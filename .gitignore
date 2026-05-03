@@ -1,0 +1,66 @@
+# ── Build output ──────────────────────────────────────────────────────────────
+bin/
+obj/
+out/
+publish/
+artifacts/
+
+# ── Visual Studio ─────────────────────────────────────────────────────────────
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.vcxproj.filters.bak
+*.aps
+
+# ── NuGet ─────────────────────────────────────────────────────────────────────
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+
+# ── Test results ──────────────────────────────────────────────────────────────
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+coverage-results/
+
+# ── Rider / JetBrains ─────────────────────────────────────────────────────────
+.idea/
+*.sln.iml
+
+# ── Office temp / lock files ──────────────────────────────────────────────────
+~$*
+
+# ── OS files ──────────────────────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# ── Logs and temp ─────────────────────────────────────────────────────────────
+*.log
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+
+# ── Internal tools (not part of the shipped product) ─────────────────────────
+Tools/
+
+# ── Secrets / credentials (belt-and-suspenders) ───────────────────────────────
+*.pfx
+*.p12
+*.key
+*.pem
+appsettings.local.json
+appsettings.*.local.json
+secrets.json

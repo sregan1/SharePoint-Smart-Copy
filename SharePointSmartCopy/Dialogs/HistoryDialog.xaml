@@ -1,0 +1,202 @@
+<Window x:Class="SharePointSmartCopy.Dialogs.HistoryDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Copy History"
+        Width="980" Height="620"
+        WindowStartupLocation="CenterOwner"
+        Background="#F3F3F3">
+
+    <Window.Resources>
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Padding" Value="16,7"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style x:Key="SecondaryButton" TargetType="Button">
+            <Setter Property="Padding" Value="16,7"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#323130"/>
+            <Setter Property="BorderBrush" Value="#8A8886"/>
+        </Style>
+        <Style x:Key="DangerButton" TargetType="Button">
+            <Setter Property="Padding" Value="16,7"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#A4262C"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Source="pack://application:,,,/Resources/logo.png"
+                   Height="70" VerticalAlignment="Center"
+                   RenderOptions.BitmapScalingMode="HighQuality"/>
+            <TextBlock Grid.Column="2" Text="Copy History" FontSize="18" FontWeight="SemiBold"
+                       Foreground="#1F1F1F" VerticalAlignment="Center"/>
+        </Grid>
+
+        <!-- Main area -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="270"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Report list -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="6"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Previous runs" FontWeight="SemiBold"
+                           FontSize="13" Foreground="#323130"/>
+
+                <ListBox Grid.Row="2" x:Name="ReportList"
+                         BorderBrush="#EDEBE9" BorderThickness="1" Background="White"
+                         SelectionChanged="ReportList_SelectionChanged">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="10,8"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding DisplayDate}"
+                                           FontSize="13" FontWeight="SemiBold" Foreground="#1F1F1F"/>
+                                <TextBlock Text="{Binding SourceUrl}" FontSize="10" Foreground="#797775"
+                                           TextTrimming="CharacterEllipsis" Margin="0,2,0,0"/>
+                                <TextBlock FontSize="10" Foreground="#797775"
+                                           TextTrimming="CharacterEllipsis">
+                                    <Run Text="→ "/>
+                                    <Run Text="{Binding TargetUrl}"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding Summary}" FontSize="12"
+                                           Foreground="#323130" Margin="0,4,0,0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <!-- Vertical divider -->
+            <Rectangle Grid.Column="1" Width="1" Fill="#EDEBE9" HorizontalAlignment="Center"/>
+
+            <!-- Detail panel -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" x:Name="DetailHeader"
+                           Text="Select a run to view details"
+                           FontSize="13" FontWeight="SemiBold" Foreground="#323130"/>
+
+                <!-- Summary cards for selected report -->
+                <StackPanel Grid.Row="2" x:Name="SummaryCards"
+                            Orientation="Horizontal" Visibility="Collapsed">
+                    <Border Background="#DFF6DD" BorderBrush="#107C10" BorderThickness="1"
+                            CornerRadius="4" Padding="16,8" Margin="0,0,8,0" MinWidth="90">
+                        <StackPanel>
+                            <TextBlock x:Name="SuccessCard" Text="0" FontSize="22" FontWeight="Bold"
+                                       Foreground="#107C10" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Succeeded" Foreground="#107C10" FontSize="11" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="#FDE7E9" BorderBrush="#A4262C" BorderThickness="1"
+                            CornerRadius="4" Padding="16,8" Margin="0,0,8,0" MinWidth="90">
+                        <StackPanel>
+                            <TextBlock x:Name="FailedCard" Text="0" FontSize="22" FontWeight="Bold"
+                                       Foreground="#A4262C" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Failed" Foreground="#A4262C" FontSize="11" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="#FFF4CE" BorderBrush="#F7B900" BorderThickness="1"
+                            CornerRadius="4" Padding="16,8" MinWidth="90">
+                        <StackPanel>
+                            <TextBlock x:Name="SkippedCard" Text="0" FontSize="22" FontWeight="Bold"
+                                       Foreground="#7A5900" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Skipped" Foreground="#7A5900" FontSize="11" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Detail DataGrid -->
+                <Border Grid.Row="4" BorderBrush="#EDEBE9" BorderThickness="1">
+                    <DataGrid x:Name="DetailGrid"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              CanUserAddRows="False" GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column" Background="White"
+                              AlternatingRowBackground="#FAFAFA" BorderThickness="0"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="File Name"   Binding="{Binding FileName}"   Width="200"/>
+                            <DataGridTemplateColumn Header="Status" Width="110">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding StatusDisplay}" Margin="4,2"
+                                                   Foreground="{Binding StatusColor}"
+                                                   FontWeight="SemiBold" FontSize="12"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Source Path" Binding="{Binding SourcePath}" Width="220"/>
+                            <DataGridTextColumn Header="Target Path" Binding="{Binding TargetPath}" Width="220"/>
+                            <DataGridTextColumn Header="Versions"    Binding="{Binding VersionsCopied}" Width="65"/>
+                            <DataGridTextColumn Header="Error"       Binding="{Binding ErrorMessage}"  Width="200"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Footer -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" x:Name="DeleteButton" Content="🗑 Delete Run"
+                    Style="{StaticResource DangerButton}"
+                    IsEnabled="False" Click="DeleteButton_Click"/>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button x:Name="ExportButton" Content="📥 Export CSV"
+                        Style="{StaticResource SecondaryButton}"
+                        IsEnabled="False" Margin="0,0,10,0" Click="ExportButton_Click"/>
+                <Button Content="Close" Style="{StaticResource SecondaryButton}" Click="Close_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

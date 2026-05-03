@@ -1,0 +1,200 @@
+<Window x:Class="SharePointSmartCopy.Dialogs.SettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Azure App Registrations"
+        Width="660" Height="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F3F3F3">
+
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="BorderBrush" Value="#8A8886"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="16,7"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#0078D4"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style x:Key="SmallButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Padding" Value="12,5"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Source="pack://application:,,,/Resources/logo.png"
+                   Height="70" VerticalAlignment="Center"
+                   RenderOptions.BitmapScalingMode="HighQuality"/>
+            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                <TextBlock Text="Azure App Registrations" FontSize="18" FontWeight="SemiBold" Foreground="#1F1F1F"/>
+                <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#605E5C" FontSize="12">
+                    Store one or more Azure AD app registrations. The one selected when you click Save becomes the active registration.
+                    Each app needs delegated permissions <Run FontWeight="Bold">Sites.ReadWrite.All</Run> and <Run FontWeight="Bold">Files.ReadWrite.All</Run>, with admin consent.
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+
+        <!-- Main area: list on left, edit form on right -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="190"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Registration list -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="6"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Registrations" FontWeight="SemiBold" FontSize="13" Foreground="#323130"/>
+
+                <ListBox Grid.Row="2" x:Name="RegistrationList"
+                         BorderBrush="#EDEBE9" BorderThickness="1" Background="White"
+                         SelectionChanged="RegistrationList_SelectionChanged">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="8,6"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock FontSize="13" FontWeight="SemiBold">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="{Binding Name}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Name}" Value="">
+                                                    <Setter Property="Text" Value="(Unnamed)"/>
+                                                    <Setter Property="Foreground" Value="#797775"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Text="{Binding ClientId}" FontSize="10" Foreground="#797775"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <StackPanel Grid.Row="4" Orientation="Horizontal">
+                    <Button Content="Add" Style="{StaticResource SmallButton}"
+                            Click="AddRegistration_Click" Margin="0,0,8,0"/>
+                    <Button x:Name="RemoveButton" Content="Remove" Style="{StaticResource SmallButton}"
+                            Click="RemoveRegistration_Click" IsEnabled="False"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Vertical divider -->
+            <Rectangle Grid.Column="1" Width="1" Fill="#EDEBE9" HorizontalAlignment="Center"/>
+
+            <!-- Edit form — DataContext bound to selected list item -->
+            <Grid Grid.Column="2"
+                  x:Name="EditForm"
+                  DataContext="{Binding SelectedItem, ElementName=RegistrationList}">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="IsEnabled" Value="True"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SelectedItem, ElementName=RegistrationList}" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Edit Selected Registration"
+                           FontWeight="SemiBold" FontSize="13" Foreground="#323130"/>
+
+                <StackPanel Grid.Row="2">
+                    <TextBlock Text="Name" FontWeight="SemiBold" Margin="0,0,0,4" FontSize="12" Foreground="#323130"/>
+                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="4">
+                    <TextBlock Text="Client ID (Application ID)" FontWeight="SemiBold" Margin="0,0,0,4" FontSize="12" Foreground="#323130"/>
+                    <TextBox Text="{Binding ClientId, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="6">
+                    <TextBlock Text="Tenant ID" FontWeight="SemiBold" Margin="0,0,0,4" FontSize="12" Foreground="#323130"/>
+                    <TextBox Text="{Binding TenantId, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="Use 'common' for multi-tenant, or your tenant GUID or domain."
+                               Foreground="#797775" FontSize="11" Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <!-- Setup instructions -->
+                <Border Grid.Row="8" Background="#EFF6FC" BorderBrush="#0078D4" BorderThickness="1"
+                        CornerRadius="4" Padding="10,7">
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#004578">
+                        <Run FontWeight="Bold">Setup:</Run> portal.azure.com → Azure Active Directory → App registrations → New registration.
+                        Add a Mobile/Desktop redirect URI of <Run FontWeight="Bold">http://localhost</Run>.
+                        Under API permissions, add Graph delegated: Sites.ReadWrite.All + Files.ReadWrite.All, then grant admin consent.
+                    </TextBlock>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Footer buttons -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="Sign Out" Click="SignOutButton_Click"
+                    Background="Transparent" BorderBrush="#8A8886" Foreground="#323130"/>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button Content="Cancel" Margin="0,0,12,0" Click="Cancel_Click"/>
+                <Button Content="Save" Style="{StaticResource PrimaryButton}" Click="Save_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
