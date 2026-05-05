@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "PowerShell(Get-ChildItem \"c:\\\\Development\\\\SharePointSmartCopy\\\\publish\" -Force | ForEach-Object { \"$\\($_.Name\\)  $\\([math]::Round\\($_.Length/1MB,1\\)\\) MB\" })",
-      "WebSearch"
+      "WebSearch",
+      "Bash(git commit *)"
     ]
   }
 }
