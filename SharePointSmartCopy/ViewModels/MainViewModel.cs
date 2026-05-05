@@ -15,6 +15,8 @@ public partial class MainViewModel : ObservableObject
     private readonly CopyService _copyService;
 
     private CancellationTokenSource? _copyCts;
+    private CancellationTokenSource? _connectSourceCts;
+    private CancellationTokenSource? _connectTargetCts;
 
     public MainViewModel(AuthService? existingAuthService = null)
     {
@@ -63,29 +65,62 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] private bool _sourceConnected;
     [ObservableProperty] private string _sourceSiteId = string.Empty;
     [ObservableProperty] private string _signedInUser = string.Empty;
+    [ObservableProperty] private bool _isConnectingSource;
 
     [RelayCommand]
     private async Task ConnectSourceAsync()
     {
-        SourceStatus    = "Connecting…";
-        SourceConnected = false;
-        IsBusy = true;
+        _connectSourceCts?.Cancel();
+        _connectSourceCts = new CancellationTokenSource();
+        var ct = _connectSourceCts.Token;
+
+        SourceStatus       = "Connecting…";
+        SourceConnected    = false;
+        IsBusy             = true;
+        IsConnectingSource = true;
         try
         {
             // Use silent auth when we already have a cached session (e.g. new copy reusing credentials)
-            await AuthService.GetAccessTokenAsync(forceInteractive: !AuthService.IsAuthenticated);
+            await AuthService.GetAccessTokenAsync(forceInteractive: !AuthService.IsAuthenticated, cancellationToken: ct);
+            ct.ThrowIfCancellationRequested();
             SignedInUser = AuthService.UserName ?? string.Empty;
             SourceSiteId = await SpService.GetSiteIdAsync(SourceUrl.Trim());
+            ct.ThrowIfCancellationRequested();
             SourceStatus    = $"✅ Connected as {SignedInUser}";
             SourceConnected = true;
             Settings.SourceUrl = SourceUrl.Trim();
             Settings.Save();
         }
+        catch (OperationCanceledException)
+        {
+            SourceStatus = string.Empty;
+        }
         catch (Exception ex)
         {
             SourceStatus = $"❌ {ex.Message}";
         }
-        finally { IsBusy = false; }
+        finally
+        {
+            IsBusy             = false;
+            IsConnectingSource = false;
+        }
+    }
+
+    [RelayCommand]
+    private void CancelConnectSource()
+    {
+        _connectSourceCts?.Cancel();
+        IsConnectingSource = false;
+        SourceStatus       = string.Empty;
+        IsBusy             = false;
+    }
+
+    [RelayCommand]
+    private void DisconnectSource()
+    {
+        SourceConnected = false;
+        SourceStatus    = string.Empty;
+        SourceSiteId    = string.Empty;
     }
 
     // ── Step 1: Browse ────────────────────────────────────────────────────────
@@ -171,17 +206,25 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private string _targetSiteId = string.Empty;
     [ObservableProperty] private ObservableCollection<SharePointNode> _targetLibraries = [];
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] private SharePointNode? _selectedTargetFolder;
+    [ObservableProperty] private bool _isConnectingTarget;
 
     [RelayCommand]
     private async Task ConnectTargetAsync()
     {
-        TargetStatus    = "Connecting…";
-        TargetConnected = false;
-        IsBusy = true;
+        _connectTargetCts?.Cancel();
+        _connectTargetCts = new CancellationTokenSource();
+        var ct = _connectTargetCts.Token;
+
+        TargetStatus       = "Connecting…";
+        TargetConnected    = false;
+        IsBusy             = true;
+        IsConnectingTarget = true;
         try
         {
             TargetSiteId = await SpService.GetSiteIdAsync(TargetUrl.Trim());
+            ct.ThrowIfCancellationRequested();
             var libs = await SpService.GetLibrariesAsync(TargetSiteId);
+            ct.ThrowIfCancellationRequested();
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 TargetLibraries.Clear();
@@ -192,12 +235,48 @@ public partial class MainViewModel : ObservableObject
             TargetConnected = true;
             Settings.TargetUrl = TargetUrl.Trim();
             Settings.Save();
+
+            // Pre-warm the SharePoint REST token so the consent dialog (if needed) happens
+            // here — on the UI thread, while the user is already waiting — rather than
+            // unexpectedly mid-copy on a background thread.
+            try { await AuthService.GetSharePointTokenAsync(TargetUrl.Trim(), ct); }
+            catch
+            {
+                TargetStatus = "✅ Connected · Note: additional consent needed for metadata — reconnect to grant";
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            TargetStatus = string.Empty;
         }
         catch (Exception ex)
         {
             TargetStatus = $"❌ {ex.Message}";
         }
-        finally { IsBusy = false; }
+        finally
+        {
+            IsBusy             = false;
+            IsConnectingTarget = false;
+        }
+    }
+
+    [RelayCommand]
+    private void CancelConnectTarget()
+    {
+        _connectTargetCts?.Cancel();
+        IsConnectingTarget = false;
+        TargetStatus       = string.Empty;
+        IsBusy             = false;
+    }
+
+    [RelayCommand]
+    private void DisconnectTarget()
+    {
+        TargetConnected      = false;
+        TargetStatus         = string.Empty;
+        TargetSiteId         = string.Empty;
+        SelectedTargetFolder = null;
+        TargetLibraries.Clear();
     }
 
     public async Task LoadTargetNodeChildrenAsync(SharePointNode node)
@@ -226,10 +305,13 @@ public partial class MainViewModel : ObservableObject
     // ── Step 3: Options ───────────────────────────────────────────────────────
 
     [ObservableProperty] private bool _overwriteFiles = false;
-    [ObservableProperty] private bool _copyVersions = false;
+    [ObservableProperty] private bool _copyVersions = true;
     [ObservableProperty] private bool _copyAllVersions = true;
     [ObservableProperty] private int _maxVersions = 10;
     [ObservableProperty] private int _maxParallelCopies = 4;
+    // true  → preserve per-version metadata via PATCH+delete (version numbers become non-sequential)
+    // false → keep version numbers sequential, only the latest version's metadata is synced
+    [ObservableProperty] private bool _preserveVersionMetadata = true;
     [ObservableProperty] private ObservableCollection<CopyJob> _copyJobs = [];
 
     public void BuildCopyJobs()
@@ -323,6 +405,7 @@ public partial class MainViewModel : ObservableObject
                 CopyVersions,
                 MaxParallelCopies,
                 versionLimit,
+                PreserveVersionMetadata,
                 _copyCts.Token);
 
             progressTimer.Stop();

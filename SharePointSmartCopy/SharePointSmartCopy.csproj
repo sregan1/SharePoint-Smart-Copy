@@ -12,7 +12,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\splash.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\logo.png" />
+    <Resource Include="Resources\splash.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

@@ -38,7 +38,7 @@ public partial class App : Application
         {
             var splash = new SplashWindow();
             splash.Show();
-            await Task.Delay(2000);
+            await Task.Delay(500);
             new MainWindow().Show();
             splash.Close();
         }

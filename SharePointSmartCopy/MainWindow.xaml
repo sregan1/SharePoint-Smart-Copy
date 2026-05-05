@@ -19,6 +19,7 @@
         <conv:NullToVisibilityConverter x:Key="NullToVis" Invert="True"/>
         <conv:NullToVisibilityConverter x:Key="NotNullToVis"/>
         <conv:IntToVisibilityConverter x:Key="IntToVis"/>
+        <conv:InvertBoolConverter x:Key="InvBool"/>
 
         <!-- Base button style -->
         <Style x:Key="BaseBtn" TargetType="Button">
@@ -447,22 +448,38 @@
                                  x:Name="SourceUrlBox"
                                  Tag="https://contoso.sharepoint.com/sites/source"
                                  Style="{StaticResource WatermarkTextBox}"/>
-                        <Button Grid.Column="2" Content="Connect" Style="{StaticResource PrimaryBtn}"
-                                Command="{Binding ConnectSourceCommand}"
-                                IsEnabled="{Binding IsBusy, Converter={StaticResource InvBoolToVis}}"/>
+                        <Grid Grid.Column="2">
+                            <Button Content="Connect" Style="{StaticResource PrimaryBtn}"
+                                    Command="{Binding ConnectSourceCommand}"
+                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"
+                                    Visibility="{Binding IsConnectingSource, Converter={StaticResource InvBoolToVis}}"/>
+                            <Button Content="Disconnect" Style="{StaticResource DangerBtn}"
+                                    Command="{Binding CancelConnectSourceCommand}"
+                                    Visibility="{Binding IsConnectingSource, Converter={StaticResource BoolToVis}}"/>
+                        </Grid>
                     </Grid>
 
-                    <TextBlock Text="{Binding SourceStatus}" FontSize="13" Margin="0,12,0,0"
-                               Visibility="{Binding SourceStatus, Converter={StaticResource NotNullToVis}}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0"
+                                Visibility="{Binding SourceStatus, Converter={StaticResource NotNullToVis}}">
+                        <TextBlock Text="{Binding SourceStatus}" FontSize="13" VerticalAlignment="Center"/>
+                        <TextBlock Text=" · " Foreground="#A19F9D" FontSize="13" VerticalAlignment="Center"
+                                   Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
+                        <Button Content="Disconnect" Style="{StaticResource LinkBtn}"
+                                Command="{Binding DisconnectSourceCommand}"
+                                Foreground="#605E5C" FontSize="13" Padding="0" VerticalAlignment="Center"
+                                Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
+                    </StackPanel>
 
                     <Border Background="#EFF6FC" BorderBrush="#0078D4" BorderThickness="1"
                             CornerRadius="4" Padding="14,10" Margin="0,20,0,0">
                         <StackPanel>
                             <TextBlock Text="💡 Requirements" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
                             <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#323130" LineHeight="20">
-                                • You must have read access to the source site collection.&#10;
-                                • Configure your Azure AD app ID in Settings (⚙) before connecting.&#10;
-                                • Admin consent is required for Sites.ReadWrite.All and Files.ReadWrite.All.
+                                <Run>• You must have read access to the source site collection.</Run>
+                                <LineBreak/>
+                                <Run>• Configure your Azure AD app ID in Settings (⚙) before connecting.</Run>
+                                <LineBreak/>
+                                <Run>• Admin consent is required for Sites.ReadWrite.All and Files.ReadWrite.All.</Run>
                             </TextBlock>
                         </StackPanel>
                     </Border>
@@ -526,18 +543,31 @@
                             Enter the URL of the destination site collection.
                         </TextBlock>
 
-                        <TextBlock Text="Target Site URL" Style="{StaticResource FieldLabel}"/>
+                        <TextBlock Text="Target Site URL" Style="{StaticResource FieldLabel}" Margin="0,22,0,4"/>
                         <TextBox Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
                                  Tag="https://contoso.sharepoint.com/sites/target"
                                  Style="{StaticResource WatermarkTextBox}"
                                  Margin="0,0,0,8"/>
-                        <Button Content="Connect to Target" Style="{StaticResource PrimaryBtn}"
-                                HorizontalAlignment="Left"
-                                Command="{Binding ConnectTargetCommand}"
-                                IsEnabled="{Binding IsBusy, Converter={StaticResource InvBoolToVis}}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Connect to Target" Style="{StaticResource PrimaryBtn}"
+                                    Command="{Binding ConnectTargetCommand}"
+                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"
+                                    Visibility="{Binding IsConnectingTarget, Converter={StaticResource InvBoolToVis}}"/>
+                            <Button Content="Disconnect" Style="{StaticResource DangerBtn}"
+                                    Command="{Binding CancelConnectTargetCommand}"
+                                    Visibility="{Binding IsConnectingTarget, Converter={StaticResource BoolToVis}}"/>
+                        </StackPanel>
 
-                        <TextBlock Text="{Binding TargetStatus}" FontSize="13" Margin="0,8,0,0"
-                                   Visibility="{Binding TargetStatus, Converter={StaticResource NotNullToVis}}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0"
+                                    Visibility="{Binding TargetStatus, Converter={StaticResource NotNullToVis}}">
+                            <TextBlock Text="{Binding TargetStatus}" FontSize="13" VerticalAlignment="Center"/>
+                            <TextBlock Text=" · " Foreground="#A19F9D" FontSize="13" VerticalAlignment="Center"
+                                       Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
+                            <Button Content="Disconnect" Style="{StaticResource LinkBtn}"
+                                    Command="{Binding DisconnectTargetCommand}"
+                                    Foreground="#605E5C" FontSize="13" Padding="0" VerticalAlignment="Center"
+                                    Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
+                        </StackPanel>
 
                         <ProgressBar IsIndeterminate="True" Height="4" Margin="0,12,0,0"
                                      Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
@@ -559,8 +589,17 @@
                         </TextBlock>
 
                         <Border Background="#E6F2FB" BorderBrush="#0078D4" BorderThickness="1"
-                                CornerRadius="4" Padding="10,6" Margin="0,0,0,8"
-                                Visibility="{Binding SelectedTargetFolder, Converter={StaticResource NullToVis}}">
+                                CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedTargetFolder}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
                             <TextBlock FontSize="13">
                                 <Run Text="📁 Selected: "/>
                                 <Run Text="{Binding SelectedTargetFolder.Name}" FontWeight="SemiBold"/>
@@ -587,35 +626,47 @@
                 <!-- ── Step 3: Options + Review ───────────────────────────────── -->
                 <Grid Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=3}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="260"/>
+                        <ColumnDefinition Width="320"/>
                         <ColumnDefinition Width="16"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Options panel -->
-                    <StackPanel Grid.Column="0">
+                    <!-- Options panel — ScrollViewer prevents expanded version options from overflowing -->
+                    <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                      <StackPanel>
                         <TextBlock Text="Copy Options" Style="{StaticResource SectionHeader}"/>
 
                         <Border Background="White" BorderBrush="#EDEBE9" BorderThickness="1"
-                                CornerRadius="6" Padding="16" Margin="0,8,0,0">
+                                CornerRadius="6" Padding="16,14,16,14" Margin="0,8,0,0">
                             <StackPanel>
                                 <CheckBox Content="Overwrite existing files"
                                           IsChecked="{Binding OverwriteFiles}"
-                                          Margin="0,0,0,12" FontSize="13"/>
+                                          Margin="0,0,0,8" FontSize="13"/>
 
-                                <CheckBox Content="Copy versions"
-                                          IsChecked="{Binding CopyVersions}"
-                                          Margin="0,0,0,4" FontSize="13"/>
-                                <TextBlock TextWrapping="Wrap" Foreground="#797775" FontSize="11"
-                                           Margin="20,0,0,8"
-                                           Text="Copies file version history to the target. Versions are uploaded oldest-first so history builds naturally. Original timestamps and author info are preserved on each version."/>
+                                <CheckBox IsChecked="{Binding CopyVersions}" Margin="0,0,0,8" FontSize="13">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="Copy versions" VerticalAlignment="Center"/>
+                                        <TextBlock Margin="6,0,0,0" FontSize="11" Foreground="#797775"
+                                                   VerticalAlignment="Center" Cursor="Help"
+                                                   ToolTipService.InitialShowDelay="0"
+                                                   ToolTipService.ShowDuration="30000">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip MaxWidth="280">
+                                                    <TextBlock TextWrapping="Wrap" FontSize="12"
+                                                               Text="Copies file version history to the target. Versions are uploaded oldest-first so history builds naturally. Original timestamps and author info are preserved on each version."/>
+                                                </ToolTip>
+                                            </TextBlock.ToolTip>
+                                            <Run Text="ⓘ"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </CheckBox>
 
                                 <!-- Version sub-options — visible only when Copy Versions is checked -->
                                 <StackPanel Visibility="{Binding CopyVersions, Converter={StaticResource BoolToVis}}"
-                                            Margin="20,0,0,12">
+                                            Margin="20,0,0,8">
                                     <CheckBox Content="Copy all versions"
                                               IsChecked="{Binding CopyAllVersions}"
-                                              FontSize="12" Margin="0,0,0,6"/>
+                                              FontSize="12" Margin="0,0,0,4"/>
                                     <!-- N input — grayed out when Copy All Versions is checked -->
                                     <StackPanel Orientation="Horizontal">
                                         <StackPanel.Style>
@@ -633,6 +684,49 @@
                                                  Width="52" FontSize="12" Padding="6,4" VerticalAlignment="Center"/>
                                         <TextBlock Text=" versions" FontSize="12" Foreground="#797775" VerticalAlignment="Center"/>
                                     </StackPanel>
+
+                                    <!-- Version strategy: SharePoint API limitation forces a tradeoff between
+                                         per-version metadata fidelity and sequential version numbers. -->
+                                    <TextBlock Text="Version strategy" FontSize="12" FontWeight="SemiBold"
+                                               Foreground="#323130" Margin="0,8,0,4"/>
+                                    <RadioButton GroupName="VersionStrategy"
+                                                 IsChecked="{Binding PreserveVersionMetadata, Mode=TwoWay}"
+                                                 FontSize="12" Margin="0,0,0,4">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="Preserve metadata for every version" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                            <TextBlock Margin="6,0,0,0" FontSize="11" Foreground="#797775"
+                                                       VerticalAlignment="Center" Cursor="Help"
+                                                       ToolTipService.InitialShowDelay="0"
+                                                       ToolTipService.ShowDuration="30000">
+                                                <TextBlock.ToolTip>
+                                                    <ToolTip MaxWidth="280">
+                                                        <TextBlock TextWrapping="Wrap" FontSize="12"
+                                                                   Text="All versions show the source's Modified date and author. Version numbers will be non-sequential (e.g. 2, 4, 6) due to a SharePoint API constraint."/>
+                                                    </ToolTip>
+                                                </TextBlock.ToolTip>
+                                                <Run Text="ⓘ"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </RadioButton>
+                                    <RadioButton GroupName="VersionStrategy"
+                                                 IsChecked="{Binding PreserveVersionMetadata, Converter={StaticResource InvBool}, Mode=TwoWay}"
+                                                 FontSize="12" Margin="0,0,0,0">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="Keep version numbers sequential" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                            <TextBlock Margin="6,0,0,0" FontSize="11" Foreground="#797775"
+                                                       VerticalAlignment="Center" Cursor="Help"
+                                                       ToolTipService.InitialShowDelay="0"
+                                                       ToolTipService.ShowDuration="30000">
+                                                <TextBlock.ToolTip>
+                                                    <ToolTip MaxWidth="280">
+                                                        <TextBlock TextWrapping="Wrap" FontSize="12"
+                                                                   Text="Versions numbered 1, 2, 3… Only the latest version's metadata is synced; intermediate versions show the copy date in version history."/>
+                                                    </ToolTip>
+                                                </TextBlock.ToolTip>
+                                                <Run Text="ⓘ"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </RadioButton>
                                 </StackPanel>
 
                                 <TextBlock Text="Parallel copies" Style="{StaticResource FieldLabel}"/>
@@ -645,12 +739,12 @@
                                                Margin="8,0,0,0" VerticalAlignment="Center"/>
                                 </StackPanel>
                                 <TextBlock Text="Higher values copy faster but may throttle on large sites."
-                                           TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="0,4,0,0"/>
+                                           TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="0,2,0,0"/>
                             </StackPanel>
                         </Border>
 
                         <Border Background="White" BorderBrush="#EDEBE9" BorderThickness="1"
-                                CornerRadius="6" Padding="16" Margin="0,12,0,0">
+                                CornerRadius="6" Padding="16" Margin="0,8,0,0">
                             <StackPanel>
                                 <TextBlock Text="Summary" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,8"/>
                                 <TextBlock FontSize="13">
@@ -662,17 +756,24 @@
                                 </TextBlock>
                             </StackPanel>
                         </Border>
-                    </StackPanel>
+                      </StackPanel>
+                    </ScrollViewer>
 
-                    <!-- Preview list -->
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Text="Copy Preview" Style="{StaticResource SectionHeader}"/>
-                        <TextBlock Style="{StaticResource SubHeader}">
+                    <!-- Preview panel — Grid lets the list fill all remaining vertical space -->
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Copy Preview" Style="{StaticResource SectionHeader}"/>
+                        <TextBlock Grid.Row="1" Style="{StaticResource SubHeader}">
                             Review what will be copied and where. Folder contents will be discovered during copy.
                         </TextBlock>
 
-                        <Border BorderBrush="#EDEBE9" BorderThickness="1" Background="White">
-                            <ListView ItemsSource="{Binding CopyJobs}" MaxHeight="450">
+                        <Border Grid.Row="2" BorderBrush="#EDEBE9" BorderThickness="1" Background="White">
+                            <ListView ItemsSource="{Binding CopyJobs}">
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn Header="Type" Width="50">
@@ -701,7 +802,7 @@
                                 </ListView.View>
                             </ListView>
                         </Border>
-                    </StackPanel>
+                    </Grid>
                 </Grid>
 
                 <!-- ── Step 4: Copying Progress ───────────────────────────────── -->

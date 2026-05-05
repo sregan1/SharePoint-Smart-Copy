@@ -16,6 +16,7 @@ public class SharePointService
     private GraphServiceClient? _graphClient;
     private readonly HttpClient _httpClient = new();
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, int> _userIdCache = new();
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, (string siteUrl, string listId, string listItemId)> _spIdsCache = new();
 
     public SharePointService(AuthService authService)
     {
@@ -168,10 +169,16 @@ public class SharePointService
 
     public async Task<List<DriveItemVersion>> GetVersionsAsync(string driveId, string itemId)
     {
-        var versions = await Graph.Drives[driveId].Items[itemId].Versions.GetAsync();
-        return (versions?.Value ?? [])
-            .OrderBy(v => v.LastModifiedDateTime)
-            .ToList();
+        var all  = new List<DriveItemVersion>();
+        var page = await Graph.Drives[driveId].Items[itemId].Versions.GetAsync();
+        while (page != null)
+        {
+            all.AddRange(page.Value ?? []);
+            if (page.OdataNextLink == null) break;
+            page = await Graph.Drives[driveId].Items[itemId].Versions
+                .WithUrl(page.OdataNextLink).GetAsync();
+        }
+        return all.OrderBy(v => v.LastModifiedDateTime).ToList();
     }
 
     // ── Metadata ──────────────────────────────────────────────────────────────
@@ -188,11 +195,14 @@ public class SharePointService
             GetIdentityEmail(item?.LastModifiedBy?.User));
     }
 
-    private static string? GetIdentityEmail(Microsoft.Graph.Models.Identity? identity)
+    internal static string? GetIdentityEmail(Microsoft.Graph.Models.Identity? identity)
     {
-        if (identity == null) return null;
-        if (identity.AdditionalData?.TryGetValue("email", out var val) == true)
-            return val?.ToString();
+        if (identity?.AdditionalData == null) return null;
+        if (identity.AdditionalData.TryGetValue("email", out var email) && email != null)
+            return email.ToString();
+        // Some Graph responses use userPrincipalName instead of email
+        if (identity.AdditionalData.TryGetValue("userPrincipalName", out var upn) && upn != null)
+            return upn.ToString();
         return null;
     }
 
@@ -222,8 +232,175 @@ public class SharePointService
         return null;
     }
 
-    public async Task PatchTimestampsAsync(
-        string driveId, string itemId, DateTimeOffset? created, DateTimeOffset? modified)
+    // Returns null on success, or an error string describing what failed.
+    public async Task<string?> PatchTimestampsAsync(
+        string driveId, string itemId, DateTimeOffset? created, DateTimeOffset? modified,
+        string? createdByEmail = null, string? modifiedByEmail = null)
+    {
+        // ValidateUpdateListItem with bNewDocumentUpdate=true sets all four metadata fields
+        // without triggering a new version. No fileSystemInfo fallback here — on intermediate
+        // versions that would create phantom versions in version history.
+        return await PatchTimestampsViaRestAsync(driveId, itemId, modified, created, createdByEmail, modifiedByEmail);
+    }
+
+    private async Task<(string siteUrl, string listId, string listItemId)?> GetSharePointIdsAsync(
+        string driveId, string itemId)
+    {
+        var key = $"{driveId}|{itemId}";
+        if (_spIdsCache.TryGetValue(key, out var cached)) return cached;
+
+        // SharePoint may take a moment to propagate sharepointIds for a newly uploaded item.
+        // Retry with backoff before giving up.
+        for (int attempt = 0; attempt < 3; attempt++)
+        {
+            if (attempt > 0) await Task.Delay(attempt * 1500);
+            try
+            {
+                var item = await Graph.Drives[driveId].Items[itemId].GetAsync(cfg =>
+                    cfg.QueryParameters.Select = ["sharepointIds"]);
+
+                var ids = item?.SharepointIds;
+                if (ids?.SiteUrl == null || ids.ListId == null || ids.ListItemId == null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"GetSharePointIds attempt {attempt + 1}/3: sharepointIds null/incomplete for item {itemId} (SiteUrl={ids?.SiteUrl}, ListId={ids?.ListId}, ListItemId={ids?.ListItemId})");
+                    continue;
+                }
+
+                var result = (ids.SiteUrl, ids.ListId, ids.ListItemId);
+                _spIdsCache[key] = result;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var odataEx = ex as Microsoft.Graph.Models.ODataErrors.ODataError;
+                var detail  = odataEx?.Error?.Message ?? ex.Message;
+                System.Diagnostics.Debug.WriteLine($"GetSharePointIds attempt {attempt + 1}/3 failed (HTTP {odataEx?.ResponseStatusCode}): {detail}");
+            }
+        }
+        return null;
+    }
+
+    // Returns null on success, or an error string describing what failed.
+    private async Task<string?> PatchTimestampsViaRestAsync(
+        string driveId, string itemId, DateTimeOffset? modified, DateTimeOffset? created,
+        string? createdByEmail = null, string? modifiedByEmail = null)
+    {
+        var ids = await GetSharePointIdsAsync(driveId, itemId);
+        if (ids == null) return "SP IDs unavailable — item not found or sharepointIds not propagated";
+
+        var (siteUrl, listId, listItemId) = ids.Value;
+        System.Diagnostics.Debug.WriteLine($"PatchTimestampsViaRest: siteUrl={siteUrl} listId={listId} listItemId={listItemId}");
+
+        var formValues = new List<object>();
+        // ValidateUpdateListItem parses dates using the site's regional settings (not ISO 8601).
+        // US English SharePoint sites expect M/d/yyyy H:mm:ss (24-hour, InvariantCulture).
+        if (modified.HasValue)
+            formValues.Add(new { FieldName = "Modified", FieldValue = modified.Value.ToUniversalTime().ToString("M/d/yyyy H:mm:ss", System.Globalization.CultureInfo.InvariantCulture) });
+        if (created.HasValue)
+            formValues.Add(new { FieldName = "Created",  FieldValue = created.Value.ToUniversalTime().ToString("M/d/yyyy H:mm:ss", System.Globalization.CultureInfo.InvariantCulture) });
+        // Author/Editor via claims identity — same call, no new version side-effect
+        if (!string.IsNullOrEmpty(modifiedByEmail))
+            formValues.Add(new { FieldName = "Editor", FieldValue = $"i:0#.f|membership|{modifiedByEmail}" });
+        if (!string.IsNullOrEmpty(createdByEmail))
+            formValues.Add(new { FieldName = "Author", FieldValue = $"i:0#.f|membership|{createdByEmail}" });
+
+        if (formValues.Count == 0) return null;
+
+        try
+        {
+            // SharePoint REST API requires a SharePoint-scoped token, not the Graph token.
+            var token = await _authService.GetSharePointTokenAsync(siteUrl);
+            var url   = $"{siteUrl}/_api/web/lists('{listId}')/items({listItemId})/ValidateUpdateListItem()";
+            using var req = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new System.Net.Http.StringContent(
+                    System.Text.Json.JsonSerializer.Serialize(new { formValues, bNewDocumentUpdate = true }),
+                    System.Text.Encoding.UTF8, "application/json")
+            };
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            var response = await _httpClient.SendAsync(req);
+            var body = await response.Content.ReadAsStringAsync();
+            System.Diagnostics.Debug.WriteLine($"ValidateUpdateListItem {(int)response.StatusCode}: {body}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var preview = body.Length > 200 ? body[..200] : body;
+                return $"ValidateUpdateListItem HTTP {(int)response.StatusCode}: {preview}";
+            }
+
+            // HTTP 200 OK — but ValidateUpdateListItem returns per-field error codes in the body.
+            // A 200 response does NOT mean every field was updated; check each field's HasException.
+            try
+            {
+                using var doc = System.Text.Json.JsonDocument.Parse(body);
+                if (doc.RootElement.TryGetProperty("value", out var arr))
+                {
+                    var fieldErrors = new List<string>();
+                    foreach (var field in arr.EnumerateArray())
+                    {
+                        bool hasEx = field.TryGetProperty("HasException", out var he) && he.GetBoolean();
+                        int  ec    = field.TryGetProperty("ErrorCode",    out var ecEl) ? ecEl.GetInt32() : 0;
+                        if (hasEx || ec != 0)
+                        {
+                            var fn = field.TryGetProperty("FieldName",     out var fnEl) ? fnEl.GetString() ?? "" : "";
+                            var em = field.TryGetProperty("ErrorMessage",  out var emEl) ? emEl.GetString() ?? "" : "";
+                            fieldErrors.Add($"{fn}: {em} (code {ec})");
+                        }
+                    }
+                    if (fieldErrors.Count > 0)
+                        return $"Field errors: {string.Join("; ", fieldErrors)}";
+                }
+            }
+            catch { /* JSON parse failure — treat body as success */ }
+
+            return null; // all fields updated successfully
+        }
+        catch (Exception ex)
+        {
+            var msg = $"ValidateUpdateListItem exception: {ex.Message}";
+            System.Diagnostics.Debug.WriteLine(msg);
+            return msg;
+        }
+    }
+
+    // Returns null on success, or an error string describing what failed.
+    public async Task<string?> ApplyFileMetadataAsync(
+        string driveId, string itemId, string siteId, FileMetadata metadata)
+    {
+        System.Diagnostics.Debug.WriteLine($"ApplyFileMetadata: itemId={itemId} createdBy={metadata.CreatedByEmail} modifiedBy={metadata.ModifiedByEmail} created={metadata.CreatedDateTime} modified={metadata.ModifiedDateTime}");
+        // ValidateUpdateListItem sets all four fields (Modified, Created, Editor, Author)
+        // atomically without creating a new version. Author/Editor are set via claims identity
+        // (i:0#.f|membership|email), confirmed working from debug output.
+        // The previous listItem/fields PATCH and fileSystemInfo fallback are removed — both
+        // could trigger a version bump in versioned libraries, causing phantom versions.
+        return await PatchTimestampsViaRestAsync(driveId, itemId,
+            metadata.ModifiedDateTime, metadata.CreatedDateTime,
+            metadata.CreatedByEmail, metadata.ModifiedByEmail);
+    }
+
+    // Returns the drive item version ID of the current (newest) version.
+    // Used to record which version to delete after a fileSystemInfo PATCH creates a phantom.
+    public async Task<string?> GetCurrentVersionIdAsync(string driveId, string itemId)
+    {
+        try
+        {
+            var page = await Graph.Drives[driveId].Items[itemId].Versions.GetAsync();
+            // Graph returns versions newest-first; first entry is the current version.
+            return page?.Value?.FirstOrDefault()?.Id;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"GetCurrentVersionId exception: {ex.Message}");
+            return null;
+        }
+    }
+
+    // Patches driveItem.fileSystemInfo.lastModifiedDateTime, which creates a new version in a
+    // versioned library and is the field SharePoint actually displays in version history.
+    // (The listItem.Modified field — set by ValidateUpdateListItem — is NOT shown in version history.)
+    public async Task<string?> PatchFileSystemDateAsync(string driveId, string itemId,
+        DateTimeOffset lastModifiedDateTime, DateTimeOffset? createdDateTime = null)
     {
         try
         {
@@ -231,69 +408,53 @@ public class SharePointService
             {
                 FileSystemInfo = new Microsoft.Graph.Models.FileSystemInfo
                 {
-                    CreatedDateTime      = created,
-                    LastModifiedDateTime = modified
+                    LastModifiedDateTime = lastModifiedDateTime,
+                    CreatedDateTime      = createdDateTime
                 }
             });
+            System.Diagnostics.Debug.WriteLine($"PatchFileSystemDate: modified={lastModifiedDateTime:o} created={createdDateTime:o} on {itemId}");
+            return null;
         }
-        catch { /* best-effort */ }
+        catch (Exception ex)
+        {
+            var msg = $"PatchFileSystemDate exception: {ex.Message}";
+            System.Diagnostics.Debug.WriteLine(msg);
+            return msg;
+        }
     }
 
-    public async Task ApplyFileMetadataAsync(
-        string driveId, string itemId, string siteId, FileMetadata metadata)
+    // Deletes a specific historical drive item version.
+    public async Task<string?> DeleteItemVersionAsync(string driveId, string itemId, string versionId)
     {
-        // Patch timestamps via fileSystemInfo — works with Files.ReadWrite.All delegated permission
         try
         {
-            if (metadata.CreatedDateTime.HasValue || metadata.ModifiedDateTime.HasValue)
-            {
-                await Graph.Drives[driveId].Items[itemId].PatchAsync(new DriveItem
-                {
-                    FileSystemInfo = new Microsoft.Graph.Models.FileSystemInfo
-                    {
-                        CreatedDateTime      = metadata.CreatedDateTime,
-                        LastModifiedDateTime = metadata.ModifiedDateTime
-                    }
-                });
-            }
+            await Graph.Drives[driveId].Items[itemId].Versions[versionId].DeleteAsync();
+            System.Diagnostics.Debug.WriteLine($"DeleteItemVersion: {versionId} on {itemId}");
+            return null;
         }
-        catch { /* best-effort */ }
-
-        // Patch Author/Editor via listItem/fields — requires user to exist in the target site
-        try
+        catch (Exception ex)
         {
-            var userFields = new Dictionary<string, object>();
-
-            if (!string.IsNullOrEmpty(metadata.CreatedByEmail))
-            {
-                var id = await LookupSharePointUserIdAsync(siteId, metadata.CreatedByEmail);
-                if (id.HasValue) userFields["AuthorLookupId"] = id.Value.ToString();
-            }
-            if (!string.IsNullOrEmpty(metadata.ModifiedByEmail))
-            {
-                var id = await LookupSharePointUserIdAsync(siteId, metadata.ModifiedByEmail);
-                if (id.HasValue) userFields["EditorLookupId"] = id.Value.ToString();
-            }
-
-            if (userFields.Count > 0)
-            {
-                var token = await _authService.GetAccessTokenAsync();
-                var url = $"https://graph.microsoft.com/v1.0/drives/{driveId}/items/{itemId}/listItem/fields";
-                using var req = new HttpRequestMessage(HttpMethod.Patch, url)
-                {
-                    Content = new System.Net.Http.StringContent(
-                        System.Text.Json.JsonSerializer.Serialize(userFields),
-                        System.Text.Encoding.UTF8, "application/json")
-                };
-                req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                req.Headers.Accept.ParseAdd("application/json");
-                await _httpClient.SendAsync(req);
-            }
+            var msg = $"DeleteItemVersion exception: {ex.Message}";
+            System.Diagnostics.Debug.WriteLine(msg);
+            return msg;
         }
-        catch { /* best-effort */ }
     }
 
     // ── Upload ────────────────────────────────────────────────────────────────
+
+    public async Task<bool> FileExistsAsync(string driveId, string parentItemId, string fileName)
+    {
+        try
+        {
+            await Graph.Drives[driveId].Items[parentItemId]
+                .ItemWithPath(Uri.EscapeDataString(fileName)).GetAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 
     public async Task<string> UploadFileAsync(
         string targetDriveId,
@@ -316,7 +477,12 @@ public class SharePointService
             return item?.Id ?? string.Empty;
         }
 
-        // Large-file upload session
+        // Large-file upload session.
+        // NOTE: SharePoint supports fileSystemInfo in the session body only for NEW file uploads,
+        // not for replacement uploads (conflictBehavior:"replace" on an existing file). Attempting
+        // to set it on a replacement session returns 200 OK with an upload URL that responds 404
+        // ("session not found") on the first chunk PUT. Dates must be fixed post-upload via
+        // PatchFileSystemDateAsync instead.
         var sessionBody = new Microsoft.Graph.Drives.Item.Items.Item.CreateUploadSession.CreateUploadSessionPostRequestBody
         {
             Item = new DriveItemUploadableProperties

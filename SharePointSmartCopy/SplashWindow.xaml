@@ -5,15 +5,11 @@
         AllowsTransparency="False"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Width="380" Height="340"
+        Width="960" Height="720"
         Background="White">
-    <Border BorderBrush="#EDEBE9" BorderThickness="1">
-        <Grid>
-            <Image Source="pack://application:,,,/Resources/logo.png"
-                   Height="260"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   RenderOptions.BitmapScalingMode="HighQuality"/>
-        </Grid>
-    </Border>
+    <Grid>
+        <Image Source="pack://application:,,,/Resources/splash.png"
+               Stretch="UniformToFill"
+               RenderOptions.BitmapScalingMode="HighQuality"/>
+    </Grid>
 </Window>
