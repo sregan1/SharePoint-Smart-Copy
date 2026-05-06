@@ -18,7 +18,7 @@ SharePoint Smart Copy uses the Microsoft Graph API to migrate content between an
 - **Version limit** — copy only the N most recent versions instead of the full history
 - **Metadata preservation** — Created By, Created Date, Modified By, and Modified Date are applied to each file and folder
 - **Overwrite control** — skip existing files or overwrite them
-- **Parallel transfers** — configurable 1–8 parallel copies for throughput tuning
+- **Parallel transfers** — configurable 1–16 parallel copies for throughput tuning
 - **Live progress** — real-time file status list with elapsed time counter and progress bar
 - **Copy report** — per-file success/fail/skipped summary with source and target paths and version counts
 - **CSV export** — export any report to CSV for sharing or archiving
@@ -88,7 +88,15 @@ Configure how the copy runs before starting:
 | **Copy versions** | Upload the full version history, oldest-first, so history builds naturally in the target. |
 | **Copy all versions** | When version copy is enabled, copies every version. Uncheck to limit to N most recent. |
 | **Latest N versions** | Active when "Copy all versions" is unchecked — copies only the N most recent versions. |
-| **Parallel copies** | Number of simultaneous file transfers (1–8). Higher values are faster but may throttle on large sites. |
+| **Version strategy** | Controls how per-version metadata is handled (see below). |
+| **Parallel copies** | Number of simultaneous file transfers (1–16). Higher values are faster but may throttle on large sites. |
+
+**Version strategy** (visible when Copy versions is on):
+
+| Strategy | Behaviour |
+|---|---|
+| **Preserve metadata for every version** | Every version in the target shows the source's original Modified date and author. Version numbers will be non-sequential (e.g. 2, 4, 6) due to a SharePoint API constraint. |
+| **Keep version numbers sequential** | Versions are numbered 1, 2, 3… with no gaps. Only the latest version's metadata (date and author) is synced; intermediate versions show the copy date in version history. |
 
 The **Copy Preview** table on the right lists every top-level item that will be copied and its destination.
 
