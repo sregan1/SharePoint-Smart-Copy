@@ -35,3 +35,11 @@ All notable changes to SharePoint Smart Copy are documented here.
 - Widened the options column from 260 px to 320 px so all option labels fit on one line without wrapping.
 - Tightened vertical margins and border padding throughout the options box (~38 px saved) so the full panel fits on screen without requiring the scroll bar.
 - Extended the Copy Options white box bottom padding so text at the bottom of the box was not clipped.
+
+### Documentation
+
+- Updated user guide (SharePointSmartCopy_UserGuide.docx) to v1.1: added Version strategy section to the Step 4 Copy Options chapter, explaining the Preserve metadata and Keep sequential radio options and their tradeoffs.
+- Regenerated all 10 user guide screenshots to match the current UI.
+- Updated both READMEs (root and Docs) to document the Version strategy options and corrected the parallel copies range from 1–8 to 1–16.
+- Added a `http://localhost` redirect URI step to the root README setup instructions.
+- Removed stale debug screenshot (`check_state.png`).
