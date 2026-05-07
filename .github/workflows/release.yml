@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version from csproj
+        id: ver
+        shell: pwsh
+        run: |
+          [xml]$proj = Get-Content SharePointSmartCopy/SharePointSmartCopy.csproj
+          $version = $proj.Project.PropertyGroup.Version
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          Write-Host "Version: $version"
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Publish self-contained exe
+        shell: pwsh
+        run: |
+          dotnet publish SharePointSmartCopy/SharePointSmartCopy.csproj `
+            -c Release `
+            --self-contained true `
+            -p:PublishSingleFile=true `
+            -r win-x64 `
+            -o publish
+
+      - name: Create or replace GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $version = "${{ steps.ver.outputs.version }}"
+          $tag     = "v$version"
+          $asset   = "SharePointSmartCopy-$tag.exe"
+
+          Rename-Item publish/SharePointSmartCopy.exe $asset
+
+          # Replace existing release for this version (idempotent on re-push)
+          gh release delete $tag --yes --cleanup-tag 2>$null
+
+          gh release create $tag "publish/$asset" `
+            --title "SharePoint Smart Copy $tag" `
+            --notes "See [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details."
