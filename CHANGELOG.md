@@ -4,6 +4,20 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 1.1.2
+
+### Bug Fixes
+
+- Fixed: application crashed on launch with `System.DllNotFoundException` when published as a single-file executable. WPF's native runtime DLLs do not extract reliably from a single-file bundle. The release now ships as a zip containing all files alongside the executable, eliminating the self-extraction step entirely.
+
+### Documentation
+
+- Added Installation section to both READMEs explaining how to download, extract, and run the zip release.
+- Removed .NET 8 Desktop Runtime from Requirements — the runtime is now bundled in the release zip.
+- Added SmartScreen note to Installation section.
+
+---
+
 ## 1.1 fixes
 
 ### Bug Fixes

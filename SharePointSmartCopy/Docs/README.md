@@ -28,10 +28,21 @@ SharePoint Smart Copy uses the Microsoft Graph API to migrate content between an
 
 ---
 
+## Installation
+
+1. Go to the [Releases](https://github.com/sregan1/SharePointSmartCopy/releases/latest) page and download `SharePointSmartCopy-vX.X.X.zip`
+2. Extract the zip to a folder of your choice (e.g. `C:\Tools\SharePointSmartCopy`)
+3. Run `SharePointSmartCopy.exe` from that folder
+
+No .NET installation required — the runtime is bundled in the zip.
+
+> **Note:** Because the executable is not code-signed, Windows may show a SmartScreen warning on first run. Click **More info → Run anyway** to proceed.
+
+---
+
 ## Requirements
 
 - Windows 10 or 11
-- .NET 8 Desktop Runtime
 - An Azure AD app registration with:
   - **Sites.ReadWrite.All** (delegated)
   - **Files.ReadWrite.All** (delegated)
