@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using SharePointSmartCopy.Models;
@@ -21,7 +21,6 @@ public partial class SettingsDialog : Window
         _original    = current;
         Result       = current;
 
-        // Deep-copy so edits don't affect the live settings until Save is clicked
         foreach (var r in current.Registrations)
             _registrations.Add(new AzureRegistration { Name = r.Name, ClientId = r.ClientId, TenantId = r.TenantId });
 
@@ -65,7 +64,7 @@ public partial class SettingsDialog : Window
         }
 
         var activeIdx = Math.Max(0, RegistrationList.SelectedIndex);
-        var active = _registrations[activeIdx];
+        var active    = _registrations[activeIdx];
 
         if (string.IsNullOrWhiteSpace(active.ClientId))
         {
@@ -76,10 +75,11 @@ public partial class SettingsDialog : Window
 
         Result = new AppSettings
         {
-            Registrations          = _registrations.ToList(),
+            Registrations           = _registrations.ToList(),
             ActiveRegistrationIndex = activeIdx,
-            SourceUrl              = _original.SourceUrl,
-            TargetUrl              = _original.TargetUrl
+            SourceUrl               = _original.SourceUrl,
+            TargetUrl               = _original.TargetUrl,
+            PreferredCopyMode       = _original.PreferredCopyMode,
         };
 
         Result.Save();

@@ -1,7 +1,8 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Kiota.Abstractions;
@@ -15,7 +16,6 @@ public class SharePointService
     private readonly AuthService _authService;
     private GraphServiceClient? _graphClient;
     private readonly HttpClient _httpClient = new();
-    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, int> _userIdCache = new();
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, (string siteUrl, string listId, string listItemId)> _spIdsCache = new();
 
     public SharePointService(AuthService authService)
@@ -47,22 +47,37 @@ public class SharePointService
 
     // ── Libraries ─────────────────────────────────────────────────────────────
 
-    public async Task<List<SharePointNode>> GetLibrariesAsync(string siteId)
+    public async Task<List<SharePointNode>> GetLibrariesAsync(string siteId, string siteUrl)
     {
+        // No $select — the Kiota SDK does not reliably populate webUrl when explicitly selected
+        // on the drives collection; the default response includes it.
         var drives = await Graph.Sites[siteId].Drives.GetAsync();
         var result = new List<SharePointNode>();
 
         foreach (var d in drives?.Value ?? [])
         {
             if (d.Id == null || d.Name == null) continue;
+
+            string? serverRelUrl = null;
+            if (d.WebUrl != null)
+            {
+                var uri = new Uri(d.WebUrl);
+                var path = Uri.UnescapeDataString(uri.AbsolutePath.TrimEnd('/'));
+                // Exclude view URLs like /Forms/AllItems.aspx — these aren't the library root
+                if (!path.EndsWith(".aspx", StringComparison.OrdinalIgnoreCase))
+                    serverRelUrl = path;
+            }
+
             var node = new SharePointNode
             {
-                Id       = "root",
-                DriveId  = d.Id,
-                SiteId   = siteId,
-                Name     = d.Name,
-                Type     = NodeType.Library,
-                HasChildren = true
+                Id                 = "root",
+                DriveId            = d.Id,
+                SiteId             = siteId,
+                SiteUrl            = siteUrl,
+                Name               = d.Name,
+                Type               = NodeType.Library,
+                HasChildren        = true,
+                ServerRelativePath = serverRelUrl
             };
             node.Children.Add(Placeholder());
             result.Add(node);
@@ -73,12 +88,10 @@ public class SharePointService
     // ── Children ──────────────────────────────────────────────────────────────
 
     public async Task<List<SharePointNode>> GetChildrenAsync(
-        string driveId, string itemId, string siteId, bool foldersOnly = false)
+        string driveId, string itemId, string siteId, string siteUrl = "", bool foldersOnly = false)
     {
-        DriveItemCollectionResponse? page;
-
         var resolvedId = itemId == "root" ? "root" : itemId;
-        page = await Graph.Drives[driveId].Items[resolvedId].Children
+        var page = await Graph.Drives[driveId].Items[resolvedId].Children
             .GetAsync(cfg => cfg.QueryParameters.Top = 1000);
 
         var items = new List<DriveItem>();
@@ -102,6 +115,7 @@ public class SharePointService
                 Id          = item.Id,
                 DriveId     = driveId,
                 SiteId      = siteId,
+                SiteUrl     = siteUrl,
                 Name        = item.Name,
                 Type        = isFolder ? NodeType.Folder : NodeType.File,
                 Size        = item.Size,
@@ -138,7 +152,7 @@ public class SharePointService
         }
     }
 
-    // ── Enumerate all sub-folders under a folder (for metadata) ──────────────
+    // ── Enumerate all sub-folders under a folder ──────────────────────────────
 
     public async IAsyncEnumerable<(string driveId, string itemId, string relativePath)>
         EnumerateFoldersAsync(string driveId, string rootItemId, string basePath = "")
@@ -178,6 +192,7 @@ public class SharePointService
             page = await Graph.Drives[driveId].Items[itemId].Versions
                 .WithUrl(page.OdataNextLink).GetAsync();
         }
+        // Sort oldest-first so we replay versions in chronological order
         return all.OrderBy(v => v.LastModifiedDateTime).ToList();
     }
 
@@ -195,52 +210,14 @@ public class SharePointService
             GetIdentityEmail(item?.LastModifiedBy?.User));
     }
 
-    internal static string? GetIdentityEmail(Microsoft.Graph.Models.Identity? identity)
+    public static string? GetIdentityEmail(Microsoft.Graph.Models.Identity? identity)
     {
         if (identity?.AdditionalData == null) return null;
         if (identity.AdditionalData.TryGetValue("email", out var email) && email != null)
             return email.ToString();
-        // Some Graph responses use userPrincipalName instead of email
         if (identity.AdditionalData.TryGetValue("userPrincipalName", out var upn) && upn != null)
             return upn.ToString();
         return null;
-    }
-
-    private async Task<int?> LookupSharePointUserIdAsync(string siteId, string email)
-    {
-        var key = $"{siteId}|{email}";
-        if (_userIdCache.TryGetValue(key, out var cached)) return cached;
-        try
-        {
-            var response = await Graph.Sites[siteId].Lists["User Information List"].Items
-                .GetAsync(cfg =>
-                {
-                    cfg.QueryParameters.Filter = $"fields/EMail eq '{email}'";
-                    cfg.QueryParameters.Expand = ["fields"];
-                    cfg.QueryParameters.Top    = 1;
-                });
-
-            var fields = response?.Value?.FirstOrDefault()?.Fields?.AdditionalData;
-            if (fields != null && fields.TryGetValue("ID", out var idObj) && idObj != null)
-            {
-                var id = Convert.ToInt32(idObj);
-                _userIdCache[key] = id;
-                return id;
-            }
-        }
-        catch { /* user not found or list not queryable — skip */ }
-        return null;
-    }
-
-    // Returns null on success, or an error string describing what failed.
-    public async Task<string?> PatchTimestampsAsync(
-        string driveId, string itemId, DateTimeOffset? created, DateTimeOffset? modified,
-        string? createdByEmail = null, string? modifiedByEmail = null)
-    {
-        // ValidateUpdateListItem with bNewDocumentUpdate=true sets all four metadata fields
-        // without triggering a new version. No fileSystemInfo fallback here — on intermediate
-        // versions that would create phantom versions in version history.
-        return await PatchTimestampsViaRestAsync(driveId, itemId, modified, created, createdByEmail, modifiedByEmail);
     }
 
     private async Task<(string siteUrl, string listId, string listItemId)?> GetSharePointIdsAsync(
@@ -249,8 +226,6 @@ public class SharePointService
         var key = $"{driveId}|{itemId}";
         if (_spIdsCache.TryGetValue(key, out var cached)) return cached;
 
-        // SharePoint may take a moment to propagate sharepointIds for a newly uploaded item.
-        // Retry with backoff before giving up.
         for (int attempt = 0; attempt < 3; attempt++)
         {
             if (attempt > 0) await Task.Delay(attempt * 1500);
@@ -261,26 +236,17 @@ public class SharePointService
 
                 var ids = item?.SharepointIds;
                 if (ids?.SiteUrl == null || ids.ListId == null || ids.ListItemId == null)
-                {
-                    System.Diagnostics.Debug.WriteLine($"GetSharePointIds attempt {attempt + 1}/3: sharepointIds null/incomplete for item {itemId} (SiteUrl={ids?.SiteUrl}, ListId={ids?.ListId}, ListItemId={ids?.ListItemId})");
                     continue;
-                }
 
                 var result = (ids.SiteUrl, ids.ListId, ids.ListItemId);
                 _spIdsCache[key] = result;
                 return result;
             }
-            catch (Exception ex)
-            {
-                var odataEx = ex as Microsoft.Graph.Models.ODataErrors.ODataError;
-                var detail  = odataEx?.Error?.Message ?? ex.Message;
-                System.Diagnostics.Debug.WriteLine($"GetSharePointIds attempt {attempt + 1}/3 failed (HTTP {odataEx?.ResponseStatusCode}): {detail}");
-            }
+            catch { /* retry */ }
         }
         return null;
     }
 
-    // Returns null on success, or an error string describing what failed.
     private async Task<string?> PatchTimestampsViaRestAsync(
         string driveId, string itemId, DateTimeOffset? modified, DateTimeOffset? created,
         string? createdByEmail = null, string? modifiedByEmail = null)
@@ -289,16 +255,12 @@ public class SharePointService
         if (ids == null) return "SP IDs unavailable — item not found or sharepointIds not propagated";
 
         var (siteUrl, listId, listItemId) = ids.Value;
-        System.Diagnostics.Debug.WriteLine($"PatchTimestampsViaRest: siteUrl={siteUrl} listId={listId} listItemId={listItemId}");
 
         var formValues = new List<object>();
-        // ValidateUpdateListItem parses dates using the site's regional settings (not ISO 8601).
-        // US English SharePoint sites expect M/d/yyyy H:mm:ss (24-hour, InvariantCulture).
         if (modified.HasValue)
             formValues.Add(new { FieldName = "Modified", FieldValue = modified.Value.ToUniversalTime().ToString("M/d/yyyy H:mm:ss", System.Globalization.CultureInfo.InvariantCulture) });
         if (created.HasValue)
             formValues.Add(new { FieldName = "Created",  FieldValue = created.Value.ToUniversalTime().ToString("M/d/yyyy H:mm:ss", System.Globalization.CultureInfo.InvariantCulture) });
-        // Author/Editor via claims identity — same call, no new version side-effect
         if (!string.IsNullOrEmpty(modifiedByEmail))
             formValues.Add(new { FieldName = "Editor", FieldValue = $"i:0#.f|membership|{modifiedByEmail}" });
         if (!string.IsNullOrEmpty(createdByEmail))
@@ -308,20 +270,18 @@ public class SharePointService
 
         try
         {
-            // SharePoint REST API requires a SharePoint-scoped token, not the Graph token.
             var token = await _authService.GetSharePointTokenAsync(siteUrl);
             var url   = $"{siteUrl}/_api/web/lists('{listId}')/items({listItemId})/ValidateUpdateListItem()";
             using var req = new HttpRequestMessage(HttpMethod.Post, url)
             {
                 Content = new System.Net.Http.StringContent(
-                    System.Text.Json.JsonSerializer.Serialize(new { formValues, bNewDocumentUpdate = true }),
+                    JsonSerializer.Serialize(new { formValues, bNewDocumentUpdate = true }),
                     System.Text.Encoding.UTF8, "application/json")
             };
             req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
             var response = await _httpClient.SendAsync(req);
             var body = await response.Content.ReadAsStringAsync();
-            System.Diagnostics.Debug.WriteLine($"ValidateUpdateListItem {(int)response.StatusCode}: {body}");
 
             if (!response.IsSuccessStatusCode)
             {
@@ -329,11 +289,9 @@ public class SharePointService
                 return $"ValidateUpdateListItem HTTP {(int)response.StatusCode}: {preview}";
             }
 
-            // HTTP 200 OK — but ValidateUpdateListItem returns per-field error codes in the body.
-            // A 200 response does NOT mean every field was updated; check each field's HasException.
             try
             {
-                using var doc = System.Text.Json.JsonDocument.Parse(body);
+                using var doc = JsonDocument.Parse(body);
                 if (doc.RootElement.TryGetProperty("value", out var arr))
                 {
                     var fieldErrors = new List<string>();
@@ -343,8 +301,8 @@ public class SharePointService
                         int  ec    = field.TryGetProperty("ErrorCode",    out var ecEl) ? ecEl.GetInt32() : 0;
                         if (hasEx || ec != 0)
                         {
-                            var fn = field.TryGetProperty("FieldName",     out var fnEl) ? fnEl.GetString() ?? "" : "";
-                            var em = field.TryGetProperty("ErrorMessage",  out var emEl) ? emEl.GetString() ?? "" : "";
+                            var fn = field.TryGetProperty("FieldName",    out var fnEl) ? fnEl.GetString() ?? "" : "";
+                            var em = field.TryGetProperty("ErrorMessage", out var emEl) ? emEl.GetString() ?? "" : "";
                             fieldErrors.Add($"{fn}: {em} (code {ec})");
                         }
                     }
@@ -352,53 +310,36 @@ public class SharePointService
                         return $"Field errors: {string.Join("; ", fieldErrors)}";
                 }
             }
-            catch { /* JSON parse failure — treat body as success */ }
+            catch { }
 
-            return null; // all fields updated successfully
+            return null;
         }
         catch (Exception ex)
         {
-            var msg = $"ValidateUpdateListItem exception: {ex.Message}";
-            System.Diagnostics.Debug.WriteLine(msg);
-            return msg;
+            return $"ValidateUpdateListItem exception: {ex.Message}";
         }
     }
 
-    // Returns null on success, or an error string describing what failed.
     public async Task<string?> ApplyFileMetadataAsync(
         string driveId, string itemId, string siteId, FileMetadata metadata)
     {
-        System.Diagnostics.Debug.WriteLine($"ApplyFileMetadata: itemId={itemId} createdBy={metadata.CreatedByEmail} modifiedBy={metadata.ModifiedByEmail} created={metadata.CreatedDateTime} modified={metadata.ModifiedDateTime}");
-        // ValidateUpdateListItem sets all four fields (Modified, Created, Editor, Author)
-        // atomically without creating a new version. Author/Editor are set via claims identity
-        // (i:0#.f|membership|email), confirmed working from debug output.
-        // The previous listItem/fields PATCH and fileSystemInfo fallback are removed — both
-        // could trigger a version bump in versioned libraries, causing phantom versions.
         return await PatchTimestampsViaRestAsync(driveId, itemId,
             metadata.ModifiedDateTime, metadata.CreatedDateTime,
             metadata.CreatedByEmail, metadata.ModifiedByEmail);
     }
 
-    // Returns the drive item version ID of the current (newest) version.
-    // Used to record which version to delete after a fileSystemInfo PATCH creates a phantom.
     public async Task<string?> GetCurrentVersionIdAsync(string driveId, string itemId)
     {
         try
         {
             var page = await Graph.Drives[driveId].Items[itemId].Versions.GetAsync();
-            // Graph returns versions newest-first; first entry is the current version.
             return page?.Value?.FirstOrDefault()?.Id;
         }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"GetCurrentVersionId exception: {ex.Message}");
-            return null;
-        }
+        catch { return null; }
     }
 
-    // Patches driveItem.fileSystemInfo.lastModifiedDateTime, which creates a new version in a
-    // versioned library and is the field SharePoint actually displays in version history.
-    // (The listItem.Modified field — set by ValidateUpdateListItem — is NOT shown in version history.)
+    // Patches fileSystemInfo.lastModifiedDateTime — the field shown in SharePoint version history.
+    // Always creates a phantom version in a versioned library.
     public async Task<string?> PatchFileSystemDateAsync(string driveId, string itemId,
         DateTimeOffset lastModifiedDateTime, DateTimeOffset? createdDateTime = null)
     {
@@ -412,31 +353,335 @@ public class SharePointService
                     CreatedDateTime      = createdDateTime
                 }
             });
-            System.Diagnostics.Debug.WriteLine($"PatchFileSystemDate: modified={lastModifiedDateTime:o} created={createdDateTime:o} on {itemId}");
             return null;
         }
         catch (Exception ex)
         {
-            var msg = $"PatchFileSystemDate exception: {ex.Message}";
-            System.Diagnostics.Debug.WriteLine(msg);
-            return msg;
+            return $"PatchFileSystemDate exception: {ex.Message}";
         }
     }
 
-    // Deletes a specific historical drive item version.
     public async Task<string?> DeleteItemVersionAsync(string driveId, string itemId, string versionId)
     {
         try
         {
             await Graph.Drives[driveId].Items[itemId].Versions[versionId].DeleteAsync();
-            System.Diagnostics.Debug.WriteLine($"DeleteItemVersion: {versionId} on {itemId}");
             return null;
         }
         catch (Exception ex)
         {
-            var msg = $"DeleteItemVersion exception: {ex.Message}";
-            System.Diagnostics.Debug.WriteLine(msg);
-            return msg;
+            return $"DeleteItemVersion exception: {ex.Message}";
+        }
+    }
+
+    // ── Migration API helpers ─────────────────────────────────────────────────
+
+    // Calls /_api/site/ProvisionMigrationContainers on the target site.
+    // Returns (dataContainerUri, metadataContainerUri, encryptionKey).
+    public async Task<(string dataUri, string metadataUri, byte[] encryptionKey)>
+        ProvisionMigrationContainersAsync(string siteUrl)
+    {
+        var token = await _authService.GetSharePointTokenAsync(siteUrl);
+        var url = $"{siteUrl.TrimEnd('/')}/_api/site/ProvisionMigrationContainers";
+        using var req = new HttpRequestMessage(HttpMethod.Post, url);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+        req.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
+
+        var response = await _httpClient.SendAsync(req);
+        var body = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+            throw new Exception($"ProvisionMigrationContainers HTTP {(int)response.StatusCode}: {body}");
+
+        using var doc = JsonDocument.Parse(body);
+        var root = doc.RootElement;
+        var dataUri     = root.GetProperty("DataContainerUri").GetString()!;
+        var metadataUri = root.GetProperty("MetadataContainerUri").GetString()!;
+        var keyBase64   = root.GetProperty("EncryptionKey").GetString()!;
+        return (dataUri, metadataUri, Convert.FromBase64String(keyBase64));
+    }
+
+    // Returns the signed-in user's display name, email, and IsSiteAdmin flag for siteUrl.
+    public async Task<(string title, string email, bool isSiteAdmin)> GetCurrentUserInfoAsync(string siteUrl)
+    {
+        var token = await _authService.GetSharePointTokenAsync(siteUrl, "AllSites.FullControl");
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/currentuser?$select=Title,Email,LoginName,IsSiteAdmin";
+        using var req = new HttpRequestMessage(HttpMethod.Get, url);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+
+        var response = await _httpClient.SendAsync(req);
+        if (!response.IsSuccessStatusCode)
+            return ("(unknown)", "(HTTP error)", false);
+
+        var body = await response.Content.ReadAsStringAsync();
+        using var doc = JsonDocument.Parse(body);
+        var root = doc.RootElement;
+        var title   = root.TryGetProperty("Title",      out var t) ? t.GetString() ?? "" : "";
+        var email   = root.TryGetProperty("Email",      out var e) ? e.GetString() ?? "" : "";
+        var login   = root.TryGetProperty("LoginName",  out var l) ? l.GetString() ?? "" : "";
+        var isAdmin = root.TryGetProperty("IsSiteAdmin", out var a) && a.GetBoolean();
+        return (title, string.IsNullOrEmpty(email) ? login : email, isAdmin);
+    }
+
+    // Returns (webId, serverRelativeUrl) for the root web of the given site URL.
+    public async Task<(string webId, string serverRelativeUrl)> GetWebInfoAsync(string siteUrl)
+    {
+        var token = await _authService.GetSharePointTokenAsync(siteUrl);
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web?$select=Id,ServerRelativeUrl";
+        using var req = new HttpRequestMessage(HttpMethod.Get, url);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+
+        var response = await _httpClient.SendAsync(req);
+        var body = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+            throw new Exception($"GetWebInfo HTTP {(int)response.StatusCode}: {body}");
+
+        using var doc = JsonDocument.Parse(body);
+        var webId  = doc.RootElement.GetProperty("Id").GetString()!;
+        var relUrl = doc.RootElement.GetProperty("ServerRelativeUrl").GetString()!;
+        return (webId, relUrl);
+    }
+
+    // Returns the GUID of a document library given its server-relative URL.
+    public async Task<string> GetListIdByServerRelativeUrlAsync(string siteUrl, string serverRelativeUrl)
+    {
+        var token = await _authService.GetSharePointTokenAsync(siteUrl);
+        var encodedUrl = Uri.EscapeDataString($"'{serverRelativeUrl}'");
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetList({encodedUrl})?$select=Id";
+        using var req = new HttpRequestMessage(HttpMethod.Get, url);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+
+        var response = await _httpClient.SendAsync(req);
+        var body = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+            throw new Exception($"GetListId HTTP {(int)response.StatusCode}: {body}");
+
+        using var doc = JsonDocument.Parse(body);
+        return doc.RootElement.GetProperty("Id").GetString()!;
+    }
+
+    // Gets the server-relative URL of a document library by fetching the drive's root item webUrl.
+    // More reliable than deriving it from drive.WebUrl which the Kiota SDK may not populate.
+    public async Task<string> GetLibraryServerRelativeUrlAsync(string driveId)
+    {
+        var root = await Graph.Drives[driveId].Root
+            .GetAsync(cfg => cfg.QueryParameters.Select = ["webUrl"]);
+        if (root?.WebUrl == null)
+            throw new InvalidOperationException($"Cannot determine library path for drive {driveId}.");
+        return Uri.UnescapeDataString(new Uri(root.WebUrl).AbsolutePath.TrimEnd('/'));
+    }
+
+    // Submits a migration job using SP-provided encrypted containers.
+    // Returns the job ID GUID.
+    //
+    // Uses raw CSOM ProcessQuery XML rather than the CSOM client library because
+    // the library's ExecutingWebRequest token injection is unreliable on .NET 8
+    // (compiled for .NET 4.0; HttpWebRequest behaviour changed under the compat layer).
+    public async Task<string> CreateMigrationJobEncryptedAsync(
+        string siteUrl, string gWebId,
+        string dataContainerUri, string metadataContainerUri,
+        byte[] encryptionKey)
+    {
+        // AllSites.FullControl is required: Sites.ReadWrite.All caps effective privilege below
+        // site-collection-admin level in SP's OAuth permission model, causing CreateMigrationJobEncrypted
+        // to reject even explicit SCAs.  The Azure AD app must have AllSites.FullControl delegated
+        // permission registered and admin-consented; the user will be prompted if not yet granted.
+        var token    = await _authService.GetSharePointTokenAsync(siteUrl, "AllSites.FullControl");
+        var keyB64   = Convert.ToBase64String(encryptionKey);
+
+        // Build the ProcessQuery XML.  EncryptionOption TypeId is {85614ad4-7a40-49e0-b272-6d1807dbfcc6}.
+        // AES256CBCKey is a byte[] serialised as Base64Binary.
+        // SP reads the per-blob IV from the first 16 bytes of each encrypted blob,
+        // so no IV is needed here — only the key.
+        var ns = System.Xml.Linq.XNamespace.Get("http://schemas.microsoft.com/sharepoint/clientquery/2009");
+        var requestXml = new System.Xml.Linq.XDocument(
+            new System.Xml.Linq.XElement(ns + "Request",
+                new System.Xml.Linq.XAttribute("SchemaVersion",   "15.0.0.0"),
+                new System.Xml.Linq.XAttribute("LibraryVersion",  "16.0.0.0"),
+                new System.Xml.Linq.XAttribute("ApplicationName", "SharePointSmartCopy"),
+                new System.Xml.Linq.XElement(ns + "Actions",
+                    new System.Xml.Linq.XElement(ns + "Method",
+                        new System.Xml.Linq.XAttribute("Name",         "CreateMigrationJobEncrypted"),
+                        new System.Xml.Linq.XAttribute("Id",           "1"),
+                        new System.Xml.Linq.XAttribute("ObjectPathId", "2"),
+                        new System.Xml.Linq.XElement(ns + "Parameters",
+                            new System.Xml.Linq.XElement(ns + "Parameter",
+                                new System.Xml.Linq.XAttribute("Type", "Guid"), gWebId),
+                            new System.Xml.Linq.XElement(ns + "Parameter",
+                                new System.Xml.Linq.XAttribute("Type", "String"), dataContainerUri),
+                            new System.Xml.Linq.XElement(ns + "Parameter",
+                                new System.Xml.Linq.XAttribute("Type", "String"), metadataContainerUri),
+                            new System.Xml.Linq.XElement(ns + "Parameter",
+                                new System.Xml.Linq.XAttribute("Type", "String"), ""),
+                            new System.Xml.Linq.XElement(ns + "Parameter",
+                                new System.Xml.Linq.XAttribute("TypeId", "{85614ad4-7a40-49e0-b272-6d1807dbfcc6}"),
+                                new System.Xml.Linq.XElement(ns + "Property",
+                                    new System.Xml.Linq.XAttribute("Name", "AES256CBCKey"),
+                                    new System.Xml.Linq.XAttribute("Type", "Base64Binary"),
+                                    keyB64))))),
+                new System.Xml.Linq.XElement(ns + "ObjectPaths",
+                    new System.Xml.Linq.XElement(ns + "Property",
+                        new System.Xml.Linq.XAttribute("Id",       "2"),
+                        new System.Xml.Linq.XAttribute("ParentId", "0"),
+                        new System.Xml.Linq.XAttribute("Name",     "Site")),
+                    new System.Xml.Linq.XElement(ns + "StaticProperty",
+                        new System.Xml.Linq.XAttribute("Id",     "0"),
+                        new System.Xml.Linq.XAttribute("TypeId", "{3747adcd-a3c3-41b9-bfab-4a64dd2f1e0a}"),
+                        new System.Xml.Linq.XAttribute("Name",   "Current")))));
+
+        var xmlBody = requestXml.ToString(System.Xml.Linq.SaveOptions.DisableFormatting);
+        var url     = $"{siteUrl.TrimEnd('/')}/_vti_bin/client.svc/ProcessQuery";
+
+        using var req = new HttpRequestMessage(HttpMethod.Post, url)
+        {
+            Content = new StringContent(xmlBody, System.Text.Encoding.UTF8, "text/xml")
+        };
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+
+        var response = await _httpClient.SendAsync(req);
+        var body     = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+            throw new Exception($"CreateMigrationJobEncrypted HTTP {(int)response.StatusCode}: {body}");
+
+        // ProcessQuery returns a JSON array.  Index 0 is the header with ErrorInfo.
+        // On success the job GUID appears as a bare string element later in the array.
+        using var doc = JsonDocument.Parse(body);
+        var arr = doc.RootElement;
+
+        if (arr.GetArrayLength() > 0 &&
+            arr[0].TryGetProperty("ErrorInfo", out var errInfo) &&
+            errInfo.ValueKind != JsonValueKind.Null)
+        {
+            var msg = errInfo.TryGetProperty("ErrorMessage", out var m) ? m.GetString() : "Unknown CSOM error";
+            var code = errInfo.TryGetProperty("ErrorCode", out var c) ? c.GetInt32() : 0;
+            if (code == -2147024891) // E_ACCESSDENIED
+            {
+                var (uTitle, uEmail, uIsAdmin) = await GetCurrentUserInfoAsync(siteUrl);
+                throw new UnauthorizedAccessException(
+                    $"The Migration API requires explicit Site Collection Administrator membership on {siteUrl}.\n\n" +
+                    $"SP sees you as: {uTitle} ({uEmail}), IsSiteAdmin={uIsAdmin}\n\n" +
+                    "Note: Global Admin / SharePoint Admin does not automatically populate this list.\n" +
+                    "Fix: go to the target site → Site Settings → Site Collection Administrators → add your account.",
+                    new Exception(msg));
+            }
+            throw new Exception($"CreateMigrationJobEncrypted CSOM error {code}: {msg}");
+        }
+
+        for (int i = 1; i < arr.GetArrayLength(); i++)
+        {
+            var el = arr[i];
+            if (el.ValueKind != JsonValueKind.String) continue;
+            var s = el.GetString() ?? "";
+            // CSOM returns Guids as "\/Guid(xxxxxxxx-...)\/"; also handle bare GUIDs.
+            if (s.StartsWith("/Guid(", StringComparison.OrdinalIgnoreCase) && s.EndsWith(")/"))
+                s = s[6..^2];
+            if (Guid.TryParse(s, out var g))
+                return g.ToString("D");
+        }
+
+        throw new Exception($"Could not find job ID GUID in ProcessQuery response: {body[..Math.Min(body.Length, 500)]}");
+    }
+
+    // Polls the migration job using the paging-based GetMigrationJobProgress endpoint.
+    // Yields each event JSON string. Caller should stop when a JobEnd event is received.
+    public async IAsyncEnumerable<JsonElement> PollMigrationJobAsync(
+        string siteUrl, string jobId, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var token = await _authService.GetSharePointTokenAsync(siteUrl);
+        int nextToken = 0;
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
+
+            // Guid parameters in SP REST require the guid'...' syntax, not just '...'.
+            // AllSites.FullControl is needed — the same reason CreateMigrationJobEncrypted needs it.
+            var url = $"{siteUrl.TrimEnd('/')}/_api/site/GetMigrationJobProgress(jobId=guid'{jobId}',nextToken={nextToken})";
+            using var req = new HttpRequestMessage(HttpMethod.Get, url);
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer",
+                await _authService.GetSharePointTokenAsync(siteUrl, "AllSites.FullControl", cancellationToken));
+            req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+
+            HttpResponseMessage response;
+            try
+            {
+                response = await _httpClient.SendAsync(req, cancellationToken);
+            }
+            catch (TaskCanceledException) { yield break; }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var err = await response.Content.ReadAsStringAsync(cancellationToken);
+                throw new Exception($"GetMigrationJobProgress HTTP {(int)response.StatusCode}: {err[..Math.Min(err.Length, 300)]}");
+            }
+
+            var body = await response.Content.ReadAsStringAsync(cancellationToken);
+            System.Diagnostics.Debug.WriteLine($"[Poll] raw response ({body.Length} bytes): {body[..Math.Min(body.Length, 3000)]}");
+            JsonDocument doc;
+            try { doc = JsonDocument.Parse(body); }
+            catch { continue; }
+
+            bool hitJobEnd = false;
+            using (doc)
+            {
+                // SP GetMigrationJobProgress returns { "Logs": [...], "nextToken": N }
+                // where each element of Logs is a JSON-encoded string (not an object).
+                // Some older docs describe "value" or a bare array — handle all variants.
+                JsonElement arr = default;
+                if (doc.RootElement.ValueKind == JsonValueKind.Array)
+                    arr = doc.RootElement;
+                else if (doc.RootElement.TryGetProperty("Logs", out var logs))
+                    arr = logs;
+                else if (doc.RootElement.TryGetProperty("value", out var v))
+                    arr = v;
+
+                if (arr.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var rawEvt in arr.EnumerateArray())
+                    {
+                        JsonElement evtObj;
+                        if (rawEvt.ValueKind == JsonValueKind.String)
+                        {
+                            try
+                            {
+                                using var inner = JsonDocument.Parse(rawEvt.GetString()!);
+                                evtObj = inner.RootElement.Clone();
+                            }
+                            catch { continue; }
+                        }
+                        else if (rawEvt.ValueKind == JsonValueKind.Object)
+                            evtObj = rawEvt.Clone();
+                        else
+                            continue;
+
+                        if (!evtObj.TryGetProperty("Event", out var evtName)) continue;
+                        yield return evtObj;
+                        if (evtName.GetString() == "JobEnd")
+                        {
+                            hitJobEnd = true;
+                            break;
+                        }
+                    }
+                }
+
+                // nextToken may be a string or number, and may be null
+                if (doc.RootElement.TryGetProperty("nextToken", out var nt))
+                {
+                    if (nt.ValueKind == JsonValueKind.Number) nextToken = nt.GetInt32();
+                    else if (nt.ValueKind == JsonValueKind.String && int.TryParse(nt.GetString(), out var p)) nextToken = p;
+                }
+                else if (doc.RootElement.TryGetProperty("NextToken", out var nt2))
+                {
+                    if (nt2.ValueKind == JsonValueKind.Number) nextToken = nt2.GetInt32();
+                    else if (nt2.ValueKind == JsonValueKind.String && int.TryParse(nt2.GetString(), out var p2)) nextToken = p2;
+                }
+            }
+
+            if (hitJobEnd) yield break;
         }
     }
 
@@ -450,10 +695,7 @@ public class SharePointService
                 .ItemWithPath(Uri.EscapeDataString(fileName)).GetAsync();
             return true;
         }
-        catch
-        {
-            return false;
-        }
+        catch { return false; }
     }
 
     public async Task<string> UploadFileAsync(
@@ -466,7 +708,6 @@ public class SharePointService
     {
         content.Position = 0;
         long size = content.Length;
-
         var conflictBehavior = overwrite ? "replace" : "fail";
 
         if (size < 4 * 1024 * 1024)
@@ -477,12 +718,6 @@ public class SharePointService
             return item?.Id ?? string.Empty;
         }
 
-        // Large-file upload session.
-        // NOTE: SharePoint supports fileSystemInfo in the session body only for NEW file uploads,
-        // not for replacement uploads (conflictBehavior:"replace" on an existing file). Attempting
-        // to set it on a replacement session returns 200 OK with an upload URL that responds 404
-        // ("session not found") on the first chunk PUT. Dates must be fixed post-upload via
-        // PatchFileSystemDateAsync instead.
         var sessionBody = new Microsoft.Graph.Drives.Item.Items.Item.CreateUploadSession.CreateUploadSessionPostRequestBody
         {
             Item = new DriveItemUploadableProperties
@@ -518,9 +753,7 @@ public class SharePointService
     {
         var current = parentItemId;
         foreach (var part in relativePath.Split('/').Where(p => !string.IsNullOrEmpty(p)))
-        {
             current = await GetOrCreateFolderAsync(driveId, current, part);
-        }
         return current;
     }
 
@@ -545,7 +778,6 @@ public class SharePointService
             }
             catch (Microsoft.Graph.Models.ODataErrors.ODataError conflict) when (conflict.ResponseStatusCode == 409)
             {
-                // Another parallel copy task created the folder first — fetch it
                 var existing = await Graph.Drives[driveId].Items[parentItemId]
                     .ItemWithPath(Uri.EscapeDataString(folderName)).GetAsync();
                 return existing?.Id ?? throw new Exception("Null ID after concurrent folder creation.");

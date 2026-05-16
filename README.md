@@ -1,177 +1,138 @@
 # SharePoint Smart Copy
 
-A Windows desktop application for copying files and folders between SharePoint site collections, with full version history support and metadata preservation.
-
----
-
-## Overview
-
-SharePoint Smart Copy uses the Microsoft Graph API to migrate content between any two SharePoint Online site collections you have access to. It walks you through the process in six guided steps, preserves file metadata (created/modified dates and authors), and generates a detailed report when finished.
-
----
+A WPF .NET 8 desktop application that copies files with full version history between SharePoint Online site collections.
 
 ## Features
 
-- **Cross-site-collection copies** — copy between any two SharePoint sites in the same or different tenants
-- **Hierarchical selection** — browse document libraries, expand folders, and check exactly what to copy; checking a folder selects all its contents recursively
-- **File version history** — optionally copies all previous versions oldest-first so version history builds naturally in the target
-- **Version limit** — copy only the N most recent versions instead of the full history
-- **Metadata preservation** — Created By, Created Date, Modified By, and Modified Date are applied to each file and folder
-- **Overwrite control** — skip existing files or overwrite them
-- **Parallel transfers** — configurable 1–16 parallel copies for throughput tuning
-- **Live progress** — real-time file status list with elapsed time counter and progress bar
-- **Copy report** — per-file success/fail/skipped summary with source and target paths and version counts
-- **CSV export** — export any report to CSV for sharing or archiving
-- **Copy History** — every run is saved locally; browse previous runs, view per-file detail, and export or delete entries
-- **Multiple Azure AD registrations** — store and switch between multiple app registrations (useful for multi-tenant work)
-- **Credential reuse** — starting a new copy reuses the existing authentication token; no extra sign-in required
+- **Migration API mode** — exact version numbers, dates, and Modified By per version in history (uses SharePoint's built-in Migration API)
+- **Enhanced REST mode** — correct dates and editors per version; version count is 2× source due to SP REST limitations
+- Configurable max-versions limit per copy run
+- Run history with CSV export
 
----
+## Prerequisites
 
-## Installation
+- Windows 10/11
+- .NET 8 Desktop Runtime
+- A Microsoft 365 tenant with SharePoint Online
+- An Azure AD (Entra ID) app registration (see setup below)
 
-1. Go to the [Releases](https://github.com/sregan1/SharePointSmartCopy/releases/latest) page and download `SharePointSmartCopy-vX.X.X.zip`
-2. Extract the zip to a folder of your choice (e.g. `C:\Tools\SharePointSmartCopy`)
-3. Run `SharePointSmartCopy.exe` from that folder
+## Azure AD App Registration
 
-No .NET installation required — the runtime is bundled in the zip.
+### 1. Register the app
 
-> **Note:** Because the executable is not code-signed, Windows may show a SmartScreen warning on first run. Click **More info → Run anyway** to proceed.
+1. Go to [Entra ID](https://entra.microsoft.com) → **App registrations** → **New registration**
+2. Name: `SharePoint Smart Copy` (or similar)
+3. Supported account types: **Single tenant** (your org only) or Multitenant as needed
+4. Redirect URI: **Public client/native** → `http://localhost`
+5. Click **Register**
+6. Copy the **Application (client) ID** and **Directory (tenant) ID** — you will enter these in the app's Settings dialog
 
----
+### 2. Add API permissions
 
-## Requirements
+Go to **API permissions** → **Add a permission**:
 
-- Windows 10 or 11
-- An Azure AD app registration with:
-  - **Sites.ReadWrite.All** (delegated)
-  - **Files.ReadWrite.All** (delegated)
-  - Admin consent granted
-- Read access to the source site collection
-- Write access to the target site collection
+| API | Type | Permission | Purpose |
+|-----|------|-----------|---------|
+| Microsoft Graph | Delegated | `Sites.ReadWrite.All` | Browse and read SharePoint sites/files via Graph |
+| Microsoft Graph | Delegated | `Files.ReadWrite.All` | Upload/download file content via Graph |
+| SharePoint | Delegated | `AllSites.FullControl` | Required by the Migration API to submit migration jobs; also allows correct `IsSiteAdmin` evaluation in the OAuth context |
 
----
+> **Why `AllSites.FullControl`?**
+> SharePoint's Migration API (`CreateMigrationJobEncrypted`) performs a server-side site-collection-administrator check.
+> With only `Sites.ReadWrite.All`, SharePoint caps the effective OAuth privilege below site-collection-admin level — meaning even a user who is explicitly a Primary Site Admin will be rejected.
+> `AllSites.FullControl` raises the OAuth context to full control so SP recognises the user's actual admin status.
 
-## Setup
+### 3. Grant admin consent
 
-1. Register an application in the [Azure portal](https://portal.azure.com) under **Azure Active Directory → App registrations**
-2. Under **Authentication → Add a platform → Mobile and desktop applications**, add redirect URI `http://localhost`
-3. Add the delegated permissions **Sites.ReadWrite.All** and **Files.ReadWrite.All** and grant admin consent
-4. Open SharePoint Smart Copy and click **⚙ Settings**
-5. Click **Add**, give the registration a name, and paste in your **Client ID** and **Tenant ID**
-6. Click **Save**
+After adding the permissions, click **Grant admin consent for [your organization]** at the top of the API permissions list.
+This pre-authorises the permissions org-wide so users are never prompted for individual consent.
 
----
+Without admin consent, users will see an interactive consent dialog on first use.
+As a Global Admin you can also check **"Consent on behalf of your organization"** in that dialog, which has the same effect.
 
-## Step-by-Step Usage
+### 4. Target site permissions
 
-### Step 1 — Connect to Source
+The account running the copy must be a **Site Collection Administrator** on the **target** site:
 
-Enter the URL of the SharePoint site you want to copy *from* and click **Connect**. The app authenticates via your browser (first run) or silently reuses a cached token on subsequent runs. When connected, your signed-in account is shown.
+> Site Settings → Site Collection Administrators → add your account
 
-![Step 1 – Source](SharePointSmartCopy/Docs/screenshots/01_source_connected.png)
+Being a Global Admin or SharePoint Admin grants effective access to all sites but does **not** automatically populate the Site Collection Administrators list for a specific site. You must add the account explicitly.
 
----
+## Configuration
 
-### Step 2 — Browse & Select
+Launch the app and open **Settings** (gear icon):
 
-Expand document libraries and check the files and folders you want to copy. Checking a folder selects all its contents. Size information is shown next to each item. Use **Select All** / **Deselect All** for bulk selection.
+- **Client ID** — Application (client) ID from the app registration
+- **Tenant ID** — Directory (tenant) ID (leave blank for multi-tenant)
+- **Source URL** — Root URL of the source SharePoint site (e.g. `https://tenant.sharepoint.com/sites/Source`)
+- **Target URL** — Root URL of the target SharePoint site
+- **Copy mode** — Migration API (exact version history) or Enhanced REST (correct metadata, 2× version count)
+- **Max versions** — Maximum number of file versions to copy per file (0 = all)
 
-![Step 2 – Browse](SharePointSmartCopy/Docs/screenshots/02_browse.png)
+## Copy Modes
 
----
+### When to use each mode
 
-### Step 3 — Connect to Target
-
-Enter the URL of the destination SharePoint site and click **Connect to Target**. Once connected, the library tree on the right populates. Click any library or folder to choose it as the copy destination — the selected path appears in the blue banner at the top of the tree.
-
-![Step 3 – Target](SharePointSmartCopy/Docs/screenshots/03_target_connected.png)
-
----
-
-### Step 4 — Copy Options
-
-Configure how the copy runs before starting:
-
-| Option | Description |
+| Scenario | Recommended mode |
 |---|---|
-| **Overwrite existing files** | Replace files that already exist in the target. When unchecked, existing files are skipped. |
-| **Copy versions** | Upload the full version history, oldest-first, so history builds naturally in the target. |
-| **Copy all versions** | When version copy is enabled, copies every version. Uncheck to limit to N most recent. |
-| **Latest N versions** | Active when "Copy all versions" is unchecked — copies only the N most recent versions. |
-| **Version strategy** | Controls how per-version metadata is handled (see below). |
-| **Parallel copies** | Number of simultaneous file transfers (1–16). Higher values are faster but may throttle on large sites. |
+| Large batch (50+ files or 200+ versions) | Migration API |
+| Full version history fidelity required | Migration API |
+| Small batch or a quick one-off copy | Enhanced REST |
+| Copying current version only (no history) | Enhanced REST |
+| User lacks Site Collection Admin rights | Enhanced REST |
+| Need to see per-file progress in real time | Enhanced REST |
 
-**Version strategy** (visible when Copy versions is on):
+---
 
-| Strategy | Behaviour |
+### Migration API
+
+Uses SharePoint's built-in [Migration API](https://learn.microsoft.com/en-us/sharepoint/dev/apis/migration-api-overview). Files are packaged client-side, uploaded to SP-provisioned Azure Blob containers, then imported server-side by SharePoint.
+
+**Advantages**
+- Version numbers on target exactly match source (1.0, 2.0, 3.0, …)
+- Modified By and Modified date correct per version in history
+- Author and Created date preserved on the file
+- Bypasses per-item throttling — SP processes the batch as a single job, not thousands of individual API calls
+- Scales well: 500 files with 10 versions each has roughly the same client-side overhead as 50 files
+
+**Limitations**
+- Minimum ~1–2 minutes of overhead per run regardless of file count (container provisioning, manifest packaging, blob upload, SP processing)
+- No per-file progress during SP's processing phase — results appear only after the full job completes
+- Error reporting is at the job level; individual file failures may have limited detail
+- Requires elevated permissions (see below)
+
+**Required permissions for Migration API**
+
+| Requirement | Where to configure |
 |---|---|
-| **Preserve metadata for every version** | Every version in the target shows the source's original Modified date and author. Version numbers will be non-sequential (e.g. 2, 4, 6) due to a SharePoint API constraint. |
-| **Keep version numbers sequential** | Versions are numbered 1, 2, 3… with no gaps. Only the latest version's metadata (date and author) is synced; intermediate versions show the copy date in version history. |
+| `AllSites.FullControl` delegated permission on the SharePoint API | Azure AD app registration → API permissions (see [Azure AD App Registration](#azure-ad-app-registration)) |
+| Site Collection Administrator on the **target** site | Site Settings → Site Collection Administrators |
 
-The **Copy Preview** table on the right lists every top-level item that will be copied and its destination.
-
-![Step 4 – Options](SharePointSmartCopy/Docs/screenshots/04_options_versions.png)
+> SP's Migration API performs a server-side site-collection-administrator check on every job submission. Standard `Sites.ReadWrite.All` is not sufficient — even a user who is explicitly a Site Admin will be rejected unless the OAuth context carries `AllSites.FullControl`. The account also needs to appear in the Site Collection Administrators list on the target site, not just have a SharePoint Admin role at the tenant level.
 
 ---
 
-### Step 5 — Copy in Progress
+### Enhanced REST
 
-Click **Start Copy** to begin. The progress bar and file counter update in real time, along with an elapsed-time display. A scrollable table shows the status of each file as it completes. Click **Cancel** to stop mid-run; already-copied files remain in the target.
+Uses the SharePoint REST and Microsoft Graph APIs directly. Each file version is uploaded individually, with metadata and timestamps patched immediately after.
 
-![Step 5 – Copying](SharePointSmartCopy/Docs/screenshots/05_copying.png)
+**Advantages**
+- Results appear per file as each one completes — you see progress in real time
+- Low overhead for small batches: a 5-file copy completes in seconds
+- No elevated permissions required beyond standard contributor access
+- Per-file error messages are clear and immediate
 
----
+**Limitations**
+- Version numbers are 2× the source count (e.g. versions 2, 4, 6 for a 3-version source file) — a SharePoint REST constraint; the correct dates and editors are still preserved
+- Subject to SharePoint throttling (HTTP 429) on large batches with high parallelism
+- Slower than Migration API for large migrations with many versions
 
-### Step 6 — Copy Report
+## NuGet Packages
 
-When the copy finishes, click **View Report** to see the final summary. Color-coded stat cards show the count of succeeded, failed, and skipped files, alongside the total duration. The file table below lists every file with its source path, target path, status, and version count. Use **Export CSV** to save the report, or **Start New Copy** to begin another transfer without re-authenticating.
-
-![Step 6 – Report](SharePointSmartCopy/Docs/screenshots/06_report.png)
-
----
-
-## Settings — Azure App Registrations
-
-Click **⚙ Settings** from any screen to manage Azure AD app registrations. You can store multiple registrations and switch between them. The active registration is used for all Graph API calls. Click **Sign Out** to clear the cached authentication token.
-
-![Settings](SharePointSmartCopy/Docs/screenshots/07_settings.png)
-
----
-
-## Copy History
-
-Click **📋 History** from any screen to view all previous runs. Select a run to see its summary cards (succeeded / failed / skipped) and the full per-file detail on the right. Use **Export CSV** to export that run's report, or **Delete Run** to remove it. History is capped at 50 entries; older runs are pruned automatically.
-
-![History](SharePointSmartCopy/Docs/screenshots/08_history_detail.png)
-
----
-
-## Technical Notes
-
-- All API calls go through Microsoft Graph v5 using delegated (user) permissions — no application-level secrets are stored
-- Authentication uses MSAL with a persistent token cache; interactive login is only required on first use
-- Version uploads proceed oldest-first; each intermediate version gets its original timestamp patched immediately after upload so the timeline is accurate
-- The current (latest) version is downloaded via the file content endpoint rather than the versions endpoint, which the Graph API blocks for the current version
-- Folder metadata (created/modified dates and authors) is applied after all file copies in that folder complete
-- Reports are saved as JSON files in `%AppData%\SharePointSmartCopy\Reports\`
-
----
-
-## Building from Source
-
-**Prerequisites:** [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8) and an Azure AD app registration (see Setup above).
-
-```bash
-cd SharePointSmartCopy
-dotnet restore
-dotnet run
-```
-
-Or open `SharePointSmartCopy.sln` in Visual Studio 2022 and press F5.
-
----
-
-## License
-
-[MIT](LICENSE)
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `Microsoft.Graph` | 5.x | Graph API client (site/file browsing, download, Enhanced REST upload) |
+| `Microsoft.Identity.Client` | 4.x | MSAL — interactive sign-in and token management |
+| `Azure.Storage.Blobs` | 12.x | Upload encrypted blobs to SP-provisioned containers (Migration API) |
+| `Microsoft.SharePointOnline.CSOM` | 16.x | `EncryptionOption` type used in Migration API package |
+| `CommunityToolkit.Mvvm` | 8.x | MVVM source generators for the WPF view models |

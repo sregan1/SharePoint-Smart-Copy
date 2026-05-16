@@ -1,4 +1,4 @@
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using SharePointSmartCopy.Dialogs;
@@ -17,17 +17,12 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = vm ?? new MainViewModel();
-
         ((System.Collections.ObjectModel.ObservableCollection<CopyResult>)VM.CopyResults)
             .CollectionChanged += ProgressList_CollectionChanged;
     }
 
-    // ── History dialog ────────────────────────────────────────────────────────
-
     private void HistoryButton_Click(object sender, RoutedEventArgs e)
-        => new Dialogs.HistoryDialog { Owner = this }.ShowDialog();
-
-    // ── Settings dialog ───────────────────────────────────────────────────────
+        => new HistoryDialog { Owner = this }.ShowDialog();
 
     private void SettingsButton_Click(object sender, RoutedEventArgs e)
     {
@@ -40,56 +35,40 @@ public partial class MainWindow : Window
         }
     }
 
-    // ── Source tree lazy loading ──────────────────────────────────────────────
-
     private async void SourceTreeItem_Expanded(object sender, RoutedEventArgs e)
     {
         if (sender is TreeViewItem tvi && tvi.DataContext is SharePointNode node)
-        {
-            e.Handled = true;
-            await VM.LoadNodeChildrenAsync(node);
-        }
+        { e.Handled = true; await VM.LoadNodeChildrenAsync(node); }
     }
 
     private void SourceNode_CheckChanged(object sender, RoutedEventArgs e)
         => VM.NextCommand.NotifyCanExecuteChanged();
 
     private void SelectAll_Click(object sender, RoutedEventArgs e)
-    {
-        VM.SelectAllSource(true);
-        VM.NextCommand.NotifyCanExecuteChanged();
-    }
+    { VM.SelectAllSource(true); VM.NextCommand.NotifyCanExecuteChanged(); }
 
     private void DeselectAll_Click(object sender, RoutedEventArgs e)
-    {
-        VM.SelectAllSource(false);
-        VM.NextCommand.NotifyCanExecuteChanged();
-    }
-
-    // ── Target tree lazy loading + selection ─────────────────────────────────
+    { VM.SelectAllSource(false); VM.NextCommand.NotifyCanExecuteChanged(); }
 
     private async void TargetTreeItem_Expanded(object sender, RoutedEventArgs e)
     {
         if (sender is TreeViewItem tvi && tvi.DataContext is SharePointNode node)
-        {
-            e.Handled = true;
-            await VM.LoadTargetNodeChildrenAsync(node);
-        }
+        { e.Handled = true; await VM.LoadTargetNodeChildrenAsync(node); }
     }
 
     private void TargetTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
-        if (e.NewValue is SharePointNode node)
-            VM.SelectedTargetFolder = node;
+        if (e.NewValue is SharePointNode node) VM.SelectedTargetFolder = node;
     }
 
-    // ── Progress list auto-scroll ─────────────────────────────────────────────
+    private void MigrationApiMode_Click(object sender, RoutedEventArgs e)
+        => VM.CopyMode = CopyMode.MigrationApi;
+
+    private void EnhancedRestMode_Click(object sender, RoutedEventArgs e)
+        => VM.CopyMode = CopyMode.EnhancedRest;
 
     private void ProgressList_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        // Defer the scroll so it runs after WPF finishes processing the CollectionChanged
-        // notification — calling ScrollIntoView synchronously inside CollectionChanged can
-        // cause the ItemContainerGenerator to see an inconsistent state.
         Dispatcher.BeginInvoke(() =>
         {
             if (ProgressList.Items.Count > 0)
@@ -97,11 +76,8 @@ public partial class MainWindow : Window
         }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
-    // ── Start new copy ────────────────────────────────────────────────────────
-
     private void StartNewCopy_Click(object sender, RoutedEventArgs e)
     {
-        // Reuse the existing AuthService so cached credentials survive into the new copy
         DataContext = new MainViewModel(VM.AuthService);
         ((System.Collections.ObjectModel.ObservableCollection<CopyResult>)VM.CopyResults)
             .CollectionChanged += ProgressList_CollectionChanged;

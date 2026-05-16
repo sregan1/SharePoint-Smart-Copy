@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace SharePointSmartCopy.Models;
 
@@ -45,6 +45,10 @@ public class SavedReport
     public int SkippedCount { get; set; }
     public int TotalCount { get; set; }
     public TimeSpan Duration { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public CopyMode CopyMode { get; set; }
+
     public List<SavedReportItem> Items { get; set; } = [];
 
     [JsonIgnore]
@@ -55,7 +59,7 @@ public class SavedReport
     {
         get
         {
-            if (Duration.TotalHours >= 1)  return $"{(int)Duration.TotalHours}h {Duration.Minutes}m {Duration.Seconds}s";
+            if (Duration.TotalHours >= 1)   return $"{(int)Duration.TotalHours}h {Duration.Minutes}m {Duration.Seconds}s";
             if (Duration.TotalMinutes >= 1) return $"{(int)Duration.TotalMinutes}m {Duration.Seconds}s";
             return $"{Duration.Seconds}s";
         }

@@ -1,4 +1,4 @@
-using Microsoft.Identity.Client;
+﻿using Microsoft.Identity.Client;
 using SharePointSmartCopy.Models;
 
 namespace SharePointSmartCopy.Services;
@@ -60,13 +60,15 @@ public class AuthService
 
     // Returns a token scoped for the SharePoint REST API (audience = tenant.sharepoint.com).
     // The Graph token from GetAccessTokenAsync cannot be used for /_api/ endpoints.
-    public async Task<string> GetSharePointTokenAsync(string siteUrl, CancellationToken cancellationToken = default)
+    // spScope: SharePoint-specific permission name, e.g. "Sites.ReadWrite.All" or "AllSites.FullControl".
+    // The Azure AD app must have the requested permission registered and admin-consented.
+    public async Task<string> GetSharePointTokenAsync(string siteUrl, string spScope = "Sites.ReadWrite.All", CancellationToken cancellationToken = default)
     {
         if (_app == null)
             throw new InvalidOperationException("Auth service not configured. Please sign in first.");
 
         var uri    = new Uri(siteUrl.TrimEnd('/'));
-        var scopes = new[] { $"{uri.Scheme}://{uri.Host}/Sites.ReadWrite.All" };
+        var scopes = new[] { $"{uri.Scheme}://{uri.Host}/{spScope}" };
 
         var accounts = await _app.GetAccountsAsync();
         var account  = accounts.FirstOrDefault();

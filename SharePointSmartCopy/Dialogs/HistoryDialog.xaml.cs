@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,24 +29,24 @@ public partial class HistoryDialog : Window
 
     private void ReportList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        var report = ReportList.SelectedItem as SavedReport;
+        var report     = ReportList.SelectedItem as SavedReport;
         bool hasSelection = report != null;
 
-        DeleteButton.IsEnabled = hasSelection;
-        ExportButton.IsEnabled = hasSelection;
+        DeleteButton.IsEnabled  = hasSelection;
+        ExportButton.IsEnabled  = hasSelection;
         SummaryCards.Visibility = hasSelection ? Visibility.Visible : Visibility.Collapsed;
 
         if (report == null)
         {
-            DetailHeader.Text = "Select a run to view details";
+            DetailHeader.Text      = "Select a run to view details";
             DetailGrid.ItemsSource = null;
             return;
         }
 
-        DetailHeader.Text = $"{report.DisplayDate}  —  {report.TotalCount} files  —  {report.DurationDisplay}";
-        SuccessCard.Text  = report.SuccessCount.ToString();
-        FailedCard.Text   = report.FailedCount.ToString();
-        SkippedCard.Text  = report.SkippedCount.ToString();
+        DetailHeader.Text      = $"{report.DisplayDate}  —  {report.TotalCount} files  —  {report.DurationDisplay}";
+        SuccessCard.Text       = report.SuccessCount.ToString();
+        FailedCard.Text        = report.FailedCount.ToString();
+        SkippedCard.Text       = report.SkippedCount.ToString();
         DetailGrid.ItemsSource = report.Items;
     }
 

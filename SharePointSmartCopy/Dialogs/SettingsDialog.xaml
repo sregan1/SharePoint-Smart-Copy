@@ -1,4 +1,4 @@
-<Window x:Class="SharePointSmartCopy.Dialogs.SettingsDialog"
+﻿<Window x:Class="SharePointSmartCopy.Dialogs.SettingsDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Azure App Registrations"
@@ -121,7 +121,7 @@
             <!-- Vertical divider -->
             <Rectangle Grid.Column="1" Width="1" Fill="#EDEBE9" HorizontalAlignment="Center"/>
 
-            <!-- Edit form — DataContext bound to selected list item -->
+            <!-- Edit form -->
             <Grid Grid.Column="2"
                   x:Name="EditForm"
                   DataContext="{Binding SelectedItem, ElementName=RegistrationList}">
