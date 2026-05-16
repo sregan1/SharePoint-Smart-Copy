@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -22,12 +22,12 @@ public partial class MainViewModel : ObservableObject
     {
         AuthService  = existingAuthService ?? new AuthService();
         SpService    = new SharePointService(AuthService);
-        _copyService = new CopyService(SpService);
+        var migrationJobService = new MigrationJobService(SpService);
+        _copyService = new CopyService(SpService, migrationJobService);
         Settings     = AppSettings.Load();
 
         if (Settings.IsConfigured)
         {
-            // Only configure (and reset auth) when creating a fresh service
             if (existingAuthService == null)
                 AuthService.Configure(Settings);
             SpService.Initialize();
@@ -35,6 +35,7 @@ public partial class MainViewModel : ObservableObject
 
         SourceUrl = Settings.SourceUrl;
         TargetUrl = Settings.TargetUrl;
+        CopyMode  = Settings.PreferredCopyMode;
     }
 
     // ── Settings ──────────────────────────────────────────────────────────────
@@ -80,7 +81,6 @@ public partial class MainViewModel : ObservableObject
         IsConnectingSource = true;
         try
         {
-            // Use silent auth when we already have a cached session (e.g. new copy reusing credentials)
             await AuthService.GetAccessTokenAsync(forceInteractive: !AuthService.IsAuthenticated, cancellationToken: ct);
             ct.ThrowIfCancellationRequested();
             SignedInUser = AuthService.UserName ?? string.Empty;
@@ -90,15 +90,11 @@ public partial class MainViewModel : ObservableObject
             SourceConnected = true;
             Settings.SourceUrl = SourceUrl.Trim();
             Settings.Save();
+            CurrentStep = 1;
+            _ = LoadLibrariesAsync();
         }
-        catch (OperationCanceledException)
-        {
-            SourceStatus = string.Empty;
-        }
-        catch (Exception ex)
-        {
-            SourceStatus = $"❌ {ex.Message}";
-        }
+        catch (OperationCanceledException) { SourceStatus = string.Empty; }
+        catch (Exception ex)              { SourceStatus = $"❌ {ex.Message}"; }
         finally
         {
             IsBusy             = false;
@@ -133,7 +129,7 @@ public partial class MainViewModel : ObservableObject
         StatusMessage = "Loading libraries…";
         try
         {
-            var libs = await SpService.GetLibrariesAsync(SourceSiteId);
+            var libs = await SpService.GetLibrariesAsync(SourceSiteId, SourceUrl.Trim());
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 SourceLibraries.Clear();
@@ -160,7 +156,7 @@ public partial class MainViewModel : ObservableObject
         node.IsLoading = true;
         try
         {
-            var children = await SpService.GetChildrenAsync(node.DriveId, node.Id, node.SiteId);
+            var children = await SpService.GetChildrenAsync(node.DriveId, node.Id, node.SiteId, node.SiteUrl);
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 node.Children.Clear();
@@ -223,7 +219,7 @@ public partial class MainViewModel : ObservableObject
         {
             TargetSiteId = await SpService.GetSiteIdAsync(TargetUrl.Trim());
             ct.ThrowIfCancellationRequested();
-            var libs = await SpService.GetLibrariesAsync(TargetSiteId);
+            var libs = await SpService.GetLibrariesAsync(TargetSiteId, TargetUrl.Trim());
             ct.ThrowIfCancellationRequested();
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
@@ -236,23 +232,14 @@ public partial class MainViewModel : ObservableObject
             Settings.TargetUrl = TargetUrl.Trim();
             Settings.Save();
 
-            // Pre-warm the SharePoint REST token so the consent dialog (if needed) happens
-            // here — on the UI thread, while the user is already waiting — rather than
-            // unexpectedly mid-copy on a background thread.
-            try { await AuthService.GetSharePointTokenAsync(TargetUrl.Trim(), ct); }
+            try { await AuthService.GetSharePointTokenAsync(TargetUrl.Trim(), cancellationToken: ct); }
             catch
             {
                 TargetStatus = "✅ Connected · Note: additional consent needed for metadata — reconnect to grant";
             }
         }
-        catch (OperationCanceledException)
-        {
-            TargetStatus = string.Empty;
-        }
-        catch (Exception ex)
-        {
-            TargetStatus = $"❌ {ex.Message}";
-        }
+        catch (OperationCanceledException) { TargetStatus = string.Empty; }
+        catch (Exception ex)              { TargetStatus = $"❌ {ex.Message}"; }
         finally
         {
             IsBusy             = false;
@@ -287,7 +274,7 @@ public partial class MainViewModel : ObservableObject
         node.IsLoading = true;
         try
         {
-            var children = await SpService.GetChildrenAsync(node.DriveId, node.Id, node.SiteId, foldersOnly: true);
+            var children = await SpService.GetChildrenAsync(node.DriveId, node.Id, node.SiteId, node.SiteUrl, foldersOnly: true);
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 node.Children.Clear();
@@ -309,32 +296,56 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool _copyAllVersions = true;
     [ObservableProperty] private int _maxVersions = 10;
     [ObservableProperty] private int _maxParallelCopies = 4;
-    // true  → preserve per-version metadata via PATCH+delete (version numbers become non-sequential)
-    // false → keep version numbers sequential, only the latest version's metadata is synced
-    [ObservableProperty] private bool _preserveVersionMetadata = true;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsMigrationApiMode))]
+    [NotifyPropertyChangedFor(nameof(IsEnhancedRestMode))]
+    private CopyMode _copyMode = CopyMode.MigrationApi;
     [ObservableProperty] private ObservableCollection<CopyJob> _copyJobs = [];
+
+    public bool IsMigrationApiMode  => CopyMode == CopyMode.MigrationApi;
+    public bool IsEnhancedRestMode  => CopyMode == CopyMode.EnhancedRest;
 
     public void BuildCopyJobs()
     {
         CopyJobs.Clear();
-
         if (SelectedTargetFolder == null) return;
+
+        // Find the library ancestor to get its server-relative URL for Migration API mode
+        var libraryNode = SelectedTargetFolder;
+        while (libraryNode.Parent != null)
+            libraryNode = libraryNode.Parent;
+
+        // Compute the subfolder path relative to the library root (empty if folder IS the library root)
+        var subFolderRelPath = libraryNode.ServerRelativePath != null && SelectedTargetFolder.ServerRelativePath != null
+            ? SelectedTargetFolder.ServerRelativePath
+                .Substring(libraryNode.ServerRelativePath.Length)
+                .Trim('/')
+            : string.Empty;
+
+        var sourceSiteUrl = SourceUrl.TrimEnd('/');
+        var targetSiteUrl = SelectedTargetFolder.SiteUrl.TrimEnd('/');
 
         foreach (var lib in SourceLibraries)
         {
             foreach (var node in lib.GetCheckedNodes())
             {
+                var targetDisplayPath = string.IsNullOrEmpty(subFolderRelPath)
+                    ? $"{targetSiteUrl}/{libraryNode.Name}/{node.Name}"
+                    : $"{targetSiteUrl}/{libraryNode.Name}/{subFolderRelPath}/{node.Name}";
+
                 var job = new CopyJob
                 {
-                    SourceDriveId      = node.DriveId,
-                    SourceItemId       = node.Id,
-                    SourceName         = node.Name,
-                    SourceDisplayPath  = BuildPath(node),
-                    TargetDriveId      = SelectedTargetFolder.DriveId,
-                    TargetParentItemId = SelectedTargetFolder.Id,
-                    TargetSiteId       = SelectedTargetFolder.SiteId,
-                    TargetDisplayPath  = node.Name,
-                    IsFolder           = node.Type != NodeType.File
+                    SourceDriveId                  = node.DriveId,
+                    SourceItemId                   = node.Id,
+                    SourceName                     = node.Name,
+                    SourceDisplayPath              = $"{sourceSiteUrl}/{BuildPath(node)}",
+                    TargetDriveId                  = SelectedTargetFolder.DriveId,
+                    TargetParentItemId             = SelectedTargetFolder.Id,
+                    TargetSiteId                   = SelectedTargetFolder.SiteId,
+                    TargetSiteUrl                  = SelectedTargetFolder.SiteUrl,
+                    TargetDisplayPath              = targetDisplayPath,
+                    TargetLibraryServerRelativeUrl = libraryNode.ServerRelativePath ?? string.Empty,
+                    IsFolder                       = node.Type != NodeType.File
                 };
                 CopyJobs.Add(job);
             }
@@ -373,7 +384,6 @@ public partial class MainViewModel : ObservableObject
         TotalProgress  = 0;
         _copyStartTime = DateTimeOffset.Now;
 
-        // Pre-populate results for file jobs (folder jobs add results dynamically)
         foreach (var job in CopyJobs.Where(j => !j.IsFolder))
         {
             CopyResults.Add(new CopyResult
@@ -396,7 +406,6 @@ public partial class MainViewModel : ObservableObject
             progressTimer.Tick += (_, _) => UpdateProgress();
             progressTimer.Start();
 
-            // 0 = all versions; positive number = copy only the N most recent
             int versionLimit = CopyVersions && !CopyAllVersions ? MaxVersions : 0;
             await _copyService.ExecuteAsync(
                 CopyJobs,
@@ -405,20 +414,14 @@ public partial class MainViewModel : ObservableObject
                 CopyVersions,
                 MaxParallelCopies,
                 versionLimit,
-                PreserveVersionMetadata,
+                CopyMode,
                 _copyCts.Token);
 
             progressTimer.Stop();
             UpdateProgress();
         }
-        catch (OperationCanceledException)
-        {
-            StatusMessage = "Copy cancelled.";
-        }
-        catch (Exception ex)
-        {
-            StatusMessage = $"Copy error: {ex.Message}";
-        }
+        catch (OperationCanceledException) { StatusMessage = "Copy cancelled."; }
+        catch (Exception ex)              { StatusMessage = $"Copy error: {ex.Message}"; }
         finally
         {
             IsCopying      = false;
@@ -499,6 +502,8 @@ public partial class MainViewModel : ObservableObject
                 CurrentStep = 3;
                 break;
             case 3 when CopyJobs.Count > 0:
+                Settings.PreferredCopyMode = CopyMode;
+                Settings.Save();
                 CurrentStep = 4;
                 _ = StartCopyAsync();
                 break;
@@ -522,10 +527,8 @@ public partial class MainViewModel : ObservableObject
 
     private static string FormatDuration(TimeSpan ts)
     {
-        if (ts.TotalHours >= 1)
-            return $"{(int)ts.TotalHours}h {ts.Minutes}m {ts.Seconds}s";
-        if (ts.TotalMinutes >= 1)
-            return $"{(int)ts.TotalMinutes}m {ts.Seconds}s";
+        if (ts.TotalHours >= 1)   return $"{(int)ts.TotalHours}h {ts.Minutes}m {ts.Seconds}s";
+        if (ts.TotalMinutes >= 1) return $"{(int)ts.TotalMinutes}m {ts.Seconds}s";
         return $"{ts.Seconds}s";
     }
 
@@ -544,6 +547,7 @@ public partial class MainViewModel : ObservableObject
                 FailedCount  = FailedCount,
                 SkippedCount = SkippedCount,
                 TotalCount   = TotalCount,
+                CopyMode     = CopyMode,
                 Items        = CopyResults.Select(r => new SavedReportItem
                 {
                     FileName       = r.FileName,
@@ -562,7 +566,7 @@ public partial class MainViewModel : ObservableObject
 
     private static string BuildPath(SharePointNode node)
     {
-        var parts = new List<string>();
+        var parts   = new List<string>();
         var current = (SharePointNode?)node;
         while (current != null)
         {

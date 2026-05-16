@@ -1,12 +1,11 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using SharePointSmartCopy.Models;
 
 namespace SharePointSmartCopy.Services;
 
-public class CopyService(SharePointService spService)
+public class CopyService(SharePointService spService, MigrationJobService migrationJobService)
 {
-    // Entry point: resolves jobs (expanding folder jobs) and runs copies in parallel.
     public async Task ExecuteAsync(
         IList<CopyJob> jobs,
         ObservableCollection<CopyResult> results,
@@ -14,13 +13,11 @@ public class CopyService(SharePointService spService)
         bool copyVersions,
         int maxParallel,
         int maxVersions,
-        bool preserveVersionMetadata,
+        CopyMode copyMode,
         CancellationToken cancellationToken)
     {
         var semaphore = new SemaphoreSlim(maxParallel, maxParallel);
-
-        // Expand folder jobs into individual file tasks
-        var allTasks = new List<(CopyJob job, CopyResult result)>();
+        var allTasks  = new List<(CopyJob job, CopyResult result)>();
 
         foreach (var job in jobs)
         {
@@ -31,13 +28,11 @@ public class CopyService(SharePointService spService)
             }
             else
             {
-                // Enumerate files under the folder; add results dynamically
                 await foreach (var (driveId, itemId, name, relativePath)
                     in spService.EnumerateFilesAsync(job.SourceDriveId, job.SourceItemId))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                     var fileDir = System.IO.Path.GetDirectoryName(relativePath)?.Replace('\\', '/') ?? string.Empty;
-                    // Recreate the selected folder at the target, then sub-folders beneath it
                     var targetSubFolder = string.IsNullOrEmpty(fileDir)
                         ? job.SourceName
                         : $"{job.SourceName}/{fileDir}";
@@ -50,8 +45,9 @@ public class CopyService(SharePointService spService)
                         TargetDriveId       = job.TargetDriveId,
                         TargetParentItemId  = job.TargetParentItemId,
                         TargetSiteId        = job.TargetSiteId,
+                        TargetSiteUrl       = job.TargetSiteUrl,
                         TargetSubFolderPath = targetSubFolder,
-                        TargetDisplayPath   = $"{targetSubFolder}/{name}",
+                        TargetDisplayPath   = $"{job.TargetDisplayPath}/{relativePath}",
                         IsFolder            = false
                     };
 
@@ -68,11 +64,18 @@ public class CopyService(SharePointService spService)
             }
         }
 
-        // Run all file copies in parallel
-        var parallelTasks = allTasks.Select(t =>
-            CopySingleFileAsync(t.job, t.result, overwrite, copyVersions, maxVersions, preserveVersionMetadata, semaphore, cancellationToken));
-
-        await Task.WhenAll(parallelTasks);
+        if (copyMode == CopyMode.MigrationApi && copyVersions)
+        {
+            // Mode A: batch all files into a single migration job
+            await migrationJobService.ExecuteAsync(allTasks, overwrite, maxVersions, maxParallel, cancellationToken);
+        }
+        else
+        {
+            // Mode B: enhanced REST, parallel per-file
+            var parallelTasks = allTasks.Select(t =>
+                CopySingleFileAsync(t.job, t.result, overwrite, copyVersions, maxVersions, semaphore, cancellationToken));
+            await Task.WhenAll(parallelTasks);
+        }
 
         // Apply metadata to all created folders (done after files so folders exist)
         foreach (var job in jobs.Where(j => j.IsFolder))
@@ -85,7 +88,6 @@ public class CopyService(SharePointService spService)
         bool overwrite,
         bool copyVersions,
         int maxVersions,
-        bool preserveVersionMetadata,
         SemaphoreSlim semaphore,
         CancellationToken ct)
     {
@@ -94,7 +96,6 @@ public class CopyService(SharePointService spService)
         {
             result.Status = CopyStatus.Copying;
 
-            // Compute target parent folder (handle sub-folder paths for folder jobs)
             var targetParentId = await ResolveTargetParentAsync(job, ct);
 
             if (!overwrite && await spService.FileExistsAsync(job.TargetDriveId, targetParentId, job.SourceName))
@@ -104,7 +105,7 @@ public class CopyService(SharePointService spService)
             }
 
             if (copyVersions)
-                await CopyWithVersionsAsync(job, result, targetParentId, overwrite, maxVersions, preserveVersionMetadata, ct);
+                await CopyWithVersionsEnhancedRestAsync(job, result, targetParentId, overwrite, maxVersions, ct);
             else
                 await CopyCurrentVersionAsync(job, result, targetParentId, overwrite, ct);
 
@@ -112,7 +113,7 @@ public class CopyService(SharePointService spService)
         }
         catch (OperationCanceledException)
         {
-            result.Status  = CopyStatus.Failed;
+            result.Status       = CopyStatus.Failed;
             result.ErrorMessage = "Cancelled";
         }
         catch (Exception ex)
@@ -165,14 +166,20 @@ public class CopyService(SharePointService spService)
         }
     }
 
-    private async Task CopyWithVersionsAsync(
+    // Mode B: enhanced REST version copy.
+    // For each version (oldest-first):
+    //   Upload → record upload-version ID U
+    //   PatchFileSystemDate → creates phantom P with correct date
+    //   ValidateUpdateListItem on P → sets per-version Editor/Author (NEW vs v1)
+    //   DeleteItemVersion(U) → removes upload-time version
+    // Result: versions 2,4,6,… (2× count) with correct dates AND correct per-version editors.
+    private async Task CopyWithVersionsEnhancedRestAsync(
         CopyJob job, CopyResult result, string targetParentId, bool overwrite, int maxVersions,
-        bool preserveVersionMetadata, CancellationToken ct)
+        CancellationToken ct)
     {
-        var metadata = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
+        var metadata    = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
         var allVersions = await spService.GetVersionsAsync(job.SourceDriveId, job.SourceItemId);
-        // Take the N most-recent versions when a limit is set (list is sorted oldest-first)
-        var versions = maxVersions > 0 && allVersions.Count > maxVersions
+        var versions    = maxVersions > 0 && allVersions.Count > maxVersions
             ? allVersions.TakeLast(maxVersions).ToList()
             : allVersions;
         result.VersionsTotal = versions.Count;
@@ -186,7 +193,6 @@ public class CopyService(SharePointService spService)
 
             bool isLast = version == versions[^1];
 
-            // The current (last) version cannot be downloaded via the versions endpoint
             using var stream = isLast
                 ? await spService.DownloadFileAsync(job.SourceDriveId, job.SourceItemId)
                 : await spService.DownloadVersionAsync(job.SourceDriveId, job.SourceItemId, version.Id);
@@ -198,52 +204,34 @@ public class CopyService(SharePointService spService)
                 job.TargetDriveId, targetParentId, job.SourceName, ms,
                 overwrite: isLast ? overwrite : true);
 
-            if (preserveVersionMetadata)
+            // Record the upload version before PatchFileSystemDate creates the phantom
+            var uploadVersionId = await spService.GetCurrentVersionIdAsync(job.TargetDriveId, targetItemId);
+
+            // PatchFileSystemDate: sets date visible in version history, creates phantom P
+            var versionDate = version.LastModifiedDateTime ?? DateTimeOffset.UtcNow;
+            var fsErr = await spService.PatchFileSystemDateAsync(
+                job.TargetDriveId, targetItemId, versionDate,
+                isLast ? metadata.CreatedDateTime : null);
+            if (fsErr != null) result.ErrorMessage ??= fsErr;
+
+            // ValidateUpdateListItem on phantom P: set per-version editor (improvement over v1)
+            var versionEditorEmail = SharePointService.GetIdentityEmail(version.LastModifiedBy?.User)
+                                     ?? metadata.ModifiedByEmail;
+            var perVersionMeta = new FileMetadata(
+                isLast ? metadata.CreatedDateTime : null,
+                isLast ? metadata.CreatedByEmail : null,
+                versionDate,
+                versionEditorEmail);
+            var metaErr = await spService.ApplyFileMetadataAsync(
+                job.TargetDriveId, targetItemId, job.TargetSiteId, perVersionMeta);
+            if (metaErr != null) result.ErrorMessage ??= metaErr;
+
+            // Delete the upload version U; keep phantom P with correct date + editor
+            if (uploadVersionId != null)
             {
-                // PRESERVE METADATA strategy: PATCH fileSystemInfo so the version's date matches
-                // the source, then delete the upload-time version. fileSystemInfo is the field
-                // shown in SharePoint version history. Side-effect: each version consumes two
-                // slots (upload + phantom), so target version numbers are non-sequential
-                // (e.g. 2, 4, 6 for 3 source versions). Tradeoff selected by the user.
-                if (isLast)
-                {
-                    // Apply full metadata (Modified, Created, Author, Editor) to the listItem
-                    // before the phantom+delete cycle so the final visible version carries it all.
-                    var err = await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetItemId, job.TargetSiteId, metadata);
-                    if (err != null) result.ErrorMessage ??= err;
-                }
-
-                var uploadVersionId = await spService.GetCurrentVersionIdAsync(job.TargetDriveId, targetItemId);
-
-                var fsErr = await spService.PatchFileSystemDateAsync(
-                    job.TargetDriveId, targetItemId,
-                    version.LastModifiedDateTime ?? DateTimeOffset.UtcNow,
-                    isLast ? metadata.CreatedDateTime : null);
-                if (fsErr != null) result.ErrorMessage ??= fsErr;
-
-                if (uploadVersionId != null)
-                {
-                    var delErr = await spService.DeleteItemVersionAsync(job.TargetDriveId, targetItemId, uploadVersionId);
-                    if (delErr != null) result.ErrorMessage ??= delErr;
-                }
-            }
-            else if (isLast)
-            {
-                // SEQUENTIAL strategy: for the latest version, sync all metadata.
-                // VULI sets listItem fields (Modified, Created, Editor, Author).
-                // PatchFileSystemDate also sets fileSystemInfo.lastModifiedDateTime, which is the
-                // field the SharePoint library "Modified" column actually displays. Without this
-                // second call the library shows the upload timestamp, not the source date.
-                // The PATCH creates one phantom version (target ends up with N+1 versions for N
-                // source versions), but all slots remain sequential: 1, 2, …, N, N+1.
-                var err = await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetItemId, job.TargetSiteId, metadata);
-                if (err != null) result.ErrorMessage ??= err;
-
-                var fsErr = await spService.PatchFileSystemDateAsync(
-                    job.TargetDriveId, targetItemId,
-                    version.LastModifiedDateTime ?? DateTimeOffset.UtcNow,
-                    metadata.CreatedDateTime);
-                if (fsErr != null) result.ErrorMessage ??= fsErr;
+                var delErr = await spService.DeleteItemVersionAsync(
+                    job.TargetDriveId, targetItemId, uploadVersionId);
+                if (delErr != null) result.ErrorMessage ??= delErr;
             }
 
             result.VersionsCopied++;
@@ -252,21 +240,17 @@ public class CopyService(SharePointService spService)
 
     private async Task ApplyFolderMetadataRecursiveAsync(CopyJob job, CancellationToken ct)
     {
-        // Apply to the selected folder itself (skip library roots — "root" has no meaningful metadata)
         if (job.SourceItemId != "root")
         {
             var rootTargetId = await spService.GetOrCreateFolderPathAsync(
                 job.TargetDriveId, job.TargetParentItemId, job.SourceName);
             var rootMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
             await spService.ApplyFileMetadataAsync(job.TargetDriveId, rootTargetId, job.TargetSiteId, rootMeta);
-            // Folders have no version history, so patching fileSystemInfo has no phantom-version side effect.
-            // This sets the dates the library view actually displays (fileSystemInfo, not listItem fields).
             if (rootMeta.ModifiedDateTime.HasValue)
                 await spService.PatchFileSystemDateAsync(job.TargetDriveId, rootTargetId,
                     rootMeta.ModifiedDateTime.Value, rootMeta.CreatedDateTime);
         }
 
-        // Apply to every sub-folder recursively
         await foreach (var (driveId, itemId, relativePath) in spService.EnumerateFoldersAsync(job.SourceDriveId, job.SourceItemId))
         {
             ct.ThrowIfCancellationRequested();

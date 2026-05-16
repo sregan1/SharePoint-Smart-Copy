@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SharePointSmartCopy.Models;
@@ -11,6 +11,7 @@ public partial class SharePointNode : ObservableObject
     [ObservableProperty] private string _id = string.Empty;
     [ObservableProperty] private string _driveId = string.Empty;
     [ObservableProperty] private string _siteId = string.Empty;
+    [ObservableProperty] private string _siteUrl = string.Empty;
     [ObservableProperty] private NodeType _type;
     [ObservableProperty] private long? _size;
     [ObservableProperty] private string? _webUrl;

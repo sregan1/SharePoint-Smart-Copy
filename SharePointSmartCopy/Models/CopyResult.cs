@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -8,8 +8,6 @@ public enum CopyStatus { Pending, Copying, Success, Failed, Skipped }
 
 public partial class CopyResult : ObservableObject
 {
-    // Copy tasks run on background threads. Ensure PropertyChanged always fires
-    // on the UI thread so the ListView/DataGrid don't get an inconsistent state.
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         var dispatcher = Application.Current?.Dispatcher;

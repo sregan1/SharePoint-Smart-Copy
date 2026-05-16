@@ -1,4 +1,4 @@
-namespace SharePointSmartCopy.Models;
+﻿namespace SharePointSmartCopy.Models;
 
 public record FileMetadata(
     DateTimeOffset? CreatedDateTime,

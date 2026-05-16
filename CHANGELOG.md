@@ -4,6 +4,28 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 2.0.0
+
+### Overview
+
+Full rewrite of the application. The core copy engine has been rebuilt around SharePoint's Migration API for high-fidelity bulk migrations, with the Enhanced REST path retained for small batches and quick copies.
+
+### New Features
+
+- **Migration API mode** — imports files server-side via SharePoint's Migration Import API (SPMI). Version numbers, dates, and per-version editors are preserved exactly as on the source. Requires `AllSites.FullControl` permission and Site Collection Administrator membership on the target site.
+- **Parallel Migration jobs** — the "Parallel copies" slider (1–16) now controls the number of concurrent SPMI jobs (capped at 5) when using Migration API mode, with blob uploads within each job also running in parallel.
+- **Full site URL in paths** — source and target paths displayed in the copy screen, report screen, and CSV export now include the full site collection URL for clarity.
+- **Run history** — completed copy runs are saved locally and viewable in the History dialog, with per-file status and CSV export.
+
+### Enhanced REST improvements (carried forward from v1)
+
+- Modified By and Modified date correct per version in version history
+- Author and Created date preserved on the file and folders
+- Overwrite and skip-existing options
+- Configurable max-versions limit per run
+
+---
+
 ## 1.1.2
 
 ### Bug Fixes
