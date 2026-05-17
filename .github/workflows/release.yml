@@ -43,13 +43,16 @@ jobs:
         run: |
           $version = "${{ steps.ver.outputs.version }}"
           $tag     = "v$version"
-          $asset   = "SharePointSmartCopy-$tag.zip"
+          $zip     = "SharePointSmartCopy-$tag.zip"
+          $exe     = "SharePointSmartCopy-$tag.exe"
 
-          Compress-Archive -Path publish\* -DestinationPath $asset
+          Compress-Archive -Path publish\* -DestinationPath $zip
+          Copy-Item publish\SharePointSmartCopy.exe $exe
 
           # Replace existing release for this version (idempotent on re-push)
           gh release delete $tag --yes --cleanup-tag 2>$null
 
-          gh release create $tag $asset `
+          gh release create $tag $zip $exe `
             --title "SharePoint Smart Copy $tag" `
+            --latest `
             --notes "See [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details."
