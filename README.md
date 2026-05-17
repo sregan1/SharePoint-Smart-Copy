@@ -1,9 +1,10 @@
 # SharePoint Smart Copy
 
-Website
+## Website
 **[https://sharepointsmartsolutions.com/smart-copy](https://sharepointsmartsolutions.com/smart-copy)**
 
-[User Guide](SharePointSmartCopy/Docs/SharePointSmartCopy_UserGuide.docx)
+## User Guide
+**SharePointSmartCopy/Docs/SharePointSmartCopy_UserGuide.docx**
 
 A WPF .NET 8 desktop application that copies files with full version history and full metadata between SharePoint Online site collections.
 
