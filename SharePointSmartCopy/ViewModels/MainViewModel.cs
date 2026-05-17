@@ -480,6 +480,11 @@ public partial class MainViewModel : ObservableObject
 
     // ── Navigation ────────────────────────────────────────────────────────────
 
+    // Set to true by MainViewModel.Demo.cs LoadDemoData(); always false in production.
+    private bool _isDemoMode = false;
+    public bool IsDemoMode => _isDemoMode;
+    partial void AdvanceDemoToReport();  // implemented in MainViewModel.Demo.cs; no-op when absent
+
     [RelayCommand(CanExecute = nameof(CanGoBack))]
     private void Back() => CurrentStep--;
 
@@ -490,30 +495,29 @@ public partial class MainViewModel : ObservableObject
     {
         switch (CurrentStep)
         {
-            case 0 when SourceConnected:
+            case 0 when SourceConnected || IsDemoMode:
                 CurrentStep = 1;
-                _ = LoadLibrariesAsync();
+                if (!IsDemoMode) _ = LoadLibrariesAsync();
                 break;
             case 1:
                 CurrentStep = 2;
                 break;
-            case 2 when TargetConnected && SelectedTargetFolder != null:
-                BuildCopyJobs();
+            case 2 when (TargetConnected && SelectedTargetFolder != null) || IsDemoMode:
+                if (!IsDemoMode) BuildCopyJobs();
                 CurrentStep = 3;
                 break;
-            case 3 when CopyJobs.Count > 0:
-                Settings.PreferredCopyMode = CopyMode;
-                Settings.Save();
+            case 3 when CopyJobs.Count > 0 || IsDemoMode:
+                if (!IsDemoMode) { Settings.PreferredCopyMode = CopyMode; Settings.Save(); _ = StartCopyAsync(); }
                 CurrentStep = 4;
-                _ = StartCopyAsync();
                 break;
-            case 4 when IsCopyComplete:
+            case 4 when IsCopyComplete || IsDemoMode:
+                if (IsDemoMode) AdvanceDemoToReport();
                 CurrentStep = 5;
                 break;
         }
     }
 
-    private bool CanGoNext() => CurrentStep switch
+    private bool CanGoNext() => IsDemoMode || CurrentStep switch
     {
         0 => SourceConnected,
         1 => SourceLibraries.Any(l => l.GetCheckedNodes().Any()),
@@ -575,4 +579,5 @@ public partial class MainViewModel : ObservableObject
         }
         return string.Join("/", parts);
     }
+
 }

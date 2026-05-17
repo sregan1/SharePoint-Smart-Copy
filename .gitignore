@@ -56,6 +56,12 @@ Desktop.ini
 # ── Internal tools (not part of the shipped product) ─────────────────────────
 Tools/
 
+# ── Screenshot capture guide (references gitignored Tools/) ──────────────────
+SharePointSmartCopy/Docs/SCREENSHOTS.md
+
+# ── Demo/screenshot partial classes (drop in to enable --demo mode) ───────────
+*.Demo.cs
+
 # ── Claude Code local config (machine-specific tool permissions) ──────────────
 .claude/
 
@@ -67,3 +73,9 @@ Tools/
 appsettings.local.json
 appsettings.*.local.json
 secrets.json
+
+# ── MSAL token cache (if file-based caching is ever added) ───────────────────
+msalcache.bin
+msalcache.bin3
+*.msalcache
+msal.cache

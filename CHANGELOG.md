@@ -16,6 +16,8 @@ Full rewrite of the application. The core copy engine has been rebuilt around Sh
 - **Parallel Migration jobs** — the "Parallel copies" slider (1–16) now controls the number of concurrent SPMI jobs (capped at 5) when using Migration API mode, with blob uploads within each job also running in parallel.
 - **Full site URL in paths** — source and target paths displayed in the copy screen, report screen, and CSV export now include the full site collection URL for clarity.
 - **Run history** — completed copy runs are saved locally and viewable in the History dialog, with per-file status and CSV export.
+- **← Back button on all steps** — the Back button is now available on every step including the final Report screen, so you can review options or re-run without restarting the wizard.
+- **ⓘ info icons on copy modes** — the Migration API and Enhanced REST options on the Options screen now show an inline ⓘ icon; hover to see a description of each mode without cluttering the UI.
 
 ### Enhanced REST improvements (carried forward from v1)
 

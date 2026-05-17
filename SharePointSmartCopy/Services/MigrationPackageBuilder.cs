@@ -128,20 +128,24 @@ public class MigrationPackageBuilder
     {
         var manifest = new Dictionary<string, byte[]>();
 
+#if DEBUG
         var debugDir = Path.Combine(Path.GetTempPath(), $"SPMigDebug_{DateTime.Now:yyyyMMdd_HHmmss}");
         Directory.CreateDirectory(debugDir);
         System.Diagnostics.Debug.WriteLine($"[Migration] Debug XMLs → {debugDir}");
+#endif
 
         void Add(string name, XDocument doc)
         {
             var xml = doc.ToString(SaveOptions.None);
             System.Diagnostics.Debug.WriteLine($"[XML] {name}:\n{xml}\n---");
 
+#if DEBUG
             // Write plaintext XML to disk for easy inspection
             File.WriteAllText(Path.Combine(debugDir, name), xml, Encoding.UTF8);
 
             // Scan every attribute for Int32.Parse failures
             DebugScanAttributes(name, doc);
+#endif
 
             manifest[name] = EncryptXml(doc);
         }

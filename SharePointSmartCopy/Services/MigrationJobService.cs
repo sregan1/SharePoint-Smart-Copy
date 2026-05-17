@@ -120,12 +120,36 @@ public class MigrationJobService(SharePointService spService)
             var (dataUri, metadataUri, encryptionKey) =
                 await spService.ProvisionMigrationContainersAsync(targetSiteUrl);
 
-            // Step 2: build the package — download all versions, encrypt blobs, build manifests
+            // Step 2: skip files that already exist at the target (overwrite=false)
+            if (!overwrite)
+            {
+                var folderIdCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var (job, result) in fileTasks)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var subPath = job.TargetSubFolderPath ?? string.Empty;
+                    if (!folderIdCache.TryGetValue(subPath, out var parentId))
+                    {
+                        parentId = string.IsNullOrEmpty(subPath)
+                            ? job.TargetParentItemId
+                            : await spService.GetOrCreateFolderPathAsync(job.TargetDriveId, job.TargetParentItemId, subPath);
+                        folderIdCache[subPath] = parentId;
+                    }
+                    if (await spService.FileExistsAsync(job.TargetDriveId, parentId, job.SourceName))
+                        result.Status = CopyStatus.Skipped;
+                }
+
+                if (fileTasks.All(t => t.result.Status == CopyStatus.Skipped))
+                    return;
+            }
+
+            // Step 3: build the package — download all versions, encrypt blobs, build manifests
             var builder = new MigrationPackageBuilder(encryptionKey);
 
             foreach (var (job, result) in fileTasks)
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                if (result.Status != CopyStatus.Copying) continue;
                 try
                 {
                     await AddFileToPackageAsync(builder, job, result, maxVersions, libraryServerRelUrl, cancellationToken);
@@ -141,7 +165,7 @@ public class MigrationJobService(SharePointService spService)
             System.Diagnostics.Debug.WriteLine($"[Migration] dataUri prefix={dataUri[..Math.Min(dataUri.Length,80)]}");
             System.Diagnostics.Debug.WriteLine($"[Migration] metaUri prefix={metadataUri[..Math.Min(metadataUri.Length,80)]}");
 
-            // Step 3: upload content blobs to the data container — parallel
+            // Step 4: upload content blobs to the data container — parallel
             var dataClient = new BlobContainerClient(new Uri(dataUri));
             var allBlobs   = builder.Files.SelectMany(f => f.Versions).ToList();
             await Parallel.ForEachAsync(
@@ -157,7 +181,7 @@ public class MigrationJobService(SharePointService spService)
                     await blob.CreateSnapshotAsync(cancellationToken: ct);
                 });
 
-            // Step 4: upload manifest XML blobs to the metadata container
+            // Step 5: upload manifest XML blobs to the metadata container
             var metadataClient = new BlobContainerClient(new Uri(metadataUri));
             var manifests = builder.BuildManifestXml(
                 siteId, webId, listId,
@@ -174,11 +198,11 @@ public class MigrationJobService(SharePointService spService)
                 await metaBlob.CreateSnapshotAsync(cancellationToken: cancellationToken);
             }
 
-            // Step 5: submit the migration job
+            // Step 6: submit the migration job
             var jobId = await spService.CreateMigrationJobEncryptedAsync(
                 targetSiteUrl, webId, dataUri, metadataUri, encryptionKey);
 
-            // Step 6: poll until JobEnd
+            // Step 7: poll until JobEnd
             string? jobError = null;
             await foreach (var evt in spService.PollMigrationJobAsync(targetSiteUrl, jobId, cancellationToken))
             {
@@ -207,7 +231,7 @@ public class MigrationJobService(SharePointService spService)
 
             await TryLogMigrationReportAsync(metadataClient, jobId, encryptionKey);
 
-            // Step 7: mark results
+            // Step 8: mark results
             foreach (var (_, result) in fileTasks)
             {
                 if (result.Status == CopyStatus.Copying)

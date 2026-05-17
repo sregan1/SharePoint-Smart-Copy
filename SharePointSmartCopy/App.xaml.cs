@@ -19,10 +19,16 @@ public partial class App : Application
             args.Handled = true;
         };
 
+        InitDemoMode(e);
+        if (_demoStarted) return;
+
         var splash = new SplashWindow();
         splash.Show();
-        await Task.Delay(500);
+        await Task.Delay(250);
         new MainWindow().Show();
         splash.Close();
     }
+
+    private bool _demoStarted;
+    partial void InitDemoMode(StartupEventArgs e);  // implemented in App.Demo.cs when present
 }

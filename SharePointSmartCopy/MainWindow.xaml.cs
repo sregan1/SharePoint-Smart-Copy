@@ -1,6 +1,7 @@
 ﻿using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using SharePointSmartCopy.Dialogs;
 using SharePointSmartCopy.Models;
 using SharePointSmartCopy.ViewModels;
@@ -66,6 +67,25 @@ public partial class MainWindow : Window
 
     private void EnhancedRestMode_Click(object sender, RoutedEventArgs e)
         => VM.CopyMode = CopyMode.EnhancedRest;
+
+    private void InfoIcon_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is FrameworkElement fe && fe.ToolTip is ToolTip tt)
+        {
+            if (tt.IsOpen)
+            {
+                tt.StaysOpen = false;
+                tt.IsOpen = false;
+            }
+            else
+            {
+                tt.PlacementTarget = fe;
+                tt.StaysOpen = true;
+                tt.IsOpen = true;
+            }
+            e.Handled = true;
+        }
+    }
 
     private void ProgressList_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {

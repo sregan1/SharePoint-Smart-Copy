@@ -1,13 +1,20 @@
 # SharePoint Smart Copy
 
-A WPF .NET 8 desktop application that copies files with full version history between SharePoint Online site collections.
+Website
+**[https://sharepointsmartsolutions.com/smart-copy](https://sharepointsmartsolutions.com/smart-copy)**
+
+[User Guide](SharePointSmartCopy/Docs/SharePointSmartCopy_UserGuide.docx)
+
+A WPF .NET 8 desktop application that copies files with full version history and full metadata between SharePoint Online site collections.
 
 ## Features
 
-- **Migration API mode** — exact version numbers, dates, and Modified By per version in history (uses SharePoint's built-in Migration API)
-- **Enhanced REST mode** — correct dates and editors per version; version count is 2× source due to SP REST limitations
-- Configurable max-versions limit per copy run
-- Run history with CSV export
+Do what you can't do in Powershell, and have to pay for with migration tools:
+
+- Full version history along with matching metadata gets copied for each version
+- Bulk copy with 1-16 parallel file copies
+- Easy to use UI to select which files or folders to transfer
+- Detailed reporting done at the end
 
 ## Prerequisites
 
@@ -40,7 +47,9 @@ Go to **API permissions** → **Add a permission**:
 > **Why `AllSites.FullControl`?**
 > SharePoint's Migration API (`CreateMigrationJobEncrypted`) performs a server-side site-collection-administrator check.
 > With only `Sites.ReadWrite.All`, SharePoint caps the effective OAuth privilege below site-collection-admin level — meaning even a user who is explicitly a Primary Site Admin will be rejected.
-> `AllSites.FullControl` raises the OAuth context to full control so SP recognises the user's actual admin status.
+> `AllSites.FullControl` raises the OAuth context to full control so SP recognizes the user's actual admin status.
+>
+> `AllSites.FullControl` is only required for Migration API mode. If your organization uses Enhanced REST mode exclusively, this permission can be omitted.
 
 ### 3. Grant admin consent
 
@@ -50,7 +59,7 @@ This pre-authorises the permissions org-wide so users are never prompted for ind
 Without admin consent, users will see an interactive consent dialog on first use.
 As a Global Admin you can also check **"Consent on behalf of your organization"** in that dialog, which has the same effect.
 
-### 4. Target site permissions
+### 4. Target site permissions (Migration API only)
 
 The account running the copy must be a **Site Collection Administrator** on the **target** site:
 
@@ -58,16 +67,16 @@ The account running the copy must be a **Site Collection Administrator** on the 
 
 Being a Global Admin or SharePoint Admin grants effective access to all sites but does **not** automatically populate the Site Collection Administrators list for a specific site. You must add the account explicitly.
 
+This requirement applies only to Migration API mode. Enhanced REST mode works with standard contributor access.
+
 ## Configuration
 
 Launch the app and open **Settings** (gear icon):
 
 - **Client ID** — Application (client) ID from the app registration
 - **Tenant ID** — Directory (tenant) ID (leave blank for multi-tenant)
-- **Source URL** — Root URL of the source SharePoint site (e.g. `https://tenant.sharepoint.com/sites/Source`)
-- **Target URL** — Root URL of the target SharePoint site
-- **Copy mode** — Migration API (exact version history) or Enhanced REST (correct metadata, 2× version count)
-- **Max versions** — Maximum number of file versions to copy per file (0 = all)
+
+Source/target URLs and copy preferences are configured within the wizard and remembered between sessions.
 
 ## Copy Modes
 
@@ -81,6 +90,8 @@ Launch the app and open **Settings** (gear icon):
 | Copying current version only (no history) | Enhanced REST |
 | User lacks Site Collection Admin rights | Enhanced REST |
 | Need to see per-file progress in real time | Enhanced REST |
+
+The copy mode option appears on the Options screen when **Copy versions** is enabled. Hover the ⓘ icon next to each mode name for a quick summary.
 
 ---
 
@@ -105,7 +116,7 @@ Uses SharePoint's built-in [Migration API](https://learn.microsoft.com/en-us/sha
 
 | Requirement | Where to configure |
 |---|---|
-| `AllSites.FullControl` delegated permission on the SharePoint API | Azure AD app registration → API permissions (see [Azure AD App Registration](#azure-ad-app-registration)) |
+| `AllSites.FullControl` delegated permission on the SharePoint API | Azure AD app registration → API permissions |
 | Site Collection Administrator on the **target** site | Site Settings → Site Collection Administrators |
 
 > SP's Migration API performs a server-side site-collection-administrator check on every job submission. Standard `Sites.ReadWrite.All` is not sufficient — even a user who is explicitly a Site Admin will be rejected unless the OAuth context carries `AllSites.FullControl`. The account also needs to appear in the Site Collection Administrators list on the target site, not just have a SharePoint Admin role at the tenant level.

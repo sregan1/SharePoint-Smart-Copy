@@ -4,7 +4,7 @@
         xmlns:conv="clr-namespace:SharePointSmartCopy.Converters"
         xmlns:vm="clr-namespace:SharePointSmartCopy.ViewModels"
         xmlns:models="clr-namespace:SharePointSmartCopy.Models"
-        Title="SharePoint Smart Copy 2"
+        Title="SharePoint Smart Copy"
         Width="960" Height="720"
         MinWidth="800" MinHeight="600"
         Background="#F3F3F3"
@@ -186,7 +186,7 @@
                             </Image.Source>
                         </Image>
                     </Border>
-                    <TextBlock Text="SharePoint Smart Copy 2" FontSize="16" FontWeight="SemiBold"
+                    <TextBlock Text="SharePoint Smart Copy" FontSize="16" FontWeight="SemiBold"
                                Foreground="White" VerticalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
@@ -623,7 +623,8 @@
                                       IsChecked="{Binding OverwriteFiles}"
                                       Margin="0,0,0,8" FontSize="13"/>
 
-                            <CheckBox IsChecked="{Binding CopyVersions}" Margin="0,0,0,8" FontSize="13">
+                            <CheckBox IsChecked="{Binding CopyVersions}" Margin="0,0,0,8" FontSize="13"
+                                      AutomationProperties.Name="Copy versions">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="Copy versions" VerticalAlignment="Center"/>
                                     <TextBlock Margin="6,0,0,0" FontSize="11" Foreground="#797775"
@@ -664,37 +665,44 @@
                                     <TextBlock Text=" versions" FontSize="12" Foreground="#797775" VerticalAlignment="Center"/>
                                 </StackPanel>
 
-                                <!-- Copy mode selection -->
-                                <TextBlock Text="Copy mode" FontSize="12" FontWeight="SemiBold"
-                                           Foreground="#323130" Margin="0,10,0,4"/>
-
-                                <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,8"
-                                             IsChecked="{Binding IsMigrationApiMode, Mode=OneWay}"
-                                             Click="MigrationApiMode_Click">
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <TextBlock Text="Migration API" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                            <Border Background="#0078D4" CornerRadius="3" Padding="4,1" Margin="6,0,0,0">
-                                                <TextBlock Text="Recommended" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
-                                            </Border>
-                                        </StackPanel>
-                                        <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#605E5C" Margin="0,2,0,0" MaxWidth="270">
-                                            Exact version numbers (1.0 → 1.0), exact dates, and exact editors in version history. Requires Site Collection Admin on the target.
-                                        </TextBlock>
-                                    </StackPanel>
-                                </RadioButton>
-
-                                <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,0"
-                                             IsChecked="{Binding IsEnhancedRestMode, Mode=OneWay}"
-                                             Click="EnhancedRestMode_Click">
-                                    <StackPanel>
-                                        <TextBlock Text="Enhanced REST" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                        <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#605E5C" Margin="0,2,0,0" MaxWidth="270">
-                                            Correct dates and editors per version, but version numbers are 2× the source count (e.g. 2, 4, 6 for 3 source versions). No admin rights required.
-                                        </TextBlock>
-                                    </StackPanel>
-                                </RadioButton>
                             </StackPanel>
+
+                            <!-- Copy mode selection — always visible -->
+                            <TextBlock Text="Copy mode" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="#323130" Margin="0,10,0,4"/>
+
+                            <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,8"
+                                         IsChecked="{Binding IsMigrationApiMode, Mode=OneWay}"
+                                         Click="MigrationApiMode_Click">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="Migration API" VerticalAlignment="Center"/>
+                                    <Border Background="#0078D4" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock Text="Recommended" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
+                                    </Border>
+                                    <TextBlock Text="ⓘ" FontSize="13" Foreground="#0078D4" Margin="6,0,0,0" VerticalAlignment="Center" Cursor="Help" MouseLeftButtonDown="InfoIcon_Click">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip>
+                                                <TextBlock Text="Exact version numbers (1.0 → 1.0), exact dates, and exact editors in version history. Requires Site Collection Admin on the target." TextWrapping="Wrap" MaxWidth="260"/>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </StackPanel>
+                            </RadioButton>
+
+                            <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,0"
+                                         IsChecked="{Binding IsEnhancedRestMode, Mode=OneWay}"
+                                         Click="EnhancedRestMode_Click">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="Enhanced REST" VerticalAlignment="Center"/>
+                                    <TextBlock Text="ⓘ" FontSize="13" Foreground="#0078D4" Margin="6,0,0,0" VerticalAlignment="Center" Cursor="Help" MouseLeftButtonDown="InfoIcon_Click">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip>
+                                                <TextBlock Text="Correct dates and editors per version, but version numbers are 2× the source count (e.g. 2, 4, 6 for 3 source versions). No admin rights required." TextWrapping="Wrap" MaxWidth="260"/>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </StackPanel>
+                            </RadioButton>
 
                             <TextBlock Text="Parallel copies" Style="{StaticResource FieldLabel}" Margin="0,8,0,4"/>
                             <StackPanel Orientation="Horizontal">
@@ -950,10 +958,12 @@
                 <Button Content="← Back" Style="{StaticResource SecondaryBtn}"
                         HorizontalAlignment="Left" VerticalAlignment="Center"
                         Command="{Binding BackCommand}"
-                        Visibility="{Binding CurrentStep, Converter={StaticResource NeqToVis}, ConverterParameter=5}"/>
+                        AutomationProperties.Name="BackBtn"
+                        Visibility="{Binding CurrentStep, Converter={StaticResource NeqToVis}, ConverterParameter=0}"/>
 
                 <Button Style="{StaticResource PrimaryBtn}" HorizontalAlignment="Right" VerticalAlignment="Center"
                         Command="{Binding NextCommand}"
+                        AutomationProperties.Name="NextBtn"
                         Visibility="{Binding CurrentStep, Converter={StaticResource NeqToVis}, ConverterParameter=5}">
                     <Button.Content>
                         <TextBlock>
