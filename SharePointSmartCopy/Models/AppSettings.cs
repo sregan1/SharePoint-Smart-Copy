@@ -23,7 +23,12 @@ public class AppSettings
     public int ActiveRegistrationIndex { get; set; } = 0;
     public string SourceUrl { get; set; } = string.Empty;
     public string TargetUrl { get; set; } = string.Empty;
-    public CopyMode PreferredCopyMode { get; set; } = CopyMode.MigrationApi;
+    public CopyMode PreferredCopyMode  { get; set; } = CopyMode.MigrationApi;
+    public bool     OverwriteFiles     { get; set; } = false;
+    public bool     CopyVersions       { get; set; } = true;
+    public bool     CopyAllVersions    { get; set; } = true;
+    public int      MaxVersions        { get; set; } = 10;
+    public int      MaxParallelCopies  { get; set; } = 4;
 
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {

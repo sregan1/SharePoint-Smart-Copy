@@ -745,14 +745,14 @@
                     <StackPanel Grid.Row="1" Margin="0,0,0,8">
                         <Border Background="#E6F2FB" BorderBrush="#0078D4" BorderThickness="1"
                                 CornerRadius="4" Padding="10,6" Margin="0,0,0,4">
-                            <TextBlock FontSize="12" TextTrimming="CharacterEllipsis">
+                            <TextBlock FontSize="12" TextWrapping="Wrap">
                                 <Run Text="From: " FontWeight="SemiBold"/>
                                 <Run Text="{Binding SourceUrl}"/>
                             </TextBlock>
                         </Border>
                         <Border Background="#E6F2FB" BorderBrush="#0078D4" BorderThickness="1"
                                 CornerRadius="4" Padding="10,6">
-                            <TextBlock FontSize="12" TextTrimming="CharacterEllipsis">
+                            <TextBlock FontSize="12" TextWrapping="Wrap">
                                 <Run Text="To: " FontWeight="SemiBold"/>
                                 <Run Text="{Binding TargetUrl}"/>
                             </TextBlock>
@@ -782,10 +782,24 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="Source Path" Width="360"
-                                                    DisplayMemberBinding="{Binding SourceDisplayPath}"/>
-                                    <GridViewColumn Header="Destination Path" Width="360"
-                                                    DisplayMemberBinding="{Binding TargetDisplayPath}"/>
+                                    <GridViewColumn Header="Source Path" Width="360">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding SourceDisplayPath}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           ToolTip="{Binding SourceDisplayPath}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Destination Path" Width="360">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding TargetDisplayPath}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           ToolTip="{Binding TargetDisplayPath}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
                                 </GridView>
                             </ListView.View>
                         </ListView>
@@ -829,7 +843,17 @@
                                 Visibility="{Binding IsCopying, Converter={StaticResource BoolToVis}}"/>
                         <TextBlock Margin="0,8,0,0" FontSize="13" Foreground="#107C10"
                                    Text="✅ Copy complete! Click Next to see the full report."
-                                   Visibility="{Binding IsCopyComplete, Converter={StaticResource BoolToVis}}"/>
+                                   Visibility="{Binding IsReadyForReport, Converter={StaticResource BoolToVis}}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
+                                    Visibility="{Binding IsMetadataInProgress, Converter={StaticResource BoolToVis}}">
+                            <ProgressBar IsIndeterminate="True" Width="80" Height="4"
+                                         VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Updating folder metadata…" FontSize="13"
+                                       Foreground="#605E5C" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Margin="0,4,0,0" FontSize="13" Foreground="#605E5C"
+                                   Text="✔ Metadata updated"
+                                   Visibility="{Binding IsMetadataComplete, Converter={StaticResource BoolToVis}}"/>
                     </StackPanel>
                 </Border>
 

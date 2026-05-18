@@ -62,7 +62,7 @@ public class AuthService
     // The Graph token from GetAccessTokenAsync cannot be used for /_api/ endpoints.
     // spScope: SharePoint-specific permission name, e.g. "Sites.ReadWrite.All" or "AllSites.FullControl".
     // The Azure AD app must have the requested permission registered and admin-consented.
-    public async Task<string> GetSharePointTokenAsync(string siteUrl, string spScope = "Sites.ReadWrite.All", CancellationToken cancellationToken = default)
+    public async Task<string> GetSharePointTokenAsync(string siteUrl, string spScope = "Sites.ReadWrite.All", CancellationToken cancellationToken = default, bool forceRefresh = false)
     {
         if (_app == null)
             throw new InvalidOperationException("Auth service not configured. Please sign in first.");
@@ -76,7 +76,9 @@ public class AuthService
         {
             try
             {
-                var result = await _app.AcquireTokenSilent(scopes, account).ExecuteAsync(cancellationToken);
+                var result = await _app.AcquireTokenSilent(scopes, account)
+                    .WithForceRefresh(forceRefresh)
+                    .ExecuteAsync(cancellationToken);
                 return result.AccessToken;
             }
             catch (MsalUiRequiredException) { /* fall through to interactive */ }

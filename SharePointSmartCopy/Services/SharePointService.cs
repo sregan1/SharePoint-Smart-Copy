@@ -381,14 +381,15 @@ public class SharePointService
     public async Task<(string dataUri, string metadataUri, byte[] encryptionKey)>
         ProvisionMigrationContainersAsync(string siteUrl)
     {
-        var token = await _authService.GetSharePointTokenAsync(siteUrl);
         var url = $"{siteUrl.TrimEnd('/')}/_api/site/ProvisionMigrationContainers";
-        using var req = new HttpRequestMessage(HttpMethod.Post, url);
-        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
-        req.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
-
-        var response = await _httpClient.SendAsync(req);
+        using var response = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Post, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
+            return r;
+        }, siteUrl);
         var body = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
             throw new Exception($"ProvisionMigrationContainers HTTP {(int)response.StatusCode}: {body}");
@@ -427,13 +428,14 @@ public class SharePointService
     // Returns (webId, serverRelativeUrl) for the root web of the given site URL.
     public async Task<(string webId, string serverRelativeUrl)> GetWebInfoAsync(string siteUrl)
     {
-        var token = await _authService.GetSharePointTokenAsync(siteUrl);
         var url = $"{siteUrl.TrimEnd('/')}/_api/web?$select=Id,ServerRelativeUrl";
-        using var req = new HttpRequestMessage(HttpMethod.Get, url);
-        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
-
-        var response = await _httpClient.SendAsync(req);
+        using var response = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Get, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            return r;
+        }, siteUrl);
         var body = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
             throw new Exception($"GetWebInfo HTTP {(int)response.StatusCode}: {body}");
@@ -447,14 +449,15 @@ public class SharePointService
     // Returns the GUID of a document library given its server-relative URL.
     public async Task<string> GetListIdByServerRelativeUrlAsync(string siteUrl, string serverRelativeUrl)
     {
-        var token = await _authService.GetSharePointTokenAsync(siteUrl);
         var encodedUrl = Uri.EscapeDataString($"'{serverRelativeUrl}'");
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetList({encodedUrl})?$select=Id";
-        using var req = new HttpRequestMessage(HttpMethod.Get, url);
-        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
-
-        var response = await _httpClient.SendAsync(req);
+        using var response = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Get, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            return r;
+        }, siteUrl);
         var body = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
             throw new Exception($"GetListId HTTP {(int)response.StatusCode}: {body}");
@@ -489,8 +492,7 @@ public class SharePointService
         // site-collection-admin level in SP's OAuth permission model, causing CreateMigrationJobEncrypted
         // to reject even explicit SCAs.  The Azure AD app must have AllSites.FullControl delegated
         // permission registered and admin-consented; the user will be prompted if not yet granted.
-        var token    = await _authService.GetSharePointTokenAsync(siteUrl, "AllSites.FullControl");
-        var keyB64   = Convert.ToBase64String(encryptionKey);
+        var keyB64 = Convert.ToBase64String(encryptionKey);
 
         // Build the ProcessQuery XML.  EncryptionOption TypeId is {85614ad4-7a40-49e0-b272-6d1807dbfcc6}.
         // AES256CBCKey is a byte[] serialised as Base64Binary.
@@ -535,15 +537,17 @@ public class SharePointService
         var xmlBody = requestXml.ToString(System.Xml.Linq.SaveOptions.DisableFormatting);
         var url     = $"{siteUrl.TrimEnd('/')}/_vti_bin/client.svc/ProcessQuery";
 
-        using var req = new HttpRequestMessage(HttpMethod.Post, url)
+        using var response = await SendSharePointRequestAsync(token =>
         {
-            Content = new StringContent(xmlBody, System.Text.Encoding.UTF8, "text/xml")
-        };
-        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
-
-        var response = await _httpClient.SendAsync(req);
-        var body     = await response.Content.ReadAsStringAsync();
+            var r = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new StringContent(xmlBody, System.Text.Encoding.UTF8, "text/xml")
+            };
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            return r;
+        }, siteUrl, "AllSites.FullControl");
+        var body = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)
             throw new Exception($"CreateMigrationJobEncrypted HTTP {(int)response.StatusCode}: {body}");
 
@@ -596,7 +600,7 @@ public class SharePointService
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken);
 
             // Guid parameters in SP REST require the guid'...' syntax, not just '...'.
             // AllSites.FullControl is needed — the same reason CreateMigrationJobEncrypted needs it.
@@ -698,6 +702,133 @@ public class SharePointService
         catch { return false; }
     }
 
+    public async Task DeleteFileIfExistsAsync(string driveId, string parentItemId, string fileName)
+    {
+        try
+        {
+            await Graph.Drives[driveId].Items[parentItemId]
+                .ItemWithPath(Uri.EscapeDataString(fileName)).DeleteAsync();
+        }
+        catch { }
+    }
+
+    // Returns the SharePoint UniqueId (AllDocs GUID) for a file by its server-relative URL.
+    // Works via REST (not Graph) so it finds zombie files — SPFile blobs without a list item
+    // that Graph returns 404 for. Returns null if the file doesn't exist.
+    public async Task<string?> GetFileUniqueIdAsync(string siteUrl, string serverRelativeUrl)
+    {
+        var encodedPath = Uri.EscapeDataString($"'{serverRelativeUrl}'");
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativeUrl({encodedPath})/UniqueId";
+        try
+        {
+            using var response = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl);
+
+            if (!response.IsSuccessStatusCode) return null;
+            var body = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(body);
+            return doc.RootElement.ValueKind == JsonValueKind.String
+                ? doc.RootElement.GetString()
+                : doc.RootElement.TryGetProperty("value", out var v) ? v.GetString() : null;
+        }
+        catch { return null; }
+    }
+
+    // Permanently deletes a file by recycling it then immediately purging the recycle bin entry.
+    // Graph DeleteAsync only soft-deletes (recycle bin); soft-deleted list item records interfere
+    // with SPMI imports at the same URL, producing "Missing file info for list item" errors.
+    public async Task PermanentlyDeleteFileAsync(string siteUrl, string serverRelativeUrl)
+    {
+        // Step 1: recycle — returns the recycle bin item GUID
+        var encodedPath = Uri.EscapeDataString($"'{serverRelativeUrl}'");
+        var recycleUrl  = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativeUrl({encodedPath})/recycleObject";
+
+        string? recycleBinGuid = null;
+        try
+        {
+            using var recycleResponse = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, recycleUrl);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
+                return r;
+            }, siteUrl);
+
+            System.Diagnostics.Debug.WriteLine($"[PermDelete] recycleObject status={recycleResponse.StatusCode} path={serverRelativeUrl}");
+
+            if (!recycleResponse.IsSuccessStatusCode)
+            {
+                // recycleObject fails for zombie blobs (no SPListItem → can't create recycle entry).
+                // Fall back to deleteObject which operates at the AllDocs level directly.
+                await TryDeleteObjectAsync(siteUrl, encodedPath);
+                return;
+            }
+
+            var body = await recycleResponse.Content.ReadAsStringAsync();
+            System.Diagnostics.Debug.WriteLine($"[PermDelete] recycleObject body={body[..Math.Min(body.Length, 200)]}");
+            using var doc = JsonDocument.Parse(body);
+            recycleBinGuid = doc.RootElement.ValueKind == JsonValueKind.String
+                ? doc.RootElement.GetString()
+                : doc.RootElement.TryGetProperty("value", out var v) ? v.GetString() : null;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[PermDelete] recycleObject error: {ex.Message}");
+            return;
+        }
+
+        System.Diagnostics.Debug.WriteLine($"[PermDelete] recycleBinGuid={recycleBinGuid}");
+        if (string.IsNullOrEmpty(recycleBinGuid)) return;
+
+        // Step 2: purge from recycle bin — removes all DB records so SPMI can import cleanly.
+        // SP REST RecycleBin key uses single-quoted string (not guid'...' OData Guid literal).
+        // Uses Sites.ReadWrite.All — user is SCA so this token is already cached and sufficient.
+        try
+        {
+            var purgeUrl = $"{siteUrl.TrimEnd('/')}/_api/site/RecycleBin('{recycleBinGuid}')/DeleteObject";
+            using var purgeResponse = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, purgeUrl);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
+                return r;
+            }, siteUrl);
+            System.Diagnostics.Debug.WriteLine($"[PermDelete] purge status={purgeResponse.StatusCode}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[PermDelete] purge error: {ex.Message}");
+        }
+    }
+
+    private async Task TryDeleteObjectAsync(string siteUrl, string encodedPath)
+    {
+        var deleteUrl = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativeUrl({encodedPath})/deleteObject";
+        try
+        {
+            using var response = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, deleteUrl);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
+                return r;
+            }, siteUrl);
+            System.Diagnostics.Debug.WriteLine($"[PermDelete] deleteObject status={response.StatusCode}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[PermDelete] deleteObject error: {ex.Message}");
+        }
+    }
+
     public async Task<string> UploadFileAsync(
         string targetDriveId,
         string targetParentItemId,
@@ -786,6 +917,29 @@ public class SharePointService
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
+
+    // Sends a SharePoint REST request and retries once with a force-refreshed token on 401.
+    // buildRequest receives the bearer token and must return a fresh HttpRequestMessage each call.
+    private async Task<HttpResponseMessage> SendSharePointRequestAsync(
+        Func<string, HttpRequestMessage> buildRequest,
+        string siteUrl,
+        string spScope = "Sites.ReadWrite.All",
+        CancellationToken cancellationToken = default)
+    {
+        var token = await _authService.GetSharePointTokenAsync(siteUrl, spScope, cancellationToken);
+        using var req = buildRequest(token);
+        var response = await _httpClient.SendAsync(req, cancellationToken);
+
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            response.Dispose();
+            token = await _authService.GetSharePointTokenAsync(siteUrl, spScope, cancellationToken, forceRefresh: true);
+            using var retryReq = buildRequest(token);
+            response = await _httpClient.SendAsync(retryReq, cancellationToken);
+        }
+
+        return response;
+    }
 
     private static SharePointNode Placeholder() =>
         new() { Name = "__placeholder__" };

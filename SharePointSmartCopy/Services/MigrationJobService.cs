@@ -82,7 +82,7 @@ public class MigrationJobService(SharePointService spService)
                         libraryServerRelUrl, listId, libraryTitle, cancellationToken)));
             }
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             foreach (var (_, result) in fileTasks.Where(t => t.result.Status == CopyStatus.Copying))
             {
@@ -120,28 +120,70 @@ public class MigrationJobService(SharePointService spService)
             var (dataUri, metadataUri, encryptionKey) =
                 await spService.ProvisionMigrationContainersAsync(targetSiteUrl);
 
-            // Step 2: skip files that already exist at the target (overwrite=false)
-            if (!overwrite)
+            // Step 2: for overwrite mode, delete any existing files so SPMI does a fresh INSERT
+            // (SPMI UPDATE appends versions instead of replacing them, causing duplication).
+            // For non-overwrite mode, mark files that already exist (Graph) as Skipped, and
+            // purge any zombies (AllDocs entry without SPListItem) so SPMI won't reject them.
+            //
+            // Step 2a (serial): resolve all unique subfolder IDs — concurrent GetOrCreate calls
+            // on the same path can conflict, so this must remain sequential.
+            var folderIdCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var subPath in fileTasks
+                .Select(t => t.job.TargetSubFolderPath ?? string.Empty)
+                .Distinct(StringComparer.OrdinalIgnoreCase))
             {
-                var folderIdCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                foreach (var (job, result) in fileTasks)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    var subPath = job.TargetSubFolderPath ?? string.Empty;
-                    if (!folderIdCache.TryGetValue(subPath, out var parentId))
-                    {
-                        parentId = string.IsNullOrEmpty(subPath)
-                            ? job.TargetParentItemId
-                            : await spService.GetOrCreateFolderPathAsync(job.TargetDriveId, job.TargetParentItemId, subPath);
-                        folderIdCache[subPath] = parentId;
-                    }
-                    if (await spService.FileExistsAsync(job.TargetDriveId, parentId, job.SourceName))
-                        result.Status = CopyStatus.Skipped;
-                }
-
-                if (fileTasks.All(t => t.result.Status == CopyStatus.Skipped))
-                    return;
+                cancellationToken.ThrowIfCancellationRequested();
+                folderIdCache[subPath] = string.IsNullOrEmpty(subPath)
+                    ? fileTasks[0].job.TargetParentItemId
+                    : await spService.GetOrCreateFolderPathAsync(
+                        fileTasks[0].job.TargetDriveId, fileTasks[0].job.TargetParentItemId, subPath);
             }
+
+            // Step 2b (parallel): check existence and delete files concurrently.
+            var existingFileIds = new System.Collections.Concurrent.ConcurrentDictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+            await Parallel.ForEachAsync(fileTasks,
+                new ParallelOptions { MaxDegreeOfParallelism = maxParallel, CancellationToken = cancellationToken },
+                async (task, ct) =>
+                {
+                    var (job, result) = task;
+                    var subPath          = job.TargetSubFolderPath ?? string.Empty;
+                    var parentId         = folderIdCache[subPath];
+                    var fileServerRelUrl = string.IsNullOrEmpty(subPath)
+                        ? $"{libraryServerRelUrl}/{job.SourceName}"
+                        : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
+
+                    if (overwrite)
+                    {
+                        if (await spService.FileExistsAsync(job.TargetDriveId, parentId, job.SourceName))
+                        {
+                            // Real file: delete first so SPMI does a fresh INSERT.
+                            // SPMI UPDATE (with existing GUID) appends imported versions to the
+                            // existing version history instead of replacing it, causing duplication.
+                            await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                        }
+                        else if (await spService.GetFileUniqueIdAsync(targetSiteUrl, fileServerRelUrl) != null)
+                        {
+                            // Zombie blob (AllDocs row without SPListItem) — delete via deleteObject,
+                            // which bypasses the SPListItem requirement that recycleObject needs.
+                            await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                        }
+                        existingFileIds[fileServerRelUrl] = null;
+                    }
+                    else
+                    {
+                        if (await spService.FileExistsAsync(job.TargetDriveId, parentId, job.SourceName))
+                            result.Status = CopyStatus.Skipped;
+                        else if (await spService.GetFileUniqueIdAsync(targetSiteUrl, fileServerRelUrl) != null)
+                        {
+                            // Zombie SPFile blob (AllDocs row exists but Graph returns 404).
+                            // Purge it so SPMI can import cleanly.
+                            await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                        }
+                    }
+                });
+
+            if (!overwrite && fileTasks.All(t => t.result.Status == CopyStatus.Skipped))
+                return;
 
             // Step 3: build the package — download all versions, encrypt blobs, build manifests
             var builder = new MigrationPackageBuilder(encryptionKey);
@@ -152,7 +194,13 @@ public class MigrationJobService(SharePointService spService)
                 if (result.Status != CopyStatus.Copying) continue;
                 try
                 {
-                    await AddFileToPackageAsync(builder, job, result, maxVersions, libraryServerRelUrl, cancellationToken);
+                    var subPath          = job.TargetSubFolderPath ?? string.Empty;
+                    var fileServerRelUrl = string.IsNullOrEmpty(subPath)
+                        ? $"{libraryServerRelUrl}/{job.SourceName}"
+                        : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
+                    existingFileIds.TryGetValue(fileServerRelUrl, out var existingFileId);
+                    await AddFileToPackageAsync(builder, job, result, maxVersions, libraryServerRelUrl,
+                        existingFileId, cancellationToken);
                 }
                 catch (Exception ex)
                 {
@@ -185,7 +233,8 @@ public class MigrationJobService(SharePointService spService)
             var metadataClient = new BlobContainerClient(new Uri(metadataUri));
             var manifests = builder.BuildManifestXml(
                 siteId, webId, listId,
-                targetSiteUrl, webRelUrl, libraryTitle, libraryServerRelUrl);
+                targetSiteUrl, webRelUrl, libraryTitle, libraryServerRelUrl,
+                overwrite);
 
             foreach (var (blobName, data) in manifests)
             {
@@ -229,7 +278,7 @@ public class MigrationJobService(SharePointService spService)
                 }
             }
 
-            await TryLogMigrationReportAsync(metadataClient, jobId, encryptionKey);
+            _ = TryLogMigrationReportAsync(metadataClient, jobId, encryptionKey);
 
             // Step 8: mark results
             foreach (var (_, result) in fileTasks)
@@ -241,7 +290,7 @@ public class MigrationJobService(SharePointService spService)
                 }
             }
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             foreach (var (_, result) in fileTasks.Where(t => t.result.Status == CopyStatus.Copying))
             {
@@ -265,6 +314,7 @@ public class MigrationJobService(SharePointService spService)
         CopyResult result,
         int maxVersions,
         string libraryServerRelUrl,
+        string? existingFileId,
         CancellationToken ct)
     {
         var metadata    = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
@@ -292,7 +342,7 @@ public class MigrationJobService(SharePointService spService)
             ? ""
             : job.TargetSubFolderPath.TrimStart('/');
 
-        await builder.AddFileAsync(job.SourceName, folderRelPath, metadata, versionStreams);
+        await builder.AddFileAsync(job.SourceName, folderRelPath, metadata, versionStreams, existingFileId);
 
         foreach (var (_, s) in versionStreams)
             s.Dispose();

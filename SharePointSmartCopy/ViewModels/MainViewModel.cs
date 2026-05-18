@@ -33,9 +33,14 @@ public partial class MainViewModel : ObservableObject
             SpService.Initialize();
         }
 
-        SourceUrl = Settings.SourceUrl;
-        TargetUrl = Settings.TargetUrl;
-        CopyMode  = Settings.PreferredCopyMode;
+        SourceUrl        = Settings.SourceUrl;
+        TargetUrl        = Settings.TargetUrl;
+        CopyMode         = Settings.PreferredCopyMode;
+        OverwriteFiles   = Settings.OverwriteFiles;
+        CopyVersions     = Settings.CopyVersions;
+        CopyAllVersions  = Settings.CopyAllVersions;
+        MaxVersions      = Settings.MaxVersions;
+        MaxParallelCopies = Settings.MaxParallelCopies;
     }
 
     // ── Settings ──────────────────────────────────────────────────────────────
@@ -315,12 +320,9 @@ public partial class MainViewModel : ObservableObject
         while (libraryNode.Parent != null)
             libraryNode = libraryNode.Parent;
 
-        // Compute the subfolder path relative to the library root (empty if folder IS the library root)
-        var subFolderRelPath = libraryNode.ServerRelativePath != null && SelectedTargetFolder.ServerRelativePath != null
-            ? SelectedTargetFolder.ServerRelativePath
-                .Substring(libraryNode.ServerRelativePath.Length)
-                .Trim('/')
-            : string.Empty;
+        // Compute the subfolder path relative to the library root by walking the parent chain.
+        // ServerRelativePath is only populated on library root nodes, so we use node names instead.
+        var subFolderRelPath = BuildRelativePath(SelectedTargetFolder, libraryNode);
 
         var sourceSiteUrl = SourceUrl.TrimEnd('/');
         var targetSiteUrl = SelectedTargetFolder.SiteUrl.TrimEnd('/');
@@ -329,9 +331,17 @@ public partial class MainViewModel : ObservableObject
         {
             foreach (var node in lib.GetCheckedNodes())
             {
-                var targetDisplayPath = string.IsNullOrEmpty(subFolderRelPath)
-                    ? $"{targetSiteUrl}/{libraryNode.Name}/{node.Name}"
-                    : $"{targetSiteUrl}/{libraryNode.Name}/{subFolderRelPath}/{node.Name}";
+                var isLibrary = node.Type == NodeType.Library;
+
+                // When the source is a whole library, copy its contents directly into the
+                // target folder — no wrapper folder with the library's name.
+                var targetDisplayPath = isLibrary
+                    ? (string.IsNullOrEmpty(subFolderRelPath)
+                        ? $"{targetSiteUrl}/{libraryNode.Name}"
+                        : $"{targetSiteUrl}/{libraryNode.Name}/{subFolderRelPath}")
+                    : (string.IsNullOrEmpty(subFolderRelPath)
+                        ? $"{targetSiteUrl}/{libraryNode.Name}/{node.Name}"
+                        : $"{targetSiteUrl}/{libraryNode.Name}/{subFolderRelPath}/{node.Name}");
 
                 var job = new CopyJob
                 {
@@ -340,12 +350,14 @@ public partial class MainViewModel : ObservableObject
                     SourceName                     = node.Name,
                     SourceDisplayPath              = $"{sourceSiteUrl}/{BuildPath(node)}",
                     TargetDriveId                  = SelectedTargetFolder.DriveId,
-                    TargetParentItemId             = SelectedTargetFolder.Id,
+                    TargetParentItemId             = libraryNode.Id,
+                    TargetSubFolderPath            = subFolderRelPath,
                     TargetSiteId                   = SelectedTargetFolder.SiteId,
                     TargetSiteUrl                  = SelectedTargetFolder.SiteUrl,
                     TargetDisplayPath              = targetDisplayPath,
                     TargetLibraryServerRelativeUrl = libraryNode.ServerRelativePath ?? string.Empty,
-                    IsFolder                       = node.Type != NodeType.File
+                    IsFolder                       = node.Type != NodeType.File,
+                    IsLibrary                      = isLibrary
                 };
                 CopyJobs.Add(job);
             }
@@ -363,11 +375,18 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private int _completedCount;
     [ObservableProperty] private int _totalCount;
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] [NotifyCanExecuteChangedFor(nameof(BackCommand))] private bool _isCopying;
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] private bool _isCopyComplete;
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] [NotifyPropertyChangedFor(nameof(IsMetadataComplete))] [NotifyPropertyChangedFor(nameof(IsMetadataInProgress))] [NotifyPropertyChangedFor(nameof(IsReadyForReport))] private bool _isCopyComplete;
     [ObservableProperty] private string _copyDuration = string.Empty;
     [ObservableProperty] private string _elapsedTime = string.Empty;
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] [NotifyPropertyChangedFor(nameof(IsMetadataComplete))] [NotifyPropertyChangedFor(nameof(IsMetadataInProgress))] [NotifyPropertyChangedFor(nameof(IsReadyForReport))] private bool _isUpdatingMetadata;
 
-    private DateTimeOffset _copyStartTime;
+    public bool IsMetadataInProgress => IsCopyComplete && IsUpdatingMetadata;
+    public bool IsMetadataComplete   => IsCopyComplete && !IsUpdatingMetadata;
+    public bool IsReadyForReport     => IsCopyComplete && !IsUpdatingMetadata;
+
+    private bool            _hasFolderJobs;
+    private DateTimeOffset  _copyStartTime;
+    private DateTimeOffset? _copyEndTime;
 
     public int SuccessCount => CopyResults.Count(r => r.Status == CopyStatus.Success);
     public int FailedCount  => CopyResults.Count(r => r.Status == CopyStatus.Failed);
@@ -376,13 +395,16 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task StartCopyAsync()
     {
-        IsCopying      = true;
-        IsCopyComplete = false;
-        CopyDuration   = string.Empty;
+        _hasFolderJobs       = CopyJobs.Any(j => j.IsFolder);
+        IsCopying            = true;
+        IsCopyComplete       = false;
+        CopyDuration         = string.Empty;
+        IsUpdatingMetadata   = _hasFolderJobs;
         CopyResults.Clear();
         CompletedCount = 0;
         TotalProgress  = 0;
         _copyStartTime = DateTimeOffset.Now;
+        _copyEndTime   = null;
 
         foreach (var job in CopyJobs.Where(j => !j.IsFolder))
         {
@@ -397,15 +419,17 @@ public partial class MainViewModel : ObservableObject
         _copyCts = new CancellationTokenSource();
         TotalCount = CopyJobs.Count;
 
+        var onMetadataDone = new Progress<bool>(_ => IsUpdatingMetadata = false);
+
+        var progressTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(400)
+        };
+        progressTimer.Tick += (_, _) => UpdateProgress();
+        progressTimer.Start();
+
         try
         {
-            var progressTimer = new System.Windows.Threading.DispatcherTimer
-            {
-                Interval = TimeSpan.FromMilliseconds(400)
-            };
-            progressTimer.Tick += (_, _) => UpdateProgress();
-            progressTimer.Start();
-
             int versionLimit = CopyVersions && !CopyAllVersions ? MaxVersions : 0;
             await _copyService.ExecuteAsync(
                 CopyJobs,
@@ -415,19 +439,19 @@ public partial class MainViewModel : ObservableObject
                 MaxParallelCopies,
                 versionLimit,
                 CopyMode,
-                _copyCts.Token);
-
-            progressTimer.Stop();
-            UpdateProgress();
+                _copyCts.Token,
+                onMetadataDone);
         }
         catch (OperationCanceledException) { StatusMessage = "Copy cancelled."; }
         catch (Exception ex)              { StatusMessage = $"Copy error: {ex.Message}"; }
         finally
         {
+            _copyEndTime   = DateTimeOffset.Now;
+            progressTimer.Stop();
             IsCopying      = false;
             IsCopyComplete = true;
             TotalCount     = CopyResults.Count;
-            CopyDuration   = FormatDuration(DateTimeOffset.Now - _copyStartTime);
+            CopyDuration   = FormatDuration(_copyEndTime.Value - _copyStartTime);
             UpdateProgress();
             OnPropertyChanged(nameof(SuccessCount));
             OnPropertyChanged(nameof(FailedCount));
@@ -445,7 +469,7 @@ public partial class MainViewModel : ObservableObject
         CompletedCount = done;
         TotalCount     = CopyResults.Count;
         TotalProgress  = TotalCount > 0 ? done * 100.0 / TotalCount : 0;
-        ElapsedTime    = FormatDuration(DateTimeOffset.Now - _copyStartTime);
+        ElapsedTime    = FormatDuration((_copyEndTime ?? DateTimeOffset.Now) - _copyStartTime);
     }
 
     public void RefreshCopyStats()
@@ -507,10 +531,20 @@ public partial class MainViewModel : ObservableObject
                 CurrentStep = 3;
                 break;
             case 3 when CopyJobs.Count > 0 || IsDemoMode:
-                if (!IsDemoMode) { Settings.PreferredCopyMode = CopyMode; Settings.Save(); _ = StartCopyAsync(); }
+                if (!IsDemoMode)
+                {
+                    Settings.PreferredCopyMode = CopyMode;
+                    Settings.OverwriteFiles    = OverwriteFiles;
+                    Settings.CopyVersions      = CopyVersions;
+                    Settings.CopyAllVersions   = CopyAllVersions;
+                    Settings.MaxVersions       = MaxVersions;
+                    Settings.MaxParallelCopies = MaxParallelCopies;
+                    Settings.Save();
+                    _ = StartCopyAsync();
+                }
                 CurrentStep = 4;
                 break;
-            case 4 when IsCopyComplete || IsDemoMode:
+            case 4 when (IsCopyComplete && !IsUpdatingMetadata) || IsDemoMode:
                 if (IsDemoMode) AdvanceDemoToReport();
                 CurrentStep = 5;
                 break;
@@ -523,7 +557,7 @@ public partial class MainViewModel : ObservableObject
         1 => SourceLibraries.Any(l => l.GetCheckedNodes().Any()),
         2 => TargetConnected && SelectedTargetFolder != null,
         3 => CopyJobs.Count > 0,
-        4 => IsCopyComplete,
+        4 => IsCopyComplete && !IsUpdatingMetadata,
         _ => false
     };
 
@@ -573,6 +607,20 @@ public partial class MainViewModel : ObservableObject
         var parts   = new List<string>();
         var current = (SharePointNode?)node;
         while (current != null)
+        {
+            parts.Insert(0, current.Name);
+            current = current.Parent;
+        }
+        return string.Join("/", parts);
+    }
+
+    // Returns the path of `node` relative to `libraryRoot` by walking the parent chain.
+    // Returns empty string when node IS the library root.
+    private static string BuildRelativePath(SharePointNode node, SharePointNode libraryRoot)
+    {
+        var parts   = new List<string>();
+        var current = node;
+        while (current != null && current != libraryRoot)
         {
             parts.Insert(0, current.Name);
             current = current.Parent;

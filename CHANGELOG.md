@@ -4,6 +4,40 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 2.1.0
+
+### Bug Fixes
+
+**Copy correctness**
+- Fixed: overwriting a file using the Migration API appended imported versions to the existing version history instead of replacing it. The root cause is that SPMI `UPDATE` (when a file GUID already exists) extends history rather than replacing it. The fix pre-deletes the target file before submitting the SPMI job so the import always performs a fresh `INSERT`.
+- Fixed: "zombie" files — AllDocs rows left behind when a previous import failed partway through, where Graph returns 404 but the SharePoint content database still holds a record — caused subsequent SPMI imports at the same URL to fail. Zombie files are now detected via `/_api/web/GetFileByServerRelativeUrl` and permanently deleted before import.
+- Fixed: Graph `DeleteAsync` only soft-deletes (moves to recycle bin). Soft-deleted records still interfere with SPMI imports at the same URL. Files are now fully purged by recycling and then deleting the resulting recycle bin entry.
+- Fixed: selecting a destination folder more than one level deep placed files at the library root instead of inside the selected folder. The relative path was computed from `ServerRelativePath`, which is only populated on library-root nodes. Path computation now walks the node's parent chain, which is always populated. `TargetParentItemId` is anchored to the library root and `TargetSubFolderPath` carries the full path from library root, keeping REST and Migration API behaviour consistent.
+
+**Authentication**
+- Fixed: SharePoint REST requests could fail with 401 after a token expiry mid-session. All SharePoint REST calls now share a helper that automatically retries once with a force-refreshed token on a 401 response.
+
+### Performance
+
+- Folder metadata (Created By, Modified By, dates) is now applied in the background after the file copy completes rather than blocking the completion signal. For large copies with many subfolders this eliminates a multi-minute post-copy wait.
+- Subfolder metadata within each folder job is applied in parallel (up to the configured parallel copies limit) instead of sequentially.
+
+### UI Improvements
+
+- The progress screen now shows a "Updating folder metadata…" spinner after files finish copying, and "✔ Folder metadata updated" once complete.
+- The Next → button on the copy progress screen is held disabled until folder metadata finishes applying, so the report is not shown before the operation is truly complete.
+- "✅ Copy complete! Click Next to see the full report." now appears only after metadata is done, not as soon as files finish.
+- Copy Preview: the From / To site URL banners now wrap instead of truncating with ellipsis.
+- Copy Preview: hovering over a truncated source or destination path in the preview list shows the full path in a tooltip.
+- Settings dialog: increased height and fixed the layout so the Azure App Registration setup instructions are always fully visible.
+
+### Other
+
+- Copy settings (Overwrite, Copy Versions, Max Versions, Parallel Copies) are now persisted between sessions.
+- `TargetLibraryServerRelativeUrl` is now propagated to child file jobs created during folder enumeration, avoiding a redundant API call to look up the library URL per-batch.
+
+---
+
 ## 2.0.0
 
 ### Overview

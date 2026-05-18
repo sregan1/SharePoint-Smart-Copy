@@ -63,10 +63,16 @@ public class MigrationPackageBuilder
         string fileName,
         string folderRelativePath,
         FileMetadata fileMetadata,
-        List<(DriveItemVersion version, Stream content)> versionStreams)
+        List<(DriveItemVersion version, Stream content)> versionStreams,
+        string? existingFileId = null)
     {
-        var fileId     = Guid.NewGuid().ToString("D").ToUpperInvariant();
-        var listItemId = Guid.NewGuid().ToString("D").ToUpperInvariant();
+        var fileId = !string.IsNullOrEmpty(existingFileId)
+            ? existingFileId.ToUpperInvariant()
+            : Guid.NewGuid().ToString("D").ToUpperInvariant();
+        // In SharePoint's content database, a document's AllDocs GUID == its SPListItem GUID.
+        // SPMI (especially in overwrite mode) looks up file info by the outer SPObject.Id of the
+        // SPListItem, which must equal the SPFile's SPObject.Id or the lookup fails.
+        var listItemId = fileId;
         var entries    = new List<VersionEntry>();
 
         for (int i = 0; i < versionStreams.Count; i++)
@@ -124,7 +130,8 @@ public class MigrationPackageBuilder
     // ready for upload to the metadata container.
     public Dictionary<string, byte[]> BuildManifestXml(
         string siteId, string webId, string listId,
-        string siteUrl, string webServerRelativeUrl, string libraryTitle, string libraryServerRelativeUrl)
+        string siteUrl, string webServerRelativeUrl, string libraryTitle, string libraryServerRelativeUrl,
+        bool overwrite = false)
     {
         var manifest = new Dictionary<string, byte[]>();
 
@@ -150,7 +157,7 @@ public class MigrationPackageBuilder
             manifest[name] = EncryptXml(doc);
         }
 
-        Add("ExportSettings.xml",              BuildExportSettings(siteUrl));
+        Add("ExportSettings.xml",              BuildExportSettings(siteUrl, overwrite));
         Add("LookupOrAddUserNamesFromSourceSite.xml", BuildUserNames());
         Add("Requirements.xml",               BuildRequirements());
         Add("RootObjectMap.xml",               BuildRootObjectMap(siteId, webId, webServerRelativeUrl));
@@ -165,13 +172,14 @@ public class MigrationPackageBuilder
 
     // ── XML builders ──────────────────────────────────────────────────────────
 
-    private XDocument BuildExportSettings(string siteUrl) =>
+    private XDocument BuildExportSettings(string siteUrl, bool overwrite) =>
         new(new XDeclaration("1.0", "utf-8", null),
             new XElement(NsExport + "ExportSettings",
                 new XAttribute("SiteUrl", siteUrl),
                 new XAttribute("FileLocation", ""),
                 new XAttribute("IncludeVersions", "All"),
-                new XAttribute("ExportMethod", "ExportAll")));
+                new XAttribute("ExportMethod", "ExportAll"),
+                overwrite ? new XAttribute("OverwriteExistingFiles", "true") : null));
 
     // LookupOrAddUserNamesFromSourceSite.xml is SPMI-specific with no Content Deployment schema.
     private XDocument BuildUserNames() =>

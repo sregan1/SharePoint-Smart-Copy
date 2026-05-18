@@ -14,7 +14,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         int maxParallel,
         int maxVersions,
         CopyMode copyMode,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IProgress<bool>? onMetadataDone = null)
     {
         var semaphore = new SemaphoreSlim(maxParallel, maxParallel);
         var allTasks  = new List<(CopyJob job, CopyResult result)>();
@@ -32,23 +33,29 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     in spService.EnumerateFilesAsync(job.SourceDriveId, job.SourceItemId))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    var fileDir = System.IO.Path.GetDirectoryName(relativePath)?.Replace('\\', '/') ?? string.Empty;
-                    var targetSubFolder = string.IsNullOrEmpty(fileDir)
-                        ? job.SourceName
-                        : $"{job.SourceName}/{fileDir}";
+                    var fileDir     = System.IO.Path.GetDirectoryName(relativePath)?.Replace('\\', '/') ?? string.Empty;
+                    var relToParent = job.IsLibrary
+                        ? fileDir
+                        : (string.IsNullOrEmpty(fileDir) ? job.SourceName : $"{job.SourceName}/{fileDir}");
+                    var targetSubFolder = string.IsNullOrEmpty(job.TargetSubFolderPath)
+                        ? relToParent
+                        : string.IsNullOrEmpty(relToParent)
+                            ? job.TargetSubFolderPath
+                            : $"{job.TargetSubFolderPath}/{relToParent}";
                     var fileJob = new CopyJob
                     {
-                        SourceDriveId       = driveId,
-                        SourceItemId        = itemId,
-                        SourceName          = name,
-                        SourceDisplayPath   = $"{job.SourceDisplayPath}/{relativePath}",
-                        TargetDriveId       = job.TargetDriveId,
-                        TargetParentItemId  = job.TargetParentItemId,
-                        TargetSiteId        = job.TargetSiteId,
-                        TargetSiteUrl       = job.TargetSiteUrl,
-                        TargetSubFolderPath = targetSubFolder,
-                        TargetDisplayPath   = $"{job.TargetDisplayPath}/{relativePath}",
-                        IsFolder            = false
+                        SourceDriveId                  = driveId,
+                        SourceItemId                   = itemId,
+                        SourceName                     = name,
+                        SourceDisplayPath              = $"{job.SourceDisplayPath}/{relativePath}",
+                        TargetDriveId                  = job.TargetDriveId,
+                        TargetParentItemId             = job.TargetParentItemId,
+                        TargetSiteId                   = job.TargetSiteId,
+                        TargetSiteUrl                  = job.TargetSiteUrl,
+                        TargetSubFolderPath            = targetSubFolder,
+                        TargetLibraryServerRelativeUrl = job.TargetLibraryServerRelativeUrl,
+                        TargetDisplayPath              = $"{job.TargetDisplayPath}/{relativePath}",
+                        IsFolder                       = false
                     };
 
                     var result = new CopyResult
@@ -77,9 +84,26 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             await Task.WhenAll(parallelTasks);
         }
 
-        // Apply metadata to all created folders (done after files so folders exist)
-        foreach (var job in jobs.Where(j => j.IsFolder))
-            await ApplyFolderMetadataRecursiveAsync(job, cancellationToken);
+        // Apply folder metadata in the background — folders exist by now, no need to block completion.
+        var folderJobs = jobs.Where(j => j.IsFolder).ToList();
+        if (folderJobs.Count > 0)
+            _ = ApplyAllFolderMetadataAsync(folderJobs, maxParallel, onMetadataDone, cancellationToken);
+    }
+
+    private async Task ApplyAllFolderMetadataAsync(
+        IEnumerable<CopyJob> folderJobs, int maxParallel,
+        IProgress<bool>? onDone, CancellationToken ct)
+    {
+        try
+        {
+            foreach (var job in folderJobs)
+                await ApplyFolderMetadataRecursiveAsync(job, maxParallel, ct);
+        }
+        catch { }
+        finally
+        {
+            onDone?.Report(true);
+        }
     }
 
     private async Task CopySingleFileAsync(
@@ -103,6 +127,11 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 result.Status = CopyStatus.Skipped;
                 return;
             }
+
+            // When overwriting with version history: delete the file first so the imported
+            // versions replace the history rather than being appended to it.
+            if (overwrite && copyVersions)
+                await spService.DeleteFileIfExistsAsync(job.TargetDriveId, targetParentId, job.SourceName);
 
             if (copyVersions)
                 await CopyWithVersionsEnhancedRestAsync(job, result, targetParentId, overwrite, maxVersions, ct);
@@ -238,12 +267,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         }
     }
 
-    private async Task ApplyFolderMetadataRecursiveAsync(CopyJob job, CancellationToken ct)
+    private async Task ApplyFolderMetadataRecursiveAsync(CopyJob job, int maxParallel, CancellationToken ct)
     {
-        if (job.SourceItemId != "root")
+        var prefix = string.IsNullOrEmpty(job.TargetSubFolderPath) ? "" : job.TargetSubFolderPath + "/";
+
+        if (!job.IsLibrary && job.SourceItemId != "root")
         {
             var rootTargetId = await spService.GetOrCreateFolderPathAsync(
-                job.TargetDriveId, job.TargetParentItemId, job.SourceName);
+                job.TargetDriveId, job.TargetParentItemId, prefix + job.SourceName);
             var rootMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
             await spService.ApplyFileMetadataAsync(job.TargetDriveId, rootTargetId, job.TargetSiteId, rootMeta);
             if (rootMeta.ModifiedDateTime.HasValue)
@@ -251,18 +282,24 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     rootMeta.ModifiedDateTime.Value, rootMeta.CreatedDateTime);
         }
 
-        await foreach (var (driveId, itemId, relativePath) in spService.EnumerateFoldersAsync(job.SourceDriveId, job.SourceItemId))
-        {
-            ct.ThrowIfCancellationRequested();
-            var targetPath = $"{job.SourceName}/{relativePath}";
-            var targetFolderId = await spService.GetOrCreateFolderPathAsync(
-                job.TargetDriveId, job.TargetParentItemId, targetPath);
-            var meta = await spService.GetFileMetadataAsync(driveId, itemId);
-            await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetFolderId, job.TargetSiteId, meta);
-            if (meta.ModifiedDateTime.HasValue)
-                await spService.PatchFileSystemDateAsync(job.TargetDriveId, targetFolderId,
-                    meta.ModifiedDateTime.Value, meta.CreatedDateTime);
-        }
+        var subFolders = new List<(string driveId, string itemId, string relativePath)>();
+        await foreach (var item in spService.EnumerateFoldersAsync(job.SourceDriveId, job.SourceItemId))
+            subFolders.Add(item);
+
+        await Parallel.ForEachAsync(subFolders,
+            new ParallelOptions { MaxDegreeOfParallelism = maxParallel, CancellationToken = ct },
+            async (item, innerCt) =>
+            {
+                var (driveId, itemId, relativePath) = item;
+                var targetPath = job.IsLibrary ? prefix + relativePath : prefix + $"{job.SourceName}/{relativePath}";
+                var targetFolderId = await spService.GetOrCreateFolderPathAsync(
+                    job.TargetDriveId, job.TargetParentItemId, targetPath);
+                var meta = await spService.GetFileMetadataAsync(driveId, itemId);
+                await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetFolderId, job.TargetSiteId, meta);
+                if (meta.ModifiedDateTime.HasValue)
+                    await spService.PatchFileSystemDateAsync(job.TargetDriveId, targetFolderId,
+                        meta.ModifiedDateTime.Value, meta.CreatedDateTime);
+            });
     }
 
     private static CopyResult? FindResult(IEnumerable<CopyResult> results, string sourcePath)

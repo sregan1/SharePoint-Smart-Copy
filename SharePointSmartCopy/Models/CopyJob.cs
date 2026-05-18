@@ -14,6 +14,7 @@ public class CopyJob
     public string TargetDisplayPath { get; set; } = string.Empty;
 
     public bool IsFolder { get; set; }
+    public bool IsLibrary { get; set; }
     public string TargetSubFolderPath { get; set; } = string.Empty;
 
     // Server-relative URL of the target document library root (e.g. "/sites/target/Shared Documents")
