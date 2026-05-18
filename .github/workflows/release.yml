@@ -36,6 +36,26 @@ jobs:
             -r win-x64 `
             -o publish
 
+      - name: Extract changelog section
+        shell: pwsh
+        run: |
+          $version = "${{ steps.ver.outputs.version }}"
+          $lines   = Get-Content CHANGELOG.md
+          $capture = $false
+          $notes   = [System.Collections.Generic.List[string]]::new()
+          foreach ($line in $lines) {
+            if ($line -match "^## $([regex]::Escape($version))") { $capture = $true; continue }
+            if ($capture -and $line -match '^## ') { break }
+            if ($capture) { $notes.Add($line) }
+          }
+          # Trim leading/trailing blank lines
+          while ($notes.Count -gt 0 -and $notes[0] -eq '') { $notes.RemoveAt(0) }
+          while ($notes.Count -gt 0 -and $notes[$notes.Count - 1] -eq '') { $notes.RemoveAt($notes.Count - 1) }
+          if ($notes.Count -eq 0) {
+            $notes.Add("See [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.")
+          }
+          $notes | Out-File -FilePath release_notes.md -Encoding utf8
+
       - name: Create or replace GitHub release
         shell: pwsh
         env:
@@ -55,4 +75,4 @@ jobs:
           gh release create $tag $zip $exe `
             --title "SharePoint Smart Copy $tag" `
             --latest `
-            --notes "See [CHANGELOG](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details."
+            --notes-file release_notes.md
