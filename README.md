@@ -1,16 +1,17 @@
 # SharePoint Smart Copy
 
+A free and open source WPF/.NET 8 desktop application for copying files between SharePoint Online site collections. Preserves complete version history and metadata, handles bulk operations through parallel threading, and includes built-in reporting.
+
 ## Website
 **[https://sharepointsmartsolutions.com/smart-copy](https://sharepointsmartsolutions.com/smart-copy)**
 
 ## User Guide
-**[SharePointSmartCopy/Docs/SharePointSmartCopy_UserGuide.docx](https://github.com/sregan1/SharePoint-Smart-Copy/raw/refs/heads/main/SharePointSmartCopy/Docs/SharePointSmartCopy_UserGuide.docx)**
+**[SharePointSmartCopy/Docs/UserGuide.md](https://github.com/sregan1/SharePoint-Smart-Copy/blob/main/SharePointSmartCopy/Docs/UserGuide.md)**
 
-A WPF .NET 8 desktop application that copies files with full version history and full metadata between SharePoint Online site collections.
 
 ## Features
 
-Do what you can't do in Powershell, and have to pay for with migration tools:
+Move SharePoint files across site collections - version history, metadata, and all.
 
 - Full version history along with matching metadata gets copied for each version
 - Bulk copy with 1-16 parallel file copies
