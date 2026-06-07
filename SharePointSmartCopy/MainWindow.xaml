@@ -1387,8 +1387,6 @@
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,8">
                     <Button Content="📥 Export CSV" Style="{StaticResource SecondaryBtn}"
                             Command="{Binding ExportReportCommand}"/>
-                    <Button Content="🔄 Start New Copy" Style="{StaticResource PrimaryBtn}"
-                            Margin="8,0,0,0" Click="StartNewCopy_Click"/>
                 </StackPanel>
 
                 <Border Grid.Row="3" BorderBrush="#EDEBE9" BorderThickness="1">
@@ -1431,11 +1429,16 @@
         <!-- ══ Navigation Bar ═══════════════════════════════════════════════════ -->
         <Border Grid.Row="3" Background="White" BorderBrush="#EDEBE9" BorderThickness="0,1,0,0">
             <Grid Margin="32,0">
-                <Button Content="← Back" Style="{StaticResource SecondaryBtn}"
-                        HorizontalAlignment="Left" VerticalAlignment="Center"
-                        Command="{Binding BackCommand}"
-                        AutomationProperties.Name="BackBtn"
-                        Visibility="{Binding CurrentStep, Converter={StaticResource NeqToVis}, ConverterParameter=0}"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Button Content="← Back" Style="{StaticResource SecondaryBtn}"
+                            Command="{Binding BackCommand}"
+                            AutomationProperties.Name="BackBtn"
+                            Visibility="{Binding CurrentStep, Converter={StaticResource NeqToVis}, ConverterParameter=0}"/>
+                    <Button Content="🔄 Start New Copy" Style="{StaticResource SecondaryBtn}"
+                            Margin="8,0,0,0"
+                            Click="StartNewCopy_Click"
+                            Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=5}"/>
+                </StackPanel>
 
                 <Button Style="{StaticResource PrimaryBtn}" HorizontalAlignment="Right" VerticalAlignment="Center"
                         Command="{Binding NextCommand}"
@@ -1459,6 +1462,7 @@
                         </TextBlock>
                     </Button.Content>
                 </Button>
+
             </Grid>
         </Border>
 
