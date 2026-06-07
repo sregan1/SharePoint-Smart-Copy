@@ -1,0 +1,375 @@
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using SharePointSmartCopy.Models;
+
+namespace SharePointSmartCopy.Services;
+
+// Reads and recreates SharePoint document library structure (columns, versioning) across sites.
+public class LibraryCopyService(SharePointService spService)
+{
+    // Reads all metadata needed to recreate a library at another site.
+    public async Task<LibraryDefinition> ReadLibraryDefinitionAsync(string sourceSiteUrl, string sourceDriveId)
+    {
+        var serverRelUrl = await spService.GetLibraryServerRelativeUrlAsync(sourceDriveId);
+        var listId       = await spService.GetListIdByServerRelativeUrlAsync(sourceSiteUrl, serverRelUrl);
+        var definition   = await ReadListMetadataAsync(sourceSiteUrl, listId);
+        definition.SourceDriveId = sourceDriveId;
+        definition.SourceSiteUrl = sourceSiteUrl;
+        definition.SourceListId  = listId;
+        definition.Columns       = await spService.GetLibraryColumnsAsync(sourceSiteUrl, listId);
+        return definition;
+    }
+
+    // Reads all library definitions for all document libraries on a site (parallel).
+    // Also includes system libraries (Site Assets, Style Library) that the Graph Drives
+    // API does not enumerate, fetching them by title via SharePoint REST.
+    public async Task<List<LibraryDefinition>> ReadAllLibraryDefinitionsAsync(string sourceSiteId, string sourceSiteUrl)
+    {
+        var libraries = await spService.GetLibrariesAsync(sourceSiteId, sourceSiteUrl);
+
+        // Append known system libraries missing from the Drives API, deduplicating by drive ID.
+        string[] systemLibraryTitles = ["Site Assets", "Style Library"];
+        foreach (var title in systemLibraryTitles)
+        {
+            var node = await spService.GetLibraryNodeByTitleAsync(sourceSiteId, sourceSiteUrl, title);
+            if (node != null && !libraries.Any(l => l.DriveId == node.DriveId))
+                libraries.Add(node);
+        }
+
+        var tasks   = libraries.Select(lib => ReadLibraryDefinitionAsync(sourceSiteUrl, lib.DriveId));
+        var results = await Task.WhenAll(tasks);
+        return [.. results];
+    }
+
+    // Creates a new document library at the target site matching the given definition.
+    // Returns the new library's Graph drive ID and server-relative URL.
+    // If overwrite=true and a library with the same name already exists, returns the existing library.
+    public async Task<(string newDriveId, string newServerRelativeUrl)> CreateLibraryAsync(
+        string targetSiteUrl, string targetSiteId,
+        LibraryDefinition definition,
+        IEnumerable<ColumnMapping>? columnMappings = null,
+        bool overwrite = false)
+    {
+        var baseUrl = targetSiteUrl.TrimEnd('/');
+
+        // Step 1: create the list
+        var createBody = JsonSerializer.Serialize(new
+        {
+            BaseTemplate = 101,
+            Title        = definition.Title,
+            Description  = definition.Description,
+        });
+
+        using var createResp = await spService.SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Post, $"{baseUrl}/_api/web/lists");
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            r.Content = new StringContent(createBody, System.Text.Encoding.UTF8, "application/json");
+            return r;
+        }, targetSiteUrl);
+
+        var createRespBody = await createResp.Content.ReadAsStringAsync();
+        if (!createResp.IsSuccessStatusCode)
+        {
+            if (IsAlreadyExistsError(createRespBody))
+            {
+                // Tier 1: Graph Drives API (normal libraries)
+                var existing = (await spService.GetLibrariesAsync(targetSiteId, targetSiteUrl))
+                    .FirstOrDefault(d => d.Name.Equals(definition.Title, StringComparison.OrdinalIgnoreCase));
+                if (existing != null)
+                {
+                    var existServerRel = await spService.GetLibraryServerRelativeUrlAsync(existing.DriveId);
+                    throw new LibraryAlreadyExistsException(existing.DriveId, existServerRel, listId: null);
+                }
+
+                // Tier 2: REST lookup — handles system libraries (Site Assets, Style Library) not in Drives API
+                var node = await spService.GetLibraryNodeByTitleAsync(targetSiteId, targetSiteUrl, definition.Title);
+                if (node != null)
+                {
+                    var serverRelUrl = node.ServerRelativePath
+                        ?? (string.IsNullOrEmpty(node.DriveId) ? null
+                            : await spService.GetLibraryServerRelativeUrlAsync(node.DriveId));
+                    throw new LibraryAlreadyExistsException(node.DriveId, serverRelUrl, listId: null);
+                }
+
+                // Exists but unresolvable (e.g. Style Library with no Graph drive)
+                throw new LibraryAlreadyExistsException(driveId: null, serverRelativeUrl: null, listId: null);
+            }
+            throw new Exception($"Create library '{definition.Title}' HTTP {(int)createResp.StatusCode}: {createRespBody[..Math.Min(200, createRespBody.Length)]}");
+        }
+
+        using var createDoc = JsonDocument.Parse(createRespBody);
+        var listId = createDoc.RootElement.GetProperty("Id").GetString()!;
+
+        // Step 2: set versioning settings
+        if (definition.EnableVersioning)
+        {
+            var versionBody = JsonSerializer.Serialize(new
+            {
+                EnableVersioning    = true,
+                EnableMinorVersions = definition.EnableMinorVersions,
+                MajorVersionLimit   = definition.MajorVersionLimit > 0 ? definition.MajorVersionLimit : 500,
+            });
+            using var versionResp = await spService.SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, $"{baseUrl}/_api/web/lists('{listId}')");
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                r.Headers.TryAddWithoutValidation("IF-MATCH", "*");
+                r.Headers.TryAddWithoutValidation("X-HTTP-Method", "MERGE");
+                r.Content = new StringContent(versionBody, System.Text.Encoding.UTF8, "application/json");
+                return r;
+            }, targetSiteUrl);
+
+            if (!versionResp.IsSuccessStatusCode &&
+                versionResp.StatusCode != System.Net.HttpStatusCode.NoContent)
+            {
+                var errBody = await versionResp.Content.ReadAsStringAsync();
+                throw new Exception($"Set versioning on '{definition.Title}' HTTP {(int)versionResp.StatusCode}: {errBody[..Math.Min(200, errBody.Length)]}");
+            }
+        }
+
+        // Step 3: create custom columns
+        // Build a lookup only when there are actual mapping decisions.
+        // An empty mapping list means the user never opened the dialog — treat as "create all".
+        var mappingEntries = columnMappings?
+            .Where(m => m.TargetColumn != null || m.CreateNew)
+            .ToDictionary(m => m.SourceColumn.InternalName);
+        var mappingLookup = mappingEntries?.Count > 0 ? mappingEntries : null;
+
+        var columnsToCreate = definition.Columns.Where(col =>
+        {
+            if (mappingLookup == null) return true;
+            if (!mappingLookup.TryGetValue(col.InternalName, out var mapping)) return false;
+            return mapping.CreateNew || mapping.TargetColumn?.InternalName == col.InternalName;
+        }).ToList();
+
+        foreach (var col in columnsToCreate)
+        {
+            try { await CreateColumnAsync(targetSiteUrl, listId, col); }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[LibraryCopy] Column '{col.InternalName}' create failed: {ex.Message}");
+            }
+        }
+
+        // Step 4: discover new drive ID (retry — Graph lags ~2s after list provisioning)
+        string newDriveId      = string.Empty;
+        string newServerRelUrl = string.Empty;
+        for (int attempt = 0; attempt < 3; attempt++)
+        {
+            if (attempt > 0) await Task.Delay(2000);
+            var drives = await spService.GetLibrariesAsync(targetSiteId, targetSiteUrl);
+            var match  = drives.FirstOrDefault(d =>
+                d.Name.Equals(definition.Title, StringComparison.OrdinalIgnoreCase));
+            if (match != null)
+            {
+                newDriveId      = match.DriveId;
+                newServerRelUrl = await spService.GetLibraryServerRelativeUrlAsync(match.DriveId);
+                break;
+            }
+        }
+
+        if (string.IsNullOrEmpty(newDriveId))
+            throw new Exception($"Created library '{definition.Title}' but could not find its drive ID in Graph.");
+
+        return (newDriveId, newServerRelUrl);
+    }
+
+    // Reads the schema for a custom list (non-document-library) identified by list GUID and title.
+    // The title parameter is used as-is so locale variants don't overwrite the source display name.
+    public async Task<LibraryDefinition> ReadListDefinitionAsync(
+        string sourceSiteUrl, string listId, string title)
+    {
+        var definition       = await ReadListMetadataAsync(sourceSiteUrl, listId);
+        definition.Title     = title;
+        definition.SourceSiteUrl = sourceSiteUrl;
+        definition.SourceListId  = listId;
+        definition.Columns   = await spService.GetLibraryColumnsAsync(sourceSiteUrl, listId);
+        return definition;
+    }
+
+    // Creates a generic (non-document-library) list at the target site.
+    // If overwrite=true and a list with the same title already exists, returns the existing list's ID.
+    // Returns the new (or existing) list GUID.
+    public async Task<string> CreateCustomListAsync(
+        string targetSiteUrl, string targetSiteId,
+        LibraryDefinition definition, int baseTemplate,
+        bool overwrite = false)
+    {
+        var baseUrl = targetSiteUrl.TrimEnd('/');
+        var createBody = JsonSerializer.Serialize(new
+        {
+            BaseTemplate = baseTemplate,
+            Title        = definition.Title,
+            Description  = definition.Description,
+        });
+
+        using var createResp = await spService.SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Post, $"{baseUrl}/_api/web/lists");
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            r.Content = new StringContent(createBody, System.Text.Encoding.UTF8, "application/json");
+            return r;
+        }, targetSiteUrl);
+
+        string listId;
+        var createRespBody = await createResp.Content.ReadAsStringAsync();
+
+        if (!createResp.IsSuccessStatusCode)
+        {
+            if (IsAlreadyExistsError(createRespBody))
+            {
+                var existingId = await spService.GetListIdByTitleAsync(targetSiteUrl, definition.Title);
+                throw new LibraryAlreadyExistsException(driveId: null, serverRelativeUrl: null, listId: existingId);
+            }
+            throw new Exception($"Create list '{definition.Title}' HTTP {(int)createResp.StatusCode}: {createRespBody[..Math.Min(200, createRespBody.Length)]}");
+        }
+        else
+        {
+            using var doc = JsonDocument.Parse(createRespBody);
+            listId = doc.RootElement.GetProperty("Id").GetString()!;
+        }
+
+        foreach (var col in definition.Columns)
+        {
+            try { await CreateColumnAsync(targetSiteUrl, listId, col); }
+            catch { }
+        }
+
+        return listId;
+    }
+
+    private async Task CreateColumnAsync(string siteUrl, string listId, ColumnDefinition col)
+    {
+        var fieldTypeKind = col.FieldType switch
+        {
+            SupportedFieldType.Text        => 2,
+            SupportedFieldType.Note        => 3,
+            SupportedFieldType.DateTime    => 4,
+            SupportedFieldType.Choice      => 6,
+            SupportedFieldType.Boolean     => 8,
+            SupportedFieldType.Number      => 9,
+            SupportedFieldType.MultiChoice => 15,
+            _ => 2,
+        };
+        string json;
+        if ((col.FieldType == SupportedFieldType.Choice || col.FieldType == SupportedFieldType.MultiChoice)
+            && col.Choices is { Length: > 0 })
+        {
+            json = JsonSerializer.Serialize(new
+            {
+                FieldTypeKind = fieldTypeKind,
+                Title         = col.DisplayName,
+                Required      = false,
+                Choices       = new { results = col.Choices },
+            });
+        }
+        else
+        {
+            json = JsonSerializer.Serialize(new
+            {
+                FieldTypeKind = fieldTypeKind,
+                Title         = col.DisplayName,
+                Required      = false,
+            });
+        }
+
+        // Create the field and read back the actual InternalName (SP may mangle spaces)
+        var createUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/fields";
+        string actualInternalName = col.InternalName;
+
+        using var createResp = await spService.SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Post, createUrl);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            r.Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            return r;
+        }, siteUrl);
+
+        var createBody = await createResp.Content.ReadAsStringAsync();
+        if (createResp.IsSuccessStatusCode)
+        {
+            using var doc = JsonDocument.Parse(createBody);
+            if (doc.RootElement.TryGetProperty("InternalName", out var n))
+                actualInternalName = n.GetString() ?? col.InternalName;
+        }
+
+        // Add to default view (non-critical)
+        try
+        {
+            var viewUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/defaultView/viewfields/addViewField('{actualInternalName}')";
+            using var _ = await spService.SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, viewUrl);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
+                return r;
+            }, siteUrl);
+        }
+        catch { }
+    }
+
+    // Adds any source columns that are absent from the existing target list.
+    // Called when a library/list already exists so its schema stays in sync with the source.
+    public async Task AddMissingColumnsAsync(
+        string targetSiteUrl, string targetListId,
+        IEnumerable<ColumnDefinition> sourceColumns)
+    {
+        var existing      = await spService.GetLibraryColumnsAsync(targetSiteUrl, targetListId);
+        var existingNames = existing.Select(c => c.InternalName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        foreach (var col in sourceColumns.Where(c => !existingNames.Contains(c.InternalName)))
+        {
+            try { await CreateColumnAsync(targetSiteUrl, targetListId, col); }
+            catch { }
+        }
+    }
+
+    private static bool IsAlreadyExistsError(string body) =>
+        body.Contains("-2130575342", StringComparison.Ordinal) ||
+        body.Contains("already exists", StringComparison.OrdinalIgnoreCase);
+
+    private async Task<LibraryDefinition> ReadListMetadataAsync(string siteUrl, string listId)
+    {
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')" +
+                  "?$select=Title,Description,EnableVersioning,EnableMinorVersions,MajorVersionLimit";
+
+        using var response = await spService.SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Get, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            return r;
+        }, siteUrl);
+
+        var body = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+            throw new Exception($"ReadListMetadata HTTP {(int)response.StatusCode}: {body[..Math.Min(200, body.Length)]}");
+
+        using var doc = JsonDocument.Parse(body);
+        var root = doc.RootElement;
+        return new LibraryDefinition
+        {
+            Title               = root.TryGetProperty("Title",               out var t)   ? t.GetString()   ?? "" : "",
+            Description         = root.TryGetProperty("Description",         out var d)   ? d.GetString()   ?? "" : "",
+            EnableVersioning    = root.TryGetProperty("EnableVersioning",    out var ev)  && ev.GetBoolean(),
+            EnableMinorVersions = root.TryGetProperty("EnableMinorVersions", out var emv) && emv.GetBoolean(),
+            MajorVersionLimit   = root.TryGetProperty("MajorVersionLimit",   out var mvl) && mvl.TryGetInt32(out var mvlv) ? mvlv : 0,
+        };
+    }
+}
+
+internal sealed class LibraryAlreadyExistsException(
+    string? driveId, string? serverRelativeUrl, string? listId)
+    : Exception("Already exists — skipped")
+{
+    public string? DriveId           { get; } = driveId;
+    public string? ServerRelativeUrl { get; } = serverRelativeUrl;
+    public string? ListId            { get; } = listId;
+}

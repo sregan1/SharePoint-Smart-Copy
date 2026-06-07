@@ -4,6 +4,48 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 3.0.0
+
+### New Features
+
+**Libraries & Lists copy scope**
+- Copy entire document libraries to a target site — recreates the library with matching versioning settings, custom column schema, and all content.
+- Copy generic lists (Tasks, Calendars, Announcements, custom lists) — recreates structure and copies list item data including all custom column values.
+- Overwrite behavior: if a library or list already exists at the target, it is skipped gracefully (shown as ⏭ Skipped in the report) rather than failing.
+- System libraries (Site Assets, Style Library) that are not returned by the Graph Drives API are resolved via a SharePoint REST fallback and handled correctly.
+
+**Site copy scope**
+- Copy all document libraries and custom lists from a source site to a target site in a single operation.
+- Navigation links (Quick Launch) are optionally copied alongside the content.
+- Each library and list appears as its own row in the progress screen and report.
+
+**Pages copy scope**
+- Copy modern SharePoint pages (.aspx) between sites.
+- Optional web part URL remapping: internal URLs within web part properties are rewritten from the source site domain to the target site domain.
+
+**Custom column mapping**
+- When copying files between libraries with different column schemas, a Configure Mappings dialog lets you map source columns to target columns or mark them for creation on the target.
+- The mapping dialog is accessible from the Copy Options step when "Copy custom column values" is enabled.
+
+### UI Improvements
+
+- New mode selection tile on the Browse step: choose Files, Libraries & Lists, Site, or Pages before browsing.
+- Copy Preview panel on the Options step is now scope-aware: shows a library/list summary for Libraries & Lists and Site scopes, and the file list for Files and Pages scopes.
+- Version history sub-options (Copy all / Latest N) are shown inline under the "Copy version history" checkbox with ⓘ tooltips.
+- Migration API is pre-selected by default on the Options step.
+- Versions column in the progress and report grids is hidden for library/list creation rows (where it is not applicable).
+- The Configure Mappings button is disabled while column metadata is loading, preventing the dialog from opening with an empty column list.
+- Removed splash screen on startup.
+
+### Bug Fixes
+
+- Fixed: Events and other custom lists showed ❌ Failed instead of ⏭ Skipped when the list already existed at the target during a site copy.
+- Fixed: Migration API radio button was not pre-selected when navigating to the Options step for the Libraries & Lists scope due to a `GroupName` conflict between the two copy-mode radio button groups.
+- Fixed: `CopyLibraryContent` and `RemapPageWebPartUrls` settings were not restored from disk on startup.
+- Fixed: column mappings were not cleared when switching copy scope or navigating back from the Options step, causing stale mappings from a previous run to be applied.
+
+---
+
 ## 2.1.0
 
 ### Bug Fixes

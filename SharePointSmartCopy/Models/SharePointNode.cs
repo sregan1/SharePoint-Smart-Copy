@@ -21,6 +21,9 @@ public partial class SharePointNode : ObservableObject
     [ObservableProperty] private ObservableCollection<SharePointNode> _children = [];
 
     public bool HasChildren { get; set; }
+    public bool IsPage { get; set; }
+    public bool IsCustomList { get; set; }
+    public int ListBaseTemplate { get; set; }
     public SharePointNode? Parent { get; set; }
     public string? ServerRelativePath { get; set; }
 
@@ -28,7 +31,7 @@ public partial class SharePointNode : ObservableObject
 
     public string SizeDisplay => Size.HasValue ? FormatSize(Size.Value) : string.Empty;
 
-    public string TypeIcon => Type switch
+    public string TypeIcon => IsCustomList ? "📋" : Type switch
     {
         NodeType.Library => "📚",
         NodeType.Folder  => "📁",

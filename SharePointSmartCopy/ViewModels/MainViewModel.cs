@@ -1,10 +1,11 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SharePointSmartCopy.Models;
 using SharePointSmartCopy.Services;
+using SpColumnDef = SharePointSmartCopy.Models.ColumnDefinition;
 
 namespace SharePointSmartCopy.ViewModels;
 
@@ -13,18 +14,28 @@ public partial class MainViewModel : ObservableObject
     public readonly AuthService AuthService;
     public readonly SharePointService SpService;
     private readonly CopyService _copyService;
+    private readonly LibraryCopyService _libraryCopyService;
 
     private CancellationTokenSource? _copyCts;
     private CancellationTokenSource? _connectSourceCts;
     private CancellationTokenSource? _connectTargetCts;
 
-    public MainViewModel(AuthService? existingAuthService = null)
+    // Bulk custom field cache keyed by SP list item integer ID (populated before copy starts)
+    private Dictionary<string, Dictionary<string, object?>> _bulkFieldCache = [];
+    // Source and target library columns for the column mapping dialog
+    private List<SpColumnDef> _sourceColumns = [];
+    private List<SpColumnDef> _targetColumns = [];
+    // Tracked so ConfigureMappings_Click can await completion before opening dialog
+    internal Task? _columnLoadTask;
+
+    public MainViewModel(AuthService? existingAuthService = null, AppSettings? settings = null)
     {
-        AuthService  = existingAuthService ?? new AuthService();
-        SpService    = new SharePointService(AuthService);
+        AuthService          = existingAuthService ?? new AuthService();
+        SpService            = new SharePointService(AuthService);
         var migrationJobService = new MigrationJobService(SpService);
-        _copyService = new CopyService(SpService, migrationJobService);
-        Settings     = AppSettings.Load();
+        _copyService         = new CopyService(SpService, migrationJobService);
+        _libraryCopyService  = new LibraryCopyService(SpService);
+        Settings             = settings ?? AppSettings.Load();
 
         if (Settings.IsConfigured)
         {
@@ -33,14 +44,24 @@ public partial class MainViewModel : ObservableObject
             SpService.Initialize();
         }
 
-        SourceUrl        = Settings.SourceUrl;
-        TargetUrl        = Settings.TargetUrl;
-        CopyMode         = Settings.PreferredCopyMode;
-        OverwriteFiles   = Settings.OverwriteFiles;
-        CopyVersions     = Settings.CopyVersions;
-        CopyAllVersions  = Settings.CopyAllVersions;
-        MaxVersions      = Settings.MaxVersions;
+        SourceUrl         = Settings.SourceUrl;
+        TargetUrl         = Settings.TargetUrl;
+        CopyMode          = Settings.PreferredCopyMode;
+        OverwriteFiles    = Settings.OverwriteFiles;
+        CopyVersions      = Settings.CopyVersions;
+        CopyAllVersions   = Settings.CopyAllVersions;
+        MaxVersions       = Settings.MaxVersions;
         MaxParallelCopies = Settings.MaxParallelCopies;
+        PreserveMetadata    = Settings.PreserveMetadata;
+        CopyNavigation      = Settings.CopyNavigation;
+        CopyLibraryContent  = Settings.CopyLibraryContent;
+        RemapPageWebPartUrls = Settings.RemapPageWebPartUrls;
+
+        SourceLibraries.CollectionChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(LibrarySummaryCount));
+            OnPropertyChanged(nameof(LibraryPreviewItems));
+        };
     }
 
     // ── Settings ──────────────────────────────────────────────────────────────
@@ -135,11 +156,39 @@ public partial class MainViewModel : ObservableObject
         try
         {
             var libs = await SpService.GetLibrariesAsync(SourceSiteId, SourceUrl.Trim());
+
+            List<(string Id, string Title, int BaseTemplate)> customLists = [];
+            if (CopyScope == CopyScope.Library)
+                customLists = await SpService.GetCustomListsAsync(SourceUrl.TrimEnd('/'));
+
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 SourceLibraries.Clear();
                 foreach (var lib in libs)
+                {
+                    // Library scope: selecting whole libraries — prevent confusing child expansion
+                    if (CopyScope == CopyScope.Library)
+                    {
+                        lib.HasChildren = false;
+                        lib.Children.Clear();
+                    }
                     SourceLibraries.Add(lib);
+                }
+                foreach (var (id, title, baseTemplate) in customLists)
+                {
+                    SourceLibraries.Add(new SharePointNode
+                    {
+                        Id               = id,
+                        Name             = title,
+                        DriveId          = string.Empty,
+                        SiteId           = SourceSiteId,
+                        SiteUrl          = SourceUrl,
+                        Type             = NodeType.Library,
+                        HasChildren      = false,
+                        IsCustomList     = true,
+                        ListBaseTemplate = baseTemplate,
+                    });
+                }
             });
         }
         catch (Exception ex)
@@ -150,6 +199,52 @@ public partial class MainViewModel : ObservableObject
         {
             IsBusy = false;
             StatusMessage = string.Empty;
+        }
+    }
+
+    // Loads the Site Pages library and immediately expands it to show page files.
+    public async Task LoadPageLibraryAsync()
+    {
+        IsBusy = true;
+        StatusMessage = "Loading Site Pages…";
+        string? errorMessage = null;
+        try
+        {
+            var sitePagesNode = await SpService.GetSitePagesLibraryAsync(SourceSiteId, SourceUrl.Trim());
+            if (sitePagesNode == null)
+            {
+                errorMessage = "No Site Pages library found on this site.";
+                return;
+            }
+
+            // Pre-load the pages so the user sees them immediately without expanding
+            var pages = await SpService.GetChildrenAsync(
+                sitePagesNode.DriveId, sitePagesNode.Id,
+                sitePagesNode.SiteId, sitePagesNode.SiteUrl);
+
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                SourceLibraries.Clear();
+                sitePagesNode.Children.Clear();
+                sitePagesNode.IsExpanded = true;
+                foreach (var page in pages)
+                {
+                    page.Parent = sitePagesNode;
+                    page.IsPage = true;
+                    sitePagesNode.Children.Add(page);
+                }
+                sitePagesNode.HasChildren = sitePagesNode.Children.Count > 0;
+                SourceLibraries.Add(sitePagesNode);
+            });
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading Site Pages: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+            StatusMessage = errorMessage ?? string.Empty;
         }
     }
 
@@ -237,6 +332,25 @@ public partial class MainViewModel : ObservableObject
             Settings.TargetUrl = TargetUrl.Trim();
             Settings.Save();
 
+            // Pages scope: pages can only go into a Site Pages library (the SitePages API is
+            // exclusive to BaseTemplate=119). Replace all target libraries with only Site Pages
+            // and auto-select it — there is exactly one valid destination.
+            if (IsPagesScope)
+            {
+                try
+                {
+                    var sitePagesTarget = await SpService.GetSitePagesLibraryAsync(TargetSiteId, TargetUrl.Trim());
+                    if (sitePagesTarget != null)
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            TargetLibraries.Clear();
+                            TargetLibraries.Add(sitePagesTarget);
+                            SelectedTargetFolder = sitePagesTarget;
+                        });
+                }
+                catch { /* non-critical */ }
+            }
+
             try { await AuthService.GetSharePointTokenAsync(TargetUrl.Trim(), cancellationToken: ct); }
             catch
             {
@@ -294,6 +408,47 @@ public partial class MainViewModel : ObservableObject
         finally { node.IsLoading = false; }
     }
 
+    // ── Copy Scope ────────────────────────────────────────────────────────────
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsFilesScope))]
+    [NotifyPropertyChangedFor(nameof(IsLibraryScope))]
+    [NotifyPropertyChangedFor(nameof(IsSiteScope))]
+    [NotifyPropertyChangedFor(nameof(IsPagesScope))]
+    [NotifyPropertyChangedFor(nameof(IsLibraryOrSiteScope))]
+    [NotifyPropertyChangedFor(nameof(IsFilesOrPagesScope))]
+    [NotifyPropertyChangedFor(nameof(NeedsTargetFolder))]
+    [NotifyPropertyChangedFor(nameof(LibrarySummaryCount))]
+    [NotifyPropertyChangedFor(nameof(LibraryPreviewItems))]
+    [NotifyPropertyChangedFor(nameof(EffectiveCopyCustomColumns))]
+    [NotifyCanExecuteChangedFor(nameof(NextCommand))]
+    private CopyScope _copyScope = CopyScope.Files;
+
+    public bool IsFilesScope         => CopyScope == CopyScope.Files;
+    public bool IsLibraryScope       => CopyScope == CopyScope.Library;
+    public bool IsSiteScope          => CopyScope == CopyScope.Site;
+    public bool IsPagesScope         => CopyScope == CopyScope.Pages;
+    public bool IsLibraryOrSiteScope => CopyScope is CopyScope.Library or CopyScope.Site;
+    public bool IsFilesOrPagesScope  => CopyScope is CopyScope.Files or CopyScope.Pages;
+    public bool NeedsTargetFolder    => CopyScope is CopyScope.Files or CopyScope.Pages;
+
+    // For Library scope: count of checked library nodes. For Site scope: count of all loaded libraries.
+    public int LibrarySummaryCount => IsSiteScope
+        ? SourceLibraries.Count
+        : SourceLibraries.SelectMany(l => l.GetCheckedNodes()).Count(n => n.Type == NodeType.Library);
+
+    // Libraries shown in the Options step preview for Library/Site scope.
+    public IEnumerable<SharePointNode> LibraryPreviewItems => IsSiteScope
+        ? SourceLibraries
+        : SourceLibraries.Where(n => n.IsChecked == true);
+
+    // Called from code-behind when any source node check state changes.
+    public void NotifySelectionChanged()
+    {
+        OnPropertyChanged(nameof(LibrarySummaryCount));
+        NextCommand.NotifyCanExecuteChanged();
+    }
+
     // ── Step 3: Options ───────────────────────────────────────────────────────
 
     [ObservableProperty] private bool _overwriteFiles = false;
@@ -309,6 +464,32 @@ public partial class MainViewModel : ObservableObject
 
     public bool IsMigrationApiMode  => CopyMode == CopyMode.MigrationApi;
     public bool IsEnhancedRestMode  => CopyMode == CopyMode.EnhancedRest;
+
+    // New options
+    [ObservableProperty] private bool _preserveMetadata = true;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(EffectiveCopyCustomColumns))]
+    private bool _copyCustomColumns = false;
+    [ObservableProperty] private bool _copyLibraryContent = true;
+    [ObservableProperty] private bool _remapPageWebPartUrls = true;
+    [ObservableProperty] private bool _copyNavigation = true;
+    public ObservableCollection<ColumnMapping> ColumnMappings { get; } = [];
+
+    // Library and Site scopes always copy all custom column values; Files scope uses the checkbox.
+    public bool EffectiveCopyCustomColumns => IsLibraryOrSiteScope || CopyCustomColumns;
+    public IReadOnlyList<SpColumnDef> SourceColumns => _sourceColumns;
+    public IReadOnlyList<SpColumnDef> TargetColumns => _targetColumns;
+
+    public string MappingButtonLabel
+    {
+        get
+        {
+            var unmatched = ColumnMappings.Count(m => m.Status == MappingStatus.Unmatched);
+            return unmatched > 0
+                ? $"Configure mappings  ⚠ {unmatched} unmatched"
+                : $"Configure mappings ({ColumnMappings.Count})";
+        }
+    }
 
     public void BuildCopyJobs()
     {
@@ -348,6 +529,7 @@ public partial class MainViewModel : ObservableObject
                     SourceDriveId                  = node.DriveId,
                     SourceItemId                   = node.Id,
                     SourceName                     = node.Name,
+                    SourceSiteUrl                  = sourceSiteUrl,
                     SourceDisplayPath              = $"{sourceSiteUrl}/{BuildPath(node)}",
                     TargetDriveId                  = SelectedTargetFolder.DriveId,
                     TargetParentItemId             = libraryNode.Id,
@@ -357,7 +539,8 @@ public partial class MainViewModel : ObservableObject
                     TargetDisplayPath              = targetDisplayPath,
                     TargetLibraryServerRelativeUrl = libraryNode.ServerRelativePath ?? string.Empty,
                     IsFolder                       = node.Type != NodeType.File,
-                    IsLibrary                      = isLibrary
+                    IsLibrary                      = isLibrary,
+                    IsPage                         = node.IsPage,
                 };
                 CopyJobs.Add(job);
             }
@@ -431,16 +614,52 @@ public partial class MainViewModel : ObservableObject
         try
         {
             int versionLimit = CopyVersions && !CopyAllVersions ? MaxVersions : 0;
+
+            // Build bulk field cache for custom columns (single paginated pass)
+            _bulkFieldCache = [];
+            if (EffectiveCopyCustomColumns && CopyJobs.Count > 0)
+            {
+                StatusMessage = "Reading source metadata…";
+                try
+                {
+                    var firstJob = CopyJobs.First(j => !j.IsFolder);
+                    var serverRelUrl = await SpService.GetLibraryServerRelativeUrlAsync(firstJob.SourceDriveId);
+                    var sourceListId = await SpService.GetListIdByServerRelativeUrlAsync(
+                        SourceUrl.TrimEnd('/'), serverRelUrl);
+                    var cols = await SpService.GetLibraryColumnsAsync(SourceUrl.TrimEnd('/'), sourceListId);
+                    _bulkFieldCache = await SpService.BulkReadCustomFieldsAsync(
+                        SourceUrl.TrimEnd('/'), sourceListId, cols,
+                        ct: _copyCts.Token);
+                }
+                catch { /* non-critical */ }
+                StatusMessage = string.Empty;
+            }
+
+            // Pages scope must use Enhanced REST — SPMI cannot import .aspx files into the Site
+            // Pages list (WebPageLibrary/BaseTemplate=119) because the manifest declares the list
+            // as DocumentLibrary (BaseTemplate=101), causing a fatal template-mismatch error.
+            // Pages also skip version copy — GetVersionsAsync on .aspx files fails in Graph and
+            // triggers 3 Kiota retries (4 ODataError entries in the debugger per page).
+            var effectiveCopyMode     = IsPagesScope ? CopyMode.EnhancedRest : CopyMode;
+            var effectiveCopyVersions = IsPagesScope ? false : CopyVersions;
+            var effectiveVersionLimit = IsPagesScope ? 0 : versionLimit;
+
             await _copyService.ExecuteAsync(
                 CopyJobs,
                 CopyResults,
                 OverwriteFiles,
-                CopyVersions,
+                effectiveCopyVersions,
                 MaxParallelCopies,
-                versionLimit,
-                CopyMode,
+                effectiveVersionLimit,
+                effectiveCopyMode,
                 _copyCts.Token,
-                onMetadataDone);
+                onMetadataDone,
+                EffectiveCopyCustomColumns,
+                [.. ColumnMappings],
+                _bulkFieldCache,
+                IsPagesScope,
+                RemapPageWebPartUrls,
+                PreserveMetadata);
         }
         catch (OperationCanceledException) { StatusMessage = "Copy cancelled."; }
         catch (Exception ex)              { StatusMessage = $"Copy error: {ex.Message}"; }
@@ -463,6 +682,643 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void CancelCopy() => _copyCts?.Cancel();
 
+    private async Task StartLibraryCopyAsync()
+    {
+        IsCopying      = true;
+        IsCopyComplete = false;
+        CopyDuration   = string.Empty;
+        CopyResults.Clear();
+        _copyStartTime = DateTimeOffset.Now;
+        _copyEndTime   = null;
+
+        _copyCts = new CancellationTokenSource();
+
+        var progressTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(400)
+        };
+        progressTimer.Tick += (_, _) => UpdateProgress();
+        progressTimer.Start();
+
+        try
+        {
+            List<LibraryDefinition> definitions;
+            var listDefinitions = new List<(LibraryDefinition Def, int BaseTemplate)>();
+            if (IsSiteScope)
+            {
+                StatusMessage = "Reading site library structure…";
+                definitions   = await _libraryCopyService.ReadAllLibraryDefinitionsAsync(
+                    SourceSiteId, SourceUrl.TrimEnd('/'));
+            }
+            else
+            {
+                StatusMessage = "Reading library structure…";
+                definitions   = [];
+                foreach (var lib in SourceLibraries)
+                {
+                    foreach (var node in lib.GetCheckedNodes().Where(n => n.Type == NodeType.Library))
+                    {
+                        if (node.IsCustomList)
+                        {
+                            var def = await _libraryCopyService.ReadListDefinitionAsync(
+                                SourceUrl.TrimEnd('/'), node.Id, node.Name);
+                            listDefinitions.Add((def, node.ListBaseTemplate));
+                        }
+                        else
+                        {
+                            var def = await _libraryCopyService.ReadLibraryDefinitionAsync(
+                                SourceUrl.TrimEnd('/'), node.DriveId);
+                            definitions.Add(def);
+                        }
+                    }
+                }
+            }
+
+            StatusMessage = string.Empty;
+
+            foreach (var def in definitions)
+            {
+                _copyCts.Token.ThrowIfCancellationRequested();
+
+                // Emit a "library created" result row
+                var libResult = new CopyResult
+                {
+                    FileName          = def.Title,
+                    SourcePath        = $"{SourceUrl.TrimEnd('/')}/{def.Title}",
+                    TargetPath        = $"{TargetUrl.TrimEnd('/')}/{def.Title}",
+                    Status            = CopyStatus.Copying,
+                    IsLibraryCreation = true,
+                };
+                System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(libResult));
+
+                try
+                {
+                    var (newDriveId, newServerRelUrl) = await _libraryCopyService.CreateLibraryAsync(
+                        TargetUrl.TrimEnd('/'), TargetSiteId, def, ColumnMappings, OverwriteFiles);
+                    libResult.Status = CopyStatus.Success;
+
+                    if (CopyLibraryContent)
+                    {
+                        StatusMessage = $"Copying files into '{def.Title}'…";
+
+                        // Build file jobs targeting the new library
+                        var newLibRoot = await SpService.GetLibraryRootItemIdAsync(newDriveId);
+                        if (newLibRoot == null)
+                        {
+                            libResult.ErrorMessage = "Library created but root item ID could not be retrieved; file copy skipped.";
+                        }
+                        else
+                        {
+                            var fileJobs = new List<CopyJob>
+                            {
+                                new CopyJob
+                                {
+                                    SourceDriveId                  = def.SourceDriveId,
+                                    SourceItemId                   = "root",
+                                    SourceName                     = def.Title,
+                                    SourceSiteUrl                  = def.SourceSiteUrl,
+                                    SourceDisplayPath              = $"{def.SourceSiteUrl}/{def.Title}",
+                                    TargetDriveId                  = newDriveId,
+                                    TargetParentItemId             = newLibRoot,
+                                    TargetSiteId                   = TargetSiteId,
+                                    TargetSiteUrl                  = TargetUrl.TrimEnd('/'),
+                                    TargetDisplayPath              = $"{TargetUrl.TrimEnd('/')}/{def.Title}",
+                                    TargetLibraryServerRelativeUrl = newServerRelUrl,
+                                    IsFolder                       = true,
+                                    IsLibrary                      = true,
+                                    ColumnMappings                 = [.. ColumnMappings],
+                                }
+                            };
+
+                            // Build bulk field cache for this library
+                            _bulkFieldCache = [];
+                            if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
+                            {
+                                try
+                                {
+                                    var sourceListId = def.SourceListId;
+                                    _bulkFieldCache = await SpService.BulkReadCustomFieldsAsync(
+                                        def.SourceSiteUrl, sourceListId, def.Columns,
+                                        ct: _copyCts.Token);
+                                }
+                                catch { }
+                            }
+
+                            int versionLimit = CopyVersions && !CopyAllVersions ? MaxVersions : 0;
+                            await _copyService.ExecuteAsync(
+                                fileJobs, CopyResults,
+                                OverwriteFiles, CopyVersions, MaxParallelCopies, versionLimit,
+                                CopyMode, _copyCts.Token,
+                                copyCustomColumns: EffectiveCopyCustomColumns,
+                                columnMappings: [.. ColumnMappings],
+                                bulkFieldCache: _bulkFieldCache,
+                                preserveMetadata: PreserveMetadata);
+                        }
+                        StatusMessage = string.Empty;
+                    }
+                }
+                catch (LibraryAlreadyExistsException alreadyEx)
+                {
+                    libResult.Status       = CopyStatus.Skipped;
+                    libResult.ErrorMessage = alreadyEx.Message;
+
+                    // Sync schema: add any source columns missing from the existing target library
+                    if (!string.IsNullOrEmpty(alreadyEx.ServerRelativeUrl) && def.Columns.Count > 0)
+                    {
+                        try
+                        {
+                            var existingListId = await SpService.GetListIdByServerRelativeUrlAsync(
+                                TargetUrl.TrimEnd('/'), alreadyEx.ServerRelativeUrl);
+                            await _libraryCopyService.AddMissingColumnsAsync(
+                                TargetUrl.TrimEnd('/'), existingListId, def.Columns);
+                        }
+                        catch { }
+                    }
+
+                    if (CopyLibraryContent && !string.IsNullOrEmpty(alreadyEx.DriveId))
+                    {
+                        StatusMessage = $"Copying files into existing '{def.Title}'…";
+
+                        var newLibRoot = await SpService.GetLibraryRootItemIdAsync(alreadyEx.DriveId);
+                        if (newLibRoot == null)
+                        {
+                            libResult.ErrorMessage += " (file copy skipped — root item ID unavailable)";
+                        }
+                        else
+                        {
+                            var serverRelUrl = alreadyEx.ServerRelativeUrl ?? string.Empty;
+                            var fileJobs = new List<CopyJob>
+                            {
+                                new CopyJob
+                                {
+                                    SourceDriveId                  = def.SourceDriveId,
+                                    SourceItemId                   = "root",
+                                    SourceName                     = def.Title,
+                                    SourceSiteUrl                  = def.SourceSiteUrl,
+                                    SourceDisplayPath              = $"{def.SourceSiteUrl}/{def.Title}",
+                                    TargetDriveId                  = alreadyEx.DriveId,
+                                    TargetParentItemId             = newLibRoot,
+                                    TargetSiteId                   = TargetSiteId,
+                                    TargetSiteUrl                  = TargetUrl.TrimEnd('/'),
+                                    TargetDisplayPath              = $"{TargetUrl.TrimEnd('/')}/{def.Title}",
+                                    TargetLibraryServerRelativeUrl = serverRelUrl,
+                                    IsFolder                       = true,
+                                    IsLibrary                      = true,
+                                    ColumnMappings                 = [.. ColumnMappings],
+                                }
+                            };
+
+                            _bulkFieldCache = [];
+                            if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
+                            {
+                                try
+                                {
+                                    _bulkFieldCache = await SpService.BulkReadCustomFieldsAsync(
+                                        def.SourceSiteUrl, def.SourceListId, def.Columns,
+                                        ct: _copyCts.Token);
+                                }
+                                catch { }
+                            }
+
+                            int versionLimit = CopyVersions && !CopyAllVersions ? MaxVersions : 0;
+                            await _copyService.ExecuteAsync(
+                                fileJobs, CopyResults,
+                                OverwriteFiles, CopyVersions, MaxParallelCopies, versionLimit,
+                                CopyMode, _copyCts.Token,
+                                copyCustomColumns: EffectiveCopyCustomColumns,
+                                columnMappings: [.. ColumnMappings],
+                                bulkFieldCache: _bulkFieldCache,
+                                preserveMetadata: PreserveMetadata);
+                        }
+                        StatusMessage = string.Empty;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    libResult.Status       = CopyStatus.Failed;
+                    libResult.ErrorMessage = ex.Message;
+                }
+            }
+
+            // For Library scope: copy any selected custom lists (Tasks, Calendars, etc.).
+            foreach (var (def, baseTemplate) in listDefinitions)
+            {
+                _copyCts.Token.ThrowIfCancellationRequested();
+
+                var listResult = new CopyResult
+                {
+                    FileName          = def.Title,
+                    SourcePath        = $"{SourceUrl.TrimEnd('/')}/{def.Title}",
+                    TargetPath        = $"{TargetUrl.TrimEnd('/')}/{def.Title}",
+                    Status            = CopyStatus.Copying,
+                    IsLibraryCreation = true,
+                };
+                System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(listResult));
+
+                try
+                {
+                    StatusMessage = $"Copying list '{def.Title}'…";
+                    var targetListId = await _libraryCopyService.CreateCustomListAsync(
+                        TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate, OverwriteFiles);
+
+                    if (CopyLibraryContent)
+                    {
+                        var fieldNames = def.Columns.Select(c => c.InternalName);
+                        var items      = await SpService.GetListItemsAsync(
+                            SourceUrl.TrimEnd('/'), def.SourceListId, fieldNames, _copyCts.Token);
+
+                        foreach (var item in items)
+                        {
+                            _copyCts.Token.ThrowIfCancellationRequested();
+
+                            var fields = new Dictionary<string, object?>();
+                            if (item.TryGetValue("Title", out var titleVal) && titleVal != null)
+                                fields["Title"] = titleVal;
+                            foreach (var col in def.Columns)
+                                if (item.TryGetValue(col.InternalName, out var v) && v != null)
+                                    fields[col.InternalName] = v;
+
+                            string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
+                            string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
+
+                            await SpService.CreateListItemAsync(
+                                TargetUrl.TrimEnd('/'), targetListId,
+                                fields, createdDate, modifiedDate,
+                                _copyCts.Token);
+                        }
+                    }
+
+                    listResult.Status = CopyStatus.Success;
+                }
+                catch (OperationCanceledException) { throw; }
+                catch (LibraryAlreadyExistsException alreadyEx)
+                {
+                    listResult.Status       = CopyStatus.Skipped;
+                    listResult.ErrorMessage = alreadyEx.Message;
+
+                    if (!string.IsNullOrEmpty(alreadyEx.ListId) && def.Columns.Count > 0)
+                    {
+                        try { await _libraryCopyService.AddMissingColumnsAsync(
+                            TargetUrl.TrimEnd('/'), alreadyEx.ListId, def.Columns); }
+                        catch { }
+                    }
+
+                    if (CopyLibraryContent && !string.IsNullOrEmpty(alreadyEx.ListId))
+                    {
+                        var targetListId = alreadyEx.ListId;
+                        var fieldNames   = def.Columns.Select(c => c.InternalName);
+                        var items        = await SpService.GetListItemsAsync(
+                            SourceUrl.TrimEnd('/'), def.SourceListId, fieldNames, _copyCts.Token);
+
+                        foreach (var item in items)
+                        {
+                            _copyCts.Token.ThrowIfCancellationRequested();
+
+                            var fields = new Dictionary<string, object?>();
+                            if (item.TryGetValue("Title", out var titleVal) && titleVal != null)
+                                fields["Title"] = titleVal;
+                            foreach (var col in def.Columns)
+                                if (item.TryGetValue(col.InternalName, out var v) && v != null)
+                                    fields[col.InternalName] = v;
+
+                            string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
+                            string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
+
+                            await SpService.CreateListItemAsync(
+                                TargetUrl.TrimEnd('/'), targetListId,
+                                fields, createdDate, modifiedDate,
+                                _copyCts.Token);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    listResult.Status       = CopyStatus.Failed;
+                    listResult.ErrorMessage = ex.Message;
+                }
+            }
+            StatusMessage = string.Empty;
+
+            // For Site scope: also copy Site Pages (excluded from the Drives API, so not
+            // captured by ReadAllLibraryDefinitionsAsync). The target Site Pages library
+            // always exists — no creation step needed, just copy pages into it.
+            if (IsSiteScope && CopyLibraryContent)
+            {
+                _copyCts.Token.ThrowIfCancellationRequested();
+                StatusMessage = "Copying site pages…";
+                try
+                {
+                    var srcSitePages = await SpService.GetSitePagesLibraryAsync(SourceSiteId, SourceUrl.TrimEnd('/'));
+                    var tgtSitePages = await SpService.GetSitePagesLibraryAsync(TargetSiteId, TargetUrl.TrimEnd('/'));
+
+                    if (srcSitePages != null && tgtSitePages != null)
+                    {
+                        var pages = await SpService.GetChildrenAsync(
+                            srcSitePages.DriveId, srcSitePages.Id,
+                            srcSitePages.SiteId, srcSitePages.SiteUrl);
+
+                        var pageJobs = pages
+                            .Where(p => p.Type == NodeType.File)
+                            .Select(p => new CopyJob
+                            {
+                                SourceDriveId                  = srcSitePages.DriveId,
+                                SourceItemId                   = p.Id,
+                                SourceName                     = p.Name,
+                                SourceSiteUrl                  = SourceUrl.TrimEnd('/'),
+                                SourceDisplayPath              = $"{SourceUrl.TrimEnd('/')}/SitePages/{p.Name}",
+                                TargetDriveId                  = tgtSitePages.DriveId,
+                                TargetParentItemId             = tgtSitePages.Id,
+                                TargetSubFolderPath            = string.Empty,
+                                TargetSiteId                   = TargetSiteId,
+                                TargetSiteUrl                  = TargetUrl.TrimEnd('/'),
+                                TargetDisplayPath              = $"{TargetUrl.TrimEnd('/')}/SitePages/{p.Name}",
+                                TargetLibraryServerRelativeUrl = tgtSitePages.ServerRelativePath ?? string.Empty,
+                                IsFolder                       = false,
+                                IsPage                         = true,
+                            })
+                            .ToList();
+
+                        if (pageJobs.Count > 0)
+                        {
+                            // Pre-add result rows — non-folder jobs are not dynamically added during execution
+                            foreach (var pj in pageJobs)
+                            {
+                                var pr = new CopyResult
+                                {
+                                    FileName   = pj.SourceName,
+                                    SourcePath = pj.SourceDisplayPath,
+                                    TargetPath = pj.TargetDisplayPath,
+                                };
+                                System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(pr));
+                            }
+
+                            // Build field cache for any custom columns on the Site Pages library
+                            var pageBulkCache = new Dictionary<string, Dictionary<string, object?>>();
+                            if (EffectiveCopyCustomColumns && srcSitePages.ServerRelativePath != null)
+                            {
+                                try
+                                {
+                                    var pagesListId = await SpService.GetListIdByServerRelativeUrlAsync(
+                                        SourceUrl.TrimEnd('/'), srcSitePages.ServerRelativePath);
+                                    var pageCols = await SpService.GetLibraryColumnsAsync(
+                                        SourceUrl.TrimEnd('/'), pagesListId);
+                                    if (pageCols.Count > 0)
+                                        pageBulkCache = await SpService.BulkReadCustomFieldsAsync(
+                                            SourceUrl.TrimEnd('/'), pagesListId, pageCols,
+                                            ct: _copyCts.Token);
+                                }
+                                catch { /* non-critical */ }
+                            }
+
+                            await _copyService.ExecuteAsync(
+                                pageJobs, CopyResults,
+                                OverwriteFiles,
+                                copyVersions: false,
+                                MaxParallelCopies,
+                                maxVersions: 0,
+                                CopyMode.EnhancedRest,
+                                _copyCts.Token,
+                                copyPages: true,
+                                remapPageWebPartUrls: RemapPageWebPartUrls,
+                                preserveMetadata: PreserveMetadata,
+                                copyCustomColumns: EffectiveCopyCustomColumns,
+                                columnMappings: [.. ColumnMappings],
+                                bulkFieldCache: pageBulkCache);
+                        }
+                    }
+                }
+                catch (OperationCanceledException) { throw; }
+                catch (Exception ex)
+                {
+                    StatusMessage = $"Site pages warning: {ex.Message}";
+                }
+                StatusMessage = string.Empty;
+            }
+
+            // For Site scope: copy navigation (Quick Launch + Top Navigation Bar).
+            if (IsSiteScope && CopyNavigation)
+            {
+                _copyCts.Token.ThrowIfCancellationRequested();
+                StatusMessage = "Copying navigation…";
+                var navResult = new CopyResult
+                {
+                    FileName          = "Navigation",
+                    SourcePath        = $"{SourceUrl.TrimEnd('/')}/navigation",
+                    TargetPath        = $"{TargetUrl.TrimEnd('/')}/navigation",
+                    Status            = CopyStatus.Copying,
+                    IsLibraryCreation = true,
+                };
+                System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(navResult));
+                try
+                {
+                    await SpService.CopyNavigationAsync(SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'), quickLaunch: true);
+                    await SpService.CopyNavigationAsync(SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'), quickLaunch: false);
+                    navResult.Status = CopyStatus.Success;
+                }
+                catch (OperationCanceledException) { throw; }
+                catch (Exception ex)
+                {
+                    navResult.Status       = CopyStatus.Failed;
+                    navResult.ErrorMessage = ex.Message;
+                }
+                StatusMessage = string.Empty;
+            }
+
+            // For Site scope: copy custom lists (Tasks, Calendars, Announcements, etc.).
+            if (IsSiteScope)
+            {
+                _copyCts.Token.ThrowIfCancellationRequested();
+                StatusMessage = "Reading custom lists…";
+                try
+                {
+                    var customLists = await SpService.GetCustomListsAsync(SourceUrl.TrimEnd('/'));
+
+                    foreach (var (srcListId, listTitle, baseTemplate) in customLists)
+                    {
+                        _copyCts.Token.ThrowIfCancellationRequested();
+
+                        var listResult = new CopyResult
+                        {
+                            FileName          = listTitle,
+                            SourcePath        = $"{SourceUrl.TrimEnd('/')}/{listTitle}",
+                            TargetPath        = $"{TargetUrl.TrimEnd('/')}/{listTitle}",
+                            Status            = CopyStatus.Copying,
+                            IsLibraryCreation = true,
+                        };
+                        System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(listResult));
+
+                        LibraryDefinition? definition = null;
+                        try
+                        {
+                            StatusMessage = $"Copying list '{listTitle}'…";
+                            definition   = await _libraryCopyService.ReadListDefinitionAsync(
+                                SourceUrl.TrimEnd('/'), srcListId, listTitle);
+                            var targetListId = await _libraryCopyService.CreateCustomListAsync(
+                                TargetUrl.TrimEnd('/'), TargetSiteId, definition, baseTemplate, OverwriteFiles);
+
+                            if (CopyLibraryContent)
+                            {
+                                var fieldNames = definition.Columns.Select(c => c.InternalName);
+                                var items      = await SpService.GetListItemsAsync(
+                                    SourceUrl.TrimEnd('/'), srcListId, fieldNames, _copyCts.Token);
+
+                                foreach (var item in items)
+                                {
+                                    _copyCts.Token.ThrowIfCancellationRequested();
+
+                                    var fields = new Dictionary<string, object?>();
+                                    if (item.TryGetValue("Title", out var titleVal) && titleVal != null)
+                                        fields["Title"] = titleVal;
+                                    foreach (var col in definition.Columns)
+                                        if (item.TryGetValue(col.InternalName, out var v) && v != null)
+                                            fields[col.InternalName] = v;
+
+                                    string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
+                                    string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
+
+                                    await SpService.CreateListItemAsync(
+                                        TargetUrl.TrimEnd('/'), targetListId,
+                                        fields, createdDate, modifiedDate,
+                                        _copyCts.Token);
+                                }
+                            }
+
+                            listResult.Status = CopyStatus.Success;
+                        }
+                        catch (OperationCanceledException) { throw; }
+                        catch (LibraryAlreadyExistsException alreadyEx)
+                        {
+                            listResult.Status       = CopyStatus.Skipped;
+                            listResult.ErrorMessage = alreadyEx.Message;
+
+                            if (!string.IsNullOrEmpty(alreadyEx.ListId) && definition?.Columns.Count > 0)
+                            {
+                                try { await _libraryCopyService.AddMissingColumnsAsync(
+                                    TargetUrl.TrimEnd('/'), alreadyEx.ListId, definition.Columns); }
+                                catch { }
+                            }
+
+                            if (CopyLibraryContent && !string.IsNullOrEmpty(alreadyEx.ListId) && definition != null)
+                            {
+                                var targetListId = alreadyEx.ListId;
+                                var fieldNames   = definition.Columns.Select(c => c.InternalName);
+                                var items        = await SpService.GetListItemsAsync(
+                                    SourceUrl.TrimEnd('/'), srcListId, fieldNames, _copyCts.Token);
+
+                                foreach (var item in items)
+                                {
+                                    _copyCts.Token.ThrowIfCancellationRequested();
+
+                                    var fields = new Dictionary<string, object?>();
+                                    if (item.TryGetValue("Title", out var titleVal) && titleVal != null)
+                                        fields["Title"] = titleVal;
+                                    foreach (var col in definition.Columns)
+                                        if (item.TryGetValue(col.InternalName, out var v) && v != null)
+                                            fields[col.InternalName] = v;
+
+                                    string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
+                                    string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
+
+                                    await SpService.CreateListItemAsync(
+                                        TargetUrl.TrimEnd('/'), targetListId,
+                                        fields, createdDate, modifiedDate,
+                                        _copyCts.Token);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            listResult.Status       = CopyStatus.Failed;
+                            listResult.ErrorMessage = ex.Message;
+                        }
+                    }
+                }
+                catch (OperationCanceledException) { throw; }
+                catch (Exception ex) { StatusMessage = $"List copy warning: {ex.Message}"; }
+                StatusMessage = string.Empty;
+            }
+        }
+        catch (OperationCanceledException) { StatusMessage = "Copy cancelled."; }
+        catch (Exception ex)              { StatusMessage = $"Library copy error: {ex.Message}"; }
+        finally
+        {
+            _copyEndTime   = DateTimeOffset.Now;
+            progressTimer.Stop();
+            IsCopying      = false;
+            IsCopyComplete = true;
+            TotalCount     = CopyResults.Count;
+            CopyDuration   = FormatDuration(_copyEndTime.Value - _copyStartTime);
+            UpdateProgress();
+            OnPropertyChanged(nameof(SuccessCount));
+            OnPropertyChanged(nameof(FailedCount));
+            OnPropertyChanged(nameof(SkippedCount));
+            SaveReport();
+        }
+    }
+
+    // Eagerly loads source AND target library columns so the mapping dialog has data immediately.
+    // Each section uses its own try/catch so a target failure does not prevent source columns loading.
+    internal string? ColumnLoadError { get; private set; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsColumnsReady))]
+    private bool _isColumnsLoading;
+    public bool IsColumnsReady => !IsColumnsLoading;
+
+    private async Task LoadTargetColumnsAsync()
+    {
+        IsColumnsLoading = true;
+        ColumnLoadError  = null;
+
+        // Load target columns (requires folder selection for Files/Pages scope)
+        if (SelectedTargetFolder != null)
+        {
+            try
+            {
+                var libraryNode = SelectedTargetFolder;
+                while (libraryNode.Parent != null)
+                    libraryNode = libraryNode.Parent;
+                var targetServerRelUrl = libraryNode.ServerRelativePath
+                    ?? await SpService.GetLibraryServerRelativeUrlAsync(libraryNode.DriveId);
+                var targetListId = await SpService.GetListIdByServerRelativeUrlAsync(
+                    TargetUrl.TrimEnd('/'), targetServerRelUrl);
+                _targetColumns = await SpService.GetLibraryColumnsAsync(TargetUrl.TrimEnd('/'), targetListId);
+                OnPropertyChanged(nameof(TargetColumns));
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[LoadColumns] target load failed: {ex.Message}");
+                ColumnLoadError = $"Target columns unavailable: {ex.Message}";
+            }
+        }
+
+        // Load source columns — separate try/catch so a target failure cannot block this
+        try
+        {
+            // Prefer first library with checked nodes; fall back to first library
+            var firstLib = SourceLibraries.FirstOrDefault(l => l.GetCheckedNodes().Any())
+                ?? SourceLibraries.FirstOrDefault();
+            if (firstLib != null)
+            {
+                var sourceServerRelUrl = firstLib.ServerRelativePath
+                    ?? await SpService.GetLibraryServerRelativeUrlAsync(firstLib.DriveId);
+                var sourceListId = await SpService.GetListIdByServerRelativeUrlAsync(
+                    SourceUrl.TrimEnd('/'), sourceServerRelUrl);
+                _sourceColumns = await SpService.GetLibraryColumnsAsync(SourceUrl.TrimEnd('/'), sourceListId);
+                OnPropertyChanged(nameof(SourceColumns));
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[LoadColumns] source load failed: {ex.Message}");
+            ColumnLoadError ??= $"Source columns unavailable: {ex.Message}";
+        }
+        finally
+        {
+            IsColumnsLoading = false;
+        }
+    }
+
+
     private void UpdateProgress()
     {
         var done = CopyResults.Count(r => r.Status is CopyStatus.Success or CopyStatus.Failed or CopyStatus.Skipped);
@@ -478,6 +1334,9 @@ public partial class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(FailedCount));
         OnPropertyChanged(nameof(SkippedCount));
     }
+
+    // Public wrapper so code-behind and dialogs can fire property change notifications.
+    public new void OnPropertyChanged(string propertyName) => base.OnPropertyChanged(propertyName);
 
     // ── Step 5: Report ────────────────────────────────────────────────────────
 
@@ -510,7 +1369,12 @@ public partial class MainViewModel : ObservableObject
     partial void AdvanceDemoToReport();  // implemented in MainViewModel.Demo.cs; no-op when absent
 
     [RelayCommand(CanExecute = nameof(CanGoBack))]
-    private void Back() => CurrentStep--;
+    private void Back()
+    {
+        if (CurrentStep == 3)
+            ColumnMappings.Clear();
+        CurrentStep--;
+    }
 
     private bool CanGoBack() => CurrentStep > 0 && !IsCopying;
 
@@ -526,21 +1390,32 @@ public partial class MainViewModel : ObservableObject
             case 1:
                 CurrentStep = 2;
                 break;
-            case 2 when (TargetConnected && SelectedTargetFolder != null) || IsDemoMode:
-                if (!IsDemoMode) BuildCopyJobs();
-                CurrentStep = 3;
-                break;
-            case 3 when CopyJobs.Count > 0 || IsDemoMode:
+            case 2 when (TargetConnected && (NeedsTargetFolder ? SelectedTargetFolder != null : true)) || IsDemoMode:
                 if (!IsDemoMode)
                 {
-                    Settings.PreferredCopyMode = CopyMode;
-                    Settings.OverwriteFiles    = OverwriteFiles;
-                    Settings.CopyVersions      = CopyVersions;
-                    Settings.CopyAllVersions   = CopyAllVersions;
-                    Settings.MaxVersions       = MaxVersions;
-                    Settings.MaxParallelCopies = MaxParallelCopies;
+                    if (NeedsTargetFolder) BuildCopyJobs();
+                    // Eagerly load target columns for mapping dialog; store task so dialog can await it
+                    _columnLoadTask = LoadTargetColumnsAsync();
+                }
+                CurrentStep = 3;
+                break;
+            case 3 when IsLibraryOrSiteScope || CopyJobs.Count > 0 || IsDemoMode:
+                if (!IsDemoMode)
+                {
+                    Settings.PreferredCopyMode    = CopyMode;
+                    Settings.OverwriteFiles       = OverwriteFiles;
+                    Settings.CopyVersions         = CopyVersions;
+                    Settings.CopyAllVersions      = CopyAllVersions;
+                    Settings.MaxVersions          = MaxVersions;
+                    Settings.MaxParallelCopies    = MaxParallelCopies;
+                    Settings.CopyCustomColumns    = CopyCustomColumns;
+                    Settings.CopyLibraryContent   = CopyLibraryContent;
+                    Settings.RemapPageWebPartUrls = RemapPageWebPartUrls;
+                    Settings.PreserveMetadata     = PreserveMetadata;
+                    Settings.CopyNavigation       = CopyNavigation;
+                    Settings.Scope                = CopyScope;
                     Settings.Save();
-                    _ = StartCopyAsync();
+                    _ = IsLibraryOrSiteScope ? StartLibraryCopyAsync() : StartCopyAsync();
                 }
                 CurrentStep = 4;
                 break;
@@ -554,9 +1429,11 @@ public partial class MainViewModel : ObservableObject
     private bool CanGoNext() => IsDemoMode || CurrentStep switch
     {
         0 => SourceConnected,
-        1 => SourceLibraries.Any(l => l.GetCheckedNodes().Any()),
-        2 => TargetConnected && SelectedTargetFolder != null,
-        3 => CopyJobs.Count > 0,
+        1 => IsSiteScope
+               ? SourceConnected
+               : SourceLibraries.Any(l => l.GetCheckedNodes().Any()),
+        2 => TargetConnected && (NeedsTargetFolder ? SelectedTargetFolder != null : true),
+        3 => IsLibraryOrSiteScope || CopyJobs.Count > 0,
         4 => IsCopyComplete && !IsUpdatingMetadata,
         _ => false
     };

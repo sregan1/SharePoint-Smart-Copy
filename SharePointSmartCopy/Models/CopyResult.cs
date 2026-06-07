@@ -27,6 +27,7 @@ public partial class CopyResult : ObservableObject
     [ObservableProperty] private string? _errorMessage;
     [ObservableProperty] private int _versionsCopied;
     [ObservableProperty] private int _versionsTotal;
+    [ObservableProperty] private bool _isLibraryCreation;
 
     public string StatusDisplay => Status switch
     {

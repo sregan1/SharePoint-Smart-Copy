@@ -1,6 +1,6 @@
 # SharePoint Smart Copy
 
-A free and open source WPF/.NET 8 desktop application for copying files between SharePoint Online site collections. Preserves complete version history and metadata, handles bulk operations through parallel threading, and includes built-in reporting.
+A free and open source WPF/.NET 8 desktop application for copying content between SharePoint Online site collections. Supports copying files, entire document libraries, full sites, and modern pages — with version history, metadata, and custom columns preserved.
 
 ## Website
 **[https://sharepointsmartsolutions.com/smart-copy](https://sharepointsmartsolutions.com/smart-copy)**
@@ -11,12 +11,25 @@ A free and open source WPF/.NET 8 desktop application for copying files between 
 
 ## Features
 
-Move SharePoint files across site collections - version history, metadata, and all.
+Choose from four copy scopes in a step-by-step wizard:
 
-- Full version history along with matching metadata gets copied for each version
-- Bulk copy with 1-16 parallel file copies
-- Easy to use UI to select which files or folders to transfer
-- Detailed reporting done at the end
+| Scope | What it copies |
+|---|---|
+| **Files** | Selected files and folders from a document library, with full version history and metadata |
+| **Libraries & Lists** | Entire document libraries or generic lists — schema, columns, versioning settings, and content |
+| **Site** | All document libraries and custom lists on a source site, plus optional navigation links |
+| **Pages** | Modern SharePoint pages (.aspx), with optional web part URL remapping |
+
+**All scopes:**
+- Custom column schema and values copied alongside content
+- Overwrite or skip-existing control
+- Detailed per-item report with CSV export
+- Run history viewable in-app
+
+**Files scope:**
+- Full version history — version numbers, dates, and per-version editors preserved exactly
+- Bulk copy with 1–16 parallel operations
+- Migration API mode for high-fidelity large batches; Enhanced REST for small or quick copies
 
 ## Prerequisites
 
@@ -80,7 +93,9 @@ Launch the app and open **Settings** (gear icon):
 
 Source/target URLs and copy preferences are configured within the wizard and remembered between sessions.
 
-## Copy Modes
+## Copy Modes (Files scope)
+
+When copying files with version history enabled, two copy modes are available:
 
 ### When to use each mode
 
@@ -149,3 +164,7 @@ Uses the SharePoint REST and Microsoft Graph APIs directly. Each file version is
 | `Azure.Storage.Blobs` | 12.x | Upload encrypted blobs to SP-provisioned containers (Migration API) |
 | `Microsoft.SharePointOnline.CSOM` | 16.x | `EncryptionOption` type used in Migration API package |
 | `CommunityToolkit.Mvvm` | 8.x | MVVM source generators for the WPF view models |
+
+## License
+
+[MIT](LICENSE)
