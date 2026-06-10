@@ -229,6 +229,35 @@
         <Setter Property="MinWidth" Value="130"/>
     </Style>
 
+    <!-- Pill-shaped filter chip (RadioButton) for the copy-log grids -->
+    <Style x:Key="FilterChip" TargetType="RadioButton">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Margin" Value="0,0,6,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Bd" Background="White"
+                            BorderBrush="{StaticResource BorderInputBrush}"
+                            BorderThickness="1" CornerRadius="12" Padding="12,4">
+                        <ContentPresenter VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource AccentBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- Centered hint shown inside empty lists / panels -->
     <Style x:Key="GhostText" TargetType="TextBlock">
         <Setter Property="FontSize" Value="13"/>

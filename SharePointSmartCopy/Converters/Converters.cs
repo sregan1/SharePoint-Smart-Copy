@@ -43,14 +43,18 @@ public class EqualToVisibilityConverter : IValueConverter
 }
 
 // String-compares value to parameter (same semantics as EqualToVisibilityConverter)
-// but returns bool — used by DataTriggers for selected/active states.
+// but returns bool — used by DataTriggers and two-way RadioButton.IsChecked bindings.
+// ConvertBack writes the parameter into the source when checked (enum-aware), so a
+// group of radio buttons can bind one enum property without code-behind handlers.
 public class EqualToBoolConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         => value != null && parameter != null && value.ToString() == parameter.ToString();
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        => throw new NotImplementedException();
+        => value is true && parameter != null
+            ? (targetType.IsEnum ? Enum.Parse(targetType, parameter.ToString()!) : parameter)
+            : Binding.DoNothing;
 }
 
 // String-compares two bound values — used where the comparison target is itself a

@@ -33,6 +33,7 @@
         <conv:InvertBoolConverter x:Key="InvBool"/>
         <conv:MultiEqualToBoolConverter x:Key="MultiEqual"/>
         <conv:MultiGreaterThanToBoolConverter x:Key="MultiGreater"/>
+        <conv:EqualToBoolConverter x:Key="EqToBool"/>
 
         <!-- ── Wizard step definitions ── -->
         <x:Array x:Key="WizardSteps" Type="models:StepInfo">
@@ -1259,9 +1260,28 @@
                     </StackPanel>
                 </Border>
 
-                <TextBlock Grid.Row="2" Text="Copy Log" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
+                <Grid Grid.Row="2" Margin="0,0,0,6">
+                    <TextBlock Text="Copy Log" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4" Content="All"
+                                     IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=All}"
+                                     />
+                        <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4"
+                                     IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Failed}">
+                            <TextBlock>
+                                <Run Text="Failed ("/><Run Text="{Binding FailedCount, Mode=OneWay}"/><Run Text=")"/>
+                            </TextBlock>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4" Margin="0"
+                                     IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Skipped}">
+                            <TextBlock>
+                                <Run Text="Skipped ("/><Run Text="{Binding SkippedCount, Mode=OneWay}"/><Run Text=")"/>
+                            </TextBlock>
+                        </RadioButton>
+                    </StackPanel>
+                </Grid>
                 <Border Grid.Row="3" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White">
-                    <ListView x:Name="ProgressList" ItemsSource="{Binding CopyResults}"
+                    <ListView x:Name="ProgressList" ItemsSource="{Binding CopyResultsView}"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -1347,17 +1367,35 @@
                     </Border>
                 </StackPanel>
 
-                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,8">
-                    <Button Style="{StaticResource SecondaryBtn}" Command="{Binding ExportReportCommand}">
+                <Grid Grid.Row="2" Margin="0,0,0,8">
+                    <Button Style="{StaticResource SecondaryBtn}" Command="{Binding ExportReportCommand}"
+                            HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE896;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
                             <TextBlock Text="Export CSV" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter5" Content="All"
+                                     IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=All}"
+                                     />
+                        <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter5"
+                                     IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Failed}">
+                            <TextBlock>
+                                <Run Text="Failed ("/><Run Text="{Binding FailedCount, Mode=OneWay}"/><Run Text=")"/>
+                            </TextBlock>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter5" Margin="0"
+                                     IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Skipped}">
+                            <TextBlock>
+                                <Run Text="Skipped ("/><Run Text="{Binding SkippedCount, Mode=OneWay}"/><Run Text=")"/>
+                            </TextBlock>
+                        </RadioButton>
+                    </StackPanel>
+                </Grid>
 
                 <Border Grid.Row="3" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1">
-                    <DataGrid ItemsSource="{Binding CopyResults}"
+                    <DataGrid ItemsSource="{Binding CopyResultsView}"
                               AutoGenerateColumns="False" IsReadOnly="True"
                               CanUserAddRows="False" GridLinesVisibility="Horizontal"
                               HeadersVisibility="Column" Background="White"

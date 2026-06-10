@@ -6,6 +6,9 @@ namespace SharePointSmartCopy.Models;
 
 public enum CopyStatus { Pending, Copying, Success, Failed, Skipped }
 
+// Which rows the copy-log grids display (chips above the log).
+public enum ResultFilterKind { All, Failed, Skipped }
+
 public partial class CopyResult : ObservableObject
 {
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)

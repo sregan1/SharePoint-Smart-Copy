@@ -642,7 +642,37 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<CopyResult> _copyResults = [];
 
     partial void OnCopyResultsChanged(ObservableCollection<CopyResult> value)
-        => BindingOperations.EnableCollectionSynchronization(value, _copyResultsLock);
+    {
+        BindingOperations.EnableCollectionSynchronization(value, _copyResultsLock);
+        _copyResultsView = null;
+        OnPropertyChanged(nameof(CopyResultsView));
+    }
+
+    // ── Result filter (All / Failed / Skipped chips above the log grids) ──────
+    // The grids bind to this filtered view; CopyResults itself stays complete so
+    // report counts and CSV export are unaffected.
+    [ObservableProperty] private ResultFilterKind _resultFilter = ResultFilterKind.All;
+
+    partial void OnResultFilterChanged(ResultFilterKind value) => CopyResultsView.Refresh();
+
+    private System.ComponentModel.ICollectionView? _copyResultsView;
+    public System.ComponentModel.ICollectionView CopyResultsView
+    {
+        get
+        {
+            if (_copyResultsView == null)
+            {
+                _copyResultsView = CollectionViewSource.GetDefaultView(CopyResults);
+                _copyResultsView.Filter = o => ResultFilter switch
+                {
+                    ResultFilterKind.Failed  => ((CopyResult)o).Status == CopyStatus.Failed,
+                    ResultFilterKind.Skipped => ((CopyResult)o).Status == CopyStatus.Skipped,
+                    _                        => true,
+                };
+            }
+            return _copyResultsView;
+        }
+    }
     [ObservableProperty] private double _totalProgress;
     [ObservableProperty] private int _completedCount;
     [ObservableProperty] private int _totalCount;
@@ -673,6 +703,7 @@ public partial class MainViewModel : ObservableObject
         CopyDuration         = string.Empty;
         IsUpdatingMetadata   = _hasFolderJobs;
         CopyResults.Clear();
+        ResultFilter = ResultFilterKind.All;
         CompletedCount = 0;
         TotalProgress  = 0;
         _copyStartTime = DateTimeOffset.Now;
@@ -1011,6 +1042,7 @@ public partial class MainViewModel : ObservableObject
         IsCopyComplete = false;
         CopyDuration   = string.Empty;
         CopyResults.Clear();
+        ResultFilter = ResultFilterKind.All;
         _copyStartTime = DateTimeOffset.Now;
         _copyEndTime   = null;
 
@@ -1753,6 +1785,9 @@ public partial class MainViewModel : ObservableObject
         TotalCount     = CopyResults.Count;
         TotalProgress  = TotalCount > 0 ? done * 100.0 / TotalCount : 0;
         ElapsedTime    = FormatDuration((_copyEndTime ?? DateTimeOffset.Now) - _copyStartTime);
+        // Keep the filter-chip counts live while the copy runs.
+        OnPropertyChanged(nameof(FailedCount));
+        OnPropertyChanged(nameof(SkippedCount));
     }
 
     public void RefreshCopyStats()
