@@ -1,0 +1,230 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ══ Color palette ════════════════════════════════════════════════════
+         One name per role. Use these instead of hex literals in views. -->
+    <SolidColorBrush x:Key="AccentBrush"          Color="#0078D4"/>
+    <SolidColorBrush x:Key="SuccessBrush"         Color="#107C10"/>
+    <SolidColorBrush x:Key="SuccessBgBrush"       Color="#DFF6DD"/>
+    <SolidColorBrush x:Key="DangerBrush"          Color="#A4262C"/>
+    <SolidColorBrush x:Key="DangerBgBrush"        Color="#FDE7E9"/>
+    <SolidColorBrush x:Key="WarningBrush"         Color="#F7B900"/>
+    <SolidColorBrush x:Key="WarningBgBrush"       Color="#FFF4CE"/>
+    <SolidColorBrush x:Key="WarningTextBrush"     Color="#7A5900"/>
+    <SolidColorBrush x:Key="InfoBgBrush"          Color="#EFF6FC"/>
+    <SolidColorBrush x:Key="BorderLightBrush"     Color="#EDEBE9"/>
+    <SolidColorBrush x:Key="BorderInputBrush"     Color="#8A8886"/>
+    <SolidColorBrush x:Key="TextPrimaryBrush"     Color="#1F1F1F"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush"   Color="#323130"/>
+    <SolidColorBrush x:Key="TextTertiaryBrush"    Color="#797775"/>
+    <SolidColorBrush x:Key="TextPlaceholderBrush" Color="#A19F9D"/>
+    <SolidColorBrush x:Key="WindowBgBrush"        Color="#F3F3F3"/>
+    <SolidColorBrush x:Key="PermissionRowBrush"   Color="#EEF2FF"/>
+    <SolidColorBrush x:Key="UnmatchedBgBrush"     Color="#FFF9F0"/>
+    <SolidColorBrush x:Key="TileSelectedTextBrush" Color="#CCE4F7"/>
+
+    <!-- ══ Buttons ══════════════════════════════════════════════════════════ -->
+    <Style x:Key="BaseBtn" TargetType="Button">
+        <Setter Property="Padding" Value="20,8"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" Value="0.85"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.45"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PrimaryBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
+        <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+    </Style>
+
+    <Style x:Key="SecondaryBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderInputBrush}"/>
+    </Style>
+
+    <Style x:Key="DangerBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
+        <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="{StaticResource DangerBrush}"/>
+    </Style>
+
+    <Style x:Key="LinkBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="4,2"/>
+    </Style>
+
+    <!-- App-bar / small button variant -->
+    <Style x:Key="AppBarBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="#80FFFFFF"/>
+        <Setter Property="Padding" Value="12,6"/>
+        <Setter Property="FontSize" Value="12"/>
+    </Style>
+
+    <!-- ══ Text styles ══════════════════════════════════════════════════════ -->
+    <Style x:Key="SectionHeader" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="SubHeader" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+        <Setter Property="Margin" Value="0,0,0,16"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style x:Key="FieldLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+
+    <Style x:Key="StepText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,2,0,0"/>
+    </Style>
+
+    <!-- Caption under a checkbox option -->
+    <Style x:Key="OptionCaption" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Margin" Value="20,0,0,8"/>
+    </Style>
+
+    <!-- ══ Glyph icons (Segoe Fluent on Win11, MDL2 fallback on Win10) ══════ -->
+    <FontFamily x:Key="GlyphFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+
+    <Style x:Key="GlyphIcon" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource GlyphFont}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- ⓘ tooltip trigger glyph -->
+    <Style x:Key="ToolTipIcon" TargetType="TextBlock" BasedOn="{StaticResource GlyphIcon}">
+        <Setter Property="Text" Value="&#xE946;"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="Margin" Value="6,0,0,0"/>
+        <Setter Property="Cursor" Value="Help"/>
+        <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
+        <Setter Property="ToolTipService.ShowDuration" Value="30000"/>
+    </Style>
+
+    <!-- ══ Inputs ═══════════════════════════════════════════════════════════ -->
+    <Style x:Key="BaseTextBox" TargetType="TextBox">
+        <Setter Property="Padding" Value="8,7"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderInputBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Implicit app-wide TextBox style so every window gets the same input look -->
+    <Style TargetType="TextBox" BasedOn="{StaticResource BaseTextBox}"/>
+
+    <Style x:Key="WatermarkTextBox" TargetType="TextBox" BasedOn="{StaticResource BaseTextBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <Grid>
+                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="0"/>
+                            <TextBlock Text="{TemplateBinding Tag}"
+                                       Foreground="{StaticResource TextPlaceholderBrush}"
+                                       VerticalAlignment="Center" IsHitTestVisible="False"
+                                       FontSize="{TemplateBinding FontSize}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ══ Banners & cards ══════════════════════════════════════════════════ -->
+    <Style x:Key="InfoBanner" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource InfoBgBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Padding" Value="12,8"/>
+    </Style>
+
+    <Style x:Key="WarningBanner" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource WarningBgBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource WarningBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Padding" Value="12,8"/>
+    </Style>
+
+    <Style x:Key="SuccessBanner" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource SuccessBgBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource SuccessBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Padding" Value="12,8"/>
+    </Style>
+
+    <Style x:Key="Card" TargetType="Border">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="16,14"/>
+    </Style>
+
+    <!-- Report / history summary count card -->
+    <Style x:Key="SummaryCard" TargetType="Border">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="20,12"/>
+        <Setter Property="Margin" Value="0,0,12,0"/>
+        <Setter Property="MinWidth" Value="130"/>
+    </Style>
+</ResourceDictionary>

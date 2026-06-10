@@ -7,7 +7,7 @@
         Title="SharePoint Smart Copy"
         Width="960" Height="720"
         MinWidth="800" MinHeight="600"
-        Background="#F3F3F3"
+        Background="{StaticResource WindowBgBrush}"
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
@@ -20,117 +20,123 @@
         <conv:NullToVisibilityConverter x:Key="NotNullToVis"/>
         <conv:IntToVisibilityConverter x:Key="IntToVis"/>
         <conv:InvertBoolConverter x:Key="InvBool"/>
+        <conv:MultiEqualToBoolConverter x:Key="MultiEqual"/>
 
-        <Style x:Key="BaseBtn" TargetType="Button">
-            <Setter Property="Padding" Value="20,8"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Opacity" Value="0.85"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.45"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+        <!-- ── Wizard step definitions ── -->
+        <x:Array x:Key="WizardSteps" Type="models:StepInfo">
+            <models:StepInfo Index="0" Display="1" Label="Source"/>
+            <models:StepInfo Index="1" Display="2" Label="Browse"/>
+            <models:StepInfo Index="2" Display="3" Label="Target"/>
+            <models:StepInfo Index="3" Display="4" Label="Options"/>
+            <models:StepInfo Index="4" Display="5" Label="Copy"/>
+            <models:StepInfo Index="5" Display="✓" Label="Report" IsFinal="True"/>
+        </x:Array>
+
+        <!-- Bubble for one wizard step: gray when inactive, accent when current,
+             green for the final (Report) step. DataContext is a StepInfo. -->
+        <Style x:Key="StepBubble" TargetType="Border">
+            <Setter Property="Width" Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{StaticResource BorderLightBrush}"/>
+            <Style.Triggers>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding Converter="{StaticResource MultiEqual}">
+                            <Binding Path="DataContext.CurrentStep" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                            <Binding Path="Index"/>
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Value="True">
+                            <Condition.Binding>
+                                <MultiBinding Converter="{StaticResource MultiEqual}">
+                                    <Binding Path="DataContext.CurrentStep" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                    <Binding Path="Index"/>
+                                </MultiBinding>
+                            </Condition.Binding>
+                        </Condition>
+                        <Condition Binding="{Binding IsFinal}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
+                </MultiDataTrigger>
+            </Style.Triggers>
         </Style>
 
-        <Style x:Key="PrimaryBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
-            <Setter Property="Background" Value="#0078D4"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#0078D4"/>
-        </Style>
-
-        <Style x:Key="SecondaryBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="#323130"/>
-            <Setter Property="BorderBrush" Value="#8A8886"/>
-        </Style>
-
-        <Style x:Key="DangerBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
-            <Setter Property="Background" Value="#A4262C"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#A4262C"/>
-        </Style>
-
-        <Style x:Key="LinkBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#0078D4"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="4,2"/>
-        </Style>
-
-        <Style TargetType="TextBox">
-            <Setter Property="Padding" Value="8,7"/>
-            <Setter Property="BorderBrush" Value="#8A8886"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-
-        <Style x:Key="WatermarkTextBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                Padding="{TemplateBinding Padding}">
-                            <Grid>
-                                <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="0"/>
-                                <TextBlock Text="{TemplateBinding Tag}" Foreground="#A19F9D"
-                                           VerticalAlignment="Center" IsHitTestVisible="False"
-                                           FontSize="{TemplateBinding FontSize}">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" Value="">
-                                                    <Setter Property="Visibility" Value="Visible"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                            </Grid>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="SectionHeader" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#1F1F1F"/>
-            <Setter Property="Margin" Value="0,0,0,4"/>
-        </Style>
-
-        <Style x:Key="SubHeader" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Foreground" Value="#605E5C"/>
-            <Setter Property="Margin" Value="0,0,0,16"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
-        </Style>
-
-        <Style x:Key="FieldLabel" TargetType="TextBlock">
+        <Style x:Key="StepBubbleText" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+            <Style.Triggers>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding Converter="{StaticResource MultiEqual}">
+                            <Binding Path="DataContext.CurrentStep" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                            <Binding Path="Index"/>
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ── Mode tile: Border whose Tag carries the scope's Is*Scope binding ── -->
+        <Style x:Key="ModeTile" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Padding" Value="14,12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="MinHeight" Value="120"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}}" Value="True">
+                    <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ModeTileGlyph" TargetType="TextBlock" BasedOn="{StaticResource GlyphIcon}">
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ModeTileTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#323130"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="Margin" Value="0,0,0,4"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ModeTileDesc" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource TileSelectedTextBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
 
         <Style TargetType="TreeViewItem">
@@ -148,7 +154,7 @@
                                 <Border x:Name="Box" Width="14" Height="14" CornerRadius="2"
                                         BorderBrush="#767676" BorderThickness="1" Background="White">
                                     <Path x:Name="Check" Visibility="Collapsed"
-                                          Stroke="#0078D4" StrokeThickness="1.8" StrokeLineJoin="Round"
+                                          Stroke="{StaticResource AccentBrush}" StrokeThickness="1.8" StrokeLineJoin="Round"
                                           Data="M2,7 L5.5,10.5 L12,3.5"
                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
@@ -160,7 +166,7 @@
                                 <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Box" Property="BorderBrush" Value="#0078D4"/>
+                                <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -180,9 +186,10 @@
                           Indeterminate="SourceNode_CheckChanged"
                           PreviewMouseLeftButtonDown="SourceCheckBox_PreviewClick"
                           VerticalAlignment="Center" Margin="0,0,4,0"/>
-                <TextBlock Text="{Binding TypeIcon}" FontSize="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
+                           Foreground="{StaticResource AccentBrush}" Margin="0,0,6,0"/>
                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
-                <TextBlock Text="{Binding SizeDisplay}" Foreground="#797775" FontSize="11"
+                <TextBlock Text="{Binding SizeDisplay}" Foreground="{StaticResource TextTertiaryBrush}" FontSize="11"
                            VerticalAlignment="Center" Margin="8,0,0,0"/>
                 <ProgressBar IsIndeterminate="True" Width="60" Height="4" Margin="8,0,0,0"
                              Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"/>
@@ -193,7 +200,8 @@
                                   DataType="{x:Type models:SharePointNode}"
                                   ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal" Margin="2,2">
-                <TextBlock Text="{Binding TypeIcon}" FontSize="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
+                           Foreground="{StaticResource AccentBrush}" Margin="0,0,6,0"/>
                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
                 <ProgressBar IsIndeterminate="True" Width="60" Height="4" Margin="8,0,0,0"
                              Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"/>
@@ -210,7 +218,7 @@
         </Grid.RowDefinitions>
 
         <!-- ══ App Bar ══════════════════════════════════════════════════════════ -->
-        <Border Grid.Row="0" Background="#0078D4">
+        <Border Grid.Row="0" Background="{StaticResource AccentBrush}">
             <Grid Margin="16,0">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Border Width="36" Height="36" CornerRadius="6" Background="White" Padding="3"
@@ -229,212 +237,47 @@
                     <TextBlock Text="{Binding SignedInUser}" Foreground="White" FontSize="12"
                                VerticalAlignment="Center" Margin="0,0,12,0"
                                Visibility="{Binding SignedInUser, Converter={StaticResource NotNullToVis}}"/>
-                    <Button Content="📋 History" Style="{StaticResource BaseBtn}"
-                            Background="Transparent" Foreground="White" BorderBrush="#80FFFFFF"
-                            Padding="12,6" FontSize="12" Margin="0,0,8,0" Click="HistoryButton_Click"/>
-                    <Button Content="⚙ Settings" Style="{StaticResource BaseBtn}"
-                            Background="Transparent" Foreground="White" BorderBrush="#80FFFFFF"
-                            Padding="12,6" FontSize="12" Click="SettingsButton_Click"/>
+                    <Button Style="{StaticResource AppBarBtn}" Margin="0,0,8,0" Click="HistoryButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE81C;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                            <TextBlock Text="History" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource AppBarBtn}" Click="SettingsButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE713;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                            <TextBlock Text="Settings" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </Grid>
         </Border>
 
         <!-- ══ Step Indicator ═══════════════════════════════════════════════════ -->
-        <Border Grid.Row="1" Background="White" BorderBrush="#EDEBE9" BorderThickness="0,0,0,1" Padding="20,12">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <StackPanel.Resources>
-                    <Style x:Key="StepText" TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="11"/>
-                        <Setter Property="Foreground" Value="#797775"/>
-                        <Setter Property="HorizontalAlignment" Value="Center"/>
-                        <Setter Property="Margin" Value="0,2,0,0"/>
-                    </Style>
-                </StackPanel.Resources>
-
-                <StackPanel>
-                    <Border Width="28" Height="28" CornerRadius="14" HorizontalAlignment="Center">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="#EDEBE9"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentStep}" Value="0">
-                                        <Setter Property="Background" Value="#0078D4"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <TextBlock Text="1" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontWeight="Bold" FontSize="12">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#797775"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding CurrentStep}" Value="0">
-                                            <Setter Property="Foreground" Value="White"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Border>
-                    <TextBlock Text="Source" Style="{StaticResource StepText}"/>
-                </StackPanel>
-
-                <Border Height="2" Width="40" Background="#EDEBE9" VerticalAlignment="Top" Margin="4,13,4,0"/>
-
-                <StackPanel>
-                    <Border Width="28" Height="28" CornerRadius="14" HorizontalAlignment="Center">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="#EDEBE9"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentStep}" Value="1">
-                                        <Setter Property="Background" Value="#0078D4"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <TextBlock Text="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontWeight="Bold" FontSize="12">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#797775"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding CurrentStep}" Value="1">
-                                            <Setter Property="Foreground" Value="White"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Border>
-                    <TextBlock Text="Browse" Style="{StaticResource StepText}"/>
-                </StackPanel>
-
-                <Border Height="2" Width="40" Background="#EDEBE9" VerticalAlignment="Top" Margin="4,13,4,0"/>
-
-                <StackPanel>
-                    <Border Width="28" Height="28" CornerRadius="14" HorizontalAlignment="Center">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="#EDEBE9"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentStep}" Value="2">
-                                        <Setter Property="Background" Value="#0078D4"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <TextBlock Text="3" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontWeight="Bold" FontSize="12">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#797775"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding CurrentStep}" Value="2">
-                                            <Setter Property="Foreground" Value="White"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Border>
-                    <TextBlock Text="Target" Style="{StaticResource StepText}"/>
-                </StackPanel>
-
-                <Border Height="2" Width="40" Background="#EDEBE9" VerticalAlignment="Top" Margin="4,13,4,0"/>
-
-                <StackPanel>
-                    <Border Width="28" Height="28" CornerRadius="14" HorizontalAlignment="Center">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="#EDEBE9"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentStep}" Value="3">
-                                        <Setter Property="Background" Value="#0078D4"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <TextBlock Text="4" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontWeight="Bold" FontSize="12">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#797775"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding CurrentStep}" Value="3">
-                                            <Setter Property="Foreground" Value="White"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Border>
-                    <TextBlock Text="Options" Style="{StaticResource StepText}"/>
-                </StackPanel>
-
-                <Border Height="2" Width="40" Background="#EDEBE9" VerticalAlignment="Top" Margin="4,13,4,0"/>
-
-                <StackPanel>
-                    <Border Width="28" Height="28" CornerRadius="14" HorizontalAlignment="Center">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="#EDEBE9"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentStep}" Value="4">
-                                        <Setter Property="Background" Value="#0078D4"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <TextBlock Text="5" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontWeight="Bold" FontSize="12">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#797775"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding CurrentStep}" Value="4">
-                                            <Setter Property="Foreground" Value="White"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Border>
-                    <TextBlock Text="Copy" Style="{StaticResource StepText}"/>
-                </StackPanel>
-
-                <Border Height="2" Width="40" Background="#EDEBE9" VerticalAlignment="Top" Margin="4,13,4,0"/>
-
-                <StackPanel>
-                    <Border Width="28" Height="28" CornerRadius="14" HorizontalAlignment="Center">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Setter Property="Background" Value="#EDEBE9"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentStep}" Value="5">
-                                        <Setter Property="Background" Value="#107C10"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                        <TextBlock Text="✓" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontWeight="Bold" FontSize="13">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#797775"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding CurrentStep}" Value="5">
-                                            <Setter Property="Foreground" Value="White"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Border>
-                    <TextBlock Text="Report" Style="{StaticResource StepText}"/>
-                </StackPanel>
-            </StackPanel>
+        <Border Grid.Row="1" Background="White" BorderBrush="{StaticResource BorderLightBrush}"
+                BorderThickness="0,0,0,1" Padding="20,12">
+            <ItemsControl ItemsSource="{StaticResource WizardSteps}" HorizontalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:StepInfo}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Height="2" Width="40" Background="{StaticResource BorderLightBrush}"
+                                    VerticalAlignment="Top" Margin="4,13,4,0"
+                                    Visibility="{Binding Index, Converter={StaticResource IntToVis}}"/>
+                            <StackPanel>
+                                <Border Style="{StaticResource StepBubble}">
+                                    <TextBlock Text="{Binding Display}" Style="{StaticResource StepBubbleText}"/>
+                                </Border>
+                                <TextBlock Text="{Binding Label}" Style="{StaticResource StepText}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Border>
 
         <!-- ══ Content Area ═════════════════════════════════════════════════════ -->
@@ -473,22 +316,25 @@
                 <StackPanel Orientation="Horizontal" Margin="0,12,0,0"
                             Visibility="{Binding SourceStatus, Converter={StaticResource NotNullToVis}}">
                     <TextBlock Text="{Binding SourceStatus}" FontSize="13" VerticalAlignment="Center"/>
-                    <TextBlock Text=" · " Foreground="#A19F9D" FontSize="13" VerticalAlignment="Center"
+                    <TextBlock Text=" · " Foreground="{StaticResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
                                Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
                     <Button Content="Disconnect" Style="{StaticResource LinkBtn}"
                             Command="{Binding DisconnectSourceCommand}"
-                            Foreground="#605E5C" FontSize="13" Padding="0" VerticalAlignment="Center"
+                            Foreground="{StaticResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
                             Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
                 </StackPanel>
 
-                <Border Background="#EFF6FC" BorderBrush="#0078D4" BorderThickness="1"
-                        CornerRadius="4" Padding="14,10" Margin="0,20,0,0">
+                <Border Style="{StaticResource InfoBanner}" Padding="14,10" Margin="0,20,0,0">
                     <StackPanel>
-                        <TextBlock Text="💡 Requirements" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
-                        <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#323130" LineHeight="20">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <TextBlock Text="&#xEA80;" Style="{StaticResource GlyphIcon}"
+                                       Foreground="{StaticResource AccentBrush}" FontSize="13" Margin="0,0,6,0"/>
+                            <TextBlock Text="Requirements" FontWeight="SemiBold" FontSize="13"/>
+                        </StackPanel>
+                        <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" LineHeight="20">
                             <Run>• You must have read access to the source site collection.</Run>
                             <LineBreak/>
-                            <Run>• Configure your Azure AD app ID in Settings (⚙) before connecting.</Run>
+                            <Run>• Configure your Azure AD app ID in Settings before connecting.</Run>
                         </TextBlock>
                     </StackPanel>
                 </Border>
@@ -512,196 +358,45 @@
 
                 <!-- ── Mode tile selector ── -->
                 <UniformGrid Grid.Row="1" Columns="4" Margin="0,8,0,12">
-                    <UniformGrid.Resources>
-                        <Style x:Key="ModeTile" TargetType="Border">
-                            <Setter Property="Background" Value="White"/>
-                            <Setter Property="BorderBrush" Value="#EDEBE9"/>
-                            <Setter Property="BorderThickness" Value="2"/>
-                            <Setter Property="CornerRadius" Value="8"/>
-                            <Setter Property="Margin" Value="0,0,8,0"/>
-                            <Setter Property="Padding" Value="14,12"/>
-                            <Setter Property="Cursor" Value="Hand"/>
-                            <Setter Property="MinHeight" Value="120"/>
-                        </Style>
-                    </UniformGrid.Resources>
-
-                    <!-- Files & Folders tile -->
-                    <Border MouseLeftButtonUp="ModeFiles_Click">
-                        <Border.Style>
-                            <Style TargetType="Border" BasedOn="{StaticResource ModeTile}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsFilesScope}" Value="True">
-                                        <Setter Property="Background" Value="#0078D4"/>
-                                        <Setter Property="BorderBrush" Value="#0078D4"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
+                    <Border Style="{StaticResource ModeTile}" Tag="{Binding IsFilesScope}"
+                            MouseLeftButtonUp="ModeFiles_Click">
                         <StackPanel>
-                            <TextBlock Text="📄" FontSize="22" Margin="0,0,0,6"/>
-                            <TextBlock FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,4">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="#201F1E"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFilesScope}" Value="True">
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                                Files &amp; Folders
-                            </TextBlock>
-                            <TextBlock FontSize="11" TextWrapping="Wrap">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="#797775"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFilesScope}" Value="True">
-                                                <Setter Property="Foreground" Value="#CCE4F7"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                                Copy individual files between libraries
-                            </TextBlock>
+                            <TextBlock Text="&#xE7C3;" Style="{StaticResource ModeTileGlyph}"/>
+                            <TextBlock Text="Files &amp; Folders" Style="{StaticResource ModeTileTitle}"/>
+                            <TextBlock Text="Copy individual files between libraries" Style="{StaticResource ModeTileDesc}"/>
                         </StackPanel>
                     </Border>
 
-                    <!-- Entire Library tile -->
-                    <Border MouseLeftButtonUp="ModeLibrary_Click">
-                        <Border.Style>
-                            <Style TargetType="Border" BasedOn="{StaticResource ModeTile}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsLibraryScope}" Value="True">
-                                        <Setter Property="Background" Value="#0078D4"/>
-                                        <Setter Property="BorderBrush" Value="#0078D4"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
+                    <Border Style="{StaticResource ModeTile}" Tag="{Binding IsLibraryScope}"
+                            MouseLeftButtonUp="ModeLibrary_Click">
                         <StackPanel>
-                            <TextBlock Text="🗂️" FontSize="22" Margin="0,0,0,6"/>
-                            <TextBlock FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,4">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="#201F1E"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsLibraryScope}" Value="True">
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                                Libraries &amp; Lists
-                            </TextBlock>
-                            <TextBlock FontSize="11" TextWrapping="Wrap">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="#797775"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsLibraryScope}" Value="True">
-                                                <Setter Property="Foreground" Value="#CCE4F7"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                                Recreate libraries &amp; lists with structure and columns
-                            </TextBlock>
+                            <TextBlock Text="&#xE8F1;" Style="{StaticResource ModeTileGlyph}"/>
+                            <TextBlock Text="Libraries &amp; Lists" Style="{StaticResource ModeTileTitle}"/>
+                            <TextBlock Text="Recreate libraries &amp; lists with structure and columns" Style="{StaticResource ModeTileDesc}"/>
                         </StackPanel>
                     </Border>
 
-                    <!-- Entire Site tile -->
-                    <Border MouseLeftButtonUp="ModeSite_Click">
-                        <Border.Style>
-                            <Style TargetType="Border" BasedOn="{StaticResource ModeTile}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsSiteScope}" Value="True">
-                                        <Setter Property="Background" Value="#0078D4"/>
-                                        <Setter Property="BorderBrush" Value="#0078D4"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
+                    <Border Style="{StaticResource ModeTile}" Tag="{Binding IsSiteScope}"
+                            MouseLeftButtonUp="ModeSite_Click">
                         <StackPanel>
-                            <TextBlock Text="🌐" FontSize="22" Margin="0,0,0,6"/>
-                            <TextBlock FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,4">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="#201F1E"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsSiteScope}" Value="True">
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                                Entire Site
-                            </TextBlock>
-                            <TextBlock FontSize="11" TextWrapping="Wrap">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="#797775"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsSiteScope}" Value="True">
-                                                <Setter Property="Foreground" Value="#CCE4F7"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                                Copy all libraries from the source site
-                            </TextBlock>
+                            <TextBlock Text="&#xE774;" Style="{StaticResource ModeTileGlyph}"/>
+                            <TextBlock Text="Entire Site" Style="{StaticResource ModeTileTitle}"/>
+                            <TextBlock Text="Copy all libraries from the source site" Style="{StaticResource ModeTileDesc}"/>
                         </StackPanel>
                     </Border>
 
-                    <!-- Site Pages tile -->
-                    <Border MouseLeftButtonUp="ModePages_Click">
-                        <Border.Style>
-                            <Style TargetType="Border" BasedOn="{StaticResource ModeTile}">
-                                <Setter Property="Margin" Value="0"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsPagesScope}" Value="True">
-                                        <Setter Property="Background" Value="#0078D4"/>
-                                        <Setter Property="BorderBrush" Value="#0078D4"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
+                    <Border Style="{StaticResource ModeTile}" Tag="{Binding IsPagesScope}" Margin="0"
+                            MouseLeftButtonUp="ModePages_Click">
                         <StackPanel>
-                            <TextBlock Text="📰" FontSize="22" Margin="0,0,0,6"/>
-                            <TextBlock FontSize="13" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,4">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="#201F1E"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsPagesScope}" Value="True">
-                                                <Setter Property="Foreground" Value="White"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                                Site Pages
-                            </TextBlock>
-                            <TextBlock FontSize="11" TextWrapping="Wrap">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="#797775"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsPagesScope}" Value="True">
-                                                <Setter Property="Foreground" Value="#CCE4F7"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                                Copy modern pages with web parts
-                            </TextBlock>
+                            <TextBlock Text="&#xE8A1;" Style="{StaticResource ModeTileGlyph}"/>
+                            <TextBlock Text="Site Pages" Style="{StaticResource ModeTileTitle}"/>
+                            <TextBlock Text="Copy modern pages with web parts" Style="{StaticResource ModeTileDesc}"/>
                         </StackPanel>
                     </Border>
                 </UniformGrid>
 
-                <Border Grid.Row="2" Background="#E6F2FB" BorderBrush="#0078D4" BorderThickness="1"
-                        CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
-                    <TextBlock FontSize="12" Foreground="#1F1F1F" TextTrimming="CharacterEllipsis">
+                <Border Grid.Row="2" Style="{StaticResource InfoBanner}" Padding="10,6" Margin="0,0,0,8">
+                    <TextBlock FontSize="12" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis">
                         <Run Text="Source: " FontWeight="SemiBold"/>
                         <Run Text="{Binding SourceUrl}"/>
                     </TextBlock>
@@ -728,15 +423,15 @@
                 <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,0,0,8"
                             Visibility="{Binding IsSiteScope, Converter={StaticResource InvBoolToVis}}">
                     <Button Content="Select All" Style="{StaticResource LinkBtn}" Click="SelectAll_Click"/>
-                    <TextBlock Text=" | " Foreground="#EDEBE9" VerticalAlignment="Center"/>
+                    <TextBlock Text=" | " Foreground="{StaticResource BorderLightBrush}" VerticalAlignment="Center"/>
                     <Button Content="Deselect All" Style="{StaticResource LinkBtn}" Click="DeselectAll_Click"/>
                     <ProgressBar IsIndeterminate="True" Width="80" Height="4" Margin="16,0,0,0" VerticalAlignment="Center"
                                  Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
-                    <TextBlock Text="{Binding StatusMessage}" Foreground="#605E5C" FontSize="12"
+                    <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource TextTertiaryBrush}" FontSize="12"
                                VerticalAlignment="Center" Margin="8,0,0,0"/>
                 </StackPanel>
 
-                <Border Grid.Row="5" BorderBrush="#EDEBE9" BorderThickness="1"
+                <Border Grid.Row="5" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1"
                         Background="White" MinHeight="200"
                         Visibility="{Binding IsSiteScope, Converter={StaticResource InvBoolToVis}}">
                     <TreeView x:Name="SourceTreeView"
@@ -785,19 +480,18 @@
                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0"
                                 Visibility="{Binding TargetStatus, Converter={StaticResource NotNullToVis}}">
                         <TextBlock Text="{Binding TargetStatus}" FontSize="13" VerticalAlignment="Center"/>
-                        <TextBlock Text=" · " Foreground="#A19F9D" FontSize="13" VerticalAlignment="Center"
+                        <TextBlock Text=" · " Foreground="{StaticResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
                                    Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
                         <Button Content="Disconnect" Style="{StaticResource LinkBtn}"
                                 Command="{Binding DisconnectTargetCommand}"
-                                Foreground="#605E5C" FontSize="13" Padding="0" VerticalAlignment="Center"
+                                Foreground="{StaticResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
                                 Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
                     </StackPanel>
 
                     <ProgressBar IsIndeterminate="True" Height="4" Margin="0,12,0,0"
                                  Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
 
-                    <Border Background="#FFF4CE" BorderBrush="#F7B900" BorderThickness="1"
-                            CornerRadius="4" Padding="12,8" Margin="0,20,0,0"
+                    <Border Style="{StaticResource WarningBanner}" Margin="0,20,0,0"
                             Visibility="{Binding NeedsTargetFolder, Converter={StaticResource BoolToVis}}">
                         <TextBlock TextWrapping="Wrap" FontSize="12">
                             Select the destination folder in the tree on the right.
@@ -824,10 +518,9 @@
                             Pages can only be copied into a Site Pages library.
                         </TextBlock>
 
-                        <Border Background="#E6F2FB" BorderBrush="#0078D4" BorderThickness="1"
-                                CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
+                        <Border Padding="10,6" Margin="0,0,0,8">
                             <Border.Style>
-                                <Style TargetType="Border">
+                                <Style TargetType="Border" BasedOn="{StaticResource InfoBanner}">
                                     <Setter Property="Visibility" Value="Visible"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding SelectedTargetFolder}" Value="{x:Null}">
@@ -837,12 +530,13 @@
                                 </Style>
                             </Border.Style>
                             <TextBlock FontSize="13">
-                                <Run Text="📁 Selected: "/>
+                                <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE8B7;"/>
+                                <Run Text=" Selected: "/>
                                 <Run Text="{Binding SelectedTargetFolder.Name}" FontWeight="SemiBold"/>
                             </TextBlock>
                         </Border>
 
-                        <Border BorderBrush="#EDEBE9" BorderThickness="1" Background="White" MinHeight="300">
+                        <Border BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White" MinHeight="300">
                             <TreeView x:Name="TargetTreeView"
                                       ItemsSource="{Binding TargetLibraries}"
                                       ItemTemplate="{StaticResource TargetNodeTemplate}"
@@ -863,22 +557,24 @@
                         <TextBlock Style="{StaticResource SubHeader}">
                             Libraries and lists will be created at the root of the target site. No folder selection is needed.
                         </TextBlock>
-                        <Border Background="#E6F2FB" BorderBrush="#0078D4" BorderThickness="1"
-                                CornerRadius="4" Padding="14,12" Margin="0,16,0,0">
+                        <Border Style="{StaticResource InfoBanner}" Padding="14,12" Margin="0,16,0,0">
                             <StackPanel>
-                                <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#0078D4" Margin="0,0,0,6">
-                                    ℹ Library / List Creation
-                                </TextBlock>
-                                <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#323130">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                    <TextBlock Text="&#xE946;" Style="{StaticResource GlyphIcon}"
+                                               Foreground="{StaticResource AccentBrush}" FontSize="13" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Library / List Creation" FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{StaticResource AccentBrush}"/>
+                                </StackPanel>
+                                <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}">
                                     Libraries and lists will be created at the root of the target site, preserving column schema and versioning settings. If a library or list already exists, any missing source columns will be added to it.
                                 </TextBlock>
                             </StackPanel>
                         </Border>
-                        <Border Background="#EFF6FC" BorderBrush="#0078D4" BorderThickness="1"
-                                CornerRadius="4" Padding="10,6" Margin="0,12,0,0"
+                        <Border Style="{StaticResource SuccessBanner}" Padding="10,6" Margin="0,12,0,0"
                                 Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}">
                             <TextBlock FontSize="12">
-                                <Run Text="✅ Target: " FontWeight="SemiBold"/>
+                                <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;" Foreground="{StaticResource SuccessBrush}"/>
+                                <Run Text=" Target: " FontWeight="SemiBold"/>
                                 <Run Text="{Binding TargetUrl}"/>
                             </TextBlock>
                         </Border>
@@ -896,7 +592,7 @@
                                      Text="{Binding NewListName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="0,0,0,6"
                                      Visibility="{Binding IsCreatingNewList, Converter={StaticResource BoolToVis}}"/>
-                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#797775">
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}">
                                 Select the list on the target site where the selected items will be copied.
                             </TextBlock>
                         </StackPanel>
@@ -917,8 +613,7 @@
                     <TextBlock Text="Copy Options" Style="{StaticResource SectionHeader}"/>
 
                     <!-- ── Library / Site options ──────────────────────────────── -->
-                    <Border Background="White" BorderBrush="#EDEBE9" BorderThickness="1"
-                            CornerRadius="6" Padding="16,14,16,14" Margin="0,8,0,0"
+                    <Border Style="{StaticResource Card}" Margin="0,8,0,0"
                             Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}">
                         <StackPanel>
                             <TextBlock Text="Library / List Options" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,10"/>
@@ -926,7 +621,7 @@
                                       IsChecked="{Binding CopyLibraryContent}"
                                       Margin="0,0,0,4" FontSize="13"/>
                             <TextBlock Text="When off, only the column schema and library settings are recreated — no files are copied."
-                                       TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="20,0,0,10"/>
+                                       Style="{StaticResource OptionCaption}" Margin="20,0,0,10"/>
                             <!-- File copy options shown when content copy is enabled -->
                             <StackPanel Visibility="{Binding CopyLibraryContent, Converter={StaticResource BoolToVis}}"
                                         Margin="0,6,0,0">
@@ -937,17 +632,13 @@
                                           AutomationProperties.Name="Copy version history">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock Text="Copy version history" VerticalAlignment="Center"/>
-                                        <TextBlock Margin="6,0,0,0" FontSize="11" Foreground="#797775"
-                                                   VerticalAlignment="Center" Cursor="Help"
-                                                   ToolTipService.InitialShowDelay="0"
-                                                   ToolTipService.ShowDuration="30000">
+                                        <TextBlock Style="{StaticResource ToolTipIcon}">
                                             <TextBlock.ToolTip>
                                                 <ToolTip MaxWidth="280">
                                                     <TextBlock TextWrapping="Wrap" FontSize="12"
                                                                Text="Copies file version history. Versions are uploaded oldest-first so history builds naturally."/>
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
-                                            <Run Text="ⓘ"/>
                                         </TextBlock>
                                     </StackPanel>
                                 </CheckBox>
@@ -956,40 +647,48 @@
                                     <CheckBox Content="Copy all versions"
                                               IsChecked="{Binding CopyAllVersions}"
                                               FontSize="12" Margin="0,0,0,4"/>
-                                    <StackPanel Orientation="Horizontal"
-                                                Visibility="{Binding CopyAllVersions, Converter={StaticResource InvBoolToVis}}">
-                                        <TextBlock Text="Latest " FontSize="12" Foreground="#323130" VerticalAlignment="Center"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CopyAllVersions}" Value="True">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        <TextBlock Text="Latest " FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                                         <TextBox Text="{Binding MaxVersions, UpdateSourceTrigger=PropertyChanged}"
                                                  Width="52" FontSize="12" Padding="6,4" VerticalAlignment="Center"/>
-                                        <TextBlock Text=" versions" FontSize="12" Foreground="#797775" VerticalAlignment="Center"/>
+                                        <TextBlock Text=" versions" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </StackPanel>
                                 <!-- ── Site-scope only: Navigation ─── -->
                                 <StackPanel Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}"
                                             Margin="0,4,0,0">
-                                    <Separator Margin="0,0,0,10" Background="#EDEBE9"/>
+                                    <Separator Margin="0,0,0,10" Background="{StaticResource BorderLightBrush}"/>
                                     <TextBlock Text="Site-level Options" FontWeight="SemiBold" FontSize="12"
-                                               Foreground="#323130" Margin="0,0,0,8"/>
+                                               Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
                                     <CheckBox Content="Copy navigation (Quick Launch &amp; top bar)"
                                               IsChecked="{Binding CopyNavigation}"
                                               Margin="0,0,0,4" FontSize="13"/>
                                     <TextBlock Text="Replaces target navigation with source links. URLs are remapped to the target site."
-                                               TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="20,0,0,0"/>
+                                               Style="{StaticResource OptionCaption}" Margin="20,0,0,0"/>
                                 </StackPanel>
                                 <!-- ── Permissions (Library &amp; Site scope) ─── -->
-                                <Separator Margin="0,8,0,8" Background="#EDEBE9"/>
+                                <Separator Margin="0,8,0,8" Background="{StaticResource BorderLightBrush}"/>
                                 <CheckBox Content="Copy permissions"
                                           IsChecked="{Binding CopyPermissions, Mode=TwoWay}"
                                           Margin="0,0,0,4" FontSize="13"/>
                                 <TextBlock Text="Copies unique role assignments for libraries, lists, folders, files, and items. Works best for same-tenant copies."
-                                           TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="20,0,0,8"/>
+                                           Style="{StaticResource OptionCaption}"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
                     <!-- ── Pages-specific options ───────────────────────────────── -->
-                    <Border Background="White" BorderBrush="#EDEBE9" BorderThickness="1"
-                            CornerRadius="6" Padding="16,14,16,14" Margin="0,8,0,0"
+                    <Border Style="{StaticResource Card}" Margin="0,8,0,0"
                             Visibility="{Binding IsPagesScope, Converter={StaticResource BoolToVis}}">
                         <StackPanel>
                             <TextBlock Text="Page Options" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,10"/>
@@ -999,16 +698,15 @@
                             <CheckBox Content="Remap web part URLs to target site"
                                       IsChecked="{Binding RemapPageWebPartUrls}"
                                       Margin="0,0,0,4" FontSize="13"/>
-                            <TextBlock TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="20,0,0,0">
+                            <TextBlock Style="{StaticResource OptionCaption}" Margin="20,0,0,0">
                                 Replaces source site URLs in web part JSON. Web parts referencing
                                 specific list IDs may still need manual review after copy.
                             </TextBlock>
                         </StackPanel>
                     </Border>
 
-                    <!-- ── Files-scope options (Overwrite, Versions, Copy Mode, Parallel) ── -->
-                    <Border Background="White" BorderBrush="#EDEBE9" BorderThickness="1"
-                            CornerRadius="6" Padding="16,14,16,14" Margin="0,8,0,0"
+                    <!-- ── Files-scope options (Overwrite, Versions) ── -->
+                    <Border Style="{StaticResource Card}" Margin="0,8,0,0"
                             Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}">
                         <StackPanel>
                             <CheckBox Content="Overwrite existing files"
@@ -1019,17 +717,13 @@
                                       AutomationProperties.Name="Copy versions">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="Copy versions" VerticalAlignment="Center"/>
-                                    <TextBlock Margin="6,0,0,0" FontSize="11" Foreground="#797775"
-                                               VerticalAlignment="Center" Cursor="Help"
-                                               ToolTipService.InitialShowDelay="0"
-                                               ToolTipService.ShowDuration="30000">
+                                    <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
                                                 <TextBlock TextWrapping="Wrap" FontSize="12"
                                                            Text="Copies file version history. Versions are uploaded oldest-first so history builds naturally."/>
                                             </ToolTip>
                                         </TextBlock.ToolTip>
-                                        <Run Text="ⓘ"/>
                                     </TextBlock>
                                 </StackPanel>
                             </CheckBox>
@@ -1050,34 +744,32 @@
                                             </Style.Triggers>
                                         </Style>
                                     </StackPanel.Style>
-                                    <TextBlock Text="Latest " FontSize="12" Foreground="#323130" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Latest " FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                                     <TextBox Text="{Binding MaxVersions, UpdateSourceTrigger=PropertyChanged}"
                                              Width="52" FontSize="12" Padding="6,4" VerticalAlignment="Center"/>
-                                    <TextBlock Text=" versions" FontSize="12" Foreground="#797775" VerticalAlignment="Center"/>
+                                    <TextBlock Text=" versions" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </StackPanel>
 
-                            <Separator Margin="0,4,0,8" Background="#EDEBE9"/>
+                            <Separator Margin="0,4,0,8" Background="{StaticResource BorderLightBrush}"/>
                             <CheckBox Content="Copy permissions"
                                       IsChecked="{Binding CopyPermissions, Mode=TwoWay}"
                                       Margin="0,0,0,4" FontSize="13"/>
                             <TextBlock Text="Copies unique role assignments for files. Works best for same-tenant copies."
-                                       TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="20,0,0,0"/>
+                                       Style="{StaticResource OptionCaption}" Margin="20,0,0,0"/>
 
                         </StackPanel>
                     </Border>
 
                     <!-- ── Metadata Options (all scopes) ───────────────────────── -->
-                    <Border Background="White" BorderBrush="#EDEBE9" BorderThickness="1"
-                            CornerRadius="6" Padding="16,14,16,14" Margin="0,8,0,0">
+                    <Border Style="{StaticResource Card}" Margin="0,8,0,0">
                         <StackPanel>
                             <TextBlock Text="Metadata" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,10"/>
 
                             <CheckBox IsChecked="{Binding PreserveMetadata}" Margin="0,0,0,4" FontSize="13">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="Preserve metadata" VerticalAlignment="Center"/>
-                                    <TextBlock Text="ⓘ" FontSize="13" Foreground="#0078D4" Margin="6,0,0,0"
-                                               VerticalAlignment="Center" Cursor="Help">
+                                    <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
                                                 <TextBlock TextWrapping="Wrap" FontSize="12"
@@ -1088,7 +780,7 @@
                                 </StackPanel>
                             </CheckBox>
                             <TextBlock Text="Dates and author fields from the source are written to the target."
-                                       TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="20,0,0,10"/>
+                                       Style="{StaticResource OptionCaption}" Margin="20,0,0,10"/>
 
                             <!-- Files scope: opt-in checkbox + mapping button -->
                             <StackPanel Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}">
@@ -1096,8 +788,7 @@
                                           x:Name="CopyCustomColumnsCheckBox" Checked="CopyCustomColumns_Changed" Unchecked="CopyCustomColumns_Changed">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock Text="Copy custom column values" VerticalAlignment="Center"/>
-                                        <TextBlock Text="ⓘ" FontSize="13" Foreground="#0078D4" Margin="6,0,0,0"
-                                                   VerticalAlignment="Center" Cursor="Help">
+                                        <TextBlock Style="{StaticResource ToolTipIcon}">
                                             <TextBlock.ToolTip>
                                                 <ToolTip MaxWidth="280">
                                                     <TextBlock TextWrapping="Wrap" FontSize="12"
@@ -1119,7 +810,7 @@
                             <StackPanel Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}"
                                         Margin="0,4,0,0">
                                 <TextBlock Text="Custom column values are always copied for list items."
-                                           TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="0,0,0,8"/>
+                                           Style="{StaticResource OptionCaption}" Margin="0,0,0,8"/>
                                 <Button HorizontalAlignment="Left"
                                         Style="{StaticResource SecondaryBtn}"
                                         Click="ConfigureMappings_Click"
@@ -1133,32 +824,32 @@
                     <Button x:Name="AdvancedToggleBtn"
                             Margin="0,8,0,0" Padding="12,9"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                            Background="White" BorderBrush="#EDEBE9" BorderThickness="1"
+                            Background="White" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1"
                             Cursor="Hand" Click="AdvancedToggle_Click"
                             Visibility="{Binding IsPagesScope, Converter={StaticResource InvBoolToVis}}">
                         <Grid>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="Advanced options" FontSize="12" FontWeight="SemiBold" Foreground="#605E5C"/>
+                                <TextBlock Text="Advanced options" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextTertiaryBrush}"/>
                             </StackPanel>
-                            <TextBlock x:Name="AdvancedChevron" Text="▾" FontSize="12" Foreground="#605E5C"
+                            <TextBlock x:Name="AdvancedChevron" Text="▾" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}"
                                        HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         </Grid>
                     </Button>
                     <Border x:Name="AdvancedPanel" Visibility="Collapsed"
-                            Background="White" BorderBrush="#EDEBE9" BorderThickness="1,0,1,1"
-                            CornerRadius="0,0,6,6" Padding="16,14,16,14">
+                            Background="White" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1,0,1,1"
+                            CornerRadius="0,0,6,6" Padding="16,14">
                         <StackPanel>
                             <TextBlock Text="Copy mode" FontSize="12" FontWeight="SemiBold"
-                                       Foreground="#323130" Margin="0,0,0,6"/>
+                                       Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,6"/>
                             <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,6"
                                          IsChecked="{Binding IsMigrationApiMode, Mode=OneWay}"
                                          Click="MigrationApiMode_Click">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="Migration API" VerticalAlignment="Center"/>
-                                    <Border Background="#0078D4" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
+                                    <Border Background="{StaticResource AccentBrush}" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
                                         <TextBlock Text="Recommended" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
                                     </Border>
-                                    <TextBlock Text="ⓘ" FontSize="13" Foreground="#0078D4" Margin="6,0,0,0" VerticalAlignment="Center" Cursor="Help" MouseLeftButtonDown="InfoIcon_Click">
+                                    <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
                                         <TextBlock.ToolTip>
                                             <ToolTip>
                                                 <TextBlock Text="Exact version numbers, dates, and editors. Requires Site Collection Admin on the target." TextWrapping="Wrap" MaxWidth="260"/>
@@ -1172,7 +863,7 @@
                                          Click="EnhancedRestMode_Click">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="Enhanced REST" VerticalAlignment="Center"/>
-                                    <TextBlock Text="ⓘ" FontSize="13" Foreground="#0078D4" Margin="6,0,0,0" VerticalAlignment="Center" Cursor="Help" MouseLeftButtonDown="InfoIcon_Click">
+                                    <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
                                         <TextBlock.ToolTip>
                                             <ToolTip>
                                                 <TextBlock Text="Correct dates and editors per version, but version numbers double (2, 4, 6…). No admin rights required." TextWrapping="Wrap" MaxWidth="260"/>
@@ -1181,9 +872,9 @@
                                     </TextBlock>
                                 </StackPanel>
                             </RadioButton>
-                            <Separator Margin="0,0,0,10" Background="#EDEBE9"/>
+                            <Separator Margin="0,0,0,10" Background="{StaticResource BorderLightBrush}"/>
                             <TextBlock Text="Parallel copies" FontSize="12" FontWeight="SemiBold"
-                                       Foreground="#323130" Margin="0,0,0,4"/>
+                                       Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
                                 <Slider Minimum="1" Maximum="16" Value="{Binding MaxParallelCopies}"
                                         Width="120" VerticalAlignment="Center"/>
@@ -1191,13 +882,12 @@
                                            Margin="8,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
                             <TextBlock Text="Higher values copy faster but may throttle on large sites."
-                                       TextWrapping="Wrap" Foreground="#797775" FontSize="11"/>
+                                       Style="{StaticResource OptionCaption}" Margin="0"/>
                         </StackPanel>
                     </Border>
 
                     <!-- ── Summary ──────────────────────────────────────────────── -->
-                    <Border Background="White" BorderBrush="#EDEBE9" BorderThickness="1"
-                            CornerRadius="6" Padding="16" Margin="0,8,0,0">
+                    <Border Style="{StaticResource Card}" Margin="0,8,0,0">
                         <StackPanel>
                             <TextBlock Text="Summary" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,8"/>
                             <TextBlock FontSize="13"
@@ -1215,11 +905,11 @@
                                 <Run Text="List items to copy: "/>
                                 <Run Text="{Binding SelectedItemCount, Mode=OneWay}" FontWeight="Bold"/>
                             </TextBlock>
-                            <TextBlock Margin="0,4,0,0" FontSize="12" Foreground="#605E5C" TextWrapping="Wrap"
+                            <TextBlock Margin="0,4,0,0" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" TextWrapping="Wrap"
                                        Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}">
                                 Folders are recursively enumerated during the copy.
                             </TextBlock>
-                            <TextBlock Margin="0,4,0,0" FontSize="12" Foreground="#605E5C" TextWrapping="Wrap"
+                            <TextBlock Margin="0,4,0,0" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" TextWrapping="Wrap"
                                        Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}">
                                 Files in each library and items in each list are enumerated at copy time.
                             </TextBlock>
@@ -1237,22 +927,19 @@
 
                     <TextBlock Grid.Row="0" Text="Copy Preview" Style="{StaticResource SectionHeader}"/>
                     <StackPanel Grid.Row="1" Margin="0,0,0,8">
-                        <Border Background="#E6F2FB" BorderBrush="#0078D4" BorderThickness="1"
-                                CornerRadius="4" Padding="10,6" Margin="0,0,0,4">
+                        <Border Style="{StaticResource InfoBanner}" Padding="10,6" Margin="0,0,0,4">
                             <TextBlock FontSize="12" TextWrapping="Wrap">
                                 <Run Text="From: " FontWeight="SemiBold"/>
                                 <Run Text="{Binding SourceUrl}"/>
                             </TextBlock>
                         </Border>
-                        <Border Background="#E6F2FB" BorderBrush="#0078D4" BorderThickness="1"
-                                CornerRadius="4" Padding="10,6">
+                        <Border Style="{StaticResource InfoBanner}" Padding="10,6">
                             <TextBlock FontSize="12" TextWrapping="Wrap">
                                 <Run Text="To: " FontWeight="SemiBold"/>
                                 <Run Text="{Binding TargetUrl}"/>
                             </TextBlock>
                         </Border>
-                        <Border Background="#EFF6E8" BorderBrush="#498205" BorderThickness="1"
-                                CornerRadius="4" Padding="10,6" Margin="0,4,0,0"
+                        <Border Style="{StaticResource SuccessBanner}" Padding="10,6" Margin="0,4,0,0"
                                 Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}">
                             <TextBlock FontSize="12" TextWrapping="Wrap">
                                 <Run Text="Destination List: " FontWeight="SemiBold"/>
@@ -1262,7 +949,7 @@
                     </StackPanel>
 
                     <!-- Library / Site scope: list selected libraries -->
-                    <Border Grid.Row="2" BorderBrush="#EDEBE9" BorderThickness="1" Background="White"
+                    <Border Grid.Row="2" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White"
                             Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}">
                         <ListView ItemsSource="{Binding LibraryPreviewItems}" Padding="4">
                             <ListView.View>
@@ -1271,7 +958,8 @@
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding TypeIcon}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
+                                                               FontSize="13" Foreground="{StaticResource AccentBrush}" Margin="0,0,6,0"/>
                                                     <TextBlock Text="{Binding Name}" FontSize="12" VerticalAlignment="Center"/>
                                                 </StackPanel>
                                             </DataTemplate>
@@ -1295,7 +983,7 @@
                     </Border>
 
                     <!-- Files / Pages scope: list selected file jobs -->
-                    <Border Grid.Row="2" BorderBrush="#EDEBE9" BorderThickness="1" Background="White"
+                    <Border Grid.Row="2" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White"
                             Visibility="{Binding IsFilesOrPagesScope, Converter={StaticResource BoolToVis}}">
                         <ListView ItemsSource="{Binding CopyJobs}"
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto">
@@ -1304,13 +992,15 @@
                                     <GridViewColumn Header="Type" Width="50">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock FontSize="14" HorizontalAlignment="Center">
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           FontFamily="{StaticResource GlyphFont}" FontSize="14"
+                                                           Foreground="{StaticResource AccentBrush}">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
-                                                            <Setter Property="Text" Value="📄"/>
+                                                            <Setter Property="Text" Value="&#xE7C3;"/>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding IsFolder}" Value="True">
-                                                                    <Setter Property="Text" Value="📁"/>
+                                                                    <Setter Property="Text" Value="&#xE8B7;"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -1366,8 +1056,7 @@
                     </TextBlock.Style>
                 </TextBlock>
 
-                <Border Grid.Row="1" Background="White" BorderBrush="#EDEBE9" BorderThickness="1"
-                        CornerRadius="6" Padding="16" Margin="0,0,0,16">
+                <Border Grid.Row="1" Style="{StaticResource Card}" Padding="16" Margin="0,0,0,16">
                     <StackPanel>
                         <Grid Margin="0,0,0,8">
                             <TextBlock FontSize="13">
@@ -1379,41 +1068,47 @@
                             <TextBlock HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold">
                                 <Run Text="{Binding TotalProgress, StringFormat={}{0:N0}}"/>
                                 <Run Text="%"/>
-                                <Run Text="   ⏱ " Foreground="#797775"/>
-                                <Run Text="{Binding ElapsedTime}" Foreground="#797775"/>
+                                <Run Text="   "/>
+                                <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE916;" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                <Run Text=" " Foreground="{StaticResource TextTertiaryBrush}"/>
+                                <Run Text="{Binding ElapsedTime}" Foreground="{StaticResource TextTertiaryBrush}"/>
                             </TextBlock>
                         </Grid>
                         <ProgressBar Value="{Binding TotalProgress}" Maximum="100" Height="12"
-                                     Background="#EDEBE9" Foreground="#0078D4"/>
+                                     Background="{StaticResource BorderLightBrush}" Foreground="{StaticResource AccentBrush}"/>
                         <Button Content="Cancel" Style="{StaticResource DangerBtn}"
                                 HorizontalAlignment="Left" Margin="0,12,0,0"
                                 Command="{Binding CancelCopyCommand}"
                                 Visibility="{Binding IsCopying, Converter={StaticResource BoolToVis}}"/>
-                        <TextBlock Margin="0,8,0,0" FontSize="13" Foreground="#107C10"
-                                   Text="✅ Copy complete! Click Next to see the full report."
-                                   Visibility="{Binding IsReadyForReport, Converter={StaticResource BoolToVis}}"/>
+                        <TextBlock Margin="0,8,0,0" FontSize="13" Foreground="{StaticResource SuccessBrush}"
+                                   Visibility="{Binding IsReadyForReport, Converter={StaticResource BoolToVis}}">
+                            <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;"/>
+                            <Run Text=" Copy complete! Click Next to see the full report."/>
+                        </TextBlock>
                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
                                     Visibility="{Binding IsMetadataInProgress, Converter={StaticResource BoolToVis}}">
                             <ProgressBar IsIndeterminate="True" Width="80" Height="4"
                                          VerticalAlignment="Center" Margin="0,0,8,0"/>
                             <TextBlock Text="Updating folder metadata…" FontSize="13"
-                                       Foreground="#605E5C" VerticalAlignment="Center"/>
+                                       Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBlock Margin="0,4,0,0" FontSize="13" Foreground="#605E5C"
-                                   Text="✔ Metadata updated"
-                                   Visibility="{Binding IsMetadataComplete, Converter={StaticResource BoolToVis}}"/>
+                        <TextBlock Margin="0,4,0,0" FontSize="13" Foreground="{StaticResource TextTertiaryBrush}"
+                                   Visibility="{Binding IsMetadataComplete, Converter={StaticResource BoolToVis}}">
+                            <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;"/>
+                            <Run Text=" Metadata updated"/>
+                        </TextBlock>
                     </StackPanel>
                 </Border>
 
                 <TextBlock Grid.Row="2" Text="Copy Log" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
-                <Border Grid.Row="3" BorderBrush="#EDEBE9" BorderThickness="1" Background="White">
+                <Border Grid.Row="3" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White">
                     <ListView x:Name="ProgressList" ItemsSource="{Binding CopyResults}"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsPermissionResult}" Value="True">
-                                        <Setter Property="Background" Value="#EEF2FF"/>
+                                        <Setter Property="Background" Value="{StaticResource PermissionRowBrush}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -1438,8 +1133,8 @@
                                             <TextBlock FontSize="12"
                                                        Visibility="{Binding IsLibraryCreation, Converter={StaticResource InvBoolToVis}}">
                                                 <Run Text="{Binding VersionsCopied}"/>
-                                                <Run Text="/" Foreground="#797775"/>
-                                                <Run Text="{Binding VersionsTotal}" Foreground="#797775"/>
+                                                <Run Text="/" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                                <Run Text="{Binding VersionsTotal}" Foreground="{StaticResource TextTertiaryBrush}"/>
                                             </TextBlock>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -1463,46 +1158,46 @@
                 <TextBlock Grid.Row="0" Text="Copy Report" Style="{StaticResource SectionHeader}"/>
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,16">
-                    <Border Background="#DFF6DD" BorderBrush="#107C10" BorderThickness="1"
-                            CornerRadius="6" Padding="20,12" Margin="0,0,12,0" MinWidth="130">
+                    <Border Style="{StaticResource SummaryCard}" Background="{StaticResource SuccessBgBrush}" BorderBrush="{StaticResource SuccessBrush}">
                         <StackPanel>
                             <TextBlock Text="{Binding SuccessCount}" FontSize="28" FontWeight="Bold"
-                                       Foreground="#107C10" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Succeeded" Foreground="#107C10" HorizontalAlignment="Center" FontSize="13"/>
+                                       Foreground="{StaticResource SuccessBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Succeeded" Foreground="{StaticResource SuccessBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
-                    <Border Background="#FDE7E9" BorderBrush="#A4262C" BorderThickness="1"
-                            CornerRadius="6" Padding="20,12" Margin="0,0,12,0" MinWidth="130">
+                    <Border Style="{StaticResource SummaryCard}" Background="{StaticResource DangerBgBrush}" BorderBrush="{StaticResource DangerBrush}">
                         <StackPanel>
                             <TextBlock Text="{Binding FailedCount}" FontSize="28" FontWeight="Bold"
-                                       Foreground="#A4262C" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Failed" Foreground="#A4262C" HorizontalAlignment="Center" FontSize="13"/>
+                                       Foreground="{StaticResource DangerBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Failed" Foreground="{StaticResource DangerBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
-                    <Border Background="#FFF4CE" BorderBrush="#F7B900" BorderThickness="1"
-                            CornerRadius="6" Padding="20,12" Margin="0,0,12,0" MinWidth="130">
+                    <Border Style="{StaticResource SummaryCard}" Background="{StaticResource WarningBgBrush}" BorderBrush="{StaticResource WarningBrush}">
                         <StackPanel>
                             <TextBlock Text="{Binding SkippedCount}" FontSize="28" FontWeight="Bold"
-                                       Foreground="#7A5900" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Skipped" Foreground="#7A5900" HorizontalAlignment="Center" FontSize="13"/>
+                                       Foreground="{StaticResource WarningTextBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Skipped" Foreground="{StaticResource WarningTextBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
-                    <Border Background="#F3F2F1" BorderBrush="#EDEBE9" BorderThickness="1"
-                            CornerRadius="6" Padding="20,12" MinWidth="130">
+                    <Border Style="{StaticResource SummaryCard}" Background="{StaticResource WindowBgBrush}" BorderBrush="{StaticResource BorderLightBrush}" Margin="0">
                         <StackPanel>
                             <TextBlock Text="{Binding CopyDuration}" FontSize="28" FontWeight="Bold"
-                                       Foreground="#323130" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Duration" Foreground="#605E5C" HorizontalAlignment="Center" FontSize="13"/>
+                                       Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Duration" Foreground="{StaticResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,8">
-                    <Button Content="📥 Export CSV" Style="{StaticResource SecondaryBtn}"
-                            Command="{Binding ExportReportCommand}"/>
+                    <Button Style="{StaticResource SecondaryBtn}" Command="{Binding ExportReportCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE896;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                            <TextBlock Text="Export CSV" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
-                <Border Grid.Row="3" BorderBrush="#EDEBE9" BorderThickness="1">
+                <Border Grid.Row="3" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1">
                     <DataGrid ItemsSource="{Binding CopyResults}"
                               AutoGenerateColumns="False" IsReadOnly="True"
                               CanUserAddRows="False" GridLinesVisibility="Horizontal"
@@ -1514,7 +1209,7 @@
                             <Style TargetType="DataGridRow">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsPermissionResult}" Value="True">
-                                        <Setter Property="Background" Value="#EEF2FF"/>
+                                        <Setter Property="Background" Value="{StaticResource PermissionRowBrush}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -1549,17 +1244,22 @@
         </Grid>
 
         <!-- ══ Navigation Bar ═══════════════════════════════════════════════════ -->
-        <Border Grid.Row="3" Background="White" BorderBrush="#EDEBE9" BorderThickness="0,1,0,0">
+        <Border Grid.Row="3" Background="White" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,1,0,0">
             <Grid Margin="32,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Button Content="← Back" Style="{StaticResource SecondaryBtn}"
                             Command="{Binding BackCommand}"
                             AutomationProperties.Name="BackBtn"
                             Visibility="{Binding CurrentStep, Converter={StaticResource NeqToVis}, ConverterParameter=0}"/>
-                    <Button Content="🔄 Start New Copy" Style="{StaticResource SecondaryBtn}"
+                    <Button Style="{StaticResource SecondaryBtn}"
                             Margin="8,0,0,0"
                             Click="StartNewCopy_Click"
-                            Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=5}"/>
+                            Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=5}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE72C;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                            <TextBlock Text="Start New Copy" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
                 <Button Style="{StaticResource PrimaryBtn}" HorizontalAlignment="Right" VerticalAlignment="Center"

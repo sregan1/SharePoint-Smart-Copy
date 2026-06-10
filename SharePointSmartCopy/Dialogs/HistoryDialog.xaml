@@ -1,39 +1,12 @@
-﻿<Window x:Class="SharePointSmartCopy.Dialogs.HistoryDialog"
+<Window x:Class="SharePointSmartCopy.Dialogs.HistoryDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Copy History"
         Width="980" Height="620"
         WindowStartupLocation="CenterOwner"
-        Background="#F3F3F3">
+        Background="{StaticResource WindowBgBrush}">
 
-    <Window.Resources>
-        <Style x:Key="PrimaryButton" TargetType="Button">
-            <Setter Property="Padding" Value="16,7"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Background" Value="#0078D4"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-        </Style>
-        <Style x:Key="SecondaryButton" TargetType="Button">
-            <Setter Property="Padding" Value="16,7"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="#323130"/>
-            <Setter Property="BorderBrush" Value="#8A8886"/>
-        </Style>
-        <Style x:Key="DangerButton" TargetType="Button">
-            <Setter Property="Padding" Value="16,7"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Background" Value="#A4262C"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-        </Style>
-    </Window.Resources>
-
-    <Grid Margin="16">
+    <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="12"/>
@@ -53,7 +26,7 @@
                    Height="70" VerticalAlignment="Center"
                    RenderOptions.BitmapScalingMode="HighQuality"/>
             <TextBlock Grid.Column="2" Text="Copy History" FontSize="18" FontWeight="SemiBold"
-                       Foreground="#1F1F1F" VerticalAlignment="Center"/>
+                       Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
         </Grid>
 
         <!-- Main area -->
@@ -73,10 +46,10 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="Previous runs" FontWeight="SemiBold"
-                           FontSize="13" Foreground="#323130"/>
+                           FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"/>
 
                 <ListBox Grid.Row="2" x:Name="ReportList"
-                         BorderBrush="#EDEBE9" BorderThickness="1" Background="White"
+                         BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White"
                          SelectionChanged="ReportList_SelectionChanged">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
@@ -88,16 +61,16 @@
                         <DataTemplate>
                             <StackPanel>
                                 <TextBlock Text="{Binding DisplayDate}"
-                                           FontSize="13" FontWeight="SemiBold" Foreground="#1F1F1F"/>
-                                <TextBlock Text="{Binding SourceUrl}" FontSize="10" Foreground="#797775"
+                                           FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{Binding SourceUrl}" FontSize="10" Foreground="{StaticResource TextTertiaryBrush}"
                                            TextTrimming="CharacterEllipsis" Margin="0,2,0,0"/>
-                                <TextBlock FontSize="10" Foreground="#797775"
+                                <TextBlock FontSize="10" Foreground="{StaticResource TextTertiaryBrush}"
                                            TextTrimming="CharacterEllipsis">
                                     <Run Text="→ "/>
                                     <Run Text="{Binding TargetUrl}"/>
                                 </TextBlock>
                                 <TextBlock Text="{Binding Summary}" FontSize="12"
-                                           Foreground="#323130" Margin="0,4,0,0"/>
+                                           Foreground="{StaticResource TextSecondaryBrush}" Margin="0,4,0,0"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -105,7 +78,7 @@
             </Grid>
 
             <!-- Vertical divider -->
-            <Rectangle Grid.Column="1" Width="1" Fill="#EDEBE9" HorizontalAlignment="Center"/>
+            <Rectangle Grid.Column="1" Width="1" Fill="{StaticResource BorderLightBrush}" HorizontalAlignment="Center"/>
 
             <!-- Detail panel -->
             <Grid Grid.Column="2">
@@ -119,39 +92,39 @@
 
                 <TextBlock Grid.Row="0" x:Name="DetailHeader"
                            Text="Select a run to view details"
-                           FontSize="13" FontWeight="SemiBold" Foreground="#323130"/>
+                           FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
 
                 <!-- Summary cards for selected report -->
                 <StackPanel Grid.Row="2" x:Name="SummaryCards"
                             Orientation="Horizontal" Visibility="Collapsed">
-                    <Border Background="#DFF6DD" BorderBrush="#107C10" BorderThickness="1"
-                            CornerRadius="4" Padding="16,8" Margin="0,0,8,0" MinWidth="90">
+                    <Border Style="{StaticResource SummaryCard}" Padding="16,8" Margin="0,0,8,0" MinWidth="90"
+                            Background="{StaticResource SuccessBgBrush}" BorderBrush="{StaticResource SuccessBrush}">
                         <StackPanel>
                             <TextBlock x:Name="SuccessCard" Text="0" FontSize="22" FontWeight="Bold"
-                                       Foreground="#107C10" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Succeeded" Foreground="#107C10" FontSize="11" HorizontalAlignment="Center"/>
+                                       Foreground="{StaticResource SuccessBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Succeeded" Foreground="{StaticResource SuccessBrush}" FontSize="11" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
-                    <Border Background="#FDE7E9" BorderBrush="#A4262C" BorderThickness="1"
-                            CornerRadius="4" Padding="16,8" Margin="0,0,8,0" MinWidth="90">
+                    <Border Style="{StaticResource SummaryCard}" Padding="16,8" Margin="0,0,8,0" MinWidth="90"
+                            Background="{StaticResource DangerBgBrush}" BorderBrush="{StaticResource DangerBrush}">
                         <StackPanel>
                             <TextBlock x:Name="FailedCard" Text="0" FontSize="22" FontWeight="Bold"
-                                       Foreground="#A4262C" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Failed" Foreground="#A4262C" FontSize="11" HorizontalAlignment="Center"/>
+                                       Foreground="{StaticResource DangerBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Failed" Foreground="{StaticResource DangerBrush}" FontSize="11" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
-                    <Border Background="#FFF4CE" BorderBrush="#F7B900" BorderThickness="1"
-                            CornerRadius="4" Padding="16,8" MinWidth="90">
+                    <Border Style="{StaticResource SummaryCard}" Padding="16,8" Margin="0" MinWidth="90"
+                            Background="{StaticResource WarningBgBrush}" BorderBrush="{StaticResource WarningBrush}">
                         <StackPanel>
                             <TextBlock x:Name="SkippedCard" Text="0" FontSize="22" FontWeight="Bold"
-                                       Foreground="#7A5900" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Skipped" Foreground="#7A5900" FontSize="11" HorizontalAlignment="Center"/>
+                                       Foreground="{StaticResource WarningTextBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Skipped" Foreground="{StaticResource WarningTextBrush}" FontSize="11" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
 
                 <!-- Detail DataGrid -->
-                <Border Grid.Row="4" BorderBrush="#EDEBE9" BorderThickness="1">
+                <Border Grid.Row="4" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1">
                     <DataGrid x:Name="DetailGrid"
                               AutoGenerateColumns="False" IsReadOnly="True"
                               CanUserAddRows="False" GridLinesVisibility="Horizontal"
@@ -188,14 +161,14 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" x:Name="DeleteButton" Content="Delete Run"
-                    Style="{StaticResource DangerButton}"
+                    Style="{StaticResource DangerBtn}"
                     IsEnabled="False" Click="DeleteButton_Click"/>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Button x:Name="ExportButton" Content="Export CSV"
-                        Style="{StaticResource SecondaryButton}"
+                        Style="{StaticResource SecondaryBtn}"
                         IsEnabled="False" Margin="0,0,10,0" Click="ExportButton_Click"/>
-                <Button Content="Close" Style="{StaticResource SecondaryButton}" Click="Close_Click"/>
+                <Button Content="Close" Style="{StaticResource SecondaryBtn}" Click="Close_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

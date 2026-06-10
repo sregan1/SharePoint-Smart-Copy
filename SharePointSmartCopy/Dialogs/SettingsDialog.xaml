@@ -5,26 +5,10 @@
         Width="660" Height="600"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="#F3F3F3">
+        Background="{StaticResource WindowBgBrush}">
 
     <Window.Resources>
-        <Style TargetType="TextBox">
-            <Setter Property="Padding" Value="8,6"/>
-            <Setter Property="BorderBrush" Value="#8A8886"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontSize" Value="13"/>
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="Padding" Value="16,7"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Cursor" Value="Hand"/>
-        </Style>
-        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Background" Value="#0078D4"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-        </Style>
-        <Style x:Key="SmallButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Style x:Key="SmallButton" TargetType="Button" BasedOn="{StaticResource SecondaryBtn}">
             <Setter Property="Padding" Value="12,5"/>
             <Setter Property="FontSize" Value="12"/>
         </Style>
@@ -50,8 +34,8 @@
                    Height="70" VerticalAlignment="Center"
                    RenderOptions.BitmapScalingMode="HighQuality"/>
             <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                <TextBlock Text="Azure App Registrations" FontSize="18" FontWeight="SemiBold" Foreground="#1F1F1F"/>
-                <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#605E5C" FontSize="12">
+                <TextBlock Text="Azure App Registrations" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="{StaticResource TextTertiaryBrush}" FontSize="12">
                     Store one or more Azure AD app registrations. The one selected when you click Save becomes the active registration.
                     Each app needs delegated permissions <Run FontWeight="Bold">Sites.ReadWrite.All</Run> and <Run FontWeight="Bold">Files.ReadWrite.All</Run>, with admin consent.
                 </TextBlock>
@@ -76,10 +60,10 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Registrations" FontWeight="SemiBold" FontSize="13" Foreground="#323130"/>
+                <TextBlock Grid.Row="0" Text="Registrations" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"/>
 
                 <ListBox Grid.Row="2" x:Name="RegistrationList"
-                         BorderBrush="#EDEBE9" BorderThickness="1" Background="White"
+                         BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White"
                          SelectionChanged="RegistrationList_SelectionChanged">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
@@ -119,7 +103,7 @@
             </Grid>
 
             <!-- Vertical divider -->
-            <Rectangle Grid.Column="1" Width="1" Fill="#EDEBE9" HorizontalAlignment="Center"/>
+            <Rectangle Grid.Column="1" Width="1" Fill="{StaticResource BorderLightBrush}" HorizontalAlignment="Center"/>
 
             <!-- Edit form -->
             <Grid Grid.Column="2"
@@ -149,28 +133,27 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="Edit Selected Registration"
-                           FontWeight="SemiBold" FontSize="13" Foreground="#323130"/>
+                           FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"/>
 
                 <StackPanel Grid.Row="2">
-                    <TextBlock Text="Name" FontWeight="SemiBold" Margin="0,0,0,4" FontSize="12" Foreground="#323130"/>
+                    <TextBlock Text="Name" Style="{StaticResource FieldLabel}"/>
                     <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="4">
-                    <TextBlock Text="Client ID (Application ID)" FontWeight="SemiBold" Margin="0,0,0,4" FontSize="12" Foreground="#323130"/>
+                    <TextBlock Text="Client ID (Application ID)" Style="{StaticResource FieldLabel}"/>
                     <TextBox Text="{Binding ClientId, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="6">
-                    <TextBlock Text="Tenant ID" FontWeight="SemiBold" Margin="0,0,0,4" FontSize="12" Foreground="#323130"/>
+                    <TextBlock Text="Tenant ID" Style="{StaticResource FieldLabel}"/>
                     <TextBox Text="{Binding TenantId, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="Use 'common' for multi-tenant, or your tenant GUID or domain."
-                               Foreground="#797775" FontSize="11" Margin="0,4,0,0"/>
+                               Foreground="{StaticResource TextTertiaryBrush}" FontSize="11" Margin="0,4,0,0"/>
                 </StackPanel>
 
                 <!-- Setup instructions -->
-                <Border Grid.Row="8" Background="#EFF6FC" BorderBrush="#0078D4" BorderThickness="1"
-                        CornerRadius="4" Padding="10,7">
+                <Border Grid.Row="8" Style="{StaticResource InfoBanner}" Padding="10,7">
                     <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#004578">
                         <Run FontWeight="Bold">Setup:</Run> portal.azure.com → Azure Active Directory → App registrations → New registration.
                         Add a Mobile/Desktop redirect URI of <Run FontWeight="Bold">http://localhost</Run>.
@@ -189,11 +172,11 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Content="Sign Out" Click="SignOutButton_Click"
-                    Background="Transparent" BorderBrush="#8A8886" Foreground="#323130"/>
+                    Style="{StaticResource SecondaryBtn}"/>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal">
-                <Button Content="Cancel" Margin="0,0,12,0" Click="Cancel_Click"/>
-                <Button Content="Save" Style="{StaticResource PrimaryButton}" Click="Save_Click"/>
+                <Button Content="Cancel" Style="{StaticResource SecondaryBtn}" Margin="0,0,12,0" Click="Cancel_Click"/>
+                <Button Content="Save" Style="{StaticResource PrimaryBtn}" Click="Save_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

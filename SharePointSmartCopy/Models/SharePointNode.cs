@@ -34,11 +34,13 @@ public partial class SharePointNode : ObservableObject
 
     public string SizeDisplay => Size.HasValue ? FormatSize(Size.Value) : string.Empty;
 
-    public string TypeIcon => IsCustomList ? "📋" : Type switch
+    // Segoe Fluent Icons / Segoe MDL2 Assets glyph codepoints — rendered with the
+    // shared GlyphIcon style (Themes/AppStyles.xaml), not as emoji text.
+    public string TypeIcon => IsCustomList ? "" : Type switch
     {
-        NodeType.Library  => "📚",
-        NodeType.Folder   => "📁",
-        NodeType.ListItem => "📋",
+        NodeType.Library  => "", // Library
+        NodeType.Folder   => "", // Folder
+        NodeType.ListItem => "", // BulletedList
         _                 => GetFileIcon(Name)
     };
 
@@ -72,15 +74,11 @@ public partial class SharePointNode : ObservableObject
         var ext = System.IO.Path.GetExtension(name).ToLowerInvariant();
         return ext switch
         {
-            ".docx" or ".doc"  => "📝",
-            ".xlsx" or ".xls"  => "📊",
-            ".pptx" or ".ppt"  => "📊",
-            ".pdf"             => "📄",
-            ".png" or ".jpg" or ".jpeg" or ".gif" or ".bmp" => "🖼️",
-            ".mp4" or ".avi" or ".mov" => "🎬",
-            ".mp3" or ".wav"   => "🎵",
-            ".zip" or ".rar"   => "🗜️",
-            _                  => "📄"
+            ".docx" or ".doc"  => "", // Document
+            ".png" or ".jpg" or ".jpeg" or ".gif" or ".bmp" => "", // Picture
+            ".mp4" or ".avi" or ".mov" => "", // Video
+            ".mp3" or ".wav"   => "", // MusicInfo
+            _                  => ""  // Page
         };
     }
 

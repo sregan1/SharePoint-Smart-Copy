@@ -42,6 +42,28 @@ public class EqualToVisibilityConverter : IValueConverter
         => throw new NotImplementedException();
 }
 
+// String-compares value to parameter (same semantics as EqualToVisibilityConverter)
+// but returns bool — used by DataTriggers for selected/active states.
+public class EqualToBoolConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        => value != null && parameter != null && value.ToString() == parameter.ToString();
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+// String-compares two bound values — used where the comparison target is itself a
+// binding (e.g. step indicator: CurrentStep == StepInfo.Index).
+public class MultiEqualToBoolConverter : IMultiValueConverter
+{
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        => values.Length == 2 && values[0]?.ToString() == values[1]?.ToString();
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
 public class NotEqualToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
