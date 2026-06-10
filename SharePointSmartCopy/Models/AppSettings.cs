@@ -17,6 +17,8 @@ public partial class AzureRegistration : ObservableObject
 
 public enum CopyMode { MigrationApi, EnhancedRest }
 
+public enum AppTheme { System, Light, Dark }
+
 public class AppSettings
 {
     public List<AzureRegistration> Registrations { get; set; } = [];
@@ -36,6 +38,7 @@ public class AppSettings
     public bool      PreserveMetadata     { get; set; } = true;
     public bool      CopyNavigation       { get; set; } = true;
     public bool      CopyPermissions      { get; set; } = false;
+    public AppTheme  Theme                { get; set; } = AppTheme.System;
 
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {

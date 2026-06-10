@@ -4,10 +4,13 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!-- Color dictionary is swapped at runtime by ThemeManager -->
+                <ResourceDictionary Source="Themes/Colors.Light.xaml"/>
                 <ResourceDictionary Source="Themes/AppStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="CheckBox">
                 <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

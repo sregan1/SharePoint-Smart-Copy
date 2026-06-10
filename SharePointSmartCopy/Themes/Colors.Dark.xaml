@@ -1,0 +1,31 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Dark theme palette. Counterpart: Colors.Light.xaml — keep keys in sync.
+         Swapped at runtime by Services/ThemeManager.
+         Status colors are chosen to read both as text on dark surfaces and as
+         backgrounds under white text (each brush serves both roles). -->
+
+    <SolidColorBrush x:Key="AccentBrush"           Color="#0078D4"/>
+    <SolidColorBrush x:Key="AccentLightBrush"      Color="#234C66"/>
+    <SolidColorBrush x:Key="SuccessBrush"          Color="#4CAF50"/>
+    <SolidColorBrush x:Key="SuccessBgBrush"        Color="#233A28"/>
+    <SolidColorBrush x:Key="DangerBrush"           Color="#E5484D"/>
+    <SolidColorBrush x:Key="DangerBgBrush"         Color="#432324"/>
+    <SolidColorBrush x:Key="WarningBrush"          Color="#D8A526"/>
+    <SolidColorBrush x:Key="WarningBgBrush"        Color="#3A3324"/>
+    <SolidColorBrush x:Key="WarningTextBrush"      Color="#F2D27D"/>
+    <SolidColorBrush x:Key="InfoBgBrush"           Color="#20354A"/>
+    <SolidColorBrush x:Key="BorderLightBrush"      Color="#3F3F3F"/>
+    <SolidColorBrush x:Key="BorderInputBrush"      Color="#6E6E6E"/>
+    <SolidColorBrush x:Key="TextPrimaryBrush"      Color="#F5F5F5"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush"    Color="#DDDDDD"/>
+    <SolidColorBrush x:Key="TextTertiaryBrush"     Color="#9D9B99"/>
+    <SolidColorBrush x:Key="TextPlaceholderBrush"  Color="#807E7C"/>
+    <SolidColorBrush x:Key="WindowBgBrush"         Color="#202020"/>
+    <SolidColorBrush x:Key="SurfaceBrush"          Color="#2B2B2B"/>
+    <SolidColorBrush x:Key="SurfaceAltBrush"       Color="#333333"/>
+    <SolidColorBrush x:Key="PermissionRowBrush"    Color="#2A3144"/>
+    <SolidColorBrush x:Key="UnmatchedBgBrush"      Color="#3B3526"/>
+    <SolidColorBrush x:Key="TileSelectedTextBrush" Color="#CCE4F7"/>
+</ResourceDictionary>

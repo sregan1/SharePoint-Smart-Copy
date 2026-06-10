@@ -4,9 +4,9 @@
         Title="Copy History"
         Width="980" Height="620"
         WindowStartupLocation="CenterOwner"
-        Background="{StaticResource WindowBgBrush}">
+        Background="{DynamicResource WindowBgBrush}">
 
-    <Grid Margin="20">
+    <Grid Margin="20" TextElement.Foreground="{DynamicResource TextPrimaryBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="12"/>
@@ -26,7 +26,7 @@
                    Height="70" VerticalAlignment="Center"
                    RenderOptions.BitmapScalingMode="HighQuality"/>
             <TextBlock Grid.Column="2" Text="Copy History" FontSize="18" FontWeight="SemiBold"
-                       Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                       Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
         </Grid>
 
         <!-- Main area -->
@@ -46,10 +46,10 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="Previous runs" FontWeight="SemiBold"
-                           FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"/>
+                           FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
 
                 <ListBox Grid.Row="2" x:Name="ReportList"
-                         BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White"
+                         BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}"
                          SelectionChanged="ReportList_SelectionChanged">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
@@ -61,16 +61,16 @@
                         <DataTemplate>
                             <StackPanel>
                                 <TextBlock Text="{Binding DisplayDate}"
-                                           FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
-                                <TextBlock Text="{Binding SourceUrl}" FontSize="10" Foreground="{StaticResource TextTertiaryBrush}"
+                                           FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{Binding SourceUrl}" FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}"
                                            TextTrimming="CharacterEllipsis" Margin="0,2,0,0"/>
-                                <TextBlock FontSize="10" Foreground="{StaticResource TextTertiaryBrush}"
+                                <TextBlock FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}"
                                            TextTrimming="CharacterEllipsis">
                                     <Run Text="→ "/>
                                     <Run Text="{Binding TargetUrl}"/>
                                 </TextBlock>
                                 <TextBlock Text="{Binding Summary}" FontSize="12"
-                                           Foreground="{StaticResource TextSecondaryBrush}" Margin="0,4,0,0"/>
+                                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,4,0,0"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -78,7 +78,7 @@
             </Grid>
 
             <!-- Vertical divider -->
-            <Rectangle Grid.Column="1" Width="1" Fill="{StaticResource BorderLightBrush}" HorizontalAlignment="Center"/>
+            <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource BorderLightBrush}" HorizontalAlignment="Center"/>
 
             <!-- Detail panel -->
             <Grid Grid.Column="2">
@@ -92,45 +92,45 @@
 
                 <TextBlock Grid.Row="0" x:Name="DetailHeader"
                            Text="Select a run to view details"
-                           FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                           FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}"/>
 
                 <!-- Summary cards for selected report -->
                 <StackPanel Grid.Row="2" x:Name="SummaryCards"
                             Orientation="Horizontal" Visibility="Collapsed">
                     <Border Style="{StaticResource SummaryCard}" Padding="16,8" Margin="0,0,8,0" MinWidth="90"
-                            Background="{StaticResource SuccessBgBrush}" BorderBrush="{StaticResource SuccessBrush}">
+                            Background="{DynamicResource SuccessBgBrush}" BorderBrush="{DynamicResource SuccessBrush}">
                         <StackPanel>
                             <TextBlock x:Name="SuccessCard" Text="0" FontSize="22" FontWeight="Bold"
-                                       Foreground="{StaticResource SuccessBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Succeeded" Foreground="{StaticResource SuccessBrush}" FontSize="11" HorizontalAlignment="Center"/>
+                                       Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Succeeded" Foreground="{DynamicResource SuccessBrush}" FontSize="11" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                     <Border Style="{StaticResource SummaryCard}" Padding="16,8" Margin="0,0,8,0" MinWidth="90"
-                            Background="{StaticResource DangerBgBrush}" BorderBrush="{StaticResource DangerBrush}">
+                            Background="{DynamicResource DangerBgBrush}" BorderBrush="{DynamicResource DangerBrush}">
                         <StackPanel>
                             <TextBlock x:Name="FailedCard" Text="0" FontSize="22" FontWeight="Bold"
-                                       Foreground="{StaticResource DangerBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Failed" Foreground="{StaticResource DangerBrush}" FontSize="11" HorizontalAlignment="Center"/>
+                                       Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Failed" Foreground="{DynamicResource DangerBrush}" FontSize="11" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                     <Border Style="{StaticResource SummaryCard}" Padding="16,8" Margin="0" MinWidth="90"
-                            Background="{StaticResource WarningBgBrush}" BorderBrush="{StaticResource WarningBrush}">
+                            Background="{DynamicResource WarningBgBrush}" BorderBrush="{DynamicResource WarningBrush}">
                         <StackPanel>
                             <TextBlock x:Name="SkippedCard" Text="0" FontSize="22" FontWeight="Bold"
-                                       Foreground="{StaticResource WarningTextBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Skipped" Foreground="{StaticResource WarningTextBrush}" FontSize="11" HorizontalAlignment="Center"/>
+                                       Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Skipped" Foreground="{DynamicResource WarningTextBrush}" FontSize="11" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
 
                 <!-- Detail DataGrid -->
-                <Border Grid.Row="4" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1">
+                <Border Grid.Row="4" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1">
                   <Grid>
                     <DataGrid x:Name="DetailGrid"
                               AutoGenerateColumns="False" IsReadOnly="True"
                               CanUserAddRows="False" GridLinesVisibility="Horizontal"
-                              HeadersVisibility="Column" Background="White"
-                              AlternatingRowBackground="#FAFAFA" BorderThickness="0"
+                              HeadersVisibility="Column" Background="{DynamicResource SurfaceBrush}"
+                              AlternatingRowBackground="{DynamicResource SurfaceAltBrush}" BorderThickness="0"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="File Name"   Binding="{Binding FileName}"   Width="200"/>

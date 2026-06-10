@@ -7,7 +7,7 @@
         Title="SharePoint Smart Copy"
         Width="960" Height="720"
         MinWidth="800" MinHeight="600"
-        Background="{StaticResource WindowBgBrush}"
+        Background="{DynamicResource WindowBgBrush}"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None">
 
@@ -53,7 +53,7 @@
             <Setter Property="Height" Value="28"/>
             <Setter Property="CornerRadius" Value="14"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="Background" Value="{StaticResource BorderLightBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource BorderLightBrush}"/>
             <Style.Triggers>
                 <DataTrigger Value="True">
                     <DataTrigger.Binding>
@@ -62,7 +62,7 @@
                             <Binding Path="Index"/>
                         </MultiBinding>
                     </DataTrigger.Binding>
-                    <Setter Property="Background" Value="{StaticResource AccentLightBrush}"/>
+                    <Setter Property="Background" Value="{DynamicResource AccentLightBrush}"/>
                 </DataTrigger>
                 <DataTrigger Value="True">
                     <DataTrigger.Binding>
@@ -71,7 +71,7 @@
                             <Binding Path="Index"/>
                         </MultiBinding>
                     </DataTrigger.Binding>
-                    <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
                 </DataTrigger>
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
@@ -85,7 +85,7 @@
                         </Condition>
                         <Condition Binding="{Binding IsFinal}" Value="True"/>
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Background" Value="{StaticResource SuccessBrush}"/>
+                    <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
@@ -97,7 +97,7 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
             <Style.Triggers>
                 <DataTrigger Value="True">
                     <DataTrigger.Binding>
@@ -107,7 +107,7 @@
                         </MultiBinding>
                     </DataTrigger.Binding>
                     <Setter Property="Text" Value="✓"/>
-                    <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
                 </DataTrigger>
                 <DataTrigger Value="True">
                     <DataTrigger.Binding>
@@ -124,8 +124,8 @@
         <!-- ── Mode tile: Button (keyboard + screen-reader accessible) whose Tag
              carries the scope's Is*Scope binding. Hover/focus show an accent border. ── -->
         <Style x:Key="ModeTileButton" TargetType="Button">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderLightBrush}"/>
             <Setter Property="Margin" Value="0,0,8,0"/>
             <Setter Property="Padding" Value="14,12"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -143,10 +143,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
                             </Trigger>
                             <Trigger Property="IsKeyboardFocused" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -154,8 +154,8 @@
             </Setter>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource Self}}" Value="True">
-                    <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
-                    <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -163,7 +163,7 @@
         <Style x:Key="ModeTileGlyph" TargetType="TextBlock" BasedOn="{StaticResource GlyphIcon}">
             <Setter Property="FontSize" Value="22"/>
             <Setter Property="Margin" Value="0,0,0,8"/>
-            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
                     <Setter Property="Foreground" Value="White"/>
@@ -176,7 +176,7 @@
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="Margin" Value="0,0,0,4"/>
-            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
                     <Setter Property="Foreground" Value="White"/>
@@ -187,10 +187,10 @@
         <Style x:Key="ModeTileDesc" TargetType="TextBlock">
             <Setter Property="FontSize" Value="11"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
-            <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
-                    <Setter Property="Foreground" Value="{StaticResource TileSelectedTextBrush}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource TileSelectedTextBrush}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -248,9 +248,9 @@
                         <BulletDecorator Background="Transparent" SnapsToDevicePixels="True">
                             <BulletDecorator.Bullet>
                                 <Border x:Name="Box" Width="14" Height="14" CornerRadius="2"
-                                        BorderBrush="#767676" BorderThickness="1" Background="White">
+                                        BorderBrush="{DynamicResource BorderInputBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}">
                                     <Path x:Name="Check" Visibility="Collapsed"
-                                          Stroke="{StaticResource AccentBrush}" StrokeThickness="1.8" StrokeLineJoin="Round"
+                                          Stroke="{DynamicResource AccentBrush}" StrokeThickness="1.8" StrokeLineJoin="Round"
                                           Data="M2,7 L5.5,10.5 L12,3.5"
                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
@@ -262,7 +262,7 @@
                                 <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -283,9 +283,9 @@
                           PreviewMouseLeftButtonDown="SourceCheckBox_PreviewClick"
                           VerticalAlignment="Center" Margin="0,0,4,0"/>
                 <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
-                           Foreground="{StaticResource AccentBrush}" Margin="0,0,6,0"/>
+                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0"/>
                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
-                <TextBlock Text="{Binding SizeDisplay}" Foreground="{StaticResource TextTertiaryBrush}" FontSize="11"
+                <TextBlock Text="{Binding SizeDisplay}" Foreground="{DynamicResource TextTertiaryBrush}" FontSize="11"
                            VerticalAlignment="Center" Margin="8,0,0,0"/>
                 <ProgressBar IsIndeterminate="True" Width="60" Height="4" Margin="8,0,0,0"
                              Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"/>
@@ -297,7 +297,7 @@
                                   ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal" Margin="2,2">
                 <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
-                           Foreground="{StaticResource AccentBrush}" Margin="0,0,6,0"/>
+                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0"/>
                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
                 <ProgressBar IsIndeterminate="True" Width="60" Height="4" Margin="8,0,0,0"
                              Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"/>
@@ -305,7 +305,7 @@
         </HierarchicalDataTemplate>
     </Window.Resources>
 
-    <Grid>
+    <Grid TextElement.Foreground="{DynamicResource TextPrimaryBrush}">
         <Grid.Style>
             <Style TargetType="Grid">
                 <Style.Triggers>
@@ -326,7 +326,7 @@
         </Grid.RowDefinitions>
 
         <!-- ══ App Bar (doubles as the window title bar) ════════════════════════ -->
-        <Border Grid.Row="0" Background="{StaticResource AccentBrush}">
+        <Border Grid.Row="0" Background="{DynamicResource AccentBrush}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -399,7 +399,7 @@
         </Border>
 
         <!-- ══ Step Indicator ═══════════════════════════════════════════════════ -->
-        <Border Grid.Row="1" Background="White" BorderBrush="{StaticResource BorderLightBrush}"
+        <Border Grid.Row="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}"
                 BorderThickness="0,0,0,1" Padding="20,12">
             <ItemsControl ItemsSource="{StaticResource WizardSteps}" HorizontalAlignment="Center">
                 <ItemsControl.ItemsPanel>
@@ -410,7 +410,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type models:StepInfo}">
                         <StackPanel Orientation="Horizontal">
-                            <Border Height="2" Width="40" Background="{StaticResource BorderLightBrush}"
+                            <Border Height="2" Width="40" Background="{DynamicResource BorderLightBrush}"
                                     VerticalAlignment="Top" Margin="4,13,4,0"
                                     Visibility="{Binding Index, Converter={StaticResource IntToVis}}"/>
                             <StackPanel>
@@ -461,11 +461,11 @@
                 <StackPanel Orientation="Horizontal" Margin="0,12,0,0"
                             Visibility="{Binding SourceStatus, Converter={StaticResource NotNullToVis}}">
                     <TextBlock Text="{Binding SourceStatus}" FontSize="13" VerticalAlignment="Center"/>
-                    <TextBlock Text=" · " Foreground="{StaticResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
+                    <TextBlock Text=" · " Foreground="{DynamicResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
                                Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
                     <Button Content="Disconnect" Style="{StaticResource LinkBtn}"
                             Command="{Binding DisconnectSourceCommand}"
-                            Foreground="{StaticResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
+                            Foreground="{DynamicResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
                             Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
                 </StackPanel>
 
@@ -473,10 +473,10 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                             <TextBlock Text="&#xEA80;" Style="{StaticResource GlyphIcon}"
-                                       Foreground="{StaticResource AccentBrush}" FontSize="13" Margin="0,0,6,0"/>
+                                       Foreground="{DynamicResource AccentBrush}" FontSize="13" Margin="0,0,6,0"/>
                             <TextBlock Text="Requirements" FontWeight="SemiBold" FontSize="13"/>
                         </StackPanel>
-                        <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" LineHeight="20">
+                        <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="20">
                             <Run>• You must have read access to the source site collection.</Run>
                             <LineBreak/>
                             <Run>• Configure your Azure AD app ID in Settings before connecting.</Run>
@@ -545,7 +545,7 @@
                 </UniformGrid>
 
                 <Border Grid.Row="2" Style="{StaticResource InfoBanner}" Padding="10,6" Margin="0,0,0,8">
-                    <TextBlock FontSize="12" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis">
+                    <TextBlock FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis">
                         <Run Text="Source: " FontWeight="SemiBold"/>
                         <Run Text="{Binding SourceUrl}"/>
                     </TextBlock>
@@ -572,16 +572,16 @@
                 <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,0,0,8"
                             Visibility="{Binding IsSiteScope, Converter={StaticResource InvBoolToVis}}">
                     <Button Content="Select All" Style="{StaticResource LinkBtn}" Click="SelectAll_Click"/>
-                    <TextBlock Text=" | " Foreground="{StaticResource BorderLightBrush}" VerticalAlignment="Center"/>
+                    <TextBlock Text=" | " Foreground="{DynamicResource BorderLightBrush}" VerticalAlignment="Center"/>
                     <Button Content="Deselect All" Style="{StaticResource LinkBtn}" Click="DeselectAll_Click"/>
                     <ProgressBar IsIndeterminate="True" Width="80" Height="4" Margin="16,0,0,0" VerticalAlignment="Center"
                                  Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
-                    <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource TextTertiaryBrush}" FontSize="12"
+                    <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource TextTertiaryBrush}" FontSize="12"
                                VerticalAlignment="Center" Margin="8,0,0,0"/>
                 </StackPanel>
 
-                <Border Grid.Row="5" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1"
-                        Background="White" MinHeight="200"
+                <Border Grid.Row="5" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1"
+                        Background="{DynamicResource SurfaceBrush}" MinHeight="200"
                         Visibility="{Binding IsSiteScope, Converter={StaticResource InvBoolToVis}}">
                     <TreeView x:Name="SourceTreeView"
                               ItemsSource="{Binding SourceLibraries}"
@@ -630,11 +630,11 @@
                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0"
                                 Visibility="{Binding TargetStatus, Converter={StaticResource NotNullToVis}}">
                         <TextBlock Text="{Binding TargetStatus}" FontSize="13" VerticalAlignment="Center"/>
-                        <TextBlock Text=" · " Foreground="{StaticResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
+                        <TextBlock Text=" · " Foreground="{DynamicResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
                                    Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
                         <Button Content="Disconnect" Style="{StaticResource LinkBtn}"
                                 Command="{Binding DisconnectTargetCommand}"
-                                Foreground="{StaticResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
+                                Foreground="{DynamicResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
                                 Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
                     </StackPanel>
 
@@ -686,7 +686,7 @@
                             </TextBlock>
                         </Border>
 
-                        <Border BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White" MinHeight="300">
+                        <Border BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}" MinHeight="300">
                             <TreeView x:Name="TargetTreeView"
                                       ItemsSource="{Binding TargetLibraries}"
                                       ItemTemplate="{StaticResource TargetNodeTemplate}"
@@ -711,11 +711,11 @@
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                     <TextBlock Text="&#xE946;" Style="{StaticResource GlyphIcon}"
-                                               Foreground="{StaticResource AccentBrush}" FontSize="13" Margin="0,0,6,0"/>
+                                               Foreground="{DynamicResource AccentBrush}" FontSize="13" Margin="0,0,6,0"/>
                                     <TextBlock Text="Library / List Creation" FontSize="13" FontWeight="SemiBold"
-                                               Foreground="{StaticResource AccentBrush}"/>
+                                               Foreground="{DynamicResource AccentBrush}"/>
                                 </StackPanel>
-                                <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}">
+                                <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}">
                                     Libraries and lists will be created at the root of the target site, preserving column schema and versioning settings. If a library or list already exists, any missing source columns will be added to it.
                                 </TextBlock>
                             </StackPanel>
@@ -723,7 +723,7 @@
                         <Border Style="{StaticResource SuccessBanner}" Padding="10,6" Margin="0,12,0,0"
                                 Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}">
                             <TextBlock FontSize="12">
-                                <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;" Foreground="{StaticResource SuccessBrush}"/>
+                                <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;" Foreground="{DynamicResource SuccessBrush}"/>
                                 <Run Text=" Target: " FontWeight="SemiBold"/>
                                 <Run Text="{Binding TargetUrl}"/>
                             </TextBlock>
@@ -742,7 +742,7 @@
                                      Text="{Binding NewListName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="0,0,0,6"
                                      Visibility="{Binding IsCreatingNewList, Converter={StaticResource BoolToVis}}"/>
-                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}">
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}">
                                 Select the list on the target site where the selected items will be copied.
                             </TextBlock>
                         </StackPanel>
@@ -808,18 +808,18 @@
                                                 </Style.Triggers>
                                             </Style>
                                         </StackPanel.Style>
-                                        <TextBlock Text="Latest " FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Latest " FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                                         <TextBox Text="{Binding MaxVersions, UpdateSourceTrigger=PropertyChanged}"
                                                  Width="52" FontSize="12" Padding="6,4" VerticalAlignment="Center"/>
-                                        <TextBlock Text=" versions" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                                        <TextBlock Text=" versions" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </StackPanel>
                                 <!-- ── Site-scope only: Navigation ─── -->
                                 <StackPanel Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}"
                                             Margin="0,4,0,0">
-                                    <Separator Margin="0,0,0,10" Background="{StaticResource BorderLightBrush}"/>
+                                    <Separator Margin="0,0,0,10" Background="{DynamicResource BorderLightBrush}"/>
                                     <TextBlock Text="Site-level Options" FontWeight="SemiBold" FontSize="12"
-                                               Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                                               Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,8"/>
                                     <CheckBox Content="Copy navigation (Quick Launch &amp; top bar)"
                                               IsChecked="{Binding CopyNavigation}"
                                               Margin="0,0,0,4" FontSize="13"/>
@@ -827,7 +827,7 @@
                                                Style="{StaticResource OptionCaption}" Margin="20,0,0,0"/>
                                 </StackPanel>
                                 <!-- ── Permissions (Library &amp; Site scope) ─── -->
-                                <Separator Margin="0,8,0,8" Background="{StaticResource BorderLightBrush}"/>
+                                <Separator Margin="0,8,0,8" Background="{DynamicResource BorderLightBrush}"/>
                                 <CheckBox Content="Copy permissions"
                                           IsChecked="{Binding CopyPermissions, Mode=TwoWay}"
                                           Margin="0,0,0,4" FontSize="13"/>
@@ -894,14 +894,14 @@
                                             </Style.Triggers>
                                         </Style>
                                     </StackPanel.Style>
-                                    <TextBlock Text="Latest " FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Latest " FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                                     <TextBox Text="{Binding MaxVersions, UpdateSourceTrigger=PropertyChanged}"
                                              Width="52" FontSize="12" Padding="6,4" VerticalAlignment="Center"/>
-                                    <TextBlock Text=" versions" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text=" versions" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </StackPanel>
 
-                            <Separator Margin="0,4,0,8" Background="{StaticResource BorderLightBrush}"/>
+                            <Separator Margin="0,4,0,8" Background="{DynamicResource BorderLightBrush}"/>
                             <CheckBox Content="Copy permissions"
                                       IsChecked="{Binding CopyPermissions, Mode=TwoWay}"
                                       Margin="0,0,0,4" FontSize="13"/>
@@ -974,29 +974,29 @@
                     <Button x:Name="AdvancedToggleBtn"
                             Margin="0,8,0,0" Padding="12,9"
                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                            Background="White" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1"
+                            Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1"
                             Cursor="Hand" Click="AdvancedToggle_Click"
                             Visibility="{Binding IsPagesScope, Converter={StaticResource InvBoolToVis}}">
                         <Grid>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="Advanced options" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                <TextBlock Text="Advanced options" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextTertiaryBrush}"/>
                             </StackPanel>
-                            <TextBlock x:Name="AdvancedChevron" Text="▾" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}"
+                            <TextBlock x:Name="AdvancedChevron" Text="▾" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"
                                        HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         </Grid>
                     </Button>
                     <Border x:Name="AdvancedPanel" Visibility="Collapsed"
-                            Background="White" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1,0,1,1"
+                            Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1,0,1,1"
                             CornerRadius="0,0,6,6" Padding="16,14">
                         <StackPanel>
                             <TextBlock Text="Copy mode" FontSize="12" FontWeight="SemiBold"
-                                       Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+                                       Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
                             <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,6"
                                          IsChecked="{Binding IsMigrationApiMode, Mode=OneWay}"
                                          Click="MigrationApiMode_Click">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="Migration API" VerticalAlignment="Center"/>
-                                    <Border Background="{StaticResource AccentBrush}" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
+                                    <Border Background="{DynamicResource AccentBrush}" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
                                         <TextBlock Text="Recommended" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
                                     </Border>
                                     <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
@@ -1022,9 +1022,9 @@
                                     </TextBlock>
                                 </StackPanel>
                             </RadioButton>
-                            <Separator Margin="0,0,0,10" Background="{StaticResource BorderLightBrush}"/>
+                            <Separator Margin="0,0,0,10" Background="{DynamicResource BorderLightBrush}"/>
                             <TextBlock Text="Parallel copies" FontSize="12" FontWeight="SemiBold"
-                                       Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,4"/>
+                                       Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
                                 <Slider Minimum="1" Maximum="16" Value="{Binding MaxParallelCopies}"
                                         Width="120" VerticalAlignment="Center"/>
@@ -1055,11 +1055,11 @@
                                 <Run Text="List items to copy: "/>
                                 <Run Text="{Binding SelectedItemCount, Mode=OneWay}" FontWeight="Bold"/>
                             </TextBlock>
-                            <TextBlock Margin="0,4,0,0" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" TextWrapping="Wrap"
+                            <TextBlock Margin="0,4,0,0" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}" TextWrapping="Wrap"
                                        Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}">
                                 Folders are recursively enumerated during the copy.
                             </TextBlock>
-                            <TextBlock Margin="0,4,0,0" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" TextWrapping="Wrap"
+                            <TextBlock Margin="0,4,0,0" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}" TextWrapping="Wrap"
                                        Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}">
                                 Files in each library and items in each list are enumerated at copy time.
                             </TextBlock>
@@ -1099,7 +1099,7 @@
                     </StackPanel>
 
                     <!-- Library / Site scope: list selected libraries -->
-                    <Border Grid.Row="2" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White"
+                    <Border Grid.Row="2" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}"
                             Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}">
                       <Grid>
                         <TextBlock Text="Nothing selected yet — go back to Browse and check the libraries or lists you want to copy."
@@ -1113,7 +1113,7 @@
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
-                                                               FontSize="13" Foreground="{StaticResource AccentBrush}" Margin="0,0,6,0"/>
+                                                               FontSize="13" Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0"/>
                                                     <TextBlock Text="{Binding Name}" FontSize="12" VerticalAlignment="Center"/>
                                                 </StackPanel>
                                             </DataTemplate>
@@ -1126,7 +1126,7 @@
                                                          Text="{Binding OverrideName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                          Tag="{Binding Name}"
                                                          FontSize="12" BorderThickness="0,0,0,1"
-                                                         BorderBrush="#C8C6C4" Background="Transparent"
+                                                         BorderBrush="{DynamicResource BorderInputBrush}" Background="Transparent"
                                                          VerticalAlignment="Center" Width="185"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
@@ -1138,7 +1138,7 @@
                     </Border>
 
                     <!-- Files / Pages scope: list selected file jobs -->
-                    <Border Grid.Row="2" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White"
+                    <Border Grid.Row="2" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}"
                             Visibility="{Binding IsFilesOrPagesScope, Converter={StaticResource BoolToVis}}">
                       <Grid>
                         <TextBlock Text="Nothing selected yet — go back to Browse and check the files or folders you want to copy."
@@ -1153,7 +1153,7 @@
                                             <DataTemplate>
                                                 <TextBlock HorizontalAlignment="Center"
                                                            FontFamily="{StaticResource GlyphFont}" FontSize="14"
-                                                           Foreground="{StaticResource AccentBrush}">
+                                                           Foreground="{DynamicResource AccentBrush}">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
                                                             <Setter Property="Text" Value="&#xE7C3;"/>
@@ -1229,18 +1229,18 @@
                                 <Run Text="{Binding TotalProgress, StringFormat={}{0:N0}}"/>
                                 <Run Text="%"/>
                                 <Run Text="   "/>
-                                <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE916;" Foreground="{StaticResource TextTertiaryBrush}"/>
-                                <Run Text=" " Foreground="{StaticResource TextTertiaryBrush}"/>
-                                <Run Text="{Binding ElapsedTime}" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE916;" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                <Run Text=" " Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                <Run Text="{Binding ElapsedTime}" Foreground="{DynamicResource TextTertiaryBrush}"/>
                             </TextBlock>
                         </Grid>
                         <ProgressBar Value="{Binding TotalProgress}" Maximum="100" Height="12"
-                                     Background="{StaticResource BorderLightBrush}" Foreground="{StaticResource AccentBrush}"/>
+                                     Background="{DynamicResource BorderLightBrush}" Foreground="{DynamicResource AccentBrush}"/>
                         <Button Content="Cancel" Style="{StaticResource DangerBtn}"
                                 HorizontalAlignment="Left" Margin="0,12,0,0"
                                 Command="{Binding CancelCopyCommand}"
                                 Visibility="{Binding IsCopying, Converter={StaticResource BoolToVis}}"/>
-                        <TextBlock Margin="0,8,0,0" FontSize="13" Foreground="{StaticResource SuccessBrush}"
+                        <TextBlock Margin="0,8,0,0" FontSize="13" Foreground="{DynamicResource SuccessBrush}"
                                    Visibility="{Binding IsReadyForReport, Converter={StaticResource BoolToVis}}">
                             <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;"/>
                             <Run Text=" Copy complete! Click Next to see the full report."/>
@@ -1250,9 +1250,9 @@
                             <ProgressBar IsIndeterminate="True" Width="80" Height="4"
                                          VerticalAlignment="Center" Margin="0,0,8,0"/>
                             <TextBlock Text="Updating folder metadata…" FontSize="13"
-                                       Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                                       Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBlock Margin="0,4,0,0" FontSize="13" Foreground="{StaticResource TextTertiaryBrush}"
+                        <TextBlock Margin="0,4,0,0" FontSize="13" Foreground="{DynamicResource TextTertiaryBrush}"
                                    Visibility="{Binding IsMetadataComplete, Converter={StaticResource BoolToVis}}">
                             <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;"/>
                             <Run Text=" Metadata updated"/>
@@ -1280,14 +1280,14 @@
                         </RadioButton>
                     </StackPanel>
                 </Grid>
-                <Border Grid.Row="3" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White">
+                <Border Grid.Row="3" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}">
                     <ListView x:Name="ProgressList" ItemsSource="{Binding CopyResultsView}"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsPermissionResult}" Value="True">
-                                        <Setter Property="Background" Value="{StaticResource PermissionRowBrush}"/>
+                                        <Setter Property="Background" Value="{DynamicResource PermissionRowBrush}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -1312,8 +1312,8 @@
                                             <TextBlock FontSize="12"
                                                        Visibility="{Binding IsLibraryCreation, Converter={StaticResource InvBoolToVis}}">
                                                 <Run Text="{Binding VersionsCopied}"/>
-                                                <Run Text="/" Foreground="{StaticResource TextTertiaryBrush}"/>
-                                                <Run Text="{Binding VersionsTotal}" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                                <Run Text="/" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                                <Run Text="{Binding VersionsTotal}" Foreground="{DynamicResource TextTertiaryBrush}"/>
                                             </TextBlock>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -1337,32 +1337,32 @@
                 <TextBlock Grid.Row="0" Text="Copy Report" Style="{StaticResource SectionHeader}"/>
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,16">
-                    <Border Style="{StaticResource SummaryCard}" Background="{StaticResource SuccessBgBrush}" BorderBrush="{StaticResource SuccessBrush}">
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource SuccessBgBrush}" BorderBrush="{DynamicResource SuccessBrush}">
                         <StackPanel>
                             <TextBlock Text="{Binding SuccessCount}" FontSize="28" FontWeight="Bold"
-                                       Foreground="{StaticResource SuccessBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Succeeded" Foreground="{StaticResource SuccessBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                                       Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Succeeded" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource SummaryCard}" Background="{StaticResource DangerBgBrush}" BorderBrush="{StaticResource DangerBrush}">
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource DangerBgBrush}" BorderBrush="{DynamicResource DangerBrush}">
                         <StackPanel>
                             <TextBlock Text="{Binding FailedCount}" FontSize="28" FontWeight="Bold"
-                                       Foreground="{StaticResource DangerBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Failed" Foreground="{StaticResource DangerBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                                       Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Failed" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource SummaryCard}" Background="{StaticResource WarningBgBrush}" BorderBrush="{StaticResource WarningBrush}">
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WarningBgBrush}" BorderBrush="{DynamicResource WarningBrush}">
                         <StackPanel>
                             <TextBlock Text="{Binding SkippedCount}" FontSize="28" FontWeight="Bold"
-                                       Foreground="{StaticResource WarningTextBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Skipped" Foreground="{StaticResource WarningTextBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                                       Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Skipped" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource SummaryCard}" Background="{StaticResource WindowBgBrush}" BorderBrush="{StaticResource BorderLightBrush}" Margin="0">
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WindowBgBrush}" BorderBrush="{DynamicResource BorderLightBrush}" Margin="0">
                         <StackPanel>
                             <TextBlock Text="{Binding CopyDuration}" FontSize="28" FontWeight="Bold"
-                                       Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Duration" Foreground="{StaticResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                                       Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Duration" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -1394,19 +1394,19 @@
                     </StackPanel>
                 </Grid>
 
-                <Border Grid.Row="3" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1">
+                <Border Grid.Row="3" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1">
                     <DataGrid ItemsSource="{Binding CopyResultsView}"
                               AutoGenerateColumns="False" IsReadOnly="True"
                               CanUserAddRows="False" GridLinesVisibility="Horizontal"
-                              HeadersVisibility="Column" Background="White"
-                              AlternatingRowBackground="#FAFAFA"
+                              HeadersVisibility="Column" Background="{DynamicResource SurfaceBrush}"
+                              AlternatingRowBackground="{DynamicResource SurfaceAltBrush}"
                               BorderThickness="0"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsPermissionResult}" Value="True">
-                                        <Setter Property="Background" Value="{StaticResource PermissionRowBrush}"/>
+                                        <Setter Property="Background" Value="{DynamicResource PermissionRowBrush}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -1441,7 +1441,7 @@
         </Grid>
 
         <!-- ══ Navigation Bar ═══════════════════════════════════════════════════ -->
-        <Border Grid.Row="3" Background="White" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,1,0,0">
+        <Border Grid.Row="3" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="0,1,0,0">
             <Grid Margin="32,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Button Content="← Back" Style="{StaticResource SecondaryBtn}"

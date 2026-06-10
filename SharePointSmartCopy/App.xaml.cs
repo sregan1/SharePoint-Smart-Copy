@@ -7,6 +7,7 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        Services.ThemeManager.Apply(Models.AppSettings.Load().Theme);
         DispatcherUnhandledException += (_, args) =>
         {
             var ex  = args.Exception;

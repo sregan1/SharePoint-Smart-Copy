@@ -31,6 +31,8 @@ public partial class SettingsDialog : Window
             var idx = Math.Clamp(current.ActiveRegistrationIndex, 0, _registrations.Count - 1);
             RegistrationList.SelectedIndex = idx;
         }
+
+        ThemeCombo.SelectedIndex = (int)current.Theme; // System=0, Light=1, Dark=2
     }
 
     private void RegistrationList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -73,6 +75,8 @@ public partial class SettingsDialog : Window
             return;
         }
 
+        // Carry every persisted setting over — only registrations and theme are
+        // edited here; dropping the rest would silently reset the user's options.
         Result = new AppSettings
         {
             Registrations           = _registrations.ToList(),
@@ -80,9 +84,23 @@ public partial class SettingsDialog : Window
             SourceUrl               = _original.SourceUrl,
             TargetUrl               = _original.TargetUrl,
             PreferredCopyMode       = _original.PreferredCopyMode,
+            OverwriteFiles          = _original.OverwriteFiles,
+            CopyVersions            = _original.CopyVersions,
+            CopyAllVersions         = _original.CopyAllVersions,
+            MaxVersions             = _original.MaxVersions,
+            MaxParallelCopies       = _original.MaxParallelCopies,
+            Scope                   = _original.Scope,
+            CopyCustomColumns       = _original.CopyCustomColumns,
+            CopyLibraryContent      = _original.CopyLibraryContent,
+            RemapPageWebPartUrls    = _original.RemapPageWebPartUrls,
+            PreserveMetadata        = _original.PreserveMetadata,
+            CopyNavigation          = _original.CopyNavigation,
+            CopyPermissions         = _original.CopyPermissions,
+            Theme                   = (AppTheme)Math.Max(0, ThemeCombo.SelectedIndex),
         };
 
         Result.Save();
+        ThemeManager.Apply(Result.Theme);
         DialogResult = true;
         Close();
     }

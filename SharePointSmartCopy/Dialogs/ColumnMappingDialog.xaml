@@ -6,7 +6,7 @@
         Width="720" Height="520"
         MinWidth="560" MinHeight="380"
         WindowStartupLocation="CenterOwner"
-        Background="{StaticResource WindowBgBrush}"
+        Background="{DynamicResource WindowBgBrush}"
         ResizeMode="CanResize">
 
     <Window.Resources>
@@ -14,7 +14,7 @@
         <conv:BoolToVisibilityConverter x:Key="InvBoolToVis" Invert="True"/>
     </Window.Resources>
 
-    <Grid Margin="20">
+    <Grid Margin="20" TextElement.Foreground="{DynamicResource TextPrimaryBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -25,12 +25,12 @@
 
         <!-- Header -->
         <TextBlock Grid.Row="0" Text="Column Mappings" FontSize="18" FontWeight="SemiBold"
-                   Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,4"/>
-        <TextBlock Grid.Row="1" TextWrapping="Wrap" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" Margin="0,0,0,12"
+                   Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
+        <TextBlock Grid.Row="1" TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,0,0,12"
                    Text="{Binding HeaderDescription}"/>
 
         <!-- Column list -->
-        <Border Grid.Row="2" Background="White" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" CornerRadius="4">
+        <Border Grid.Row="2" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" CornerRadius="4">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -38,7 +38,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Column header row -->
-                <Border Grid.Row="0" Background="{StaticResource WindowBgBrush}" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="0,0,0,1" Padding="12,8">
+                <Border Grid.Row="0" Background="{DynamicResource WindowBgBrush}" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="0,0,0,1" Padding="12,8">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -46,9 +46,9 @@
                             <ColumnDefinition Width="16"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Source Column" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}"/>
-                        <TextBlock Grid.Column="1" Text="Type" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}"/>
-                        <TextBlock Grid.Column="3" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}"
+                        <TextBlock Grid.Column="0" Text="Source Column" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                        <TextBlock Grid.Column="1" Text="Type" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                        <TextBlock Grid.Column="3" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"
                                    Text="{Binding TargetColumnHeader}"/>
                     </Grid>
                 </Border>
@@ -60,8 +60,8 @@
                             Visibility="{Binding HasNoMappings, Converter={StaticResource BoolToVis}}">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                             <TextBlock Text="No mappable columns" FontSize="14" FontWeight="SemiBold"
-                                       Foreground="{StaticResource TextTertiaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{StaticResource TextPlaceholderBrush}"
+                                       Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextPlaceholderBrush}"
                                        HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="420">
                                 The source library has no custom columns of a supported type.
                                 Supported types: Text, Note, Number, Boolean, Date, Choice, Multi-choice.
@@ -76,12 +76,12 @@
                         <ItemsControl x:Name="MappingsList" ItemsSource="{Binding Mappings}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border BorderBrush="{StaticResource WindowBgBrush}" BorderThickness="0,0,0,1" Padding="12,8">
+                                    <Border BorderBrush="{DynamicResource WindowBgBrush}" BorderThickness="0,0,0,1" Padding="12,8">
                                         <Border.Style>
                                             <Style TargetType="Border">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Mapping.Status}" Value="Unmatched">
-                                                        <Setter Property="Background" Value="{StaticResource UnmatchedBgBrush}"/>
+                                                        <Setter Property="Background" Value="{DynamicResource UnmatchedBgBrush}"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -104,10 +104,10 @@
 
                                             <!-- Type badge -->
                                             <TextBlock Grid.Column="1" Text="{Binding Mapping.SourceColumn.FieldType}"
-                                                       FontSize="11" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                                                       FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center"/>
 
                                             <!-- Arrow -->
-                                            <TextBlock Grid.Column="2" Text="→" FontSize="13" Foreground="{StaticResource TextPlaceholderBrush}"
+                                            <TextBlock Grid.Column="2" Text="→" FontSize="13" Foreground="{DynamicResource TextPlaceholderBrush}"
                                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                                             <!-- Target column selector -->
@@ -127,7 +127,7 @@
         </Border>
 
         <!-- Status bar -->
-        <TextBlock Grid.Row="3" x:Name="StatusBar" FontSize="12" Foreground="{StaticResource TextTertiaryBrush}" Margin="0,8,0,0"/>
+        <TextBlock Grid.Row="3" x:Name="StatusBar" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,8,0,0"/>
 
         <!-- Buttons -->
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">

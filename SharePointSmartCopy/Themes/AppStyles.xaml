@@ -1,28 +1,9 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- ══ Color palette ════════════════════════════════════════════════════
-         One name per role. Use these instead of hex literals in views. -->
-    <SolidColorBrush x:Key="AccentBrush"          Color="#0078D4"/>
-    <SolidColorBrush x:Key="SuccessBrush"         Color="#107C10"/>
-    <SolidColorBrush x:Key="SuccessBgBrush"       Color="#DFF6DD"/>
-    <SolidColorBrush x:Key="DangerBrush"          Color="#A4262C"/>
-    <SolidColorBrush x:Key="DangerBgBrush"        Color="#FDE7E9"/>
-    <SolidColorBrush x:Key="WarningBrush"         Color="#F7B900"/>
-    <SolidColorBrush x:Key="WarningBgBrush"       Color="#FFF4CE"/>
-    <SolidColorBrush x:Key="WarningTextBrush"     Color="#7A5900"/>
-    <SolidColorBrush x:Key="InfoBgBrush"          Color="#EFF6FC"/>
-    <SolidColorBrush x:Key="BorderLightBrush"     Color="#EDEBE9"/>
-    <SolidColorBrush x:Key="BorderInputBrush"     Color="#8A8886"/>
-    <SolidColorBrush x:Key="TextPrimaryBrush"     Color="#1F1F1F"/>
-    <SolidColorBrush x:Key="TextSecondaryBrush"   Color="#323130"/>
-    <SolidColorBrush x:Key="TextTertiaryBrush"    Color="#797775"/>
-    <SolidColorBrush x:Key="TextPlaceholderBrush" Color="#A19F9D"/>
-    <SolidColorBrush x:Key="WindowBgBrush"        Color="#F3F3F3"/>
-    <SolidColorBrush x:Key="PermissionRowBrush"   Color="#EEF2FF"/>
-    <SolidColorBrush x:Key="UnmatchedBgBrush"     Color="#FFF9F0"/>
-    <SolidColorBrush x:Key="TileSelectedTextBrush" Color="#CCE4F7"/>
-    <SolidColorBrush x:Key="AccentLightBrush"     Color="#CCE4F7"/>
+    <!-- Color palette lives in Colors.Light.xaml / Colors.Dark.xaml, swapped at
+         runtime by Services/ThemeManager. Styles here reference the palette via
+         DynamicResource so a theme change restyles the running app. -->
 
     <!-- ══ Buttons ══════════════════════════════════════════════════════════ -->
     <Style x:Key="BaseBtn" TargetType="Button">
@@ -53,26 +34,26 @@
     </Style>
 
     <Style x:Key="PrimaryBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
-        <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
     </Style>
 
     <Style x:Key="SecondaryBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource BorderInputBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderInputBrush}"/>
     </Style>
 
     <Style x:Key="DangerBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
-        <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource DangerBrush}"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderBrush" Value="{StaticResource DangerBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}"/>
     </Style>
 
     <Style x:Key="LinkBtn" TargetType="Button" BasedOn="{StaticResource BaseBtn}">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="4,2"/>
     </Style>
@@ -90,13 +71,13 @@
     <Style x:Key="SectionHeader" TargetType="TextBlock">
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
         <Setter Property="Margin" Value="0,0,0,4"/>
     </Style>
 
     <Style x:Key="SubHeader" TargetType="TextBlock">
         <Setter Property="FontSize" Value="13"/>
-        <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
         <Setter Property="Margin" Value="0,0,0,16"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
@@ -104,13 +85,13 @@
     <Style x:Key="FieldLabel" TargetType="TextBlock">
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
         <Setter Property="Margin" Value="0,0,0,4"/>
     </Style>
 
     <Style x:Key="StepText" TargetType="TextBlock">
         <Setter Property="FontSize" Value="11"/>
-        <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="0,2,0,0"/>
     </Style>
@@ -118,7 +99,7 @@
     <!-- Caption under a checkbox option -->
     <Style x:Key="OptionCaption" TargetType="TextBlock">
         <Setter Property="FontSize" Value="11"/>
-        <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Setter Property="Margin" Value="20,0,0,8"/>
     </Style>
@@ -136,7 +117,7 @@
     <Style x:Key="ToolTipIcon" TargetType="TextBlock" BasedOn="{StaticResource GlyphIcon}">
         <Setter Property="Text" Value="&#xE946;"/>
         <Setter Property="FontSize" Value="13"/>
-        <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
         <Setter Property="Margin" Value="6,0,0,0"/>
         <Setter Property="Cursor" Value="Help"/>
         <Setter Property="ToolTipService.InitialShowDelay" Value="0"/>
@@ -146,7 +127,10 @@
     <!-- ══ Inputs ═══════════════════════════════════════════════════════════ -->
     <Style x:Key="BaseTextBox" TargetType="TextBox">
         <Setter Property="Padding" Value="8,7"/>
-        <Setter Property="BorderBrush" Value="{StaticResource BorderInputBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderInputBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -166,7 +150,7 @@
                         <Grid>
                             <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="0"/>
                             <TextBlock Text="{TemplateBinding Tag}"
-                                       Foreground="{StaticResource TextPlaceholderBrush}"
+                                       Foreground="{DynamicResource TextPlaceholderBrush}"
                                        VerticalAlignment="Center" IsHitTestVisible="False"
                                        FontSize="{TemplateBinding FontSize}">
                                 <TextBlock.Style>
@@ -189,32 +173,32 @@
 
     <!-- ══ Banners & cards ══════════════════════════════════════════════════ -->
     <Style x:Key="InfoBanner" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource InfoBgBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource InfoBgBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Padding" Value="12,8"/>
     </Style>
 
     <Style x:Key="WarningBanner" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource WarningBgBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource WarningBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource WarningBgBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource WarningBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Padding" Value="12,8"/>
     </Style>
 
     <Style x:Key="SuccessBanner" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource SuccessBgBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource SuccessBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource SuccessBgBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Padding" Value="12,8"/>
     </Style>
 
     <Style x:Key="Card" TargetType="Border">
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="BorderBrush" Value="{StaticResource BorderLightBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderLightBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="6"/>
         <Setter Property="Padding" Value="16,14"/>
@@ -232,24 +216,24 @@
     <!-- Pill-shaped filter chip (RadioButton) for the copy-log grids -->
     <Style x:Key="FilterChip" TargetType="RadioButton">
         <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Margin" Value="0,0,6,0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
-                    <Border x:Name="Bd" Background="White"
-                            BorderBrush="{StaticResource BorderInputBrush}"
+                    <Border x:Name="Bd" Background="{DynamicResource SurfaceBrush}"
+                            BorderBrush="{DynamicResource BorderInputBrush}"
                             BorderThickness="1" CornerRadius="12" Padding="12,4">
                         <ContentPresenter VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource AccentBrush}"/>
-                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentBrush}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -261,13 +245,63 @@
     <!-- Centered hint shown inside empty lists / panels -->
     <Style x:Key="GhostText" TargetType="TextBlock">
         <Setter Property="FontSize" Value="13"/>
-        <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Setter Property="TextAlignment" Value="Center"/>
         <Setter Property="MaxWidth" Value="360"/>
         <Setter Property="IsHitTestVisible" Value="False"/>
+    </Style>
+
+    <!-- ══ Implicit styles so stock controls follow the theme ═══════════════
+         ComboBox and ScrollBar keep system chrome (acceptable in both themes). -->
+    <Style TargetType="TreeView">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderLightBrush}"/>
+    </Style>
+
+    <Style TargetType="ListBox">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderLightBrush}"/>
+    </Style>
+
+    <Style TargetType="ListView">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderLightBrush}"/>
+    </Style>
+
+    <Style TargetType="GridViewColumnHeader">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderLightBrush}"/>
+    </Style>
+
+    <Style TargetType="DataGrid">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="RowBackground" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="AlternatingRowBackground" Value="{DynamicResource SurfaceAltBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderLightBrush}"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource BorderLightBrush}"/>
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource BorderLightBrush}"/>
+    </Style>
+
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderLightBrush}"/>
+        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        <Setter Property="Padding" Value="6,4"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style TargetType="RadioButton">
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="Cursor" Value="Hand"/>
     </Style>
 
     <!-- Transient bottom-center notification -->

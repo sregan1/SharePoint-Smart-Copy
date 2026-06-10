@@ -1,11 +1,11 @@
-﻿<Window x:Class="SharePointSmartCopy.Dialogs.SettingsDialog"
+<Window x:Class="SharePointSmartCopy.Dialogs.SettingsDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Azure App Registrations"
         Width="660" Height="600"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="{StaticResource WindowBgBrush}">
+        Background="{DynamicResource WindowBgBrush}">
 
     <Window.Resources>
         <Style x:Key="SmallButton" TargetType="Button" BasedOn="{StaticResource SecondaryBtn}">
@@ -14,7 +14,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid Margin="20">
+    <Grid Margin="20" TextElement.Foreground="{DynamicResource TextPrimaryBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="12"/>
@@ -34,8 +34,8 @@
                    Height="70" VerticalAlignment="Center"
                    RenderOptions.BitmapScalingMode="HighQuality"/>
             <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                <TextBlock Text="Azure App Registrations" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
-                <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="{StaticResource TextTertiaryBrush}" FontSize="12">
+                <TextBlock Text="Azure App Registrations" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="{DynamicResource TextTertiaryBrush}" FontSize="12">
                     Store one or more Azure AD app registrations. The one selected when you click Save becomes the active registration.
                     Each app needs delegated permissions <Run FontWeight="Bold">Sites.ReadWrite.All</Run> and <Run FontWeight="Bold">Files.ReadWrite.All</Run>, with admin consent.
                 </TextBlock>
@@ -60,10 +60,10 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Registrations" FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <TextBlock Grid.Row="0" Text="Registrations" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
 
                 <ListBox Grid.Row="2" x:Name="RegistrationList"
-                         BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1" Background="White"
+                         BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}"
                          SelectionChanged="RegistrationList_SelectionChanged">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
@@ -81,13 +81,13 @@
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Name}" Value="">
                                                     <Setter Property="Text" Value="(Unnamed)"/>
-                                                    <Setter Property="Foreground" Value="#797775"/>
+                                                    <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <TextBlock Text="{Binding ClientId}" FontSize="10" Foreground="#797775"
+                                <TextBlock Text="{Binding ClientId}" FontSize="10" Foreground="{DynamicResource TextTertiaryBrush}"
                                            TextTrimming="CharacterEllipsis"/>
                             </StackPanel>
                         </DataTemplate>
@@ -103,7 +103,7 @@
             </Grid>
 
             <!-- Vertical divider -->
-            <Rectangle Grid.Column="1" Width="1" Fill="{StaticResource BorderLightBrush}" HorizontalAlignment="Center"/>
+            <Rectangle Grid.Column="1" Width="1" Fill="{DynamicResource BorderLightBrush}" HorizontalAlignment="Center"/>
 
             <!-- Edit form -->
             <Grid Grid.Column="2"
@@ -133,7 +133,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" Text="Edit Selected Registration"
-                           FontWeight="SemiBold" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"/>
+                           FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
 
                 <StackPanel Grid.Row="2">
                     <TextBlock Text="Name" Style="{StaticResource FieldLabel}"/>
@@ -149,7 +149,7 @@
                     <TextBlock Text="Tenant ID" Style="{StaticResource FieldLabel}"/>
                     <TextBox Text="{Binding TenantId, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="Use 'common' for multi-tenant, or your tenant GUID or domain."
-                               Foreground="{StaticResource TextTertiaryBrush}" FontSize="11" Margin="0,4,0,0"/>
+                               Foreground="{DynamicResource TextTertiaryBrush}" FontSize="11" Margin="0,4,0,0"/>
                 </StackPanel>
 
                 <!-- Setup instructions -->
@@ -171,8 +171,17 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="Sign Out" Click="SignOutButton_Click"
-                    Style="{StaticResource SecondaryBtn}"/>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Button Content="Sign Out" Click="SignOutButton_Click"
+                        Style="{StaticResource SecondaryBtn}" Margin="0,0,16,0"/>
+                <TextBlock Text="Theme:" VerticalAlignment="Center" FontSize="12"
+                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,6,0"/>
+                <ComboBox x:Name="ThemeCombo" Width="110" VerticalAlignment="Center" FontSize="12">
+                    <ComboBoxItem Content="System"/>
+                    <ComboBoxItem Content="Light"/>
+                    <ComboBoxItem Content="Dark"/>
+                </ComboBox>
+            </StackPanel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Button Content="Cancel" Style="{StaticResource SecondaryBtn}" Margin="0,0,12,0" Click="Cancel_Click"/>
