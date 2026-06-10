@@ -30,11 +30,12 @@ public class AppSettings
     public int      MaxVersions          { get; set; } = 10;
     public int      MaxParallelCopies    { get; set; } = 4;
     public CopyScope Scope                { get; set; } = CopyScope.Files;
-    public bool      CopyCustomColumns    { get; set; } = false;
+    public bool      CopyCustomColumns    { get; set; } = true;
     public bool      CopyLibraryContent   { get; set; } = true;
     public bool      RemapPageWebPartUrls { get; set; } = true;
     public bool      PreserveMetadata     { get; set; } = true;
     public bool      CopyNavigation       { get; set; } = true;
+    public bool      CopyPermissions      { get; set; } = false;
 
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {

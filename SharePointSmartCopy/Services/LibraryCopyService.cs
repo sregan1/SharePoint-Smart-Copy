@@ -173,6 +173,19 @@ public class LibraryCopyService(SharePointService spService)
         }
 
         if (string.IsNullOrEmpty(newDriveId))
+        {
+            // Tier 2: REST-based lookup — catches libraries not yet visible in the Graph Drives API
+            // (system libraries and slow-propagating provisioning are common culprits).
+            var node = await spService.GetLibraryNodeByTitleAsync(targetSiteId, targetSiteUrl, definition.Title);
+            if (node != null && !string.IsNullOrEmpty(node.DriveId))
+            {
+                newDriveId      = node.DriveId;
+                newServerRelUrl = node.ServerRelativePath
+                    ?? await spService.GetLibraryServerRelativeUrlAsync(node.DriveId);
+            }
+        }
+
+        if (string.IsNullOrEmpty(newDriveId))
             throw new Exception($"Created library '{definition.Title}' but could not find its drive ID in Graph.");
 
         return (newDriveId, newServerRelUrl);
@@ -234,7 +247,12 @@ public class LibraryCopyService(SharePointService spService)
             listId = doc.RootElement.GetProperty("Id").GetString()!;
         }
 
-        foreach (var col in definition.Columns)
+        var existingCols          = await spService.GetLibraryColumnsAsync(targetSiteUrl, listId, skipCache: true);
+        var existingInternalNames = existingCols.Select(c => c.InternalName).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var existingDisplayNames  = existingCols.Select(c => c.DisplayName).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        foreach (var col in definition.Columns.Where(c =>
+            !existingInternalNames.Contains(c.InternalName) &&
+            !existingDisplayNames.Contains(c.DisplayName)))
         {
             try { await CreateColumnAsync(targetSiteUrl, listId, col); }
             catch { }
@@ -264,6 +282,7 @@ public class LibraryCopyService(SharePointService spService)
             {
                 FieldTypeKind = fieldTypeKind,
                 Title         = col.DisplayName,
+                StaticName    = col.InternalName,
                 Required      = false,
                 Choices       = new { results = col.Choices },
             });
@@ -274,6 +293,7 @@ public class LibraryCopyService(SharePointService spService)
             {
                 FieldTypeKind = fieldTypeKind,
                 Title         = col.DisplayName,
+                StaticName    = col.InternalName,
                 Required      = false,
             });
         }
@@ -316,19 +336,29 @@ public class LibraryCopyService(SharePointService spService)
     }
 
     // Adds any source columns that are absent from the existing target list.
-    // Called when a library/list already exists so its schema stays in sync with the source.
-    public async Task AddMissingColumnsAsync(
+    // Returns the display names of columns that were successfully created.
+    public async Task<List<string>> AddMissingColumnsAsync(
         string targetSiteUrl, string targetListId,
         IEnumerable<ColumnDefinition> sourceColumns)
     {
-        var existing      = await spService.GetLibraryColumnsAsync(targetSiteUrl, targetListId);
-        var existingNames = existing.Select(c => c.InternalName)
-            .ToHashSet(StringComparer.OrdinalIgnoreCase);
-        foreach (var col in sourceColumns.Where(c => !existingNames.Contains(c.InternalName)))
+        // Skip cache so we always see the live column list — a stale cached snapshot
+        // would cause columns that were just created to appear "missing" and get duplicated.
+        var existing             = await spService.GetLibraryColumnsAsync(targetSiteUrl, targetListId, skipCache: true);
+        var existingInternalNames = existing.Select(c => c.InternalName).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var existingDisplayNames  = existing.Select(c => c.DisplayName).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var created = new List<string>();
+        foreach (var col in sourceColumns.Where(c =>
+            !existingInternalNames.Contains(c.InternalName) &&
+            !existingDisplayNames.Contains(c.DisplayName)))
         {
-            try { await CreateColumnAsync(targetSiteUrl, targetListId, col); }
+            try
+            {
+                await CreateColumnAsync(targetSiteUrl, targetListId, col);
+                created.Add(col.DisplayName);
+            }
             catch { }
         }
+        return created;
     }
 
     private static bool IsAlreadyExistsError(string body) =>

@@ -45,6 +45,22 @@ public partial class MainWindow : Window
     private void SourceNode_CheckChanged(object sender, RoutedEventArgs e)
         => VM.NotifySelectionChanged();
 
+    // Cycles custom list nodes: blank → checked (structure+items) → blank (items only) → blank (nothing).
+    // The null state is visually identical to unchecked via the ItemsOnlyCheckBox style.
+    private void SourceCheckBox_PreviewClick(object sender, MouseButtonEventArgs e)
+    {
+        if ((sender as CheckBox)?.DataContext is not SharePointNode node || !node.IsCustomList)
+            return;
+        node.IsChecked = node.IsChecked switch
+        {
+            false => true,   // blank → checked
+            true  => null,   // checked → blank (items only, no structure)
+            _     => false   // null/blank → blank (deselect all)
+        };
+        e.Handled = true;
+        VM.NotifySelectionChanged();
+    }
+
     private void SelectAll_Click(object sender, RoutedEventArgs e)
     { VM.SelectAllSource(true); VM.NotifySelectionChanged(); }
 

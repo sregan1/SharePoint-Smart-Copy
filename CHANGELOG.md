@@ -14,6 +14,19 @@ All notable changes to SharePoint Smart Copy are documented here.
 - Overwrite behavior: if a library or list already exists at the target, it is skipped gracefully (shown as ⏭ Skipped in the report) rather than failing.
 - System libraries (Site Assets, Style Library) that are not returned by the Graph Drives API are resolved via a SharePoint REST fallback and handled correctly.
 
+**Individual list item selection**
+- Custom lists in the Libraries & Lists scope are now expandable in the browse tree — expand a list to see its items, each with a checkbox.
+- Check individual items to copy only a subset; leave the list node itself checked (without expanding) to copy the whole list as before.
+- Items are loaded on demand via a lightweight REST query (`$select=Id,Title`) and sorted by ID. Lists with more than 5,000 items cannot be expanded for item-level selection (the whole-list copy still works for those).
+
+**Destination list picker for item-level copies**
+- When individual list items are selected, the Target step shows a "Destination List" dropdown populated with the custom lists on the target site.
+- The Next button is held disabled until a destination list is chosen, preventing accidental misconfiguration.
+
+**Column mapping for list item copies**
+- The Configure Mappings button is now accessible in the Options step when copying individual list items, with source and target columns loaded from the respective lists.
+- Column mappings are applied when writing item field values to the target list, so items land in the correct columns even when source and target schemas differ.
+
 **Site copy scope**
 - Copy all document libraries and custom lists from a source site to a target site in a single operation.
 - Navigation links (Quick Launch) are optionally copied alongside the content.
@@ -31,6 +44,7 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 - New mode selection tile on the Browse step: choose Files, Libraries & Lists, Site, or Pages before browsing.
 - Copy Preview panel on the Options step is now scope-aware: shows a library/list summary for Libraries & Lists and Site scopes, and the file list for Files and Pages scopes.
+- Copy Preview summary now distinguishes between whole libraries/lists selected and individual list items selected.
 - Version history sub-options (Copy all / Latest N) are shown inline under the "Copy version history" checkbox with ⓘ tooltips.
 - Migration API is pre-selected by default on the Options step.
 - Versions column in the progress and report grids is hidden for library/list creation rows (where it is not applicable).
@@ -43,6 +57,8 @@ All notable changes to SharePoint Smart Copy are documented here.
 - Fixed: Migration API radio button was not pre-selected when navigating to the Options step for the Libraries & Lists scope due to a `GroupName` conflict between the two copy-mode radio button groups.
 - Fixed: `CopyLibraryContent` and `RemapPageWebPartUrls` settings were not restored from disk on startup.
 - Fixed: column mappings were not cleared when switching copy scope or navigating back from the Options step, causing stale mappings from a previous run to be applied.
+- Fixed: opening the column mapping dialog for a custom list source caused a "malformed drive ID" Graph error. Custom lists have no drive; the fix uses the list GUID directly to load column definitions, bypassing the drive-based lookup entirely.
+- Fixed: individual list item copy reported success even when no items were copied because per-item errors were silently swallowed. Item-level errors are now caught individually and surfaced in the copy report.
 
 ---
 

@@ -18,6 +18,14 @@ public partial class ColumnMappingDialog : Window
             vm.SourceColumns, vm.TargetColumns, vm.ColumnMappings,
             isLibraryScope: vm.IsLibraryOrSiteScope);
         DataContext = dlgVm;
+
+        foreach (var row in dlgVm.Mappings)
+            row.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(MappingRow.SelectedTargetItem))
+                    UpdateStatusBar();
+            };
+
         UpdateStatusBar();
         if (vm.ColumnLoadError != null)
             StatusBar.Text = $"⚠ {vm.ColumnLoadError}";

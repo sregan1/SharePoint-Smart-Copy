@@ -532,6 +532,22 @@ public class SharePointService
         return doc.RootElement.GetProperty("Id").GetString()!;
     }
 
+    // Gets the SharePoint list GUID for a document library via the Graph drive's associated list.
+    // More reliable than GetListIdByServerRelativeUrlAsync when the server-relative URL is uncertain.
+    public async Task<string?> GetListIdFromDriveAsync(string driveId)
+    {
+        try
+        {
+            var list = await Graph.Drives[driveId].List
+                .GetAsync(cfg => cfg.QueryParameters.Select = ["id"]);
+            return list?.Id;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     // Gets the server-relative URL of a document library by fetching the drive's root item webUrl.
     // More reliable than deriving it from drive.WebUrl which the Kiota SDK may not populate.
     public async Task<string> GetLibraryServerRelativeUrlAsync(string driveId)
@@ -1223,9 +1239,9 @@ public class SharePointService
     private readonly Dictionary<string, List<SpColumnDef>> _columnCache = new();
 
     // Returns the custom (non-built-in) columns for a library.
-    public async Task<List<SpColumnDef>> GetLibraryColumnsAsync(string siteUrl, string listId)
+    public async Task<List<SpColumnDef>> GetLibraryColumnsAsync(string siteUrl, string listId, bool skipCache = false)
     {
-        if (_columnCache.TryGetValue(listId, out var cached))
+        if (!skipCache && _columnCache.TryGetValue(listId, out var cached))
             return cached;
 
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/fields" +
@@ -2056,8 +2072,50 @@ public class SharePointService
         return result;
     }
 
+    // Returns (Id, Title) for each item in a list — lightweight query for tree display only.
+    public async Task<List<(string Id, string Title)>> GetListItemTitlesAsync(
+        string siteUrl, string listId, CancellationToken ct = default)
+    {
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items" +
+                  "?$select=Id,Title&$top=5000&$orderby=Id";
+
+        var result = new List<(string, string)>();
+        string? next = url;
+
+        while (next != null)
+        {
+            ct.ThrowIfCancellationRequested();
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, next);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl);
+
+            if (!resp.IsSuccessStatusCode) break;
+            var body = await resp.Content.ReadAsStringAsync(ct);
+            using var doc = JsonDocument.Parse(body);
+
+            if (doc.RootElement.TryGetProperty("value", out var values))
+                foreach (var el in values.EnumerateArray())
+                {
+                    var id    = el.TryGetProperty("Id",    out var ip) ? ip.GetInt32().ToString() : string.Empty;
+                    var title = el.TryGetProperty("Title", out var tp) && tp.ValueKind == JsonValueKind.String
+                                    ? tp.GetString() ?? string.Empty
+                                    : string.Empty;
+                    if (!string.IsNullOrEmpty(id))
+                        result.Add((id, title));
+                }
+
+            next = doc.RootElement.TryGetProperty("odata.nextLink", out var nl) ? nl.GetString() : null;
+        }
+        return result;
+    }
+
     // Creates a list item and optionally back-fills Created/Modified timestamps.
-    public async Task CreateListItemAsync(
+    // Returns the new item's integer ID as a string, or null if it could not be parsed.
+    public async Task<string?> CreateListItemAsync(
         string siteUrl, string listId,
         Dictionary<string, object?> fields,
         string? createdDate, string? modifiedDate,
@@ -2079,13 +2137,17 @@ public class SharePointService
             return r;
         }, siteUrl))
         {
-            if (!resp.IsSuccessStatusCode) return;
+            if (!resp.IsSuccessStatusCode)
+            {
+                var errBody = await resp.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Create item failed: {(int)resp.StatusCode} {resp.ReasonPhrase} — {errBody}");
+            }
             var respBody = await resp.Content.ReadAsStringAsync();
             using var doc = JsonDocument.Parse(respBody);
             newItemId = doc.RootElement.TryGetProperty("Id", out var ip) ? ip.GetRawText() : null;
         }
 
-        if (newItemId == null || (createdDate == null && modifiedDate == null)) return;
+        if (newItemId == null || (createdDate == null && modifiedDate == null)) return newItemId;
 
         var metaValues = new List<object>();
         if (createdDate  != null) metaValues.Add(new { FieldName = "Created",  FieldValue = createdDate });
@@ -2093,6 +2155,60 @@ public class SharePointService
 
         var metaPayload = JsonSerializer.Serialize(new { formValues = metaValues, bNewDocumentUpdate = true });
         var metaUrl     = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({newItemId})/ValidateUpdateListItem()";
+
+        try
+        {
+            using var _ = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, metaUrl);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                r.Content = new StringContent(metaPayload, System.Text.Encoding.UTF8, "application/json");
+                return r;
+            }, siteUrl);
+        }
+        catch { }
+        return newItemId;
+    }
+
+    // Updates an existing list item's fields via MERGE/PATCH and optionally back-fills Created/Modified.
+    public async Task UpdateListItemAsync(
+        string siteUrl, string listId, string itemId,
+        Dictionary<string, object?> fields,
+        string? createdDate, string? modifiedDate,
+        CancellationToken ct = default)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        var updateUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({itemId})";
+        var body      = JsonSerializer.Serialize(fields.Where(kv => kv.Value != null)
+                            .ToDictionary(kv => kv.Key, kv => kv.Value));
+
+        using var resp = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Post, updateUrl);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            r.Headers.Add("X-HTTP-Method", "MERGE");
+            r.Headers.Add("If-Match", "*");
+            r.Content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
+            return r;
+        }, siteUrl);
+
+        if (!resp.IsSuccessStatusCode)
+        {
+            var errBody = await resp.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"Update item failed: {(int)resp.StatusCode} {resp.ReasonPhrase} — {errBody}");
+        }
+
+        if (createdDate == null && modifiedDate == null) return;
+
+        var metaValues = new List<object>();
+        if (createdDate  != null) metaValues.Add(new { FieldName = "Created",  FieldValue = createdDate });
+        if (modifiedDate != null) metaValues.Add(new { FieldName = "Modified", FieldValue = modifiedDate });
+
+        var metaPayload = JsonSerializer.Serialize(new { formValues = metaValues, bNewDocumentUpdate = true });
+        var metaUrl     = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({itemId})/ValidateUpdateListItem()";
 
         try
         {
@@ -2117,6 +2233,221 @@ public class SharePointService
         JsonValueKind.Null    => null,
         _                     => null,
     };
+
+    // Reads ID + HasUniqueRoleAssignments for all items in a library/list in one paginated request.
+    // Returns a dictionary keyed by SP list item integer ID (as string), value = hasUniquePermissions.
+    public async Task<Dictionary<string, bool>> BulkReadPermissionFlagsAsync(
+        string siteUrl, string listId, CancellationToken ct = default)
+    {
+        var result  = new Dictionary<string, bool>();
+        string? next = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items" +
+                       "?$select=Id,HasUniqueRoleAssignments&$top=5000";
+        while (next != null)
+        {
+            ct.ThrowIfCancellationRequested();
+            try
+            {
+                using var resp = await SendSharePointRequestAsync(token =>
+                {
+                    var r = new HttpRequestMessage(HttpMethod.Get, next);
+                    r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                    return r;
+                }, siteUrl, cancellationToken: ct);
+                if (!resp.IsSuccessStatusCode) break;
+                var body = await resp.Content.ReadAsStringAsync(ct);
+                using var doc = JsonDocument.Parse(body);
+                if (doc.RootElement.TryGetProperty("value", out var vals))
+                    foreach (var el in vals.EnumerateArray())
+                    {
+                        var id      = el.TryGetProperty("Id",                    out var ip) ? ip.GetInt32().ToString() : null;
+                        var unique  = el.TryGetProperty("HasUniqueRoleAssignments", out var up) && up.GetBoolean();
+                        if (id != null) result[id] = unique;
+                    }
+                next = doc.RootElement.TryGetProperty("odata.nextLink", out var nl) ? nl.GetString() : null;
+            }
+            catch { break; }
+        }
+        return result;
+    }
+
+    // ── Permissions ───────────────────────────────────────────────────────────
+
+    // Checks whether a single SP object has unique (broken) permissions.
+    // apiPath examples: "web/lists('{guid}')", "web"
+    public async Task<bool> GetHasUniqueRoleAssignmentsAsync(
+        string siteUrl, string apiPath, CancellationToken ct = default)
+    {
+        var url = $"{siteUrl.TrimEnd('/')}/_api/{apiPath}?$select=HasUniqueRoleAssignments";
+        try
+        {
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl, cancellationToken: ct);
+            if (!resp.IsSuccessStatusCode) return false;
+            var body = await resp.Content.ReadAsStringAsync(ct);
+            using var doc = JsonDocument.Parse(body);
+            return doc.RootElement.TryGetProperty("HasUniqueRoleAssignments", out var v) && v.GetBoolean();
+        }
+        catch { return false; }
+    }
+
+    public async Task<List<RoleAssignmentInfo>> GetRoleAssignmentsAsync(
+        string siteUrl, string apiPath, CancellationToken ct = default)
+    {
+        var url = $"{siteUrl.TrimEnd('/')}/_api/{apiPath}/roleassignments" +
+                  "?$expand=Member,RoleDefinitionBindings&$select=Member/Id,Member/LoginName,Member/Title,Member/PrincipalType,RoleDefinitionBindings/Name";
+        try
+        {
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl, cancellationToken: ct);
+            if (!resp.IsSuccessStatusCode) return [];
+            var body = await resp.Content.ReadAsStringAsync(ct);
+            using var doc = JsonDocument.Parse(body);
+            if (!doc.RootElement.TryGetProperty("value", out var vals)) return [];
+
+            var result = new List<RoleAssignmentInfo>();
+            foreach (var el in vals.EnumerateArray())
+            {
+                if (!el.TryGetProperty("Member", out var member)) continue;
+                var pid        = member.TryGetProperty("Id",            out var idEl)   ? idEl.GetInt32()          : 0;
+                var loginName  = member.TryGetProperty("LoginName",     out var lnEl)   ? lnEl.GetString() ?? ""   : "";
+                var title      = member.TryGetProperty("Title",         out var tEl)    ? tEl.GetString()  ?? ""   : "";
+                var ptype      = member.TryGetProperty("PrincipalType", out var ptEl)   ? ptEl.GetInt32()          : 0;
+                var roleNames  = new List<string>();
+                if (el.TryGetProperty("RoleDefinitionBindings", out var rdbs))
+                    foreach (var rdb in rdbs.EnumerateArray())
+                        if (rdb.TryGetProperty("Name", out var nm))
+                            roleNames.Add(nm.GetString() ?? "");
+                result.Add(new RoleAssignmentInfo(pid, ptype, loginName, title, roleNames));
+            }
+            return result;
+        }
+        catch { return []; }
+    }
+
+    public async Task BreakPermissionInheritanceAsync(
+        string siteUrl, string apiPath, CancellationToken ct = default)
+    {
+        var url = $"{siteUrl.TrimEnd('/')}/_api/{apiPath}/breakroleinheritance(copyRoleAssignments=false,clearSubscopes=false)";
+        using var resp = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Post, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            r.Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
+            return r;
+        }, siteUrl, cancellationToken: ct);
+        if (!resp.IsSuccessStatusCode)
+        {
+            var body = await resp.Content.ReadAsStringAsync(ct);
+            throw new HttpRequestException($"BreakPermissionInheritance failed: {(int)resp.StatusCode} — {body}");
+        }
+    }
+
+    public async Task AddRoleAssignmentAsync(
+        string siteUrl, string apiPath, int principalId, int roleDefId, CancellationToken ct = default)
+    {
+        var url = $"{siteUrl.TrimEnd('/')}/_api/{apiPath}/roleassignments/addroleassignment(principalid={principalId},roleDefId={roleDefId})";
+        using var resp = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Post, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            r.Content = new StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
+            return r;
+        }, siteUrl, cancellationToken: ct);
+        if (!resp.IsSuccessStatusCode)
+        {
+            var errBody = await resp.Content.ReadAsStringAsync(ct);
+            throw new HttpRequestException($"AddRoleAssignment failed: {(int)resp.StatusCode} — {errBody}");
+        }
+    }
+
+    public async Task<int?> EnsureUserAsync(
+        string siteUrl, string loginName, CancellationToken ct = default)
+    {
+        var url  = $"{siteUrl.TrimEnd('/')}/_api/web/ensureuser";
+        var body = JsonSerializer.Serialize(new { logonName = loginName });
+        try
+        {
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                r.Content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
+                return r;
+            }, siteUrl, cancellationToken: ct);
+            if (!resp.IsSuccessStatusCode) return null;
+            var respBody = await resp.Content.ReadAsStringAsync(ct);
+            using var doc = JsonDocument.Parse(respBody);
+            return doc.RootElement.TryGetProperty("Id", out var ip) ? ip.GetInt32() : null;
+        }
+        catch { return null; }
+    }
+
+    public async Task<int?> GetSiteGroupIdAsync(
+        string siteUrl, string groupTitle, CancellationToken ct = default)
+    {
+        var encoded = Uri.EscapeDataString(groupTitle.Replace("'", "''"));
+        var url     = $"{siteUrl.TrimEnd('/')}/_api/web/sitegroups/getbyname('{encoded}')?$select=Id";
+        try
+        {
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl, cancellationToken: ct);
+            if (!resp.IsSuccessStatusCode) return null;
+            var respBody = await resp.Content.ReadAsStringAsync(ct);
+            using var doc = JsonDocument.Parse(respBody);
+            return doc.RootElement.TryGetProperty("Id", out var ip) ? ip.GetInt32() : null;
+        }
+        catch { return null; }
+    }
+
+    // Loads all role definitions for the site and returns a name→ID dictionary.
+    public async Task<Dictionary<string, int>> GetAllRoleDefinitionsAsync(
+        string siteUrl, CancellationToken ct = default)
+    {
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/roledefinitions?$select=Id,Name";
+        try
+        {
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl, cancellationToken: ct);
+            if (!resp.IsSuccessStatusCode) return [];
+            var body = await resp.Content.ReadAsStringAsync(ct);
+            using var doc = JsonDocument.Parse(body);
+            if (!doc.RootElement.TryGetProperty("value", out var vals)) return [];
+            var result = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            foreach (var el in vals.EnumerateArray())
+            {
+                var id   = el.TryGetProperty("Id",   out var idEl)   ? idEl.GetInt32()        : 0;
+                var name = el.TryGetProperty("Name", out var nameEl) ? nameEl.GetString() ?? "" : "";
+                if (id > 0 && !string.IsNullOrEmpty(name))
+                    result[name] = id;
+            }
+            return result;
+        }
+        catch { return []; }
+    }
 
     private sealed class TokenProvider : IAccessTokenProvider
     {

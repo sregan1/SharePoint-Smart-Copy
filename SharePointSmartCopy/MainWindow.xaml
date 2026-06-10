@@ -90,7 +90,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Padding="{TemplateBinding Padding}">
                             <Grid>
-                                <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
+                                <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="0"/>
                                 <TextBlock Text="{TemplateBinding Tag}" Foreground="#A19F9D"
                                            VerticalAlignment="Center" IsHitTestVisible="False"
                                            FontSize="{TemplateBinding FontSize}">
@@ -138,12 +138,47 @@
             <Setter Property="Padding" Value="2"/>
         </Style>
 
+        <!-- CheckBox that shows indeterminate (null) as a plain empty box — no black fill -->
+        <Style x:Key="ItemsOnlyCheckBox" TargetType="CheckBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <BulletDecorator Background="Transparent" SnapsToDevicePixels="True">
+                            <BulletDecorator.Bullet>
+                                <Border x:Name="Box" Width="14" Height="14" CornerRadius="2"
+                                        BorderBrush="#767676" BorderThickness="1" Background="White">
+                                    <Path x:Name="Check" Visibility="Collapsed"
+                                          Stroke="#0078D4" StrokeThickness="1.8" StrokeLineJoin="Round"
+                                          Data="M2,7 L5.5,10.5 L12,3.5"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </BulletDecorator.Bullet>
+                            <ContentPresenter Margin="6,0,0,0" VerticalAlignment="Center"/>
+                        </BulletDecorator>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Box" Property="BorderBrush" Value="#0078D4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <HierarchicalDataTemplate x:Key="SourceNodeTemplate"
                                   DataType="{x:Type models:SharePointNode}"
                                   ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal" Margin="2,2">
                 <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                          Checked="SourceNode_CheckChanged" Unchecked="SourceNode_CheckChanged"
+                          Style="{StaticResource ItemsOnlyCheckBox}"
+                          IsThreeState="True"
+                          Checked="SourceNode_CheckChanged"
+                          Unchecked="SourceNode_CheckChanged"
+                          Indeterminate="SourceNode_CheckChanged"
+                          PreviewMouseLeftButtonDown="SourceCheckBox_PreviewClick"
                           VerticalAlignment="Center" Margin="0,0,4,0"/>
                 <TextBlock Text="{Binding TypeIcon}" FontSize="14" VerticalAlignment="Center" Margin="0,0,4,0"/>
                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
@@ -847,6 +882,24 @@
                                 <Run Text="{Binding TargetUrl}"/>
                             </TextBlock>
                         </Border>
+
+                        <!-- Destination list picker — only when individual items are selected -->
+                        <StackPanel Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}"
+                                    Margin="0,16,0,0">
+                            <TextBlock Text="Destination List" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
+                            <ComboBox ItemsSource="{Binding TargetCustomLists}"
+                                      SelectedItem="{Binding SelectedTargetList}"
+                                      DisplayMemberPath="Title"
+                                      Margin="0,0,0,6"/>
+                            <TextBox Style="{StaticResource WatermarkTextBox}"
+                                     Tag="Enter the name of the new list to create"
+                                     Text="{Binding NewListName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="0,0,0,6"
+                                     Visibility="{Binding IsCreatingNewList, Converter={StaticResource BoolToVis}}"/>
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#797775">
+                                Select the list on the target site where the selected items will be copied.
+                            </TextBlock>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Grid>
@@ -923,6 +976,13 @@
                                     <TextBlock Text="Replaces target navigation with source links. URLs are remapped to the target site."
                                                TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="20,0,0,0"/>
                                 </StackPanel>
+                                <!-- ── Permissions (Library &amp; Site scope) ─── -->
+                                <Separator Margin="0,8,0,8" Background="#EDEBE9"/>
+                                <CheckBox Content="Copy permissions"
+                                          IsChecked="{Binding CopyPermissions, Mode=TwoWay}"
+                                          Margin="0,0,0,4" FontSize="13"/>
+                                <TextBlock Text="Copies unique role assignments for libraries, lists, folders, files, and items. Works best for same-tenant copies."
+                                           TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="20,0,0,8"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -997,6 +1057,13 @@
                                 </StackPanel>
                             </StackPanel>
 
+                            <Separator Margin="0,4,0,8" Background="#EDEBE9"/>
+                            <CheckBox Content="Copy permissions"
+                                      IsChecked="{Binding CopyPermissions, Mode=TwoWay}"
+                                      Margin="0,0,0,4" FontSize="13"/>
+                            <TextBlock Text="Copies unique role assignments for files. Works best for same-tenant copies."
+                                       TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="20,0,0,0"/>
+
                         </StackPanel>
                     </Border>
 
@@ -1046,6 +1113,18 @@
                                         Content="{Binding MappingButtonLabel}"
                                         IsEnabled="{Binding IsColumnsReady}"
                                         Visibility="{Binding CopyCustomColumns, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+
+                            <!-- Library scope (individual items): column values always copied — just show mapping button -->
+                            <StackPanel Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}"
+                                        Margin="0,4,0,0">
+                                <TextBlock Text="Custom column values are always copied for list items."
+                                           TextWrapping="Wrap" Foreground="#797775" FontSize="11" Margin="0,0,0,8"/>
+                                <Button HorizontalAlignment="Left"
+                                        Style="{StaticResource SecondaryBtn}"
+                                        Click="ConfigureMappings_Click"
+                                        Content="{Binding MappingButtonLabel}"
+                                        IsEnabled="{Binding IsColumnsReady}"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -1127,9 +1206,14 @@
                                 <Run Text="{Binding CopyJobs.Count, Mode=OneWay}" FontWeight="Bold"/>
                             </TextBlock>
                             <TextBlock FontSize="13"
-                                       Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}">
+                                       Visibility="{Binding ShowLibrarySummaryLine, Converter={StaticResource BoolToVis}}">
                                 <Run Text="Libraries &amp; lists to copy: "/>
                                 <Run Text="{Binding LibrarySummaryCount, Mode=OneWay}" FontWeight="Bold"/>
+                            </TextBlock>
+                            <TextBlock FontSize="13"
+                                       Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}">
+                                <Run Text="List items to copy: "/>
+                                <Run Text="{Binding SelectedItemCount, Mode=OneWay}" FontWeight="Bold"/>
                             </TextBlock>
                             <TextBlock Margin="0,4,0,0" FontSize="12" Foreground="#605E5C" TextWrapping="Wrap"
                                        Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}">
@@ -1167,6 +1251,14 @@
                                 <Run Text="{Binding TargetUrl}"/>
                             </TextBlock>
                         </Border>
+                        <Border Background="#EFF6E8" BorderBrush="#498205" BorderThickness="1"
+                                CornerRadius="4" Padding="10,6" Margin="0,4,0,0"
+                                Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}">
+                            <TextBlock FontSize="12" TextWrapping="Wrap">
+                                <Run Text="Destination List: " FontWeight="SemiBold"/>
+                                <Run Text="{Binding EffectiveDestinationListName, Mode=OneWay}"/>
+                            </TextBlock>
+                        </Border>
                     </StackPanel>
 
                     <!-- Library / Site scope: list selected libraries -->
@@ -1175,13 +1267,25 @@
                         <ListView ItemsSource="{Binding LibraryPreviewItems}" Padding="4">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Library / List" Width="340">
+                                    <GridViewColumn Header="Library / List" Width="220">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding TypeIcon}" FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center"/>
                                                     <TextBlock Text="{Binding Name}" FontSize="12" VerticalAlignment="Center"/>
                                                 </StackPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Destination Name" Width="200">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Style="{StaticResource WatermarkTextBox}"
+                                                         Text="{Binding OverrideName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         Tag="{Binding Name}"
+                                                         FontSize="12" BorderThickness="0,0,0,1"
+                                                         BorderBrush="#C8C6C4" Background="Transparent"
+                                                         VerticalAlignment="Center" Width="185"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
@@ -1301,13 +1405,22 @@
                     </StackPanel>
                 </Border>
 
-                <TextBlock Grid.Row="2" Text="File Status" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
+                <TextBlock Grid.Row="2" Text="Copy Log" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
                 <Border Grid.Row="3" BorderBrush="#EDEBE9" BorderThickness="1" Background="White">
                     <ListView x:Name="ProgressList" ItemsSource="{Binding CopyResults}"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsPermissionResult}" Value="True">
+                                        <Setter Property="Background" Value="#EEF2FF"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.ItemContainerStyle>
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="File"     Width="220" DisplayMemberBinding="{Binding FileName}"/>
+                                <GridViewColumn Header="Item"     Width="220" DisplayMemberBinding="{Binding FileName}"/>
                                 <GridViewColumn Header="Status"   Width="110">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
@@ -1331,7 +1444,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Error"    Width="220" DisplayMemberBinding="{Binding ErrorMessage}"/>
+                                <GridViewColumn Header="Details"  Width="220" DisplayMemberBinding="{Binding ErrorMessage}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -1397,8 +1510,17 @@
                               AlternatingRowBackground="#FAFAFA"
                               BorderThickness="0"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsPermissionResult}" Value="True">
+                                        <Setter Property="Background" Value="#EEF2FF"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="File Name"   Binding="{Binding FileName}"   Width="220"/>
+                            <DataGridTextColumn Header="Item"        Binding="{Binding FileName}"   Width="220"/>
                             <DataGridTemplateColumn Header="Status" Width="110">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -1418,7 +1540,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Error"       Binding="{Binding ErrorMessage}"  Width="220"/>
+                            <DataGridTextColumn Header="Details"     Binding="{Binding ErrorMessage}"  Width="220"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>

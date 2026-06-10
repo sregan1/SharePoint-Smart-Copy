@@ -43,7 +43,21 @@ public class MigrationJobService(SharePointService spService)
             var libraryServerRelUrl = firstJob.TargetLibraryServerRelativeUrl;
             if (string.IsNullOrEmpty(libraryServerRelUrl))
                 libraryServerRelUrl = await spService.GetLibraryServerRelativeUrlAsync(firstJob.TargetDriveId);
-            var listId       = await spService.GetListIdByServerRelativeUrlAsync(targetSiteUrl, libraryServerRelUrl);
+
+            string listId;
+            try
+            {
+                listId = await spService.GetListIdByServerRelativeUrlAsync(targetSiteUrl, libraryServerRelUrl);
+            }
+            catch when (!string.IsNullOrEmpty(firstJob.TargetDriveId))
+            {
+                // URL-based lookup can fail when the library's actual server-relative URL
+                // differs from what was stored (e.g. "Shared Documents" vs "Documents").
+                // Fall back to resolving the list ID directly from the drive via Graph.
+                var fallbackId = await spService.GetListIdFromDriveAsync(firstJob.TargetDriveId);
+                listId = fallbackId
+                    ?? throw new Exception($"Cannot resolve list ID for library at '{libraryServerRelUrl}'");
+            }
             var libraryTitle = libraryServerRelUrl.Split('/').Last();
 
             // Pre-create subfolders before parallel split — concurrent creates for the same path conflict

@@ -15,6 +15,7 @@ public partial class MainViewModel : ObservableObject
     public readonly SharePointService SpService;
     private readonly CopyService _copyService;
     private readonly LibraryCopyService _libraryCopyService;
+    private readonly PermissionCopyService _permissionCopyService;
 
     private CancellationTokenSource? _copyCts;
     private CancellationTokenSource? _connectSourceCts;
@@ -33,8 +34,9 @@ public partial class MainViewModel : ObservableObject
         AuthService          = existingAuthService ?? new AuthService();
         SpService            = new SharePointService(AuthService);
         var migrationJobService = new MigrationJobService(SpService);
-        _copyService         = new CopyService(SpService, migrationJobService);
-        _libraryCopyService  = new LibraryCopyService(SpService);
+        _copyService              = new CopyService(SpService, migrationJobService);
+        _libraryCopyService       = new LibraryCopyService(SpService);
+        _permissionCopyService    = new PermissionCopyService(SpService);
         Settings             = settings ?? AppSettings.Load();
 
         if (Settings.IsConfigured)
@@ -56,6 +58,7 @@ public partial class MainViewModel : ObservableObject
         CopyNavigation      = Settings.CopyNavigation;
         CopyLibraryContent  = Settings.CopyLibraryContent;
         RemapPageWebPartUrls = Settings.RemapPageWebPartUrls;
+        CopyPermissions      = Settings.CopyPermissions;
 
         SourceLibraries.CollectionChanged += (_, _) =>
         {
@@ -176,7 +179,7 @@ public partial class MainViewModel : ObservableObject
                 }
                 foreach (var (id, title, baseTemplate) in customLists)
                 {
-                    SourceLibraries.Add(new SharePointNode
+                    var listNode = new SharePointNode
                     {
                         Id               = id,
                         Name             = title,
@@ -184,10 +187,12 @@ public partial class MainViewModel : ObservableObject
                         SiteId           = SourceSiteId,
                         SiteUrl          = SourceUrl,
                         Type             = NodeType.Library,
-                        HasChildren      = false,
+                        HasChildren      = true,
                         IsCustomList     = true,
                         ListBaseTemplate = baseTemplate,
-                    });
+                    };
+                    listNode.Children.Add(new SharePointNode { Name = "__placeholder__", Id = "ph" });
+                    SourceLibraries.Add(listNode);
                 }
             });
         }
@@ -256,6 +261,31 @@ public partial class MainViewModel : ObservableObject
         node.IsLoading = true;
         try
         {
+            if (node.IsCustomList)
+            {
+                var items = await SpService.GetListItemTitlesAsync(SourceUrl.TrimEnd('/'), node.Id);
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    node.Children.Clear();
+                    foreach (var (id, title) in items)
+                        node.Children.Add(new SharePointNode
+                        {
+                            Name         = string.IsNullOrWhiteSpace(title) ? $"(Item {id})" : title,
+                            Id           = id,
+                            Type         = NodeType.ListItem,
+                            SourceListId = node.Id,
+                            SiteId       = node.SiteId,
+                            SiteUrl      = node.SiteUrl,
+                            HasChildren  = false,
+                            IsChecked    = false,
+                            Parent       = node,
+                        });
+                    if (!node.Children.Any())
+                        node.HasChildren = false;
+                });
+                return;
+            }
+
             var children = await SpService.GetChildrenAsync(node.DriveId, node.Id, node.SiteId, node.SiteUrl);
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
@@ -302,6 +332,21 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private string _targetSiteId = string.Empty;
     [ObservableProperty] private ObservableCollection<SharePointNode> _targetLibraries = [];
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] private SharePointNode? _selectedTargetFolder;
+    [ObservableProperty] private ObservableCollection<ListPickerItem> _targetCustomLists = [];
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(NextCommand))]
+    [NotifyPropertyChangedFor(nameof(IsCreatingNewList))]
+    [NotifyPropertyChangedFor(nameof(EffectiveDestinationListName))]
+    private ListPickerItem? _selectedTargetList;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(NextCommand))]
+    [NotifyPropertyChangedFor(nameof(EffectiveDestinationListName))]
+    private string _newListName = string.Empty;
+
+    private const string NewListSentinelId = "__new__";
+    public bool IsCreatingNewList => SelectedTargetList?.Id == NewListSentinelId;
+    public string EffectiveDestinationListName =>
+        IsCreatingNewList ? NewListName : (SelectedTargetList?.Title ?? string.Empty);
     [ObservableProperty] private bool _isConnectingTarget;
 
     [RelayCommand]
@@ -351,6 +396,25 @@ public partial class MainViewModel : ObservableObject
                 catch { /* non-critical */ }
             }
 
+            // Library scope with individual item selection: load the target site's custom lists
+            // so the user can pick a destination list in the Target step.
+            if (CopyScope == CopyScope.Library)
+            {
+                try
+                {
+                    var lists = await SpService.GetCustomListsAsync(TargetUrl.TrimEnd('/'));
+                    ct.ThrowIfCancellationRequested();
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        TargetCustomLists.Clear();
+                        TargetCustomLists.Add(new ListPickerItem(NewListSentinelId, "[ Create New List ]"));
+                        foreach (var (id, title, _) in lists)
+                            TargetCustomLists.Add(new ListPickerItem(id, title));
+                    });
+                }
+                catch { /* non-critical — list picker just stays empty */ }
+            }
+
             try { await AuthService.GetSharePointTokenAsync(TargetUrl.Trim(), cancellationToken: ct); }
             catch
             {
@@ -382,7 +446,10 @@ public partial class MainViewModel : ObservableObject
         TargetStatus         = string.Empty;
         TargetSiteId         = string.Empty;
         SelectedTargetFolder = null;
+        SelectedTargetList   = null;
+        NewListName          = string.Empty;
         TargetLibraries.Clear();
+        TargetCustomLists.Clear();
     }
 
     public async Task LoadTargetNodeChildrenAsync(SharePointNode node)
@@ -430,22 +497,43 @@ public partial class MainViewModel : ObservableObject
     public bool IsPagesScope         => CopyScope == CopyScope.Pages;
     public bool IsLibraryOrSiteScope => CopyScope is CopyScope.Library or CopyScope.Site;
     public bool IsFilesOrPagesScope  => CopyScope is CopyScope.Files or CopyScope.Pages;
-    public bool NeedsTargetFolder    => CopyScope is CopyScope.Files or CopyScope.Pages;
+    public bool NeedsTargetFolder      => CopyScope is CopyScope.Files or CopyScope.Pages;
+    // True when item-level selection is active: either individual items are checked (partial),
+    // or a list is in items-only mode (IsChecked == null).
+    public bool IsItemSelectionActive  =>
+        CopyScope == CopyScope.Library && (
+            SourceLibraries.Any(lib => lib.IsChecked == null) ||
+            SourceLibraries.Any(lib => lib.Children.Any(c => c.Type == NodeType.ListItem && c.IsChecked == true)));
+
+    // True when the Libraries & lists summary line should be shown (whole-list or site scope, not individual items).
+    public bool ShowLibrarySummaryLine => IsLibraryOrSiteScope && !IsItemSelectionActive;
 
     // For Library scope: count of checked library nodes. For Site scope: count of all loaded libraries.
+    // Count of whole libraries/lists selected (not individual items).
     public int LibrarySummaryCount => IsSiteScope
         ? SourceLibraries.Count
         : SourceLibraries.SelectMany(l => l.GetCheckedNodes()).Count(n => n.Type == NodeType.Library);
 
+    // Count of individually selected list items (partial or items-only selection).
+    public int SelectedItemCount => SourceLibraries
+        .SelectMany(l => l.Children)
+        .Count(c => c.Type == NodeType.ListItem && c.IsChecked == true);
+
     // Libraries shown in the Options step preview for Library/Site scope.
     public IEnumerable<SharePointNode> LibraryPreviewItems => IsSiteScope
         ? SourceLibraries
-        : SourceLibraries.Where(n => n.IsChecked == true);
+        : SourceLibraries.Where(n => n.IsChecked == true
+              || n.IsChecked == null
+              || (n.IsCustomList && n.Children.Any(c => c.Type == NodeType.ListItem && c.IsChecked == true)));
 
     // Called from code-behind when any source node check state changes.
     public void NotifySelectionChanged()
     {
+        OnPropertyChanged(nameof(IsItemSelectionActive));
+        OnPropertyChanged(nameof(ShowLibrarySummaryLine));
         OnPropertyChanged(nameof(LibrarySummaryCount));
+        OnPropertyChanged(nameof(SelectedItemCount));
+        OnPropertyChanged(nameof(LibraryPreviewItems));
         NextCommand.NotifyCanExecuteChanged();
     }
 
@@ -469,10 +557,11 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool _preserveMetadata = true;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(EffectiveCopyCustomColumns))]
-    private bool _copyCustomColumns = false;
+    private bool _copyCustomColumns = true;
     [ObservableProperty] private bool _copyLibraryContent = true;
     [ObservableProperty] private bool _remapPageWebPartUrls = true;
     [ObservableProperty] private bool _copyNavigation = true;
+    [ObservableProperty] private bool _copyPermissions = false;
     public ObservableCollection<ColumnMapping> ColumnMappings { get; } = [];
 
     // Library and Site scopes always copy all custom column values; Files scope uses the checkbox.
@@ -616,23 +705,37 @@ public partial class MainViewModel : ObservableObject
             int versionLimit = CopyVersions && !CopyAllVersions ? MaxVersions : 0;
 
             // Build bulk field cache for custom columns (single paginated pass)
+            // Also build permission flags when CopyPermissions is on.
             _bulkFieldCache = [];
-            if (EffectiveCopyCustomColumns && CopyJobs.Count > 0)
+            var _permissionFlags = new Dictionary<string, bool>();
+            if ((EffectiveCopyCustomColumns || CopyPermissions) && CopyJobs.Count > 0)
             {
                 StatusMessage = "Reading source metadata…";
                 try
                 {
-                    var firstJob = CopyJobs.First(j => !j.IsFolder);
+                    var firstJob     = CopyJobs.First(j => !j.IsFolder);
                     var serverRelUrl = await SpService.GetLibraryServerRelativeUrlAsync(firstJob.SourceDriveId);
                     var sourceListId = await SpService.GetListIdByServerRelativeUrlAsync(
                         SourceUrl.TrimEnd('/'), serverRelUrl);
-                    var cols = await SpService.GetLibraryColumnsAsync(SourceUrl.TrimEnd('/'), sourceListId);
-                    _bulkFieldCache = await SpService.BulkReadCustomFieldsAsync(
-                        SourceUrl.TrimEnd('/'), sourceListId, cols,
-                        ct: _copyCts.Token);
+                    if (EffectiveCopyCustomColumns)
+                    {
+                        var cols = await SpService.GetLibraryColumnsAsync(SourceUrl.TrimEnd('/'), sourceListId);
+                        _bulkFieldCache = await SpService.BulkReadCustomFieldsAsync(
+                            SourceUrl.TrimEnd('/'), sourceListId, cols,
+                            ct: _copyCts.Token);
+                    }
+                    if (CopyPermissions)
+                        _permissionFlags = await SpService.BulkReadPermissionFlagsAsync(
+                            SourceUrl.TrimEnd('/'), sourceListId, _copyCts.Token);
                 }
                 catch { /* non-critical */ }
                 StatusMessage = string.Empty;
+            }
+
+            if (CopyPermissions)
+            {
+                try { await _permissionCopyService.InitializeAsync(TargetUrl.TrimEnd('/'), _copyCts.Token); }
+                catch { /* non-fatal */ }
             }
 
             // Pages scope must use Enhanced REST — SPMI cannot import .aspx files into the Site
@@ -659,7 +762,10 @@ public partial class MainViewModel : ObservableObject
                 _bulkFieldCache,
                 IsPagesScope,
                 RemapPageWebPartUrls,
-                PreserveMetadata);
+                PreserveMetadata,
+                copyPermissions: CopyPermissions,
+                permissionService: CopyPermissions ? _permissionCopyService : null,
+                permissionFlags: _permissionFlags);
         }
         catch (OperationCanceledException) { StatusMessage = "Copy cancelled."; }
         catch (Exception ex)              { StatusMessage = $"Copy error: {ex.Message}"; }
@@ -682,6 +788,196 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void CancelCopy() => _copyCts?.Cancel();
 
+    // Copies items from a source list into an already-resolved target list.
+    // Fetches live target columns (bypassing cache) and resolves source InternalName →
+    // target InternalName by direct match first, then display-name fallback. Per-item
+    // errors are collected and surfaced on result rather than aborting the whole batch.
+    private async Task CopyListItemsAsync(
+        string targetListId,
+        LibraryDefinition def,
+        HashSet<string> selectedItemIds,
+        bool isPartialSelection,
+        CopyResult listResult)
+    {
+        var targetCols       = await SpService.GetLibraryColumnsAsync(TargetUrl.TrimEnd('/'), targetListId, skipCache: true);
+        var targetByInternal = targetCols.ToDictionary(c => c.InternalName, StringComparer.OrdinalIgnoreCase);
+        var targetByDisplay  = targetCols.ToDictionary(c => c.DisplayName,  StringComparer.OrdinalIgnoreCase);
+
+        // Fetch existing target items to support skip/overwrite by Title.
+        var existingTargetItems = await SpService.GetListItemTitlesAsync(
+            TargetUrl.TrimEnd('/'), targetListId, _copyCts!.Token);
+        var existingByTitle = existingTargetItems
+            .GroupBy(t => t.Title, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First().Id, StringComparer.OrdinalIgnoreCase);
+
+        var fieldNames = def.Columns.Select(c => c.InternalName)
+            .Append("HasUniqueRoleAssignments");
+        var allItems   = await SpService.GetListItemsAsync(
+            SourceUrl.TrimEnd('/'), def.SourceListId ?? string.Empty, fieldNames, _copyCts!.Token);
+
+        var items = isPartialSelection
+            ? allItems.Where(i => i.TryGetValue("Id", out var id) && selectedItemIds.Contains(id?.ToString() ?? string.Empty)).ToList()
+            : allItems;
+
+        var targetListTitle = IsCreatingNewList ? NewListName.Trim()
+                            : SelectedTargetList?.Title ?? def.Title;
+
+        foreach (var item in items)
+        {
+            _copyCts.Token.ThrowIfCancellationRequested();
+
+            var itemTitle = item.TryGetValue("Title", out var titleVal) ? titleVal?.ToString() : null;
+            var itemId    = item.TryGetValue("Id",    out var iidVal)   ? iidVal?.ToString()   : "?";
+            var rowLabel  = itemTitle ?? $"Item {itemId}";
+
+            var itemResult = new CopyResult
+            {
+                FileName   = rowLabel,
+                SourcePath = $"{SourceUrl.TrimEnd('/')}/{def.Title}",
+                TargetPath = $"{TargetUrl.TrimEnd('/')}/{targetListTitle}",
+                Status     = CopyStatus.Copying,
+            };
+            System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(itemResult));
+
+            var fields = new Dictionary<string, object?>();
+            if (itemTitle != null) fields["Title"] = itemTitle;
+
+            foreach (var col in def.Columns)
+            {
+                if (!item.TryGetValue(col.InternalName, out var v) || v == null) continue;
+
+                string? targetKey = null;
+                if (isPartialSelection)
+                {
+                    var mapped = ColumnMappings.FirstOrDefault(m => m.SourceColumn.InternalName == col.InternalName)?.TargetColumn?.InternalName;
+                    if (mapped != null && targetByInternal.ContainsKey(mapped))
+                        targetKey = mapped;
+                }
+                if (targetKey == null)
+                {
+                    if (targetByInternal.ContainsKey(col.InternalName))
+                        targetKey = col.InternalName;
+                    else if (targetByDisplay.TryGetValue(col.DisplayName, out var tc))
+                        targetKey = tc.InternalName;
+                }
+                if (targetKey == null) continue;
+                fields[targetKey] = v;
+            }
+
+            string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
+            string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
+
+            var existingId = itemTitle != null && existingByTitle.TryGetValue(itemTitle, out var eid) ? eid : null;
+            var hasUniquePerms = item.TryGetValue("HasUniqueRoleAssignments", out var hurv) && hurv is true;
+            try
+            {
+                string? resolvedTargetItemId = existingId;
+                if (existingId != null)
+                {
+                    if (!OverwriteFiles)
+                    {
+                        itemResult.Status       = CopyStatus.Skipped;
+                        itemResult.ErrorMessage = "Already exists";
+                        continue;
+                    }
+                    await SpService.UpdateListItemAsync(
+                        TargetUrl.TrimEnd('/'), targetListId, existingId,
+                        fields, createdDate, modifiedDate,
+                        _copyCts.Token);
+                    itemResult.Status       = CopyStatus.Success;
+                    itemResult.ErrorMessage = "Updated";
+                }
+                else
+                {
+                    resolvedTargetItemId = await SpService.CreateListItemAsync(
+                        TargetUrl.TrimEnd('/'), targetListId,
+                        fields, createdDate, modifiedDate,
+                        _copyCts.Token);
+                    itemResult.Status = CopyStatus.Success;
+                }
+
+                if (CopyPermissions && resolvedTargetItemId != null && hasUniquePerms)
+                {
+                    try
+                    {
+                        var srcItemId = item.TryGetValue("Id", out var srcId) ? srcId?.ToString() : null;
+                        if (srcItemId != null)
+                        {
+                            var perm = await _permissionCopyService.CopyObjectPermissionsAsync(
+                                SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'),
+                                $"web/lists('{def.SourceListId}')/items({srcItemId})",
+                                $"web/lists('{targetListId}')/items({resolvedTargetItemId})",
+                                hasUniquePermissions: true,
+                                rowLabel, _copyCts.Token);
+                            if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                                AddPermissionResult(perm, itemResult.TargetPath);
+                        }
+                    }
+                    catch (OperationCanceledException) { throw; }
+                    catch { /* non-fatal */ }
+                }
+            }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception itemEx)
+            {
+                itemResult.Status       = CopyStatus.Failed;
+                itemResult.ErrorMessage = itemEx.Message;
+                listResult.Status       = CopyStatus.Failed;
+            }
+        }
+    }
+
+    // Adds a summary log row for columns that were created on a target list.
+    private void AddColumnCreationResult(string listTitle, string targetPath, List<string> created)
+    {
+        if (created.Count == 0) return;
+        var detail = created.Count == 1
+            ? $"Column created: {created[0]}"
+            : $"{created.Count} columns created: {string.Join(", ", created)}";
+        var r = new CopyResult
+        {
+            FileName          = $"Columns → {listTitle}",
+            SourcePath        = string.Empty,
+            TargetPath        = targetPath,
+            Status            = CopyStatus.Success,
+            ErrorMessage      = detail,
+            IsLibraryCreation = true,
+        };
+        System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(r));
+    }
+
+    // Adds a permission copy log row to CopyResults.
+    private void AddPermissionResult(PermissionCopyResult perm, string targetPath)
+    {
+        string detail;
+        CopyStatus status;
+        if (perm.Error != null)
+        {
+            detail = perm.Error;
+            status = CopyStatus.Failed;
+        }
+        else
+        {
+            detail = perm.Applied == 1
+                ? "1 role assignment applied"
+                : $"{perm.Applied} role assignments applied";
+            if (perm.SkippedPrincipals.Count > 0)
+                detail += $"; skipped {perm.SkippedPrincipals.Count} unresolvable: {string.Join(", ", perm.SkippedPrincipals)}";
+            status = CopyStatus.Success;
+        }
+        var r = new CopyResult
+        {
+            FileName           = $"Permissions → {perm.ItemName}",
+            SourcePath         = string.Empty,
+            TargetPath         = targetPath,
+            Status             = status,
+            ErrorMessage       = detail,
+            IsLibraryCreation  = true,
+            IsPermissionResult = true,
+        };
+        System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(r));
+    }
+
     private async Task StartLibraryCopyAsync()
     {
         IsCopying      = true;
@@ -702,8 +998,32 @@ public partial class MainViewModel : ObservableObject
 
         try
         {
+            // Pre-warm permission cache once before any copy loops.
+            // For Site scope, also copy the web-level permissions.
+            if (CopyPermissions)
+            {
+                try { await _permissionCopyService.InitializeAsync(TargetUrl.TrimEnd('/'), _copyCts.Token); }
+                catch { /* non-fatal — proceed without permission copy */ }
+
+                if (IsSiteScope)
+                {
+                    try
+                    {
+                        var perm = await _permissionCopyService.CopyObjectPermissionsAsync(
+                            SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'),
+                            "web", "web",
+                            hasUniquePermissions: true,
+                            "Site", _copyCts.Token);
+                        if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                            AddPermissionResult(perm, TargetUrl.TrimEnd('/'));
+                    }
+                    catch (OperationCanceledException) { throw; }
+                    catch { /* non-fatal */ }
+                }
+            }
+
             List<LibraryDefinition> definitions;
-            var listDefinitions = new List<(LibraryDefinition Def, int BaseTemplate)>();
+            var listDefinitions = new List<(LibraryDefinition Def, int BaseTemplate, SharePointNode? SourceNode)>();
             if (IsSiteScope)
             {
                 StatusMessage = "Reading site library structure…";
@@ -722,13 +1042,33 @@ public partial class MainViewModel : ObservableObject
                         {
                             var def = await _libraryCopyService.ReadListDefinitionAsync(
                                 SourceUrl.TrimEnd('/'), node.Id, node.Name);
-                            listDefinitions.Add((def, node.ListBaseTemplate));
+                            if (!string.IsNullOrWhiteSpace(node.OverrideName))
+                                def.Title = node.OverrideName.Trim();
+                            listDefinitions.Add((def, node.ListBaseTemplate, node));
                         }
                         else
                         {
                             var def = await _libraryCopyService.ReadLibraryDefinitionAsync(
                                 SourceUrl.TrimEnd('/'), node.DriveId);
+                            if (!string.IsNullOrWhiteSpace(node.OverrideName))
+                                def.Title = node.OverrideName.Trim();
                             definitions.Add(def);
+                        }
+                    }
+
+                    // Items-only mode (IsChecked == null) or partial item selection (IsChecked == false with
+                    // individual children checked): list node itself is not fully checked.
+                    if (lib.Type == NodeType.Library && lib.IsCustomList && lib.IsChecked != true)
+                    {
+                        var isItemsOnly   = lib.IsChecked == null;
+                        var hasSelected   = isItemsOnly || lib.Children.Any(c => c.Type == NodeType.ListItem && c.IsChecked == true);
+                        if (hasSelected)
+                        {
+                            var def = await _libraryCopyService.ReadListDefinitionAsync(
+                                SourceUrl.TrimEnd('/'), lib.Id, lib.Name);
+                            if (!string.IsNullOrWhiteSpace(lib.OverrideName))
+                                def.Title = lib.OverrideName.Trim();
+                            listDefinitions.Add((def, lib.ListBaseTemplate, lib));
                         }
                     }
                 }
@@ -756,6 +1096,26 @@ public partial class MainViewModel : ObservableObject
                     var (newDriveId, newServerRelUrl) = await _libraryCopyService.CreateLibraryAsync(
                         TargetUrl.TrimEnd('/'), TargetSiteId, def, ColumnMappings, OverwriteFiles);
                     libResult.Status = CopyStatus.Success;
+
+                    if (CopyPermissions)
+                    {
+                        try
+                        {
+                            var newListId = await SpService.GetListIdByServerRelativeUrlAsync(TargetUrl.TrimEnd('/'), newServerRelUrl);
+                            var srcHasUnique = await SpService.GetHasUniqueRoleAssignmentsAsync(
+                                SourceUrl.TrimEnd('/'), $"web/lists('{def.SourceListId}')", _copyCts.Token);
+                            var perm = await _permissionCopyService.CopyObjectPermissionsAsync(
+                                SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'),
+                                $"web/lists('{def.SourceListId}')",
+                                $"web/lists('{newListId}')",
+                                hasUniquePermissions: srcHasUnique,
+                                def.Title, _copyCts.Token);
+                            if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                                AddPermissionResult(perm, $"{TargetUrl.TrimEnd('/')}/{def.Title}");
+                        }
+                        catch (OperationCanceledException) { throw; }
+                        catch { /* non-fatal */ }
+                    }
 
                     if (CopyLibraryContent)
                     {
@@ -790,19 +1150,20 @@ public partial class MainViewModel : ObservableObject
                                 }
                             };
 
-                            // Build bulk field cache for this library
+                            // Build bulk field cache for this library; also permission flags if enabled
                             _bulkFieldCache = [];
-                            if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
+                            var libPermFlags = new Dictionary<string, bool>();
+                            try
                             {
-                                try
-                                {
-                                    var sourceListId = def.SourceListId;
+                                if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
                                     _bulkFieldCache = await SpService.BulkReadCustomFieldsAsync(
-                                        def.SourceSiteUrl, sourceListId, def.Columns,
+                                        def.SourceSiteUrl, def.SourceListId, def.Columns,
                                         ct: _copyCts.Token);
-                                }
-                                catch { }
+                                if (CopyPermissions)
+                                    libPermFlags = await SpService.BulkReadPermissionFlagsAsync(
+                                        def.SourceSiteUrl, def.SourceListId, _copyCts.Token);
                             }
+                            catch { }
 
                             int versionLimit = CopyVersions && !CopyAllVersions ? MaxVersions : 0;
                             await _copyService.ExecuteAsync(
@@ -812,7 +1173,10 @@ public partial class MainViewModel : ObservableObject
                                 copyCustomColumns: EffectiveCopyCustomColumns,
                                 columnMappings: [.. ColumnMappings],
                                 bulkFieldCache: _bulkFieldCache,
-                                preserveMetadata: PreserveMetadata);
+                                preserveMetadata: PreserveMetadata,
+                                copyPermissions: CopyPermissions,
+                                permissionService: CopyPermissions ? _permissionCopyService : null,
+                                permissionFlags: libPermFlags);
                         }
                         StatusMessage = string.Empty;
                     }
@@ -829,8 +1193,9 @@ public partial class MainViewModel : ObservableObject
                         {
                             var existingListId = await SpService.GetListIdByServerRelativeUrlAsync(
                                 TargetUrl.TrimEnd('/'), alreadyEx.ServerRelativeUrl);
-                            await _libraryCopyService.AddMissingColumnsAsync(
+                            var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
                                 TargetUrl.TrimEnd('/'), existingListId, def.Columns);
+                            AddColumnCreationResult(def.Title, $"{TargetUrl.TrimEnd('/')}/{def.Title}", createdCols);
                         }
                         catch { }
                     }
@@ -869,16 +1234,18 @@ public partial class MainViewModel : ObservableObject
                             };
 
                             _bulkFieldCache = [];
-                            if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
+                            var existLibPermFlags = new Dictionary<string, bool>();
+                            try
                             {
-                                try
-                                {
+                                if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
                                     _bulkFieldCache = await SpService.BulkReadCustomFieldsAsync(
                                         def.SourceSiteUrl, def.SourceListId, def.Columns,
                                         ct: _copyCts.Token);
-                                }
-                                catch { }
+                                if (CopyPermissions)
+                                    existLibPermFlags = await SpService.BulkReadPermissionFlagsAsync(
+                                        def.SourceSiteUrl, def.SourceListId, _copyCts.Token);
                             }
+                            catch { }
 
                             int versionLimit = CopyVersions && !CopyAllVersions ? MaxVersions : 0;
                             await _copyService.ExecuteAsync(
@@ -888,7 +1255,10 @@ public partial class MainViewModel : ObservableObject
                                 copyCustomColumns: EffectiveCopyCustomColumns,
                                 columnMappings: [.. ColumnMappings],
                                 bulkFieldCache: _bulkFieldCache,
-                                preserveMetadata: PreserveMetadata);
+                                preserveMetadata: PreserveMetadata,
+                                copyPermissions: CopyPermissions,
+                                permissionService: CopyPermissions ? _permissionCopyService : null,
+                                permissionFlags: existLibPermFlags);
                         }
                         StatusMessage = string.Empty;
                     }
@@ -901,9 +1271,22 @@ public partial class MainViewModel : ObservableObject
             }
 
             // For Library scope: copy any selected custom lists (Tasks, Calendars, etc.).
-            foreach (var (def, baseTemplate) in listDefinitions)
+            foreach (var (def, baseTemplate, sourceNode) in listDefinitions)
             {
                 _copyCts.Token.ThrowIfCancellationRequested();
+
+                // Determine copy mode for this list node.
+                // isItemsOnly: IsChecked == null — copy all items, skip structure creation, use SelectedTargetList.
+                // isPartialSelection: IsChecked == false with individual children checked — copy those items only.
+                var isItemsOnly       = sourceNode?.IsChecked == null;
+                var selectedItemIds   = (!isItemsOnly && sourceNode != null)
+                    ? sourceNode.Children
+                        .Where(c => c.Type == NodeType.ListItem && c.IsChecked == true)
+                        .Select(c => c.Id)
+                        .ToHashSet()
+                    : [];
+                var isPartialSelection = selectedItemIds.Count > 0;
+                var needsItemCopy      = CopyLibraryContent || isPartialSelection || isItemsOnly;
 
                 var listResult = new CopyResult
                 {
@@ -918,37 +1301,60 @@ public partial class MainViewModel : ObservableObject
                 try
                 {
                     StatusMessage = $"Copying list '{def.Title}'…";
-                    var targetListId = await _libraryCopyService.CreateCustomListAsync(
-                        TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate, OverwriteFiles);
-
-                    if (CopyLibraryContent)
+                    string targetListId;
+                    if ((isPartialSelection || isItemsOnly) && SelectedTargetList != null)
                     {
-                        var fieldNames = def.Columns.Select(c => c.InternalName);
-                        var items      = await SpService.GetListItemsAsync(
-                            SourceUrl.TrimEnd('/'), def.SourceListId, fieldNames, _copyCts.Token);
-
-                        foreach (var item in items)
+                        // Items-only or partial selection: create a new list or use the chosen destination list.
+                        if (IsCreatingNewList)
                         {
-                            _copyCts.Token.ThrowIfCancellationRequested();
-
-                            var fields = new Dictionary<string, object?>();
-                            if (item.TryGetValue("Title", out var titleVal) && titleVal != null)
-                                fields["Title"] = titleVal;
-                            foreach (var col in def.Columns)
-                                if (item.TryGetValue(col.InternalName, out var v) && v != null)
-                                    fields[col.InternalName] = v;
-
-                            string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
-                            string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
-
-                            await SpService.CreateListItemAsync(
-                                TargetUrl.TrimEnd('/'), targetListId,
-                                fields, createdDate, modifiedDate,
-                                _copyCts.Token);
+                            def.Title    = NewListName.Trim();
+                            targetListId = await _libraryCopyService.CreateCustomListAsync(
+                                TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate, OverwriteFiles);
+                        }
+                        else
+                        {
+                            targetListId = SelectedTargetList.Id;
+                        }
+                        if (_copyCustomColumns && def.Columns.Count > 0)
+                        {
+                            var colTitle = IsCreatingNewList ? NewListName.Trim() : SelectedTargetList.Title;
+                            try
+                            {
+                                var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
+                                    TargetUrl.TrimEnd('/'), targetListId, def.Columns);
+                                AddColumnCreationResult(colTitle, $"{TargetUrl.TrimEnd('/')}/{colTitle}", createdCols);
+                            }
+                            catch { /* non-fatal — column creation best-effort */ }
                         }
                     }
+                    else
+                        targetListId = await _libraryCopyService.CreateCustomListAsync(
+                            TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate, OverwriteFiles);
 
-                    listResult.Status = CopyStatus.Success;
+                    if (CopyPermissions)
+                    {
+                        try
+                        {
+                            var srcHasUnique = await SpService.GetHasUniqueRoleAssignmentsAsync(
+                                SourceUrl.TrimEnd('/'), $"web/lists('{def.SourceListId}')", _copyCts.Token);
+                            var perm = await _permissionCopyService.CopyObjectPermissionsAsync(
+                                SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'),
+                                $"web/lists('{def.SourceListId}')",
+                                $"web/lists('{targetListId}')",
+                                hasUniquePermissions: srcHasUnique,
+                                def.Title, _copyCts.Token);
+                            if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                                AddPermissionResult(perm, $"{TargetUrl.TrimEnd('/')}/{def.Title}");
+                        }
+                        catch (OperationCanceledException) { throw; }
+                        catch { /* non-fatal */ }
+                    }
+
+                    if (needsItemCopy)
+                        await CopyListItemsAsync(targetListId, def, selectedItemIds, isPartialSelection, listResult);
+
+                    if (listResult.Status != CopyStatus.Failed)
+                        listResult.Status = CopyStatus.Success;
                 }
                 catch (OperationCanceledException) { throw; }
                 catch (LibraryAlreadyExistsException alreadyEx)
@@ -958,38 +1364,20 @@ public partial class MainViewModel : ObservableObject
 
                     if (!string.IsNullOrEmpty(alreadyEx.ListId) && def.Columns.Count > 0)
                     {
-                        try { await _libraryCopyService.AddMissingColumnsAsync(
-                            TargetUrl.TrimEnd('/'), alreadyEx.ListId, def.Columns); }
+                        try
+                        {
+                            var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
+                                TargetUrl.TrimEnd('/'), alreadyEx.ListId, def.Columns);
+                            AddColumnCreationResult(def.Title, $"{TargetUrl.TrimEnd('/')}/{def.Title}", createdCols);
+                        }
                         catch { }
                     }
 
-                    if (CopyLibraryContent && !string.IsNullOrEmpty(alreadyEx.ListId))
-                    {
-                        var targetListId = alreadyEx.ListId;
-                        var fieldNames   = def.Columns.Select(c => c.InternalName);
-                        var items        = await SpService.GetListItemsAsync(
-                            SourceUrl.TrimEnd('/'), def.SourceListId, fieldNames, _copyCts.Token);
+                    if (needsItemCopy && !string.IsNullOrEmpty(alreadyEx.ListId))
+                        await CopyListItemsAsync(alreadyEx.ListId, def, selectedItemIds, isPartialSelection, listResult);
 
-                        foreach (var item in items)
-                        {
-                            _copyCts.Token.ThrowIfCancellationRequested();
-
-                            var fields = new Dictionary<string, object?>();
-                            if (item.TryGetValue("Title", out var titleVal) && titleVal != null)
-                                fields["Title"] = titleVal;
-                            foreach (var col in def.Columns)
-                                if (item.TryGetValue(col.InternalName, out var v) && v != null)
-                                    fields[col.InternalName] = v;
-
-                            string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
-                            string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
-
-                            await SpService.CreateListItemAsync(
-                                TargetUrl.TrimEnd('/'), targetListId,
-                                fields, createdDate, modifiedDate,
-                                _copyCts.Token);
-                        }
-                    }
+                    if (listResult.Status != CopyStatus.Failed)
+                        listResult.Status = CopyStatus.Skipped;
                 }
                 catch (Exception ex)
                 {
@@ -1053,19 +1441,26 @@ public partial class MainViewModel : ObservableObject
                             }
 
                             // Build field cache for any custom columns on the Site Pages library
-                            var pageBulkCache = new Dictionary<string, Dictionary<string, object?>>();
-                            if (EffectiveCopyCustomColumns && srcSitePages.ServerRelativePath != null)
+                            var pageBulkCache   = new Dictionary<string, Dictionary<string, object?>>();
+                            var pagePermFlags   = new Dictionary<string, bool>();
+                            if (srcSitePages.ServerRelativePath != null)
                             {
                                 try
                                 {
                                     var pagesListId = await SpService.GetListIdByServerRelativeUrlAsync(
                                         SourceUrl.TrimEnd('/'), srcSitePages.ServerRelativePath);
-                                    var pageCols = await SpService.GetLibraryColumnsAsync(
-                                        SourceUrl.TrimEnd('/'), pagesListId);
-                                    if (pageCols.Count > 0)
-                                        pageBulkCache = await SpService.BulkReadCustomFieldsAsync(
-                                            SourceUrl.TrimEnd('/'), pagesListId, pageCols,
-                                            ct: _copyCts.Token);
+                                    if (EffectiveCopyCustomColumns)
+                                    {
+                                        var pageCols = await SpService.GetLibraryColumnsAsync(
+                                            SourceUrl.TrimEnd('/'), pagesListId);
+                                        if (pageCols.Count > 0)
+                                            pageBulkCache = await SpService.BulkReadCustomFieldsAsync(
+                                                SourceUrl.TrimEnd('/'), pagesListId, pageCols,
+                                                ct: _copyCts.Token);
+                                    }
+                                    if (CopyPermissions)
+                                        pagePermFlags = await SpService.BulkReadPermissionFlagsAsync(
+                                            SourceUrl.TrimEnd('/'), pagesListId, _copyCts.Token);
                                 }
                                 catch { /* non-critical */ }
                             }
@@ -1083,7 +1478,10 @@ public partial class MainViewModel : ObservableObject
                                 preserveMetadata: PreserveMetadata,
                                 copyCustomColumns: EffectiveCopyCustomColumns,
                                 columnMappings: [.. ColumnMappings],
-                                bulkFieldCache: pageBulkCache);
+                                bulkFieldCache: pageBulkCache,
+                                copyPermissions: CopyPermissions,
+                                permissionService: CopyPermissions ? _permissionCopyService : null,
+                                permissionFlags: pagePermFlags);
                         }
                     }
                 }
@@ -1156,34 +1554,30 @@ public partial class MainViewModel : ObservableObject
                             var targetListId = await _libraryCopyService.CreateCustomListAsync(
                                 TargetUrl.TrimEnd('/'), TargetSiteId, definition, baseTemplate, OverwriteFiles);
 
-                            if (CopyLibraryContent)
+                            if (CopyPermissions)
                             {
-                                var fieldNames = definition.Columns.Select(c => c.InternalName);
-                                var items      = await SpService.GetListItemsAsync(
-                                    SourceUrl.TrimEnd('/'), srcListId, fieldNames, _copyCts.Token);
-
-                                foreach (var item in items)
+                                try
                                 {
-                                    _copyCts.Token.ThrowIfCancellationRequested();
-
-                                    var fields = new Dictionary<string, object?>();
-                                    if (item.TryGetValue("Title", out var titleVal) && titleVal != null)
-                                        fields["Title"] = titleVal;
-                                    foreach (var col in definition.Columns)
-                                        if (item.TryGetValue(col.InternalName, out var v) && v != null)
-                                            fields[col.InternalName] = v;
-
-                                    string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
-                                    string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
-
-                                    await SpService.CreateListItemAsync(
-                                        TargetUrl.TrimEnd('/'), targetListId,
-                                        fields, createdDate, modifiedDate,
-                                        _copyCts.Token);
+                                    var srcHasUnique = await SpService.GetHasUniqueRoleAssignmentsAsync(
+                                        SourceUrl.TrimEnd('/'), $"web/lists('{srcListId}')", _copyCts.Token);
+                                    var perm = await _permissionCopyService.CopyObjectPermissionsAsync(
+                                        SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'),
+                                        $"web/lists('{srcListId}')",
+                                        $"web/lists('{targetListId}')",
+                                        hasUniquePermissions: srcHasUnique,
+                                        listTitle, _copyCts.Token);
+                                    if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                                        AddPermissionResult(perm, $"{TargetUrl.TrimEnd('/')}/{listTitle}");
                                 }
+                                catch (OperationCanceledException) { throw; }
+                                catch { }
                             }
 
-                            listResult.Status = CopyStatus.Success;
+                            if (CopyLibraryContent)
+                                await CopyListItemsAsync(targetListId, definition, [], false, listResult);
+
+                            if (listResult.Status != CopyStatus.Failed)
+                                listResult.Status = CopyStatus.Success;
                         }
                         catch (OperationCanceledException) { throw; }
                         catch (LibraryAlreadyExistsException alreadyEx)
@@ -1193,38 +1587,20 @@ public partial class MainViewModel : ObservableObject
 
                             if (!string.IsNullOrEmpty(alreadyEx.ListId) && definition?.Columns.Count > 0)
                             {
-                                try { await _libraryCopyService.AddMissingColumnsAsync(
-                                    TargetUrl.TrimEnd('/'), alreadyEx.ListId, definition.Columns); }
+                                try
+                                {
+                                    var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
+                                        TargetUrl.TrimEnd('/'), alreadyEx.ListId, definition.Columns);
+                                    AddColumnCreationResult(listTitle, $"{TargetUrl.TrimEnd('/')}/{listTitle}", createdCols);
+                                }
                                 catch { }
                             }
 
                             if (CopyLibraryContent && !string.IsNullOrEmpty(alreadyEx.ListId) && definition != null)
-                            {
-                                var targetListId = alreadyEx.ListId;
-                                var fieldNames   = definition.Columns.Select(c => c.InternalName);
-                                var items        = await SpService.GetListItemsAsync(
-                                    SourceUrl.TrimEnd('/'), srcListId, fieldNames, _copyCts.Token);
+                                await CopyListItemsAsync(alreadyEx.ListId, definition, [], false, listResult);
 
-                                foreach (var item in items)
-                                {
-                                    _copyCts.Token.ThrowIfCancellationRequested();
-
-                                    var fields = new Dictionary<string, object?>();
-                                    if (item.TryGetValue("Title", out var titleVal) && titleVal != null)
-                                        fields["Title"] = titleVal;
-                                    foreach (var col in definition.Columns)
-                                        if (item.TryGetValue(col.InternalName, out var v) && v != null)
-                                            fields[col.InternalName] = v;
-
-                                    string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
-                                    string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
-
-                                    await SpService.CreateListItemAsync(
-                                        TargetUrl.TrimEnd('/'), targetListId,
-                                        fields, createdDate, modifiedDate,
-                                        _copyCts.Token);
-                                }
-                            }
+                            if (listResult.Status != CopyStatus.Failed)
+                                listResult.Status = CopyStatus.Skipped;
                         }
                         catch (Exception ex)
                         {
@@ -1269,7 +1645,8 @@ public partial class MainViewModel : ObservableObject
         IsColumnsLoading = true;
         ColumnLoadError  = null;
 
-        // Load target columns (requires folder selection for Files/Pages scope)
+        // Load target columns — Files/Pages scope uses the selected folder; individual item
+        // copies use the chosen destination list directly.
         if (SelectedTargetFolder != null)
         {
             try
@@ -1290,6 +1667,19 @@ public partial class MainViewModel : ObservableObject
                 ColumnLoadError = $"Target columns unavailable: {ex.Message}";
             }
         }
+        else if (IsItemSelectionActive && SelectedTargetList != null)
+        {
+            try
+            {
+                _targetColumns = await SpService.GetLibraryColumnsAsync(TargetUrl.TrimEnd('/'), SelectedTargetList.Id);
+                OnPropertyChanged(nameof(TargetColumns));
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[LoadColumns] target load failed: {ex.Message}");
+                ColumnLoadError = $"Target columns unavailable: {ex.Message}";
+            }
+        }
 
         // Load source columns — separate try/catch so a target failure cannot block this
         try
@@ -1299,10 +1689,19 @@ public partial class MainViewModel : ObservableObject
                 ?? SourceLibraries.FirstOrDefault();
             if (firstLib != null)
             {
-                var sourceServerRelUrl = firstLib.ServerRelativePath
-                    ?? await SpService.GetLibraryServerRelativeUrlAsync(firstLib.DriveId);
-                var sourceListId = await SpService.GetListIdByServerRelativeUrlAsync(
-                    SourceUrl.TrimEnd('/'), sourceServerRelUrl);
+                string sourceListId;
+                if (firstLib.IsCustomList)
+                {
+                    // Custom lists already have the list GUID as their Id — no drive lookup needed
+                    sourceListId = firstLib.Id;
+                }
+                else
+                {
+                    var sourceServerRelUrl = firstLib.ServerRelativePath
+                        ?? await SpService.GetLibraryServerRelativeUrlAsync(firstLib.DriveId);
+                    sourceListId = await SpService.GetListIdByServerRelativeUrlAsync(
+                        SourceUrl.TrimEnd('/'), sourceServerRelUrl);
+                }
                 _sourceColumns = await SpService.GetLibraryColumnsAsync(SourceUrl.TrimEnd('/'), sourceListId);
                 OnPropertyChanged(nameof(SourceColumns));
             }
@@ -1388,6 +1787,8 @@ public partial class MainViewModel : ObservableObject
                 if (!IsDemoMode) _ = LoadLibrariesAsync();
                 break;
             case 1:
+                OnPropertyChanged(nameof(IsItemSelectionActive));
+                NextCommand.NotifyCanExecuteChanged();
                 CurrentStep = 2;
                 break;
             case 2 when (TargetConnected && (NeedsTargetFolder ? SelectedTargetFolder != null : true)) || IsDemoMode:
@@ -1432,7 +1833,10 @@ public partial class MainViewModel : ObservableObject
         1 => IsSiteScope
                ? SourceConnected
                : SourceLibraries.Any(l => l.GetCheckedNodes().Any()),
-        2 => TargetConnected && (NeedsTargetFolder ? SelectedTargetFolder != null : true),
+        2 => TargetConnected &&
+             (NeedsTargetFolder ? SelectedTargetFolder != null : true) &&
+             (!IsItemSelectionActive || (SelectedTargetList != null &&
+                 (!IsCreatingNewList || !string.IsNullOrWhiteSpace(NewListName)))),
         3 => IsLibraryOrSiteScope || CopyJobs.Count > 0,
         4 => IsCopyComplete && !IsUpdatingMetadata,
         _ => false
