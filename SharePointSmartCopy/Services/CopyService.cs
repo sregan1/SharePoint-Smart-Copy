@@ -94,7 +94,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     {
                         var srcIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
                         if (!srcIds.HasValue) continue;
-                        if (!permissionFlags.TryGetValue(srcIds.Value.listItemId, out var hu) || !hu) continue;
+                        var flagKey = SharePointService.PermissionFlagKey(srcIds.Value.listId, srcIds.Value.listItemId);
+                        if (!permissionFlags.TryGetValue(flagKey, out var hu) || !hu) continue;
 
                         var sub = job.TargetSubFolderPath?.Trim('/');
                         var tgtRelUrl = string.IsNullOrEmpty(sub)
@@ -109,7 +110,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             hasUniquePermissions: true,
                             job.SourceName, cancellationToken);
 
-                        if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                        if (perm.HasActivity)
                             AddPermissionRow(results, perm, result.TargetPath);
                     }
                     catch (OperationCanceledException) { throw; }
@@ -212,7 +213,9 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     if (srcIds.HasValue)
                     {
                         var hasUnique = permissionFlags != null &&
-                            permissionFlags.TryGetValue(srcIds.Value.listItemId, out var hu) && hu;
+                            permissionFlags.TryGetValue(
+                                SharePointService.PermissionFlagKey(srcIds.Value.listId, srcIds.Value.listItemId),
+                                out var hu) && hu;
                         if (hasUnique)
                         {
                             var tgtIds = await spService.GetSharePointIdsAsync(job.TargetDriveId, targetGraphItemId);
@@ -224,7 +227,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                     $"web/lists('{tgtIds.Value.listId}')/items({tgtIds.Value.listItemId})",
                                     hasUniquePermissions: true,
                                     job.SourceName, ct);
-                                if ((perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null) && permissionResults != null)
+                                if ((perm.HasActivity) && permissionResults != null)
                                     AddPermissionRow(permissionResults, perm, result.TargetPath);
                             }
                         }
@@ -527,7 +530,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             $"web/lists('{tgtIds.Value.listId}')/items({tgtIds.Value.listItemId})",
                             hasUniquePermissions: hasUnique,
                             job.SourceName, ct);
-                        if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                        if (perm.HasActivity)
                             AddPermissionRow(permissionResults, perm, $"{job.TargetSiteUrl.TrimEnd('/')}/{job.SourceName}");
                     }
                 }
@@ -570,7 +573,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 $"web/lists('{tgtIds.Value.listId}')/items({tgtIds.Value.listItemId})",
                                 hasUniquePermissions: hasUnique,
                                 System.IO.Path.GetFileName(relativePath), innerCt);
-                            if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                            if (perm.HasActivity)
                                 AddPermissionRow(permissionResults, perm, $"{job.TargetSiteUrl.TrimEnd('/')}/{relativePath}");
                         }
                     }
@@ -621,6 +624,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             detail = perm.Applied == 1 ? "1 role assignment applied" : $"{perm.Applied} role assignments applied";
             if (perm.SkippedPrincipals.Count > 0)
                 detail += $"; skipped {perm.SkippedPrincipals.Count} unresolvable: {string.Join(", ", perm.SkippedPrincipals)}";
+            if (perm.FailedRoles is { Count: > 0 })
+                detail += $"; {perm.FailedRoles.Count} failed: {string.Join(", ", perm.FailedRoles.Take(3))}";
             status = CopyStatus.Success;
         }
         var row = new CopyResult

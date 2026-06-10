@@ -44,12 +44,12 @@ public class LibraryCopyService(SharePointService spService)
 
     // Creates a new document library at the target site matching the given definition.
     // Returns the new library's Graph drive ID and server-relative URL.
-    // If overwrite=true and a library with the same name already exists, returns the existing library.
+    // If a library with the same name already exists, throws LibraryAlreadyExistsException
+    // carrying the existing library's identifiers so the caller can reuse it.
     public async Task<(string newDriveId, string newServerRelativeUrl)> CreateLibraryAsync(
         string targetSiteUrl, string targetSiteId,
         LibraryDefinition definition,
-        IEnumerable<ColumnMapping>? columnMappings = null,
-        bool overwrite = false)
+        IEnumerable<ColumnMapping>? columnMappings = null)
     {
         var baseUrl = targetSiteUrl.TrimEnd('/');
 
@@ -204,13 +204,12 @@ public class LibraryCopyService(SharePointService spService)
         return definition;
     }
 
-    // Creates a generic (non-document-library) list at the target site.
-    // If overwrite=true and a list with the same title already exists, returns the existing list's ID.
-    // Returns the new (or existing) list GUID.
+    // Creates a generic (non-document-library) list at the target site and returns its GUID.
+    // If a list with the same title already exists, throws LibraryAlreadyExistsException
+    // carrying the existing list's ID so the caller can reuse it.
     public async Task<string> CreateCustomListAsync(
         string targetSiteUrl, string targetSiteId,
-        LibraryDefinition definition, int baseTemplate,
-        bool overwrite = false)
+        LibraryDefinition definition, int baseTemplate)
     {
         var baseUrl = targetSiteUrl.TrimEnd('/');
         var createBody = JsonSerializer.Serialize(new

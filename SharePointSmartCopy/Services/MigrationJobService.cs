@@ -39,66 +39,75 @@ public class MigrationJobService(SharePointService spService)
             var rawSiteId          = await spService.GetSiteIdAsync(targetSiteUrl);
             var siteId             = rawSiteId.Contains(',') ? rawSiteId.Split(',')[1] : rawSiteId;
 
-            var firstJob            = fileTasks[0].job;
-            var libraryServerRelUrl = firstJob.TargetLibraryServerRelativeUrl;
-            if (string.IsNullOrEmpty(libraryServerRelUrl))
-                libraryServerRelUrl = await spService.GetLibraryServerRelativeUrlAsync(firstJob.TargetDriveId);
+            // Group by target drive — the manifest is built per library, so a batch that
+            // spans multiple target libraries must run one pipeline per library.
+            var driveGroups = fileTasks.GroupBy(t => t.job.TargetDriveId).ToList();
 
-            string listId;
-            try
+            foreach (var driveGroup in driveGroups)
             {
-                listId = await spService.GetListIdByServerRelativeUrlAsync(targetSiteUrl, libraryServerRelUrl);
-            }
-            catch when (!string.IsNullOrEmpty(firstJob.TargetDriveId))
-            {
-                // URL-based lookup can fail when the library's actual server-relative URL
-                // differs from what was stored (e.g. "Shared Documents" vs "Documents").
-                // Fall back to resolving the list ID directly from the drive via Graph.
-                var fallbackId = await spService.GetListIdFromDriveAsync(firstJob.TargetDriveId);
-                listId = fallbackId
-                    ?? throw new Exception($"Cannot resolve list ID for library at '{libraryServerRelUrl}'");
-            }
-            var libraryTitle = libraryServerRelUrl.Split('/').Last();
+                var groupTasks = driveGroup.ToList();
+                var firstJob   = groupTasks[0].job;
 
-            // Pre-create subfolders before parallel split — concurrent creates for the same path conflict
-            var subFolderPaths = fileTasks
-                .Select(t => t.job.TargetSubFolderPath)
-                .Where(p => !string.IsNullOrEmpty(p))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
-            foreach (var folderPath in subFolderPaths)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await spService.GetOrCreateFolderPathAsync(
-                    firstJob.TargetDriveId, firstJob.TargetParentItemId, folderPath);
-            }
+                var libraryServerRelUrl = firstJob.TargetLibraryServerRelativeUrl;
+                if (string.IsNullOrEmpty(libraryServerRelUrl))
+                    libraryServerRelUrl = await spService.GetLibraryServerRelativeUrlAsync(firstJob.TargetDriveId);
 
-            // Cap SPMI job count at 5 — beyond that SP throttling negates the gain
-            var jobCount = Math.Min(Math.Max(maxParallel, 1), 5);
+                string listId;
+                try
+                {
+                    listId = await spService.GetListIdByServerRelativeUrlAsync(targetSiteUrl, libraryServerRelUrl);
+                }
+                catch when (!string.IsNullOrEmpty(firstJob.TargetDriveId))
+                {
+                    // URL-based lookup can fail when the library's actual server-relative URL
+                    // differs from what was stored (e.g. "Shared Documents" vs "Documents").
+                    // Fall back to resolving the list ID directly from the drive via Graph.
+                    var fallbackId = await spService.GetListIdFromDriveAsync(firstJob.TargetDriveId);
+                    listId = fallbackId
+                        ?? throw new Exception($"Cannot resolve list ID for library at '{libraryServerRelUrl}'");
+                }
+                var libraryTitle = libraryServerRelUrl.Split('/').Last();
 
-            if (jobCount <= 1)
-            {
-                await RunSingleJobAsync(
-                    fileTasks, overwrite, maxVersions, maxParallel,
-                    targetSiteUrl, webId, webRelUrl, siteId,
-                    libraryServerRelUrl, listId, libraryTitle, cancellationToken,
-                    copyCustomColumns, columnMappings, bulkFieldCache);
-            }
-            else
-            {
-                var batches = Enumerable.Range(0, jobCount)
-                    .Select(_ => new List<(CopyJob, CopyResult)>())
-                    .ToArray();
-                for (int i = 0; i < fileTasks.Count; i++)
-                    batches[i % jobCount].Add(fileTasks[i]);
+                // Pre-create subfolders before parallel split — concurrent creates for the same path conflict
+                var subFolderPaths = groupTasks
+                    .Select(t => t.job.TargetSubFolderPath)
+                    .Where(p => !string.IsNullOrEmpty(p))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+                foreach (var folderPath in subFolderPaths)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await spService.GetOrCreateFolderPathAsync(
+                        firstJob.TargetDriveId, firstJob.TargetParentItemId, folderPath);
+                }
 
-                await Task.WhenAll(batches
-                    .Where(b => b.Count > 0)
-                    .Select(batch => RunSingleJobAsync(
-                        batch, overwrite, maxVersions, maxParallel,
+                // Cap SPMI job count at 5 — beyond that SP throttling negates the gain
+                var jobCount = Math.Min(Math.Max(maxParallel, 1), 5);
+
+                if (jobCount <= 1 || groupTasks.Count <= 1)
+                {
+                    await RunSingleJobAsync(
+                        groupTasks, overwrite, maxVersions, maxParallel,
                         targetSiteUrl, webId, webRelUrl, siteId,
                         libraryServerRelUrl, listId, libraryTitle, cancellationToken,
-                        copyCustomColumns, columnMappings, bulkFieldCache)));
+                        copyCustomColumns, columnMappings, bulkFieldCache);
+                }
+                else
+                {
+                    var batches = Enumerable.Range(0, jobCount)
+                        .Select(_ => new List<(CopyJob, CopyResult)>())
+                        .ToArray();
+                    for (int i = 0; i < groupTasks.Count; i++)
+                        batches[i % jobCount].Add(groupTasks[i]);
+
+                    await Task.WhenAll(batches
+                        .Where(b => b.Count > 0)
+                        .Select(batch => RunSingleJobAsync(
+                            batch, overwrite, maxVersions, maxParallel,
+                            targetSiteUrl, webId, webRelUrl, siteId,
+                            libraryServerRelUrl, listId, libraryTitle, cancellationToken,
+                            copyCustomColumns, columnMappings, bulkFieldCache)));
+                }
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -207,13 +216,26 @@ public class MigrationJobService(SharePointService spService)
             if (!overwrite && fileTasks.All(t => t.result.Status == CopyStatus.Skipped))
                 return;
 
-            // Step 3: build the package — download all versions, encrypt blobs, build manifests
-            var builder = new MigrationPackageBuilder(encryptionKey);
+            System.Diagnostics.Debug.WriteLine($"[Migration] encryptionKey length={encryptionKey.Length}");
+            System.Diagnostics.Debug.WriteLine($"[Migration] dataUri prefix={dataUri[..Math.Min(dataUri.Length,80)]}");
+            System.Diagnostics.Debug.WriteLine($"[Migration] metaUri prefix={metadataUri[..Math.Min(metadataUri.Length,80)]}");
+
+            // Steps 3+4 interleaved: for each file — download versions, encrypt, upload its
+            // blobs, then free the encrypted bytes. Uploading per file instead of buffering
+            // the whole batch keeps peak memory at one file's versions rather than the
+            // entire library (which OOMs on multi-GB copies).
+            // NetworkTimeout extends the per-request timeout from the 60-second Azure default
+            // so large files don't cancel mid-upload on slow connections.
+            var blobOptions = new BlobClientOptions();
+            blobOptions.Retry.NetworkTimeout = TimeSpan.FromMinutes(30);
+            var dataClient = new BlobContainerClient(new Uri(dataUri), blobOptions);
+            var builder    = new MigrationPackageBuilder(encryptionKey);
 
             foreach (var (job, result) in fileTasks)
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 if (result.Status != CopyStatus.Copying) continue;
+                int filesBefore = builder.Files.Count;
                 try
                 {
                     var subPath          = job.TargetSubFolderPath ?? string.Empty;
@@ -224,37 +246,36 @@ public class MigrationJobService(SharePointService spService)
                     await AddFileToPackageAsync(builder, job, result, maxVersions, libraryServerRelUrl,
                         existingFileId, cancellationToken,
                         copyCustomColumns, columnMappings, bulkFieldCache);
+
+                    // Upload this file's version blobs now, then release the bytes.
+                    var fileEntry = builder.Files[^1];
+                    await Parallel.ForEachAsync(
+                        fileEntry.Versions,
+                        new ParallelOptions { MaxDegreeOfParallelism = maxParallel, CancellationToken = cancellationToken },
+                        async (version, ct) =>
+                        {
+                            var content = version.EncryptedContent
+                                ?? throw new InvalidOperationException("Encrypted content already released.");
+                            var ivB64 = Convert.ToBase64String(content[..16]);
+                            var opts  = new BlobUploadOptions { Metadata = new Dictionary<string, string> { ["IV"] = ivB64 } };
+                            using var ms = new MemoryStream(content, 16, content.Length - 16);
+                            var blob = dataClient.GetBlobClient(version.StreamId);
+                            await blob.UploadAsync(ms, opts, ct);
+                            await blob.CreateSnapshotAsync(cancellationToken: ct);
+                            version.EncryptedContent = null;
+                        });
                 }
+                catch (OperationCanceledException) { throw; }
                 catch (Exception ex)
                 {
+                    // Drop the partially-added entry so the manifest never references
+                    // blobs that were not uploaded.
+                    if (builder.Files.Count > filesBefore)
+                        builder.RemoveLastFile();
                     result.Status       = CopyStatus.Failed;
                     result.ErrorMessage = $"Package build failed: {ex.Message}";
                 }
             }
-
-            System.Diagnostics.Debug.WriteLine($"[Migration] encryptionKey length={encryptionKey.Length}");
-            System.Diagnostics.Debug.WriteLine($"[Migration] dataUri prefix={dataUri[..Math.Min(dataUri.Length,80)]}");
-            System.Diagnostics.Debug.WriteLine($"[Migration] metaUri prefix={metadataUri[..Math.Min(metadataUri.Length,80)]}");
-
-            // Step 4: upload content blobs to the data container — parallel.
-            // NetworkTimeout extends the per-request timeout from the 60-second Azure default
-            // so large files don't cancel mid-upload on slow connections.
-            var blobOptions = new BlobClientOptions();
-            blobOptions.Retry.NetworkTimeout = TimeSpan.FromMinutes(30);
-            var dataClient = new BlobContainerClient(new Uri(dataUri), blobOptions);
-            var allBlobs   = builder.Files.SelectMany(f => f.Versions).ToList();
-            await Parallel.ForEachAsync(
-                allBlobs,
-                new ParallelOptions { MaxDegreeOfParallelism = maxParallel, CancellationToken = cancellationToken },
-                async (version, ct) =>
-                {
-                    var ivB64 = Convert.ToBase64String(version.EncryptedContent[..16]);
-                    var opts  = new BlobUploadOptions { Metadata = new Dictionary<string, string> { ["IV"] = ivB64 } };
-                    using var ms = new MemoryStream(version.EncryptedContent, 16, version.EncryptedContent.Length - 16);
-                    var blob = dataClient.GetBlobClient(version.StreamId);
-                    await blob.UploadAsync(ms, opts, ct);
-                    await blob.CreateSnapshotAsync(cancellationToken: ct);
-                });
 
             // Step 5: upload manifest XML blobs to the metadata container.
             // Fetch the root folder GUID so the manifest can include an explicit SPFolder entry.

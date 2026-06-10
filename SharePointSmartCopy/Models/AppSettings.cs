@@ -66,7 +66,11 @@ public class AppSettings
     public void Save()
     {
         Directory.CreateDirectory(Path.GetDirectoryName(SettingsPath)!);
-        File.WriteAllText(SettingsPath, JsonSerializer.Serialize(this, _jsonOptions));
+        // Write-then-move so a crash mid-write can't corrupt the settings file
+        // (Load silently resets to defaults on corrupt JSON, losing all registrations).
+        var tempPath = SettingsPath + ".tmp";
+        File.WriteAllText(tempPath, JsonSerializer.Serialize(this, _jsonOptions));
+        File.Move(tempPath, SettingsPath, overwrite: true);
     }
 
     public AzureRegistration? ActiveRegistration =>

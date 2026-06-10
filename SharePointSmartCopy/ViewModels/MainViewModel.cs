@@ -688,6 +688,7 @@ public partial class MainViewModel : ObservableObject
             });
         }
 
+        _copyCts?.Dispose();
         _copyCts = new CancellationTokenSource();
         TotalCount = CopyJobs.Count;
 
@@ -707,28 +708,48 @@ public partial class MainViewModel : ObservableObject
             // Build bulk field cache for custom columns (single paginated pass)
             // Also build permission flags when CopyPermissions is on.
             _bulkFieldCache = [];
-            var _permissionFlags = new Dictionary<string, bool>();
+            var _permissionFlags = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
             if ((EffectiveCopyCustomColumns || CopyPermissions) && CopyJobs.Count > 0)
             {
                 StatusMessage = "Reading source metadata…";
+                // Custom columns use the first library only (the mapping dialog is per-library).
                 try
                 {
-                    var firstJob     = CopyJobs.First(j => !j.IsFolder);
-                    var serverRelUrl = await SpService.GetLibraryServerRelativeUrlAsync(firstJob.SourceDriveId);
-                    var sourceListId = await SpService.GetListIdByServerRelativeUrlAsync(
-                        SourceUrl.TrimEnd('/'), serverRelUrl);
                     if (EffectiveCopyCustomColumns)
                     {
+                        var firstJob     = CopyJobs.First(j => !j.IsFolder);
+                        var serverRelUrl = await SpService.GetLibraryServerRelativeUrlAsync(firstJob.SourceDriveId);
+                        var sourceListId = await SpService.GetListIdByServerRelativeUrlAsync(
+                            SourceUrl.TrimEnd('/'), serverRelUrl);
                         var cols = await SpService.GetLibraryColumnsAsync(SourceUrl.TrimEnd('/'), sourceListId);
                         _bulkFieldCache = await SpService.BulkReadCustomFieldsAsync(
                             SourceUrl.TrimEnd('/'), sourceListId, cols,
                             ct: _copyCts.Token);
                     }
-                    if (CopyPermissions)
-                        _permissionFlags = await SpService.BulkReadPermissionFlagsAsync(
-                            SourceUrl.TrimEnd('/'), sourceListId, _copyCts.Token);
                 }
                 catch { /* non-critical */ }
+
+                // Permission flags must cover every source library in the selection —
+                // jobs can span multiple libraries, and the flags use composite
+                // "{listId}:{itemId}" keys so merging is collision-free.
+                if (CopyPermissions)
+                {
+                    foreach (var driveId in CopyJobs.Select(j => j.SourceDriveId)
+                                                    .Where(d => !string.IsNullOrEmpty(d))
+                                                    .Distinct())
+                    {
+                        try
+                        {
+                            var listId = await SpService.GetListIdFromDriveAsync(driveId);
+                            if (listId == null) continue;
+                            var flags = await SpService.BulkReadPermissionFlagsAsync(
+                                SourceUrl.TrimEnd('/'), listId, _copyCts.Token);
+                            foreach (var (k, v) in flags)
+                                _permissionFlags[k] = v;
+                        }
+                        catch { /* non-critical — that library's permissions are skipped */ }
+                    }
+                }
                 StatusMessage = string.Empty;
             }
 
@@ -800,8 +821,14 @@ public partial class MainViewModel : ObservableObject
         CopyResult listResult)
     {
         var targetCols       = await SpService.GetLibraryColumnsAsync(TargetUrl.TrimEnd('/'), targetListId, skipCache: true);
-        var targetByInternal = targetCols.ToDictionary(c => c.InternalName, StringComparer.OrdinalIgnoreCase);
-        var targetByDisplay  = targetCols.ToDictionary(c => c.DisplayName,  StringComparer.OrdinalIgnoreCase);
+        // GroupBy/First: duplicate display names are legal in SharePoint and a plain
+        // ToDictionary would throw, aborting the whole list copy.
+        var targetByInternal = targetCols
+            .GroupBy(c => c.InternalName, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+        var targetByDisplay  = targetCols
+            .GroupBy(c => c.DisplayName, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
 
         // Fetch existing target items to support skip/overwrite by Title.
         var existingTargetItems = await SpService.GetListItemTitlesAsync(
@@ -909,7 +936,7 @@ public partial class MainViewModel : ObservableObject
                                 $"web/lists('{targetListId}')/items({resolvedTargetItemId})",
                                 hasUniquePermissions: true,
                                 rowLabel, _copyCts.Token);
-                            if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                            if (perm.HasActivity)
                                 AddPermissionResult(perm, itemResult.TargetPath);
                         }
                     }
@@ -987,6 +1014,7 @@ public partial class MainViewModel : ObservableObject
         _copyStartTime = DateTimeOffset.Now;
         _copyEndTime   = null;
 
+        _copyCts?.Dispose();
         _copyCts = new CancellationTokenSource();
 
         var progressTimer = new System.Windows.Threading.DispatcherTimer
@@ -1014,7 +1042,7 @@ public partial class MainViewModel : ObservableObject
                             "web", "web",
                             hasUniquePermissions: true,
                             "Site", _copyCts.Token);
-                        if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                        if (perm.HasActivity)
                             AddPermissionResult(perm, TargetUrl.TrimEnd('/'));
                     }
                     catch (OperationCanceledException) { throw; }
@@ -1094,7 +1122,7 @@ public partial class MainViewModel : ObservableObject
                 try
                 {
                     var (newDriveId, newServerRelUrl) = await _libraryCopyService.CreateLibraryAsync(
-                        TargetUrl.TrimEnd('/'), TargetSiteId, def, ColumnMappings, OverwriteFiles);
+                        TargetUrl.TrimEnd('/'), TargetSiteId, def, ColumnMappings);
                     libResult.Status = CopyStatus.Success;
 
                     if (CopyPermissions)
@@ -1110,7 +1138,7 @@ public partial class MainViewModel : ObservableObject
                                 $"web/lists('{newListId}')",
                                 hasUniquePermissions: srcHasUnique,
                                 def.Title, _copyCts.Token);
-                            if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                            if (perm.HasActivity)
                                 AddPermissionResult(perm, $"{TargetUrl.TrimEnd('/')}/{def.Title}");
                         }
                         catch (OperationCanceledException) { throw; }
@@ -1309,13 +1337,13 @@ public partial class MainViewModel : ObservableObject
                         {
                             def.Title    = NewListName.Trim();
                             targetListId = await _libraryCopyService.CreateCustomListAsync(
-                                TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate, OverwriteFiles);
+                                TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate);
                         }
                         else
                         {
                             targetListId = SelectedTargetList.Id;
                         }
-                        if (_copyCustomColumns && def.Columns.Count > 0)
+                        if (CopyCustomColumns && def.Columns.Count > 0)
                         {
                             var colTitle = IsCreatingNewList ? NewListName.Trim() : SelectedTargetList.Title;
                             try
@@ -1329,7 +1357,7 @@ public partial class MainViewModel : ObservableObject
                     }
                     else
                         targetListId = await _libraryCopyService.CreateCustomListAsync(
-                            TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate, OverwriteFiles);
+                            TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate);
 
                     if (CopyPermissions)
                     {
@@ -1343,7 +1371,7 @@ public partial class MainViewModel : ObservableObject
                                 $"web/lists('{targetListId}')",
                                 hasUniquePermissions: srcHasUnique,
                                 def.Title, _copyCts.Token);
-                            if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                            if (perm.HasActivity)
                                 AddPermissionResult(perm, $"{TargetUrl.TrimEnd('/')}/{def.Title}");
                         }
                         catch (OperationCanceledException) { throw; }
@@ -1552,7 +1580,7 @@ public partial class MainViewModel : ObservableObject
                             definition   = await _libraryCopyService.ReadListDefinitionAsync(
                                 SourceUrl.TrimEnd('/'), srcListId, listTitle);
                             var targetListId = await _libraryCopyService.CreateCustomListAsync(
-                                TargetUrl.TrimEnd('/'), TargetSiteId, definition, baseTemplate, OverwriteFiles);
+                                TargetUrl.TrimEnd('/'), TargetSiteId, definition, baseTemplate);
 
                             if (CopyPermissions)
                             {
@@ -1566,7 +1594,7 @@ public partial class MainViewModel : ObservableObject
                                         $"web/lists('{targetListId}')",
                                         hasUniquePermissions: srcHasUnique,
                                         listTitle, _copyCts.Token);
-                                    if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                                    if (perm.HasActivity)
                                         AddPermissionResult(perm, $"{TargetUrl.TrimEnd('/')}/{listTitle}");
                                 }
                                 catch (OperationCanceledException) { throw; }

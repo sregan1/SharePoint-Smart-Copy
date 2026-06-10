@@ -21,8 +21,13 @@ public class MigrationPackageBuilder
         DateTimeOffset? Created,
         string? AuthorEmail,
         string? ModifiedByEmail,
-        long Size,
-        byte[] EncryptedContent);
+        long Size)
+    {
+        // Mutable so callers can free the blob bytes after upload — keeping every
+        // encrypted version of every file in RAM for the whole batch causes OOM
+        // on large libraries. Null after the blob is uploaded.
+        public byte[]? EncryptedContent { get; set; }
+    }
 
     public record FileEntry(
         string FileId,
@@ -48,8 +53,10 @@ public class MigrationPackageBuilder
 
     // Integer user IDs required by the MS-PRIMEPF schema for Author/ModifiedBy attributes.
     // Claims strings belong only inside <Fields>/<Field> value attributes.
+    // ID 1 is reserved for the System Account (used when an author email is missing) —
+    // real users start at 2 so a missing email is never attributed to a real person.
     private readonly Dictionary<string, int> _userIdMap = new(StringComparer.OrdinalIgnoreCase);
-    private int _nextUserId = 1;
+    private int _nextUserId = 2;
 
     public MigrationPackageBuilder(byte[] encryptionKey)
     {
@@ -57,6 +64,14 @@ public class MigrationPackageBuilder
     }
 
     public IReadOnlyList<FileEntry> Files => _files;
+
+    // Removes the most recently added file — used when its blob upload fails so the
+    // manifest never references streams that were not uploaded.
+    public void RemoveLastFile()
+    {
+        if (_files.Count > 0)
+            _files.RemoveAt(_files.Count - 1);
+    }
 
     // Adds a file with all its versions to the package.
     // versions must be ordered oldest-first; the last entry is IsCurrentVersion.
@@ -98,8 +113,8 @@ public class MigrationPackageBuilder
                 Created:           isLast ? fileMetadata.CreatedDateTime : null,
                 AuthorEmail:       author,
                 ModifiedByEmail:   editor,
-                Size:              origSize,
-                EncryptedContent:  encrypted));
+                Size:              origSize)
+            { EncryptedContent = encrypted });
         }
 
         // Pre-register all user emails so UserGroup.xml is fully populated before Manifest.xml is built
@@ -223,6 +238,16 @@ public class MigrationPackageBuilder
     private XDocument BuildUserGroupMap()
     {
         var usersEl = new XElement(NsUserGroup + "Users");
+        // Reserved ID 1: System Account fallback for versions with no author email.
+        usersEl.Add(new XElement(NsUserGroup + "User",
+            new XAttribute("Id", "1"),
+            new XAttribute("Name", "System Account"),
+            new XAttribute("Login", "SHAREPOINT\\system"),
+            new XAttribute("Email", ""),
+            new XAttribute("IsDomainGroup", "false"),
+            new XAttribute("IsSiteAdmin", "false"),
+            new XAttribute("SystemId", Convert.ToBase64String(Guid.NewGuid().ToByteArray())),
+            new XAttribute("IsDeleted", "false")));
         foreach (var (email, id) in _userIdMap.OrderBy(kv => kv.Value))
         {
             usersEl.Add(new XElement(NsUserGroup + "User",

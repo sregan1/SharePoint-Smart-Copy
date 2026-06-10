@@ -7,9 +7,10 @@ public class PermissionCopyService(SharePointService spService)
     // name→ID cache pre-loaded from the target site once per copy session
     private Dictionary<string, int> _targetRoleDefs = [];
 
-    // principal resolution caches for the duration of the copy session
-    private readonly Dictionary<string, int?> _userCache  = new(StringComparer.OrdinalIgnoreCase);
-    private readonly Dictionary<string, int?> _groupCache = new(StringComparer.OrdinalIgnoreCase);
+    // principal resolution caches for the duration of the copy session.
+    // Concurrent — CopyObjectPermissionsAsync is called from parallel file-copy tasks.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, int?> _userCache  = new(StringComparer.OrdinalIgnoreCase);
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, int?> _groupCache = new(StringComparer.OrdinalIgnoreCase);
 
     // Call once before copy loops start. Pre-loads target role definitions in one request.
     public async Task InitializeAsync(string targetSiteUrl, CancellationToken ct = default)
@@ -56,6 +57,7 @@ public class PermissionCopyService(SharePointService spService)
 
         int applied = 0;
         var skipped = new List<string>();
+        var failed  = new List<string>();
 
         foreach (var assignment in assignments)
         {
@@ -69,7 +71,11 @@ public class PermissionCopyService(SharePointService spService)
             foreach (var roleName in assignment.RoleNames)
             {
                 if (!_targetRoleDefs.TryGetValue(roleName, out var roleDefId))
-                    continue; // role definition doesn't exist on target — skip
+                {
+                    // Role definition doesn't exist on target — record so the user sees it.
+                    failed.Add($"{assignment.Title} ({roleName}: no such role on target)");
+                    continue;
+                }
 
                 try
                 {
@@ -77,11 +83,20 @@ public class PermissionCopyService(SharePointService spService)
                     applied++;
                 }
                 catch (OperationCanceledException) { throw; }
-                catch { /* non-fatal — continue with remaining assignments */ }
+                catch (Exception ex)
+                {
+                    failed.Add($"{assignment.Title} ({roleName}: {ex.Message})");
+                }
             }
         }
 
-        return new PermissionCopyResult(itemDisplayName, applied, skipped);
+        // Inheritance was broken but nothing could be applied — the target object would be
+        // inaccessible. Surface this as a hard error so a log row is always written.
+        string? error = null;
+        if (!isRootWeb && applied == 0 && failed.Count > 0)
+            error = $"Inheritance broken but no role assignments applied: {string.Join("; ", failed.Take(3))}";
+
+        return new PermissionCopyResult(itemDisplayName, applied, skipped, error, failed);
     }
 
     private async Task<int?> ResolvePrincipalAsync(
@@ -111,4 +126,10 @@ public record PermissionCopyResult(
     string ItemName,
     int Applied,
     List<string> SkippedPrincipals,
-    string? Error = null);
+    string? Error = null,
+    List<string>? FailedRoles = null)
+{
+    // True when there is anything worth showing in the copy log.
+    public bool HasActivity => Applied > 0 || SkippedPrincipals.Count > 0
+                            || Error != null || (FailedRoles?.Count ?? 0) > 0;
+}

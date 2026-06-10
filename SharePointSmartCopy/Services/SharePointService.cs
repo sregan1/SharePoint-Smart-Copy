@@ -240,8 +240,17 @@ public class SharePointService
             page = await Graph.Drives[driveId].Items[itemId].Versions
                 .WithUrl(page.OdataNextLink).GetAsync();
         }
-        // Sort oldest-first so we replay versions in chronological order
-        return all.OrderBy(v => v.LastModifiedDateTime).ToList();
+        // Sort oldest-first so we replay versions in chronological order.
+        // Sort by the numeric version label ("2.0" → 2.0) rather than timestamp:
+        // versions saved within the same second would otherwise keep Graph's
+        // newest-first order and be replayed out of sequence.
+        return all.OrderBy(v =>
+        {
+            var parts = (v.Id ?? "0").Split('.');
+            double major = parts.Length > 0 && double.TryParse(parts[0], out var mj) ? mj : 0;
+            double minor = parts.Length > 1 && double.TryParse(parts[1], out var mn) ? mn : 0;
+            return major + minor / 1000.0;
+        }).ToList();
     }
 
     // ── Metadata ──────────────────────────────────────────────────────────────
@@ -1175,7 +1184,9 @@ public class SharePointService
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    // Sends a SharePoint REST request and retries once with a force-refreshed token on 401.
+    // Sends a SharePoint REST request with resilience:
+    //  - 401: retried once with a force-refreshed token.
+    //  - 429/503 (throttling): retried up to 3 times, honoring the Retry-After header.
     // buildRequest receives the bearer token and must return a fresh HttpRequestMessage each call.
     internal async Task<HttpResponseMessage> SendSharePointRequestAsync(
         Func<string, HttpRequestMessage> buildRequest,
@@ -1183,23 +1194,50 @@ public class SharePointService
         string spScope = "Sites.ReadWrite.All",
         CancellationToken cancellationToken = default)
     {
+        const int maxThrottleRetries = 3;
         var token = await _authService.GetSharePointTokenAsync(siteUrl, spScope, cancellationToken);
-        using var req = buildRequest(token);
-        var response = await _httpClient.SendAsync(req, cancellationToken);
+        HttpResponseMessage response;
+        bool refreshedToken = false;
 
-        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        for (int attempt = 0; ; attempt++)
         {
-            response.Dispose();
-            token = await _authService.GetSharePointTokenAsync(siteUrl, spScope, cancellationToken, forceRefresh: true);
-            using var retryReq = buildRequest(token);
-            response = await _httpClient.SendAsync(retryReq, cancellationToken);
-        }
+            using var req = buildRequest(token);
+            response = await _httpClient.SendAsync(req, cancellationToken);
 
-        return response;
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized && !refreshedToken)
+            {
+                response.Dispose();
+                token = await _authService.GetSharePointTokenAsync(siteUrl, spScope, cancellationToken, forceRefresh: true);
+                refreshedToken = true;
+                continue;
+            }
+
+            bool throttled = response.StatusCode is System.Net.HttpStatusCode.TooManyRequests
+                                                 or System.Net.HttpStatusCode.ServiceUnavailable;
+            if (throttled && attempt < maxThrottleRetries)
+            {
+                var delay = response.Headers.RetryAfter?.Delta
+                    ?? TimeSpan.FromSeconds(Math.Pow(2, attempt + 1)); // 2s, 4s, 8s
+                System.Diagnostics.Debug.WriteLine(
+                    $"[SP-REST] {(int)response.StatusCode} throttled — retrying in {delay.TotalSeconds:N0}s (attempt {attempt + 1}/{maxThrottleRetries})");
+                response.Dispose();
+                await Task.Delay(delay, cancellationToken);
+                continue;
+            }
+
+            return response;
+        }
     }
 
     private static SharePointNode Placeholder() =>
         new() { Name = "__placeholder__" };
+
+    // SP REST pagination link: "odata.nextLink" under odata=nometadata (classic), but
+    // "@odata.nextLink" under OData v4 / minimalmetadata responses. Check both so
+    // pagination never silently truncates at the first page.
+    private static string? GetNextLink(JsonElement root) =>
+        root.TryGetProperty("odata.nextLink",  out var nl1) ? nl1.GetString() :
+        root.TryGetProperty("@odata.nextLink", out var nl2) ? nl2.GetString() : null;
 
     // ── Column / Custom Field Methods ─────────────────────────────────────────
 
@@ -1235,8 +1273,8 @@ public class SharePointService
         { 15, SupportedFieldType.MultiChoice },
     };
 
-    // Keyed by listId.
-    private readonly Dictionary<string, List<SpColumnDef>> _columnCache = new();
+    // Keyed by listId. Concurrent — read/written from parallel copy tasks.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, List<SpColumnDef>> _columnCache = new();
 
     // Returns the custom (non-built-in) columns for a library.
     public async Task<List<SpColumnDef>> GetLibraryColumnsAsync(string siteUrl, string listId, bool skipCache = false)
@@ -1367,7 +1405,7 @@ public class SharePointService
                     }
                 }
 
-                nextUrl = root.TryGetProperty("odata.nextLink", out var next) ? next.GetString() : null;
+                nextUrl = GetNextLink(root);
             }
 
             progress?.Report((chunk + 1) * 100 / chunks.Count);
@@ -2067,7 +2105,7 @@ public class SharePointService
                     result.Add(item);
                 }
 
-            next = doc.RootElement.TryGetProperty("odata.nextLink", out var nl) ? nl.GetString() : null;
+            next = GetNextLink(doc.RootElement);
         }
         return result;
     }
@@ -2108,7 +2146,7 @@ public class SharePointService
                         result.Add((id, title));
                 }
 
-            next = doc.RootElement.TryGetProperty("odata.nextLink", out var nl) ? nl.GetString() : null;
+            next = GetNextLink(doc.RootElement);
         }
         return result;
     }
@@ -2235,11 +2273,13 @@ public class SharePointService
     };
 
     // Reads ID + HasUniqueRoleAssignments for all items in a library/list in one paginated request.
-    // Returns a dictionary keyed by SP list item integer ID (as string), value = hasUniquePermissions.
+    // Returns a dictionary keyed by "{listId}:{itemId}" (see PermissionFlagKey), value =
+    // hasUniquePermissions. The composite key lets flags from multiple source libraries
+    // be merged into one dictionary without item-ID collisions.
     public async Task<Dictionary<string, bool>> BulkReadPermissionFlagsAsync(
         string siteUrl, string listId, CancellationToken ct = default)
     {
-        var result  = new Dictionary<string, bool>();
+        var result  = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
         string? next = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items" +
                        "?$select=Id,HasUniqueRoleAssignments&$top=5000";
         while (next != null)
@@ -2262,14 +2302,19 @@ public class SharePointService
                     {
                         var id      = el.TryGetProperty("Id",                    out var ip) ? ip.GetInt32().ToString() : null;
                         var unique  = el.TryGetProperty("HasUniqueRoleAssignments", out var up) && up.GetBoolean();
-                        if (id != null) result[id] = unique;
+                        if (id != null) result[PermissionFlagKey(listId, id)] = unique;
                     }
-                next = doc.RootElement.TryGetProperty("odata.nextLink", out var nl) ? nl.GetString() : null;
+                next = GetNextLink(doc.RootElement);
             }
             catch { break; }
         }
         return result;
     }
+
+    // Composite key for permission-flag dictionaries. GUID braces are stripped so keys
+    // match whether the list ID came from SP REST or Graph sharepointIds.
+    public static string PermissionFlagKey(string listId, string itemId) =>
+        $"{listId.Trim('{', '}')}:{itemId}";
 
     // ── Permissions ───────────────────────────────────────────────────────────
 
