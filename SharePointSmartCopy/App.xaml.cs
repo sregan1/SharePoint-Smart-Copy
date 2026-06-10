@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace SharePointSmartCopy;
 
 public partial class App : Application
 {
-    protected override async void OnStartup(StartupEventArgs e)
+    protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
         DispatcherUnhandledException += (_, args) =>
@@ -22,11 +21,7 @@ public partial class App : Application
         InitDemoMode(e);
         if (_demoStarted) return;
 
-        var splash = new SplashWindow();
-        splash.Show();
-        await Task.Delay(250);
         new MainWindow().Show();
-        splash.Close();
     }
 
     private bool _demoStarted;

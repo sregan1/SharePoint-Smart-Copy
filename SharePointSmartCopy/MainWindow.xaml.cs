@@ -43,13 +43,29 @@ public partial class MainWindow : Window
     }
 
     private void SourceNode_CheckChanged(object sender, RoutedEventArgs e)
-        => VM.NextCommand.NotifyCanExecuteChanged();
+        => VM.NotifySelectionChanged();
+
+    // Cycles custom list nodes: blank → checked (structure+items) → blank (items only) → blank (nothing).
+    // The null state is visually identical to unchecked via the ItemsOnlyCheckBox style.
+    private void SourceCheckBox_PreviewClick(object sender, MouseButtonEventArgs e)
+    {
+        if ((sender as CheckBox)?.DataContext is not SharePointNode node || !node.IsCustomList)
+            return;
+        node.IsChecked = node.IsChecked switch
+        {
+            false => true,   // blank → checked
+            true  => null,   // checked → blank (items only, no structure)
+            _     => false   // null/blank → blank (deselect all)
+        };
+        e.Handled = true;
+        VM.NotifySelectionChanged();
+    }
 
     private void SelectAll_Click(object sender, RoutedEventArgs e)
-    { VM.SelectAllSource(true); VM.NextCommand.NotifyCanExecuteChanged(); }
+    { VM.SelectAllSource(true); VM.NotifySelectionChanged(); }
 
     private void DeselectAll_Click(object sender, RoutedEventArgs e)
-    { VM.SelectAllSource(false); VM.NextCommand.NotifyCanExecuteChanged(); }
+    { VM.SelectAllSource(false); VM.NotifySelectionChanged(); }
 
     private async void TargetTreeItem_Expanded(object sender, RoutedEventArgs e)
     {
@@ -101,5 +117,58 @@ public partial class MainWindow : Window
         DataContext = new MainViewModel(VM.AuthService);
         ((System.Collections.ObjectModel.ObservableCollection<CopyResult>)VM.CopyResults)
             .CollectionChanged += ProgressList_CollectionChanged;
+    }
+
+    // ── Mode tile click handlers ───────────────────────────────────────────────
+
+    private void ModeFiles_Click(object sender, MouseButtonEventArgs e)
+    {
+        VM.ColumnMappings.Clear();
+        VM.CopyScope = CopyScope.Files;
+        _ = VM.LoadLibrariesAsync();
+    }
+
+    private void ModeLibrary_Click(object sender, MouseButtonEventArgs e)
+    {
+        VM.ColumnMappings.Clear();
+        VM.CopyScope = CopyScope.Library;
+        _ = VM.LoadLibrariesAsync();
+    }
+
+    private void ModeSite_Click(object sender, MouseButtonEventArgs e)
+    {
+        VM.ColumnMappings.Clear();
+        VM.CopyScope = CopyScope.Site;
+        _ = VM.LoadLibrariesAsync();
+    }
+
+    private void ModePages_Click(object sender, MouseButtonEventArgs e)
+    {
+        VM.ColumnMappings.Clear();
+        VM.CopyScope = CopyScope.Pages;
+        _ = VM.LoadPageLibraryAsync();
+    }
+
+    private void AdvancedToggle_Click(object sender, RoutedEventArgs e)
+    {
+        var open = AdvancedPanel.Visibility == Visibility.Visible;
+        AdvancedPanel.Visibility = open ? Visibility.Collapsed : Visibility.Visible;
+        AdvancedChevron.Text     = open ? "▾" : "▴";
+    }
+
+    private void CopyCustomColumns_Changed(object sender, RoutedEventArgs e)
+    {
+        VM.OnPropertyChanged(nameof(VM.MappingButtonLabel));
+    }
+
+    private async void ConfigureMappings_Click(object sender, RoutedEventArgs e)
+    {
+        // Columns are loaded in the background when step 2 → 3 advances.
+        // Wait here so the dialog always has data, even if the user clicks immediately.
+        if (VM._columnLoadTask != null)
+            await VM._columnLoadTask;
+        var dlg = new ColumnMappingDialog(VM) { Owner = this };
+        dlg.ShowDialog();
+        VM.OnPropertyChanged(nameof(VM.MappingButtonLabel));
     }
 }

@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SharePointSmartCopy.Models;
 
-public enum NodeType { Library, Folder, File }
+public enum NodeType { Library, Folder, File, ListItem }
 
 public partial class SharePointNode : ObservableObject
 {
@@ -17,10 +17,16 @@ public partial class SharePointNode : ObservableObject
     [ObservableProperty] private string? _webUrl;
     [ObservableProperty] private bool _isLoading;
     [ObservableProperty] private bool _isExpanded;
-    [ObservableProperty] private bool _isChecked;
+    [ObservableProperty] private bool? _isChecked = false;
     [ObservableProperty] private ObservableCollection<SharePointNode> _children = [];
 
+    [ObservableProperty] private string? _overrideName;
+
     public bool HasChildren { get; set; }
+    public bool IsPage { get; set; }
+    public bool IsCustomList { get; set; }
+    public int ListBaseTemplate { get; set; }
+    public string? SourceListId { get; set; }
     public SharePointNode? Parent { get; set; }
     public string? ServerRelativePath { get; set; }
 
@@ -28,25 +34,30 @@ public partial class SharePointNode : ObservableObject
 
     public string SizeDisplay => Size.HasValue ? FormatSize(Size.Value) : string.Empty;
 
-    public string TypeIcon => Type switch
+    public string TypeIcon => IsCustomList ? "📋" : Type switch
     {
-        NodeType.Library => "📚",
-        NodeType.Folder  => "📁",
-        _                => GetFileIcon(Name)
+        NodeType.Library  => "📚",
+        NodeType.Folder   => "📁",
+        NodeType.ListItem => "📋",
+        _                 => GetFileIcon(Name)
     };
 
-    partial void OnIsCheckedChanged(bool value)
+    partial void OnIsCheckedChanged(bool? value)
     {
+        // null = items-only mode: check all children but skip structure creation.
+        // true  = full copy: check all children + structure.
+        // false = deselect: uncheck all children.
+        var childValue = value == false ? (bool?)false : true;
         foreach (var child in Children)
         {
             if (!child.IsPlaceholder)
-                child.IsChecked = value;
+                child.IsChecked = childValue;
         }
     }
 
     public IEnumerable<SharePointNode> GetCheckedNodes()
     {
-        if (IsChecked && !IsPlaceholder)
+        if (IsChecked == true && !IsPlaceholder)
         {
             yield return this;
             yield break;

@@ -15,7 +15,16 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         int maxVersions,
         CopyMode copyMode,
         CancellationToken cancellationToken,
-        IProgress<bool>? onMetadataDone = null)
+        IProgress<bool>? onMetadataDone = null,
+        bool copyCustomColumns = false,
+        List<ColumnMapping>? columnMappings = null,
+        Dictionary<string, Dictionary<string, object?>>? bulkFieldCache = null,
+        bool copyPages = false,
+        bool remapPageWebPartUrls = true,
+        bool preserveMetadata = true,
+        bool copyPermissions = false,
+        PermissionCopyService? permissionService = null,
+        Dictionary<string, bool>? permissionFlags = null)
     {
         var semaphore = new SemaphoreSlim(maxParallel, maxParallel);
         var allTasks  = new List<(CopyJob job, CopyResult result)>();
@@ -33,20 +42,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     in spService.EnumerateFilesAsync(job.SourceDriveId, job.SourceItemId))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    var fileDir     = System.IO.Path.GetDirectoryName(relativePath)?.Replace('\\', '/') ?? string.Empty;
-                    var relToParent = job.IsLibrary
-                        ? fileDir
-                        : (string.IsNullOrEmpty(fileDir) ? job.SourceName : $"{job.SourceName}/{fileDir}");
-                    var targetSubFolder = string.IsNullOrEmpty(job.TargetSubFolderPath)
-                        ? relToParent
-                        : string.IsNullOrEmpty(relToParent)
-                            ? job.TargetSubFolderPath
-                            : $"{job.TargetSubFolderPath}/{relToParent}";
+                    var targetSubFolder = ComputeTargetSubFolder(
+                        relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
                     var fileJob = new CopyJob
                     {
                         SourceDriveId                  = driveId,
                         SourceItemId                   = itemId,
                         SourceName                     = name,
+                        SourceSiteUrl                  = job.SourceSiteUrl,
                         SourceDisplayPath              = $"{job.SourceDisplayPath}/{relativePath}",
                         TargetDriveId                  = job.TargetDriveId,
                         TargetParentItemId             = job.TargetParentItemId,
@@ -55,6 +58,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         TargetSubFolderPath            = targetSubFolder,
                         TargetLibraryServerRelativeUrl = job.TargetLibraryServerRelativeUrl,
                         TargetDisplayPath              = $"{job.TargetDisplayPath}/{relativePath}",
+                        IsPage                         = copyPages,
                         IsFolder                       = false
                     };
 
@@ -74,30 +78,76 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         if (copyMode == CopyMode.MigrationApi && copyVersions)
         {
             // Mode A: batch all files into a single migration job
-            await migrationJobService.ExecuteAsync(allTasks, overwrite, maxVersions, maxParallel, cancellationToken);
+            await migrationJobService.ExecuteAsync(allTasks, overwrite, maxVersions, maxParallel, cancellationToken,
+                copyCustomColumns, columnMappings, bulkFieldCache);
+
+            // Permissions: run after the migration job completes so the target items exist.
+            // We can't use Graph item IDs here (the migration API doesn't surface them), so we
+            // resolve the target via its server-relative URL using the SP REST file endpoint.
+            if (copyPermissions && permissionService != null && permissionFlags != null)
+            {
+                foreach (var (job, result) in allTasks)
+                {
+                    if (result.Status != CopyStatus.Success) continue;
+                    cancellationToken.ThrowIfCancellationRequested();
+                    try
+                    {
+                        var srcIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
+                        if (!srcIds.HasValue) continue;
+                        if (!permissionFlags.TryGetValue(srcIds.Value.listItemId, out var hu) || !hu) continue;
+
+                        var sub = job.TargetSubFolderPath?.Trim('/');
+                        var tgtRelUrl = string.IsNullOrEmpty(sub)
+                            ? $"{job.TargetLibraryServerRelativeUrl}/{job.SourceName}"
+                            : $"{job.TargetLibraryServerRelativeUrl.TrimEnd('/')}/{sub}/{job.SourceName}";
+
+                        var escapedTgtRelUrl = tgtRelUrl.Replace("'", "''");
+                        var perm = await permissionService.CopyObjectPermissionsAsync(
+                            job.SourceSiteUrl, job.TargetSiteUrl,
+                            $"web/lists('{srcIds.Value.listId}')/items({srcIds.Value.listItemId})",
+                            $"web/GetFileByServerRelativeUrl('{escapedTgtRelUrl}')/ListItemAllFields",
+                            hasUniquePermissions: true,
+                            job.SourceName, cancellationToken);
+
+                        if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                            AddPermissionRow(results, perm, result.TargetPath);
+                    }
+                    catch (OperationCanceledException) { throw; }
+                    catch { /* non-fatal */ }
+                }
+            }
         }
         else
         {
             // Mode B: enhanced REST, parallel per-file
             var parallelTasks = allTasks.Select(t =>
-                CopySingleFileAsync(t.job, t.result, overwrite, copyVersions, maxVersions, semaphore, cancellationToken));
+                CopySingleFileAsync(t.job, t.result, overwrite, copyVersions, maxVersions, semaphore, cancellationToken,
+                    copyCustomColumns, columnMappings, bulkFieldCache, copyPages, remapPageWebPartUrls, preserveMetadata,
+                    copyPermissions, permissionService, permissionFlags, permissionResults: results));
             await Task.WhenAll(parallelTasks);
         }
 
-        // Apply folder metadata in the background — folders exist by now, no need to block completion.
+        // Apply folder metadata in the background (skipped when preserveMetadata is off)
         var folderJobs = jobs.Where(j => j.IsFolder).ToList();
-        if (folderJobs.Count > 0)
-            _ = ApplyAllFolderMetadataAsync(folderJobs, maxParallel, onMetadataDone, cancellationToken);
+        if (folderJobs.Count > 0 && preserveMetadata)
+            _ = ApplyAllFolderMetadataAsync(folderJobs, maxParallel, onMetadataDone, cancellationToken,
+                copyPermissions, permissionService, results);
+        else
+            onMetadataDone?.Report(true);
     }
 
     private async Task ApplyAllFolderMetadataAsync(
         IEnumerable<CopyJob> folderJobs, int maxParallel,
-        IProgress<bool>? onDone, CancellationToken ct)
+        IProgress<bool>? onDone, CancellationToken ct,
+        bool copyPermissions = false,
+        PermissionCopyService? permissionService = null,
+        ObservableCollection<CopyResult>? permissionResults = null)
     {
         try
         {
             foreach (var job in folderJobs)
-                await ApplyFolderMetadataRecursiveAsync(job, maxParallel, ct);
+                await ApplyFolderMetadataRecursiveAsync(job, maxParallel, ct,
+                    copyPermissions, permissionService, permissionResults);
         }
         catch { }
         finally
@@ -113,7 +163,17 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         bool copyVersions,
         int maxVersions,
         SemaphoreSlim semaphore,
-        CancellationToken ct)
+        CancellationToken ct,
+        bool copyCustomColumns = false,
+        List<ColumnMapping>? columnMappings = null,
+        Dictionary<string, Dictionary<string, object?>>? bulkFieldCache = null,
+        bool copyPages = false,
+        bool remapPageWebPartUrls = true,
+        bool preserveMetadata = true,
+        bool copyPermissions = false,
+        PermissionCopyService? permissionService = null,
+        Dictionary<string, bool>? permissionFlags = null,
+        ObservableCollection<CopyResult>? permissionResults = null)
     {
         await semaphore.WaitAsync(ct);
         try
@@ -133,17 +193,58 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             if (overwrite && copyVersions)
                 await spService.DeleteFileIfExistsAsync(job.TargetDriveId, targetParentId, job.SourceName);
 
+            string? targetGraphItemId;
             if (copyVersions)
-                await CopyWithVersionsEnhancedRestAsync(job, result, targetParentId, overwrite, maxVersions, ct);
+                targetGraphItemId = await CopyWithVersionsEnhancedRestAsync(job, result, targetParentId, overwrite, maxVersions, ct,
+                    copyCustomColumns, columnMappings, bulkFieldCache, preserveMetadata);
             else
-                await CopyCurrentVersionAsync(job, result, targetParentId, overwrite, ct);
+                targetGraphItemId = await CopyCurrentVersionAsync(job, result, targetParentId, overwrite, ct,
+                    copyCustomColumns, columnMappings, bulkFieldCache, copyPages, remapPageWebPartUrls, preserveMetadata);
 
             result.Status = CopyStatus.Success;
+
+            // Per-file permission copy (skipped if not enabled or file has inherited permissions)
+            if (copyPermissions && permissionService != null && !string.IsNullOrEmpty(targetGraphItemId))
+            {
+                try
+                {
+                    var srcIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
+                    if (srcIds.HasValue)
+                    {
+                        var hasUnique = permissionFlags != null &&
+                            permissionFlags.TryGetValue(srcIds.Value.listItemId, out var hu) && hu;
+                        if (hasUnique)
+                        {
+                            var tgtIds = await spService.GetSharePointIdsAsync(job.TargetDriveId, targetGraphItemId);
+                            if (tgtIds.HasValue)
+                            {
+                                var perm = await permissionService.CopyObjectPermissionsAsync(
+                                    job.SourceSiteUrl, job.TargetSiteUrl,
+                                    $"web/lists('{srcIds.Value.listId}')/items({srcIds.Value.listItemId})",
+                                    $"web/lists('{tgtIds.Value.listId}')/items({tgtIds.Value.listItemId})",
+                                    hasUniquePermissions: true,
+                                    job.SourceName, ct);
+                                if ((perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null) && permissionResults != null)
+                                    AddPermissionRow(permissionResults, perm, result.TargetPath);
+                            }
+                        }
+                    }
+                }
+                catch (OperationCanceledException) { throw; }
+                catch { /* non-fatal — permissions best-effort */ }
+            }
         }
         catch (OperationCanceledException)
         {
             result.Status       = CopyStatus.Failed;
             result.ErrorMessage = "Cancelled";
+        }
+        catch (Microsoft.Graph.Models.ODataErrors.ODataError oe)
+        {
+            var detail = oe.Error?.Message ?? oe.Message;
+            System.Diagnostics.Debug.WriteLine($"[CopySingle] ODataError HTTP {oe.ResponseStatusCode}: code={oe.Error?.Code}, message={detail}");
+            result.Status       = CopyStatus.Failed;
+            result.ErrorMessage = $"SharePoint error ({oe.ResponseStatusCode}): {detail}";
         }
         catch (Exception ex)
         {
@@ -168,31 +269,134 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             job.TargetDriveId, job.TargetParentItemId, job.TargetSubFolderPath);
     }
 
-    private async Task CopyCurrentVersionAsync(
-        CopyJob job, CopyResult result, string targetParentId, bool overwrite, CancellationToken ct)
+    private async Task<string?> CopyCurrentVersionAsync(
+        CopyJob job, CopyResult result, string targetParentId, bool overwrite, CancellationToken ct,
+        bool copyCustomColumns = false, List<ColumnMapping>? columnMappings = null,
+        Dictionary<string, Dictionary<string, object?>>? bulkFieldCache = null,
+        bool copyPages = false, bool remapPageWebPartUrls = true, bool preserveMetadata = true)
     {
         ct.ThrowIfCancellationRequested();
-        var metadata = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
-        using var stream = await spService.DownloadFileAsync(job.SourceDriveId, job.SourceItemId);
-        using var ms     = new MemoryStream();
-        await stream.CopyToAsync(ms, ct);
-        ms.Position = 0;
-        var targetItemId = await spService.UploadFileAsync(job.TargetDriveId, targetParentId, job.SourceName, ms, overwrite);
+        System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] START: {job.SourceName} isPage={job.IsPage}");
+
+        var metadata = preserveMetadata
+            ? await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId)
+            : new FileMetadata();
+        System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] metadata fetched");
+
+        string targetItemId;
+        int    targetSitePagesId = 0;
+
+        if (job.IsPage)
+        {
+            if (string.IsNullOrEmpty(job.TargetLibraryServerRelativeUrl))
+                throw new Exception("Cannot create page: target library server-relative URL is not set.");
+            var targetFolderRelUrl = string.IsNullOrEmpty(job.TargetSubFolderPath)
+                ? job.TargetLibraryServerRelativeUrl
+                : $"{job.TargetLibraryServerRelativeUrl.TrimEnd('/')}/{job.TargetSubFolderPath}";
+
+            // Pre-fetch source canvas BEFORE creating the stub.
+            // Any file operation between CreatePageStub and SavePage (e.g. PatchFileSystemDate
+            // via Graph) ends the SitePages editing session, causing SavePage to return 409.
+            // By fetching first we can call SavePage the instant the stub exists.
+            PageMetadata? pageMeta = null;
+            string? metaErr = null;
+            if (copyPages && !string.IsNullOrEmpty(job.SourceSiteUrl))
+            {
+                var sourceLibRel = await spService.GetLibraryServerRelativeUrlAsync(job.SourceDriveId);
+                var pageRel = $"{sourceLibRel}/{job.SourceName}";
+                System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] pre-fetching source canvas…");
+                (pageMeta, metaErr) = await spService.GetPageMetadataAsync(job.SourceSiteUrl, pageRel);
+                System.Diagnostics.Debug.WriteLine(
+                    $"[CopyCurrentVersion] GetPageMetadata: {(pageMeta == null ? $"null — {metaErr}" : $"CanvasContent1={pageMeta.CanvasContent1?.Length ?? 0} chars")}");
+            }
+
+            System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] page: creating stub in {targetFolderRelUrl}…");
+            (targetItemId, targetSitePagesId) = await spService.CreatePageStubAsync(
+                job.TargetSiteUrl, targetFolderRelUrl,
+                job.TargetDriveId, targetParentId, job.SourceName, overwrite);
+            System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] stub created: graphItemId={targetItemId} sitePagesId={targetSitePagesId}");
+
+            // SavePage + Publish immediately (do not allow any other file operation in between)
+            if (pageMeta != null)
+            {
+                var effectiveSrc = remapPageWebPartUrls ? job.SourceSiteUrl : job.TargetSiteUrl;
+                var saveErr = await spService.SavePageContentAsync(
+                    job.TargetSiteUrl, targetSitePagesId, pageMeta, effectiveSrc);
+                if (saveErr != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] SavePage warning: {saveErr}");
+                    result.ErrorMessage = saveErr;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] SavePage OK");
+                }
+
+                var pubErr = await spService.PublishPageAsync(job.TargetSiteUrl, targetSitePagesId);
+                if (pubErr != null)
+                    System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] Publish warning: {pubErr}");
+                else
+                    System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] page published OK");
+            }
+            else
+            {
+                result.ErrorMessage = metaErr ?? "Source page metadata unavailable";
+            }
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] downloading…");
+            using var stream = await spService.DownloadFileAsync(job.SourceDriveId, job.SourceItemId);
+            using var ms     = new MemoryStream();
+            await stream.CopyToAsync(ms, ct);
+            ms.Position = 0;
+            System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] downloaded {ms.Length} bytes, uploading…");
+            targetItemId = await spService.UploadFileAsync(job.TargetDriveId, targetParentId, job.SourceName, ms, overwrite);
+            System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] upload complete, targetItemId={targetItemId}");
+        }
+
         result.VersionsCopied = 1;
         result.VersionsTotal  = 1;
         if (!string.IsNullOrEmpty(targetItemId))
         {
-            var err = await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetItemId, job.TargetSiteId, metadata);
-            if (err != null) result.ErrorMessage = err;
-
-            if (metadata.ModifiedDateTime.HasValue)
+            // For pages these run AFTER Publish so the editing session is already closed —
+            // no 409 conflicts from Graph PATCH competing with the SitePages session.
+            if (preserveMetadata)
             {
-                var fsErr = await spService.PatchFileSystemDateAsync(
-                    job.TargetDriveId, targetItemId,
-                    metadata.ModifiedDateTime.Value, metadata.CreatedDateTime);
-                if (fsErr != null) result.ErrorMessage ??= fsErr;
+                System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] applying file metadata…");
+                var err = await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetItemId, job.TargetSiteId, metadata);
+                if (err != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] ApplyFileMetadata warning: {err}");
+                    result.ErrorMessage ??= err;
+                }
+                if (metadata.ModifiedDateTime.HasValue)
+                {
+                    var fsErr = await spService.PatchFileSystemDateAsync(
+                        job.TargetDriveId, targetItemId,
+                        metadata.ModifiedDateTime.Value, metadata.CreatedDateTime);
+                    if (fsErr != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] PatchFileSystemDate warning: {fsErr}");
+                        result.ErrorMessage ??= fsErr;
+                    }
+                }
+            }
+
+            if (copyCustomColumns && bulkFieldCache != null && columnMappings != null)
+            {
+                System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] applying custom columns…");
+                var spIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
+                if (spIds.HasValue && bulkFieldCache.TryGetValue(spIds.Value.listItemId, out var customFields))
+                {
+                    var cfErr = await spService.ApplyFileCustomFieldsAsync(
+                        job.TargetDriveId, targetItemId, customFields, columnMappings);
+                    if (cfErr != null) result.ErrorMessage ??= cfErr;
+                }
             }
         }
+        System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] DONE: {job.SourceName}");
+        return targetItemId;
     }
 
     // Mode B: enhanced REST version copy.
@@ -202,9 +406,12 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
     //   ValidateUpdateListItem on P → sets per-version Editor/Author (NEW vs v1)
     //   DeleteItemVersion(U) → removes upload-time version
     // Result: versions 2,4,6,… (2× count) with correct dates AND correct per-version editors.
-    private async Task CopyWithVersionsEnhancedRestAsync(
+    private async Task<string?> CopyWithVersionsEnhancedRestAsync(
         CopyJob job, CopyResult result, string targetParentId, bool overwrite, int maxVersions,
-        CancellationToken ct)
+        CancellationToken ct,
+        bool copyCustomColumns = false, List<ColumnMapping>? columnMappings = null,
+        Dictionary<string, Dictionary<string, object?>>? bulkFieldCache = null,
+        bool preserveMetadata = true)
     {
         var metadata    = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
         var allVersions = await spService.GetVersionsAsync(job.SourceDriveId, job.SourceItemId);
@@ -233,41 +440,64 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 job.TargetDriveId, targetParentId, job.SourceName, ms,
                 overwrite: isLast ? overwrite : true);
 
-            // Record the upload version before PatchFileSystemDate creates the phantom
-            var uploadVersionId = await spService.GetCurrentVersionIdAsync(job.TargetDriveId, targetItemId);
-
-            // PatchFileSystemDate: sets date visible in version history, creates phantom P
-            var versionDate = version.LastModifiedDateTime ?? DateTimeOffset.UtcNow;
-            var fsErr = await spService.PatchFileSystemDateAsync(
-                job.TargetDriveId, targetItemId, versionDate,
-                isLast ? metadata.CreatedDateTime : null);
-            if (fsErr != null) result.ErrorMessage ??= fsErr;
-
-            // ValidateUpdateListItem on phantom P: set per-version editor (improvement over v1)
-            var versionEditorEmail = SharePointService.GetIdentityEmail(version.LastModifiedBy?.User)
-                                     ?? metadata.ModifiedByEmail;
-            var perVersionMeta = new FileMetadata(
-                isLast ? metadata.CreatedDateTime : null,
-                isLast ? metadata.CreatedByEmail : null,
-                versionDate,
-                versionEditorEmail);
-            var metaErr = await spService.ApplyFileMetadataAsync(
-                job.TargetDriveId, targetItemId, job.TargetSiteId, perVersionMeta);
-            if (metaErr != null) result.ErrorMessage ??= metaErr;
-
-            // Delete the upload version U; keep phantom P with correct date + editor
-            if (uploadVersionId != null)
+            if (preserveMetadata)
             {
-                var delErr = await spService.DeleteItemVersionAsync(
-                    job.TargetDriveId, targetItemId, uploadVersionId);
-                if (delErr != null) result.ErrorMessage ??= delErr;
+                // Record the upload version before PatchFileSystemDate creates the phantom
+                var uploadVersionId = await spService.GetCurrentVersionIdAsync(job.TargetDriveId, targetItemId);
+
+                // PatchFileSystemDate: sets date visible in version history, creates phantom P
+                var versionDate = version.LastModifiedDateTime ?? DateTimeOffset.UtcNow;
+                var fsErr = await spService.PatchFileSystemDateAsync(
+                    job.TargetDriveId, targetItemId, versionDate,
+                    isLast ? metadata.CreatedDateTime : null);
+                if (fsErr != null) result.ErrorMessage ??= fsErr;
+
+                // ValidateUpdateListItem on phantom P: set per-version editor
+                var versionEditorEmail = SharePointService.GetIdentityEmail(version.LastModifiedBy?.User)
+                                         ?? metadata.ModifiedByEmail;
+                var perVersionMeta = new FileMetadata
+                {
+                    CreatedDateTime  = isLast ? metadata.CreatedDateTime : null,
+                    CreatedByEmail   = isLast ? metadata.CreatedByEmail : null,
+                    ModifiedDateTime = versionDate,
+                    ModifiedByEmail  = versionEditorEmail,
+                };
+                var metaErr = await spService.ApplyFileMetadataAsync(
+                    job.TargetDriveId, targetItemId, job.TargetSiteId, perVersionMeta);
+                if (metaErr != null) result.ErrorMessage ??= metaErr;
+
+                // Delete the upload version U; keep phantom P with correct date + editor
+                if (uploadVersionId != null)
+                {
+                    var delErr = await spService.DeleteItemVersionAsync(
+                        job.TargetDriveId, targetItemId, uploadVersionId);
+                    if (delErr != null) result.ErrorMessage ??= delErr;
+                }
             }
 
             result.VersionsCopied++;
         }
+
+        // Apply custom column values once (on the final version target item)
+        if (copyCustomColumns && bulkFieldCache != null && columnMappings != null &&
+            !string.IsNullOrEmpty(targetItemId))
+        {
+            var spIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
+            if (spIds.HasValue && bulkFieldCache.TryGetValue(spIds.Value.listItemId, out var customFields))
+            {
+                var cfErr = await spService.ApplyFileCustomFieldsAsync(
+                    job.TargetDriveId, targetItemId, customFields, columnMappings);
+                if (cfErr != null) result.ErrorMessage ??= cfErr;
+            }
+        }
+        return targetItemId;
     }
 
-    private async Task ApplyFolderMetadataRecursiveAsync(CopyJob job, int maxParallel, CancellationToken ct)
+    private async Task ApplyFolderMetadataRecursiveAsync(
+        CopyJob job, int maxParallel, CancellationToken ct,
+        bool copyPermissions = false,
+        PermissionCopyService? permissionService = null,
+        ObservableCollection<CopyResult>? permissionResults = null)
     {
         var prefix = string.IsNullOrEmpty(job.TargetSubFolderPath) ? "" : job.TargetSubFolderPath + "/";
 
@@ -280,6 +510,30 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             if (rootMeta.ModifiedDateTime.HasValue)
                 await spService.PatchFileSystemDateAsync(job.TargetDriveId, rootTargetId,
                     rootMeta.ModifiedDateTime.Value, rootMeta.CreatedDateTime);
+
+            if (copyPermissions && permissionService != null && permissionResults != null)
+            {
+                try
+                {
+                    var srcIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
+                    var tgtIds = await spService.GetSharePointIdsAsync(job.TargetDriveId, rootTargetId);
+                    if (srcIds.HasValue && tgtIds.HasValue)
+                    {
+                        var srcApiPath = $"web/lists('{srcIds.Value.listId}')/items({srcIds.Value.listItemId})";
+                        var hasUnique  = await spService.GetHasUniqueRoleAssignmentsAsync(job.SourceSiteUrl, srcApiPath, ct);
+                        var perm = await permissionService.CopyObjectPermissionsAsync(
+                            job.SourceSiteUrl, job.TargetSiteUrl,
+                            srcApiPath,
+                            $"web/lists('{tgtIds.Value.listId}')/items({tgtIds.Value.listItemId})",
+                            hasUniquePermissions: hasUnique,
+                            job.SourceName, ct);
+                        if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                            AddPermissionRow(permissionResults, perm, $"{job.TargetSiteUrl.TrimEnd('/')}/{job.SourceName}");
+                    }
+                }
+                catch (OperationCanceledException) { throw; }
+                catch { /* non-fatal */ }
+            }
         }
 
         var subFolders = new List<(string driveId, string itemId, string relativePath)>();
@@ -299,7 +553,48 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 if (meta.ModifiedDateTime.HasValue)
                     await spService.PatchFileSystemDateAsync(job.TargetDriveId, targetFolderId,
                         meta.ModifiedDateTime.Value, meta.CreatedDateTime);
+
+                if (copyPermissions && permissionService != null && permissionResults != null)
+                {
+                    try
+                    {
+                        var srcIds = await spService.GetSharePointIdsAsync(driveId, itemId);
+                        var tgtIds = await spService.GetSharePointIdsAsync(job.TargetDriveId, targetFolderId);
+                        if (srcIds.HasValue && tgtIds.HasValue)
+                        {
+                            var srcApiPath = $"web/lists('{srcIds.Value.listId}')/items({srcIds.Value.listItemId})";
+                            var hasUnique  = await spService.GetHasUniqueRoleAssignmentsAsync(job.SourceSiteUrl, srcApiPath, innerCt);
+                            var perm = await permissionService.CopyObjectPermissionsAsync(
+                                job.SourceSiteUrl, job.TargetSiteUrl,
+                                srcApiPath,
+                                $"web/lists('{tgtIds.Value.listId}')/items({tgtIds.Value.listItemId})",
+                                hasUniquePermissions: hasUnique,
+                                System.IO.Path.GetFileName(relativePath), innerCt);
+                            if (perm.Applied > 0 || perm.SkippedPrincipals.Count > 0 || perm.Error != null)
+                                AddPermissionRow(permissionResults, perm, $"{job.TargetSiteUrl.TrimEnd('/')}/{relativePath}");
+                        }
+                    }
+                    catch (OperationCanceledException) { throw; }
+                    catch { /* non-fatal */ }
+                }
             });
+    }
+
+    // Computes the TargetSubFolderPath for a file expanded from a folder job.
+    // For library jobs the file's directory becomes the subfolder directly.
+    // For folder jobs the source folder name is prepended to form the relative path.
+    internal static string ComputeTargetSubFolder(
+        string relativePath, string jobSourceName, bool isLibrary, string jobTargetSubFolderPath)
+    {
+        var fileDir     = System.IO.Path.GetDirectoryName(relativePath)?.Replace('\\', '/') ?? string.Empty;
+        var relToParent = isLibrary
+            ? fileDir
+            : (string.IsNullOrEmpty(fileDir) ? jobSourceName : $"{jobSourceName}/{fileDir}");
+        return string.IsNullOrEmpty(jobTargetSubFolderPath)
+            ? relToParent
+            : string.IsNullOrEmpty(relToParent)
+                ? jobTargetSubFolderPath
+                : $"{jobTargetSubFolderPath}/{relToParent}";
     }
 
     private static CopyResult? FindResult(IEnumerable<CopyResult> results, string sourcePath)
@@ -311,4 +606,33 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         SourcePath = job.SourceDisplayPath,
         TargetPath = job.TargetDisplayPath
     };
+
+    private static void AddPermissionRow(ObservableCollection<CopyResult> results, PermissionCopyResult perm, string targetPath)
+    {
+        string detail;
+        CopyStatus status;
+        if (perm.Error != null)
+        {
+            detail = perm.Error;
+            status = CopyStatus.Failed;
+        }
+        else
+        {
+            detail = perm.Applied == 1 ? "1 role assignment applied" : $"{perm.Applied} role assignments applied";
+            if (perm.SkippedPrincipals.Count > 0)
+                detail += $"; skipped {perm.SkippedPrincipals.Count} unresolvable: {string.Join(", ", perm.SkippedPrincipals)}";
+            status = CopyStatus.Success;
+        }
+        var row = new CopyResult
+        {
+            FileName           = $"Permissions → {perm.ItemName}",
+            SourcePath         = string.Empty,
+            TargetPath         = targetPath,
+            Status             = status,
+            ErrorMessage       = detail,
+            IsLibraryCreation  = true,
+            IsPermissionResult = true,
+        };
+        System.Windows.Application.Current.Dispatcher.Invoke(() => results.Add(row));
+    }
 }

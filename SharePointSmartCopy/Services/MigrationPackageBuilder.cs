@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Linq;
@@ -31,7 +31,8 @@ public class MigrationPackageBuilder
         string ListItemId,
         DateTimeOffset Created,
         string? CreatedByEmail,
-        List<VersionEntry> Versions);
+        List<VersionEntry> Versions,
+        Dictionary<string, string>? CustomFieldValues = null);
 
     // Each manifest file uses its own schema namespace per SP Content Deployment format.
     private static readonly XNamespace NsManifest     = "urn:deployment-manifest-schema";
@@ -64,7 +65,8 @@ public class MigrationPackageBuilder
         string folderRelativePath,
         FileMetadata fileMetadata,
         List<(DriveItemVersion version, Stream content)> versionStreams,
-        string? existingFileId = null)
+        string? existingFileId = null,
+        Dictionary<string, string>? customFields = null)
     {
         var fileId = !string.IsNullOrEmpty(existingFileId)
             ? existingFileId.ToUpperInvariant()
@@ -115,7 +117,8 @@ public class MigrationPackageBuilder
             ListItemId:         listItemId,
             Created:            fileMetadata.CreatedDateTime ?? DateTimeOffset.UtcNow,
             CreatedByEmail:     fileMetadata.CreatedByEmail,
-            Versions:           entries));
+            Versions:           entries,
+            CustomFieldValues:  customFields));
     }
 
     private int GetUserId(string? email)
@@ -131,7 +134,7 @@ public class MigrationPackageBuilder
     public Dictionary<string, byte[]> BuildManifestXml(
         string siteId, string webId, string listId,
         string siteUrl, string webServerRelativeUrl, string libraryTitle, string libraryServerRelativeUrl,
-        bool overwrite = false)
+        bool overwrite = false, string? rootFolderGuid = null)
     {
         var manifest = new Dictionary<string, byte[]>();
 
@@ -165,7 +168,8 @@ public class MigrationPackageBuilder
         Add("UserGroup.xml",                   BuildUserGroupMap());
         Add("ViewFormsList.xml",               BuildViewFormsList());
         Add("Manifest.xml",                    BuildManifest(
-            siteId, webId, listId, siteUrl, webServerRelativeUrl, libraryTitle, libraryServerRelativeUrl));
+            siteId, webId, listId, siteUrl, webServerRelativeUrl, libraryTitle, libraryServerRelativeUrl,
+            rootFolderGuid));
 
         return manifest;
     }
@@ -244,9 +248,25 @@ public class MigrationPackageBuilder
 
     private XDocument BuildManifest(
         string siteId, string webId, string listId,
-        string siteUrl, string webRelUrl, string libraryTitle, string libraryRelUrl)
+        string siteUrl, string webRelUrl, string libraryTitle, string libraryRelUrl,
+        string? rootFolderGuid = null)
     {
         XElement E(string name, params object[] content) => new XElement(NsManifest + name, content);
+
+        XElement BuildFields(FileEntry file, VersionEntry currentVersion)
+        {
+            var fields = new List<object>
+            {
+                E("Field", new XAttribute("Name", "Author"),             new XAttribute("Value", Claims(file.CreatedByEmail))),
+                E("Field", new XAttribute("Name", "Editor"),             new XAttribute("Value", Claims(currentVersion.ModifiedByEmail))),
+                E("Field", new XAttribute("Name", "Created_x0020_Date"), new XAttribute("Value", FormatDate(file.Created))),
+                E("Field", new XAttribute("Name", "Last_x0020_Modified"),new XAttribute("Value", FormatDate(currentVersion.LastModified))),
+            };
+            if (file.CustomFieldValues != null)
+                foreach (var (name, value) in file.CustomFieldValues)
+                    fields.Add(E("Field", new XAttribute("Name", name), new XAttribute("Value", value)));
+            return E("Fields", fields.ToArray());
+        }
 
         var objects = E("SPObjects");
 
@@ -270,6 +290,29 @@ public class MigrationPackageBuilder
         var libraryWebRelUrl = libraryRelUrl.StartsWith(webPrefix + "/")
             ? libraryRelUrl[(webPrefix.Length + 1)..]
             : libraryRelUrl.TrimStart('/');
+
+        // Include the root folder explicitly so SPMI can resolve parent-folder references for
+        // newly created empty libraries (without it, SPMI throws "Missing file info for list item").
+        if (!string.IsNullOrEmpty(rootFolderGuid))
+        {
+            System.Diagnostics.Debug.WriteLine(
+                $"[Migration] SPFolder: Id={rootFolderGuid} Url={libraryWebRelUrl} Name={libraryTitle}" +
+                $" ParentWebId={webId} ParentFolderId={listId}");
+            objects.Add(E("SPObject",
+                new XAttribute("Id", rootFolderGuid),
+                new XAttribute("ObjectType", "SPFolder"),
+                new XAttribute("ParentId", listId),
+                new XAttribute("ParentWebId", webId),
+                E("Folder",
+                    new XAttribute("Id", rootFolderGuid),
+                    new XAttribute("Url", libraryWebRelUrl),
+                    new XAttribute("Name", libraryTitle),
+                    new XAttribute("ParentWebId", webId),
+                    new XAttribute("ParentFolderId", listId),
+                    new XAttribute("ProgId", ""),
+                    new XAttribute("TimeCreated", "2000-01-01T00:00:00Z"),
+                    new XAttribute("TimeLastModified", "2000-01-01T00:00:00Z"))));
+        }
 
         foreach (var file in _files)
         {
@@ -326,6 +369,8 @@ public class MigrationPackageBuilder
                         new XAttribute("Url", fileUrl),
                         new XAttribute("Id", Guid.NewGuid().ToString("D").ToUpperInvariant()),
                         new XAttribute("Version", v.VersionLabel),
+                        new XAttribute("ParentId", listId),
+                        new XAttribute("ParentWebId", webId),
                         new XAttribute("IsCurrentVersion", isCurr ? "1" : "0"),
                         new XAttribute("HasWebParts", "0"),
                         new XAttribute("StreamId", v.StreamId),
@@ -379,6 +424,8 @@ public class MigrationPackageBuilder
                     new XAttribute("ContentTypeId", "0x0101"),
                     new XAttribute("DocType", "File"),
                     new XAttribute("HasAttachments", "0"),
+                    new XAttribute("ParentId", listId),
+                    new XAttribute("ParentWebId", webId),
                     new XAttribute("ParentFolderId", listId),
                     new XAttribute("Order", "100"),
                     new XAttribute("Version", "1"),
@@ -391,15 +438,10 @@ public class MigrationPackageBuilder
                     new XAttribute("ModerationStatus", "Approved"),
                     new XAttribute("Name", file.FileName),
                     new XAttribute("DocId", file.FileId),
-                    new XAttribute("ParentWebId", webId),
                     new XAttribute("ParentListId", listId),
                     new XAttribute("FileUrl", fileUrl),
                     new XAttribute("FileId", file.FileId),
-                    E("Fields",
-                        E("Field", new XAttribute("Name", "Author"),             new XAttribute("Value", Claims(file.CreatedByEmail))),
-                        E("Field", new XAttribute("Name", "Editor"),             new XAttribute("Value", Claims(currentVersion.ModifiedByEmail))),
-                        E("Field", new XAttribute("Name", "Created_x0020_Date"), new XAttribute("Value", FormatDate(file.Created))),
-                        E("Field", new XAttribute("Name", "Last_x0020_Modified"),new XAttribute("Value", FormatDate(currentVersion.LastModified)))))));
+                    BuildFields(file, currentVersion))));
         }
 
         return new XDocument(
@@ -560,4 +602,5 @@ public class MigrationPackageBuilder
         new XElement("Field",
             new XAttribute("Name", name),
             new XAttribute("Value", value));
+
 }

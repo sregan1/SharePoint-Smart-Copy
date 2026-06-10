@@ -18,7 +18,10 @@ public class MigrationJobService(SharePointService spService)
         bool overwrite,
         int maxVersions,
         int maxParallel,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool copyCustomColumns = false,
+        List<ColumnMapping>? columnMappings = null,
+        Dictionary<string, Dictionary<string, object?>>? bulkFieldCache = null)
     {
         if (fileTasks.Count == 0) return;
 
@@ -40,7 +43,21 @@ public class MigrationJobService(SharePointService spService)
             var libraryServerRelUrl = firstJob.TargetLibraryServerRelativeUrl;
             if (string.IsNullOrEmpty(libraryServerRelUrl))
                 libraryServerRelUrl = await spService.GetLibraryServerRelativeUrlAsync(firstJob.TargetDriveId);
-            var listId       = await spService.GetListIdByServerRelativeUrlAsync(targetSiteUrl, libraryServerRelUrl);
+
+            string listId;
+            try
+            {
+                listId = await spService.GetListIdByServerRelativeUrlAsync(targetSiteUrl, libraryServerRelUrl);
+            }
+            catch when (!string.IsNullOrEmpty(firstJob.TargetDriveId))
+            {
+                // URL-based lookup can fail when the library's actual server-relative URL
+                // differs from what was stored (e.g. "Shared Documents" vs "Documents").
+                // Fall back to resolving the list ID directly from the drive via Graph.
+                var fallbackId = await spService.GetListIdFromDriveAsync(firstJob.TargetDriveId);
+                listId = fallbackId
+                    ?? throw new Exception($"Cannot resolve list ID for library at '{libraryServerRelUrl}'");
+            }
             var libraryTitle = libraryServerRelUrl.Split('/').Last();
 
             // Pre-create subfolders before parallel split — concurrent creates for the same path conflict
@@ -64,7 +81,8 @@ public class MigrationJobService(SharePointService spService)
                 await RunSingleJobAsync(
                     fileTasks, overwrite, maxVersions, maxParallel,
                     targetSiteUrl, webId, webRelUrl, siteId,
-                    libraryServerRelUrl, listId, libraryTitle, cancellationToken);
+                    libraryServerRelUrl, listId, libraryTitle, cancellationToken,
+                    copyCustomColumns, columnMappings, bulkFieldCache);
             }
             else
             {
@@ -79,7 +97,8 @@ public class MigrationJobService(SharePointService spService)
                     .Select(batch => RunSingleJobAsync(
                         batch, overwrite, maxVersions, maxParallel,
                         targetSiteUrl, webId, webRelUrl, siteId,
-                        libraryServerRelUrl, listId, libraryTitle, cancellationToken)));
+                        libraryServerRelUrl, listId, libraryTitle, cancellationToken,
+                        copyCustomColumns, columnMappings, bulkFieldCache)));
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -112,7 +131,10 @@ public class MigrationJobService(SharePointService spService)
         string libraryServerRelUrl,
         string listId,
         string libraryTitle,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool copyCustomColumns = false,
+        List<ColumnMapping>? columnMappings = null,
+        Dictionary<string, Dictionary<string, object?>>? bulkFieldCache = null)
     {
         try
         {
@@ -200,7 +222,8 @@ public class MigrationJobService(SharePointService spService)
                         : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
                     existingFileIds.TryGetValue(fileServerRelUrl, out var existingFileId);
                     await AddFileToPackageAsync(builder, job, result, maxVersions, libraryServerRelUrl,
-                        existingFileId, cancellationToken);
+                        existingFileId, cancellationToken,
+                        copyCustomColumns, columnMappings, bulkFieldCache);
                 }
                 catch (Exception ex)
                 {
@@ -213,8 +236,12 @@ public class MigrationJobService(SharePointService spService)
             System.Diagnostics.Debug.WriteLine($"[Migration] dataUri prefix={dataUri[..Math.Min(dataUri.Length,80)]}");
             System.Diagnostics.Debug.WriteLine($"[Migration] metaUri prefix={metadataUri[..Math.Min(metadataUri.Length,80)]}");
 
-            // Step 4: upload content blobs to the data container — parallel
-            var dataClient = new BlobContainerClient(new Uri(dataUri));
+            // Step 4: upload content blobs to the data container — parallel.
+            // NetworkTimeout extends the per-request timeout from the 60-second Azure default
+            // so large files don't cancel mid-upload on slow connections.
+            var blobOptions = new BlobClientOptions();
+            blobOptions.Retry.NetworkTimeout = TimeSpan.FromMinutes(30);
+            var dataClient = new BlobContainerClient(new Uri(dataUri), blobOptions);
             var allBlobs   = builder.Files.SelectMany(f => f.Versions).ToList();
             await Parallel.ForEachAsync(
                 allBlobs,
@@ -229,16 +256,28 @@ public class MigrationJobService(SharePointService spService)
                     await blob.CreateSnapshotAsync(cancellationToken: ct);
                 });
 
-            // Step 5: upload manifest XML blobs to the metadata container
+            // Step 5: upload manifest XML blobs to the metadata container.
+            // Fetch the root folder GUID so the manifest can include an explicit SPFolder entry.
+            // This is required for newly created empty libraries — without it SPMI cannot resolve
+            // the parent folder for files and fails with "Missing file info for list item".
+            var rootFolderGuid = await spService.GetLibraryRootFolderUniqueIdAsync(
+                targetSiteUrl, libraryServerRelUrl);
+
+            System.Diagnostics.Debug.WriteLine(
+                $"[Migration] manifest params: siteId={siteId} webId={webId} listId={listId}" +
+                $" webRelUrl={webRelUrl} libraryTitle={libraryTitle} libraryServerRelUrl={libraryServerRelUrl}" +
+                $" rootFolderGuid={rootFolderGuid ?? "(null)"} overwrite={overwrite}");
+
             var metadataClient = new BlobContainerClient(new Uri(metadataUri));
             var manifests = builder.BuildManifestXml(
                 siteId, webId, listId,
                 targetSiteUrl, webRelUrl, libraryTitle, libraryServerRelUrl,
-                overwrite);
+                overwrite, rootFolderGuid);
 
             foreach (var (blobName, data) in manifests)
             {
                 cancellationToken.ThrowIfCancellationRequested();
+                System.Diagnostics.Debug.WriteLine($"[Migration] uploading manifest blob: {blobName} ({data.Length} bytes)");
                 var ivB64m = Convert.ToBase64String(data[..16]);
                 var optsM  = new BlobUploadOptions { Metadata = new Dictionary<string, string> { ["IV"] = ivB64m } };
                 using var ms = new MemoryStream(data, 16, data.Length - 16);
@@ -250,6 +289,7 @@ public class MigrationJobService(SharePointService spService)
             // Step 6: submit the migration job
             var jobId = await spService.CreateMigrationJobEncryptedAsync(
                 targetSiteUrl, webId, dataUri, metadataUri, encryptionKey);
+            System.Diagnostics.Debug.WriteLine($"[Migration] submitted job: {jobId}");
 
             // Step 7: poll until JobEnd
             string? jobError = null;
@@ -315,7 +355,10 @@ public class MigrationJobService(SharePointService spService)
         int maxVersions,
         string libraryServerRelUrl,
         string? existingFileId,
-        CancellationToken ct)
+        CancellationToken ct,
+        bool copyCustomColumns = false,
+        List<ColumnMapping>? columnMappings = null,
+        Dictionary<string, Dictionary<string, object?>>? bulkFieldCache = null)
     {
         var metadata    = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
         var allVersions = await spService.GetVersionsAsync(job.SourceDriveId, job.SourceItemId);
@@ -342,7 +385,29 @@ public class MigrationJobService(SharePointService spService)
             ? ""
             : job.TargetSubFolderPath.TrimStart('/');
 
-        await builder.AddFileAsync(job.SourceName, folderRelPath, metadata, versionStreams, existingFileId);
+        // Look up custom field values from bulk cache (keyed by SP list item integer ID)
+        Dictionary<string, string>? customFieldsForManifest = null;
+        if (copyCustomColumns && bulkFieldCache != null && columnMappings != null)
+        {
+            var spIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
+            if (spIds.HasValue && bulkFieldCache.TryGetValue(spIds.Value.listItemId, out var rawFields))
+            {
+                var mappingLookup = columnMappings.ToDictionary(
+                    m => m.SourceColumn.InternalName,
+                    m => m.TargetColumn?.InternalName);
+                customFieldsForManifest = new Dictionary<string, string>();
+                foreach (var (srcName, value) in rawFields)
+                {
+                    if (value == null) continue;
+                    if (!mappingLookup.TryGetValue(srcName, out var targetName) || targetName == null)
+                        targetName = srcName;
+                    customFieldsForManifest[targetName] = value.ToString() ?? "";
+                }
+            }
+        }
+
+        await builder.AddFileAsync(job.SourceName, folderRelPath, metadata, versionStreams, existingFileId,
+            customFieldsForManifest);
 
         foreach (var (_, s) in versionStreams)
             s.Dispose();
@@ -367,7 +432,13 @@ public class MigrationJobService(SharePointService spService)
                     if (props.Value.Metadata.TryGetValue("IV", out var ivB64) && !string.IsNullOrEmpty(ivB64))
                         iv = Convert.FromBase64String(ivB64);
                 }
-                catch { /* metadata read may not be permitted by SAS */ }
+                catch (Azure.RequestFailedException ex) when (ex.Status == 404)
+                {
+                    // Blob not written by SP — skip rather than falling through to DownloadToAsync
+                    System.Diagnostics.Debug.WriteLine($"[SP-{suffix[1..]}] {name} not present (SP did not write it)");
+                    continue;
+                }
+                catch { /* 403: metadata read not permitted by SAS; still attempt download */ }
 
                 using var ms = new MemoryStream();
                 await blob.DownloadToAsync(ms);
