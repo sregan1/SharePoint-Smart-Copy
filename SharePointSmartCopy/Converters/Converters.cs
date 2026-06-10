@@ -64,6 +64,20 @@ public class MultiEqualToBoolConverter : IMultiValueConverter
         => throw new NotImplementedException();
 }
 
+// Numerically compares two bound ints: values[0] > values[1].
+// Used by the step indicator to mark completed steps (CurrentStep > StepInfo.Index).
+public class MultiGreaterThanToBoolConverter : IMultiValueConverter
+{
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        => values.Length == 2
+           && int.TryParse(values[0]?.ToString(), out var a)
+           && int.TryParse(values[1]?.ToString(), out var b)
+           && a > b;
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
 public class NotEqualToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

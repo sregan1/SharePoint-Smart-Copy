@@ -22,6 +22,7 @@
     <SolidColorBrush x:Key="PermissionRowBrush"   Color="#EEF2FF"/>
     <SolidColorBrush x:Key="UnmatchedBgBrush"     Color="#FFF9F0"/>
     <SolidColorBrush x:Key="TileSelectedTextBrush" Color="#CCE4F7"/>
+    <SolidColorBrush x:Key="AccentLightBrush"     Color="#CCE4F7"/>
 
     <!-- ══ Buttons ══════════════════════════════════════════════════════════ -->
     <Style x:Key="BaseBtn" TargetType="Button">
@@ -226,5 +227,32 @@
         <Setter Property="Padding" Value="20,12"/>
         <Setter Property="Margin" Value="0,0,12,0"/>
         <Setter Property="MinWidth" Value="130"/>
+    </Style>
+
+    <!-- Centered hint shown inside empty lists / panels -->
+    <Style x:Key="GhostText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="{StaticResource TextTertiaryBrush}"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="MaxWidth" Value="360"/>
+        <Setter Property="IsHitTestVisible" Value="False"/>
+    </Style>
+
+    <!-- Transient bottom-center notification -->
+    <Style x:Key="ToastBorder" TargetType="Border">
+        <Setter Property="Background" Value="#323130"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Margin" Value="0,0,0,80"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

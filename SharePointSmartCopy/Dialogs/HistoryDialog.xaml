@@ -125,6 +125,7 @@
 
                 <!-- Detail DataGrid -->
                 <Border Grid.Row="4" BorderBrush="{StaticResource BorderLightBrush}" BorderThickness="1">
+                  <Grid>
                     <DataGrid x:Name="DetailGrid"
                               AutoGenerateColumns="False" IsReadOnly="True"
                               CanUserAddRows="False" GridLinesVisibility="Horizontal"
@@ -148,6 +149,9 @@
                             <DataGridTextColumn Header="Error"       Binding="{Binding ErrorMessage}"  Width="200"/>
                         </DataGrid.Columns>
                     </DataGrid>
+                    <TextBlock x:Name="EmptyHint" Style="{StaticResource GhostText}"
+                               Text="Select a run on the left to see its file-by-file results."/>
+                  </Grid>
                 </Border>
             </Grid>
         </Grid>

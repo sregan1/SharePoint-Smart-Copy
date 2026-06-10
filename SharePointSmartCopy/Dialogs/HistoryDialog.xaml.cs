@@ -35,6 +35,7 @@ public partial class HistoryDialog : Window
         DeleteButton.IsEnabled  = hasSelection;
         ExportButton.IsEnabled  = hasSelection;
         SummaryCards.Visibility = hasSelection ? Visibility.Visible : Visibility.Collapsed;
+        EmptyHint.Visibility    = hasSelection ? Visibility.Collapsed : Visibility.Visible;
 
         if (report == null)
         {

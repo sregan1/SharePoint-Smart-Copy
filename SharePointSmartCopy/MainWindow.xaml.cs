@@ -31,9 +31,27 @@ public partial class MainWindow : Window
         if (dlg.ShowDialog() == true)
         {
             VM.ApplySettings(dlg.Result);
-            MessageBox.Show("Settings saved. Connect again if you were already signed in.",
-                "Settings Updated", MessageBoxButton.OK, MessageBoxImage.Information);
+            ShowToast("Settings saved. Connect again if you were already signed in.");
         }
+    }
+
+    // Shows a transient bottom-center notification for ~3 seconds.
+    private System.Windows.Threading.DispatcherTimer? _toastTimer;
+    private void ShowToast(string message)
+    {
+        ToastText.Text = message;
+        ToastHost.Visibility = Visibility.Visible;
+        _toastTimer?.Stop();
+        _toastTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(3)
+        };
+        _toastTimer.Tick += (_, _) =>
+        {
+            _toastTimer.Stop();
+            ToastHost.Visibility = Visibility.Collapsed;
+        };
+        _toastTimer.Start();
     }
 
     private async void SourceTreeItem_Expanded(object sender, RoutedEventArgs e)
@@ -121,28 +139,28 @@ public partial class MainWindow : Window
 
     // ── Mode tile click handlers ───────────────────────────────────────────────
 
-    private void ModeFiles_Click(object sender, MouseButtonEventArgs e)
+    private void ModeFiles_Click(object sender, RoutedEventArgs e)
     {
         VM.ColumnMappings.Clear();
         VM.CopyScope = CopyScope.Files;
         _ = VM.LoadLibrariesAsync();
     }
 
-    private void ModeLibrary_Click(object sender, MouseButtonEventArgs e)
+    private void ModeLibrary_Click(object sender, RoutedEventArgs e)
     {
         VM.ColumnMappings.Clear();
         VM.CopyScope = CopyScope.Library;
         _ = VM.LoadLibrariesAsync();
     }
 
-    private void ModeSite_Click(object sender, MouseButtonEventArgs e)
+    private void ModeSite_Click(object sender, RoutedEventArgs e)
     {
         VM.ColumnMappings.Clear();
         VM.CopyScope = CopyScope.Site;
         _ = VM.LoadLibrariesAsync();
     }
 
-    private void ModePages_Click(object sender, MouseButtonEventArgs e)
+    private void ModePages_Click(object sender, RoutedEventArgs e)
     {
         VM.ColumnMappings.Clear();
         VM.CopyScope = CopyScope.Pages;
