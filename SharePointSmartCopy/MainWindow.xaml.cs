@@ -22,6 +22,17 @@ public partial class MainWindow : Window
             .CollectionChanged += ProgressList_CollectionChanged;
     }
 
+    // ── Window caption buttons (custom chrome) ────────────────────────────────
+
+    private void Minimize_Click(object sender, RoutedEventArgs e)
+        => WindowState = WindowState.Minimized;
+
+    private void MaximizeRestore_Click(object sender, RoutedEventArgs e)
+        => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+
+    private void CloseWindow_Click(object sender, RoutedEventArgs e)
+        => Close();
+
     private void HistoryButton_Click(object sender, RoutedEventArgs e)
         => new HistoryDialog { Owner = this }.ShowDialog();
 

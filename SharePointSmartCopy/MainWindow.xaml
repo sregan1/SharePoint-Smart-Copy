@@ -8,7 +8,18 @@
         Width="960" Height="720"
         MinWidth="800" MinHeight="600"
         Background="{StaticResource WindowBgBrush}"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None">
+
+    <!-- Custom chrome: the blue app bar (row 0, 52px) doubles as the title bar.
+         Buttons inside it opt in via WindowChrome.IsHitTestVisibleInChrome. -->
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="52"
+                      ResizeBorderThickness="6"
+                      GlassFrameThickness="0"
+                      CornerRadius="0"
+                      UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
 
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
@@ -183,6 +194,46 @@
             </Style.Triggers>
         </Style>
 
+        <!-- ── Window caption buttons (min / max / close) ── -->
+        <Style x:Key="CaptionBtn" TargetType="Button">
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#33FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CaptionCloseBtn" TargetType="Button" BasedOn="{StaticResource CaptionBtn}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#E81123"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style TargetType="TreeViewItem">
             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
             <Setter Property="Padding" Value="2"/>
@@ -254,6 +305,18 @@
     </Window.Resources>
 
     <Grid>
+        <Grid.Style>
+            <Style TargetType="Grid">
+                <Style.Triggers>
+                    <!-- Maximized borderless windows overhang the screen by the resize
+                         border width — pad the content back into view. -->
+                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
+                                 Value="Maximized">
+                        <Setter Property="Margin" Value="7"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
         <Grid.RowDefinitions>
             <RowDefinition Height="52"/>
             <RowDefinition Height="Auto"/>
@@ -261,37 +324,74 @@
             <RowDefinition Height="64"/>
         </Grid.RowDefinitions>
 
-        <!-- ══ App Bar ══════════════════════════════════════════════════════════ -->
+        <!-- ══ App Bar (doubles as the window title bar) ════════════════════════ -->
         <Border Grid.Row="0" Background="{StaticResource AccentBrush}">
-            <Grid Margin="16,0">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Width="36" Height="36" CornerRadius="6" Background="White" Padding="3"
-                            VerticalAlignment="Center" Margin="0,0,10,0">
-                        <Image RenderOptions.BitmapScalingMode="HighQuality">
-                            <Image.Source>
-                                <CroppedBitmap Source="pack://application:,,,/Resources/logo.png"
-                                               SourceRect="0,0,625,415"/>
-                            </Image.Source>
-                        </Image>
-                    </Border>
-                    <TextBlock Text="SharePoint Smart Copy" FontSize="16" FontWeight="SemiBold"
-                               Foreground="White" VerticalAlignment="Center"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding SignedInUser}" Foreground="White" FontSize="12"
-                               VerticalAlignment="Center" Margin="0,0,12,0"
-                               Visibility="{Binding SignedInUser, Converter={StaticResource NotNullToVis}}"/>
-                    <Button Style="{StaticResource AppBarBtn}" Margin="0,0,8,0" Click="HistoryButton_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE81C;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
-                            <TextBlock Text="History" VerticalAlignment="Center"/>
-                        </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" Margin="16,0,8,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="36" Height="36" CornerRadius="6" Background="White" Padding="3"
+                                VerticalAlignment="Center" Margin="0,0,10,0">
+                            <Image RenderOptions.BitmapScalingMode="HighQuality">
+                                <Image.Source>
+                                    <CroppedBitmap Source="pack://application:,,,/Resources/logo.png"
+                                                   SourceRect="0,0,625,415"/>
+                                </Image.Source>
+                            </Image>
+                        </Border>
+                        <TextBlock Text="SharePoint Smart Copy" FontSize="16" FontWeight="SemiBold"
+                                   Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding SignedInUser}" Foreground="White" FontSize="12"
+                                   VerticalAlignment="Center" Margin="0,0,12,0"
+                                   Visibility="{Binding SignedInUser, Converter={StaticResource NotNullToVis}}"/>
+                        <Button Style="{StaticResource AppBarBtn}" Margin="0,0,8,0" Click="HistoryButton_Click"
+                                WindowChrome.IsHitTestVisibleInChrome="True">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE81C;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                                <TextBlock Text="History" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource AppBarBtn}" Click="SettingsButton_Click"
+                                WindowChrome.IsHitTestVisibleInChrome="True">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE713;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                                <TextBlock Text="Settings" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Window caption buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Style="{StaticResource CaptionBtn}" Click="Minimize_Click"
+                            AutomationProperties.Name="Minimize">
+                        <TextBlock Text="&#xE921;" FontFamily="{StaticResource GlyphFont}" FontSize="10"/>
                     </Button>
-                    <Button Style="{StaticResource AppBarBtn}" Click="SettingsButton_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE713;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
-                            <TextBlock Text="Settings" VerticalAlignment="Center"/>
-                        </StackPanel>
+                    <Button Style="{StaticResource CaptionBtn}" Click="MaximizeRestore_Click"
+                            AutomationProperties.Name="Maximize or restore">
+                        <TextBlock FontFamily="{StaticResource GlyphFont}" FontSize="10">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="&#xE922;"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                     Value="Maximized">
+                                            <Setter Property="Text" Value="&#xE923;"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Button>
+                    <Button Style="{StaticResource CaptionCloseBtn}" Click="CloseWindow_Click"
+                            AutomationProperties.Name="Close">
+                        <TextBlock Text="&#xE8BB;" FontFamily="{StaticResource GlyphFont}" FontSize="10"/>
                     </Button>
                 </StackPanel>
             </Grid>
