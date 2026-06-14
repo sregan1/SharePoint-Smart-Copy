@@ -14,6 +14,11 @@ public class SavedReportItem
     public int VersionsCopied { get; set; }
     public int VersionsTotal { get; set; }
     public string? ErrorMessage { get; set; }
+    public bool IsPermissionResult { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public CopyStatus? PermissionStatus { get; set; }
+    public string? PermissionDetails { get; set; }
 
     [JsonIgnore]
     public string StatusDisplay => Status switch

@@ -112,20 +112,25 @@ public class StringToColorBrushConverter : IValueConverter
 
 public class CopyStatusToColorConverter : IValueConverter
 {
+    // Resolves theme palette brushes so log/report colors follow Light/Dark mode;
+    // the RGB fallbacks match the light palette for safety outside an app context.
+    private static Brush Themed(string key, Color fallback)
+        => Application.Current?.TryFindResource(key) as Brush ?? new SolidColorBrush(fallback);
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is CopyStatus s)
         {
             return s switch
             {
-                CopyStatus.Success => new SolidColorBrush(Color.FromRgb(16, 124, 16)),
-                CopyStatus.Failed  => new SolidColorBrush(Color.FromRgb(164, 38, 44)),
-                CopyStatus.Copying => new SolidColorBrush(Color.FromRgb(0, 120, 212)),
-                CopyStatus.Skipped => new SolidColorBrush(Color.FromRgb(121, 119, 117)),
-                _                  => new SolidColorBrush(Color.FromRgb(50, 49, 48))
+                CopyStatus.Success => Themed("SuccessBrush", Color.FromRgb(16, 124, 16)),
+                CopyStatus.Failed  => Themed("DangerBrush", Color.FromRgb(164, 38, 44)),
+                CopyStatus.Copying => Themed("AccentBrush", Color.FromRgb(0, 120, 212)),
+                CopyStatus.Skipped => Themed("TextTertiaryBrush", Color.FromRgb(121, 119, 117)),
+                _                  => Themed("TextSecondaryBrush", Color.FromRgb(50, 49, 48))
             };
         }
-        return Brushes.Black;
+        return Themed("TextPrimaryBrush", Colors.Black);
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

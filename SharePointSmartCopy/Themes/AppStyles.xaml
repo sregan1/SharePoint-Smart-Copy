@@ -204,13 +204,84 @@
         <Setter Property="Padding" Value="16,14"/>
     </Style>
 
+    <!-- Card section header text, paired with an optional CardHeaderGlyph -->
+    <Style x:Key="CardHeader" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="CardHeaderGlyph" TargetType="TextBlock" BasedOn="{StaticResource GlyphIcon}">
+        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+        <Setter Property="Margin" Value="0,0,6,0"/>
+    </Style>
+
+    <!-- Thin divider between sections inside a card -->
+    <Style x:Key="SectionSeparator" TargetType="Separator">
+        <Setter Property="Background" Value="{DynamicResource BorderLightBrush}"/>
+        <Setter Property="Margin" Value="0,8,0,8"/>
+    </Style>
+
+    <!-- Card-styled expander for collapsible option groups (e.g. Advanced options) -->
+    <Style x:Key="OptionsExpander" TargetType="Expander">
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Expander">
+                    <StackPanel>
+                        <ToggleButton x:Name="HeaderBtn" Cursor="Hand"
+                                      IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border x:Name="HeaderBd" Background="{DynamicResource SurfaceBrush}"
+                                            BorderBrush="{DynamicResource BorderLightBrush}"
+                                            BorderThickness="1" CornerRadius="6" Padding="14,9">
+                                        <Grid>
+                                            <ContentPresenter VerticalAlignment="Center"/>
+                                            <TextBlock x:Name="Chevron" Text="&#xE70D;"
+                                                       FontFamily="{StaticResource GlyphFont}" FontSize="12"
+                                                       Foreground="{DynamicResource TextTertiaryBrush}"
+                                                       HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="Chevron" Property="Text" Value="&#xE70E;"/>
+                                            <Setter TargetName="HeaderBd" Property="CornerRadius" Value="6,6,0,0"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="HeaderBd" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                            <ContentPresenter Content="{TemplateBinding Header}"/>
+                        </ToggleButton>
+                        <Border x:Name="ContentBd" Visibility="Collapsed"
+                                Background="{DynamicResource SurfaceBrush}"
+                                BorderBrush="{DynamicResource BorderLightBrush}"
+                                BorderThickness="1,0,1,1" CornerRadius="0,0,6,6" Padding="16,14">
+                            <ContentPresenter/>
+                        </Border>
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Setter TargetName="ContentBd" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- Report / history summary count card -->
     <Style x:Key="SummaryCard" TargetType="Border">
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="6"/>
         <Setter Property="Padding" Value="20,12"/>
         <Setter Property="Margin" Value="0,0,12,0"/>
-        <Setter Property="MinWidth" Value="130"/>
+        <Setter Property="MinWidth" Value="100"/>
     </Style>
 
     <!-- Pill-shaped filter chip (RadioButton) for the copy-log grids -->
@@ -303,6 +374,8 @@
         <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
         <Setter Property="Cursor" Value="Hand"/>
     </Style>
+
+    <!-- ══ Report TabControl / TabItem ══════════════════════════════════════ -->
 
     <!-- Transient bottom-center notification -->
     <Style x:Key="ToastBorder" TargetType="Border">

@@ -64,8 +64,8 @@
                             <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextPlaceholderBrush}"
                                        HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="420">
                                 The source library has no custom columns of a supported type.
-                                Supported types: Text, Note, Number, Boolean, Date, Choice, Multi-choice.
-                                Lookup, User, and Managed Metadata columns are not supported.
+                                Supported types: Text, Note, Number, Boolean, Date, Choice, Multi-choice, Person, Managed Metadata.
+                                Lookup columns are not supported.
                             </TextBlock>
                         </StackPanel>
                     </Border>
@@ -112,7 +112,7 @@
 
                                             <!-- Target column selector -->
                                             <ComboBox Grid.Column="3" FontSize="12" VerticalAlignment="Center"
-                                                      ItemsSource="{Binding DataContext.TargetColumnOptions, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                      ItemsSource="{Binding CompatibleOptions}"
                                                       DisplayMemberPath="DisplayLabel"
                                                       SelectedItem="{Binding SelectedTargetItem, Mode=TwoWay}"
                                                       Padding="6,4"/>

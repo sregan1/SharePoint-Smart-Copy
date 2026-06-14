@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 2.0  ·  May 2026**
+**Version 3.1  ·  June 2026**
 
 ---
 
@@ -27,15 +27,20 @@ Two copy engines are available. **Migration API** mode uses SharePoint's server-
 
 ### Key Capabilities
 
-- Copy individual files, entire folders, or complete document libraries
+- Copy individual files, entire folders, complete document libraries, entire sites, or modern pages
 - Preserve version history — copy all versions or limit to the N most recent
 - **Migration API mode** — exact version numbers, exact dates, exact editors (requires Site Collection Admin on target)
 - **Enhanced REST mode** — correct dates and editors per version; no admin rights required
+- **Copy-if-newer** incremental mode — only copies files that are newer on the source, skipping files already up to date
+- **Person/User and Managed Metadata columns** copied alongside content — no manual field re-entry
+- Custom column mapping dialog — map source columns to matching target columns or create missing ones
+- Automatic HTTP 429 throttle handling — large jobs complete without interruption
 - Parallel transfers with 1–16 simultaneous file copies for faster bulk operations
 - Real-time progress monitoring with per-file status updates (Enhanced REST) or job-level results (Migration API)
-- Copy report with succeeded, failed, and skipped counts, plus CSV export
+- Copy report with succeeded, failed, and skipped counts, inline permission status, and CSV export
 - Full copy history stored locally — browse, re-export, or delete previous runs
 - ← Back navigation available on every step, including the final report screen
+- Light, Dark, and System-follows-Windows themes
 
 ---
 

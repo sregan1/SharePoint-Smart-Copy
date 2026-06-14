@@ -76,16 +76,21 @@ public partial class MainWindow : Window
 
     // Cycles custom list nodes: blank → checked (structure+items) → blank (items only) → blank (nothing).
     // The null state is visually identical to unchecked via the ItemsOnlyCheckBox style.
+    // All other nodes are a plain two-state toggle — without this, WPF's native tri-state
+    // cycle sends "checked → indeterminate" on uncheck, leaving stray null states the app
+    // would misread as items-only mode (phantom entries in the Copy Preview).
     private void SourceCheckBox_PreviewClick(object sender, MouseButtonEventArgs e)
     {
-        if ((sender as CheckBox)?.DataContext is not SharePointNode node || !node.IsCustomList)
+        if ((sender as CheckBox)?.DataContext is not SharePointNode node)
             return;
-        node.IsChecked = node.IsChecked switch
-        {
-            false => true,   // blank → checked
-            true  => null,   // checked → blank (items only, no structure)
-            _     => false   // null/blank → blank (deselect all)
-        };
+        node.IsChecked = node.IsCustomList
+            ? node.IsChecked switch
+              {
+                  false => true,   // blank → checked
+                  true  => null,   // checked → blank (items only, no structure)
+                  _     => false   // null/blank → blank (deselect all)
+              }
+            : node.IsChecked != true;
         e.Handled = true;
         VM.NotifySelectionChanged();
     }
@@ -106,12 +111,6 @@ public partial class MainWindow : Window
     {
         if (e.NewValue is SharePointNode node) VM.SelectedTargetFolder = node;
     }
-
-    private void MigrationApiMode_Click(object sender, RoutedEventArgs e)
-        => VM.CopyMode = CopyMode.MigrationApi;
-
-    private void EnhancedRestMode_Click(object sender, RoutedEventArgs e)
-        => VM.CopyMode = CopyMode.EnhancedRest;
 
     private void InfoIcon_Click(object sender, MouseButtonEventArgs e)
     {
@@ -176,13 +175,6 @@ public partial class MainWindow : Window
         VM.ColumnMappings.Clear();
         VM.CopyScope = CopyScope.Pages;
         _ = VM.LoadPageLibraryAsync();
-    }
-
-    private void AdvancedToggle_Click(object sender, RoutedEventArgs e)
-    {
-        var open = AdvancedPanel.Visibility == Visibility.Visible;
-        AdvancedPanel.Visibility = open ? Visibility.Collapsed : Visibility.Visible;
-        AdvancedChevron.Text     = open ? "▾" : "▴";
     }
 
     private void CopyCustomColumns_Changed(object sender, RoutedEventArgs e)

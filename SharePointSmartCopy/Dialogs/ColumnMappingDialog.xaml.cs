@@ -51,10 +51,15 @@ public partial class ColumnMappingDialog : Window
             {
                 if (row.Mapping.Status == MappingStatus.ManuallyMapped) continue;
 
+                // Name matches only count when the value types are compatible — a Person
+                // column must not silently match a Text column that shares its name.
+                var srcType = row.Mapping.SourceColumn.FieldType;
                 var exact = _vm.TargetColumns.FirstOrDefault(t =>
-                    t.InternalName.Equals(row.Mapping.SourceColumn.InternalName, StringComparison.OrdinalIgnoreCase));
+                    t.InternalName.Equals(row.Mapping.SourceColumn.InternalName, StringComparison.OrdinalIgnoreCase) &&
+                    ColumnMapping.AreTypesCompatible(srcType, t.FieldType));
                 var fuzzy = exact ?? _vm.TargetColumns.FirstOrDefault(t =>
-                    t.DisplayName.Equals(row.Mapping.SourceColumn.DisplayName, StringComparison.OrdinalIgnoreCase));
+                    t.DisplayName.Equals(row.Mapping.SourceColumn.DisplayName, StringComparison.OrdinalIgnoreCase) &&
+                    ColumnMapping.AreTypesCompatible(srcType, t.FieldType));
 
                 if (fuzzy != null)
                 {
@@ -113,7 +118,7 @@ public partial class ColumnMappingDialog : Window
     {
         if (DlgVM.Mappings.Count == 0)
         {
-            StatusBar.Text = "ℹ No mappable columns found. Supported types: Text, Note, Number, Boolean, Date, Choice, Multi-choice.";
+            StatusBar.Text = "ℹ No mappable columns found. Supported types: Text, Note, Number, Boolean, Date, Choice, Multi-choice, Person, Managed Metadata.";
             return;
         }
         var skipped = DlgVM.Mappings.Count(r => r.SelectedTargetItem == null || r.SelectedTargetItem.IsSkip);
@@ -124,8 +129,11 @@ public partial class ColumnMappingDialog : Window
         }
         else
         {
-            var mapped = DlgVM.Mappings.Count(r => r.SelectedTargetItem != null && !r.SelectedTargetItem.IsSkip && !r.SelectedTargetItem.IsCreate);
-            StatusBar.Text = $"✅ {mapped} mapped    ⚠ {skipped} skipped";
+            var mapped   = DlgVM.Mappings.Count(r => r.SelectedTargetItem != null && !r.SelectedTargetItem.IsSkip && !r.SelectedTargetItem.IsCreate);
+            var creating = DlgVM.Mappings.Count(r => r.SelectedTargetItem?.IsCreate == true);
+            StatusBar.Text = creating > 0
+                ? $"✅ {mapped} mapped    + {creating} will be created    ⚠ {skipped} skipped"
+                : $"✅ {mapped} mapped    ⚠ {skipped} skipped";
         }
     }
 }
@@ -141,7 +149,7 @@ public class ColumnMappingViewModel
 
     public string HeaderDescription  => IsLibraryScope
         ? "Choose which columns to create in the new target library. Columns set to 'Skip' will not be created."
-        : "Map source columns to target columns. Unmatched columns will be skipped unless you assign a target. Use Auto-match to automatically match columns by name.";
+        : "Map source columns to target columns, or choose 'Create in target' to add a missing column to the destination library. Unmatched columns will be skipped unless you assign a target. Use Auto-match to automatically match columns by name.";
     public string TargetColumnHeader => IsLibraryScope ? "Action" : "Target Column";
 
     public ColumnMappingViewModel(
@@ -163,10 +171,11 @@ public class ColumnMappingViewModel
         }
         else
         {
-            // Files/Pages scope: map to an existing target column, or skip.
+            // Files/Pages scope: map to an existing target column, create it, or skip.
             TargetColumnOptions =
             [
                 new TargetColumnOption { DisplayName = "── Skip this column ──", IsSkip = true, InternalName = "__skip__" },
+                new TargetColumnOption { DisplayName = "+ Create in target", IsCreate = true, InternalName = "__create__" },
                 .. targetColumns.Select(c => new TargetColumnOption
                 {
                     DisplayName  = c.DisplayName,
@@ -192,6 +201,24 @@ public class ColumnMappingViewModel
                     CreateNew    = isLibraryScope,
                 };
 
+            // Per-row options: sentinels always present; real columns filtered to compatible types only.
+            List<TargetColumnOption> rowOptions;
+            if (isLibraryScope)
+            {
+                rowOptions = TargetColumnOptions; // Create + Skip only — no type filtering needed
+            }
+            else
+            {
+                rowOptions =
+                [
+                    skipOption,
+                    .. (createOption != null ? (IEnumerable<TargetColumnOption>)[createOption] : []),
+                    .. targetColumns
+                        .Where(t => ColumnMapping.AreTypesCompatible(src.FieldType, t.FieldType))
+                        .Select(t => TargetColumnOptions.First(o => o.InternalName == t.InternalName))
+                ];
+            }
+
             TargetColumnOption? selected;
             if (isLibraryScope)
             {
@@ -202,12 +229,31 @@ public class ColumnMappingViewModel
             {
                 selected = null;
                 if (mapping.TargetColumn != null)
-                    selected = TargetColumnOptions.FirstOrDefault(o => !o.IsSkip && o.InternalName == mapping.TargetColumn.InternalName);
+                    selected = rowOptions.FirstOrDefault(o => !o.IsSkip && !o.IsCreate && o.InternalName == mapping.TargetColumn.InternalName);
+                if (selected == null && mapping.CreateNew)
+                    selected = createOption;
                 if (selected == null && mapping.Status == MappingStatus.Skipped)
                     selected = skipOption;
+
+                // First open with no saved state: auto-match by name + compatible type.
+                if (selected == null && !existingBySource.ContainsKey(src.InternalName))
+                {
+                    var match = targetColumns.FirstOrDefault(t =>
+                        t.InternalName.Equals(src.InternalName, StringComparison.OrdinalIgnoreCase) &&
+                        ColumnMapping.AreTypesCompatible(src.FieldType, t.FieldType))
+                        ?? targetColumns.FirstOrDefault(t =>
+                        t.DisplayName.Equals(src.DisplayName, StringComparison.OrdinalIgnoreCase) &&
+                        ColumnMapping.AreTypesCompatible(src.FieldType, t.FieldType));
+                    if (match != null)
+                    {
+                        selected = rowOptions.FirstOrDefault(o => !o.IsSkip && !o.IsCreate && o.InternalName == match.InternalName);
+                        mapping.TargetColumn = match;
+                        mapping.Status       = MappingStatus.AutoMatched;
+                    }
+                }
             }
 
-            return new MappingRow(mapping, selected);
+            return new MappingRow(mapping, selected, rowOptions);
         }).ToList();
     }
 }
@@ -216,7 +262,8 @@ public class ColumnMappingViewModel
 
 public class MappingRow : INotifyPropertyChanged
 {
-    public ColumnMapping Mapping { get; }
+    public ColumnMapping            Mapping          { get; }
+    public List<TargetColumnOption> CompatibleOptions { get; }
 
     private TargetColumnOption? _selectedTargetItem;
     public TargetColumnOption? SelectedTargetItem
@@ -240,10 +287,11 @@ public class MappingRow : INotifyPropertyChanged
         }
     }
 
-    public MappingRow(ColumnMapping mapping, TargetColumnOption? initialSelection)
+    public MappingRow(ColumnMapping mapping, TargetColumnOption? initialSelection, List<TargetColumnOption> compatibleOptions)
     {
         Mapping             = mapping;
         _selectedTargetItem = initialSelection;
+        CompatibleOptions   = compatibleOptions;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

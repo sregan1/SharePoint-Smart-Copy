@@ -6,10 +6,13 @@ namespace SharePointSmartCopy.Services;
 
 public class CopyService(SharePointService spService, MigrationJobService migrationJobService)
 {
+    // Fired when adaptive throttling changes the effective parallelism during a copy run.
+    public event Action<int>? ParallelismChanged;
+
     public async Task ExecuteAsync(
         IList<CopyJob> jobs,
         ObservableCollection<CopyResult> results,
-        bool overwrite,
+        OverwriteMode overwriteMode,
         bool copyVersions,
         int maxParallel,
         int maxVersions,
@@ -26,7 +29,10 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         PermissionCopyService? permissionService = null,
         Dictionary<string, bool>? permissionFlags = null)
     {
-        var semaphore = new SemaphoreSlim(maxParallel, maxParallel);
+        using var controller = new AdaptiveParallelismController(maxParallel);
+        controller.LimitChanged += n => ParallelismChanged?.Invoke(n);
+        void onThrottled(TimeSpan _, int __, int ___) => controller.StepDown();
+        spService.Throttled += onThrottled;
         var allTasks  = new List<(CopyJob job, CopyResult result)>();
 
         foreach (var job in jobs)
@@ -78,7 +84,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         if (copyMode == CopyMode.MigrationApi && copyVersions)
         {
             // Mode A: batch all files into a single migration job
-            await migrationJobService.ExecuteAsync(allTasks, overwrite, maxVersions, maxParallel, cancellationToken,
+            await migrationJobService.ExecuteAsync(allTasks, overwriteMode, maxVersions, maxParallel, cancellationToken,
                 copyCustomColumns, columnMappings, bulkFieldCache);
 
             // Permissions: run after the migration job completes so the target items exist.
@@ -88,7 +94,11 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             {
                 foreach (var (job, result) in allTasks)
                 {
-                    if (result.Status != CopyStatus.Success) continue;
+                    // Files skipped as "Up to date" by Copy-if-newer still get their
+                    // permissions refreshed — only permission changes may have occurred.
+                    bool upToDate = result.Status == CopyStatus.Skipped &&
+                                    result.ErrorMessage == CopyResult.UpToDate;
+                    if (result.Status != CopyStatus.Success && !upToDate) continue;
                     cancellationToken.ThrowIfCancellationRequested();
                     try
                     {
@@ -122,11 +132,13 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         {
             // Mode B: enhanced REST, parallel per-file
             var parallelTasks = allTasks.Select(t =>
-                CopySingleFileAsync(t.job, t.result, overwrite, copyVersions, maxVersions, semaphore, cancellationToken,
+                CopySingleFileAsync(t.job, t.result, overwriteMode, copyVersions, maxVersions, controller, cancellationToken,
                     copyCustomColumns, columnMappings, bulkFieldCache, copyPages, remapPageWebPartUrls, preserveMetadata,
                     copyPermissions, permissionService, permissionFlags, permissionResults: results));
             await Task.WhenAll(parallelTasks);
         }
+
+        spService.Throttled -= onThrottled;
 
         // Apply folder metadata in the background (skipped when preserveMetadata is off)
         var folderJobs = jobs.Where(j => j.IsFolder).ToList();
@@ -160,10 +172,10 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
     private async Task CopySingleFileAsync(
         CopyJob job,
         CopyResult result,
-        bool overwrite,
+        OverwriteMode overwriteMode,
         bool copyVersions,
         int maxVersions,
-        SemaphoreSlim semaphore,
+        AdaptiveParallelismController controller,
         CancellationToken ct,
         bool copyCustomColumns = false,
         List<ColumnMapping>? columnMappings = null,
@@ -176,33 +188,68 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         Dictionary<string, bool>? permissionFlags = null,
         ObservableCollection<CopyResult>? permissionResults = null)
     {
-        await semaphore.WaitAsync(ct);
+        bool semaphoreAcquired = false;
+        try { await controller.WaitAsync(ct); semaphoreAcquired = true; }
+        catch (OperationCanceledException)
+        {
+            result.Status       = CopyStatus.Skipped;
+            result.ErrorMessage = "Cancelled";
+            return;
+        }
         try
         {
             result.Status = CopyStatus.Copying;
 
             var targetParentId = await ResolveTargetParentAsync(job, ct);
 
-            if (!overwrite && await spService.FileExistsAsync(job.TargetDriveId, targetParentId, job.SourceName))
+            // Set when IfNewer finds the target already current: the file copy is skipped
+            // but permissions (below) still refresh when enabled.
+            string? upToDateItemId = null;
+
+            if (overwriteMode != OverwriteMode.Overwrite)
             {
-                result.Status = CopyStatus.Skipped;
-                return;
+                var existing = await spService.GetFileInfoAsync(job.TargetDriveId, targetParentId, job.SourceName);
+                if (existing != null)
+                {
+                    if (overwriteMode == OverwriteMode.Skip)
+                    {
+                        result.Status = CopyStatus.Skipped;
+                        return;
+                    }
+                    // IfNewer: copy only when the source changed since the target was written.
+                    var srcMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
+                    if (srcMeta.ModifiedDateTime is { } srcModified && srcModified <= existing.Value.Modified)
+                        upToDateItemId = existing.Value.ItemId;
+                }
             }
 
-            // When overwriting with version history: delete the file first so the imported
-            // versions replace the history rather than being appended to it.
-            if (overwrite && copyVersions)
-                await spService.DeleteFileIfExistsAsync(job.TargetDriveId, targetParentId, job.SourceName);
-
             string? targetGraphItemId;
-            if (copyVersions)
-                targetGraphItemId = await CopyWithVersionsEnhancedRestAsync(job, result, targetParentId, overwrite, maxVersions, ct,
-                    copyCustomColumns, columnMappings, bulkFieldCache, preserveMetadata);
+            if (upToDateItemId != null)
+            {
+                targetGraphItemId   = upToDateItemId;
+                result.Status       = CopyStatus.Skipped;
+                result.ErrorMessage = CopyResult.UpToDate;
+            }
             else
-                targetGraphItemId = await CopyCurrentVersionAsync(job, result, targetParentId, overwrite, ct,
-                    copyCustomColumns, columnMappings, bulkFieldCache, copyPages, remapPageWebPartUrls, preserveMetadata);
+            {
+                // Whether uploads should replace an existing target file. With Skip we returned
+                // above if the file existed; with IfNewer we only reach here when replacing.
+                bool overwrite = overwriteMode != OverwriteMode.Skip;
 
-            result.Status = CopyStatus.Success;
+                // When overwriting with version history: delete the file first so the imported
+                // versions replace the history rather than being appended to it.
+                if (overwrite && copyVersions)
+                    await spService.DeleteFileIfExistsAsync(job.TargetDriveId, targetParentId, job.SourceName);
+
+                if (copyVersions)
+                    targetGraphItemId = await CopyWithVersionsEnhancedRestAsync(job, result, targetParentId, overwrite, maxVersions, ct,
+                        copyCustomColumns, columnMappings, bulkFieldCache, preserveMetadata);
+                else
+                    targetGraphItemId = await CopyCurrentVersionAsync(job, result, targetParentId, overwrite, ct,
+                        copyCustomColumns, columnMappings, bulkFieldCache, copyPages, remapPageWebPartUrls, preserveMetadata);
+
+                result.Status = CopyStatus.Success;
+            }
 
             // Per-file permission copy (skipped if not enabled or file has inherited permissions)
             if (copyPermissions && permissionService != null && !string.IsNullOrEmpty(targetGraphItemId))
@@ -239,7 +286,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         }
         catch (OperationCanceledException)
         {
-            result.Status       = CopyStatus.Failed;
+            result.Status       = CopyStatus.Skipped;
             result.ErrorMessage = "Cancelled";
         }
         catch (Microsoft.Graph.Models.ODataErrors.ODataError oe)
@@ -256,7 +303,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         }
         finally
         {
-            semaphore.Release();
+            if (semaphoreAcquired) controller.Release();
         }
     }
 
@@ -364,6 +411,21 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         {
             // For pages these run AFTER Publish so the editing session is already closed —
             // no 409 conflicts from Graph PATCH competing with the SitePages session.
+
+            // Custom columns FIRST: ValidateUpdateListItem bumps Modified/Editor, so the
+            // metadata stamp below must come last for preserved dates to survive.
+            if (copyCustomColumns && bulkFieldCache != null && columnMappings != null)
+            {
+                System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] applying custom columns…");
+                var spIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
+                if (spIds.HasValue && bulkFieldCache.TryGetValue($"{spIds.Value.listId}:{spIds.Value.listItemId}", out var customFields))
+                {
+                    var cfErr = await spService.ApplyFileCustomFieldsAsync(
+                        job.TargetDriveId, targetItemId, customFields, columnMappings, ct);
+                    if (cfErr != null) result.ErrorMessage ??= cfErr;
+                }
+            }
+
             if (preserveMetadata)
             {
                 System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] applying file metadata…");
@@ -383,18 +445,6 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] PatchFileSystemDate warning: {fsErr}");
                         result.ErrorMessage ??= fsErr;
                     }
-                }
-            }
-
-            if (copyCustomColumns && bulkFieldCache != null && columnMappings != null)
-            {
-                System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] applying custom columns…");
-                var spIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
-                if (spIds.HasValue && bulkFieldCache.TryGetValue(spIds.Value.listItemId, out var customFields))
-                {
-                    var cfErr = await spService.ApplyFileCustomFieldsAsync(
-                        job.TargetDriveId, targetItemId, customFields, columnMappings);
-                    if (cfErr != null) result.ErrorMessage ??= cfErr;
                 }
             }
         }
@@ -486,11 +536,30 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             !string.IsNullOrEmpty(targetItemId))
         {
             var spIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
-            if (spIds.HasValue && bulkFieldCache.TryGetValue(spIds.Value.listItemId, out var customFields))
+            if (spIds.HasValue && bulkFieldCache.TryGetValue($"{spIds.Value.listId}:{spIds.Value.listItemId}", out var customFields) &&
+                customFields.Count > 0)
             {
                 var cfErr = await spService.ApplyFileCustomFieldsAsync(
                     job.TargetDriveId, targetItemId, customFields, columnMappings);
                 if (cfErr != null) result.ErrorMessage ??= cfErr;
+
+                // ValidateUpdateListItem bumps Modified/Editor — re-stamp the final
+                // version's metadata so the preserved dates survive the field write.
+                if (preserveMetadata && versions.Count > 0)
+                {
+                    var lastVersion = versions[^1];
+                    var finalMeta = new FileMetadata
+                    {
+                        CreatedDateTime  = metadata.CreatedDateTime,
+                        CreatedByEmail   = metadata.CreatedByEmail,
+                        ModifiedDateTime = lastVersion.LastModifiedDateTime ?? metadata.ModifiedDateTime,
+                        ModifiedByEmail  = SharePointService.GetIdentityEmail(lastVersion.LastModifiedBy?.User)
+                                           ?? metadata.ModifiedByEmail,
+                    };
+                    var restampErr = await spService.ApplyFileMetadataAsync(
+                        job.TargetDriveId, targetItemId, job.TargetSiteId, finalMeta);
+                    if (restampErr != null) result.ErrorMessage ??= restampErr;
+                }
             }
         }
         return targetItemId;
@@ -610,6 +679,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         TargetPath = job.TargetDisplayPath
     };
 
+    // Stamps the permission outcome onto the existing file row. Silently no-ops for
+    // folder-level results where no matching row exists.
     private static void AddPermissionRow(ObservableCollection<CopyResult> results, PermissionCopyResult perm, string targetPath)
     {
         string detail;
@@ -628,16 +699,17 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 detail += $"; {perm.FailedRoles.Count} failed: {string.Join(", ", perm.FailedRoles.Take(3))}";
             status = CopyStatus.Success;
         }
-        var row = new CopyResult
+
+        var row = results.FirstOrDefault(r =>
+            !r.IsPermissionResult &&
+            string.Equals(r.FileName, perm.ItemName, StringComparison.OrdinalIgnoreCase));
+
+        if (row == null) return;
+
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
         {
-            FileName           = $"Permissions → {perm.ItemName}",
-            SourcePath         = string.Empty,
-            TargetPath         = targetPath,
-            Status             = status,
-            ErrorMessage       = detail,
-            IsLibraryCreation  = true,
-            IsPermissionResult = true,
-        };
-        System.Windows.Application.Current.Dispatcher.Invoke(() => results.Add(row));
+            row.PermissionStatus  = status;
+            row.PermissionDetails = detail;
+        });
     }
 }

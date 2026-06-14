@@ -247,9 +247,9 @@ public class SharePointService
         return all.OrderBy(v =>
         {
             var parts = (v.Id ?? "0").Split('.');
-            double major = parts.Length > 0 && double.TryParse(parts[0], out var mj) ? mj : 0;
-            double minor = parts.Length > 1 && double.TryParse(parts[1], out var mn) ? mn : 0;
-            return major + minor / 1000.0;
+            int major = parts.Length > 0 && int.TryParse(parts[0], out var mj) ? mj : 0;
+            int minor = parts.Length > 1 && int.TryParse(parts[1], out var mn) ? mn : 0;
+            return (major, minor);
         }).ToList();
     }
 
@@ -708,6 +708,9 @@ public class SharePointService
             }
             catch (TaskCanceledException) { yield break; }
 
+            bool hitJobEnd = false;
+            using (response)
+            {
             if (!response.IsSuccessStatusCode)
             {
                 var err = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -719,8 +722,6 @@ public class SharePointService
             JsonDocument doc;
             try { doc = JsonDocument.Parse(body); }
             catch { continue; }
-
-            bool hitJobEnd = false;
             using (doc)
             {
                 // SP GetMigrationJobProgress returns { "Logs": [...], "nextToken": N }
@@ -776,6 +777,8 @@ public class SharePointService
                 }
             }
 
+            } // end using (response)
+
             if (hitJobEnd) yield break;
         }
     }
@@ -806,6 +809,25 @@ public class SharePointService
                 .ItemWithPath(Uri.EscapeDataString(fileName)).DeleteAsync();
         }
         catch { }
+    }
+
+    // Returns the file's Graph item ID and last-modified timestamp, or null if it does
+    // not exist. One call serves the existence check, the Copy-if-newer comparison, and
+    // (via the ID) permission refresh on files that end up skipped as up to date.
+    public async Task<(string ItemId, DateTimeOffset? Modified)?> GetFileInfoAsync(
+        string driveId, string parentItemId, string fileName)
+    {
+        try
+        {
+            var item = await Graph.Drives[driveId].Items[parentItemId]
+                .ItemWithPath(Uri.EscapeDataString(fileName))
+                .GetAsync(cfg => cfg.QueryParameters.Select = ["id", "lastModifiedDateTime"]);
+            return item?.Id is { } id ? (id, item.LastModifiedDateTime) : null;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     // Returns the SharePoint UniqueId (AllDocs GUID) for a file by its server-relative URL.
@@ -1184,9 +1206,14 @@ public class SharePointService
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
+    // Raised when a request is throttled and a retry is scheduled — lets the UI show
+    // "Throttled — retrying in Ns…" instead of appearing stalled.
+    public event Action<TimeSpan, int, int>? Throttled;
+
     // Sends a SharePoint REST request with resilience:
     //  - 401: retried once with a force-refreshed token.
-    //  - 429/503 (throttling): retried up to 3 times, honoring the Retry-After header.
+    //  - 429/503 (throttling): retried up to 5 times, honoring the Retry-After header,
+    //    with capped exponential backoff + jitter when the header is absent.
     // buildRequest receives the bearer token and must return a fresh HttpRequestMessage each call.
     internal async Task<HttpResponseMessage> SendSharePointRequestAsync(
         Func<string, HttpRequestMessage> buildRequest,
@@ -1194,7 +1221,7 @@ public class SharePointService
         string spScope = "Sites.ReadWrite.All",
         CancellationToken cancellationToken = default)
     {
-        const int maxThrottleRetries = 3;
+        const int maxThrottleRetries = 5;
         var token = await _authService.GetSharePointTokenAsync(siteUrl, spScope, cancellationToken);
         HttpResponseMessage response;
         bool refreshedToken = false;
@@ -1216,10 +1243,18 @@ public class SharePointService
                                                  or System.Net.HttpStatusCode.ServiceUnavailable;
             if (throttled && attempt < maxThrottleRetries)
             {
+                // Retry-After can arrive as a delta or an absolute date.
                 var delay = response.Headers.RetryAfter?.Delta
-                    ?? TimeSpan.FromSeconds(Math.Pow(2, attempt + 1)); // 2s, 4s, 8s
+                    ?? (response.Headers.RetryAfter?.Date is { } when
+                            ? when - DateTimeOffset.UtcNow
+                            : TimeSpan.FromSeconds(Math.Pow(2, attempt + 1))
+                              + TimeSpan.FromMilliseconds(Random.Shared.Next(0, 1000))); // jitter
+                if (delay < TimeSpan.Zero) delay = TimeSpan.FromSeconds(1);
+                if (delay > TimeSpan.FromSeconds(120)) delay = TimeSpan.FromSeconds(120);
+
                 System.Diagnostics.Debug.WriteLine(
                     $"[SP-REST] {(int)response.StatusCode} throttled — retrying in {delay.TotalSeconds:N0}s (attempt {attempt + 1}/{maxThrottleRetries})");
+                Throttled?.Invoke(delay, attempt + 1, maxThrottleRetries);
                 response.Dispose();
                 await Task.Delay(delay, cancellationToken);
                 continue;
@@ -1271,10 +1306,26 @@ public class SharePointService
         { 8,  SupportedFieldType.Boolean },
         { 9,  SupportedFieldType.Number },
         { 15, SupportedFieldType.MultiChoice },
+        { 20, SupportedFieldType.User },
+    };
+
+    // Types that FieldTypeKind alone cannot distinguish (taxonomy fields report kind 0,
+    // multi-user fields report kind 20 like single-user).
+    private static SupportedFieldType? ResolveFieldType(int typeKind, string? typeAsString) => typeAsString switch
+    {
+        "UserMulti"              => SupportedFieldType.UserMulti,
+        "TaxonomyFieldType"      => SupportedFieldType.Taxonomy,
+        "TaxonomyFieldTypeMulti" => SupportedFieldType.TaxonomyMulti,
+        "Lookup"                 => SupportedFieldType.Lookup,
+        "LookupMulti"            => SupportedFieldType.LookupMulti,
+        _ => _fieldTypeMap.TryGetValue(typeKind, out var t) ? t : null,
     };
 
     // Keyed by listId. Concurrent — read/written from parallel copy tasks.
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, List<SpColumnDef>> _columnCache = new();
+
+    // Keyed by "{listId}|{showField}|{displayValue}" — caches resolved target lookup item IDs.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, int?> _lookupValueCache = new();
 
     // Returns the custom (non-built-in) columns for a library.
     public async Task<List<SpColumnDef>> GetLibraryColumnsAsync(string siteUrl, string listId, bool skipCache = false)
@@ -1284,7 +1335,7 @@ public class SharePointService
 
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/fields" +
                   "?$filter=Hidden eq false and ReadOnlyField eq false and FromBaseType eq false" +
-                  "&$select=InternalName,Title,FieldTypeKind,Choices";
+                  "&$select=InternalName,Title,FieldTypeKind,TypeAsString,Choices,SchemaXml";
 
         using var response = await SendSharePointRequestAsync(token =>
         {
@@ -1308,7 +1359,8 @@ public class SharePointService
                 var internalName = field.GetProperty("InternalName").GetString() ?? "";
                 if (_builtInFields.Contains(internalName)) continue;
                 var typeKind = field.GetProperty("FieldTypeKind").GetInt32();
-                if (!_fieldTypeMap.TryGetValue(typeKind, out var fieldType)) continue;
+                var typeAsString = field.TryGetProperty("TypeAsString", out var tas) ? tas.GetString() : null;
+                if (ResolveFieldType(typeKind, typeAsString) is not { } fieldType) continue;
 
                 string[]? choices = null;
                 if (field.TryGetProperty("Choices", out var choicesProp) &&
@@ -1331,12 +1383,29 @@ public class SharePointService
                         .ToArray();
                 }
 
+                var schemaXml = field.TryGetProperty("SchemaXml", out var sx) ? sx.GetString() : null;
+
+                string? lookupListId    = null;
+                string? lookupShowField = null;
+                if (SpColumnDef.IsLookupType(fieldType) && schemaXml != null)
+                {
+                    var listMatch = System.Text.RegularExpressions.Regex.Match(schemaXml, @"List=""(\{?[0-9A-Fa-f\-]+\}?)""");
+                    if (listMatch.Success)
+                        lookupListId = listMatch.Groups[1].Value.Trim('{', '}');
+                    var showMatch = System.Text.RegularExpressions.Regex.Match(schemaXml, @"ShowField=""([^""]+)""");
+                    if (showMatch.Success)
+                        lookupShowField = showMatch.Groups[1].Value;
+                }
+
                 result.Add(new SpColumnDef
                 {
-                    InternalName = internalName,
-                    DisplayName  = field.GetProperty("Title").GetString() ?? internalName,
-                    FieldType    = fieldType,
-                    Choices      = choices,
+                    InternalName    = internalName,
+                    DisplayName     = field.GetProperty("Title").GetString() ?? internalName,
+                    FieldType       = fieldType,
+                    Choices         = choices,
+                    SchemaXml       = schemaXml,
+                    LookupListId    = lookupListId,
+                    LookupShowField = lookupShowField,
                 });
             }
         }
@@ -1361,8 +1430,32 @@ public class SharePointService
 
         for (int chunk = 0; chunk < chunks.Count; chunk++)
         {
-            var colNames = string.Join(",", new[] { "ID" }.Concat(chunks[chunk].Select(c => c.InternalName)));
-            var nextUrl  = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items?$select={Uri.EscapeDataString(colNames)}&$top=1000";
+            // User fields are lookups: they must be $expand-ed and read via {name}/Name
+            // (the claims login). Other field types are selected directly.
+            var selectParts = new List<string> { "ID" };
+            var expandParts = new List<string>();
+            foreach (var c in chunks[chunk])
+            {
+                if (SpColumnDef.IsUserType(c.FieldType))
+                {
+                    selectParts.Add($"{c.InternalName}/Name");
+                    expandParts.Add(c.InternalName);
+                }
+                else if (SpColumnDef.IsLookupType(c.FieldType))
+                {
+                    selectParts.Add($"{c.InternalName}/LookupId");
+                    selectParts.Add($"{c.InternalName}/LookupValue");
+                    expandParts.Add(c.InternalName);
+                }
+                else
+                {
+                    selectParts.Add(c.InternalName);
+                }
+            }
+            var nextUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items" +
+                          $"?$select={Uri.EscapeDataString(string.Join(",", selectParts))}" +
+                          (expandParts.Count > 0 ? $"&$expand={Uri.EscapeDataString(string.Join(",", expandParts))}" : "") +
+                          "&$top=1000";
 
             while (nextUrl != null)
             {
@@ -1419,6 +1512,38 @@ public class SharePointService
         if (el.ValueKind == JsonValueKind.Null || el.ValueKind == JsonValueKind.Undefined)
             return null;
 
+        if (SpColumnDef.IsUserType(type))
+        {
+            var logins = EnumerateComplexValues(el)
+                .Select(u => u.TryGetProperty("Name", out var n) ? n.GetString() : null)
+                .Where(s => !string.IsNullOrEmpty(s))
+                .Select(s => s!)
+                .ToArray();
+            return logins.Length > 0 ? new PersonFieldValue(logins) : null;
+        }
+
+        if (SpColumnDef.IsTaxonomyType(type))
+        {
+            var terms = EnumerateComplexValues(el)
+                .Select(t => (
+                    Label:    t.TryGetProperty("Label",    out var l) ? l.GetString() ?? "" : "",
+                    TermGuid: t.TryGetProperty("TermGuid", out var g) ? g.GetString() ?? "" : ""))
+                .Where(t => t.TermGuid.Length > 0)
+                .ToArray();
+            return terms.Length > 0 ? new TaxonomyFieldValue(terms) : null;
+        }
+
+        if (SpColumnDef.IsLookupType(type))
+        {
+            var entries = EnumerateComplexValues(el)
+                .Select(e => (
+                    Id:           e.TryGetProperty("LookupId",    out var id) && id.ValueKind == JsonValueKind.Number ? id.GetInt32() : 0,
+                    DisplayValue: e.TryGetProperty("LookupValue", out var dv) ? dv.GetString() ?? "" : ""))
+                .Where(e => e.Id > 0)
+                .ToArray();
+            return entries.Length > 0 ? new LookupFieldValue(entries) : null;
+        }
+
         return type switch
         {
             SupportedFieldType.MultiChoice when el.ValueKind == JsonValueKind.Array =>
@@ -1427,11 +1552,65 @@ public class SharePointService
                 el.TryGetProperty("results", out var r) =>
                 string.Join(";#", r.EnumerateArray().Select(v => v.GetString() ?? "")),
             SupportedFieldType.Boolean =>
-                el.ValueKind == JsonValueKind.True ? "1" : "0",
+                el.ValueKind == JsonValueKind.True,
             SupportedFieldType.DateTime when el.ValueKind == JsonValueKind.String =>
                 el.GetString(),
             _ => el.ValueKind == JsonValueKind.String ? el.GetString() : el.ToString()
         };
+    }
+
+    // Complex field values (user, taxonomy) arrive as a single object, a bare array,
+    // or a verbose { "results": [...] } wrapper depending on OData mode and multiplicity.
+    private static IEnumerable<JsonElement> EnumerateComplexValues(JsonElement el)
+    {
+        if (el.ValueKind == JsonValueKind.Array)
+            return el.EnumerateArray();
+        if (el.ValueKind == JsonValueKind.Object && el.TryGetProperty("results", out var results) &&
+            results.ValueKind == JsonValueKind.Array)
+            return results.EnumerateArray();
+        if (el.ValueKind == JsonValueKind.Object)
+            return [el];
+        return [];
+    }
+
+    // Finds the ID of an item in a lookup list by its display value.
+    // ShowField values "LinkTitle"/"LinkTitleNoMenu" are queried as "Title".
+    // Returns null when the display value cannot be matched; result is cached per run.
+    private async Task<int?> ResolveLookupValueAsync(
+        string siteUrl, string lookupListId, string showField, string displayValue,
+        CancellationToken ct = default)
+    {
+        var queryField = showField is "LinkTitle" or "LinkTitleNoMenu" ? "Title" : showField;
+        var cacheKey   = $"{lookupListId}|{queryField}|{displayValue}";
+        if (_lookupValueCache.TryGetValue(cacheKey, out var cached)) return cached;
+
+        var escaped = Uri.EscapeDataString(displayValue.Replace("'", "''"));
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{lookupListId}')/items" +
+                  $"?$select=ID&$filter={Uri.EscapeDataString(queryField)} eq '{escaped}'&$top=1";
+
+        using var response = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Get, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            return r;
+        }, siteUrl, cancellationToken: ct);
+
+        int? result = null;
+        if (response.IsSuccessStatusCode)
+        {
+            var body = await response.Content.ReadAsStringAsync(ct);
+            using var doc = JsonDocument.Parse(body);
+            if (doc.RootElement.TryGetProperty("value", out var items) &&
+                items.GetArrayLength() > 0 &&
+                items[0].TryGetProperty("ID", out var id))
+            {
+                result = id.GetInt32();
+            }
+        }
+
+        _lookupValueCache[cacheKey] = result;
+        return result;
     }
 
     // Applies custom field values to a list item via ValidateUpdateListItem.
@@ -1439,16 +1618,27 @@ public class SharePointService
     public async Task<string?> ApplyFileCustomFieldsAsync(
         string driveId, string itemId,
         Dictionary<string, object?> fields,
-        IEnumerable<SpColumnMap> mappings)
+        IEnumerable<SpColumnMap> mappings,
+        CancellationToken ct = default)
     {
         if (fields.Count == 0) return null;
 
-        // Build mapping lookup: source internal name → target internal name
-        var mappingLookup = mappings.ToDictionary(
-            m => m.SourceColumn.InternalName,
-            m => m.TargetColumn?.InternalName);
+        var mappingLookup = SpColumnMap.BuildTargetNameMap(mappings);
 
-        var formValues = new List<object>();
+        // Resolve target SharePoint IDs first so we can look up target column definitions
+        // (needed to find the target lookup list GUID for Lookup/LookupMulti fields).
+        var ids = await GetSharePointIdsAsync(driveId, itemId)
+            ?? throw new Exception($"Could not resolve SharePoint IDs for {driveId}/{itemId}");
+
+        // Fetch target column defs (cached) to resolve lookup list GUIDs.
+        List<SpColumnDef> targetCols;
+        try { targetCols = await GetLibraryColumnsAsync(ids.siteUrl, ids.listId); }
+        catch { targetCols = []; }
+        var targetColsByName = targetCols.ToDictionary(c => c.InternalName, StringComparer.OrdinalIgnoreCase);
+
+        var formValues      = new List<object>();
+        var submittedFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var lookupErrors    = new List<string>();
         foreach (var (srcName, value) in fields)
         {
             if (value == null) continue;
@@ -1464,14 +1654,40 @@ public class SharePointService
                 targetName = srcName;
             }
 
-            var formatted = FormatFieldValueForValidate(value);
-            formValues.Add(new { FieldName = targetName, FieldValue = formatted });
+            // Lookup fields: resolve each display value to a target item ID.
+            if (value is LookupFieldValue lookup)
+            {
+                if (!targetColsByName.TryGetValue(targetName, out var tgtCol) ||
+                    string.IsNullOrEmpty(tgtCol.LookupListId))
+                {
+                    lookupErrors.Add(targetName);
+                    continue;
+                }
+
+                var showField  = string.IsNullOrEmpty(tgtCol.LookupShowField) ? "Title" : tgtCol.LookupShowField;
+                var resolvedIds = new List<int>();
+                foreach (var (_, display) in lookup.Entries)
+                {
+                    var targetId = await ResolveLookupValueAsync(ids.siteUrl, tgtCol.LookupListId, showField, display, ct);
+                    if (targetId.HasValue) resolvedIds.Add(targetId.Value);
+                }
+
+                if (resolvedIds.Count == 0) continue; // nothing resolved — skip field
+                // Single: "3", Multi: "3;#;#5;#" (SP lookup wire format with ID only)
+                var formatted = resolvedIds.Count == 1
+                    ? resolvedIds[0].ToString()
+                    : string.Join(";#;#", resolvedIds.Select(id => id.ToString())) + ";#";
+                formValues.Add(new { FieldName = targetName, FieldValue = formatted });
+                submittedFields.Add(targetName);
+                continue;
+            }
+
+            var formattedValue = FormatFieldValueForValidate(value);
+            formValues.Add(new { FieldName = targetName, FieldValue = formattedValue });
+            submittedFields.Add(targetName);
         }
 
-        if (formValues.Count == 0) return null;
-
-        var ids = await GetSharePointIdsAsync(driveId, itemId)
-            ?? throw new Exception($"Could not resolve SharePoint IDs for {driveId}/{itemId}");
+        if (formValues.Count == 0) return lookupErrors.Count > 0 ? $"Lookup unresolved: {string.Join(", ", lookupErrors)}" : null;
 
         var url = $"{ids.siteUrl.TrimEnd('/')}/_api/web/lists('{ids.listId}')/items({ids.listItemId})/ValidateUpdateListItem()";
         var payload = JsonSerializer.Serialize(new
@@ -1493,27 +1709,44 @@ public class SharePointService
         if (!response.IsSuccessStatusCode)
             return $"ApplyCustomFields HTTP {(int)response.StatusCode}";
 
-        // Parse per-field errors
+        // ValidateUpdateListItem returns an entry for every field in the list definition,
+        // including read-only system fields (Created, Modified, etc.) that always report
+        // HasException=true.  Only surface errors for fields we actually submitted.
+        var fieldErrors = new List<string>(lookupErrors.Select(n => $"{n} (lookup unresolved)"));
         try
         {
             using var doc = JsonDocument.Parse(body);
             if (doc.RootElement.TryGetProperty("value", out var vals))
             {
-                var errors = vals.EnumerateArray()
-                    .Where(v => v.TryGetProperty("HasException", out var ex) && ex.GetBoolean())
-                    .Select(v => v.TryGetProperty("FieldName", out var fn) ? fn.GetString() : "?")
-                    .ToList();
-                if (errors.Count > 0)
-                    return $"Custom field errors: {string.Join(", ", errors)}";
+                foreach (var v in vals.EnumerateArray())
+                {
+                    if (!v.TryGetProperty("HasException", out var ex) || !ex.GetBoolean()) continue;
+                    if (!v.TryGetProperty("FieldName", out var fn)) continue;
+                    var name = fn.GetString() ?? "";
+                    if (submittedFields.Contains(name))
+                        fieldErrors.Add(name);
+                }
             }
         }
         catch { /* ignore parse errors */ }
 
-        return null;
+        return fieldErrors.Count > 0 ? $"Custom field errors: {string.Join(", ", fieldErrors)}" : null;
     }
 
     private static string FormatFieldValueForValidate(object value)
     {
+        // ValidateUpdateListItem person format: JSON array of claims keys.
+        if (value is PersonFieldValue person)
+            return JsonSerializer.Serialize(person.Logins.Select(l => new { Key = l }));
+
+        // ValidateUpdateListItem taxonomy format: "Label|guid" (";"-joined for multi).
+        // SharePoint resolves WssId and the hidden note field server-side.
+        if (value is TaxonomyFieldValue taxonomy)
+            return string.Join(";", taxonomy.Terms.Select(t => $"{t.Label}|{t.TermGuid}"));
+
+        if (value is bool b)
+            return b ? "1" : "0";
+
         var str = value.ToString() ?? "";
         // MultiChoice: ensure ";#val1;#val2;#" format
         if (str.Contains(";#") && !str.StartsWith(";#"))
@@ -1737,8 +1970,10 @@ public class SharePointService
                 foreach (var item in arr.EnumerateArray())
                 {
                     if (item.TryGetProperty("Id", out var idProp))
+                    {
                         pageId = idProp.GetInt32();
-                    break;
+                        break;
+                    }
                 }
             }
         }
@@ -2070,13 +2305,35 @@ public class SharePointService
     // Returns each item as a string-keyed dictionary. Handles pagination automatically.
     public async Task<List<Dictionary<string, object?>>> GetListItemsAsync(
         string siteUrl, string listId,
-        IEnumerable<string> customFieldNames,
+        IEnumerable<SpColumnDef> customColumns,
+        IEnumerable<string>? extraFieldNames = null,
         CancellationToken ct = default)
     {
-        var fields  = customFieldNames.ToList();
-        var select  = "Id,Title,Created,Modified," + (fields.Count > 0 ? string.Join(",", fields) : "Title");
+        var cols       = customColumns.ToList();
+        var colsByName = cols.ToDictionary(c => c.InternalName, StringComparer.OrdinalIgnoreCase);
+
+        // User fields are lookups: $expand them and read {name}/Name (claims login).
+        var selectParts = new List<string> { "Id", "Title", "Created", "Modified" };
+        var expandParts = new List<string>();
+        foreach (var c in cols)
+        {
+            if (SpColumnDef.IsUserType(c.FieldType))
+            {
+                selectParts.Add($"{c.InternalName}/Name");
+                expandParts.Add(c.InternalName);
+            }
+            else
+            {
+                selectParts.Add(c.InternalName);
+            }
+        }
+        if (extraFieldNames != null)
+            selectParts.AddRange(extraFieldNames);
+
         var baseUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items" +
-                      $"?$select={Uri.EscapeDataString(select)}&$top=5000";
+                      $"?$select={Uri.EscapeDataString(string.Join(",", selectParts))}" +
+                      (expandParts.Count > 0 ? $"&$expand={Uri.EscapeDataString(string.Join(",", expandParts))}" : "") +
+                      "&$top=5000";
 
         var result = new List<Dictionary<string, object?>>();
         string? next = baseUrl;
@@ -2101,7 +2358,9 @@ public class SharePointService
                 {
                     var item = new Dictionary<string, object?>();
                     foreach (var prop in el.EnumerateObject())
-                        item[prop.Name] = ExtractJsonValue(prop.Value);
+                        item[prop.Name] = colsByName.TryGetValue(prop.Name, out var col)
+                            ? ParseFieldValue(prop.Value, col.FieldType)
+                            : ExtractJsonValue(prop.Value);
                     result.Add(item);
                 }
 
@@ -2110,14 +2369,15 @@ public class SharePointService
         return result;
     }
 
-    // Returns (Id, Title) for each item in a list — lightweight query for tree display only.
-    public async Task<List<(string Id, string Title)>> GetListItemTitlesAsync(
+    // Returns (Id, Title, Modified) for each item in a list — lightweight query used for
+    // tree display and for skip / copy-if-newer decisions during list item copies.
+    public async Task<List<(string Id, string Title, DateTimeOffset? Modified)>> GetListItemTitlesAsync(
         string siteUrl, string listId, CancellationToken ct = default)
     {
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items" +
-                  "?$select=Id,Title&$top=5000&$orderby=Id";
+                  "?$select=Id,Title,Modified&$top=5000&$orderby=Id";
 
-        var result = new List<(string, string)>();
+        var result = new List<(string, string, DateTimeOffset?)>();
         string? next = url;
 
         while (next != null)
@@ -2142,8 +2402,12 @@ public class SharePointService
                     var title = el.TryGetProperty("Title", out var tp) && tp.ValueKind == JsonValueKind.String
                                     ? tp.GetString() ?? string.Empty
                                     : string.Empty;
+                    DateTimeOffset? modified = el.TryGetProperty("Modified", out var mp) &&
+                                               mp.ValueKind == JsonValueKind.String &&
+                                               DateTimeOffset.TryParse(mp.GetString(), out var m)
+                                                   ? m : null;
                     if (!string.IsNullOrEmpty(id))
-                        result.Add((id, title));
+                        result.Add((id, title, modified));
                 }
 
             next = GetNextLink(doc.RootElement);
@@ -2152,8 +2416,8 @@ public class SharePointService
     }
 
     // Creates a list item and optionally back-fills Created/Modified timestamps.
-    // Returns the new item's integer ID as a string, or null if it could not be parsed.
-    public async Task<string?> CreateListItemAsync(
+    // Returns (new item ID or null, field-write error or null).
+    public async Task<(string? Id, string? FieldError)> CreateListItemAsync(
         string siteUrl, string listId,
         Dictionary<string, object?> fields,
         string? createdDate, string? modifiedDate,
@@ -2161,9 +2425,12 @@ public class SharePointService
     {
         ct.ThrowIfCancellationRequested();
 
+        // Person/taxonomy values cannot be set through the plain item POST body — they
+        // go through the ValidateUpdateListItem pass below alongside the date back-fill.
+        var (simpleFields, complexFields) = SplitComplexFields(fields);
+
         var createUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items";
-        var body      = JsonSerializer.Serialize(fields.Where(kv => kv.Value != null)
-                            .ToDictionary(kv => kv.Key, kv => kv.Value));
+        var body      = JsonSerializer.Serialize(simpleFields);
 
         string? newItemId = null;
         using (var resp = await SendSharePointRequestAsync(token =>
@@ -2185,32 +2452,80 @@ public class SharePointService
             newItemId = doc.RootElement.TryGetProperty("Id", out var ip) ? ip.GetRawText() : null;
         }
 
-        if (newItemId == null || (createdDate == null && modifiedDate == null)) return newItemId;
+        if (newItemId == null) return (null, null);
+        var fieldError = await ValidateUpdateItemFieldsAsync(siteUrl, listId, newItemId, complexFields, createdDate, modifiedDate);
+        return (newItemId, fieldError);
+    }
 
-        var metaValues = new List<object>();
-        if (createdDate  != null) metaValues.Add(new { FieldName = "Created",  FieldValue = createdDate });
-        if (modifiedDate != null) metaValues.Add(new { FieldName = "Modified", FieldValue = modifiedDate });
+    // Splits person/taxonomy values (which require ValidateUpdateListItem) from fields
+    // that can be written through a plain REST POST/MERGE body.
+    private static (Dictionary<string, object?> Simple, List<(string Name, object Value)> Complex)
+        SplitComplexFields(Dictionary<string, object?> fields)
+    {
+        var simple  = new Dictionary<string, object?>();
+        var complex = new List<(string, object)>();
+        foreach (var (name, value) in fields)
+        {
+            if (value == null) continue;
+            if (value is PersonFieldValue or TaxonomyFieldValue)
+                complex.Add((name, value));
+            else
+                simple[name] = value;
+        }
+        return (simple, complex);
+    }
 
-        var metaPayload = JsonSerializer.Serialize(new { formValues = metaValues, bNewDocumentUpdate = true });
-        var metaUrl     = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({newItemId})/ValidateUpdateListItem()";
+    // Applies complex field values and/or Created/Modified back-fill in one
+    // ValidateUpdateListItem call (bNewDocumentUpdate avoids creating a new version).
+    // Returns an error string if the write failed, or null on success.
+    private async Task<string?> ValidateUpdateItemFieldsAsync(
+        string siteUrl, string listId, string itemId,
+        List<(string Name, object Value)> complexFields,
+        string? createdDate, string? modifiedDate)
+    {
+        var formValues = complexFields
+            .Select(f => (object)new { FieldName = f.Name, FieldValue = FormatFieldValueForValidate(f.Value) })
+            .ToList();
+        if (createdDate  != null) formValues.Add(new { FieldName = "Created",  FieldValue = createdDate });
+        if (modifiedDate != null) formValues.Add(new { FieldName = "Modified", FieldValue = modifiedDate });
+        if (formValues.Count == 0) return null;
+
+        var payload = JsonSerializer.Serialize(new { formValues, bNewDocumentUpdate = true });
+        var url     = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({itemId})/ValidateUpdateListItem()";
+
+        using var resp = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Post, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            r.Content = new StringContent(payload, System.Text.Encoding.UTF8, "application/json");
+            return r;
+        }, siteUrl);
+
+        var body = await resp.Content.ReadAsStringAsync();
+        if (!resp.IsSuccessStatusCode)
+            return $"Field write failed ({(int)resp.StatusCode}): {body[..Math.Min(200, body.Length)]}";
 
         try
         {
-            using var _ = await SendSharePointRequestAsync(token =>
+            using var doc = JsonDocument.Parse(body);
+            if (doc.RootElement.TryGetProperty("value", out var vals))
             {
-                var r = new HttpRequestMessage(HttpMethod.Post, metaUrl);
-                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
-                r.Content = new StringContent(metaPayload, System.Text.Encoding.UTF8, "application/json");
-                return r;
-            }, siteUrl);
+                var errors = vals.EnumerateArray()
+                    .Where(v => v.TryGetProperty("HasException", out var ex) && ex.GetBoolean())
+                    .Select(v => v.TryGetProperty("FieldName", out var fn) ? fn.GetString() : "?")
+                    .ToList();
+                if (errors.Count > 0)
+                    return $"Field errors on: {string.Join(", ", errors)}";
+            }
         }
         catch { }
-        return newItemId;
+        return null;
     }
 
     // Updates an existing list item's fields via MERGE/PATCH and optionally back-fills Created/Modified.
-    public async Task UpdateListItemAsync(
+    // Returns a field-write error string if person/taxonomy fields could not be applied, or null on success.
+    public async Task<string?> UpdateListItemAsync(
         string siteUrl, string listId, string itemId,
         Dictionary<string, object?> fields,
         string? createdDate, string? modifiedDate,
@@ -2218,9 +2533,10 @@ public class SharePointService
     {
         ct.ThrowIfCancellationRequested();
 
+        var (simpleFields, complexFields) = SplitComplexFields(fields);
+
         var updateUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({itemId})";
-        var body      = JsonSerializer.Serialize(fields.Where(kv => kv.Value != null)
-                            .ToDictionary(kv => kv.Key, kv => kv.Value));
+        var body      = JsonSerializer.Serialize(simpleFields);
 
         using var resp = await SendSharePointRequestAsync(token =>
         {
@@ -2239,27 +2555,7 @@ public class SharePointService
             throw new HttpRequestException($"Update item failed: {(int)resp.StatusCode} {resp.ReasonPhrase} — {errBody}");
         }
 
-        if (createdDate == null && modifiedDate == null) return;
-
-        var metaValues = new List<object>();
-        if (createdDate  != null) metaValues.Add(new { FieldName = "Created",  FieldValue = createdDate });
-        if (modifiedDate != null) metaValues.Add(new { FieldName = "Modified", FieldValue = modifiedDate });
-
-        var metaPayload = JsonSerializer.Serialize(new { formValues = metaValues, bNewDocumentUpdate = true });
-        var metaUrl     = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({itemId})/ValidateUpdateListItem()";
-
-        try
-        {
-            using var _ = await SendSharePointRequestAsync(token =>
-            {
-                var r = new HttpRequestMessage(HttpMethod.Post, metaUrl);
-                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
-                r.Content = new StringContent(metaPayload, System.Text.Encoding.UTF8, "application/json");
-                return r;
-            }, siteUrl);
-        }
-        catch { }
+        return await ValidateUpdateItemFieldsAsync(siteUrl, listId, itemId, complexFields, createdDate, modifiedDate);
     }
 
     private static object? ExtractJsonValue(JsonElement el) => el.ValueKind switch

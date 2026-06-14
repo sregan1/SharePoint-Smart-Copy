@@ -15,7 +15,7 @@ public class MigrationJobService(SharePointService spService)
 {
     public async Task ExecuteAsync(
         IList<(CopyJob job, CopyResult result)> fileTasks,
-        bool overwrite,
+        OverwriteMode overwriteMode,
         int maxVersions,
         int maxParallel,
         CancellationToken cancellationToken,
@@ -87,7 +87,7 @@ public class MigrationJobService(SharePointService spService)
                 if (jobCount <= 1 || groupTasks.Count <= 1)
                 {
                     await RunSingleJobAsync(
-                        groupTasks, overwrite, maxVersions, maxParallel,
+                        groupTasks, overwriteMode, maxVersions, maxParallel,
                         targetSiteUrl, webId, webRelUrl, siteId,
                         libraryServerRelUrl, listId, libraryTitle, cancellationToken,
                         copyCustomColumns, columnMappings, bulkFieldCache);
@@ -103,7 +103,7 @@ public class MigrationJobService(SharePointService spService)
                     await Task.WhenAll(batches
                         .Where(b => b.Count > 0)
                         .Select(batch => RunSingleJobAsync(
-                            batch, overwrite, maxVersions, maxParallel,
+                            batch, overwriteMode, maxVersions, maxParallel,
                             targetSiteUrl, webId, webRelUrl, siteId,
                             libraryServerRelUrl, listId, libraryTitle, cancellationToken,
                             copyCustomColumns, columnMappings, bulkFieldCache)));
@@ -130,7 +130,7 @@ public class MigrationJobService(SharePointService spService)
 
     private async Task RunSingleJobAsync(
         IList<(CopyJob job, CopyResult result)> fileTasks,
-        bool overwrite,
+        OverwriteMode overwriteMode,
         int maxVersions,
         int maxParallel,
         string targetSiteUrl,
@@ -183,7 +183,7 @@ public class MigrationJobService(SharePointService spService)
                         ? $"{libraryServerRelUrl}/{job.SourceName}"
                         : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
 
-                    if (overwrite)
+                    if (overwriteMode == OverwriteMode.Overwrite)
                     {
                         if (await spService.FileExistsAsync(job.TargetDriveId, parentId, job.SourceName))
                         {
@@ -200,7 +200,31 @@ public class MigrationJobService(SharePointService spService)
                         }
                         existingFileIds[fileServerRelUrl] = null;
                     }
-                    else
+                    else if (overwriteMode == OverwriteMode.IfNewer)
+                    {
+                        var existing = await spService.GetFileInfoAsync(job.TargetDriveId, parentId, job.SourceName);
+                        if (existing != null)
+                        {
+                            var srcMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
+                            if (srcMeta.ModifiedDateTime is { } srcModified && srcModified <= existing.Value.Modified)
+                            {
+                                result.Status       = CopyStatus.Skipped;
+                                result.ErrorMessage = CopyResult.UpToDate;
+                            }
+                            else
+                            {
+                                // Source is newer — delete so SPMI does a fresh INSERT
+                                // (same reasoning as overwrite mode).
+                                await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                            }
+                        }
+                        else if (await spService.GetFileUniqueIdAsync(targetSiteUrl, fileServerRelUrl) != null)
+                        {
+                            // Zombie SPFile blob — purge so SPMI can import cleanly.
+                            await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                        }
+                    }
+                    else // Skip
                     {
                         if (await spService.FileExistsAsync(job.TargetDriveId, parentId, job.SourceName))
                             result.Status = CopyStatus.Skipped;
@@ -213,7 +237,7 @@ public class MigrationJobService(SharePointService spService)
                     }
                 });
 
-            if (!overwrite && fileTasks.All(t => t.result.Status == CopyStatus.Skipped))
+            if (fileTasks.All(t => t.result.Status == CopyStatus.Skipped))
                 return;
 
             System.Diagnostics.Debug.WriteLine($"[Migration] encryptionKey length={encryptionKey.Length}");
@@ -284,16 +308,19 @@ public class MigrationJobService(SharePointService spService)
             var rootFolderGuid = await spService.GetLibraryRootFolderUniqueIdAsync(
                 targetSiteUrl, libraryServerRelUrl);
 
+            // IfNewer behaves like overwrite from SPMI's perspective: stale targets were
+            // already deleted in step 2b, so surviving imports must be allowed to replace.
+            var spmiOverwrite = overwriteMode != OverwriteMode.Skip;
             System.Diagnostics.Debug.WriteLine(
                 $"[Migration] manifest params: siteId={siteId} webId={webId} listId={listId}" +
                 $" webRelUrl={webRelUrl} libraryTitle={libraryTitle} libraryServerRelUrl={libraryServerRelUrl}" +
-                $" rootFolderGuid={rootFolderGuid ?? "(null)"} overwrite={overwrite}");
+                $" rootFolderGuid={rootFolderGuid ?? "(null)"} overwrite={spmiOverwrite}");
 
             var metadataClient = new BlobContainerClient(new Uri(metadataUri));
             var manifests = builder.BuildManifestXml(
                 siteId, webId, listId,
                 targetSiteUrl, webRelUrl, libraryTitle, libraryServerRelUrl,
-                overwrite, rootFolderGuid);
+                spmiOverwrite, rootFolderGuid);
 
             foreach (var (blobName, data) in manifests)
             {
@@ -406,23 +433,40 @@ public class MigrationJobService(SharePointService spService)
             ? ""
             : job.TargetSubFolderPath.TrimStart('/');
 
-        // Look up custom field values from bulk cache (keyed by SP list item integer ID)
+        // Look up custom field values from bulk cache (keyed by "{listId}:{listItemId}")
         Dictionary<string, string>? customFieldsForManifest = null;
         if (copyCustomColumns && bulkFieldCache != null && columnMappings != null)
         {
             var spIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
-            if (spIds.HasValue && bulkFieldCache.TryGetValue(spIds.Value.listItemId, out var rawFields))
+            if (spIds.HasValue && bulkFieldCache.TryGetValue($"{spIds.Value.listId}:{spIds.Value.listItemId}", out var rawFields))
             {
-                var mappingLookup = columnMappings.ToDictionary(
-                    m => m.SourceColumn.InternalName,
-                    m => m.TargetColumn?.InternalName);
+                var mappingLookup = ColumnMapping.BuildTargetNameMap(columnMappings);
                 customFieldsForManifest = new Dictionary<string, string>();
                 foreach (var (srcName, value) in rawFields)
                 {
                     if (value == null) continue;
-                    if (!mappingLookup.TryGetValue(srcName, out var targetName) || targetName == null)
+                    string targetName;
+                    if (mappingLookup.TryGetValue(srcName, out var mapped))
+                    {
+                        if (mapped == null) continue; // explicitly skipped
+                        targetName = mapped;
+                    }
+                    else
+                    {
                         targetName = srcName;
-                    customFieldsForManifest[targetName] = value.ToString() ?? "";
+                    }
+                    // SPMI lookup-value encoding: "-1;#value" asks SP to resolve at import.
+                    // Person fields resolve claims logins; taxonomy fields resolve Label|guid
+                    // (term GUIDs are valid as-is within the same tenant's term store).
+                    // Lookup fields resolve by display value — SPMI matches the value against
+                    // the lookup target list that already exists at the destination.
+                    customFieldsForManifest[targetName] = value switch
+                    {
+                        PersonFieldValue p   => string.Join(";#", p.Logins.Select(l => $"-1;#{l}")),
+                        TaxonomyFieldValue t => string.Join(";#", t.Terms.Select(x => $"-1;#{x.Label}|{x.TermGuid}")),
+                        LookupFieldValue l   => string.Join(";#", l.Entries.Select(e => $"-1;#{e.DisplayValue}")),
+                        _ => value.ToString() ?? "",
+                    };
                 }
             }
         }

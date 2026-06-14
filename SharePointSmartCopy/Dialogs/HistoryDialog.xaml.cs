@@ -76,17 +76,20 @@ public partial class HistoryDialog : Window
         };
         if (dlg.ShowDialog() != true) return;
 
+        static string Csv(string? s) => $"\"{(s ?? "").Replace("\"", "\"\"")}\"";
         var sb = new StringBuilder();
-        sb.AppendLine("File Name,Source Path,Target Path,Status,Versions Copied,Error");
+        sb.AppendLine("File Name,Source Path,Target Path,Status,Versions Copied,Error,Permissions Status,Permissions Details");
         foreach (var item in report.Items)
         {
             sb.AppendLine(
-                $"\"{item.FileName}\"," +
-                $"\"{item.SourcePath}\"," +
-                $"\"{item.TargetPath}\"," +
+                $"{Csv(item.FileName)}," +
+                $"{Csv(item.SourcePath)}," +
+                $"{Csv(item.TargetPath)}," +
                 $"{item.Status}," +
                 $"{item.VersionsCopied}," +
-                $"\"{item.ErrorMessage}\"");
+                $"{Csv(item.ErrorMessage)}," +
+                $"{item.PermissionStatus?.ToString() ?? ""}," +
+                $"{Csv(item.PermissionDetails)}");
         }
         System.IO.File.WriteAllText(dlg.FileName, sb.ToString());
         System.Diagnostics.Process.Start(

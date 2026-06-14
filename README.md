@@ -23,13 +23,12 @@ A free and open source Windows desktop application for copying files, libraries,
 
 ## Installation (No Build Required)
 
-1. **Download** the latest `.zip` from the [Releases page](https://github.com/sregan1/SharePoint-Smart-Copy/releases/latest) and extract it anywhere.
-2. **Install the runtime** — if prompted, download [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) (x64, Windows).
-3. **Register an Azure AD app** — follow the [Azure AD App Registration](#azure-ad-app-registration) steps below to create an app registration in your tenant.
-4. **Launch** `SharePointSmartCopy.exe`, open **Settings** (⚙ top-right), and enter your Client ID and Tenant ID.
-5. **Connect and copy** — enter your source site URL, sign in with your Microsoft 365 account, choose a scope, and follow the wizard.
+1. **Download** the latest `.exe` from the [Releases page](https://github.com/sregan1/SharePoint-Smart-Copy/releases/latest) — it is a self-contained single-file binary, no extraction needed.
+2. **Register an Azure AD app** — follow the [Azure AD App Registration](#azure-ad-app-registration) steps below to create an app registration in your tenant.
+3. **Launch** `SharePointSmartCopy.exe`, open **Settings** (⚙ top-right), and enter your Client ID and Tenant ID.
+4. **Connect and copy** — enter your source site URL, sign in with your Microsoft 365 account, choose a scope, and follow the wizard.
 
-No build step required — the release includes a self-contained executable.
+> **Windows SmartScreen** may show a warning on first launch because the binary is downloaded from the internet. Click **More info → Run anyway**. No .NET runtime installation is required — the runtime is bundled in the executable.
 
 ---
 
@@ -45,15 +44,20 @@ Choose from four copy scopes in a step-by-step wizard:
 | **Pages** | Modern SharePoint pages (.aspx), with optional web part URL remapping |
 
 **All scopes:**
-- Custom column schema and values copied alongside content
-- Overwrite or skip-existing control
-- Detailed per-item report with CSV export
+- Custom column values copied — including **Person/User** and **Managed Metadata** columns
+- Custom column mapping dialog — map source columns to target columns, or create missing columns in the target
+- Overwrite / skip / **copy-if-newer** incremental mode
+- **HTTP 429 throttle handling** — automatic Retry-After backoff so large jobs complete without manual intervention
+- Detailed per-item report with CSV export and inline permission status
 - Run history viewable in-app
 
 **Files scope:**
 - Full version history — version numbers, dates, and per-version editors preserved exactly
 - Bulk copy with 1–16 parallel operations
 - Migration API mode for high-fidelity large batches; Enhanced REST for small or quick copies
+
+**Appearance:**
+- Light / Dark / System theme — switchable in Settings
 
 ---
 

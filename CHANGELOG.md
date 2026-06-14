@@ -4,6 +4,38 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 3.1.0 — 2026-06-13
+
+### Added
+
+- **Person/User column copy** — Person and People columns are now read from the source (with full user detail via `$expand`) and written to the target using the SharePoint `ValidateUpdateListItem` endpoint with claims-format keys (`i:0#.f|membership|email`). Works for both single and multi-value user fields. Applied in all three write paths: Enhanced REST, Migration API manifest, and list item copy.
+- **Managed Metadata column copy** — Taxonomy (single) and TaxonomyMulti columns are now read from the source and written using the `Label|TermGuid` format. Because source and target share the same tenant term store, term GUIDs are identical — no term mapping required.
+- **Copy-if-newer incremental mode** — A third overwrite option sits alongside Skip and Overwrite: "If newer" compares the source file's last-modified date against the target and copies only when the source is more recent. Files that are already up to date are reported as Skipped ("Up to date") and still receive a permission refresh when Copy Permissions is enabled. Supported by both Migration API and Enhanced REST.
+- **HTTP 429 throttling backoff** — SharePoint throttle responses are now handled automatically: the app reads the `Retry-After` header (supporting both seconds and date formats), waits the instructed delay (capped at 120 s) with ±10 % jitter, and retries up to 5 times. A "Throttled, retrying in N s…" status message appears during the wait. Retry count increased from 3 to 5.
+- **Column mapping: auto-match on open** — When the Column Mappings dialog opens for the first time (no saved state), source columns are automatically pre-matched to target columns that share the same internal or display name and a compatible field type. Previously the user had to click "Auto-match" manually.
+- **Column mapping: type-filtered dropdowns** — Each source column's dropdown now only lists target columns whose type is compatible with the source. A Person source column no longer shows Text targets; a Date column no longer shows Lookup targets; etc. Incompatible pairings are removed from the list entirely.
+- **Light/Dark/System theme** — A theme selector in Settings switches between Light, Dark, and System-follows-Windows palettes at runtime without restarting.
+- **Copy log filter chips** — "All / Failed / Skipped" radio chips on the Copy progress and Report screens filter the file list in place, making it easy to focus on failures in a large run.
+- **Custom title bar** — The blue app bar now doubles as the window chrome (drag-to-move, double-click to maximize). Standard caption buttons (minimize / maximize / close) are embedded in the bar.
+
+### Changed
+
+- **Overwrite control** changed from a checkbox to a three-way horizontal radio group: **Skip existing** / **Overwrite** / **If newer**. The previous `OverwriteFiles = true` setting is automatically migrated to `Overwrite` on first launch.
+- **Permissions UI** refactored: the separate Permissions tab in the report is removed. Permission result (status + details) now appears as two inline columns on each file row — Perm Status and Perm Details. The columns are hidden when Copy Permissions is off.
+- **Copy Options layout** compacted so all options fit a standard 720 px window without a scrollbar: option captions moved into ⓘ tooltips, radio groups converted from stacked to single horizontal rows, Preserve Metadata moved to Advanced.
+- **Destination Name in Copy Preview** is now read-only when individual list items are selected (the name was already authoritatively chosen on the Target step). A tooltip explains this when the field is locked.
+- **Navigation bar** given a distinct background (`#E9E9E9` in light mode) so it is always visually anchored and the Back/Next buttons never appear to float against white content surfaces.
+- **Release packaging**: GitHub release now uses `PublishSingleFile=true` — the distributed `.exe` is a true self-contained binary and no longer an apphost wrapper that requires `SharePointSmartCopy.dll` alongside it.
+
+### Fixed
+
+- Fixed: phantom document library appearing in Copy Preview when only a custom list was selected. Root cause: WPF's tri-state checkbox left non-list nodes in `IsChecked = null`; the app misread `null` as "items-only mode" and included the library. Non-list nodes are now always two-state.
+- Fixed: New List name not populating in Copy Preview. `OverrideName` was never set when advancing from the Target step; it is now assigned from `EffectiveDestinationListName` during step navigation.
+- Fixed: custom column writes corrupting preserved metadata timestamps. `ValidateUpdateListItem` updates the `Modified` and `Editor` fields as a side effect. Fix: custom columns are now applied before the metadata preservation stamp, so the stamp always runs last.
+- Fixed: column mapping auto-match silently pairing incompatible types (e.g. a Person column matching a same-named Text column). `AreTypesCompatible()` now gates all name-based matches.
+
+---
+
 ## 3.0.0
 
 ### New Features

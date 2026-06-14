@@ -15,6 +15,7 @@ public class MigrationPackageBuilder
 {
     public record VersionEntry(
         string StreamId,
+        string FileId,
         string VersionLabel,
         bool IsCurrentVersion,
         DateTimeOffset LastModified,
@@ -107,6 +108,7 @@ public class MigrationPackageBuilder
 
             entries.Add(new VersionEntry(
                 StreamId:          streamId,
+                FileId:            Guid.NewGuid().ToString("D").ToUpperInvariant(),
                 VersionLabel:      label,
                 IsCurrentVersion:  isLast,
                 LastModified:      modified,
@@ -392,7 +394,7 @@ public class MigrationPackageBuilder
                     bool isCurr = v == currentVersion;
                     versionsEl.Add(E("File",
                         new XAttribute("Url", fileUrl),
-                        new XAttribute("Id", Guid.NewGuid().ToString("D").ToUpperInvariant()),
+                        new XAttribute("Id", v.FileId),
                         new XAttribute("Version", v.VersionLabel),
                         new XAttribute("ParentId", listId),
                         new XAttribute("ParentWebId", webId),

@@ -17,6 +17,11 @@ public partial class AzureRegistration : ObservableObject
 
 public enum CopyMode { MigrationApi, EnhancedRest }
 
+// What to do when a file already exists at the target:
+// Skip — leave it; Overwrite — always replace; IfNewer — replace only when the
+// source was modified more recently (incremental re-copy for staged cutovers).
+public enum OverwriteMode { Skip, Overwrite, IfNewer }
+
 public enum AppTheme { System, Light, Dark }
 
 public class AppSettings
@@ -26,7 +31,10 @@ public class AppSettings
     public string SourceUrl { get; set; } = string.Empty;
     public string TargetUrl { get; set; } = string.Empty;
     public CopyMode PreferredCopyMode    { get; set; } = CopyMode.MigrationApi;
+    // Legacy two-state setting; superseded by OverwriteMode but kept so old
+    // settings.json files migrate cleanly (see Load).
     public bool     OverwriteFiles       { get; set; } = false;
+    public OverwriteMode? OverwriteMode  { get; set; }
     public bool     CopyVersions         { get; set; } = true;
     public bool     CopyAllVersions      { get; set; } = true;
     public int      MaxVersions          { get; set; } = 10;
@@ -59,7 +67,12 @@ public class AppSettings
             if (File.Exists(SettingsPath))
             {
                 var json = File.ReadAllText(SettingsPath);
-                return JsonSerializer.Deserialize<AppSettings>(json, _jsonOptions) ?? new AppSettings();
+                var settings = JsonSerializer.Deserialize<AppSettings>(json, _jsonOptions) ?? new AppSettings();
+                // Migrate pre-OverwriteMode settings from the legacy bool.
+                settings.OverwriteMode ??= settings.OverwriteFiles
+                    ? Models.OverwriteMode.Overwrite
+                    : Models.OverwriteMode.Skip;
+                return settings;
             }
         }
         catch { /* fall through to default */ }

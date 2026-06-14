@@ -33,8 +33,10 @@ public partial class MainViewModel : ObservableObject
     {
         AuthService          = existingAuthService ?? new AuthService();
         SpService            = new SharePointService(AuthService);
+        SpService.Throttled += OnThrottled;
         var migrationJobService = new MigrationJobService(SpService);
-        _copyService              = new CopyService(SpService, migrationJobService);
+        _copyService                    = new CopyService(SpService, migrationJobService);
+        _copyService.ParallelismChanged += OnParallelismChanged;
         _libraryCopyService       = new LibraryCopyService(SpService);
         _permissionCopyService    = new PermissionCopyService(SpService);
         Settings             = settings ?? AppSettings.Load();
@@ -49,7 +51,7 @@ public partial class MainViewModel : ObservableObject
         SourceUrl         = Settings.SourceUrl;
         TargetUrl         = Settings.TargetUrl;
         CopyMode          = Settings.PreferredCopyMode;
-        OverwriteFiles    = Settings.OverwriteFiles;
+        OverwriteMode     = Settings.OverwriteMode ?? Models.OverwriteMode.Skip;
         CopyVersions      = Settings.CopyVersions;
         CopyAllVersions   = Settings.CopyAllVersions;
         MaxVersions       = Settings.MaxVersions;
@@ -86,6 +88,37 @@ public partial class MainViewModel : ObservableObject
     private int _currentStep;
 
     [ObservableProperty] private string _statusMessage = string.Empty;
+
+    // Shows a throttle notice while a retry wait is in progress, then clears it
+    // (unless another status message has replaced it in the meantime).
+    private void OnThrottled(TimeSpan delay, int attempt, int maxAttempts)
+    {
+        var msg = $"SharePoint is throttling requests — retrying in {Math.Ceiling(delay.TotalSeconds):N0}s (attempt {attempt}/{maxAttempts})…";
+        var dispatcher = System.Windows.Application.Current?.Dispatcher;
+        if (dispatcher == null) return;
+        dispatcher.BeginInvoke(() => StatusMessage = msg);
+        _ = Task.Delay(delay + TimeSpan.FromSeconds(2)).ContinueWith(_ =>
+            dispatcher.BeginInvoke(() =>
+            {
+                if (StatusMessage == msg) StatusMessage = string.Empty;
+            }));
+    }
+
+    // Shows a brief notice when adaptive throttling steps parallelism down or back up.
+    private void OnParallelismChanged(int newLimit)
+    {
+        var dispatcher = System.Windows.Application.Current?.Dispatcher;
+        if (dispatcher == null) return;
+        var msg = newLimit < MaxParallelCopies
+            ? $"Parallelism reduced to {newLimit} thread{(newLimit == 1 ? "" : "s")} (throttle protection)…"
+            : $"Parallelism restored to {newLimit} thread{(newLimit == 1 ? "" : "s")}.";
+        dispatcher.BeginInvoke(() => StatusMessage = msg);
+        _ = Task.Delay(TimeSpan.FromSeconds(5)).ContinueWith(_ =>
+            dispatcher.BeginInvoke(() =>
+            {
+                if (StatusMessage == msg) StatusMessage = string.Empty;
+            }));
+    }
     [ObservableProperty] private bool _isBusy;
 
     // ── Step 0: Source ────────────────────────────────────────────────────────
@@ -267,7 +300,7 @@ public partial class MainViewModel : ObservableObject
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
                     node.Children.Clear();
-                    foreach (var (id, title) in items)
+                    foreach (var (id, title, _) in items)
                         node.Children.Add(new SharePointNode
                         {
                             Name         = string.IsNullOrWhiteSpace(title) ? $"(Item {id})" : title,
@@ -485,9 +518,13 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsLibraryOrSiteScope))]
     [NotifyPropertyChangedFor(nameof(IsFilesOrPagesScope))]
     [NotifyPropertyChangedFor(nameof(NeedsTargetFolder))]
+    [NotifyPropertyChangedFor(nameof(IsItemSelectionActive))]
+    [NotifyPropertyChangedFor(nameof(ShowLibrarySummaryLine))]
+    [NotifyPropertyChangedFor(nameof(ShowLibraryFullCopyMapping))]
     [NotifyPropertyChangedFor(nameof(LibrarySummaryCount))]
     [NotifyPropertyChangedFor(nameof(LibraryPreviewItems))]
     [NotifyPropertyChangedFor(nameof(EffectiveCopyCustomColumns))]
+    [NotifyPropertyChangedFor(nameof(ShowFileCopyOptions))]
     [NotifyCanExecuteChangedFor(nameof(NextCommand))]
     private CopyScope _copyScope = CopyScope.Files;
 
@@ -502,11 +539,13 @@ public partial class MainViewModel : ObservableObject
     // or a list is in items-only mode (IsChecked == null).
     public bool IsItemSelectionActive  =>
         CopyScope == CopyScope.Library && (
-            SourceLibraries.Any(lib => lib.IsChecked == null) ||
+            SourceLibraries.Any(lib => lib.IsCustomList && lib.IsChecked == null) ||
             SourceLibraries.Any(lib => lib.Children.Any(c => c.Type == NodeType.ListItem && c.IsChecked == true)));
 
-    // True when the Libraries & lists summary line should be shown (whole-list or site scope, not individual items).
-    public bool ShowLibrarySummaryLine => IsLibraryOrSiteScope && !IsItemSelectionActive;
+    // True when the Site scope summary text should be shown (whole-site copy, not individual items).
+    public bool ShowLibrarySummaryLine => IsSiteScope && !IsItemSelectionActive;
+    // True when the Library/List full-copy mapping button should be shown.
+    public bool ShowLibraryFullCopyMapping => IsLibraryScope && !IsItemSelectionActive;
 
     // For Library scope: count of checked library nodes. For Site scope: count of all loaded libraries.
     // Count of whole libraries/lists selected (not individual items).
@@ -520,10 +559,12 @@ public partial class MainViewModel : ObservableObject
         .Count(c => c.Type == NodeType.ListItem && c.IsChecked == true);
 
     // Libraries shown in the Options step preview for Library/Site scope.
+    // The null (items-only) state only has meaning for custom lists — a stray null on
+    // any other node type must not surface a phantom entry here.
     public IEnumerable<SharePointNode> LibraryPreviewItems => IsSiteScope
         ? SourceLibraries
         : SourceLibraries.Where(n => n.IsChecked == true
-              || n.IsChecked == null
+              || (n.IsCustomList && n.IsChecked == null)
               || (n.IsCustomList && n.Children.Any(c => c.Type == NodeType.ListItem && c.IsChecked == true)));
 
     // Called from code-behind when any source node check state changes.
@@ -531,6 +572,7 @@ public partial class MainViewModel : ObservableObject
     {
         OnPropertyChanged(nameof(IsItemSelectionActive));
         OnPropertyChanged(nameof(ShowLibrarySummaryLine));
+        OnPropertyChanged(nameof(ShowLibraryFullCopyMapping));
         OnPropertyChanged(nameof(LibrarySummaryCount));
         OnPropertyChanged(nameof(SelectedItemCount));
         OnPropertyChanged(nameof(LibraryPreviewItems));
@@ -539,33 +581,40 @@ public partial class MainViewModel : ObservableObject
 
     // ── Step 3: Options ───────────────────────────────────────────────────────
 
-    [ObservableProperty] private bool _overwriteFiles = false;
+    [ObservableProperty] private OverwriteMode _overwriteMode = OverwriteMode.Skip;
     [ObservableProperty] private bool _copyVersions = true;
     [ObservableProperty] private bool _copyAllVersions = true;
     [ObservableProperty] private int _maxVersions = 10;
     [ObservableProperty] private int _maxParallelCopies = 4;
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsMigrationApiMode))]
-    [NotifyPropertyChangedFor(nameof(IsEnhancedRestMode))]
-    private CopyMode _copyMode = CopyMode.MigrationApi;
+    [ObservableProperty] private CopyMode _copyMode = CopyMode.MigrationApi;
     [ObservableProperty] private ObservableCollection<CopyJob> _copyJobs = [];
-
-    public bool IsMigrationApiMode  => CopyMode == CopyMode.MigrationApi;
-    public bool IsEnhancedRestMode  => CopyMode == CopyMode.EnhancedRest;
 
     // New options
     [ObservableProperty] private bool _preserveMetadata = true;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(EffectiveCopyCustomColumns))]
+    [NotifyPropertyChangedFor(nameof(CanConfigureMappings))]
     private bool _copyCustomColumns = true;
-    [ObservableProperty] private bool _copyLibraryContent = true;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowFileCopyOptions))]
+    private bool _copyLibraryContent = true;
     [ObservableProperty] private bool _remapPageWebPartUrls = true;
     [ObservableProperty] private bool _copyNavigation = true;
-    [ObservableProperty] private bool _copyPermissions = false;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PermColumnWidth))]
+    [NotifyPropertyChangedFor(nameof(PermDetailsColumnWidth))]
+    private bool _copyPermissions = false;
     public ObservableCollection<ColumnMapping> ColumnMappings { get; } = [];
 
-    // Library and Site scopes always copy all custom column values; Files scope uses the checkbox.
-    public bool EffectiveCopyCustomColumns => IsLibraryOrSiteScope || CopyCustomColumns;
+    // Library, Site, and Pages scopes always copy all custom column values; Files scope uses the checkbox.
+    public bool EffectiveCopyCustomColumns => IsLibraryOrSiteScope || IsPagesScope || CopyCustomColumns;
+
+    // File-level options (overwrite, versions, permissions) apply in Files scope, and in
+    // Library/Site scope only when library content is being copied.
+    public bool ShowFileCopyOptions => IsFilesScope || (IsLibraryOrSiteScope && CopyLibraryContent);
+
+    // Mapping configuration requires columns loaded and (in Files scope) the opt-in checkbox.
+    public bool CanConfigureMappings => IsColumnsReady && CopyCustomColumns;
     public IReadOnlyList<SpColumnDef> SourceColumns => _sourceColumns;
     public IReadOnlyList<SpColumnDef> TargetColumns => _targetColumns;
 
@@ -573,10 +622,15 @@ public partial class MainViewModel : ObservableObject
     {
         get
         {
+            var total = _sourceColumns.Count;
+            if (ColumnMappings.Count == 0)
+                return total > 0 ? $"Configure mappings ({total} columns)" : "Configure mappings";
+
             var unmatched = ColumnMappings.Count(m => m.Status == MappingStatus.Unmatched);
+            var mapped    = ColumnMappings.Count - unmatched;
             return unmatched > 0
-                ? $"Configure mappings  ⚠ {unmatched} unmatched"
-                : $"Configure mappings ({ColumnMappings.Count})";
+                ? $"Configure mappings  ⚠ {unmatched} of {total} unmatched"
+                : $"Configure mappings ({mapped} of {total} mapped)";
         }
     }
 
@@ -645,7 +699,9 @@ public partial class MainViewModel : ObservableObject
     {
         BindingOperations.EnableCollectionSynchronization(value, _copyResultsLock);
         _copyResultsView = null;
+        _fileResultsView = null;
         OnPropertyChanged(nameof(CopyResultsView));
+        OnPropertyChanged(nameof(FileResultsView));
     }
 
     // ── Result filter (All / Failed / Skipped chips above the log grids) ──────
@@ -655,6 +711,11 @@ public partial class MainViewModel : ObservableObject
 
     partial void OnResultFilterChanged(ResultFilterKind value) => CopyResultsView.Refresh();
 
+    // ── Step 5 tab-specific filters ───────────────────────────────────────────
+    [ObservableProperty] private ResultFilterKind _fileResultFilter = ResultFilterKind.All;
+
+    partial void OnFileResultFilterChanged(ResultFilterKind value) => _fileResultsView?.Refresh();
+
     private System.ComponentModel.ICollectionView? _copyResultsView;
     public System.ComponentModel.ICollectionView CopyResultsView
     {
@@ -663,14 +724,42 @@ public partial class MainViewModel : ObservableObject
             if (_copyResultsView == null)
             {
                 _copyResultsView = CollectionViewSource.GetDefaultView(CopyResults);
-                _copyResultsView.Filter = o => ResultFilter switch
+                _copyResultsView.Filter = o =>
                 {
-                    ResultFilterKind.Failed  => ((CopyResult)o).Status == CopyStatus.Failed,
-                    ResultFilterKind.Skipped => ((CopyResult)o).Status == CopyStatus.Skipped,
-                    _                        => true,
+                    var r = (CopyResult)o;
+                    return ResultFilter switch
+                    {
+                        ResultFilterKind.Failed  => r.Status == CopyStatus.Failed || r.PermissionStatus == CopyStatus.Failed,
+                        ResultFilterKind.Skipped => r.Status == CopyStatus.Skipped,
+                        _                        => true,
+                    };
                 };
             }
             return _copyResultsView;
+        }
+    }
+
+    private System.ComponentModel.ICollectionView? _fileResultsView;
+    public System.ComponentModel.ICollectionView FileResultsView
+    {
+        get
+        {
+            if (_fileResultsView == null)
+            {
+                _fileResultsView = new CollectionViewSource { Source = CopyResults }.View;
+                _fileResultsView.Filter = o =>
+                {
+                    var r = (CopyResult)o;
+                    if (r.IsPermissionResult) return false;
+                    return FileResultFilter switch
+                    {
+                        ResultFilterKind.Failed  => r.Status == CopyStatus.Failed || r.PermissionStatus == CopyStatus.Failed,
+                        ResultFilterKind.Skipped => r.Status == CopyStatus.Skipped,
+                        _                        => true,
+                    };
+                };
+            }
+            return _fileResultsView;
         }
     }
     [ObservableProperty] private double _totalProgress;
@@ -694,6 +783,13 @@ public partial class MainViewModel : ObservableObject
     public int FailedCount  => CopyResults.Count(r => r.Status == CopyStatus.Failed);
     public int SkippedCount => CopyResults.Count(r => r.Status == CopyStatus.Skipped);
 
+    public int FileTotalCount   => CopyResults.Count(r => !r.IsPermissionResult);
+    public int FileFailedCount  => CopyResults.Count(r => !r.IsPermissionResult && (r.Status == CopyStatus.Failed || r.PermissionStatus == CopyStatus.Failed));
+    public int FileSkippedCount => CopyResults.Count(r => !r.IsPermissionResult && r.Status == CopyStatus.Skipped);
+
+    public double PermColumnWidth        => CopyPermissions ? 100 : 0;
+    public double PermDetailsColumnWidth => CopyPermissions ? 200 : 0;
+
     [RelayCommand]
     private async Task StartCopyAsync()
     {
@@ -703,7 +799,8 @@ public partial class MainViewModel : ObservableObject
         CopyDuration         = string.Empty;
         IsUpdatingMetadata   = _hasFolderJobs;
         CopyResults.Clear();
-        ResultFilter = ResultFilterKind.All;
+        ResultFilter     = ResultFilterKind.All;
+        FileResultFilter = ResultFilterKind.All;
         CompletedCount = 0;
         TotalProgress  = 0;
         _copyStartTime = DateTimeOffset.Now;
@@ -743,22 +840,26 @@ public partial class MainViewModel : ObservableObject
             if ((EffectiveCopyCustomColumns || CopyPermissions) && CopyJobs.Count > 0)
             {
                 StatusMessage = "Reading source metadata…";
-                // Custom columns use the first library only (the mapping dialog is per-library).
-                try
+                // Build bulk field cache for each source library. Keys are "{listId}:{itemId}"
+                // so caches from multiple libraries can be merged without collision.
+                if (EffectiveCopyCustomColumns)
                 {
-                    if (EffectiveCopyCustomColumns)
+                    foreach (var driveId in CopyJobs.Select(j => j.SourceDriveId)
+                                                    .Where(d => !string.IsNullOrEmpty(d))
+                                                    .Distinct())
                     {
-                        var firstJob     = CopyJobs.First(j => !j.IsFolder);
-                        var serverRelUrl = await SpService.GetLibraryServerRelativeUrlAsync(firstJob.SourceDriveId);
-                        var sourceListId = await SpService.GetListIdByServerRelativeUrlAsync(
-                            SourceUrl.TrimEnd('/'), serverRelUrl);
-                        var cols = await SpService.GetLibraryColumnsAsync(SourceUrl.TrimEnd('/'), sourceListId);
-                        _bulkFieldCache = await SpService.BulkReadCustomFieldsAsync(
-                            SourceUrl.TrimEnd('/'), sourceListId, cols,
-                            ct: _copyCts.Token);
+                        try
+                        {
+                            var srvUrl = await SpService.GetLibraryServerRelativeUrlAsync(driveId);
+                            var listId = await SpService.GetListIdByServerRelativeUrlAsync(SourceUrl.TrimEnd('/'), srvUrl);
+                            var cols   = await SpService.GetLibraryColumnsAsync(SourceUrl.TrimEnd('/'), listId);
+                            var cache  = await SpService.BulkReadCustomFieldsAsync(SourceUrl.TrimEnd('/'), listId, cols, ct: _copyCts.Token);
+                            foreach (var (itemId, fields) in cache)
+                                _bulkFieldCache[$"{listId}:{itemId}"] = fields;
+                        }
+                        catch { /* non-critical — that library's custom columns are skipped */ }
                     }
                 }
-                catch { /* non-critical */ }
 
                 // Permission flags must cover every source library in the selection —
                 // jobs can span multiple libraries, and the flags use composite
@@ -790,6 +891,33 @@ public partial class MainViewModel : ObservableObject
                 catch { /* non-fatal */ }
             }
 
+            // Create columns the user marked "Create in target" in the mapping dialog
+            // before any values are written. Created columns keep the source internal
+            // name, which is what BuildTargetNameMap resolves create-new mappings to.
+            var columnsToCreate = ColumnMappings
+                .Where(m => m.CreateNew && m.Status == MappingStatus.WillCreate)
+                .Select(m => m.SourceColumn)
+                .ToList();
+            if (EffectiveCopyCustomColumns && columnsToCreate.Count > 0 && SelectedTargetFolder != null)
+            {
+                try
+                {
+                    StatusMessage = "Creating target columns…";
+                    var libraryNode = SelectedTargetFolder;
+                    while (libraryNode.Parent != null)
+                        libraryNode = libraryNode.Parent;
+                    var targetServerRelUrl = libraryNode.ServerRelativePath
+                        ?? await SpService.GetLibraryServerRelativeUrlAsync(libraryNode.DriveId);
+                    var targetListId = await SpService.GetListIdByServerRelativeUrlAsync(
+                        TargetUrl.TrimEnd('/'), targetServerRelUrl);
+                    var created = await _libraryCopyService.AddMissingColumnsAsync(
+                        TargetUrl.TrimEnd('/'), targetListId, columnsToCreate);
+                    AddColumnCreationResult(libraryNode.Name, $"{TargetUrl.TrimEnd('/')}/{libraryNode.Name}", created);
+                }
+                catch { /* non-fatal — affected column values fall back to per-field errors */ }
+                finally { StatusMessage = string.Empty; }
+            }
+
             // Pages scope must use Enhanced REST — SPMI cannot import .aspx files into the Site
             // Pages list (WebPageLibrary/BaseTemplate=119) because the manifest declares the list
             // as DocumentLibrary (BaseTemplate=101), causing a fatal template-mismatch error.
@@ -802,7 +930,7 @@ public partial class MainViewModel : ObservableObject
             await _copyService.ExecuteAsync(
                 CopyJobs,
                 CopyResults,
-                OverwriteFiles,
+                OverwriteMode,
                 effectiveCopyVersions,
                 MaxParallelCopies,
                 effectiveVersionLimit,
@@ -833,6 +961,9 @@ public partial class MainViewModel : ObservableObject
             OnPropertyChanged(nameof(SuccessCount));
             OnPropertyChanged(nameof(FailedCount));
             OnPropertyChanged(nameof(SkippedCount));
+            OnPropertyChanged(nameof(FileTotalCount));
+            OnPropertyChanged(nameof(FileFailedCount));
+            OnPropertyChanged(nameof(FileSkippedCount));
             SaveReport();
         }
     }
@@ -861,17 +992,19 @@ public partial class MainViewModel : ObservableObject
             .GroupBy(c => c.DisplayName, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
 
+        // Honor mapping-dialog decisions (skip / rename) the same way the file writers do.
+        var mappingLookup = ColumnMapping.BuildTargetNameMap(ColumnMappings);
+
         // Fetch existing target items to support skip/overwrite by Title.
         var existingTargetItems = await SpService.GetListItemTitlesAsync(
             TargetUrl.TrimEnd('/'), targetListId, _copyCts!.Token);
         var existingByTitle = existingTargetItems
             .GroupBy(t => t.Title, StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(g => g.Key, g => g.First().Id, StringComparer.OrdinalIgnoreCase);
+            .ToDictionary(g => g.Key, g => (g.First().Id, g.First().Modified), StringComparer.OrdinalIgnoreCase);
 
-        var fieldNames = def.Columns.Select(c => c.InternalName)
-            .Append("HasUniqueRoleAssignments");
-        var allItems   = await SpService.GetListItemsAsync(
-            SourceUrl.TrimEnd('/'), def.SourceListId ?? string.Empty, fieldNames, _copyCts!.Token);
+        var allItems = await SpService.GetListItemsAsync(
+            SourceUrl.TrimEnd('/'), def.SourceListId ?? string.Empty, def.Columns,
+            ["HasUniqueRoleAssignments"], _copyCts!.Token);
 
         var items = isPartialSelection
             ? allItems.Where(i => i.TryGetValue("Id", out var id) && selectedItemIds.Contains(id?.ToString() ?? string.Empty)).ToList()
@@ -905,10 +1038,10 @@ public partial class MainViewModel : ObservableObject
                 if (!item.TryGetValue(col.InternalName, out var v) || v == null) continue;
 
                 string? targetKey = null;
-                if (isPartialSelection)
+                if (mappingLookup.TryGetValue(col.InternalName, out var mapped))
                 {
-                    var mapped = ColumnMappings.FirstOrDefault(m => m.SourceColumn.InternalName == col.InternalName)?.TargetColumn?.InternalName;
-                    if (mapped != null && targetByInternal.ContainsKey(mapped))
+                    if (mapped == null) continue; // explicitly skipped in the mapping dialog
+                    if (targetByInternal.ContainsKey(mapped))
                         targetKey = mapped;
                 }
                 if (targetKey == null)
@@ -925,33 +1058,47 @@ public partial class MainViewModel : ObservableObject
             string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
             string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
 
-            var existingId = itemTitle != null && existingByTitle.TryGetValue(itemTitle, out var eid) ? eid : null;
+            (string Id, DateTimeOffset? Modified)? existing =
+                itemTitle != null && existingByTitle.TryGetValue(itemTitle, out var ex) ? ex : null;
             var hasUniquePerms = item.TryGetValue("HasUniqueRoleAssignments", out var hurv) && hurv is true;
             try
             {
-                string? resolvedTargetItemId = existingId;
-                if (existingId != null)
+                string? resolvedTargetItemId = existing?.Id;
+                if (existing != null)
                 {
-                    if (!OverwriteFiles)
+                    if (OverwriteMode == Models.OverwriteMode.Skip)
                     {
                         itemResult.Status       = CopyStatus.Skipped;
                         itemResult.ErrorMessage = "Already exists";
                         continue;
                     }
-                    await SpService.UpdateListItemAsync(
-                        TargetUrl.TrimEnd('/'), targetListId, existingId,
+                    if (OverwriteMode == Models.OverwriteMode.IfNewer)
+                    {
+                        var srcModified = item.TryGetValue("Modified", out var sm) && sm is string sms &&
+                                          DateTimeOffset.TryParse(sms, out var smv) ? smv : (DateTimeOffset?)null;
+                        if (srcModified is { } sv && existing.Value.Modified is { } tv && sv <= tv)
+                        {
+                            itemResult.Status       = CopyStatus.Skipped;
+                            itemResult.ErrorMessage = "Up to date";
+                            continue;
+                        }
+                    }
+                    var updateFieldError = await SpService.UpdateListItemAsync(
+                        TargetUrl.TrimEnd('/'), targetListId, existing.Value.Id,
                         fields, createdDate, modifiedDate,
                         _copyCts.Token);
                     itemResult.Status       = CopyStatus.Success;
-                    itemResult.ErrorMessage = "Updated";
+                    itemResult.ErrorMessage = updateFieldError != null ? $"Updated (field warning: {updateFieldError})" : "Updated";
                 }
                 else
                 {
-                    resolvedTargetItemId = await SpService.CreateListItemAsync(
+                    var (newItemId, createFieldError) = await SpService.CreateListItemAsync(
                         TargetUrl.TrimEnd('/'), targetListId,
                         fields, createdDate, modifiedDate,
                         _copyCts.Token);
-                    itemResult.Status = CopyStatus.Success;
+                    resolvedTargetItemId    = newItemId;
+                    itemResult.Status       = CopyStatus.Success;
+                    itemResult.ErrorMessage = createFieldError != null ? $"field warning: {createFieldError}" : null;
                 }
 
                 if (CopyPermissions && resolvedTargetItemId != null && hasUniquePerms)
@@ -985,26 +1132,41 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    // Adds a summary log row for columns that were created on a target list.
-    private void AddColumnCreationResult(string listTitle, string targetPath, List<string> created)
+    // Adds summary log rows for column creation outcomes on a target list.
+    private void AddColumnCreationResult(string listTitle, string targetPath,
+        (List<string> Created, List<string> Failed) result)
     {
-        if (created.Count == 0) return;
-        var detail = created.Count == 1
-            ? $"Column created: {created[0]}"
-            : $"{created.Count} columns created: {string.Join(", ", created)}";
-        var r = new CopyResult
+        if (result.Created.Count > 0)
         {
-            FileName          = $"Columns → {listTitle}",
-            SourcePath        = string.Empty,
-            TargetPath        = targetPath,
-            Status            = CopyStatus.Success,
-            ErrorMessage      = detail,
-            IsLibraryCreation = true,
-        };
-        System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(r));
+            var detail = result.Created.Count == 1
+                ? $"Column created: {result.Created[0]}"
+                : $"{result.Created.Count} columns created: {string.Join(", ", result.Created)}";
+            System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(new CopyResult
+            {
+                FileName          = $"Columns → {listTitle}",
+                SourcePath        = string.Empty,
+                TargetPath        = targetPath,
+                Status            = CopyStatus.Success,
+                ErrorMessage      = detail,
+                IsLibraryCreation = true,
+            }));
+        }
+        foreach (var failure in result.Failed)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(new CopyResult
+            {
+                FileName          = $"Column failed → {listTitle}",
+                SourcePath        = string.Empty,
+                TargetPath        = targetPath,
+                Status            = CopyStatus.Failed,
+                ErrorMessage      = failure,
+                IsLibraryCreation = true,
+            }));
+        }
     }
 
-    // Adds a permission copy log row to CopyResults.
+    // For file-level results: stamps the perm outcome onto the existing file row.
+    // For site/library-level results (no matching file row): adds a structural summary row.
     private void AddPermissionResult(PermissionCopyResult perm, string targetPath)
     {
         string detail;
@@ -1023,17 +1185,33 @@ public partial class MainViewModel : ObservableObject
                 detail += $"; skipped {perm.SkippedPrincipals.Count} unresolvable: {string.Join(", ", perm.SkippedPrincipals)}";
             status = CopyStatus.Success;
         }
-        var r = new CopyResult
+
+        var row = CopyResults.FirstOrDefault(r =>
+            !r.IsPermissionResult &&
+            string.Equals(r.FileName, perm.ItemName, StringComparison.OrdinalIgnoreCase));
+
+        if (row != null)
         {
-            FileName           = $"Permissions → {perm.ItemName}",
-            SourcePath         = string.Empty,
-            TargetPath         = targetPath,
-            Status             = status,
-            ErrorMessage       = detail,
-            IsLibraryCreation  = true,
-            IsPermissionResult = true,
-        };
-        System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(r));
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                row.PermissionStatus  = status;
+                row.PermissionDetails = detail;
+            });
+        }
+        else
+        {
+            // Site/library-level result — no file row to stamp; add as a structural entry.
+            var r = new CopyResult
+            {
+                FileName          = $"Permissions — {perm.ItemName}",
+                SourcePath        = string.Empty,
+                TargetPath        = targetPath,
+                Status            = status,
+                ErrorMessage      = detail,
+                IsLibraryCreation = true,
+            };
+            System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(r));
+        }
     }
 
     private async Task StartLibraryCopyAsync()
@@ -1042,7 +1220,8 @@ public partial class MainViewModel : ObservableObject
         IsCopyComplete = false;
         CopyDuration   = string.Empty;
         CopyResults.Clear();
-        ResultFilter = ResultFilterKind.All;
+        ResultFilter     = ResultFilterKind.All;
+        FileResultFilter = ResultFilterKind.All;
         _copyStartTime = DateTimeOffset.Now;
         _copyEndTime   = null;
 
@@ -1216,9 +1395,13 @@ public partial class MainViewModel : ObservableObject
                             try
                             {
                                 if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
-                                    _bulkFieldCache = await SpService.BulkReadCustomFieldsAsync(
+                                {
+                                    var raw = await SpService.BulkReadCustomFieldsAsync(
                                         def.SourceSiteUrl, def.SourceListId, def.Columns,
                                         ct: _copyCts.Token);
+                                    _bulkFieldCache = raw.ToDictionary(
+                                        kvp => $"{def.SourceListId}:{kvp.Key}", kvp => kvp.Value);
+                                }
                                 if (CopyPermissions)
                                     libPermFlags = await SpService.BulkReadPermissionFlagsAsync(
                                         def.SourceSiteUrl, def.SourceListId, _copyCts.Token);
@@ -1228,7 +1411,7 @@ public partial class MainViewModel : ObservableObject
                             int versionLimit = CopyVersions && !CopyAllVersions ? MaxVersions : 0;
                             await _copyService.ExecuteAsync(
                                 fileJobs, CopyResults,
-                                OverwriteFiles, CopyVersions, MaxParallelCopies, versionLimit,
+                                OverwriteMode, CopyVersions, MaxParallelCopies, versionLimit,
                                 CopyMode, _copyCts.Token,
                                 copyCustomColumns: EffectiveCopyCustomColumns,
                                 columnMappings: [.. ColumnMappings],
@@ -1298,9 +1481,13 @@ public partial class MainViewModel : ObservableObject
                             try
                             {
                                 if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
-                                    _bulkFieldCache = await SpService.BulkReadCustomFieldsAsync(
+                                {
+                                    var raw = await SpService.BulkReadCustomFieldsAsync(
                                         def.SourceSiteUrl, def.SourceListId, def.Columns,
                                         ct: _copyCts.Token);
+                                    _bulkFieldCache = raw.ToDictionary(
+                                        kvp => $"{def.SourceListId}:{kvp.Key}", kvp => kvp.Value);
+                                }
                                 if (CopyPermissions)
                                     existLibPermFlags = await SpService.BulkReadPermissionFlagsAsync(
                                         def.SourceSiteUrl, def.SourceListId, _copyCts.Token);
@@ -1310,7 +1497,7 @@ public partial class MainViewModel : ObservableObject
                             int versionLimit = CopyVersions && !CopyAllVersions ? MaxVersions : 0;
                             await _copyService.ExecuteAsync(
                                 fileJobs, CopyResults,
-                                OverwriteFiles, CopyVersions, MaxParallelCopies, versionLimit,
+                                OverwriteMode, CopyVersions, MaxParallelCopies, versionLimit,
                                 CopyMode, _copyCts.Token,
                                 copyCustomColumns: EffectiveCopyCustomColumns,
                                 columnMappings: [.. ColumnMappings],
@@ -1367,6 +1554,8 @@ public partial class MainViewModel : ObservableObject
                         // Items-only or partial selection: create a new list or use the chosen destination list.
                         if (IsCreatingNewList)
                         {
+                            // The Target step is the single authority for the destination list
+                            // name; the preview's Destination Name column mirrors it read-only.
                             def.Title    = NewListName.Trim();
                             targetListId = await _libraryCopyService.CreateCustomListAsync(
                                 TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate);
@@ -1377,7 +1566,7 @@ public partial class MainViewModel : ObservableObject
                         }
                         if (CopyCustomColumns && def.Columns.Count > 0)
                         {
-                            var colTitle = IsCreatingNewList ? NewListName.Trim() : SelectedTargetList.Title;
+                            var colTitle = IsCreatingNewList ? def.Title : SelectedTargetList.Title;
                             try
                             {
                                 var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
@@ -1527,7 +1716,7 @@ public partial class MainViewModel : ObservableObject
 
                             await _copyService.ExecuteAsync(
                                 pageJobs, CopyResults,
-                                OverwriteFiles,
+                                OverwriteMode,
                                 copyVersions: false,
                                 MaxParallelCopies,
                                 maxVersions: 0,
@@ -1688,6 +1877,9 @@ public partial class MainViewModel : ObservableObject
             OnPropertyChanged(nameof(SuccessCount));
             OnPropertyChanged(nameof(FailedCount));
             OnPropertyChanged(nameof(SkippedCount));
+            OnPropertyChanged(nameof(FileTotalCount));
+            OnPropertyChanged(nameof(FileFailedCount));
+            OnPropertyChanged(nameof(FileSkippedCount));
             SaveReport();
         }
     }
@@ -1697,6 +1889,8 @@ public partial class MainViewModel : ObservableObject
     internal string? ColumnLoadError { get; private set; }
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsColumnsReady))]
+    [NotifyPropertyChangedFor(nameof(CanConfigureMappings))]
+    [NotifyPropertyChangedFor(nameof(MappingButtonLabel))]
     private bool _isColumnsLoading;
     public bool IsColumnsReady => !IsColumnsLoading;
 
@@ -1740,6 +1934,39 @@ public partial class MainViewModel : ObservableObject
                 ColumnLoadError = $"Target columns unavailable: {ex.Message}";
             }
         }
+        else if (IsLibraryScope && !IsItemSelectionActive)
+        {
+            // Library full-copy: try to load columns from the matching library at the target.
+            // The library may not exist yet — failure here is non-fatal.
+            var firstLib = SourceLibraries.FirstOrDefault(l => l.IsChecked == true || l.IsChecked == null)
+                ?? SourceLibraries.FirstOrDefault();
+            if (firstLib != null)
+            {
+                try
+                {
+                    var srcServerRelUrl = firstLib.ServerRelativePath
+                        ?? await SpService.GetLibraryServerRelativeUrlAsync(firstLib.DriveId);
+                    // Map source server-relative URL to target by replacing the source site path prefix.
+                    var srcSitePath    = new Uri(SourceUrl.TrimEnd('/')).AbsolutePath.TrimEnd('/');
+                    var tgtSitePath    = new Uri(TargetUrl.TrimEnd('/')).AbsolutePath.TrimEnd('/');
+                    var libRelPart     = srcServerRelUrl.StartsWith(srcSitePath, StringComparison.OrdinalIgnoreCase)
+                        ? srcServerRelUrl[srcSitePath.Length..]
+                        : srcServerRelUrl;
+                    var tgtServerRelUrl = tgtSitePath + libRelPart;
+                    var targetListId   = await SpService.GetListIdByServerRelativeUrlAsync(
+                        TargetUrl.TrimEnd('/'), tgtServerRelUrl);
+                    if (!string.IsNullOrEmpty(targetListId))
+                    {
+                        _targetColumns = await SpService.GetLibraryColumnsAsync(TargetUrl.TrimEnd('/'), targetListId);
+                        OnPropertyChanged(nameof(TargetColumns));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[LoadColumns] target load failed (library full copy): {ex.Message}");
+                }
+            }
+        }
 
         // Load source columns — separate try/catch so a target failure cannot block this
         try
@@ -1780,14 +2007,21 @@ public partial class MainViewModel : ObservableObject
 
     private void UpdateProgress()
     {
-        var done = CopyResults.Count(r => r.Status is CopyStatus.Success or CopyStatus.Failed or CopyStatus.Skipped);
+        int done, total;
+        lock (_copyResultsLock)
+        {
+            done  = CopyResults.Count(r => r.Status is CopyStatus.Success or CopyStatus.Failed or CopyStatus.Skipped);
+            total = CopyResults.Count;
+        }
         CompletedCount = done;
-        TotalCount     = CopyResults.Count;
+        TotalCount     = total;
         TotalProgress  = TotalCount > 0 ? done * 100.0 / TotalCount : 0;
         ElapsedTime    = FormatDuration((_copyEndTime ?? DateTimeOffset.Now) - _copyStartTime);
         // Keep the filter-chip counts live while the copy runs.
         OnPropertyChanged(nameof(FailedCount));
         OnPropertyChanged(nameof(SkippedCount));
+        OnPropertyChanged(nameof(FileFailedCount));
+        OnPropertyChanged(nameof(FileSkippedCount));
     }
 
     public void RefreshCopyStats()
@@ -1795,6 +2029,9 @@ public partial class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(SuccessCount));
         OnPropertyChanged(nameof(FailedCount));
         OnPropertyChanged(nameof(SkippedCount));
+        OnPropertyChanged(nameof(FileTotalCount));
+        OnPropertyChanged(nameof(FileFailedCount));
+        OnPropertyChanged(nameof(FileSkippedCount));
     }
 
     // Public wrapper so code-behind and dialogs can fire property change notifications.
@@ -1803,21 +2040,23 @@ public partial class MainViewModel : ObservableObject
     // ── Step 5: Report ────────────────────────────────────────────────────────
 
     [RelayCommand]
-    private void ExportReport()
+    private void ExportFilesReport()
     {
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
             Filter   = "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt",
-            FileName = $"CopyReport_{DateTime.Now:yyyyMMdd_HHmmss}.csv"
+            FileName = $"CopyReport_Files_{DateTime.Now:yyyyMMdd_HHmmss}.csv"
         };
         if (dlg.ShowDialog() != true) return;
 
+        static string Csv(string? s) => $"\"{(s ?? "").Replace("\"", "\"\"")}\"";
         var sb = new StringBuilder();
-        sb.AppendLine("File Name,Source Path,Target Path,Status,Versions Copied,Error");
-        foreach (var r in CopyResults)
+        sb.AppendLine("File Name,Source Path,Target Path,Status,Versions Copied,Error,Permissions Status,Permissions Details");
+        foreach (var r in CopyResults.Where(r => !r.IsPermissionResult))
         {
-            sb.AppendLine($"\"{r.FileName}\",\"{r.SourcePath}\",\"{r.TargetPath}\"," +
-                          $"{r.Status},{r.VersionsCopied},\"{r.ErrorMessage}\"");
+            sb.AppendLine($"{Csv(r.FileName)},{Csv(r.SourcePath)},{Csv(r.TargetPath)}," +
+                          $"{r.Status},{r.VersionsCopied},{Csv(r.ErrorMessage)}," +
+                          $"{r.PermissionStatus?.ToString() ?? ""},{Csv(r.PermissionDetails)}");
         }
         System.IO.File.WriteAllText(dlg.FileName, sb.ToString());
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
@@ -1858,6 +2097,17 @@ public partial class MainViewModel : ObservableObject
                 if (!IsDemoMode)
                 {
                     if (NeedsTargetFolder) BuildCopyJobs();
+                    // Item-level copies write into the chosen destination list (or a new one) —
+                    // reflect that name in the preview's Destination Name column so what the
+                    // user typed at the Target step is what the preview shows.
+                    if (IsItemSelectionActive && !string.IsNullOrWhiteSpace(EffectiveDestinationListName))
+                    {
+                        foreach (var lib in SourceLibraries.Where(l => l.IsCustomList &&
+                                     (l.IsChecked == null ||
+                                      l.Children.Any(c => c.Type == NodeType.ListItem && c.IsChecked == true))))
+                            lib.OverrideName = EffectiveDestinationListName;
+                        OnPropertyChanged(nameof(LibraryPreviewItems));
+                    }
                     // Eagerly load target columns for mapping dialog; store task so dialog can await it
                     _columnLoadTask = LoadTargetColumnsAsync();
                 }
@@ -1867,7 +2117,9 @@ public partial class MainViewModel : ObservableObject
                 if (!IsDemoMode)
                 {
                     Settings.PreferredCopyMode    = CopyMode;
-                    Settings.OverwriteFiles       = OverwriteFiles;
+                    Settings.OverwriteMode        = OverwriteMode;
+                    // Keep the legacy bool in sync for older builds reading the same file.
+                    Settings.OverwriteFiles       = OverwriteMode == Models.OverwriteMode.Overwrite;
                     Settings.CopyVersions         = CopyVersions;
                     Settings.CopyAllVersions      = CopyAllVersions;
                     Settings.MaxVersions          = MaxVersions;
@@ -1932,13 +2184,16 @@ public partial class MainViewModel : ObservableObject
                 CopyMode     = CopyMode,
                 Items        = CopyResults.Select(r => new SavedReportItem
                 {
-                    FileName       = r.FileName,
-                    SourcePath     = r.SourcePath,
-                    TargetPath     = r.TargetPath,
-                    Status         = r.Status,
-                    VersionsCopied = r.VersionsCopied,
-                    VersionsTotal  = r.VersionsTotal,
-                    ErrorMessage   = r.ErrorMessage
+                    FileName           = r.FileName,
+                    SourcePath         = r.SourcePath,
+                    TargetPath         = r.TargetPath,
+                    Status             = r.Status,
+                    VersionsCopied     = r.VersionsCopied,
+                    VersionsTotal      = r.VersionsTotal,
+                    ErrorMessage       = r.ErrorMessage,
+                    IsPermissionResult = r.IsPermissionResult,
+                    PermissionStatus   = r.PermissionStatus,
+                    PermissionDetails  = r.PermissionDetails,
                 }).ToList()
             };
             ReportHistoryService.Save(report);

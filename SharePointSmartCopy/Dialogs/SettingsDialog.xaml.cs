@@ -85,6 +85,7 @@ public partial class SettingsDialog : Window
             TargetUrl               = _original.TargetUrl,
             PreferredCopyMode       = _original.PreferredCopyMode,
             OverwriteFiles          = _original.OverwriteFiles,
+            OverwriteMode           = _original.OverwriteMode,
             CopyVersions            = _original.CopyVersions,
             CopyAllVersions         = _original.CopyAllVersions,
             MaxVersions             = _original.MaxVersions,

@@ -143,7 +143,7 @@ public class LibraryCopyService(SharePointService spService)
         {
             if (mappingLookup == null) return true;
             if (!mappingLookup.TryGetValue(col.InternalName, out var mapping)) return false;
-            return mapping.CreateNew || mapping.TargetColumn?.InternalName == col.InternalName;
+            return mapping.CreateNew;
         }).ToList();
 
         foreach (var col in columnsToCreate)
@@ -262,6 +262,17 @@ public class LibraryCopyService(SharePointService spService)
 
     private async Task CreateColumnAsync(string siteUrl, string listId, ColumnDefinition col)
     {
+        // User, taxonomy, and choice columns with options need schema XML.
+        // The plain JSON /fields endpoint rejects typed properties (Choices, __metadata)
+        // regardless of the odata=nometadata accept header.
+        bool isChoiceWithOptions = (col.FieldType == SupportedFieldType.Choice || col.FieldType == SupportedFieldType.MultiChoice)
+                                   && col.Choices is { Length: > 0 };
+        if (ColumnDefinition.IsUserType(col.FieldType) || ColumnDefinition.IsTaxonomyType(col.FieldType) || isChoiceWithOptions)
+        {
+            await CreateColumnFromSchemaXmlAsync(siteUrl, listId, col);
+            return;
+        }
+
         var fieldTypeKind = col.FieldType switch
         {
             SupportedFieldType.Text        => 2,
@@ -273,29 +284,13 @@ public class LibraryCopyService(SharePointService spService)
             SupportedFieldType.MultiChoice => 15,
             _ => 2,
         };
-        string json;
-        if ((col.FieldType == SupportedFieldType.Choice || col.FieldType == SupportedFieldType.MultiChoice)
-            && col.Choices is { Length: > 0 })
+        var json = JsonSerializer.Serialize(new
         {
-            json = JsonSerializer.Serialize(new
-            {
-                FieldTypeKind = fieldTypeKind,
-                Title         = col.DisplayName,
-                StaticName    = col.InternalName,
-                Required      = false,
-                Choices       = new { results = col.Choices },
-            });
-        }
-        else
-        {
-            json = JsonSerializer.Serialize(new
-            {
-                FieldTypeKind = fieldTypeKind,
-                Title         = col.DisplayName,
-                StaticName    = col.InternalName,
-                Required      = false,
-            });
-        }
+            FieldTypeKind = fieldTypeKind,
+            Title         = col.DisplayName,
+            StaticName    = col.InternalName,
+            Required      = false,
+        });
 
         // Create the field and read back the actual InternalName (SP may mangle spaces)
         var createUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/fields";
@@ -311,17 +306,109 @@ public class LibraryCopyService(SharePointService spService)
         }, siteUrl);
 
         var createBody = await createResp.Content.ReadAsStringAsync();
-        if (createResp.IsSuccessStatusCode)
+        if (!createResp.IsSuccessStatusCode)
+            throw new HttpRequestException(
+                $"SharePoint rejected column creation ({(int)createResp.StatusCode}): {createBody}");
+
+        using var doc = JsonDocument.Parse(createBody);
+        if (doc.RootElement.TryGetProperty("InternalName", out var n))
+            actualInternalName = n.GetString() ?? col.InternalName;
+
+        // Add to default view (non-critical)
+        await AddColumnToDefaultViewAsync(siteUrl, listId, actualInternalName);
+    }
+
+    // Creates a User or Taxonomy column via fields/createfieldasxml.
+    // User columns get a clean handwritten schema. Taxonomy columns reuse the source
+    // field's schema — within-tenant the term store is shared, so the SspId/TermSetId
+    // binding is valid as-is. Instance-specific attributes are regenerated or stripped.
+    private async Task CreateColumnFromSchemaXmlAsync(string siteUrl, string listId, ColumnDefinition col)
+    {
+        string schemaXml;
+        if (col.FieldType == SupportedFieldType.Choice || col.FieldType == SupportedFieldType.MultiChoice)
         {
-            using var doc = JsonDocument.Parse(createBody);
+            var type = col.FieldType == SupportedFieldType.MultiChoice ? "MultiChoice" : "Choice";
+            var el = new System.Xml.Linq.XElement("Field",
+                new System.Xml.Linq.XAttribute("Type", type),
+                new System.Xml.Linq.XAttribute("DisplayName", col.DisplayName),
+                new System.Xml.Linq.XAttribute("Name", col.InternalName),
+                new System.Xml.Linq.XAttribute("StaticName", col.InternalName),
+                new System.Xml.Linq.XAttribute("Required", "FALSE"),
+                new System.Xml.Linq.XAttribute("FillInChoice", "FALSE"));
+            if (col.Choices is { Length: > 0 })
+            {
+                var choicesEl = new System.Xml.Linq.XElement("CHOICES");
+                foreach (var choice in col.Choices)
+                    choicesEl.Add(new System.Xml.Linq.XElement("CHOICE", choice));
+                el.Add(choicesEl);
+            }
+            schemaXml = el.ToString(System.Xml.Linq.SaveOptions.DisableFormatting);
+        }
+        else if (ColumnDefinition.IsUserType(col.FieldType))
+        {
+            var el = new System.Xml.Linq.XElement("Field",
+                new System.Xml.Linq.XAttribute("Type", col.FieldType == SupportedFieldType.UserMulti ? "UserMulti" : "User"),
+                new System.Xml.Linq.XAttribute("DisplayName", col.DisplayName),
+                new System.Xml.Linq.XAttribute("Name", col.InternalName),
+                new System.Xml.Linq.XAttribute("StaticName", col.InternalName),
+                new System.Xml.Linq.XAttribute("List", "UserInfo"),
+                new System.Xml.Linq.XAttribute("ShowField", "ImnName"),
+                new System.Xml.Linq.XAttribute("UserSelectionMode", "PeopleAndGroups"),
+                new System.Xml.Linq.XAttribute("Required", "FALSE"));
+            if (col.FieldType == SupportedFieldType.UserMulti)
+                el.Add(new System.Xml.Linq.XAttribute("Mult", "TRUE"));
+            schemaXml = el.ToString(System.Xml.Linq.SaveOptions.DisableFormatting);
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(col.SchemaXml))
+                throw new Exception($"No source schema captured for taxonomy column '{col.DisplayName}'");
+
+            var el = System.Xml.Linq.XElement.Parse(col.SchemaXml);
+            // Fresh field ID; source-instance attributes don't apply at the target.
+            el.SetAttributeValue("ID", $"{{{Guid.NewGuid()}}}");
+            foreach (var attr in new[] { "SourceID", "ColName", "RowOrdinal", "Version", "WebId" })
+                el.Attribute(attr)?.Remove();
+            // TextField points at the source's hidden companion note field by GUID —
+            // it doesn't exist at the target, so let SharePoint regenerate it.
+            var textFieldProps = el.Descendants("Property")
+                .Where(p => (string?)p.Element("Name") == "TextField")
+                .ToList();
+            foreach (var p in textFieldProps)
+                p.Remove();
+            schemaXml = el.ToString(System.Xml.Linq.SaveOptions.DisableFormatting);
+        }
+
+        var url  = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/fields/createfieldasxml";
+        var json = JsonSerializer.Serialize(new { parameters = new { SchemaXml = schemaXml } });
+
+        using var resp = await spService.SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Post, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            r.Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            return r;
+        }, siteUrl);
+
+        var body = await resp.Content.ReadAsStringAsync();
+        if (!resp.IsSuccessStatusCode)
+            throw new Exception($"createfieldasxml '{col.DisplayName}' HTTP {(int)resp.StatusCode}: {body[..Math.Min(200, body.Length)]}");
+
+        var actualInternalName = col.InternalName;
+        using (var doc = JsonDocument.Parse(body))
+        {
             if (doc.RootElement.TryGetProperty("InternalName", out var n))
                 actualInternalName = n.GetString() ?? col.InternalName;
         }
+        await AddColumnToDefaultViewAsync(siteUrl, listId, actualInternalName);
+    }
 
-        // Add to default view (non-critical)
+    private async Task AddColumnToDefaultViewAsync(string siteUrl, string listId, string internalName)
+    {
         try
         {
-            var viewUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/defaultView/viewfields/addViewField('{actualInternalName}')";
+            var viewUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/defaultView/viewfields/addViewField('{internalName}')";
             using var _ = await spService.SendSharePointRequestAsync(token =>
             {
                 var r = new HttpRequestMessage(HttpMethod.Post, viewUrl);
@@ -335,17 +422,18 @@ public class LibraryCopyService(SharePointService spService)
     }
 
     // Adds any source columns that are absent from the existing target list.
-    // Returns the display names of columns that were successfully created.
-    public async Task<List<string>> AddMissingColumnsAsync(
+    // Returns (created display names, failed display names with reason).
+    public async Task<(List<string> Created, List<string> Failed)> AddMissingColumnsAsync(
         string targetSiteUrl, string targetListId,
         IEnumerable<ColumnDefinition> sourceColumns)
     {
         // Skip cache so we always see the live column list — a stale cached snapshot
         // would cause columns that were just created to appear "missing" and get duplicated.
-        var existing             = await spService.GetLibraryColumnsAsync(targetSiteUrl, targetListId, skipCache: true);
+        var existing              = await spService.GetLibraryColumnsAsync(targetSiteUrl, targetListId, skipCache: true);
         var existingInternalNames = existing.Select(c => c.InternalName).ToHashSet(StringComparer.OrdinalIgnoreCase);
         var existingDisplayNames  = existing.Select(c => c.DisplayName).ToHashSet(StringComparer.OrdinalIgnoreCase);
         var created = new List<string>();
+        var failed  = new List<string>();
         foreach (var col in sourceColumns.Where(c =>
             !existingInternalNames.Contains(c.InternalName) &&
             !existingDisplayNames.Contains(c.DisplayName)))
@@ -355,9 +443,12 @@ public class LibraryCopyService(SharePointService spService)
                 await CreateColumnAsync(targetSiteUrl, targetListId, col);
                 created.Add(col.DisplayName);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                failed.Add($"{col.DisplayName} ({ex.Message})");
+            }
         }
-        return created;
+        return (created, failed);
     }
 
     private static bool IsAlreadyExistsError(string body) =>

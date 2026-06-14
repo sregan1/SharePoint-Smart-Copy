@@ -11,6 +11,10 @@ public enum ResultFilterKind { All, Failed, Skipped }
 
 public partial class CopyResult : ObservableObject
 {
+    // Skip reason for Copy-if-newer: file exists at the target and is not older.
+    // Compared against ErrorMessage to decide whether permissions still refresh.
+    public const string UpToDate = "Up to date";
+
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         var dispatcher = Application.Current?.Dispatcher;
@@ -33,6 +37,13 @@ public partial class CopyResult : ObservableObject
     [ObservableProperty] private bool _isLibraryCreation;
     [ObservableProperty] private bool _isPermissionResult;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PermissionStatusDisplay))]
+    [NotifyPropertyChangedFor(nameof(PermissionStatusColor))]
+    private CopyStatus? _permissionStatus;
+
+    [ObservableProperty] private string? _permissionDetails;
+
     public string StatusDisplay => Status switch
     {
         CopyStatus.Pending  => "⏳ Pending",
@@ -50,5 +61,21 @@ public partial class CopyResult : ObservableObject
         CopyStatus.Skipped  => "#797775",
         CopyStatus.Copying  => "#0078D4",
         _                   => "#323130"
+    };
+
+    public string PermissionStatusDisplay => PermissionStatus switch
+    {
+        CopyStatus.Success => "✅ Success",
+        CopyStatus.Failed  => "❌ Failed",
+        CopyStatus.Skipped => "⏭ Skipped",
+        _                  => "—"
+    };
+
+    public string PermissionStatusColor => PermissionStatus switch
+    {
+        CopyStatus.Success => "#107C10",
+        CopyStatus.Failed  => "#A4262C",
+        CopyStatus.Skipped => "#797775",
+        _                  => "#797775"
     };
 }
