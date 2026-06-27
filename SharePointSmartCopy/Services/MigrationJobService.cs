@@ -198,21 +198,33 @@ public class MigrationJobService(SharePointService spService)
                 }
                 if (currentBatch.Count > 0) batches.Add(currentBatch);
 
+                // Depth-1 pipeline: while SharePoint imports batch N (SubmitAndPollBatchAsync — the
+                // serialized phase, since SP soft-cancels concurrent import jobs), prepare batch N+1
+                // (download → encrypt → upload blobs + manifest) concurrently. Only ONE batch is ever
+                // prepared ahead, so memory and the per-batch SAS tokens stay bounded; a fast prep just
+                // waits at the import gate. This hides nearly all app-side prep time behind import time.
+                Task<PreparedBatch> Prep(int idx) => PrepareBatchAsync(
+                    batches[idx], overwriteMode, maxVersions, maxParallel,
+                    targetSiteUrl, webId, webRelUrl, siteId,
+                    libraryServerRelUrl, listId, libraryTitle, cancellationToken,
+                    copyCustomColumns, columnMappings, bulkFieldCache,
+                    preflightCounter, preflightTotal, preflightProgress,
+                    sharedFolderIdCache, sharedExistingByFolder,
+                    batchLabel: batches.Count > 1 ? $"{idx + 1}/{batches.Count}" : "",
+                    activityLog: activityLog,
+                    onFilePacked: onFilePacked,
+                    downloadController: downloadController,
+                    sharedMetaCache: sizeProbe);
+
+                var current = await Prep(0);
                 for (int bi = 0; bi < batches.Count; bi++)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    await RunSingleJobAsync(
-                        batches[bi], overwriteMode, maxVersions, maxParallel,
-                        targetSiteUrl, webId, webRelUrl, siteId,
-                        libraryServerRelUrl, listId, libraryTitle, cancellationToken,
-                        copyCustomColumns, columnMappings, bulkFieldCache,
-                        preflightCounter, preflightTotal, preflightProgress,
-                        sharedFolderIdCache, sharedExistingByFolder,
-                        batchLabel: batches.Count > 1 ? $"{bi + 1}/{batches.Count}" : "",
-                        activityLog: activityLog,
-                        onFilePacked: onFilePacked,
-                        downloadController: downloadController,
-                        sharedMetaCache: sizeProbe);
+                    // Start preparing the next batch BEFORE importing the current one, so its
+                    // download/upload overlaps this batch's SharePoint import.
+                    var nextPrep = bi + 1 < batches.Count ? Prep(bi + 1) : null;
+                    await SubmitAndPollBatchAsync(current, webId, targetSiteUrl, activityLog, cancellationToken);
+                    if (nextPrep != null) current = await nextPrep;
                 }
             }
         }
@@ -238,7 +250,21 @@ public class MigrationJobService(SharePointService spService)
         }
     }
 
-    private async Task RunSingleJobAsync(
+    // A batch whose blobs + manifest have been uploaded and is ready to import. Carries only
+    // references (URIs + key); the file payloads live in Azure, so a staged batch is cheap to hold
+    // while a previous batch is still importing.
+    private sealed record PreparedBatch(
+        string BatchLabel,
+        IList<(CopyJob job, CopyResult result)> FileTasks,
+        int CopyingCount,
+        string DataUri,
+        string MetadataUri,
+        byte[] EncryptionKey);
+
+    // Phase 1 of a batch: provision containers, pre-flight, download → encrypt → upload blobs, and
+    // upload the manifest. Does NOT submit the import job, so this can safely run (for batch N+1)
+    // while a previous batch (N) is still importing — only the import itself must be serialized.
+    private async Task<PreparedBatch> PrepareBatchAsync(
         IList<(CopyJob job, CopyResult result)> fileTasks,
         OverwriteMode overwriteMode,
         int maxVersions,
@@ -404,7 +430,7 @@ public class MigrationJobService(SharePointService spService)
             if (copyingCount == 0)
             {
                 activityLog?.Report($"{pfx}All files already exist — nothing to copy");
-                return;
+                return new PreparedBatch(batchLabel, fileTasks, 0, dataUri, metadataUri, encryptionKey);
             }
 
             System.Diagnostics.Debug.WriteLine($"[Migration] encryptionKey length={encryptionKey.Length}");
@@ -630,9 +656,48 @@ public class MigrationJobService(SharePointService spService)
                 await metaBlob.CreateSnapshotAsync(cancellationToken: cancellationToken);
             }
 
+            activityLog?.Report($"{pfx}Packaged {copyingCount:N0} file{(copyingCount == 1 ? "" : "s")} — ready to import");
+            return new PreparedBatch(batchLabel, fileTasks, copyingCount, dataUri, metadataUri, encryptionKey);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            foreach (var (_, result) in fileTasks.Where(t => t.result.Status == CopyStatus.Copying))
+            {
+                result.Status       = CopyStatus.Failed;
+                result.ErrorMessage = "Cancelled";
+            }
+        }
+        catch (Exception ex)
+        {
+            foreach (var (_, result) in fileTasks.Where(t => t.result.Status == CopyStatus.Copying))
+            {
+                result.Status       = CopyStatus.Failed;
+                result.ErrorMessage = ex.Message;
+            }
+        }
+        // Prep failed (or was cancelled): return a sentinel with nothing to submit so the pipeline
+        // skips the import for this batch and continues with the rest.
+        return new PreparedBatch(batchLabel, fileTasks, 0, string.Empty, string.Empty, Array.Empty<byte>());
+    }
+
+    // Phase 2 of a batch: submit the import job and poll to completion. This is the ONLY phase that
+    // must be serialized across batches — SharePoint soft-cancels concurrent import jobs. No-op when
+    // the prepared batch has nothing to import (all files skipped, or prep failed).
+    private async Task SubmitAndPollBatchAsync(
+        PreparedBatch batch, string webId, string targetSiteUrl,
+        IProgress<string>? activityLog, CancellationToken cancellationToken)
+    {
+        if (batch.CopyingCount == 0) return;
+
+        var pfx       = string.IsNullOrEmpty(batch.BatchLabel) ? "" : $"[{batch.BatchLabel}] ";
+        var fileTasks = batch.FileTasks;
+        try
+        {
+            var metadataClient = new BlobContainerClient(new Uri(batch.MetadataUri));
+
             // Step 6: submit the migration job
             var jobId = await spService.CreateMigrationJobEncryptedAsync(
-                targetSiteUrl, webId, dataUri, metadataUri, encryptionKey);
+                targetSiteUrl, webId, batch.DataUri, batch.MetadataUri, batch.EncryptionKey);
             System.Diagnostics.Debug.WriteLine($"[Migration] submitted job: {jobId}");
             activityLog?.Report($"{pfx}Submitted to SharePoint — waiting for import...");
 
@@ -653,7 +718,7 @@ public class MigrationJobService(SharePointService spService)
                     {
                         if (evt.TryGetProperty("ObjectsProcessed", out var proc) &&
                             proc.ValueKind == System.Text.Json.JsonValueKind.Number)
-                            activityLog?.Report($"{pfx}SP importing: {proc.GetInt32():N0} / {copyingCount:N0} files");
+                            activityLog?.Report($"{pfx}SP importing: {proc.GetInt32():N0} / {batch.CopyingCount:N0} files");
                     }
                     if (name == "JobEnd")
                     {
@@ -686,7 +751,7 @@ public class MigrationJobService(SharePointService spService)
             else
                 activityLog?.Report($"⚠ {pfx}Import finished with errors: {jobError}");
 
-            _ = TryLogMigrationReportAsync(metadataClient, jobId, encryptionKey);
+            _ = TryLogMigrationReportAsync(metadataClient, jobId, batch.EncryptionKey);
 
             // Step 8: mark results
             foreach (var (_, result) in fileTasks)
