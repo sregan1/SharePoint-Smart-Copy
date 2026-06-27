@@ -146,26 +146,57 @@ public class MigrationJobService(SharePointService spService)
                             firstJob.TargetDriveId, kvp.Value);
                     });
 
-                // Split into SEQUENTIAL jobs of at most MaxItemsPerJob files. SharePoint's migration
-                // performance guidance is to keep each package under 250 items / 250 MB; a single job
-                // over that limit imports the SPFile blobs but fails every SPListItem with "Missing file
-                // info for list item", hitting the 100-failure threshold and canceling the whole job.
-                // (Verified empirically: a 32-item copy imports cleanly; 512 — and even 150-item batches —
-                // fail this way.) The binding limit is the 250 MB byte cap, not item count: version
-                // history multiplies bytes, so a count-based cap must stay well below 250 items to keep
-                // each package under ~250 MB for typical file sizes. 30 (at/below the proven-good 32)
-                // keeps packages around tens of MB. Jobs run ONE AT A TIME — concurrent jobs make SP
-                // soft-cancel the extras with the same error, so sequential is required.
-                // NOTE: this is count-based; a library of large files could still exceed 250 MB at 30
-                // items. If that occurs, switch to a cumulative-byte cap (version sizes are available via
-                // SharePointService.BatchFetchMetadataAndVersionsAsync).
-                const int MaxItemsPerJob = 30;
+                // Split into SEQUENTIAL jobs that each stay under SharePoint's migration package limits
+                // (guidance: < 250 items / < 250 MB). A single job over the limit imports the SPFile
+                // blobs but fails every SPListItem with "Missing file info for list item", hits the
+                // 100-failure threshold, and cancels the whole job (verified: a 32-item copy imports
+                // cleanly; 512 — and even 150-item batches — fail this way). The BYTE cap is the binding
+                // one because Migration API mode copies full version history, so we size each job by the
+                // sum of all version bytes, not item count. Jobs run ONE AT A TIME — concurrent jobs make
+                // SP soft-cancel the extras with the same error.
+                const long MaxBytesPerJob = 200L * 1024 * 1024; // margin under the 250 MB package limit
+                const int  MaxItemsPerJob = 200;                // margin under the 250-item package limit
+                const long UnknownFileBytes = 10L * 1024 * 1024; // assume 10 MB when size can't be probed
 
-                var batches = groupTasks
-                    .Select((t, i) => (t, i))
-                    .GroupBy(x => x.i / MaxItemsPerJob)
-                    .Select(g => g.Select(x => x.t).ToList())
-                    .ToList();
+                // Probe version sizes once up front so batching can respect the byte cap. This metadata
+                // fetch is independent of (and cheaper than) the per-batch content download that follows;
+                // a failed probe just falls back to UnknownFileBytes for that file.
+                activityLog?.Report("Sizing files for batching...");
+                var sizeProbe = await spService.BatchFetchMetadataAndVersionsAsync(
+                    groupTasks.Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
+                    cancellationToken);
+
+                long FileBytes((CopyJob job, CopyResult result) t)
+                {
+                    if (!sizeProbe.TryGetValue(t.job.SourceItemId, out var mv) || mv.Versions is not { Count: > 0 })
+                        return UnknownFileBytes;
+                    IEnumerable<Microsoft.Graph.Models.DriveItemVersion> versions =
+                        maxVersions > 0 && mv.Versions.Count > maxVersions
+                            ? mv.Versions.TakeLast(maxVersions)
+                            : mv.Versions;
+                    return versions.Sum(v => v.Size ?? 0);
+                }
+
+                // Greedy packing: accumulate files until the next one would exceed either cap, then start
+                // a new batch. A single file larger than the byte cap goes alone in its own job (it can't
+                // be split, and SP chunks large single-file uploads internally).
+                var batches      = new List<List<(CopyJob job, CopyResult result)>>();
+                var currentBatch = new List<(CopyJob job, CopyResult result)>();
+                long currentBytes = 0;
+                foreach (var t in groupTasks)
+                {
+                    var bytes = FileBytes(t);
+                    if (currentBatch.Count > 0 &&
+                        (currentBatch.Count >= MaxItemsPerJob || currentBytes + bytes > MaxBytesPerJob))
+                    {
+                        batches.Add(currentBatch);
+                        currentBatch = [];
+                        currentBytes = 0;
+                    }
+                    currentBatch.Add(t);
+                    currentBytes += bytes;
+                }
+                if (currentBatch.Count > 0) batches.Add(currentBatch);
 
                 for (int bi = 0; bi < batches.Count; bi++)
                 {

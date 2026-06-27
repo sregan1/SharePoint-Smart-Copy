@@ -164,15 +164,17 @@ public class MigrationPackageBuilder
 
         void Add(string name, XDocument doc)
         {
-            var xml = doc.ToString(SaveOptions.None);
-            System.Diagnostics.Debug.WriteLine($"[XML] {name}:\n{xml}\n---");
-
 #if DEBUG
-            // Write plaintext XML to disk for easy inspection
+            var xml = doc.ToString(SaveOptions.None);
+            // Write plaintext XML to disk for easy inspection (avoid Debug.WriteLine for large docs —
+            // a multi-MB Manifest.xml dumped to the debugger can stall or crash the app).
             File.WriteAllText(Path.Combine(debugDir, name), xml, Encoding.UTF8);
 
-            // Scan every attribute for Int32.Parse failures
-            DebugScanAttributes(name, doc);
+            // Scan every attribute for Int32.Parse failures — skip for large documents because the
+            // per-attribute Debug.WriteLine calls (tens of thousands for a big manifest) can crash the
+            // app under memory pressure in Debug mode.
+            if (_files.Count <= 100)
+                DebugScanAttributes(name, doc);
 #endif
 
             manifest[name] = EncryptXml(doc);
@@ -616,8 +618,10 @@ public class MigrationPackageBuilder
     {
         using var ms = new MemoryStream();
         await plaintext.CopyToAsync(ms);
-        var bytes = ms.ToArray();
-        return (AesEncrypt(bytes, key), bytes.Length);
+        long size = ms.Length;
+        // GetBuffer() returns the internal array without copying it; ToArray() would allocate a second
+        // full-size copy of the plaintext, doubling peak memory per version (an OOM risk on large files).
+        return (AesEncrypt(ms.GetBuffer(), (int)size, key), size);
     }
 
     private byte[] EncryptXml(XDocument doc)
@@ -632,14 +636,15 @@ public class MigrationPackageBuilder
         using (var writer = System.Xml.XmlWriter.Create(ms, settings))
             doc.Save(writer);
         var bytes = ms.ToArray();
-        System.Diagnostics.Debug.WriteLine($"[XML-serialized] {System.Text.Encoding.UTF8.GetString(bytes)}");
         System.Diagnostics.Debug.WriteLine($"[XML-bytes] first4={BitConverter.ToString(bytes, 0, Math.Min(4, bytes.Length))} len={bytes.Length}");
         return AesEncrypt(bytes, _encryptionKey);
     }
 
     // AES-256-CBC with a random per-blob IV. Output format: [16-byte IV][ciphertext].
     // SP reads the first 16 bytes as the IV when decrypting.
-    private static byte[] AesEncrypt(byte[] plaintext, byte[] key)
+    // length: number of bytes to encrypt from plaintext (lets callers pass an oversized GetBuffer()
+    // array without copying it down to the exact content length first).
+    private static byte[] AesEncrypt(byte[] plaintext, int length, byte[] key)
     {
         var iv = System.Security.Cryptography.RandomNumberGenerator.GetBytes(16);
 
@@ -653,9 +658,12 @@ public class MigrationPackageBuilder
         output.Write(iv, 0, iv.Length);
         using (var encryptor = aes.CreateEncryptor())
         using (var cs = new CryptoStream(output, encryptor, CryptoStreamMode.Write))
-            cs.Write(plaintext, 0, plaintext.Length);
+            cs.Write(plaintext, 0, length);
         return output.ToArray();
     }
+
+    private static byte[] AesEncrypt(byte[] plaintext, byte[] key) =>
+        AesEncrypt(plaintext, plaintext.Length, key);
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
