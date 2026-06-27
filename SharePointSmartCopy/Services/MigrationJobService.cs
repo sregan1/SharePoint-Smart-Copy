@@ -211,7 +211,8 @@ public class MigrationJobService(SharePointService spService)
                         batchLabel: batches.Count > 1 ? $"{bi + 1}/{batches.Count}" : "",
                         activityLog: activityLog,
                         onFilePacked: onFilePacked,
-                        downloadController: downloadController);
+                        downloadController: downloadController,
+                        sharedMetaCache: sizeProbe);
                 }
             }
         }
@@ -262,7 +263,8 @@ public class MigrationJobService(SharePointService spService)
         string batchLabel = "",
         IProgress<string>? activityLog = null,
         IProgress<int>? onFilePacked = null,
-        AdaptiveParallelismController? downloadController = null)
+        AdaptiveParallelismController? downloadController = null,
+        Dictionary<string, (FileMetadata Metadata, List<Microsoft.Graph.Models.DriveItemVersion> Versions)>? sharedMetaCache = null)
     {
         var pfx = string.IsNullOrEmpty(batchLabel) ? "" : $"[{batchLabel}] ";
         try
@@ -442,77 +444,58 @@ public class MigrationJobService(SharePointService spService)
             {
                 try
                 {
-                    // Batch-fetch metadata + versions 10 files at a time (20 Graph sub-requests per
-                    // $batch call). Double-buffer: fire the next chunk's metadata fetch in the
-                    // background while the current chunk's files are downloading, so the $batch
-                    // round-trip (~200–600 ms) is hidden inside download time rather than serial.
+                    // Metadata + versions were already fetched once up front (sharedMetaCache, the
+                    // size-probe used for byte-aware batching). Reuse it here instead of re-fetching
+                    // per chunk — that was a full duplicate metadata+versions Graph round-trip for
+                    // every file. Files missing from the cache (e.g. a failed probe sub-request) fall
+                    // back to an individual fetch inside DownloadFileDataAsync.
                     var copyingTasks = fileTasks.Where(t => t.result.Status == CopyStatus.Copying).ToList();
-                    var chunks = copyingTasks.Chunk(10).ToArray();
-
-                    if (chunks.Length > 0)
-                    {
-                        // Prime the first chunk's metadata fetch before the loop begins.
-                        var prefetchTask = spService.BatchFetchMetadataAndVersionsAsync(
-                            chunks[0].Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
-                            cancellationToken);
-
-                        for (int chunkIdx = 0; chunkIdx < chunks.Length; chunkIdx++)
+                    await Parallel.ForEachAsync(copyingTasks,
+                        new ParallelOptions { MaxDegreeOfParallelism = parallelFileDownloads, CancellationToken = cancellationToken },
+                        async (taskPair, ct) =>
                         {
-                            cancellationToken.ThrowIfCancellationRequested();
+                            var (job, result) = taskPair;
+                            if (result.Status != CopyStatus.Copying) return;
 
-                            // Await metadata for this chunk (usually already done; waits for remainder if not).
-                            var batchCache = await prefetchTask;
+                            var subPath = job.TargetSubFolderPath ?? string.Empty;
+                            var fileServerRelUrl = string.IsNullOrEmpty(subPath)
+                                ? $"{libraryServerRelUrl}/{job.SourceName}"
+                                : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
+                            existingFileIds.TryGetValue(fileServerRelUrl, out var existingFileId);
 
-                            // Fire the next chunk's fetch in the background BEFORE downloads start,
-                            // so its $batch round-trip overlaps with this chunk's download time.
-                            if (chunkIdx + 1 < chunks.Length)
-                                prefetchTask = spService.BatchFetchMetadataAndVersionsAsync(
-                                    chunks[chunkIdx + 1].Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
-                                    cancellationToken);
-
-                            // Download all files in this chunk in parallel.
-                            // batchCache is read-only here; existingFileIds is ConcurrentDictionary — both are safe.
-                            await Parallel.ForEachAsync(chunks[chunkIdx],
-                                new ParallelOptions { MaxDegreeOfParallelism = parallelFileDownloads, CancellationToken = cancellationToken },
-                                async (taskPair, ct) =>
+                            // Acquire a global download slot — limits total concurrent Graph
+                            // content downloads across all SPMI batches to maxParallel.
+                            if (downloadController != null)
+                                await downloadController.WaitAsync(ct);
+                            try
+                            {
+                                FileMetadata? prefetchedMeta = null;
+                                List<Microsoft.Graph.Models.DriveItemVersion>? prefetchedVersions = null;
+                                if (sharedMetaCache != null &&
+                                    sharedMetaCache.TryGetValue(job.SourceItemId, out var mv))
                                 {
-                                    var (job, result) = taskPair;
-                                    if (result.Status != CopyStatus.Copying) return;
-
-                                    var subPath = job.TargetSubFolderPath ?? string.Empty;
-                                    var fileServerRelUrl = string.IsNullOrEmpty(subPath)
-                                        ? $"{libraryServerRelUrl}/{job.SourceName}"
-                                        : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
-                                    existingFileIds.TryGetValue(fileServerRelUrl, out var existingFileId);
-
-                                    // Acquire a global download slot — limits total concurrent Graph
-                                    // content downloads across all SPMI batches to maxParallel.
-                                    if (downloadController != null)
-                                        await downloadController.WaitAsync(ct);
-                                    try
-                                    {
-                                        batchCache.TryGetValue(job.SourceItemId, out var prefetched);
-                                        if (verbosePerFile) activityLog?.Report($"{pfx}↓ {job.SourceName}");
-                                        var data = await DownloadFileDataAsync(
-                                            job, result, maxVersions, versionParallelism, existingFileId, ct,
-                                            prefetched.Metadata, prefetched.Versions,
-                                            copyCustomColumns, columnMappings, bulkFieldCache,
-                                            pfxLabel: pfx, activityLog: activityLog);
-                                        await pipe.Writer.WriteAsync(data, ct);
-                                    }
-                                    catch (OperationCanceledException) { throw; }
-                                    catch (Exception ex)
-                                    {
-                                        result.Status       = CopyStatus.Failed;
-                                        result.ErrorMessage = $"Download failed: {ex.Message}";
-                                    }
-                                    finally
-                                    {
-                                        downloadController?.Release();
-                                    }
-                                });
-                        }
-                    }
+                                    prefetchedMeta     = mv.Metadata;
+                                    prefetchedVersions = mv.Versions;
+                                }
+                                if (verbosePerFile) activityLog?.Report($"{pfx}↓ {job.SourceName}");
+                                var data = await DownloadFileDataAsync(
+                                    job, result, maxVersions, versionParallelism, existingFileId, ct,
+                                    prefetchedMeta, prefetchedVersions,
+                                    copyCustomColumns, columnMappings, bulkFieldCache,
+                                    pfxLabel: pfx, activityLog: activityLog);
+                                await pipe.Writer.WriteAsync(data, ct);
+                            }
+                            catch (OperationCanceledException) { throw; }
+                            catch (Exception ex)
+                            {
+                                result.Status       = CopyStatus.Failed;
+                                result.ErrorMessage = $"Download failed: {ex.Message}";
+                            }
+                            finally
+                            {
+                                downloadController?.Release();
+                            }
+                        });
                 }
                 finally { pipe.Writer.Complete(); }
             }, cancellationToken);
@@ -542,7 +525,9 @@ public class MigrationJobService(SharePointService spService)
                     var fileEntry = builder.Files[^1];
                     await Parallel.ForEachAsync(
                         fileEntry.Versions,
-                        new ParallelOptions { MaxDegreeOfParallelism = Math.Max(2, maxParallel / 2), CancellationToken = cancellationToken },
+                        // Upload version blobs wide — Azure block-blob PUT handles high concurrency, and
+                        // halving maxParallel here was an unnecessary ceiling on the upload stage.
+                        new ParallelOptions { MaxDegreeOfParallelism = Math.Max(2, Math.Min(8, maxParallel)), CancellationToken = cancellationToken },
                         async (version, ct) =>
                         {
                             var content = version.EncryptedContent

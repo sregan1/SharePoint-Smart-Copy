@@ -38,7 +38,7 @@ public class AppSettings
     public bool     CopyVersions         { get; set; } = true;
     public bool     CopyAllVersions      { get; set; } = true;
     public int      MaxVersions          { get; set; } = 10;
-    public int      MaxParallelCopies    { get; set; } = 4;
+    public int      MaxParallelCopies    { get; set; } = 8;
     public CopyScope Scope                { get; set; } = CopyScope.Files;
     public bool      CopyCustomColumns    { get; set; } = false;
     public bool      CopyLibraryContent   { get; set; } = true;

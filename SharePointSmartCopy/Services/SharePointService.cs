@@ -93,7 +93,15 @@ public class SharePointService
         // This makes Graph throttles visible to the adaptive parallelism controller.
         handlers.Insert(3, new GraphThrottleNotifyHandler(
             (delay, attempt, max, reason) => Throttled?.Invoke(delay, attempt, max, reason)));
-        var httpClient = KiotaClientFactory.Create(handlers);
+        // Configure the underlying socket handler: gzip so metadata/JSON responses transfer
+        // compressed (binary downloads are already-compressed and unaffected), and recycle pooled
+        // connections every few minutes for stability across multi-hour 20k+ file runs.
+        var finalHandler = new System.Net.Http.SocketsHttpHandler
+        {
+            AutomaticDecompression   = System.Net.DecompressionMethods.All,
+            PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+        };
+        var httpClient = KiotaClientFactory.Create(handlers, finalHandler);
         httpClient.Timeout = TimeSpan.FromMinutes(30);
         var adapter  = new HttpClientRequestAdapter(provider, httpClient: httpClient);
         _graphClient = new GraphServiceClient(adapter);
@@ -903,14 +911,16 @@ public class SharePointService
         var token = await _authService.GetSharePointTokenAsync(siteUrl);
         int nextToken  = 0;
         int pollCount  = 0;
-        var pollDelay  = TimeSpan.FromSeconds(3);
+        var pollDelay  = TimeSpan.FromSeconds(2);
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            await Task.Delay(pollDelay, cancellationToken);
+            // Poll immediately on the first pass (the previous fixed 3 s pre-delay added latency to
+            // every batch); then back off for long-running jobs to reduce API noise:
+            // 2 s for the first ~1 min → 10 s for the next ~6 min → 30 s thereafter.
+            if (pollCount > 0)
+                await Task.Delay(pollDelay, cancellationToken);
             pollCount++;
-            // Back off for long-running jobs to reduce API noise:
-            // 3 s for first 2 min → 10 s for next 10 min → 30 s thereafter.
             if (pollCount == 40)  pollDelay = TimeSpan.FromSeconds(10);
             if (pollCount == 100) pollDelay = TimeSpan.FromSeconds(30);
 

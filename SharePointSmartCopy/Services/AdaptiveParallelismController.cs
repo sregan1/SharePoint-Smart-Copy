@@ -33,7 +33,9 @@ internal sealed class AdaptiveParallelismController : IDisposable
     private          DateTimeOffset _nextRestoreTime = DateTimeOffset.MinValue;
     private static readonly TimeSpan StepDownCooldown = TimeSpan.FromSeconds(2);
     // Extra cushion added on top of the Retry-After value before any slot is reused or restored.
-    private static readonly TimeSpan RestoreBuffer    = TimeSpan.FromSeconds(10);
+    // The server's Retry-After already includes its own margin; a large extra cushion just leaves
+    // concurrency stuck low across a long run, so keep it small.
+    private static readonly TimeSpan RestoreBuffer    = TimeSpan.FromSeconds(3);
 
     // Fired on the thread-pool when the effective limit changes.
     public event Action<int>? LimitChanged;
@@ -122,41 +124,49 @@ internal sealed class AdaptiveParallelismController : IDisposable
         }
     }
 
+    // Number of slots restored per heartbeat tick. Restoring more than one lets the pool climb
+    // back to full concurrency in a few seconds after a transient throttle instead of taking one
+    // tick (5 s) per slot — important on long runs where a brief 429 burst shouldn't cost minutes.
+    private const int RestorePerTick = 2;
+
     private void TryRestore()
     {
         if (_disposed) return;
-        bool released;
-        int  newLimit;
-        lock (_lock)
+        for (int i = 0; i < RestorePerTick; i++)
         {
-            // Honour the quiet period — do not restore during an active throttle window.
-            if (DateTimeOffset.UtcNow < _nextRestoreTime) return;
-            if (_limit >= _max) return;
+            bool released;
+            int  newLimit;
+            lock (_lock)
+            {
+                // Honour the quiet period — do not restore during an active throttle window.
+                if (DateTimeOffset.UtcNow < _nextRestoreTime) return;
+                if (_limit >= _max) return;
 
-            // Prefer cancelling a pending withhold (slot never actually left pool) over
-            // releasing a fully absorbed slot — either way the effective limit goes up by 1.
-            if (_pendingWithhold > 0)
-            {
-                _pendingWithhold--;
-                _limit++;
-                newLimit = _limit;
-                released = false;
+                // Prefer cancelling a pending withhold (slot never actually left pool) over
+                // releasing a fully absorbed slot — either way the effective limit goes up by 1.
+                if (_pendingWithhold > 0)
+                {
+                    _pendingWithhold--;
+                    _limit++;
+                    newLimit = _limit;
+                    released = false;
+                }
+                else if (_withheld > 0)
+                {
+                    _withheld--;
+                    _limit++;
+                    newLimit = _limit;
+                    released = true;
+                }
+                else
+                {
+                    return;
+                }
             }
-            else if (_withheld > 0)
-            {
-                _withheld--;
-                _limit++;
-                newLimit = _limit;
-                released = true;
-            }
-            else
-            {
-                return;
-            }
+
+            if (released) _sem.Release();
+            LimitChanged?.Invoke(newLimit);
         }
-
-        if (released) _sem.Release();
-        LimitChanged?.Invoke(newLimit);
     }
 
     public void Dispose()
