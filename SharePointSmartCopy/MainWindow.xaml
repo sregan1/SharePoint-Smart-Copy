@@ -923,17 +923,35 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- ── Metadata Options (all scopes) ───────────────────────── -->
-                    <Border Style="{StaticResource Card}" Margin="0,8,0,0">
+                    <!-- ── Advanced options (metadata, custom columns, copy mode, performance) ── -->
+                    <Expander Style="{StaticResource OptionsExpander}" Margin="0,8,0,0">
+                        <Expander.Header>
+                            <TextBlock Text="Advanced options" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextTertiaryBrush}"/>
+                        </Expander.Header>
                         <StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <TextBlock Text="&#xE8EC;" Style="{StaticResource CardHeaderGlyph}"/>
-                                <TextBlock Text="Metadata" Style="{StaticResource CardHeader}"/>
-                            </StackPanel>
+                            <!-- Metadata: preserved author/dates grouped with custom column values -->
+                            <TextBlock Text="Metadata" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+
+                            <CheckBox IsChecked="{Binding PreserveMetadata}" Margin="0,0,0,8" FontSize="12"
+                                      AutomationProperties.Name="Preserve metadata">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="Preserve metadata" VerticalAlignment="Center"/>
+                                    <TextBlock Style="{StaticResource ToolTipIcon}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip MaxWidth="280">
+                                                <TextBlock TextWrapping="Wrap" FontSize="12"
+                                                           Text="Preserves Created By, Created Date, Modified By, and Modified Date on every copied item. When off, items appear as created by you today."/>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </StackPanel>
+                            </CheckBox>
 
                             <!-- Files scope: opt-in checkbox + mapping button -->
                             <StackPanel Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}">
-                                <CheckBox IsChecked="{Binding CopyCustomColumns}" Margin="0,0,0,4" FontSize="13"
+                                <CheckBox IsChecked="{Binding CopyCustomColumns}" Margin="0,0,0,4" FontSize="12"
                                           AutomationProperties.Name="Copy custom column values"
                                           x:Name="CopyCustomColumnsCheckBox" Checked="CopyCustomColumns_Changed" Unchecked="CopyCustomColumns_Changed">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -960,7 +978,7 @@
 
                             <!-- Site scope (full copy): all column values are always transferred -->
                             <TextBlock Visibility="{Binding ShowLibrarySummaryLine, Converter={StaticResource BoolToVis}}"
-                                       TextWrapping="Wrap" FontSize="13"
+                                       TextWrapping="Wrap" FontSize="12"
                                        Foreground="{DynamicResource TextSecondaryBrush}">
                                 All custom column values are copied automatically.
                             </TextBlock>
@@ -1000,74 +1018,53 @@
                                         Content="{Binding MappingButtonLabel}"
                                         IsEnabled="{Binding IsColumnsReady}"/>
                             </StackPanel>
-                        </StackPanel>
-                    </Border>
 
-                    <!-- ── Advanced (hidden for Pages scope) ──────────────────── -->
-                    <Expander Style="{StaticResource OptionsExpander}" Margin="0,8,0,0"
-                              Visibility="{Binding IsPagesScope, Converter={StaticResource InvBoolToVis}}">
-                        <Expander.Header>
-                            <TextBlock Text="Advanced options" FontSize="12" FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextTertiaryBrush}"/>
-                        </Expander.Header>
-                        <StackPanel>
-                            <CheckBox IsChecked="{Binding PreserveMetadata}" Margin="0,0,0,4" FontSize="12"
-                                      AutomationProperties.Name="Preserve metadata">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Preserve metadata" VerticalAlignment="Center"/>
-                                    <TextBlock Style="{StaticResource ToolTipIcon}">
-                                        <TextBlock.ToolTip>
-                                            <ToolTip MaxWidth="280">
-                                                <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                           Text="Preserves Created By, Created Date, Modified By, and Modified Date on every copied item. When off, items appear as created by you today."/>
-                                            </ToolTip>
-                                        </TextBlock.ToolTip>
-                                    </TextBlock>
+                            <!-- Copy mode + performance (not applicable to Pages scope) -->
+                            <StackPanel Visibility="{Binding IsPagesScope, Converter={StaticResource InvBoolToVis}}">
+                                <Separator Margin="0,10,0,10" Background="{DynamicResource BorderLightBrush}"/>
+                                <TextBlock Text="Copy mode" FontSize="12" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+                                <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,6"
+                                             IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=MigrationApi}">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="Migration API" VerticalAlignment="Center"/>
+                                        <Border Background="{DynamicResource AccentBrush}" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="Recommended" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
+                                        </Border>
+                                        <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip>
+                                                    <TextBlock Text="Exact version numbers, dates, and editors. Requires Site Collection Admin on the target." TextWrapping="Wrap" MaxWidth="260"/>
+                                                </ToolTip>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,12"
+                                             IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=EnhancedRest}">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="Enhanced REST" VerticalAlignment="Center"/>
+                                        <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip>
+                                                    <TextBlock Text="Correct dates and editors per version, but version numbers double (2, 4, 6…). No admin rights required." TextWrapping="Wrap" MaxWidth="260"/>
+                                                </ToolTip>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </RadioButton>
+                                <Separator Margin="0,0,0,10" Background="{DynamicResource BorderLightBrush}"/>
+                                <TextBlock Text="Parallel copies" FontSize="12" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                                    <Slider Minimum="1" Maximum="16" Value="{Binding MaxParallelCopies}"
+                                            Width="120" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding MaxParallelCopies}" FontSize="14" FontWeight="SemiBold"
+                                               Margin="8,0,0,0" VerticalAlignment="Center"/>
                                 </StackPanel>
-                            </CheckBox>
-                            <Separator Margin="0,4,0,10" Background="{DynamicResource BorderLightBrush}"/>
-                            <TextBlock Text="Copy mode" FontSize="12" FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
-                            <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,6"
-                                         IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=MigrationApi}">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Migration API" VerticalAlignment="Center"/>
-                                    <Border Background="{DynamicResource AccentBrush}" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
-                                        <TextBlock Text="Recommended" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
-                                    </Border>
-                                    <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
-                                        <TextBlock.ToolTip>
-                                            <ToolTip>
-                                                <TextBlock Text="Exact version numbers, dates, and editors. Requires Site Collection Admin on the target." TextWrapping="Wrap" MaxWidth="260"/>
-                                            </ToolTip>
-                                        </TextBlock.ToolTip>
-                                    </TextBlock>
-                                </StackPanel>
-                            </RadioButton>
-                            <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,12"
-                                         IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=EnhancedRest}">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Enhanced REST" VerticalAlignment="Center"/>
-                                    <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
-                                        <TextBlock.ToolTip>
-                                            <ToolTip>
-                                                <TextBlock Text="Correct dates and editors per version, but version numbers double (2, 4, 6…). No admin rights required." TextWrapping="Wrap" MaxWidth="260"/>
-                                            </ToolTip>
-                                        </TextBlock.ToolTip>
-                                    </TextBlock>
-                                </StackPanel>
-                            </RadioButton>
-                            <Separator Margin="0,0,0,10" Background="{DynamicResource BorderLightBrush}"/>
-                            <TextBlock Text="Parallel copies" FontSize="12" FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
-                                <Slider Minimum="1" Maximum="16" Value="{Binding MaxParallelCopies}"
-                                        Width="120" VerticalAlignment="Center"/>
-                                <TextBlock Text="{Binding MaxParallelCopies}" FontSize="14" FontWeight="SemiBold"
-                                           Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Higher values copy faster but may throttle on large sites."
+                                           Style="{StaticResource OptionCaption}" Margin="0"/>
                             </StackPanel>
-                            <TextBlock Text="Higher values copy faster but may throttle on large sites."
-                                       Style="{StaticResource OptionCaption}" Margin="0"/>
                         </StackPanel>
                     </Expander>
                   </StackPanel>

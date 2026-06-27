@@ -1,9 +1,11 @@
 ﻿using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using SharePointSmartCopy.Dialogs;
 using SharePointSmartCopy.Models;
@@ -32,6 +34,78 @@ public partial class MainWindow : Window
 
     private void MaximizeRestore_Click(object sender, RoutedEventArgs e)
         => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+
+    // A borderless (WindowStyle=None) window maximizes to the full monitor bounds, overflowing the
+    // work area so its bottom edge — the navigation footer with the View Report / Next button — is
+    // hidden under the taskbar/off-screen. Constrain the maximized size to the monitor work area.
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+        var handle = new WindowInteropHelper(this).Handle;
+        HwndSource.FromHwnd(handle)?.AddHook(WindowProc);
+    }
+
+    private IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        const int WM_GETMINMAXINFO = 0x0024;
+        if (msg == WM_GETMINMAXINFO)
+        {
+            var mmi = Marshal.PtrToStructure<MINMAXINFO>(lParam);
+            const int MONITOR_DEFAULTTONEAREST = 0x00000002;
+            var monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+            if (monitor != IntPtr.Zero)
+            {
+                var info = new MONITORINFO { cbSize = Marshal.SizeOf<MONITORINFO>() };
+                GetMonitorInfo(monitor, ref info);
+                var work = info.rcWork;
+                var screen = info.rcMonitor;
+                // Position/size relative to the monitor so the maximized window exactly fills the
+                // work area (excludes the taskbar) instead of the whole screen.
+                mmi.ptMaxPosition.X = work.Left - screen.Left;
+                mmi.ptMaxPosition.Y = work.Top - screen.Top;
+                mmi.ptMaxSize.X     = work.Right - work.Left;
+                mmi.ptMaxSize.Y     = work.Bottom - work.Top;
+                // Preserve the window's own minimum-size constraints while maximized.
+                mmi.ptMinTrackSize.X = (int)MinWidth;
+                mmi.ptMinTrackSize.Y = (int)MinHeight;
+                Marshal.StructureToPtr(mmi, lParam, true);
+            }
+            handled = true;
+        }
+        return IntPtr.Zero;
+    }
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr MonitorFromWindow(IntPtr hwnd, int flags);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct POINT { public int X; public int Y; }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct RECT { public int Left, Top, Right, Bottom; }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MINMAXINFO
+    {
+        public POINT ptReserved;
+        public POINT ptMaxSize;
+        public POINT ptMaxPosition;
+        public POINT ptMinTrackSize;
+        public POINT ptMaxTrackSize;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MONITORINFO
+    {
+        public int cbSize;
+        public RECT rcMonitor;
+        public RECT rcWork;
+        public int dwFlags;
+    }
 
     private void CloseWindow_Click(object sender, RoutedEventArgs e)
         => Close();
