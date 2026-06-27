@@ -151,7 +151,8 @@ public class MigrationPackageBuilder
     public Dictionary<string, byte[]> BuildManifestXml(
         string siteId, string webId, string listId,
         string siteUrl, string webServerRelativeUrl, string libraryTitle, string libraryServerRelativeUrl,
-        bool overwrite = false, string? rootFolderGuid = null)
+        bool overwrite = false, string? rootFolderGuid = null,
+        Dictionary<string, string>? folderGuids = null)
     {
         var manifest = new Dictionary<string, byte[]>();
 
@@ -186,7 +187,7 @@ public class MigrationPackageBuilder
         Add("ViewFormsList.xml",               BuildViewFormsList());
         Add("Manifest.xml",                    BuildManifest(
             siteId, webId, listId, siteUrl, webServerRelativeUrl, libraryTitle, libraryServerRelativeUrl,
-            rootFolderGuid));
+            rootFolderGuid, folderGuids));
 
         return manifest;
     }
@@ -276,7 +277,8 @@ public class MigrationPackageBuilder
     private XDocument BuildManifest(
         string siteId, string webId, string listId,
         string siteUrl, string webRelUrl, string libraryTitle, string libraryRelUrl,
-        string? rootFolderGuid = null)
+        string? rootFolderGuid = null,
+        Dictionary<string, string>? folderGuids = null)
     {
         XElement E(string name, params object[] content) => new XElement(NsManifest + name, content);
 
@@ -341,9 +343,62 @@ public class MigrationPackageBuilder
                     new XAttribute("TimeLastModified", "2000-01-01T00:00:00Z"))));
         }
 
+        var rootParentId = !string.IsNullOrEmpty(rootFolderGuid) ? rootFolderGuid : listId;
+
+        // Resolves the GUID of the folder that directly contains a file. SP requires every SPFile to
+        // be preceded by its parent SPFolder; without an SPFolder object for each nested subfolder the
+        // list item cannot resolve its parent and import fails with "Missing file info for list item".
+        // Root-level files keep the historical listId parent (proven path); nested files point at the
+        // real target folder GUID supplied in folderGuids.
+        string ContainingFolderId(FileEntry f)
+        {
+            if (string.IsNullOrEmpty(f.FolderRelativePath)) return listId;
+            if (folderGuids != null && folderGuids.TryGetValue(f.FolderRelativePath, out var g)) return g;
+            return rootParentId;
+        }
+
+        // Emit an SPFolder object for every nested subfolder, ordered parents-before-children so each
+        // folder is preceded by its parent. The parent of a top-level subfolder is the library root
+        // folder (rootFolderGuid); deeper folders chain to their immediate parent's GUID.
+        if (folderGuids != null)
+        {
+            foreach (var (relPath, guid) in folderGuids.OrderBy(kv => kv.Key.Count(c => c == '/')))
+            {
+                var segments      = relPath.Split('/');
+                var name          = segments[^1];
+                var parentRelPath = segments.Length > 1 ? string.Join('/', segments[..^1]) : string.Empty;
+                var parentGuid    = parentRelPath.Length == 0
+                    ? rootParentId
+                    : (folderGuids.TryGetValue(parentRelPath, out var pg) ? pg : rootParentId);
+
+                objects.Add(E("SPObject",
+                    new XAttribute("Id", guid),
+                    new XAttribute("ObjectType", "SPFolder"),
+                    new XAttribute("ParentId", parentGuid),
+                    new XAttribute("ParentWebId", webId),
+                    E("Folder",
+                        new XAttribute("Id", guid),
+                        new XAttribute("Url", $"{libraryWebRelUrl}/{relPath}"),
+                        new XAttribute("Name", name),
+                        new XAttribute("ParentWebId", webId),
+                        new XAttribute("ParentFolderId", parentGuid),
+                        new XAttribute("ProgId", ""),
+                        new XAttribute("TimeCreated", "2000-01-01T00:00:00Z"),
+                        new XAttribute("TimeLastModified", "2000-01-01T00:00:00Z"))));
+            }
+        }
+
         foreach (var file in _files)
         {
             var currentVersion = file.Versions[^1];
+            var folderId = ContainingFolderId(file);
+            // DirName: web-relative directory the item lives in (no leading/trailing slash),
+            // e.g. "Shared Documents/09. Specifica/Platform/AriaIII". The migration schema's
+            // File and ListItem elements both carry it; without it SP cannot locate the file a
+            // nested list item refers to and fails with "Missing file info for list item".
+            var dirName = string.IsNullOrEmpty(file.FolderRelativePath)
+                ? libraryWebRelUrl
+                : $"{libraryWebRelUrl}/{file.FolderRelativePath}";
             var fileUrl = string.IsNullOrEmpty(file.FolderRelativePath)
                 ? $"{libraryWebRelUrl}/{file.FileName}"
                 : $"{libraryWebRelUrl}/{file.FolderRelativePath}/{file.FileName}";
@@ -352,8 +407,9 @@ public class MigrationPackageBuilder
                 new XAttribute("Url", fileUrl),
                 new XAttribute("Id", file.FileId),
                 new XAttribute("Name", file.FileName),
+                new XAttribute("DirName", dirName),
                 new XAttribute("Version", currentVersion.VersionLabel),
-                new XAttribute("ParentId", listId),
+                new XAttribute("ParentId", folderId),
                 new XAttribute("ParentWebId", webId),
                 new XAttribute("StreamId", currentVersion.StreamId),
                 new XAttribute("FileValue", currentVersion.StreamId),
@@ -395,8 +451,9 @@ public class MigrationPackageBuilder
                     versionsEl.Add(E("File",
                         new XAttribute("Url", fileUrl),
                         new XAttribute("Id", v.FileId),
+                        new XAttribute("DirName", dirName),
                         new XAttribute("Version", v.VersionLabel),
-                        new XAttribute("ParentId", listId),
+                        new XAttribute("ParentId", folderId),
                         new XAttribute("ParentWebId", webId),
                         new XAttribute("IsCurrentVersion", isCurr ? "1" : "0"),
                         new XAttribute("HasWebParts", "0"),
@@ -434,26 +491,27 @@ public class MigrationPackageBuilder
             objects.Add(E("SPObject",
                 new XAttribute("Id", file.FileId),
                 new XAttribute("ObjectType", "SPFile"),
-                new XAttribute("ParentId", listId),
+                new XAttribute("ParentId", folderId),
                 new XAttribute("ParentWebId", webId),
                 fileEl));
 
             objects.Add(E("SPObject",
                 new XAttribute("Id", file.ListItemId),
                 new XAttribute("ObjectType", "SPListItem"),
-                new XAttribute("ParentId", listId),
+                new XAttribute("ParentId", folderId),
                 new XAttribute("ParentWebId", webId),
                 E("ListItem",
                     new XAttribute("Id", file.ListItemId),
                     new XAttribute("IntId", "0"),
                     new XAttribute("ObjectType", "0"),
                     new XAttribute("FSObjType", "0"),
+                    new XAttribute("DirName", dirName),
                     new XAttribute("ContentTypeId", "0x0101"),
                     new XAttribute("DocType", "File"),
                     new XAttribute("HasAttachments", "0"),
-                    new XAttribute("ParentId", listId),
+                    new XAttribute("ParentId", folderId),
                     new XAttribute("ParentWebId", webId),
-                    new XAttribute("ParentFolderId", listId),
+                    new XAttribute("ParentFolderId", folderId),
                     new XAttribute("Order", "100"),
                     new XAttribute("Version", "1"),
                     new XAttribute("UIVersion", UiVersion(currentVersion.VersionLabel)),

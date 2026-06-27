@@ -91,7 +91,7 @@ public partial class MainViewModel : ObservableObject
 
     // Shows a throttle notice while a retry wait is in progress, then clears it
     // (unless another status message has replaced it in the meantime).
-    private void OnThrottled(TimeSpan delay, int attempt, int maxAttempts)
+    private void OnThrottled(TimeSpan delay, int attempt, int maxAttempts, string? reason)
     {
         var msg = $"SharePoint is throttling requests — retrying in {Math.Ceiling(delay.TotalSeconds):N0}s (attempt {attempt}/{maxAttempts})…";
         var dispatcher = System.Windows.Application.Current?.Dispatcher;
@@ -594,7 +594,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(EffectiveCopyCustomColumns))]
     [NotifyPropertyChangedFor(nameof(CanConfigureMappings))]
-    private bool _copyCustomColumns = true;
+    private bool _copyCustomColumns = false;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowFileCopyOptions))]
     private bool _copyLibraryContent = true;
@@ -763,21 +763,68 @@ public partial class MainViewModel : ObservableObject
         }
     }
     [ObservableProperty] private double _totalProgress;
-    [ObservableProperty] private int _completedCount;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsPackingInProgress))] private int _completedCount;
     [ObservableProperty] private int _totalCount;
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] [NotifyCanExecuteChangedFor(nameof(BackCommand))] private bool _isCopying;
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] [NotifyPropertyChangedFor(nameof(IsMetadataComplete))] [NotifyPropertyChangedFor(nameof(IsMetadataInProgress))] [NotifyPropertyChangedFor(nameof(IsReadyForReport))] private bool _isCopyComplete;
     [ObservableProperty] private string _copyDuration = string.Empty;
     [ObservableProperty] private string _elapsedTime = string.Empty;
+    [ObservableProperty] private string _estimatedTimeRemaining = string.Empty;
+    [ObservableProperty] private string _packagedEstimatedTimeRemaining = string.Empty;
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] [NotifyPropertyChangedFor(nameof(IsMetadataComplete))] [NotifyPropertyChangedFor(nameof(IsMetadataInProgress))] [NotifyPropertyChangedFor(nameof(IsReadyForReport))] private bool _isUpdatingMetadata;
+    [ObservableProperty] private int _preflightChecked;
+    [ObservableProperty] private int _preflightTotal;
+    [ObservableProperty] private int _packedCount;
 
-    public bool IsMetadataInProgress => IsCopyComplete && IsUpdatingMetadata;
-    public bool IsMetadataComplete   => IsCopyComplete && !IsUpdatingMetadata;
-    public bool IsReadyForReport     => IsCopyComplete && !IsUpdatingMetadata;
+    private readonly List<string> _activityLines = [];
+    private string _activityText = "";
+    public string ActivityText
+    {
+        get => _activityText;
+        private set { _activityText = value; OnPropertyChanged(); }
+    }
+
+    private void PushActivity(string message)
+    {
+        var ts = DateTime.Now.ToString("HH:mm:ss");
+        _activityLines.Insert(0, $"{ts}  {message}");
+        while (_activityLines.Count > 30)
+            _activityLines.RemoveAt(_activityLines.Count - 1);
+        ActivityText = string.Join("\n", _activityLines);
+    }
+
+    public bool IsMetadataInProgress  => IsCopyComplete && IsUpdatingMetadata;
+    public bool IsMetadataComplete    => IsCopyComplete && !IsUpdatingMetadata;
+    public bool IsReadyForReport      => IsCopyComplete && !IsUpdatingMetadata;
+    public bool IsPreflightInProgress => IsCopying && PreflightTotal > 0 && PreflightChecked < PreflightTotal;
+    public bool IsPackingInProgress   => IsCopying && PackedCount > 0 && CompletedCount < TotalCount;
+
+    partial void OnPackedCountChanged(int value) => OnPropertyChanged(nameof(IsPackingInProgress));
+
+    partial void OnPreflightCheckedChanged(int value)
+    {
+        OnPropertyChanged(nameof(IsPreflightInProgress));
+        // Anchor the ETA clock the moment pre-flight finishes so the estimate
+        // reflects actual copy throughput rather than existence-check time.
+        // _etaStartDone captures files already finished (e.g. pre-flight skips)
+        // so they don't inflate the rate — only post-preflight completions count.
+        if (PreflightTotal > 0 && value >= PreflightTotal && _etaStartTime == null)
+        {
+            _etaStartTime = DateTimeOffset.Now;
+            lock (_copyResultsLock)
+                _etaStartDone = CopyResults.Count(r => r.Status is CopyStatus.Success or CopyStatus.Failed or CopyStatus.Skipped);
+        }
+    }
+
+    partial void OnPreflightTotalChanged(int value) => OnPropertyChanged(nameof(IsPreflightInProgress));
 
     private bool            _hasFolderJobs;
     private DateTimeOffset  _copyStartTime;
     private DateTimeOffset? _copyEndTime;
+    private DateTimeOffset? _etaStartTime;
+    private int             _etaStartDone;
+    private DateTimeOffset? _packStartTime;
+    private int             _packStartDone;
 
     public int SuccessCount => CopyResults.Count(r => r.Status == CopyStatus.Success);
     public int FailedCount  => CopyResults.Count(r => r.Status == CopyStatus.Failed);
@@ -817,10 +864,30 @@ public partial class MainViewModel : ObservableObject
         }
 
         _copyCts?.Dispose();
-        _copyCts = new CancellationTokenSource();
-        TotalCount = CopyJobs.Count;
+        _copyCts      = new CancellationTokenSource();
+        _etaStartTime = null;
+        _etaStartDone = 0;
+        _packStartTime = null;
+        _packStartDone = 0;
+        TotalCount    = CopyJobs.Count;
 
+        PreflightChecked = 0;
+        PreflightTotal   = 0;
+        PackedCount      = 0;
+        _activityLines.Clear();
+        ActivityText = "";
         var onMetadataDone = new Progress<bool>(_ => IsUpdatingMetadata = false);
+        var onPreflight    = new Progress<(int done, int total)>(p =>
+        {
+            PreflightTotal   = p.total;
+            PreflightChecked = p.done;
+        });
+        var onActivity   = new Progress<string>(PushActivity);
+        var onFilePacked = new Progress<int>(_ =>
+        {
+            PackedCount++;
+            OnPropertyChanged(nameof(IsPackingInProgress));
+        });
 
         var progressTimer = new System.Windows.Threading.DispatcherTimer
         {
@@ -945,7 +1012,10 @@ public partial class MainViewModel : ObservableObject
                 PreserveMetadata,
                 copyPermissions: CopyPermissions,
                 permissionService: CopyPermissions ? _permissionCopyService : null,
-                permissionFlags: _permissionFlags);
+                permissionFlags: _permissionFlags,
+                preflightProgress: onPreflight,
+                activityLog: onActivity,
+                onFilePacked: onFilePacked);
         }
         catch (OperationCanceledException) { StatusMessage = "Copy cancelled."; }
         catch (Exception ex)              { StatusMessage = $"Copy error: {ex.Message}"; }
@@ -955,6 +1025,8 @@ public partial class MainViewModel : ObservableObject
             progressTimer.Stop();
             IsCopying      = false;
             IsCopyComplete = true;
+            OnPropertyChanged(nameof(IsPreflightInProgress));
+            OnPropertyChanged(nameof(IsPackingInProgress));
             TotalCount     = CopyResults.Count;
             CopyDuration   = FormatDuration(_copyEndTime.Value - _copyStartTime);
             UpdateProgress();
@@ -2016,7 +2088,88 @@ public partial class MainViewModel : ObservableObject
         CompletedCount = done;
         TotalCount     = total;
         TotalProgress  = TotalCount > 0 ? done * 100.0 / TotalCount : 0;
-        ElapsedTime    = FormatDuration((_copyEndTime ?? DateTimeOffset.Now) - _copyStartTime);
+
+        var elapsed = (_copyEndTime ?? DateTimeOffset.Now) - _copyStartTime;
+        ElapsedTime = FormatDuration(elapsed);
+
+        // Packaging ETA — rate-based estimate for the download+encrypt+upload phase.
+        // Anchors when the first file is packed; waits 5 s for a stable rate before showing.
+        var packed = PackedCount;
+        if (packed > 0 && packed < total && _copyEndTime == null)
+        {
+            if (_packStartTime == null)
+            {
+                _packStartTime = DateTimeOffset.Now;
+                _packStartDone = packed;
+            }
+            var packElapsed = (DateTimeOffset.Now - _packStartTime.Value).TotalSeconds;
+            var packDone    = packed - _packStartDone;
+            if (packDone > 0 && packElapsed >= 5)
+            {
+                var remainingSecs = (total - packed) * packElapsed / packDone;
+                PackagedEstimatedTimeRemaining = remainingSecs >= 2
+                    ? $" · ~{FormatDuration(TimeSpan.FromSeconds(remainingSecs))} remaining"
+                    : string.Empty;
+            }
+            else
+            {
+                PackagedEstimatedTimeRemaining = string.Empty;
+            }
+        }
+        else
+        {
+            PackagedEstimatedTimeRemaining = string.Empty;
+        }
+
+        // Main ETA: two phases —
+        //   Packaging phase (done==0): show packaging ETA labelled "to package" so the user
+        //   knows it covers only download+encrypt+upload, not the subsequent SP import.
+        //   Completion phase (done>0): switch to actual completion rate for "remaining".
+        if (done > 0 && done < total && _copyEndTime == null)
+        {
+            // Anchor the completion clock the first time files start finishing.
+            if (_etaStartTime == null)
+            {
+                _etaStartTime = DateTimeOffset.Now;
+                _etaStartDone = done;
+            }
+            var etaElapsed = (DateTimeOffset.Now - _etaStartTime.Value).TotalSeconds;
+            var etaDone    = done - _etaStartDone;
+            if (etaDone > 0 && etaElapsed >= 5)
+            {
+                var remainingSecs = (total - done) * etaElapsed / etaDone;
+                EstimatedTimeRemaining = remainingSecs >= 2
+                    ? $" · ~{FormatDuration(TimeSpan.FromSeconds(remainingSecs))} remaining"
+                    : string.Empty;
+            }
+            else
+            {
+                EstimatedTimeRemaining = string.Empty;
+            }
+        }
+        else if (done == 0 && packed > 0 && packed < total && _copyEndTime == null)
+        {
+            // Packaging phase — reuse the packaging ETA with a clearer label.
+            var packElapsed2 = _packStartTime == null ? 0
+                : (DateTimeOffset.Now - _packStartTime.Value).TotalSeconds;
+            var packDone2 = packed - _packStartDone;
+            if (packDone2 > 0 && packElapsed2 >= 5)
+            {
+                var remainingSecs = (total - packed) * packElapsed2 / packDone2;
+                EstimatedTimeRemaining = remainingSecs >= 2
+                    ? $" · ~{FormatDuration(TimeSpan.FromSeconds(remainingSecs))} to package"
+                    : string.Empty;
+            }
+            else
+            {
+                EstimatedTimeRemaining = string.Empty;
+            }
+        }
+        else
+        {
+            EstimatedTimeRemaining = string.Empty;
+        }
+
         // Keep the filter-chip counts live while the copy runs.
         OnPropertyChanged(nameof(FailedCount));
         OnPropertyChanged(nameof(SkippedCount));
@@ -2114,6 +2267,12 @@ public partial class MainViewModel : ObservableObject
                 CurrentStep = 3;
                 break;
             case 3 when IsLibraryOrSiteScope || CopyJobs.Count > 0 || IsDemoMode:
+                if (IsCopyComplete)
+                {
+                    // Copy already ran — navigate forward without re-running.
+                    CurrentStep = 4;
+                    break;
+                }
                 if (!IsDemoMode)
                 {
                     Settings.PreferredCopyMode    = CopyMode;

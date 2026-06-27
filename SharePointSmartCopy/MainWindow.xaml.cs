@@ -1,7 +1,10 @@
 ﻿using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using SharePointSmartCopy.Dialogs;
 using SharePointSmartCopy.Models;
 using SharePointSmartCopy.ViewModels;
@@ -175,6 +178,67 @@ public partial class MainWindow : Window
         VM.ColumnMappings.Clear();
         VM.CopyScope = CopyScope.Pages;
         _ = VM.LoadPageLibraryAsync();
+    }
+
+    // ── Step 4 Copy log column sorting ───────────────────────────────────────────
+
+    static readonly Dictionary<string, string> _headerSortMap = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Item"]                = "FileName",
+        ["Status"]              = "Status",
+        ["Source"]              = "SourcePath",
+        ["Target"]              = "TargetPath",
+        ["Versions"]            = "VersionsCopied",
+        ["Details"]             = "ErrorMessage",
+        ["Permissions Status"]  = "PermissionStatus",
+        ["Permissions Details"] = "PermissionDetails",
+    };
+
+    private GridViewColumnHeader? _sortHeader;
+    private SortAdorner?          _sortAdorner;
+
+    private void ProgressList_ColumnHeaderClick(object sender, RoutedEventArgs e)
+    {
+        if (e.OriginalSource is not GridViewColumnHeader header ||
+            header.Role == GridViewColumnHeaderRole.Padding ||
+            header.Content is not string headerText ||
+            !_headerSortMap.TryGetValue(headerText, out var sortBy))
+            return;
+
+        var dir = (_sortHeader == header && _sortAdorner?.Direction == ListSortDirection.Ascending)
+            ? ListSortDirection.Descending
+            : ListSortDirection.Ascending;
+
+        if (_sortAdorner != null && _sortHeader != null)
+            AdornerLayer.GetAdornerLayer(_sortHeader)?.Remove(_sortAdorner);
+
+        _sortAdorner = new SortAdorner(header, dir);
+        AdornerLayer.GetAdornerLayer(header)?.Add(_sortAdorner);
+        _sortHeader  = header;
+
+        VM.CopyResultsView.SortDescriptions.Clear();
+        VM.CopyResultsView.SortDescriptions.Add(new SortDescription(sortBy, dir));
+    }
+
+    sealed class SortAdorner(UIElement element, ListSortDirection direction) : Adorner(element)
+    {
+        static readonly Geometry AscGeometry  = Geometry.Parse("M 0 4 L 3.5 0 L 7 4 Z");
+        static readonly Geometry DescGeometry = Geometry.Parse("M 0 0 L 3.5 4 L 7 0 Z");
+
+        public ListSortDirection Direction { get; } = direction;
+
+        protected override void OnRender(DrawingContext dc)
+        {
+            base.OnRender(dc);
+            if (AdornedElement.RenderSize.Width < 20) return;
+            var brush = Application.Current.TryFindResource("AccentBrush") as Brush ?? Brushes.SteelBlue;
+            dc.PushTransform(new TranslateTransform(
+                AdornedElement.RenderSize.Width - 15,
+                (AdornedElement.RenderSize.Height - 5) / 2));
+            dc.DrawGeometry(brush, null,
+                Direction == ListSortDirection.Ascending ? AscGeometry : DescGeometry);
+            dc.Pop();
+        }
     }
 
     private void CopyCustomColumns_Changed(object sender, RoutedEventArgs e)

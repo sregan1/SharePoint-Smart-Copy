@@ -1275,6 +1275,7 @@
                                 <Run Text=" of "/>
                                 <Run Text="{Binding TotalCount}"/>
                                 <Run Text=" items processed"/>
+                                <Run Text="{Binding EstimatedTimeRemaining}" Foreground="{DynamicResource TextTertiaryBrush}"/>
                             </TextBlock>
                             <TextBlock HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold">
                                 <Run Text="{Binding TotalProgress, StringFormat={}{0:N0}}"/>
@@ -1291,6 +1292,53 @@
                                 HorizontalAlignment="Left" Margin="0,12,0,0"
                                 Command="{Binding CancelCopyCommand}"
                                 Visibility="{Binding IsCopying, Converter={StaticResource BoolToVis}}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
+                                    Visibility="{Binding IsPreflightInProgress, Converter={StaticResource BoolToVis}}">
+                            <ProgressBar IsIndeterminate="True" Width="80" Height="4"
+                                         VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock FontSize="13" Foreground="{DynamicResource TextTertiaryBrush}"
+                                       VerticalAlignment="Center">
+                                <Run Text="Checking files… "/>
+                                <Run Text="{Binding PreflightChecked}"/>
+                                <Run Text=" of "/>
+                                <Run Text="{Binding PreflightTotal}"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
+                                    Visibility="{Binding IsPackingInProgress, Converter={StaticResource BoolToVis}}">
+                            <ProgressBar IsIndeterminate="True" Width="80" Height="4"
+                                         VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock FontSize="13" Foreground="{DynamicResource TextTertiaryBrush}"
+                                       VerticalAlignment="Center">
+                                <Run Text="{Binding PackedCount, StringFormat={}{0:N0}}"/>
+                                <Run Text=" / "/>
+                                <Run Text="{Binding TotalCount, StringFormat={}{0:N0}}"/>
+                                <Run Text=" files packaged for import"/>
+                                <Run Text="{Binding PackagedEstimatedTimeRemaining}"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <!-- Live activity feed -->
+                        <Border Margin="0,8,0,0" MaxHeight="152"
+                                BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1"
+                                CornerRadius="4" Padding="8,6"
+                                Visibility="{Binding IsCopying, Converter={StaticResource BoolToVis}}">
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top" Text="Activity"
+                                           FontSize="10" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextTertiaryBrush}"
+                                           Margin="0,0,0,4"/>
+                                <TextBox Text="{Binding ActivityText, Mode=OneWay}"
+                                         FontSize="11" FontFamily="Consolas"
+                                         Foreground="{DynamicResource TextSecondaryBrush}"
+                                         TextWrapping="Wrap"
+                                         IsReadOnly="True"
+                                         BorderThickness="0" Background="Transparent"
+                                         Padding="0"
+                                         VerticalScrollBarVisibility="Auto"
+                                         HorizontalScrollBarVisibility="Disabled"
+                                         FocusVisualStyle="{x:Null}"/>
+                            </DockPanel>
+                        </Border>
                         <TextBlock Margin="0,8,0,0" FontSize="13" Foreground="{DynamicResource SuccessBrush}"
                                    Visibility="{Binding IsReadyForReport, Converter={StaticResource BoolToVis}}">
                             <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;"/>
@@ -1333,6 +1381,7 @@
                 </Grid>
                 <Border Grid.Row="3" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}">
                     <ListView x:Name="ProgressList" ItemsSource="{Binding CopyResultsView}"
+                              GridViewColumnHeader.Click="ProgressList_ColumnHeaderClick"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <ListView.View>
                             <GridView>
@@ -1360,7 +1409,16 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Details"  Width="220" DisplayMemberBinding="{Binding ErrorMessage}"/>
+                                <GridViewColumn Header="Details"  Width="220">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent"
+                                                     Padding="0" FontSize="12" Cursor="IBeam"
+                                                     Text="{Binding ErrorMessage, Mode=OneWay}"
+                                                     Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Header="Permissions Status"
                                     Width="{Binding DataContext.PermColumnWidth, RelativeSource={RelativeSource AncestorType=Window}}">
                                     <GridViewColumn.CellTemplate>
@@ -1462,7 +1520,7 @@
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Item"        Binding="{Binding FileName}"   Width="220"/>
-                                <DataGridTemplateColumn Header="Status" Width="110">
+                                <DataGridTemplateColumn Header="Status" Width="110" SortMemberPath="Status">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding StatusDisplay}" Margin="4,2"
@@ -1473,7 +1531,7 @@
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="Source Path" Binding="{Binding SourcePath}" Width="260"/>
                                 <DataGridTextColumn Header="Target Path" Binding="{Binding TargetPath}" Width="260"/>
-                                <DataGridTemplateColumn Header="Versions" Width="65">
+                                <DataGridTemplateColumn Header="Versions" Width="65" SortMemberPath="VersionsCopied">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding VersionsCopied}" Margin="4,2"
@@ -1481,8 +1539,17 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Details" Binding="{Binding ErrorMessage}" Width="220"/>
-                                <DataGridTemplateColumn Header="Permissions Status"
+                                <DataGridTemplateColumn Header="Details" Width="220" SortMemberPath="ErrorMessage">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent"
+                                                     Padding="2,1" FontSize="12" Cursor="IBeam"
+                                                     Text="{Binding ErrorMessage, Mode=OneWay}"
+                                                     Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Permissions Status" SortMemberPath="PermissionStatus"
                                     Width="{Binding DataContext.PermColumnWidth, RelativeSource={RelativeSource AncestorType=Window}}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -1532,9 +1599,14 @@
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Text" Value="Next →"/>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding CurrentStep}" Value="3">
+                                        <!-- Show "Start Copy" on Step 3 only when no copy has run yet -->
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding CurrentStep}" Value="3"/>
+                                                <Condition Binding="{Binding IsCopyComplete}" Value="False"/>
+                                            </MultiDataTrigger.Conditions>
                                             <Setter Property="Text" Value="▶ Start Copy"/>
-                                        </DataTrigger>
+                                        </MultiDataTrigger>
                                         <DataTrigger Binding="{Binding CurrentStep}" Value="4">
                                             <Setter Property="Text" Value="View Report →"/>
                                         </DataTrigger>

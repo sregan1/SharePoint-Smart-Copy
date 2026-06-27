@@ -21,6 +21,15 @@ public class SharePointService
     // 30-minute timeout: site copies involve large file downloads and long-running REST calls.
     private readonly HttpClient _httpClient = new() { Timeout = TimeSpan.FromMinutes(30) };
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, (string siteUrl, string listId, string listItemId)> _spIdsCache = new();
+    // Deduplicates concurrent folder-creation calls for the same path segment.
+    // Lazy<Task<string>> ensures only one Graph call is made per "{driveId}|{parentId}|{segment}"
+    // key even when multiple parallel tasks race — all share the same Task and await its result.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Lazy<Task<string>>> _folderSegmentTasks = new(StringComparer.OrdinalIgnoreCase);
+    // Limits concurrent Graph $batch calls across all parallel SPMI job pipelines.
+    // Each batch call carries 20 sub-requests; 10 parallel jobs firing simultaneously
+    // would produce 200 concurrent Graph ops, reliably hitting per-app throttle limits.
+    // 3 permits → at most 60 concurrent Graph ops from batch calls at any instant.
+    private readonly System.Threading.SemaphoreSlim _batchGate = new(3, 3);
 
     public SharePointService(AuthService authService)
     {
@@ -68,13 +77,26 @@ public class SharePointService
 
     public void Initialize()
     {
-        var provider   = new BaseBearerTokenAuthenticationProvider(new TokenProvider(_authService));
-        // KiotaClientFactory wires up all Graph middleware (retry, redirect, auth challenges, etc.)
-        // then we extend the timeout so large file downloads don't cancel at the 100-second default.
-        var httpClient = KiotaClientFactory.Create();
+        var provider = new BaseBearerTokenAuthenticationProvider(new TokenProvider(_authService));
+        var handlers = KiotaClientFactory.CreateDefaultHandlers();
+        // CreateDefaultHandlers() order: [0]=UriReplacementHandler [1]=RetryHandler [2]=RedirectHandler ...
+        // Replace the RetryHandler (index 1) with one configured for large migrations.
+        // Default MaxRetry=3; with 10 parallel SPMI jobs the Graph per-app rate limit is
+        // hit frequently enough that 3 retries is insufficient — bump to 10 (library max).
+        handlers[1] = new Microsoft.Kiota.Http.HttpClientLibrary.Middleware.RetryHandler(
+            new Microsoft.Kiota.Http.HttpClientLibrary.Middleware.Options.RetryHandlerOption
+            {
+                MaxRetry = 10,
+            });
+        // Insert our throttle-notify handler after RetryHandler (now at index 2, after RedirectHandler)
+        // so it sits inside Kiota's retry loop and sees raw 429/503 responses before they are absorbed.
+        // This makes Graph throttles visible to the adaptive parallelism controller.
+        handlers.Insert(3, new GraphThrottleNotifyHandler(
+            (delay, attempt, max, reason) => Throttled?.Invoke(delay, attempt, max, reason)));
+        var httpClient = KiotaClientFactory.Create(handlers);
         httpClient.Timeout = TimeSpan.FromMinutes(30);
-        var adapter    = new HttpClientRequestAdapter(provider, httpClient: httpClient);
-        _graphClient   = new GraphServiceClient(adapter);
+        var adapter  = new HttpClientRequestAdapter(provider, httpClient: httpClient);
+        _graphClient = new GraphServiceClient(adapter);
     }
 
     private GraphServiceClient Graph => _graphClient
@@ -240,18 +262,210 @@ public class SharePointService
             page = await Graph.Drives[driveId].Items[itemId].Versions
                 .WithUrl(page.OdataNextLink).GetAsync();
         }
-        // Sort oldest-first so we replay versions in chronological order.
-        // Sort by the numeric version label ("2.0" → 2.0) rather than timestamp:
-        // versions saved within the same second would otherwise keep Graph's
-        // newest-first order and be replayed out of sequence.
-        return all.OrderBy(v =>
+        return SortVersions(all);
+    }
+
+    // ── Graph $batch metadata + versions ─────────────────────────────────────
+
+    private const string GraphBaseUrl = "https://graph.microsoft.com/v1.0";
+
+    // Fetches metadata and the full version list for each item using Graph $batch
+    // (20 sub-requests per call: 1 metadata + 1 versions list per item, 10 items/batch).
+    // Items absent from the result failed their sub-request; callers should fall back
+    // to individual GetFileMetadataAsync / GetVersionsAsync calls for those items.
+    public async Task<Dictionary<string, (FileMetadata Metadata, List<DriveItemVersion> Versions)>>
+        BatchFetchMetadataAndVersionsAsync(
+            IReadOnlyList<(string driveId, string itemId)> items,
+            CancellationToken ct = default)
+    {
+        var result = new Dictionary<string, (FileMetadata, List<DriveItemVersion>)>();
+        if (items.Count == 0) return result;
+
+        // 2 Graph requests per file (metadata + versions); Graph batch cap is 20 → 10 files/call.
+        const int ItemsPerBatch = 10;
+
+        foreach (var chunk in items.Chunk(ItemsPerBatch))
+        {
+            ct.ThrowIfCancellationRequested();
+            await _batchGate.WaitAsync(ct);
+            try { await FetchBatchChunkAsync(chunk, result, ct); }
+            catch (OperationCanceledException) { throw; }
+            catch { /* chunk failed; items absent from result, caller falls back */ }
+            finally { _batchGate.Release(); }
+        }
+
+        return result;
+    }
+
+    private async Task FetchBatchChunkAsync(
+        (string driveId, string itemId)[] chunk,
+        Dictionary<string, (FileMetadata, List<DriveItemVersion>)> result,
+        CancellationToken ct)
+    {
+        // BatchRequestContentCollection is the current recommended API (BatchRequestContent is obsolete).
+        // Graph enforces a 20-sub-request cap; we send exactly 2 per file and cap chunks at 10 files.
+        var batch = new BatchRequestContentCollection(Graph);
+
+        // AddBatchRequestStep(HttpRequestMessage) auto-assigns a request ID and returns it.
+        var metaIds = new string[chunk.Length];
+        var versIds = new string[chunk.Length];
+
+        for (int i = 0; i < chunk.Length; i++)
+        {
+            var (driveId, itemId) = chunk[i];
+            var metaReq = new HttpRequestMessage(HttpMethod.Get,
+                $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}" +
+                "?$select=createdDateTime,lastModifiedDateTime,createdBy,lastModifiedBy,sharepointIds");
+            var versReq = new HttpRequestMessage(HttpMethod.Get,
+                $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}/versions?$top=500");
+            metaIds[i] = batch.AddBatchRequestStep(metaReq);
+            versIds[i] = batch.AddBatchRequestStep(versReq);
+        }
+
+        var response = await Graph.Batch.PostAsync(batch, ct);
+
+        for (int i = 0; i < chunk.Length; i++)
+        {
+            var (driveId, itemId) = chunk[i];
+
+            // Use nullable sentinels: only add to result when BOTH sub-requests succeeded.
+            // A failed sub-request (429, 404, etc.) leaves the item absent so the caller
+            // falls back to individual Graph calls rather than using empty/stale data.
+            FileMetadata? metadata = null;
+            try
+            {
+                using var metaHttp = await response.GetResponseByIdAsync(metaIds[i]);
+                if (metaHttp.IsSuccessStatusCode)
+                {
+                    var metaJson = await metaHttp.Content.ReadAsStringAsync(ct);
+                    metadata = ParseBatchFileMetadata(metaJson);
+                    TryCacheBatchSpIds(driveId, itemId, metaJson);
+                }
+            }
+            catch { }
+
+            List<DriveItemVersion>? versions = null;
+            try
+            {
+                using var versHttp = await response.GetResponseByIdAsync(versIds[i]);
+                if (versHttp.IsSuccessStatusCode)
+                {
+                    var (parsed, nextLink) = ParseBatchVersions(await versHttp.Content.ReadAsStringAsync(ct));
+                    var vList = parsed;
+                    while (nextLink != null)
+                    {
+                        ct.ThrowIfCancellationRequested();
+                        var page = await Graph.Drives[driveId].Items[itemId].Versions
+                            .WithUrl(nextLink).GetAsync(cancellationToken: ct);
+                        vList.AddRange(page?.Value ?? []);
+                        nextLink = page?.OdataNextLink;
+                    }
+                    versions = SortVersions(vList);
+                }
+            }
+            catch { }
+
+            if (metadata != null && versions != null)
+                result[itemId] = (metadata, versions);
+        }
+    }
+
+    private static FileMetadata ParseBatchFileMetadata(string json)
+    {
+        using var doc = JsonDocument.Parse(json);
+        var root = doc.RootElement;
+        return new FileMetadata
+        {
+            CreatedDateTime  = TryGetBatchDateTimeOffset(root, "createdDateTime"),
+            ModifiedDateTime = TryGetBatchDateTimeOffset(root, "lastModifiedDateTime"),
+            CreatedByEmail   = ParseBatchIdentityEmail(root, "createdBy"),
+            ModifiedByEmail  = ParseBatchIdentityEmail(root, "lastModifiedBy"),
+        };
+    }
+
+    private static DateTimeOffset? TryGetBatchDateTimeOffset(JsonElement root, string property)
+    {
+        if (!root.TryGetProperty(property, out var el) || el.ValueKind == JsonValueKind.Null)
+            return null;
+        return el.TryGetDateTimeOffset(out var dt) ? dt : null;
+    }
+
+    private static string? ParseBatchIdentityEmail(JsonElement root, string identitySetName)
+    {
+        if (!root.TryGetProperty(identitySetName, out var set)) return null;
+        if (!set.TryGetProperty("user", out var user)) return null;
+        if (user.TryGetProperty("email", out var email) && email.ValueKind == JsonValueKind.String)
+            return email.GetString();
+        if (user.TryGetProperty("userPrincipalName", out var upn) && upn.ValueKind == JsonValueKind.String)
+            return upn.GetString();
+        return null;
+    }
+
+    private void TryCacheBatchSpIds(string driveId, string itemId, string json)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(json);
+            if (!doc.RootElement.TryGetProperty("sharepointIds", out var sp)) return;
+            if (!sp.TryGetProperty("siteUrl",    out var su)  || su.ValueKind  != JsonValueKind.String) return;
+            if (!sp.TryGetProperty("listId",     out var li)  || li.ValueKind  != JsonValueKind.String) return;
+            if (!sp.TryGetProperty("listItemId", out var lii) || lii.ValueKind != JsonValueKind.String) return;
+            _spIdsCache[$"{driveId}|{itemId}"] = (su.GetString()!, li.GetString()!, lii.GetString()!);
+        }
+        catch { }
+    }
+
+    private static (List<DriveItemVersion> versions, string? nextLink) ParseBatchVersions(string json)
+    {
+        using var doc = JsonDocument.Parse(json);
+        var root     = doc.RootElement;
+        var versions = new List<DriveItemVersion>();
+
+        if (root.TryGetProperty("value", out var arr))
+        {
+            foreach (var el in arr.EnumerateArray())
+            {
+                var v = new DriveItemVersion
+                {
+                    Id = el.TryGetProperty("id", out var id) ? id.GetString() : null,
+                    LastModifiedDateTime = TryGetBatchDateTimeOffset(el, "lastModifiedDateTime"),
+                };
+
+                if (el.TryGetProperty("lastModifiedBy", out var lmb) &&
+                    lmb.TryGetProperty("user", out var user))
+                {
+                    var extra = new Dictionary<string, object?>();
+                    if (user.TryGetProperty("email", out var em) && em.ValueKind == JsonValueKind.String)
+                        extra["email"] = em.GetString();
+                    else if (user.TryGetProperty("userPrincipalName", out var upn) && upn.ValueKind == JsonValueKind.String)
+                        extra["userPrincipalName"] = upn.GetString();
+                    v.LastModifiedBy = new IdentitySet
+                    {
+                        User = new Microsoft.Graph.Models.Identity { AdditionalData = extra }
+                    };
+                }
+
+                versions.Add(v);
+            }
+        }
+
+        string? nextLink = root.TryGetProperty("@odata.nextLink", out var nl) && nl.ValueKind == JsonValueKind.String
+            ? nl.GetString() : null;
+
+        return (versions, nextLink);
+    }
+
+    // Sort oldest-first by numeric version label ("2.0" → 2.0) rather than timestamp:
+    // versions saved within the same second would otherwise keep Graph's newest-first
+    // order and be replayed out of sequence.
+    private static List<DriveItemVersion> SortVersions(List<DriveItemVersion> versions) =>
+        versions.OrderBy(v =>
         {
             var parts = (v.Id ?? "0").Split('.');
             int major = parts.Length > 0 && int.TryParse(parts[0], out var mj) ? mj : 0;
             int minor = parts.Length > 1 && int.TryParse(parts[1], out var mn) ? mn : 0;
             return (major, minor);
         }).ToList();
-    }
 
     // ── Metadata ──────────────────────────────────────────────────────────────
 
@@ -687,11 +901,18 @@ public class SharePointService
         string siteUrl, string jobId, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var token = await _authService.GetSharePointTokenAsync(siteUrl);
-        int nextToken = 0;
+        int nextToken  = 0;
+        int pollCount  = 0;
+        var pollDelay  = TimeSpan.FromSeconds(3);
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken);
+            await Task.Delay(pollDelay, cancellationToken);
+            pollCount++;
+            // Back off for long-running jobs to reduce API noise:
+            // 3 s for first 2 min → 10 s for next 10 min → 30 s thereafter.
+            if (pollCount == 40)  pollDelay = TimeSpan.FromSeconds(10);
+            if (pollCount == 100) pollDelay = TimeSpan.FromSeconds(30);
 
             // Guid parameters in SP REST require the guid'...' syntax, not just '...'.
             // AllSites.FullControl is needed — the same reason CreateMigrationJobEncrypted needs it.
@@ -711,6 +932,24 @@ public class SharePointService
             bool hitJobEnd = false;
             using (response)
             {
+            bool isThrottle = response.StatusCode is System.Net.HttpStatusCode.TooManyRequests
+                                                  or System.Net.HttpStatusCode.ServiceUnavailable;
+            bool isTransient = !isThrottle && (int)response.StatusCode >= 500;
+            if (isThrottle || isTransient)
+            {
+                // Throttle: honour Retry-After; 5xx: SP sometimes returns 500 when internally
+                // throttled — treat as retriable rather than fatal.
+                var delay = isThrottle
+                    ? (response.Headers.RetryAfter?.Delta
+                       ?? (response.Headers.RetryAfter?.Date is { } when
+                               ? when - DateTimeOffset.UtcNow
+                               : TimeSpan.FromSeconds(30)))
+                    : TimeSpan.FromSeconds(30);
+                if (delay < TimeSpan.Zero) delay = TimeSpan.FromSeconds(1);
+                if (delay > TimeSpan.FromSeconds(120)) delay = TimeSpan.FromSeconds(120);
+                await Task.Delay(delay, cancellationToken);
+                continue;
+            }
             if (!response.IsSuccessStatusCode)
             {
                 var err = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -784,6 +1023,34 @@ public class SharePointService
     }
 
     // ── Upload ────────────────────────────────────────────────────────────────
+
+    // Fetches all file children of a folder in one paginated pass.
+    // Returns filename → (itemId, lastModifiedDateTime), case-insensitive.
+    // Used by the migration pre-flight to avoid one Graph call per file.
+    public async Task<Dictionary<string, (string ItemId, DateTimeOffset? Modified)>> FetchFolderItemsAsync(
+        string driveId, string folderId)
+    {
+        var result = new Dictionary<string, (string, DateTimeOffset?)>(StringComparer.OrdinalIgnoreCase);
+        var page = await Graph.Drives[driveId].Items[folderId].Children
+            .GetAsync(cfg =>
+            {
+                cfg.QueryParameters.Top    = 1000;
+                cfg.QueryParameters.Select = ["id", "name", "lastModifiedDateTime", "file"];
+            });
+
+        while (page != null)
+        {
+            foreach (var item in page.Value ?? [])
+            {
+                if (item.File == null || item.Name == null || item.Id == null) continue;
+                result[item.Name] = (item.Id, item.LastModifiedDateTime);
+            }
+            if (page.OdataNextLink == null) break;
+            page = await Graph.Drives[driveId].Items[folderId].Children
+                .WithUrl(page.OdataNextLink).GetAsync();
+        }
+        return result;
+    }
 
     public async Task<bool> FileExistsAsync(string driveId, string parentItemId, string fileName)
     {
@@ -1168,7 +1435,19 @@ public class SharePointService
     {
         var current = parentItemId;
         foreach (var part in relativePath.Split('/').Where(p => !string.IsNullOrEmpty(p)))
-            current = await GetOrCreateFolderAsync(driveId, current, part);
+        {
+            // Capture loop variables for the lambda — the Lazy factory runs on first .Value access.
+            var cacheKey = $"{driveId}|{current}|{part}";
+            var d = driveId; var p = current; var n = part;
+            // GetOrAdd may construct multiple Lazy instances under contention but only stores one.
+            // Because Lazy.Value is called after GetOrAdd returns, the discarded instances never
+            // invoke their factories — so only one Graph call is made per unique folder segment.
+            var lazy = _folderSegmentTasks.GetOrAdd(cacheKey,
+                _ => new Lazy<Task<string>>(
+                    () => GetOrCreateFolderAsync(d, p, n),
+                    System.Threading.LazyThreadSafetyMode.ExecutionAndPublication));
+            current = await lazy.Value;
+        }
         return current;
     }
 
@@ -1208,7 +1487,7 @@ public class SharePointService
 
     // Raised when a request is throttled and a retry is scheduled — lets the UI show
     // "Throttled — retrying in Ns…" instead of appearing stalled.
-    public event Action<TimeSpan, int, int>? Throttled;
+    public event Action<TimeSpan, int, int, string?>? Throttled;
 
     // Sends a SharePoint REST request with resilience:
     //  - 401: retried once with a force-refreshed token.
@@ -1254,7 +1533,7 @@ public class SharePointService
 
                 System.Diagnostics.Debug.WriteLine(
                     $"[SP-REST] {(int)response.StatusCode} throttled — retrying in {delay.TotalSeconds:N0}s (attempt {attempt + 1}/{maxThrottleRetries})");
-                Throttled?.Invoke(delay, attempt + 1, maxThrottleRetries);
+                Throttled?.Invoke(delay, attempt + 1, maxThrottleRetries, null);
                 response.Dispose();
                 await Task.Delay(delay, cancellationToken);
                 continue;

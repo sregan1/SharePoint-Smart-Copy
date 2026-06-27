@@ -27,12 +27,50 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         bool preserveMetadata = true,
         bool copyPermissions = false,
         PermissionCopyService? permissionService = null,
-        Dictionary<string, bool>? permissionFlags = null)
+        Dictionary<string, bool>? permissionFlags = null,
+        IProgress<(int, int)>? preflightProgress = null,
+        IProgress<string>? activityLog = null,
+        IProgress<int>? onFilePacked = null)
     {
+        // In SPMI mode the controller semaphore is never used as a download gate
+        // (MigrationJobService has its own download controller). Suppress cosmetic step-downs.
+        bool isMigrationMode = copyMode == CopyMode.MigrationApi && copyVersions;
+
         using var controller = new AdaptiveParallelismController(maxParallel);
         controller.LimitChanged += n => ParallelismChanged?.Invoke(n);
-        void onThrottled(TimeSpan _, int __, int ___) => controller.StepDown();
+        if (activityLog != null && !isMigrationMode)
+        {
+            int lastLimit = maxParallel;
+            controller.LimitChanged += n =>
+            {
+                bool down = n < lastLimit;
+                lastLimit = n;
+                activityLog.Report(down
+                    ? $"↓ Parallelism: {n}/{maxParallel} (throttled)"
+                    : $"⬆ Parallelism: {n}/{maxParallel} (recovering)");
+            };
+        }
+        void onThrottled(TimeSpan delay, int attempt, int max, string? reason)
+        {
+            if (!isMigrationMode) controller.StepDown(delay);
+        }
         spService.Throttled += onThrottled;
+        if (activityLog != null)
+        {
+            var throttleLogLock  = new object();
+            var lastThrottleLog  = DateTimeOffset.MinValue;
+            spService.Throttled += (delay, attempt, max, reason) =>
+            {
+                lock (throttleLogLock)
+                {
+                    var now = DateTimeOffset.UtcNow;
+                    if (now - lastThrottleLog < TimeSpan.FromSeconds(5)) return;
+                    lastThrottleLog = now;
+                }
+                activityLog.Report($"⚠ Graph throttled — waiting {delay.TotalSeconds:0}s"
+                    + (string.IsNullOrEmpty(reason) ? "" : $" [{reason}]"));
+            };
+        }
         var allTasks  = new List<(CopyJob job, CopyResult result)>();
 
         foreach (var job in jobs)
@@ -85,7 +123,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         {
             // Mode A: batch all files into a single migration job
             await migrationJobService.ExecuteAsync(allTasks, overwriteMode, maxVersions, maxParallel, cancellationToken,
-                copyCustomColumns, columnMappings, bulkFieldCache);
+                copyCustomColumns, columnMappings, bulkFieldCache, preflightProgress, activityLog, onFilePacked);
 
             // Permissions: run after the migration job completes so the target items exist.
             // We can't use Graph item IDs here (the migration API doesn't surface them), so we
