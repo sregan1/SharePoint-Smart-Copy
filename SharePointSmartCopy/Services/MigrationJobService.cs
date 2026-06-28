@@ -114,6 +114,14 @@ public class MigrationJobService(SharePointService spService)
                     .ToList();
                 var sharedFolderIdCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                 sharedFolderIdCache[string.Empty] = firstJob.TargetParentItemId;
+
+                // Fresh-target fast path: check (cheaply, BEFORE we create any subfolders) whether the
+                // destination is completely empty. If so, nothing can already exist, so the per-folder
+                // existing-file scan below is skipped entirely — one $top=1 call instead of O(folders)
+                // listings. Must be checked before creating subfolders, which would make it non-empty.
+                var targetIsEmpty = await spService.IsFolderEmptyAsync(
+                    firstJob.TargetDriveId, firstJob.TargetParentItemId);
+
                 if (subFolderPaths.Count > 0)
                 {
                     activityLog?.Report($"Provisioning {subFolderPaths.Count} target subfolder{(subFolderPaths.Count == 1 ? "" : "s")}...");
@@ -134,75 +142,85 @@ public class MigrationJobService(SharePointService spService)
                 // Build the target-folder file listing once and share across all SPMI batches.
                 // Without sharing, N parallel batches each independently fetch all M folders = N×M calls.
                 // With sharing: M calls total (parallel at 8), then all batches read the snapshot.
-                activityLog?.Report($"Scanning {sharedFolderIdCache.Count} target folder{(sharedFolderIdCache.Count == 1 ? "" : "s")} for existing files...");
                 var sharedExistingByFolder = new System.Collections.Concurrent.ConcurrentDictionary<
                     string, Dictionary<string, (string ItemId, DateTimeOffset? Modified)>>(
                     StringComparer.OrdinalIgnoreCase);
-                await Parallel.ForEachAsync(sharedFolderIdCache,
-                    new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
-                    async (kvp, ct) =>
-                    {
-                        sharedExistingByFolder[kvp.Key] = await spService.FetchFolderItemsAsync(
-                            firstJob.TargetDriveId, kvp.Value);
-                    });
-
-                // Split into SEQUENTIAL jobs that each stay under SharePoint's migration package limits
-                // (guidance: < 250 items / < 250 MB). A single job over the limit imports the SPFile
-                // blobs but fails every SPListItem with "Missing file info for list item", hits the
-                // 100-failure threshold, and cancels the whole job (verified: a 32-item copy imports
-                // cleanly; 512 — and even 150-item batches — fail this way). The BYTE cap is the binding
-                // one because Migration API mode copies full version history, so we size each job by the
-                // sum of all version bytes, not item count. Jobs run ONE AT A TIME — concurrent jobs make
-                // SP soft-cancel the extras with the same error.
-                const long MaxBytesPerJob = 200L * 1024 * 1024; // margin under the 250 MB package limit
-                const int  MaxItemsPerJob = 200;                // margin under the 250-item package limit
-                const long UnknownFileBytes = 10L * 1024 * 1024; // assume 10 MB when size can't be probed
-
-                // Probe version sizes once up front so batching can respect the byte cap. This metadata
-                // fetch is independent of (and cheaper than) the per-batch content download that follows;
-                // a failed probe just falls back to UnknownFileBytes for that file.
-                activityLog?.Report("Sizing files for batching...");
-                var sizeProbe = await spService.BatchFetchMetadataAndVersionsAsync(
-                    groupTasks.Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
-                    cancellationToken);
-
-                long FileBytes((CopyJob job, CopyResult result) t)
+                if (targetIsEmpty)
                 {
-                    if (!sizeProbe.TryGetValue(t.job.SourceItemId, out var mv) || mv.Versions is not { Count: > 0 })
-                        return UnknownFileBytes;
-                    IEnumerable<Microsoft.Graph.Models.DriveItemVersion> versions =
-                        maxVersions > 0 && mv.Versions.Count > maxVersions
-                            ? mv.Versions.TakeLast(maxVersions)
-                            : mv.Versions;
-                    return versions.Sum(v => v.Size ?? 0);
+                    // Nothing exists — populate empty listings with no Graph calls at all. The per-batch
+                    // pre-flight fast-path then treats every file as new (no scan, no zombie checks).
+                    activityLog?.Report("Target is empty — skipping the existing-file scan.");
+                    foreach (var key in sharedFolderIdCache.Keys)
+                        sharedExistingByFolder[key] = new Dictionary<string, (string ItemId, DateTimeOffset? Modified)>(StringComparer.OrdinalIgnoreCase);
+                }
+                else
+                {
+                    activityLog?.Report($"Scanning {sharedFolderIdCache.Count} target folder{(sharedFolderIdCache.Count == 1 ? "" : "s")} for existing files...");
+                    await Parallel.ForEachAsync(sharedFolderIdCache,
+                        new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
+                        async (kvp, ct) =>
+                        {
+                            sharedExistingByFolder[kvp.Key] = await spService.FetchFolderItemsAsync(
+                                firstJob.TargetDriveId, kvp.Value);
+                        });
                 }
 
-                // Greedy packing: accumulate files until the next one would exceed either cap, then start
-                // a new batch. A single file larger than the byte cap goes alone in its own job (it can't
-                // be split, and SP chunks large single-file uploads internally).
+                // Split into SEQUENTIAL jobs small enough that SharePoint imports them cleanly. Above a
+                // ceiling SP fails every SPListItem with "Missing file info for list item" → the
+                // 100-failure threshold → whole job cancels.
+                //
+                // VERIFIED: the ceiling is on the total number of manifest VERSION ENTRIES, NOT file
+                // count. A file with N versions contributes ~N <File> entries, so a 120-file batch of
+                // 3-version documents (~480 entries) fails while 120 single-version files (~120 entries)
+                // succeed. So batch by total version count, not file count — otherwise version-heavy
+                // regions (e.g. edited documents) blow the limit at far fewer files.
+                //
+                // This requires version counts up front: a one-time parallel "analyze" pass (memory-
+                // light — counts only). Batches then stay large in single-version regions and shrink
+                // automatically where files have many versions.
+                const int MaxVersionsPerJob = 100; // total manifest version-entries (verified ceiling 120–150)
+                const int MaxItemsPerJob    = 120; // sanity cap so single-version runs don't make huge batches
+
+                activityLog?.Report($"Analyzing {groupTasks.Count:N0} files for version-aware batching...");
+                var sizingProgress = new Progress<int>(d =>
+                    activityLog?.Report($"Analyzing files for batching: {d:N0} / {groupTasks.Count:N0}"));
+                var versionCounts = await spService.FetchVersionCountsAsync(
+                    groupTasks.Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
+                    maxVersionsCap: maxVersions, maxConcurrency: 12, progress: sizingProgress,
+                    ct: cancellationToken);
+
+                int VersionsOf((CopyJob job, CopyResult result) t) =>
+                    versionCounts.TryGetValue(t.job.SourceItemId, out var v) ? Math.Max(1, v) : 1;
+
                 var batches      = new List<List<(CopyJob job, CopyResult result)>>();
                 var currentBatch = new List<(CopyJob job, CopyResult result)>();
-                long currentBytes = 0;
+                int currentVersions = 0;
                 foreach (var t in groupTasks)
                 {
-                    var bytes = FileBytes(t);
+                    int v = VersionsOf(t);
                     if (currentBatch.Count > 0 &&
-                        (currentBatch.Count >= MaxItemsPerJob || currentBytes + bytes > MaxBytesPerJob))
+                        (currentVersions + v > MaxVersionsPerJob || currentBatch.Count >= MaxItemsPerJob))
                     {
                         batches.Add(currentBatch);
                         currentBatch = [];
-                        currentBytes = 0;
+                        currentVersions = 0;
                     }
                     currentBatch.Add(t);
-                    currentBytes += bytes;
+                    currentVersions += v;
                 }
                 if (currentBatch.Count > 0) batches.Add(currentBatch);
 
-                // Depth-1 pipeline: while SharePoint imports batch N (SubmitAndPollBatchAsync — the
-                // serialized phase, since SP soft-cancels concurrent import jobs), prepare batch N+1
-                // (download → encrypt → upload blobs + manifest) concurrently. Only ONE batch is ever
-                // prepared ahead, so memory and the per-batch SAS tokens stay bounded; a fast prep just
-                // waits at the import gate. This hides nearly all app-side prep time behind import time.
+                // Pipeline: a single prep producer (download → encrypt → upload blobs + manifest) feeds
+                // a bounded channel; import workers drain it. Prep always overlaps imports, hiding
+                // app-side prep time behind SharePoint import time.
+                //
+                // ── CONCURRENT IMPORTS ────────────────────────────────────────────────────────────
+                // VERIFIED: this tenant does NOT allow concurrent import jobs — MaxConcurrentImports=2
+                // reproduces the "Missing file info" soft-cancel even with a valid 120-item manifest.
+                // So the "SP soft-cancels concurrent jobs" constraint is real (not a manifest artifact).
+                // Imports MUST stay sequential; do not raise this above 1 for this tenant.
+                const int MaxConcurrentImports = 1;
+
                 Task<PreparedBatch> Prep(int idx) => PrepareBatchAsync(
                     batches[idx], overwriteMode, maxVersions, maxParallel,
                     targetSiteUrl, webId, webRelUrl, siteId,
@@ -213,19 +231,39 @@ public class MigrationJobService(SharePointService spService)
                     batchLabel: batches.Count > 1 ? $"{idx + 1}/{batches.Count}" : "",
                     activityLog: activityLog,
                     onFilePacked: onFilePacked,
-                    downloadController: downloadController,
-                    sharedMetaCache: sizeProbe);
+                    downloadController: downloadController);
 
-                var current = await Prep(0);
-                for (int bi = 0; bi < batches.Count; bi++)
+                // Bounded so prep runs at most MaxConcurrentImports+1 batches ahead — keeps memory and
+                // the per-batch SAS tokens bounded (a prepared batch is just blobs-in-Azure + refs).
+                var prepChannel = Channel.CreateBounded<PreparedBatch>(
+                    new BoundedChannelOptions(MaxConcurrentImports + 1) { FullMode = BoundedChannelFullMode.Wait });
+
+                // Producer: prepare batches sequentially (downloads already share the global gate) and
+                // hand each off to the import workers.
+                var prepProducer = Task.Run(async () =>
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    // Start preparing the next batch BEFORE importing the current one, so its
-                    // download/upload overlaps this batch's SharePoint import.
-                    var nextPrep = bi + 1 < batches.Count ? Prep(bi + 1) : null;
-                    await SubmitAndPollBatchAsync(current, webId, targetSiteUrl, activityLog, cancellationToken);
-                    if (nextPrep != null) current = await nextPrep;
-                }
+                    try
+                    {
+                        for (int idx = 0; idx < batches.Count; idx++)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+                            var prepared = await Prep(idx);
+                            await prepChannel.Writer.WriteAsync(prepared, cancellationToken);
+                        }
+                    }
+                    finally { prepChannel.Writer.Complete(); }
+                }, cancellationToken);
+
+                // Import workers: each pulls a prepared batch and runs its SP import to completion.
+                // With MaxConcurrentImports=1 this is strict sequential import (the proven path).
+                var importWorkers = Enumerable.Range(0, MaxConcurrentImports).Select(_ => Task.Run(async () =>
+                {
+                    await foreach (var prepared in prepChannel.Reader.ReadAllAsync(cancellationToken))
+                        await SubmitAndPollBatchAsync(prepared, webId, targetSiteUrl, activityLog, cancellationToken);
+                }, cancellationToken)).ToArray();
+
+                await Task.WhenAll(importWorkers);
+                await prepProducer;
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -289,8 +327,7 @@ public class MigrationJobService(SharePointService spService)
         string batchLabel = "",
         IProgress<string>? activityLog = null,
         IProgress<int>? onFilePacked = null,
-        AdaptiveParallelismController? downloadController = null,
-        Dictionary<string, (FileMetadata Metadata, List<Microsoft.Graph.Models.DriveItemVersion> Versions)>? sharedMetaCache = null)
+        AdaptiveParallelismController? downloadController = null)
     {
         var pfx = string.IsNullOrEmpty(batchLabel) ? "" : $"[{batchLabel}] ";
         try
@@ -470,58 +507,71 @@ public class MigrationJobService(SharePointService spService)
             {
                 try
                 {
-                    // Metadata + versions were already fetched once up front (sharedMetaCache, the
-                    // size-probe used for byte-aware batching). Reuse it here instead of re-fetching
-                    // per chunk — that was a full duplicate metadata+versions Graph round-trip for
-                    // every file. Files missing from the cache (e.g. a failed probe sub-request) fall
-                    // back to an individual fetch inside DownloadFileDataAsync.
+                    // Batch-fetch metadata + versions 10 files at a time (20 Graph sub-requests per
+                    // $batch call) for THIS batch only. Double-buffer: fire the next chunk's metadata
+                    // fetch in the background while the current chunk's files are downloading, so the
+                    // $batch round-trip is hidden inside download time. Fetching per-batch (rather than
+                    // a probe over the whole library) means packaging starts immediately.
                     var copyingTasks = fileTasks.Where(t => t.result.Status == CopyStatus.Copying).ToList();
-                    await Parallel.ForEachAsync(copyingTasks,
-                        new ParallelOptions { MaxDegreeOfParallelism = parallelFileDownloads, CancellationToken = cancellationToken },
-                        async (taskPair, ct) =>
+                    var chunks = copyingTasks.Chunk(10).ToArray();
+
+                    if (chunks.Length > 0)
+                    {
+                        var prefetchTask = spService.BatchFetchMetadataAndVersionsAsync(
+                            chunks[0].Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
+                            cancellationToken);
+
+                        for (int chunkIdx = 0; chunkIdx < chunks.Length; chunkIdx++)
                         {
-                            var (job, result) = taskPair;
-                            if (result.Status != CopyStatus.Copying) return;
+                            cancellationToken.ThrowIfCancellationRequested();
+                            var batchCache = await prefetchTask;
 
-                            var subPath = job.TargetSubFolderPath ?? string.Empty;
-                            var fileServerRelUrl = string.IsNullOrEmpty(subPath)
-                                ? $"{libraryServerRelUrl}/{job.SourceName}"
-                                : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
-                            existingFileIds.TryGetValue(fileServerRelUrl, out var existingFileId);
+                            if (chunkIdx + 1 < chunks.Length)
+                                prefetchTask = spService.BatchFetchMetadataAndVersionsAsync(
+                                    chunks[chunkIdx + 1].Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
+                                    cancellationToken);
 
-                            // Acquire a global download slot — limits total concurrent Graph
-                            // content downloads across all SPMI batches to maxParallel.
-                            if (downloadController != null)
-                                await downloadController.WaitAsync(ct);
-                            try
-                            {
-                                FileMetadata? prefetchedMeta = null;
-                                List<Microsoft.Graph.Models.DriveItemVersion>? prefetchedVersions = null;
-                                if (sharedMetaCache != null &&
-                                    sharedMetaCache.TryGetValue(job.SourceItemId, out var mv))
+                            await Parallel.ForEachAsync(chunks[chunkIdx],
+                                new ParallelOptions { MaxDegreeOfParallelism = parallelFileDownloads, CancellationToken = cancellationToken },
+                                async (taskPair, ct) =>
                                 {
-                                    prefetchedMeta     = mv.Metadata;
-                                    prefetchedVersions = mv.Versions;
-                                }
-                                if (verbosePerFile) activityLog?.Report($"{pfx}↓ {job.SourceName}");
-                                var data = await DownloadFileDataAsync(
-                                    job, result, maxVersions, versionParallelism, existingFileId, ct,
-                                    prefetchedMeta, prefetchedVersions,
-                                    copyCustomColumns, columnMappings, bulkFieldCache,
-                                    pfxLabel: pfx, activityLog: activityLog);
-                                await pipe.Writer.WriteAsync(data, ct);
-                            }
-                            catch (OperationCanceledException) { throw; }
-                            catch (Exception ex)
-                            {
-                                result.Status       = CopyStatus.Failed;
-                                result.ErrorMessage = $"Download failed: {ex.Message}";
-                            }
-                            finally
-                            {
-                                downloadController?.Release();
-                            }
-                        });
+                                    var (job, result) = taskPair;
+                                    if (result.Status != CopyStatus.Copying) return;
+
+                                    var subPath = job.TargetSubFolderPath ?? string.Empty;
+                                    var fileServerRelUrl = string.IsNullOrEmpty(subPath)
+                                        ? $"{libraryServerRelUrl}/{job.SourceName}"
+                                        : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
+                                    existingFileIds.TryGetValue(fileServerRelUrl, out var existingFileId);
+
+                                    // Acquire a global download slot — limits total concurrent Graph
+                                    // content downloads across all SPMI batches to maxParallel.
+                                    if (downloadController != null)
+                                        await downloadController.WaitAsync(ct);
+                                    try
+                                    {
+                                        batchCache.TryGetValue(job.SourceItemId, out var prefetched);
+                                        if (verbosePerFile) activityLog?.Report($"{pfx}↓ {job.SourceName}");
+                                        var data = await DownloadFileDataAsync(
+                                            job, result, maxVersions, versionParallelism, existingFileId, ct,
+                                            prefetched.Metadata, prefetched.Versions,
+                                            copyCustomColumns, columnMappings, bulkFieldCache,
+                                            pfxLabel: pfx, activityLog: activityLog);
+                                        await pipe.Writer.WriteAsync(data, ct);
+                                    }
+                                    catch (OperationCanceledException) { throw; }
+                                    catch (Exception ex)
+                                    {
+                                        result.Status       = CopyStatus.Failed;
+                                        result.ErrorMessage = $"Download failed: {ex.Message}";
+                                    }
+                                    finally
+                                    {
+                                        downloadController?.Release();
+                                    }
+                                });
+                        }
+                    }
                 }
                 finally { pipe.Writer.Complete(); }
             }, cancellationToken);

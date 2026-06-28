@@ -305,6 +305,50 @@ public class SharePointService
         return result;
     }
 
+    // Fetches ONLY the version count per item (capped at maxVersionsCap), in PARALLEL and
+    // memory-light: the heavy version/metadata objects are discarded immediately after counting, so
+    // only one small int per file persists. Used to size version-aware migration batches over a whole
+    // library (tens/hundreds of thousands of files) without holding all metadata in memory. Items
+    // whose sub-request fails default to a count of 1.
+    public async Task<Dictionary<string, int>> FetchVersionCountsAsync(
+        IReadOnlyList<(string driveId, string itemId)> items,
+        int maxVersionsCap,
+        int maxConcurrency,
+        IProgress<int>? progress = null,
+        CancellationToken ct = default)
+    {
+        var counts = new System.Collections.Concurrent.ConcurrentDictionary<string, int>();
+        if (items.Count == 0) return new Dictionary<string, int>();
+
+        const int ItemsPerBatch = 10; // Graph $batch cap is 20 sub-requests = 10 files (meta + versions)
+        var chunks = items.Chunk(ItemsPerBatch).ToList();
+
+        int done = 0, lastReported = 0;
+        var reportLock = new object();
+
+        await Parallel.ForEachAsync(chunks,
+            new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, maxConcurrency), CancellationToken = ct },
+            async (chunk, c) =>
+            {
+                var local = new Dictionary<string, (FileMetadata, List<DriveItemVersion>)>();
+                try { await FetchBatchChunkAsync(chunk, local, c); }
+                catch (OperationCanceledException) { throw; }
+                catch { /* items absent → counted as 1 by the caller's fallback */ }
+                foreach (var kv in local)
+                {
+                    int v = kv.Value.Item2?.Count ?? 1;
+                    counts[kv.Key] = maxVersionsCap > 0 ? Math.Min(v, maxVersionsCap) : v;
+                }
+                int d = Interlocked.Add(ref done, chunk.Length);
+                lock (reportLock)
+                {
+                    if (d - lastReported >= 500 || d == items.Count) { lastReported = d; progress?.Report(d); }
+                }
+            });
+
+        return new Dictionary<string, int>(counts);
+    }
+
     private async Task FetchBatchChunkAsync(
         (string driveId, string itemId)[] chunk,
         Dictionary<string, (FileMetadata, List<DriveItemVersion>)> result,
@@ -1060,6 +1104,20 @@ public class SharePointService
                 .WithUrl(page.OdataNextLink).GetAsync();
         }
         return result;
+    }
+
+    // Cheap "is this folder completely empty?" check (files OR subfolders), via a single $top=1
+    // request. Used to detect a fresh migration target so the per-folder existing-file scan can be
+    // skipped entirely — on an empty target nothing can already exist.
+    public async Task<bool> IsFolderEmptyAsync(string driveId, string folderId)
+    {
+        var page = await Graph.Drives[driveId].Items[folderId].Children
+            .GetAsync(cfg =>
+            {
+                cfg.QueryParameters.Top    = 1;
+                cfg.QueryParameters.Select = ["id"];
+            });
+        return (page?.Value?.Count ?? 0) == 0;
     }
 
     public async Task<bool> FileExistsAsync(string driveId, string parentItemId, string fileName)
