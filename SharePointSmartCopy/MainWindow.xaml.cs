@@ -208,10 +208,18 @@ public partial class MainWindow : Window
         }
     }
 
+    private bool _autoScrollQueued;
     private void ProgressList_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
+        // Coalesce auto-scroll: scrolling to the bottom on EVERY add forces a layout pass per item,
+        // which saturates the UI thread on huge copies (tens of thousands of rows). Queue at most one
+        // pending scroll at Background priority; rapid bursts of adds collapse to a single scroll once
+        // the UI thread goes idle.
+        if (_autoScrollQueued) return;
+        _autoScrollQueued = true;
         Dispatcher.BeginInvoke(() =>
         {
+            _autoScrollQueued = false;
             if (ProgressList.Items.Count > 0)
                 ProgressList.ScrollIntoView(ProgressList.Items[^1]);
         }, System.Windows.Threading.DispatcherPriority.Background);

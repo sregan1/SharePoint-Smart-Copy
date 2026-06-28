@@ -73,6 +73,23 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         }
         var allTasks  = new List<(CopyJob job, CopyResult result)>();
 
+        // Buffer new result rows and flush them to the bound collection in chunks. Adding tens of
+        // thousands of rows one at a time via a *synchronous* Dispatcher.Invoke saturates the UI
+        // thread and back-pressures enumeration — the progress display appears to "freeze" around
+        // ~47k files on huge copies. Chunked async adds collapse 120k UI round-trips into a few
+        // hundred and keep both the file listing and the window responsive.
+        var pendingResults = new List<CopyResult>(256);
+        async Task FlushPendingResultsAsync()
+        {
+            if (pendingResults.Count == 0) return;
+            var chunk = pendingResults.ToArray();
+            pendingResults.Clear();
+            await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                foreach (var r in chunk) results.Add(r);
+            }).Task;
+        }
+
         foreach (var job in jobs)
         {
             if (!job.IsFolder)
@@ -113,11 +130,13 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         TargetPath = fileJob.TargetDisplayPath
                     };
 
-                    System.Windows.Application.Current.Dispatcher.Invoke(() => results.Add(result));
+                    pendingResults.Add(result);
                     allTasks.Add((fileJob, result));
+                    if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
                 }
             }
         }
+        await FlushPendingResultsAsync();
 
         if (copyMode == CopyMode.MigrationApi && copyVersions)
         {
