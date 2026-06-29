@@ -34,7 +34,7 @@ A free and open source Windows desktop application for copying files, libraries,
 
 ## Features
 
-Choose from four copy scopes in a step-by-step wizard:
+Choose from four copy scopes in a step-by-step wizard: 
 
 | Scope | What it copies |
 |---|---|
