@@ -4,6 +4,27 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 3.1.1 — 2026-06-28
+
+### Fixed
+
+- **Migration API always engages when selected** — Copy Versions off no longer silently fell back to Enhanced REST. Migration API now runs whenever the mode is selected; with Copy Versions off it produces a current-only copy through the same fast batched path.
+- **"Missing file info for list item" import errors eliminated** — Standalone `SPListItem` manifest objects were always rejected by SharePoint's importer because it cannot link them to their `SPFile`. `SPFile` alone imports the file with correct metadata. Removing the redundant `SPListItem` emission eliminated the primary source of import failures and freed the full 250-item batch size.
+- **Special-character folder names** — Folder GUID resolution now uses `GetFolderByServerRelativePath(decodedurl=...)` instead of `GetFolderByServerRelativeUrl`, fixing 404 failures for folders whose names contain `#`, `%`, `&`, or other URL-reserved characters.
+- **Accurate per-file import reporting** — Each file's SPMI result is now attributed by GUID. "0 of N imported" is no longer reported when files actually landed; the error column shows the specific file and reason for any genuine failure.
+- **Folder dates and authors preserved** — Source folder created/modified dates and created-by/modified-by users are now written into the SPMI manifest. Previously all migrated folders showed a hardcoded 1999/2000 placeholder date on the target.
+
+### Changed
+
+- **SPMI batch ceiling raised to 250 items** — With per-item SPListItem errors eliminated, batches now operate reliably at SharePoint's package limit (250 items / 250 MB), reducing the number of jobs and total overhead on large runs.
+- **Upfront metadata and version cache** — All file metadata and version counts are fetched in a single parallelised pass before import begins, eliminating per-batch Graph API calls and preventing stale-data failures mid-run.
+- **Parallel blob uploads within each package** — File blobs are now uploaded concurrently rather than one at a time, reducing package preparation time on multi-file batches.
+- **AIMD throttle tuning** — The adaptive parallelism ceiling now starts at the configured soft-start value (not the slider maximum), halves on a throttle event, and probes upward every 45 s only when the semaphore is under active load. The slider acts as a safety cap rather than a target.
+- **Large-copy UI responsiveness** — File rows are added to the progress list in batches of 200 via a non-blocking async dispatcher call instead of one synchronous UI round-trip per file. Auto-scroll is coalesced to a single background-priority scroll per burst. Copies with 47,000+ files no longer freeze the progress display.
+- **Success filter chip** — A "Success" chip appears alongside "All / Failed / Skipped" on both the copy log (Step 5) and report (Step 6) screens, making it easy to confirm what landed in a large run.
+
+---
+
 ## 3.1.0 — 2026-06-13
 
 ### Added

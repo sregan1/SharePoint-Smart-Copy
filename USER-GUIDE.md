@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 3.1  ·  June 2026**
+**Version 3.1.1  ·  June 2026**
 
 ---
 
@@ -198,7 +198,10 @@ Configure how the copy operation should behave:
 
 *Step 4 — Copy options and copy preview*
 
-- **Overwrite existing files** — when checked, files with matching names in the destination are replaced. When unchecked, files that already exist at the destination are skipped and recorded as Skipped in the report.
+- **Overwrite mode** — a three-way selector controlling what happens when a file already exists at the destination:
+  - **Skip existing** — files already present at the destination are left untouched and recorded as Skipped in the report.
+  - **Overwrite** — files with matching names are replaced unconditionally.
+  - **If newer** — files are copied only when the source is more recently modified than the target. Files already up to date are recorded as Skipped.
 - **Copy versions** — when checked, SharePoint version history is copied alongside each file. Requires versioning to be enabled on the source library.
 - **Parallel copies** — controls how many files (or Migration API jobs) run simultaneously. The default of 4 is a good balance; raise to 8 or 16 on a fast connection for large batches.
 
@@ -209,9 +212,9 @@ When **Copy versions** is enabled, two additional controls appear:
 - **Copy all versions** — copies the complete version history for every file.
 - **Latest N versions** — copies only the N most recent versions of each file.
 
-The **Copy mode** option controls how version metadata is preserved:
+The **Copy mode** selector is always available in Advanced options and controls how files are transferred:
 
-- **Migration API (Recommended)** — version numbers on the target exactly match the source (1.0, 2.0, 3.0…), with the correct Modified date and editor per version. Requires Site Collection Administrator on the target site. Hover the ⓘ icon for a summary.
+- **Migration API (Recommended)** — version numbers on the target exactly match the source (1.0, 2.0, 3.0…), with the correct Modified date and editor per version, and correct folder creation/modification dates. With Copy Versions off, only the current version is imported via the same fast batched path. Requires Site Collection Administrator on the target site. Hover the ⓘ icon for a summary.
 - **Enhanced REST** — correct dates and editors per version, but version numbers are 2× the source count (e.g. 2, 4, 6 for a 3-version file) due to a SharePoint REST constraint. No admin rights required. Hover the ⓘ icon for a summary.
 
 > **Note:** Choose **Migration API** when exact version numbers matter or for large batches. Choose **Enhanced REST** when you do not have Site Collection Admin rights, or for small quick copies where sequential numbering is not critical.
@@ -234,6 +237,8 @@ Each file appears in the list with its current status:
 | ❌ | Failed | An error occurred; the reason appears in the Error column |
 | ⏭ | Skipped | File already exists at the destination and Overwrite was not enabled |
 
+Use the **filter chips** (All / Success / Failed / Skipped) above the file list to focus on a subset of results — useful when copying thousands of files.
+
 Click **Cancel** to stop the copy at any time. Files already transferred remain in the destination — the operation is not rolled back. When all files are processed, the **Next →** button becomes active.
 
 ### Step 6 — Copy Report
@@ -249,7 +254,7 @@ The report screen summarises the completed copy with four summary cards:
 | Yellow — **Skipped** | Files not copied because they already existed at the destination |
 | **Duration** | Total elapsed time for the entire copy operation |
 
-The full per-file results table is shown below the summary cards. Available actions:
+The full per-file results table is shown below the summary cards. Use the **filter chips** (All / Success / Failed / Skipped) to narrow the list. Available actions:
 
 - **← Back** — returns to Step 5 (progress screen) to review the run details, or navigate further back through the wizard
 - **Export CSV** — saves the complete report to a comma-separated file

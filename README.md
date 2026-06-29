@@ -53,8 +53,14 @@ Choose from four copy scopes in a step-by-step wizard:
 
 **Files scope:**
 - Full version history — version numbers, dates, and per-version editors preserved exactly
+- Folder creation/modification dates and authors preserved on target
 - Bulk copy with 1–16 parallel operations
 - Migration API mode for high-fidelity large batches; Enhanced REST for small or quick copies
+- Migration API engages whenever selected — independent of the Copy Versions toggle
+
+**Copy log:**
+- Filter chips — All / Success / Failed / Skipped — on both the progress and report screens
+- Scales to 100,000+ files without UI freeze — batched row rendering and coalesced auto-scroll
 
 **Appearance:**
 - Light / Dark / System theme — switchable in Settings
