@@ -8,6 +8,14 @@ A free and open source Windows desktop application for copying files, libraries,
 
 ---
 
+## Download
+
+**[⬇ Download SharePointSmartCopy.exe — v3.1.1](https://github.com/sregan1/SharePoint-Smart-Copy/releases/latest)**
+
+Self-contained single-file binary for Windows. No .NET installation or extraction required. See [Installation](#installation-no-build-required) for setup steps.
+
+---
+
 ## Screenshots
 
 | | |
