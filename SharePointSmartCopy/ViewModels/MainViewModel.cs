@@ -729,6 +729,7 @@ public partial class MainViewModel : ObservableObject
                     var r = (CopyResult)o;
                     return ResultFilter switch
                     {
+                        ResultFilterKind.Success => r.Status == CopyStatus.Success,
                         ResultFilterKind.Failed  => r.Status == CopyStatus.Failed || r.PermissionStatus == CopyStatus.Failed,
                         ResultFilterKind.Skipped => r.Status == CopyStatus.Skipped,
                         _                        => true,
@@ -753,6 +754,7 @@ public partial class MainViewModel : ObservableObject
                     if (r.IsPermissionResult) return false;
                     return FileResultFilter switch
                     {
+                        ResultFilterKind.Success => r.Status == CopyStatus.Success,
                         ResultFilterKind.Failed  => r.Status == CopyStatus.Failed || r.PermissionStatus == CopyStatus.Failed,
                         ResultFilterKind.Skipped => r.Status == CopyStatus.Skipped,
                         _                        => true,
@@ -786,11 +788,46 @@ public partial class MainViewModel : ObservableObject
 
     private void PushActivity(string message)
     {
-        var ts = DateTime.Now.ToString("HH:mm:ss");
-        _activityLines.Insert(0, $"{ts}  {message}");
-        while (_activityLines.Count > 30)
+        var ts   = DateTime.Now.ToString("HH:mm:ss");
+        var line = $"{ts}  {message}";
+        _activityLines.Insert(0, line);
+        // Keep a generous window in the UI (newest-first, scrollable); the full history is on disk.
+        while (_activityLines.Count > 300)
             _activityLines.RemoveAt(_activityLines.Count - 1);
         ActivityText = string.Join("\n", _activityLines);
+
+        // Append to the on-disk log so long runs can be inspected afterwards. Best-effort: never let
+        // a logging error interrupt a copy.
+        var path = _activityLogPath;
+        if (path != null)
+        {
+            try { lock (_activityLogFileLock) System.IO.File.AppendAllText(path, line + Environment.NewLine); }
+            catch { /* ignore disk/IO errors */ }
+        }
+    }
+
+    // Full activity log written to disk for the current run (one file per copy). Surfaced in the UI
+    // so the user can open it after a long migration.
+    private string? _activityLogPath;
+    private readonly object _activityLogFileLock = new();
+    public string? ActivityLogPath
+    {
+        get => _activityLogPath;
+        private set { _activityLogPath = value; OnPropertyChanged(); }
+    }
+
+    // Creates a fresh timestamped activity-log file for a new copy run. Returns silently on failure.
+    private void StartActivityLogFile()
+    {
+        try
+        {
+            var dir = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "SharePointSmartCopy", "Logs");
+            System.IO.Directory.CreateDirectory(dir);
+            ActivityLogPath = System.IO.Path.Combine(dir, $"activity-{DateTime.Now:yyyyMMdd-HHmmss}.log");
+        }
+        catch { ActivityLogPath = null; }
     }
 
     public bool IsMetadataInProgress  => IsCopyComplete && IsUpdatingMetadata;
@@ -831,6 +868,7 @@ public partial class MainViewModel : ObservableObject
     public int SkippedCount => CopyResults.Count(r => r.Status == CopyStatus.Skipped);
 
     public int FileTotalCount   => CopyResults.Count(r => !r.IsPermissionResult);
+    public int FileSuccessCount => CopyResults.Count(r => !r.IsPermissionResult && r.Status == CopyStatus.Success);
     public int FileFailedCount  => CopyResults.Count(r => !r.IsPermissionResult && (r.Status == CopyStatus.Failed || r.PermissionStatus == CopyStatus.Failed));
     public int FileSkippedCount => CopyResults.Count(r => !r.IsPermissionResult && r.Status == CopyStatus.Skipped);
 
@@ -876,6 +914,9 @@ public partial class MainViewModel : ObservableObject
         PackedCount      = 0;
         _activityLines.Clear();
         ActivityText = "";
+        StartActivityLogFile();
+        if (ActivityLogPath != null)
+            PushActivity($"Activity log: {ActivityLogPath}");
         var onMetadataDone = new Progress<bool>(_ => IsUpdatingMetadata = false);
         var onPreflight    = new Progress<(int done, int total)>(p =>
         {
@@ -1034,6 +1075,7 @@ public partial class MainViewModel : ObservableObject
             OnPropertyChanged(nameof(FailedCount));
             OnPropertyChanged(nameof(SkippedCount));
             OnPropertyChanged(nameof(FileTotalCount));
+            OnPropertyChanged(nameof(FileSuccessCount));
             OnPropertyChanged(nameof(FileFailedCount));
             OnPropertyChanged(nameof(FileSkippedCount));
             SaveReport();
@@ -1950,6 +1992,7 @@ public partial class MainViewModel : ObservableObject
             OnPropertyChanged(nameof(FailedCount));
             OnPropertyChanged(nameof(SkippedCount));
             OnPropertyChanged(nameof(FileTotalCount));
+            OnPropertyChanged(nameof(FileSuccessCount));
             OnPropertyChanged(nameof(FileFailedCount));
             OnPropertyChanged(nameof(FileSkippedCount));
             SaveReport();
@@ -2171,8 +2214,10 @@ public partial class MainViewModel : ObservableObject
         }
 
         // Keep the filter-chip counts live while the copy runs.
+        OnPropertyChanged(nameof(SuccessCount));
         OnPropertyChanged(nameof(FailedCount));
         OnPropertyChanged(nameof(SkippedCount));
+        OnPropertyChanged(nameof(FileSuccessCount));
         OnPropertyChanged(nameof(FileFailedCount));
         OnPropertyChanged(nameof(FileSkippedCount));
     }
@@ -2183,6 +2228,7 @@ public partial class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(FailedCount));
         OnPropertyChanged(nameof(SkippedCount));
         OnPropertyChanged(nameof(FileTotalCount));
+        OnPropertyChanged(nameof(FileSuccessCount));
         OnPropertyChanged(nameof(FileFailedCount));
         OnPropertyChanged(nameof(FileSkippedCount));
     }

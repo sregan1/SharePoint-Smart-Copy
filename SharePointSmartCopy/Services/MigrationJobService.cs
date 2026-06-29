@@ -46,9 +46,10 @@ public class MigrationJobService(SharePointService spService)
         // way to 1 slot; in practice the controller finds an equilibrium just below the bandwidth
         // threshold and stays there, yielding much higher sustained throughput than a fixed gate
         // that repeatedly bursts → throttles → waits 6 s → bursts again.
-        // Soft-start at 6 slots (safely below the Graph bandwidth throttle threshold for
-        // typical SharePoint file sizes) and ramp up to maxParallel via the restore heartbeat.
-        int migrationSoftStart = Math.Min(maxParallel, 6);
+        // Soft-start at 8 slots and ramp up to maxParallel via the restore heartbeat. Raised from 6
+        // now that per-file metadata Graph calls are fetched once upfront (not per-batch during the
+        // copy), so throttling is far milder and the opening burst tolerates a higher floor.
+        int migrationSoftStart = Math.Min(maxParallel, 8);
         using var downloadController = new AdaptiveParallelismController(maxParallel, migrationSoftStart);
         void onMigrationThrottle(TimeSpan delay, int __, int ___, string? ____) =>
             downloadController.StepDown(delay);
@@ -115,6 +116,13 @@ public class MigrationJobService(SharePointService spService)
                 var sharedFolderIdCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                 sharedFolderIdCache[string.Empty] = firstJob.TargetParentItemId;
 
+                // Folder SharePoint UniqueIds (server-relative URL → GUID), resolved at most once each
+                // and shared across ALL batches. The deep folder tree repeats every batch; resolving it
+                // per batch multiplied the throttle exposure that was returning null GUIDs and breaking
+                // the manifest. Resolved resiliently (retry-until-success) so throttling slows, not fails.
+                var sharedFolderUniqueIdCache =
+                    new System.Collections.Concurrent.ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
                 // Fresh-target fast path: check (cheaply, BEFORE we create any subfolders) whether the
                 // destination is completely empty. If so, nothing can already exist, so the per-folder
                 // existing-file scan below is skipped entirely — one $top=1 call instead of O(folders)
@@ -178,19 +186,61 @@ public class MigrationJobService(SharePointService spService)
                 // This requires version counts up front: a one-time parallel "analyze" pass (memory-
                 // light — counts only). Batches then stay large in single-version regions and shrink
                 // automatically where files have many versions.
-                const int MaxVersionsPerJob = 100; // total manifest version-entries (verified ceiling 120–150)
-                const int MaxItemsPerJob    = 120; // sanity cap so single-version runs don't make huge batches
+                // CALIBRATION RESULTS (2026-06-28): the SPMI "Missing file info" ceiling is DATA-DEPENDENT
+                // (subfolder depth lowers it). On the deeply-nested SOW set (351 subfolders): 200 and 120
+                // BOTH fail every batch; the 590-file SOW subset imported clean at ~100. So 100 is the
+                // proven-safe value for deep structures. (120 was fine on flatter data — don't assume a
+                // single global number.) Keep at 100 unless re-verified on the exact target structure.
+                // The "Missing file info" failures came from the redundant standalone SPListItem objects
+                // (now omitted — see MigrationPackageBuilder.EmitStandaloneListItems), which also tripped
+                // the 100-error job-cancel threshold and forced tiny batches. With SPFile-only manifests
+                // there's no per-item list-item error, so the old 120/133/200 "ceilings" (which were that
+                // threshold, not a real SP limit) no longer apply. Raising to 200 to cut the job count for
+                // 120k; verify a clean run, then try higher (250) if it holds.
+                const int MaxVersionsPerJob = 250;
+                const int MaxItemsPerJob    = 250;
 
                 activityLog?.Report($"Analyzing {groupTasks.Count:N0} files for version-aware batching...");
                 var sizingProgress = new Progress<int>(d =>
                     activityLog?.Report($"Analyzing files for batching: {d:N0} / {groupTasks.Count:N0}"));
-                var versionCounts = await spService.FetchVersionCountsAsync(
+                // Fetch metadata + versions for the whole group ONCE, upfront, into a cache the download
+                // producer reuses — so the producer makes no Graph metadata calls during the copy (those
+                // per-batch $batch calls were being silently throttled and stalling the pipeline). This
+                // both sizes the batches (version counts) and feeds packaging. 12-wide: throttling is now
+                // mild, and any throttle here only delays the start, it can't stall a running batch.
+                var metaCache = await spService.FetchMetadataAndVersionCacheAsync(
                     groupTasks.Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
-                    maxVersionsCap: maxVersions, maxConcurrency: 12, progress: sizingProgress,
-                    ct: cancellationToken);
+                    maxConcurrency: 12, progress: sizingProgress, ct: cancellationToken);
 
-                int VersionsOf((CopyJob job, CopyResult result) t) =>
-                    versionCounts.TryGetValue(t.job.SourceItemId, out var v) ? Math.Max(1, v) : 1;
+                // Any files still missing from the cache after its retry rounds get version-counted as 1
+                // for batching, but the producer re-fetches their real versions at download time — a
+                // mismatch that could push a batch over the entry ceiling. Surface the count so it's never
+                // silent; if non-zero on a failing run, that's the lead to chase.
+                int cacheMisses = groupTasks.Count(t => !metaCache.ContainsKey(t.job.SourceItemId));
+                if (cacheMisses > 0)
+                    activityLog?.Report($"⚠ {cacheMisses:N0} file(s) missing metadata after retries — version counts may be approximate for those");
+
+                // Source folder created/modified metadata (relative path → metadata; "" = library root),
+                // so the manifest's SPFolder objects carry real dates/authors instead of a placeholder.
+                // One sample file per distinct folder identifies the source folder (its parent). Shared
+                // across all batches in this drive group.
+                // Key by the slash-trimmed path so it matches the SPFolder `relPath` keys the manifest
+                // builder uses (which come from TargetSubFolderPath.Trim('/')).
+                var folderMetaInput = groupTasks
+                    .Where(t => !string.IsNullOrEmpty(t.job.TargetSubFolderPath))
+                    .GroupBy(t => t.job.TargetSubFolderPath!.Trim('/'))
+                    .Where(g => g.Key.Length > 0)
+                    .Select(g => (folderKey: g.Key, driveId: g.First().job.SourceDriveId, sampleFileItemId: g.First().job.SourceItemId))
+                    .ToList();
+                var folderMetadata = await spService.FetchFolderMetadataAsync(
+                    groupTasks[0].job.SourceDriveId, folderMetaInput, maxConcurrency: 6, ct: cancellationToken);
+
+                int VersionsOf((CopyJob job, CopyResult result) t)
+                {
+                    if (!metaCache.TryGetValue(t.job.SourceItemId, out var c)) return 1;
+                    int raw = Math.Max(1, c.Versions?.Count ?? 1);
+                    return maxVersions > 0 ? Math.Min(raw, maxVersions) : raw;
+                }
 
                 var batches      = new List<List<(CopyJob job, CopyResult result)>>();
                 var currentBatch = new List<(CopyJob job, CopyResult result)>();
@@ -215,11 +265,14 @@ public class MigrationJobService(SharePointService spService)
                 // app-side prep time behind SharePoint import time.
                 //
                 // ── CONCURRENT IMPORTS ────────────────────────────────────────────────────────────
-                // VERIFIED: this tenant does NOT allow concurrent import jobs — MaxConcurrentImports=2
-                // reproduces the "Missing file info" soft-cancel even with a valid 120-item manifest.
-                // So the "SP soft-cancels concurrent jobs" constraint is real (not a manifest artifact).
-                // Imports MUST stay sequential; do not raise this above 1 for this tenant.
-                const int MaxConcurrentImports = 1;
+                // Concurrent import jobs DO work (the earlier "concurrency fails" result was confounded
+                // by pre-version-aware batching). Measured: 2 and 4 give the SAME wall-clock (4 slightly
+                // slower), so ~2 is the practical sweet spot. WHY 4 doesn't help is UNDETERMINED — either
+                // SharePoint's active-processing limit (~2 jobs, queueing the rest) OR our SINGLE
+                // sequential prep producer (one pipeline can't package fast enough to feed >2 imports).
+                // To tell them apart, watch the activity log at =4: if ~4 jobs import concurrently it's
+                // prep-bound (→ multiple prep producers would help); if only ~2 progress it's SP-bound.
+                const int MaxConcurrentImports = 6;
 
                 Task<PreparedBatch> Prep(int idx) => PrepareBatchAsync(
                     batches[idx], overwriteMode, maxVersions, maxParallel,
@@ -231,7 +284,10 @@ public class MigrationJobService(SharePointService spService)
                     batchLabel: batches.Count > 1 ? $"{idx + 1}/{batches.Count}" : "",
                     activityLog: activityLog,
                     onFilePacked: onFilePacked,
-                    downloadController: downloadController);
+                    downloadController: downloadController,
+                    folderUniqueIdCache: sharedFolderUniqueIdCache,
+                    folderMetadata: folderMetadata,
+                    metaCache: metaCache);
 
                 // Bounded so prep runs at most MaxConcurrentImports+1 batches ahead — keeps memory and
                 // the per-batch SAS tokens bounded (a prepared batch is just blobs-in-Azure + refs).
@@ -297,7 +353,11 @@ public class MigrationJobService(SharePointService spService)
         int CopyingCount,
         string DataUri,
         string MetadataUri,
-        byte[] EncryptionKey);
+        byte[] EncryptionKey,
+        // Maps each manifest list-item GUID → its CopyResult, so a per-item SP import error
+        // ("Missing file info for list item with id <guid>") can be attributed to the exact file
+        // and marked Failed — instead of blanket-marking the whole batch Success.
+        IReadOnlyDictionary<string, CopyResult> ListItemMap);
 
     // Phase 1 of a batch: provision containers, pre-flight, download → encrypt → upload blobs, and
     // upload the manifest. Does NOT submit the import job, so this can safely run (for batch N+1)
@@ -327,7 +387,10 @@ public class MigrationJobService(SharePointService spService)
         string batchLabel = "",
         IProgress<string>? activityLog = null,
         IProgress<int>? onFilePacked = null,
-        AdaptiveParallelismController? downloadController = null)
+        AdaptiveParallelismController? downloadController = null,
+        IReadOnlyDictionary<string, (FileMetadata Metadata, List<Microsoft.Graph.Models.DriveItemVersion>? Versions)>? metaCache = null,
+        System.Collections.Concurrent.ConcurrentDictionary<string, string>? folderUniqueIdCache = null,
+        IReadOnlyDictionary<string, FileMetadata>? folderMetadata = null)
     {
         var pfx = string.IsNullOrEmpty(batchLabel) ? "" : $"[{batchLabel}] ";
         try
@@ -467,7 +530,8 @@ public class MigrationJobService(SharePointService spService)
             if (copyingCount == 0)
             {
                 activityLog?.Report($"{pfx}All files already exist — nothing to copy");
-                return new PreparedBatch(batchLabel, fileTasks, 0, dataUri, metadataUri, encryptionKey);
+                return new PreparedBatch(batchLabel, fileTasks, 0, dataUri, metadataUri, encryptionKey,
+                    new Dictionary<string, CopyResult>());
             }
 
             System.Diagnostics.Debug.WriteLine($"[Migration] encryptionKey length={encryptionKey.Length}");
@@ -503,84 +567,102 @@ public class MigrationJobService(SharePointService spService)
 
             activityLog?.Report($"{pfx}Downloading {copyingCount:N0} files ({maxParallel} concurrent, {versionParallelism} version stream{(versionParallelism > 1 ? "s" : "")} each)...");
 
+            // Files absent from the upfront cache (metadata fetch failed under throttling) that we copy
+            // current-version-only to stay within the batch's entry budget. Reported in the batch summary.
+            int currentOnlyMisses = 0;
+
             var producerTask = Task.Run(async () =>
             {
                 try
                 {
-                    // Batch-fetch metadata + versions 10 files at a time (20 Graph sub-requests per
-                    // $batch call) for THIS batch only. Double-buffer: fire the next chunk's metadata
-                    // fetch in the background while the current chunk's files are downloading, so the
-                    // $batch round-trip is hidden inside download time. Fetching per-batch (rather than
-                    // a probe over the whole library) means packaging starts immediately.
+                    // Metadata + versions were fetched ONCE upfront into metaCache, so the producer makes
+                    // ZERO Graph metadata calls here — only content downloads. This removes the per-batch
+                    // $batch round-trips that were being silently throttled (Kiota retries the Retry-After
+                    // invisibly), which stalled a batch's last chunk and starved the import workers.
                     var copyingTasks = fileTasks.Where(t => t.result.Status == CopyStatus.Copying).ToList();
-                    var chunks = copyingTasks.Chunk(10).ToArray();
 
-                    if (chunks.Length > 0)
-                    {
-                        var prefetchTask = spService.BatchFetchMetadataAndVersionsAsync(
-                            chunks[0].Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
-                            cancellationToken);
-
-                        for (int chunkIdx = 0; chunkIdx < chunks.Length; chunkIdx++)
+                    await Parallel.ForEachAsync(copyingTasks,
+                        new ParallelOptions { MaxDegreeOfParallelism = parallelFileDownloads, CancellationToken = cancellationToken },
+                        async (taskPair, ct) =>
                         {
-                            cancellationToken.ThrowIfCancellationRequested();
-                            var batchCache = await prefetchTask;
+                            var (job, result) = taskPair;
+                            if (result.Status != CopyStatus.Copying) return;
 
-                            if (chunkIdx + 1 < chunks.Length)
-                                prefetchTask = spService.BatchFetchMetadataAndVersionsAsync(
-                                    chunks[chunkIdx + 1].Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
-                                    cancellationToken);
+                            var subPath = job.TargetSubFolderPath ?? string.Empty;
+                            var fileServerRelUrl = string.IsNullOrEmpty(subPath)
+                                ? $"{libraryServerRelUrl}/{job.SourceName}"
+                                : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
+                            existingFileIds.TryGetValue(fileServerRelUrl, out var existingFileId);
 
-                            await Parallel.ForEachAsync(chunks[chunkIdx],
-                                new ParallelOptions { MaxDegreeOfParallelism = parallelFileDownloads, CancellationToken = cancellationToken },
-                                async (taskPair, ct) =>
-                                {
-                                    var (job, result) = taskPair;
-                                    if (result.Status != CopyStatus.Copying) return;
+                            // Pull metadata/versions from the upfront cache. Single-version files cached
+                            // their Versions as null → synthesize the current-version entry here.
+                            // CACHE MISS GUARD: batching counted a missing file as 1 version, so we MUST
+                            // emit only its current version — otherwise its (uncounted) extra versions would
+                            // push the batch past the SPMI entry ceiling and fail the whole import. So a
+                            // miss also gets a synthetic single-version entry (current-only); metadata is
+                            // left null and fetched individually in DownloadFileDataAsync. This is lossless
+                            // for single-version data; for a throttle-missed multi-version file it copies
+                            // current-only (counted below and surfaced in the batch summary).
+                            FileMetadata? cachedMeta = null;
+                            List<Microsoft.Graph.Models.DriveItemVersion>? cachedVersions;
+                            if (metaCache != null && metaCache.TryGetValue(job.SourceItemId, out var cached))
+                            {
+                                cachedMeta     = cached.Metadata;
+                                cachedVersions = cached.Versions
+                                    ?? new List<Microsoft.Graph.Models.DriveItemVersion> { new Microsoft.Graph.Models.DriveItemVersion() };
+                            }
+                            else
+                            {
+                                cachedVersions = new List<Microsoft.Graph.Models.DriveItemVersion> { new Microsoft.Graph.Models.DriveItemVersion() };
+                                Interlocked.Increment(ref currentOnlyMisses);
+                            }
 
-                                    var subPath = job.TargetSubFolderPath ?? string.Empty;
-                                    var fileServerRelUrl = string.IsNullOrEmpty(subPath)
-                                        ? $"{libraryServerRelUrl}/{job.SourceName}"
-                                        : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
-                                    existingFileIds.TryGetValue(fileServerRelUrl, out var existingFileId);
-
-                                    // Acquire a global download slot — limits total concurrent Graph
-                                    // content downloads across all SPMI batches to maxParallel.
-                                    if (downloadController != null)
-                                        await downloadController.WaitAsync(ct);
-                                    try
-                                    {
-                                        batchCache.TryGetValue(job.SourceItemId, out var prefetched);
-                                        if (verbosePerFile) activityLog?.Report($"{pfx}↓ {job.SourceName}");
-                                        var data = await DownloadFileDataAsync(
-                                            job, result, maxVersions, versionParallelism, existingFileId, ct,
-                                            prefetched.Metadata, prefetched.Versions,
-                                            copyCustomColumns, columnMappings, bulkFieldCache,
-                                            pfxLabel: pfx, activityLog: activityLog);
-                                        await pipe.Writer.WriteAsync(data, ct);
-                                    }
-                                    catch (OperationCanceledException) { throw; }
-                                    catch (Exception ex)
-                                    {
-                                        result.Status       = CopyStatus.Failed;
-                                        result.ErrorMessage = $"Download failed: {ex.Message}";
-                                    }
-                                    finally
-                                    {
-                                        downloadController?.Release();
-                                    }
-                                });
-                        }
-                    }
+                            // Acquire a global download slot — limits total concurrent Graph
+                            // content downloads across all SPMI batches to maxParallel.
+                            if (downloadController != null)
+                                await downloadController.WaitAsync(ct);
+                            try
+                            {
+                                if (verbosePerFile) activityLog?.Report($"{pfx}↓ {job.SourceName}");
+                                var data = await DownloadFileDataAsync(
+                                    job, result, maxVersions, versionParallelism, existingFileId, ct,
+                                    cachedMeta, cachedVersions,
+                                    copyCustomColumns, columnMappings, bulkFieldCache,
+                                    pfxLabel: pfx, activityLog: activityLog);
+                                await pipe.Writer.WriteAsync(data, ct);
+                            }
+                            catch (OperationCanceledException) { throw; }
+                            catch (Exception ex)
+                            {
+                                result.Status       = CopyStatus.Failed;
+                                result.ErrorMessage = $"Download failed: {ex.Message}";
+                            }
+                            finally
+                            {
+                                downloadController?.Release();
+                            }
+                        });
                 }
                 finally { pipe.Writer.Complete(); }
             }, cancellationToken);
 
             int packedInBatch = 0;
+            // Upload blobs in parallel ACROSS files (bounded), not one file at a time. Awaiting each
+            // file's upload before pulling the next made the upload stage serial across files — the
+            // dominant prep bottleneck for libraries of many small files. Encryption stays sequential
+            // in this consumer (builder.Files isn't thread-safe and AES is cheap); only the network
+            // upload is parallelized. The gate bounds how many files' encrypted bytes are held at once.
+            int uploadConcurrency = Math.Max(2, Math.Min(16, maxParallel));
+            using var uploadGate  = new SemaphoreSlim(uploadConcurrency);
+            var uploadTasks       = new List<Task>();
+
+            // GUID → CopyResult, built as files are added, so per-item SP import errors can be
+            // attributed back to the exact file. Written only in this sequential consumer loop.
+            var listItemMap = new Dictionary<string, CopyResult>(StringComparer.OrdinalIgnoreCase);
+
             await foreach (var data in pipe.Reader.ReadAllAsync(cancellationToken))
             {
                 int filesBefore = builder.Files.Count;
-                if (verbosePerFile) activityLog?.Report($"{pfx}↑ {data.Job.SourceName} ({data.Versions.Count} version{(data.Versions.Count == 1 ? "" : "s")})");
                 try
                 {
                     var versionStreams = data.Slots
@@ -592,42 +674,51 @@ public class MigrationJobService(SharePointService spService)
                     await builder.AddFileAsync(data.Job.SourceName, data.FolderRelPath, data.Metadata,
                         versionStreams, data.ExistingFileId, data.CustomFields);
 
-                    // Versions are now encrypted. Free the original downloaded buffers immediately
-                    // so only the encrypted bytes remain in memory during uploads — not both.
-                    foreach (var ms in data.Slots) ms?.Dispose();
-                    for (int si = 0; si < data.Slots.Length; si++) data.Slots[si] = null;
-
-                    // Upload this file's version blobs now, then release the encrypted bytes.
-                    var fileEntry = builder.Files[^1];
-                    await Parallel.ForEachAsync(
-                        fileEntry.Versions,
-                        // Upload version blobs wide — Azure block-blob PUT handles high concurrency, and
-                        // halving maxParallel here was an unnecessary ceiling on the upload stage.
-                        new ParallelOptions { MaxDegreeOfParallelism = Math.Max(2, Math.Min(8, maxParallel)), CancellationToken = cancellationToken },
-                        async (version, ct) =>
+                    // Hand this file's blob upload off to run concurrently with other files' uploads.
+                    var entry      = builder.Files[^1];
+                    var dataResult = data.Result;
+                    listItemMap[entry.ListItemId] = dataResult; // for per-item import-error attribution
+                    var versCount  = data.Versions.Count;
+                    var fileName   = data.Job.SourceName;
+                    await uploadGate.WaitAsync(cancellationToken); // back-pressure: cap in-flight uploads
+                    uploadTasks.Add(Task.Run(async () =>
+                    {
+                        try
                         {
-                            var content = version.EncryptedContent
-                                ?? throw new InvalidOperationException("Encrypted content already released.");
-                            var ivB64 = Convert.ToBase64String(content[..16]);
-                            var opts  = new BlobUploadOptions { Metadata = new Dictionary<string, string> { ["IV"] = ivB64 } };
-                            using var ms = new MemoryStream(content, 16, content.Length - 16);
-                            var blob = dataClient.GetBlobClient(version.StreamId);
-                            await blob.UploadAsync(ms, opts, ct);
-                            await blob.CreateSnapshotAsync(cancellationToken: ct);
-                            version.EncryptedContent = null;
-                        });
-
-                    data.Result.VersionsCopied = data.Versions.Count;
-                    onFilePacked?.Report(1);
-                    int n = ++packedInBatch;
-                    if (!verbosePerFile && (n == 1 || n % milestoneStep == 0 || n == copyingCount))
-                        activityLog?.Report($"{pfx}{n:N0} / {copyingCount:N0} files packaged");
+                            // Versions within a file upload sequentially; cross-file concurrency comes
+                            // from the gate, so total concurrent blob PUTs stay ~uploadConcurrency.
+                            foreach (var version in entry.Versions)
+                            {
+                                var content = version.EncryptedContent
+                                    ?? throw new InvalidOperationException("Encrypted content already released.");
+                                var ivB64 = Convert.ToBase64String(content[..16]);
+                                var opts  = new BlobUploadOptions { Metadata = new Dictionary<string, string> { ["IV"] = ivB64 } };
+                                using var ms = new MemoryStream(content, 16, content.Length - 16);
+                                var blob = dataClient.GetBlobClient(version.StreamId);
+                                await blob.UploadAsync(ms, opts, cancellationToken);
+                                await blob.CreateSnapshotAsync(cancellationToken: cancellationToken);
+                                version.EncryptedContent = null;
+                            }
+                            dataResult.VersionsCopied = versCount;
+                            onFilePacked?.Report(1);
+                            int n = Interlocked.Increment(ref packedInBatch);
+                            if (!verbosePerFile && (n == 1 || n % milestoneStep == 0 || n == copyingCount))
+                                activityLog?.Report($"{pfx}{n:N0} / {copyingCount:N0} files packaged");
+                        }
+                        catch (Exception ex) when (ex is not OperationCanceledException)
+                        {
+                            entry.Failed = true; // exclude from manifest — its blobs weren't all uploaded
+                            dataResult.Status       = CopyStatus.Failed;
+                            dataResult.ErrorMessage = $"Upload failed ({fileName}): {ex.Message}";
+                        }
+                        finally { uploadGate.Release(); }
+                    }, cancellationToken));
                 }
                 catch (OperationCanceledException) { throw; }
                 catch (Exception ex)
                 {
-                    // Drop the partially-added entry so the manifest never references
-                    // blobs that were not uploaded.
+                    // AddFileAsync (encrypt) failed — the entry is the last added, so RemoveLastFile is
+                    // still correct here (this runs serially, before any upload task for this file).
                     if (builder.Files.Count > filesBefore)
                         builder.RemoveLastFile();
                     data.Result.Status       = CopyStatus.Failed;
@@ -635,19 +726,26 @@ public class MigrationJobService(SharePointService spService)
                 }
                 finally
                 {
-                    foreach (var ms in data.Slots)
-                        ms?.Dispose();
+                    // Encryption is done (or failed) — free the original download buffers now.
+                    foreach (var ms in data.Slots) ms?.Dispose();
                 }
             }
 
             await producerTask;
+            await Task.WhenAll(uploadTasks); // all blobs uploaded before the manifest is built
 
             // Step 5: upload manifest XML blobs to the metadata container.
             // Fetch the root folder GUID so the manifest can include an explicit SPFolder entry.
             // This is required for newly created empty libraries — without it SPMI cannot resolve
             // the parent folder for files and fails with "Missing file info for list item".
-            var rootFolderGuid = await spService.GetLibraryRootFolderUniqueIdAsync(
-                targetSiteUrl, libraryServerRelUrl);
+            var rootFolderGuid = await GetCachedFolderUniqueIdAsync(
+                folderUniqueIdCache, targetSiteUrl, libraryServerRelUrl, cancellationToken);
+            // A null root-folder GUID makes SPMI reject EVERY list item in the batch with the cryptic
+            // "Missing file info for list item". Under heavy throttling the underlying REST call can
+            // exhaust its retries and return null — so fail the batch CLEARLY and re-queueably rather
+            // than submitting a manifest that's guaranteed to fail 100% with an opaque error.
+            if (string.IsNullOrEmpty(rootFolderGuid))
+                throw new Exception("Could not resolve target library root folder ID — SharePoint throttling exhausted retries. Batch not submitted; re-run (ideally off-peak).");
 
             // Resolve the real target GUID of every nested subfolder (and all ancestor folders) so the
             // manifest can declare an SPFolder object for each. SP requires every SPFile to be preceded
@@ -667,16 +765,25 @@ public class MigrationJobService(SharePointService spService)
             }
             if (allFolderPaths.Count > 0)
             {
-                var libRel    = libraryServerRelUrl.TrimEnd('/');
-                var guidLock  = new object();
+                var libRel       = libraryServerRelUrl.TrimEnd('/');
+                var guidLock     = new object();
+                var unresolved   = new List<string>();
                 await Parallel.ForEachAsync(allFolderPaths,
-                    new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
+                    new ParallelOptions { MaxDegreeOfParallelism = 6, CancellationToken = cancellationToken },
                     async (path, ct) =>
                     {
-                        var guid = await spService.GetLibraryRootFolderUniqueIdAsync(targetSiteUrl, $"{libRel}/{path}");
+                        var guid = await GetCachedFolderUniqueIdAsync(folderUniqueIdCache, targetSiteUrl, $"{libRel}/{path}", ct);
                         if (!string.IsNullOrEmpty(guid))
-                            lock (guidLock) folderGuids[path] = guid;
+                            lock (guidLock) folderGuids[path] = guid!;
+                        else
+                            lock (guidLock) unresolved.Add(path);
                     });
+
+                // A subfolder whose GUID we couldn't resolve makes SPMI reject every file under it with
+                // "Missing file info for list item". Rather than submit a manifest that's partly broken,
+                // fail the whole batch clearly so it can be re-run (off-peak) intact.
+                if (unresolved.Count > 0)
+                    throw new Exception($"Could not resolve {unresolved.Count} target subfolder ID(s) — SharePoint throttling exhausted retries (e.g. '{unresolved[0]}'). Batch not submitted; re-run (ideally off-peak).");
             }
 
             // IfNewer behaves like overwrite from SPMI's perspective: stale targets were
@@ -692,7 +799,7 @@ public class MigrationJobService(SharePointService spService)
             var manifests = builder.BuildManifestXml(
                 siteId, webId, listId,
                 targetSiteUrl, webRelUrl, libraryTitle, libraryServerRelUrl,
-                spmiOverwrite, rootFolderGuid, folderGuids);
+                spmiOverwrite, rootFolderGuid, folderGuids, folderMetadata);
 
             foreach (var (blobName, data) in manifests)
             {
@@ -706,8 +813,10 @@ public class MigrationJobService(SharePointService spService)
                 await metaBlob.CreateSnapshotAsync(cancellationToken: cancellationToken);
             }
 
+            if (currentOnlyMisses > 0)
+                activityLog?.Report($"⚠ {pfx}{currentOnlyMisses:N0} file(s) copied current-version-only (metadata unavailable under throttling; lossless for single-version files)");
             activityLog?.Report($"{pfx}Packaged {copyingCount:N0} file{(copyingCount == 1 ? "" : "s")} — ready to import");
-            return new PreparedBatch(batchLabel, fileTasks, copyingCount, dataUri, metadataUri, encryptionKey);
+            return new PreparedBatch(batchLabel, fileTasks, copyingCount, dataUri, metadataUri, encryptionKey, listItemMap);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -727,7 +836,8 @@ public class MigrationJobService(SharePointService spService)
         }
         // Prep failed (or was cancelled): return a sentinel with nothing to submit so the pipeline
         // skips the import for this batch and continues with the rest.
-        return new PreparedBatch(batchLabel, fileTasks, 0, string.Empty, string.Empty, Array.Empty<byte>());
+        return new PreparedBatch(batchLabel, fileTasks, 0, string.Empty, string.Empty, Array.Empty<byte>(),
+            new Dictionary<string, CopyResult>());
     }
 
     // Phase 2 of a batch: submit the import job and poll to completion. This is the ONLY phase that
@@ -751,9 +861,14 @@ public class MigrationJobService(SharePointService spService)
             System.Diagnostics.Debug.WriteLine($"[Migration] submitted job: {jobId}");
             activityLog?.Report($"{pfx}Submitted to SharePoint — waiting for import...");
 
-            // Step 7: poll until JobEnd
-            string? jobError = null;
-            bool seenJobStart = false;
+            // Step 7: poll until JobEnd. Attribute each per-item error to its exact file via the
+            // list-item GUID in the message, so we can mark only the truly-failed files (not the
+            // whole batch) and report an honest imported/failed count.
+            bool   fatal          = false;
+            string? fatalMsg      = null;
+            bool   seenJobStart   = false;
+            int    liveErrorCount = 0; // per-item errors surfaced live so failures show as they happen
+            int    totalErrorsReported = 0;
             await foreach (var evt in spService.PollMigrationJobAsync(targetSiteUrl, jobId, cancellationToken))
             {
                 if (evt.TryGetProperty("Event", out var evtName))
@@ -773,44 +888,79 @@ public class MigrationJobService(SharePointService spService)
                     if (name == "JobEnd")
                     {
                         if (evt.TryGetProperty("TotalErrors", out var te) &&
-                            te.ValueKind == JsonValueKind.Number && te.GetInt32() > 0)
-                            jobError = $"Migration job completed with {te.GetInt32()} error(s).";
+                            te.ValueKind == JsonValueKind.Number)
+                            totalErrorsReported = te.GetInt32();
                         break;
                     }
                     if (name == "JobFatalError")
                     {
-                        var msg = evt.TryGetProperty("Message", out var m) ? m.GetString() : "Unknown error";
-                        activityLog?.Report($"⚠ {pfx}Fatal error: {msg}");
+                        fatalMsg = evt.TryGetProperty("Message", out var m) ? m.GetString() : "Unknown error";
+                        activityLog?.Report($"⚠ {pfx}Fatal error: {fatalMsg}");
                         // Log the full SP event — may contain an error code or richer reason
-                        // beyond Message (e.g. "Operation canceled" can mean concurrent-job limit,
-                        // SAS expiry, bad manifest, etc.)
+                        // (e.g. "Operation canceled" can mean concurrent-job limit, SAS expiry, bad manifest).
                         activityLog?.Report($"  SP event: {evt}");
-                        jobError = $"Migration job fatal error: {msg}";
+                        fatal = true;
                     }
                     else if (name == "JobError")
                     {
                         var msg = evt.TryGetProperty("Message", out var m) ? m.GetString() : "Unknown error";
-                        System.Diagnostics.Debug.WriteLine($"[Migration] non-fatal JobError: {msg}");
+                        liveErrorCount++;
+                        // Attribute to the exact file when the message carries its list-item GUID, and
+                        // mark that file Failed so it shows in the Failed filter and can be re-copied.
+                        var guid = ExtractGuid(msg);
+                        if (guid != null && batch.ListItemMap.TryGetValue(guid, out var failedRes)
+                            && failedRes.Status == CopyStatus.Copying)
+                        {
+                            failedRes.Status       = CopyStatus.Failed;
+                            failedRes.ErrorMessage = msg;
+                        }
+                        // Surface the first handful LIVE (as SP reports them) so a failing batch is
+                        // visible immediately; suppress the rest to avoid flooding the feed.
+                        if (liveErrorCount <= 5)
+                            activityLog?.Report($"⚠ {pfx}import error {liveErrorCount}: {msg}");
+                        else if (liveErrorCount == 6)
+                            activityLog?.Report($"⚠ {pfx}…more errors this batch (suppressing; see batch summary)");
+                        System.Diagnostics.Debug.WriteLine($"[Migration] JobError #{liveErrorCount}: {msg}");
                     }
                 }
             }
 
-            var importedCount = fileTasks.Count(t => t.result.Status == CopyStatus.Copying);
-            if (jobError == null)
-                activityLog?.Report($"{pfx}✓ Import complete — {importedCount} file{(importedCount == 1 ? "" : "s")} imported");
-            else
-                activityLog?.Report($"⚠ {pfx}Import finished with errors: {jobError}");
-
-            _ = TryLogMigrationReportAsync(metadataClient, jobId, batch.EncryptionKey);
-
-            // Step 8: mark results
+            // Step 8: mark results accurately. Files already Failed (attributed above, or upload failures)
+            // stay Failed; on a fatal abort every not-yet-succeeded file fails; otherwise the rest succeeded.
             foreach (var (_, result) in fileTasks)
             {
-                if (result.Status == CopyStatus.Copying)
+                if (result.Status != CopyStatus.Copying) continue; // already Failed/Skipped
+                if (fatal)
                 {
-                    result.Status = jobError == null ? CopyStatus.Success : CopyStatus.Failed;
-                    if (jobError != null) result.ErrorMessage ??= jobError;
+                    result.Status       = CopyStatus.Failed;
+                    result.ErrorMessage ??= fatalMsg ?? "Migration job fatal error";
                 }
+                else
+                {
+                    result.Status = CopyStatus.Success;
+                }
+            }
+
+            int failedCount   = fileTasks.Count(t => t.result.Status == CopyStatus.Failed);
+            int importedCount = Math.Max(0, batch.CopyingCount - failedCount);
+
+            if (fatal)
+            {
+                activityLog?.Report($"✗ {pfx}Import FAILED (fatal abort) — {importedCount} of {batch.CopyingCount} imported, {failedCount} failed");
+                await TryLogMigrationReportAsync(metadataClient, jobId, batch.EncryptionKey, activityLog, pfx);
+            }
+            else if (failedCount > 0 || liveErrorCount > 0 || totalErrorsReported > 0)
+            {
+                // Reconcile counts: if SP/JobError reported more errors than we could attribute to a
+                // specific GUID, surface the discrepancy so a silent shortfall is never hidden.
+                int reported = Math.Max(failedCount, Math.Max(liveErrorCount, totalErrorsReported));
+                var extra = reported > failedCount ? $" ({reported} errors reported, {failedCount} attributed)" : "";
+                activityLog?.Report($"⚠ {pfx}Import finished with errors — {importedCount} of {batch.CopyingCount} imported, {failedCount} failed{extra}");
+                await TryLogMigrationReportAsync(metadataClient, jobId, batch.EncryptionKey, activityLog, pfx);
+            }
+            else
+            {
+                activityLog?.Report($"{pfx}✓ Import complete — {importedCount} file{(importedCount == 1 ? "" : "s")} imported");
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -859,14 +1009,23 @@ public class MigrationJobService(SharePointService spService)
         FileMetadata metadata;
         List<Microsoft.Graph.Models.DriveItemVersion> allVersions;
 
+        // Metadata and versions are resolved INDEPENDENTLY: the producer may supply versions (even a
+        // synthetic current-only list for a cache-miss file, to keep the batch within its entry budget)
+        // while leaving metadata null so it's fetched here. Only fetch what wasn't supplied.
         if (prefetchedMetadata != null && prefetchedVersions != null)
         {
             metadata    = prefetchedMetadata;
             allVersions = prefetchedVersions;
         }
+        else if (prefetchedVersions != null)
+        {
+            // Versions supplied (e.g. current-only for a cache miss); fetch just the metadata.
+            metadata    = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
+            allVersions = prefetchedVersions;
+        }
         else
         {
-            // Batch fetch missed this item — fall back to individual Graph calls.
+            // Nothing prefetched — fall back to individual Graph calls for both.
             var metaTask     = spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
             var versionsTask = spService.GetVersionsAsync(job.SourceDriveId, job.SourceItemId);
             await Task.WhenAll(metaTask, versionsTask);
@@ -888,8 +1047,13 @@ public class MigrationJobService(SharePointService spService)
             async (idx, _) =>
             {
                 var version = versions[idx];
-                if (version.Id == null) return;
                 bool isLast = idx == versions.Count - 1;
+                // Historical (non-current) versions need their own id to download. The current version
+                // (isLast) is fetched from the file's current content and needs no id — so a null id is
+                // fine there. This is the case for the synthetic single-version entry produced when the
+                // /versions list is skipped for a known single-version file; skipping it here (as the old
+                // unconditional guard did) left its content slot null → empty Versions → IndexOutOfRange.
+                if (!isLast && version.Id == null) return;
                 var ms = new MemoryStream();
                 for (int attempt = 0; ; attempt++)
                 {
@@ -898,7 +1062,7 @@ public class MigrationJobService(SharePointService spService)
                     {
                         var networkStream = isLast
                             ? await spService.DownloadFileAsync(job.SourceDriveId, job.SourceItemId)
-                            : await spService.DownloadVersionAsync(job.SourceDriveId, job.SourceItemId, version.Id);
+                            : await spService.DownloadVersionAsync(job.SourceDriveId, job.SourceItemId, version.Id!);
                         await using (networkStream)
                             await networkStream.CopyToAsync(ms, ct);
                         ms.Position = 0;
@@ -957,8 +1121,58 @@ public class MigrationJobService(SharePointService spService)
             metadata, versions, slots, customFields);
     }
 
+    // Resolves a folder's SharePoint UniqueId, retrying when the call comes back empty. The underlying
+    // REST sender already retries 429s a few times, but under heavy sustained throttling it can exhaust
+    // those and return null — and a null folder GUID silently breaks the manifest's file→folder linkage
+    // (SPMI then rejects every affected list item with "Missing file info"). These GUIDs are
+    // manifest-critical, so retry harder (riding out throttle windows) before giving up.
+    private async Task<string?> ResolveFolderUniqueIdResilientAsync(
+        string siteUrl, string folderServerRelativeUrl, CancellationToken ct)
+    {
+        // The folder was already provisioned, so a null result here is a transient throttle, not a real
+        // 404 — keep retrying (with backoff, on top of the REST sender's own 429 waits) until it returns.
+        const int maxAttempts = 10;
+        for (int attempt = 0; attempt < maxAttempts; attempt++)
+        {
+            ct.ThrowIfCancellationRequested();
+            var guid = await spService.GetLibraryRootFolderUniqueIdAsync(siteUrl, folderServerRelativeUrl);
+            if (!string.IsNullOrEmpty(guid)) return guid;
+            if (attempt < maxAttempts - 1)
+                await Task.Delay(TimeSpan.FromSeconds(Math.Min(30, 5 * (attempt + 1))), ct);
+        }
+        return null;
+    }
+
+    // Resolves a folder's UniqueId through a cross-batch cache so each folder is resolved at most once
+    // for the whole copy (the deep folder tree repeats across all 40+ batches; re-resolving it per batch
+    // multiplied the throttle exposure). cacheKey is the folder's server-relative URL.
+    private async Task<string?> GetCachedFolderUniqueIdAsync(
+        System.Collections.Concurrent.ConcurrentDictionary<string, string>? cache,
+        string siteUrl, string folderServerRelativeUrl, CancellationToken ct)
+    {
+        if (cache != null && cache.TryGetValue(folderServerRelativeUrl, out var cached))
+            return cached;
+        var guid = await ResolveFolderUniqueIdResilientAsync(siteUrl, folderServerRelativeUrl, ct);
+        if (!string.IsNullOrEmpty(guid) && cache != null)
+            cache[folderServerRelativeUrl] = guid!;
+        return guid;
+    }
+
+    // Matches a standard GUID anywhere in a string (e.g. the list-item id in an SP import error).
+    private static readonly System.Text.RegularExpressions.Regex GuidRegex = new(
+        @"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+        System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    private static string? ExtractGuid(string? text)
+    {
+        if (string.IsNullOrEmpty(text)) return null;
+        var m = GuidRegex.Match(text);
+        return m.Success ? m.Value : null;
+    }
+
     private static async Task TryLogMigrationReportAsync(
-        Azure.Storage.Blobs.BlobContainerClient metadataClient, string jobId, byte[] key)
+        Azure.Storage.Blobs.BlobContainerClient metadataClient, string jobId, byte[] key,
+        IProgress<string>? activityLog = null, string? pfx = null)
     {
         foreach (var suffix in new[] { ".err", ".log" })
         {
@@ -1000,7 +1214,18 @@ public class MigrationJobService(SharePointService spService)
                     plain = cipherBytes;
                 }
 
-                System.Diagnostics.Debug.WriteLine($"[SP-{suffix[1..]}] {System.Text.Encoding.UTF8.GetString(plain)}");
+                var reportText = System.Text.Encoding.UTF8.GetString(plain);
+                System.Diagnostics.Debug.WriteLine($"[SP-{suffix[1..]}] {reportText}");
+
+                // Surface the first few lines of SP's .err report into the activity feed so the actual
+                // failure reason is visible to the user immediately (not just in VS Debug Output).
+                if (activityLog != null && suffix == ".err")
+                {
+                    var lines = reportText.Split('\n')
+                        .Select(l => l.Trim()).Where(l => l.Length > 0).Take(5).ToList();
+                    foreach (var line in lines)
+                        activityLog.Report($"   {pfx}SP: {line}");
+                }
             }
             catch (Exception ex)
             {

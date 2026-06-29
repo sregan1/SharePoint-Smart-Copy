@@ -56,8 +56,13 @@ public class SharePointService
     // parent folder for files in newly created empty libraries ("Missing file info" error).
     public async Task<string?> GetLibraryRootFolderUniqueIdAsync(string siteUrl, string libraryServerRelativeUrl)
     {
-        var encoded = Uri.EscapeDataString($"'{libraryServerRelativeUrl}'");
-        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFolderByServerRelativeUrl({encoded})?$select=UniqueId";
+        // Use GetFolderByServerRelativePath(decodedurl=...) instead of ...ByServerRelativeUrl(...):
+        // the Url variant mishandles special characters in folder names (e.g. '#' in "SOW#3", '%',
+        // '&') and returns 404 for them, which then failed the whole batch's manifest with the
+        // "Could not resolve target subfolder ID" guard. The Path/decodedurl variant resolves them
+        // correctly. Single quotes are OData-escaped (doubled), then the literal is URL-encoded.
+        var odataLiteral = libraryServerRelativeUrl.Replace("'", "''");
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFolderByServerRelativePath(decodedurl='{Uri.EscapeDataString(odataLiteral)}')?$select=UniqueId";
         try
         {
             using var response = await SendSharePointRequestAsync(token =>
@@ -278,25 +283,32 @@ public class SharePointService
     private const string GraphBaseUrl = "https://graph.microsoft.com/v1.0";
 
     // Fetches metadata and the full version list for each item using Graph $batch
-    // (20 sub-requests per call: 1 metadata + 1 versions list per item, 10 items/batch).
+    // (up to 20 sub-requests per call: 1 metadata + 1 versions list per item, 10 items/batch).
     // Items absent from the result failed their sub-request; callers should fall back
     // to individual GetFileMetadataAsync / GetVersionsAsync calls for those items.
+    //
+    // multiVersionItemIds: when supplied, the per-file /versions sub-request is issued ONLY for items
+    // in this set (those an upstream analyze pass already counted as having >1 version). Single-version
+    // files — the bulk of typical libraries — get a metadata-only fetch (1 sub-request instead of 2)
+    // and a synthetic single current-version entry, roughly HALVING Graph request volume here and
+    // sharply reducing throttling. Pass null to fetch versions for every item (the fallback path).
     public async Task<Dictionary<string, (FileMetadata Metadata, List<DriveItemVersion> Versions)>>
         BatchFetchMetadataAndVersionsAsync(
             IReadOnlyList<(string driveId, string itemId)> items,
-            CancellationToken ct = default)
+            CancellationToken ct = default,
+            IReadOnlySet<string>? multiVersionItemIds = null)
     {
         var result = new Dictionary<string, (FileMetadata, List<DriveItemVersion>)>();
         if (items.Count == 0) return result;
 
-        // 2 Graph requests per file (metadata + versions); Graph batch cap is 20 → 10 files/call.
+        // Up to 2 Graph requests per file (metadata + versions); Graph batch cap is 20 → 10 files/call.
         const int ItemsPerBatch = 10;
 
         foreach (var chunk in items.Chunk(ItemsPerBatch))
         {
             ct.ThrowIfCancellationRequested();
             await _batchGate.WaitAsync(ct);
-            try { await FetchBatchChunkAsync(chunk, result, ct); }
+            try { await FetchBatchChunkAsync(chunk, result, ct, multiVersionItemIds); }
             catch (OperationCanceledException) { throw; }
             catch { /* chunk failed; items absent from result, caller falls back */ }
             finally { _batchGate.Release(); }
@@ -306,10 +318,11 @@ public class SharePointService
     }
 
     // Fetches ONLY the version count per item (capped at maxVersionsCap), in PARALLEL and
-    // memory-light: the heavy version/metadata objects are discarded immediately after counting, so
-    // only one small int per file persists. Used to size version-aware migration batches over a whole
-    // library (tens/hundreds of thousands of files) without holding all metadata in memory. Items
-    // whose sub-request fails default to a count of 1.
+    // memory-light: the heavy version objects are discarded immediately after counting, so only one
+    // small int per file persists. Issues just the /versions sub-request (no metadata round-trip —
+    // this pass doesn't use metadata), halving its Graph footprint vs a full metadata+versions fetch.
+    // Used to size version-aware migration batches over a whole library (tens/hundreds of thousands of
+    // files) without holding all metadata in memory. Items whose sub-request fails default to a count of 1.
     public async Task<Dictionary<string, int>> FetchVersionCountsAsync(
         IReadOnlyList<(string driveId, string itemId)> items,
         int maxVersionsCap,
@@ -320,7 +333,8 @@ public class SharePointService
         var counts = new System.Collections.Concurrent.ConcurrentDictionary<string, int>();
         if (items.Count == 0) return new Dictionary<string, int>();
 
-        const int ItemsPerBatch = 10; // Graph $batch cap is 20 sub-requests = 10 files (meta + versions)
+        // Versions-only here → 1 sub-request per file, so the 20-sub-request $batch cap allows 20 files.
+        const int ItemsPerBatch = 20;
         var chunks = items.Chunk(ItemsPerBatch).ToList();
 
         int done = 0, lastReported = 0;
@@ -331,7 +345,7 @@ public class SharePointService
             async (chunk, c) =>
             {
                 var local = new Dictionary<string, (FileMetadata, List<DriveItemVersion>)>();
-                try { await FetchBatchChunkAsync(chunk, local, c); }
+                try { await FetchBatchChunkAsync(chunk, local, c, versionsOnly: true); }
                 catch (OperationCanceledException) { throw; }
                 catch { /* items absent → counted as 1 by the caller's fallback */ }
                 foreach (var kv in local)
@@ -349,28 +363,113 @@ public class SharePointService
         return new Dictionary<string, int>(counts);
     }
 
+    // Fetches metadata + versions for every item ONCE, in PARALLEL, into a reusable cache the download
+    // producer consumes directly — so the producer makes zero Graph metadata calls during the copy
+    // (those per-batch $batch calls were being silently throttled by Kiota's retry handler and stalling
+    // the pipeline). Memory-light at scale: single-version files (the bulk of a typical library) keep
+    // their metadata but DROP the version objects (Versions stored as null; the producer synthesizes a
+    // current-version entry), so only multi-version files retain version lists. Items whose sub-request
+    // failed are absent → the producer falls back to individual Graph calls for them. Misses are
+    // RETRIED (a transient throttle can drop a sub-request); an incomplete cache would under-count a
+    // file's versions, and that file's batch could then exceed the SPMI entry ceiling and fail import.
+    public async Task<Dictionary<string, (FileMetadata Metadata, List<DriveItemVersion>? Versions)>>
+        FetchMetadataAndVersionCacheAsync(
+            IReadOnlyList<(string driveId, string itemId)> items,
+            int maxConcurrency,
+            IProgress<int>? progress = null,
+            CancellationToken ct = default)
+    {
+        var cache = new System.Collections.Concurrent.ConcurrentDictionary<string, (FileMetadata, List<DriveItemVersion>?)>();
+        if (items.Count == 0) return new Dictionary<string, (FileMetadata, List<DriveItemVersion>?)>();
+
+        const int ItemsPerBatch = 10; // metadata + versions = 2 sub-requests/file → 10 files per $batch
+
+        int done = 0, lastReported = 0;
+        var reportLock = new object();
+
+        async Task RunPassAsync(IReadOnlyList<(string driveId, string itemId)> toFetch, int concurrency, bool reportProgress)
+        {
+            await Parallel.ForEachAsync(toFetch.Chunk(ItemsPerBatch),
+                new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, concurrency), CancellationToken = ct },
+                async (chunk, c) =>
+                {
+                    var local = new Dictionary<string, (FileMetadata, List<DriveItemVersion>)>();
+                    try { await FetchBatchChunkAsync(chunk, local, c); }
+                    catch (OperationCanceledException) { throw; }
+                    catch { /* items absent → retried below, then producer falls back if still missing */ }
+                    foreach (var kv in local)
+                    {
+                        var versions = kv.Value.Item2;
+                        // Single-version → keep metadata, drop the version object (producer synthesizes it).
+                        cache[kv.Key] = versions.Count <= 1
+                            ? (kv.Value.Item1, (List<DriveItemVersion>?)null)
+                            : (kv.Value.Item1, versions);
+                    }
+                    if (reportProgress)
+                    {
+                        int d = Interlocked.Add(ref done, chunk.Length);
+                        lock (reportLock)
+                        {
+                            if (d - lastReported >= 500 || d == items.Count) { lastReported = d; progress?.Report(d); }
+                        }
+                    }
+                });
+        }
+
+        // First pass at full concurrency.
+        await RunPassAsync(items, maxConcurrency, reportProgress: true);
+
+        // Retry rounds for any item the first pass missed (transient throttle), at halved concurrency
+        // to stay gentler on the already-pressured Graph budget. A handful of rounds closes the gap.
+        for (int round = 0; round < 3; round++)
+        {
+            var missing = items.Where(i => !cache.ContainsKey(i.itemId)).ToList();
+            if (missing.Count == 0) break;
+            await RunPassAsync(missing, Math.Max(1, maxConcurrency / 2), reportProgress: false);
+        }
+
+        return new Dictionary<string, (FileMetadata, List<DriveItemVersion>?)>(cache);
+    }
+
     private async Task FetchBatchChunkAsync(
         (string driveId, string itemId)[] chunk,
         Dictionary<string, (FileMetadata, List<DriveItemVersion>)> result,
-        CancellationToken ct)
+        CancellationToken ct,
+        IReadOnlySet<string>? multiVersionItemIds = null,
+        bool versionsOnly = false)
     {
         // BatchRequestContentCollection is the current recommended API (BatchRequestContent is obsolete).
-        // Graph enforces a 20-sub-request cap; we send exactly 2 per file and cap chunks at 10 files.
+        // Graph enforces a 20-sub-request cap; we send 1 or 2 sub-requests per file and cap chunks at 10
+        // files, so a chunk is always ≤ 20 sub-requests.
+        //   versionsOnly = true  → only the /versions call (the analyze/sizing pass needs counts, not
+        //                          metadata it would discard); skips the metadata round-trip per file.
+        //   multiVersionItemIds  → in the download pass, only fetch /versions for items known to have
+        //                          >1 version; single-version files get metadata-only.
         var batch = new BatchRequestContentCollection(Graph);
 
         // AddBatchRequestStep(HttpRequestMessage) auto-assigns a request ID and returns it.
-        var metaIds = new string[chunk.Length];
-        var versIds = new string[chunk.Length];
+        // A null id means that sub-request was deliberately not issued for this item.
+        var metaIds = new string?[chunk.Length];
+        var versIds = new string?[chunk.Length];
 
         for (int i = 0; i < chunk.Length; i++)
         {
             var (driveId, itemId) = chunk[i];
-            var metaReq = new HttpRequestMessage(HttpMethod.Get,
-                $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}" +
-                "?$select=createdDateTime,lastModifiedDateTime,createdBy,lastModifiedBy,sharepointIds");
+
+            if (!versionsOnly)
+            {
+                var metaReq = new HttpRequestMessage(HttpMethod.Get,
+                    $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}" +
+                    "?$select=createdDateTime,lastModifiedDateTime,createdBy,lastModifiedBy,sharepointIds");
+                metaIds[i] = batch.AddBatchRequestStep(metaReq);
+
+                // Skip the versions round-trip for files an upstream pass already counted as single-version.
+                if (multiVersionItemIds != null && !multiVersionItemIds.Contains(itemId))
+                    continue;
+            }
+
             var versReq = new HttpRequestMessage(HttpMethod.Get,
                 $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}/versions?$top=500");
-            metaIds[i] = batch.AddBatchRequestStep(metaReq);
             versIds[i] = batch.AddBatchRequestStep(versReq);
         }
 
@@ -380,42 +479,56 @@ public class SharePointService
         {
             var (driveId, itemId) = chunk[i];
 
-            // Use nullable sentinels: only add to result when BOTH sub-requests succeeded.
-            // A failed sub-request (429, 404, etc.) leaves the item absent so the caller
-            // falls back to individual Graph calls rather than using empty/stale data.
-            FileMetadata? metadata = null;
-            try
+            // Use nullable sentinels: only add to result when the needed sub-request(s) succeeded.
+            // A failed sub-request (429, 404, etc.) leaves the item absent so the caller falls back
+            // to individual Graph calls rather than using empty/stale data. In versionsOnly mode no
+            // metadata is fetched, so a placeholder stands in (the caller uses only the version count).
+            FileMetadata? metadata = versionsOnly ? new FileMetadata() : null;
+            if (metaIds[i] != null)
             {
-                using var metaHttp = await response.GetResponseByIdAsync(metaIds[i]);
-                if (metaHttp.IsSuccessStatusCode)
+                try
                 {
-                    var metaJson = await metaHttp.Content.ReadAsStringAsync(ct);
-                    metadata = ParseBatchFileMetadata(metaJson);
-                    TryCacheBatchSpIds(driveId, itemId, metaJson);
+                    using var metaHttp = await response.GetResponseByIdAsync(metaIds[i]!);
+                    if (metaHttp.IsSuccessStatusCode)
+                    {
+                        var metaJson = await metaHttp.Content.ReadAsStringAsync(ct);
+                        metadata = ParseBatchFileMetadata(metaJson);
+                        TryCacheBatchSpIds(driveId, itemId, metaJson);
+                    }
                 }
+                catch { }
             }
-            catch { }
 
             List<DriveItemVersion>? versions = null;
-            try
+            if (versIds[i] == null)
             {
-                using var versHttp = await response.GetResponseByIdAsync(versIds[i]);
-                if (versHttp.IsSuccessStatusCode)
-                {
-                    var (parsed, nextLink) = ParseBatchVersions(await versHttp.Content.ReadAsStringAsync(ct));
-                    var vList = parsed;
-                    while (nextLink != null)
-                    {
-                        ct.ThrowIfCancellationRequested();
-                        var page = await Graph.Drives[driveId].Items[itemId].Versions
-                            .WithUrl(nextLink).GetAsync(cancellationToken: ct);
-                        vList.AddRange(page?.Value ?? []);
-                        nextLink = page?.OdataNextLink;
-                    }
-                    versions = SortVersions(vList);
-                }
+                // Versions deliberately skipped (single-version file). Synthesize one current-version
+                // entry; the manifest builder fills its label/date/author from the file metadata, and
+                // the downloader fetches the file's current content for this single entry.
+                versions = new List<DriveItemVersion> { new DriveItemVersion() };
             }
-            catch { }
+            else
+            {
+                try
+                {
+                    using var versHttp = await response.GetResponseByIdAsync(versIds[i]!);
+                    if (versHttp.IsSuccessStatusCode)
+                    {
+                        var (parsed, nextLink) = ParseBatchVersions(await versHttp.Content.ReadAsStringAsync(ct));
+                        var vList = parsed;
+                        while (nextLink != null)
+                        {
+                            ct.ThrowIfCancellationRequested();
+                            var page = await Graph.Drives[driveId].Items[itemId].Versions
+                                .WithUrl(nextLink).GetAsync(cancellationToken: ct);
+                            vList.AddRange(page?.Value ?? []);
+                            nextLink = page?.OdataNextLink;
+                        }
+                        versions = SortVersions(vList);
+                    }
+                }
+                catch { }
+            }
 
             if (metadata != null && versions != null)
                 result[itemId] = (metadata, versions);
@@ -533,6 +646,55 @@ public class SharePointService
             ModifiedDateTime = item?.LastModifiedDateTime,
             ModifiedByEmail  = GetIdentityEmail(item?.LastModifiedBy?.User),
         };
+    }
+
+    // Fetches each SOURCE folder's created/modified metadata for the migration manifest (folders
+    // otherwise get a hardcoded placeholder date, which surfaced as a wrong "1999" timestamp on the
+    // target). `folders` maps a caller key (the folder's relative path) to a sample FILE item id inside
+    // that folder — the file's parentReference IS the folder, so this needs no path-mapping assumptions.
+    // The library root ("" key) is read from the drive root. Parallel + the Graph client's own throttle
+    // retries; a folder that can't be read is simply absent (the builder keeps the placeholder for it).
+    public async Task<Dictionary<string, FileMetadata>> FetchFolderMetadataAsync(
+        string rootDriveId,
+        IReadOnlyList<(string folderKey, string driveId, string sampleFileItemId)> folders,
+        int maxConcurrency,
+        CancellationToken ct = default)
+    {
+        var result = new System.Collections.Concurrent.ConcurrentDictionary<string, FileMetadata>();
+
+        // Library root folder.
+        try
+        {
+            var root = await Graph.Drives[rootDriveId].Root.GetAsync(cfg =>
+                cfg.QueryParameters.Select = ["id", "createdDateTime", "lastModifiedDateTime", "createdBy", "lastModifiedBy"],
+                cancellationToken: ct);
+            if (root != null)
+                result[string.Empty] = new FileMetadata
+                {
+                    CreatedDateTime  = root.CreatedDateTime,
+                    CreatedByEmail   = GetIdentityEmail(root.CreatedBy?.User),
+                    ModifiedDateTime = root.LastModifiedDateTime,
+                    ModifiedByEmail  = GetIdentityEmail(root.LastModifiedBy?.User),
+                };
+        }
+        catch { /* keep placeholder */ }
+
+        await Parallel.ForEachAsync(folders,
+            new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, maxConcurrency), CancellationToken = ct },
+            async (f, c) =>
+            {
+                try
+                {
+                    var file = await Graph.Drives[f.driveId].Items[f.sampleFileItemId].GetAsync(cfg =>
+                        cfg.QueryParameters.Select = ["parentReference"], cancellationToken: c);
+                    var parentId = file?.ParentReference?.Id;
+                    if (string.IsNullOrEmpty(parentId)) return;
+                    result[f.folderKey] = await GetFileMetadataAsync(f.driveId, parentId);
+                }
+                catch { /* keep placeholder */ }
+            });
+
+        return new Dictionary<string, FileMetadata>(result);
     }
 
     public static string? GetIdentityEmail(Microsoft.Graph.Models.Identity? identity)
@@ -1568,7 +1730,7 @@ public class SharePointService
         string spScope = "Sites.ReadWrite.All",
         CancellationToken cancellationToken = default)
     {
-        const int maxThrottleRetries = 5;
+        const int maxThrottleRetries = 8;
         var token = await _authService.GetSharePointTokenAsync(siteUrl, spScope, cancellationToken);
         HttpResponseMessage response;
         bool refreshedToken = false;

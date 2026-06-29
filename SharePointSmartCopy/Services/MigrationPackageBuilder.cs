@@ -38,7 +38,14 @@ public class MigrationPackageBuilder
         DateTimeOffset Created,
         string? CreatedByEmail,
         List<VersionEntry> Versions,
-        Dictionary<string, string>? CustomFieldValues = null);
+        Dictionary<string, string>? CustomFieldValues = null)
+    {
+        // Set true if this file's blob upload failed. BuildManifest skips failed entries so the
+        // manifest never references blobs that weren't fully uploaded. Uploads now run in parallel
+        // across files, so RemoveLastFile (which assumes serial order) can't be used for upload
+        // failures — this flag handles them instead.
+        public bool Failed { get; set; }
+    }
 
     // Each manifest file uses its own schema namespace per SP Content Deployment format.
     private static readonly XNamespace NsManifest     = "urn:deployment-manifest-schema";
@@ -65,6 +72,14 @@ public class MigrationPackageBuilder
     }
 
     public IReadOnlyList<FileEntry> Files => _files;
+
+    // Whether to emit a standalone SPListItem object alongside each SPFile. For document libraries this
+    // is REDUNDANT: importing the SPFile auto-creates the library list row (verified — files land with
+    // correct metadata even though the SPListItem import fails). The standalone SPListItem has never
+    // resolved its file link and always fails "Missing file info for list item", which also trips the
+    // 100-error job-cancel threshold. So default OFF. (Re-enable only once the list-item↔file linkage is
+    // genuinely fixed — needed only if copying custom column values, which ride on the list item.)
+    public bool EmitStandaloneListItems { get; set; }
 
     // Removes the most recently added file — used when its blob upload fails so the
     // manifest never references streams that were not uploaded.
@@ -152,7 +167,8 @@ public class MigrationPackageBuilder
         string siteId, string webId, string listId,
         string siteUrl, string webServerRelativeUrl, string libraryTitle, string libraryServerRelativeUrl,
         bool overwrite = false, string? rootFolderGuid = null,
-        Dictionary<string, string>? folderGuids = null)
+        Dictionary<string, string>? folderGuids = null,
+        IReadOnlyDictionary<string, FileMetadata>? folderMetadata = null)
     {
         var manifest = new Dictionary<string, byte[]>();
 
@@ -189,7 +205,7 @@ public class MigrationPackageBuilder
         Add("ViewFormsList.xml",               BuildViewFormsList());
         Add("Manifest.xml",                    BuildManifest(
             siteId, webId, listId, siteUrl, webServerRelativeUrl, libraryTitle, libraryServerRelativeUrl,
-            rootFolderGuid, folderGuids));
+            rootFolderGuid, folderGuids, folderMetadata));
 
         return manifest;
     }
@@ -280,9 +296,31 @@ public class MigrationPackageBuilder
         string siteId, string webId, string listId,
         string siteUrl, string webRelUrl, string libraryTitle, string libraryRelUrl,
         string? rootFolderGuid = null,
-        Dictionary<string, string>? folderGuids = null)
+        Dictionary<string, string>? folderGuids = null,
+        IReadOnlyDictionary<string, FileMetadata>? folderMetadata = null)
     {
         XElement E(string name, params object[] content) => new XElement(NsManifest + name, content);
+
+        // Real source folder dates/authors when we have them (keyed by relative path; "" = root),
+        // else fall back to the schema placeholder so the import still validates. Folders we couldn't
+        // read keep the placeholder rather than failing the import.
+        const string FolderDatePlaceholder = "2000-01-01T00:00:00Z";
+        object[] FolderTimeAndAuthor(string relKey)
+        {
+            FileMetadata? m = folderMetadata != null && folderMetadata.TryGetValue(relKey, out var fm) ? fm : null;
+            var created  = m?.CreatedDateTime  is { } c ? FormatDate(c) : FolderDatePlaceholder;
+            var modified = m?.ModifiedDateTime is { } md ? FormatDate(md) : FolderDatePlaceholder;
+            var attrs = new List<object>
+            {
+                new XAttribute("TimeCreated", created),
+                new XAttribute("TimeLastModified", modified),
+            };
+            if (!string.IsNullOrEmpty(m?.CreatedByEmail))
+                attrs.Add(new XAttribute("Author", GetUserId(m!.CreatedByEmail)));
+            if (!string.IsNullOrEmpty(m?.ModifiedByEmail))
+                attrs.Add(new XAttribute("ModifiedBy", GetUserId(m!.ModifiedByEmail)));
+            return attrs.ToArray();
+        }
 
         XElement BuildFields(FileEntry file, VersionEntry currentVersion)
         {
@@ -341,8 +379,7 @@ public class MigrationPackageBuilder
                     new XAttribute("ParentWebId", webId),
                     new XAttribute("ParentFolderId", listId),
                     new XAttribute("ProgId", ""),
-                    new XAttribute("TimeCreated", "2000-01-01T00:00:00Z"),
-                    new XAttribute("TimeLastModified", "2000-01-01T00:00:00Z"))));
+                    FolderTimeAndAuthor(string.Empty))));
         }
 
         var rootParentId = !string.IsNullOrEmpty(rootFolderGuid) ? rootFolderGuid : listId;
@@ -385,13 +422,13 @@ public class MigrationPackageBuilder
                         new XAttribute("ParentWebId", webId),
                         new XAttribute("ParentFolderId", parentGuid),
                         new XAttribute("ProgId", ""),
-                        new XAttribute("TimeCreated", "2000-01-01T00:00:00Z"),
-                        new XAttribute("TimeLastModified", "2000-01-01T00:00:00Z"))));
+                        FolderTimeAndAuthor(relPath))));
             }
         }
 
         foreach (var file in _files)
         {
+            if (file.Failed) continue; // blob upload failed — exclude so the manifest doesn't reference missing blobs
             var currentVersion = file.Versions[^1];
             var folderId = ContainingFolderId(file);
             // DirName: web-relative directory the item lives in (no leading/trailing slash),
@@ -497,6 +534,7 @@ public class MigrationPackageBuilder
                 new XAttribute("ParentWebId", webId),
                 fileEl));
 
+            if (EmitStandaloneListItems)
             objects.Add(E("SPObject",
                 new XAttribute("Id", file.ListItemId),
                 new XAttribute("ObjectType", "SPListItem"),

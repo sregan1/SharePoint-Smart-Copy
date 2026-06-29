@@ -1336,6 +1336,14 @@
                                          FocusVisualStyle="{x:Null}"/>
                             </DockPanel>
                         </Border>
+                        <!-- Full activity log saved to disk (selectable path; survives after the run). -->
+                        <TextBox Text="{Binding ActivityLogPath, Mode=OneWay}"
+                                 Visibility="{Binding ActivityLogPath, Converter={StaticResource NotNullToVis}}"
+                                 IsReadOnly="True" BorderThickness="0" Background="Transparent"
+                                 FontSize="10" FontFamily="Consolas" Padding="0" Margin="0,4,0,0"
+                                 Foreground="{DynamicResource TextTertiaryBrush}" TextWrapping="Wrap"
+                                 FocusVisualStyle="{x:Null}"
+                                 ToolTip="Full activity log for this run — select and copy this path to open it after the migration"/>
                         <TextBlock Margin="0,8,0,0" FontSize="13" Foreground="{DynamicResource SuccessBrush}"
                                    Visibility="{Binding IsReadyForReport, Converter={StaticResource BoolToVis}}">
                             <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;"/>
@@ -1362,6 +1370,12 @@
                         <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4" Content="All"
                                      IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=All}"
                                      />
+                        <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4"
+                                     IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Success}">
+                            <TextBlock>
+                                <Run Text="Success ("/><Run Text="{Binding SuccessCount, Mode=OneWay}"/><Run Text=")"/>
+                            </TextBlock>
+                        </RadioButton>
                         <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4"
                                      IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Failed}">
                             <TextBlock>
@@ -1493,6 +1507,12 @@
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter" Content="All"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=All}"/>
+                            <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter"
+                                         IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Success}">
+                                <TextBlock>
+                                    <Run Text="Success ("/><Run Text="{Binding FileSuccessCount, Mode=OneWay}"/><Run Text=")"/>
+                                </TextBlock>
+                            </RadioButton>
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Failed}">
                                 <TextBlock>

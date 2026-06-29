@@ -34,7 +34,10 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
     {
         // In SPMI mode the controller semaphore is never used as a download gate
         // (MigrationJobService has its own download controller). Suppress cosmetic step-downs.
-        bool isMigrationMode = copyMode == CopyMode.MigrationApi && copyVersions;
+        // Migration API engages whenever the mode is selected — independent of the Copy Versions
+        // toggle. With versions off we copy current-only via the fast batched path (see maxVersions
+        // translation below) rather than silently falling back to slow per-file REST.
+        bool isMigrationMode = copyMode == CopyMode.MigrationApi;
 
         using var controller = new AdaptiveParallelismController(maxParallel);
         controller.LimitChanged += n => ParallelismChanged?.Invoke(n);
@@ -138,10 +141,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         }
         await FlushPendingResultsAsync();
 
-        if (copyMode == CopyMode.MigrationApi && copyVersions)
+        if (copyMode == CopyMode.MigrationApi)
         {
-            // Mode A: batch all files into a single migration job
-            await migrationJobService.ExecuteAsync(allTasks, overwriteMode, maxVersions, maxParallel, cancellationToken,
+            // Mode A: batch all files into migration jobs. When Copy Versions is off, callers pass
+            // maxVersions = 0; the Migration path reads 0 as "all versions", so translate it to 1
+            // (current version only) to honor the toggle. With versions on, maxVersions is already
+            // the intended cap (and 0 there legitimately means "all versions").
+            int migrationMaxVersions = copyVersions ? maxVersions : 1;
+            await migrationJobService.ExecuteAsync(allTasks, overwriteMode, migrationMaxVersions, maxParallel, cancellationToken,
                 copyCustomColumns, columnMappings, bulkFieldCache, preflightProgress, activityLog, onFilePacked);
 
             // Permissions: run after the migration job completes so the target items exist.

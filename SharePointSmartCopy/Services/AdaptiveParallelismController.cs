@@ -5,8 +5,9 @@ namespace SharePointSmartCopy.Services;
 /// then steps it back up once the throttle window clears.  Thread-safe.
 ///
 /// How it works:
-///   StepDown(retryAfter) — called on each throttle event; reserves one slot to be withheld on
-///                 the next Release() call, shrinking the live pool by 1 (floor: 1).
+///   StepDown(retryAfter) — called on each throttle event; HALVES the live limit (multiplicative
+///                 decrease) and lowers the AIMD ceiling to match, so the pool settles below the
+///                 tenant's throttle threshold instead of climbing straight back into it.
 ///                 Rate-limited to 1 step-down per 2s so a burst of 429s doesn't crater
 ///                 the limit to 1 in one shot.
 ///                 Also extends _nextRestoreTime = now + retryAfter + RestoreBuffer so that
@@ -17,8 +18,10 @@ namespace SharePointSmartCopy.Services;
 ///                 window and trigger further escalation (the cascade-to-1 failure mode).
 ///   Release()    — called after each file completes; either absorbs the slot (if a step-down
 ///                 is pending) or returns it to the semaphore normally.
-///   TryRestore() — fires on a fixed 5-second heartbeat.  Returns one absorbed slot per tick,
-///                 but ONLY after _nextRestoreTime has passed.
+///   TryRestore() — fires on a fixed 5-second heartbeat.  Returns absorbed slots (climbing only up
+///                 to the AIMD ceiling, not _max), but ONLY after _nextRestoreTime has passed. After
+///                 a stable stretch with no throttle it nudges the ceiling up by 1 (additive
+///                 increase) to re-probe for more capacity — so it converges on the safe rate.
 internal sealed class AdaptiveParallelismController : IDisposable
 {
     private readonly SemaphoreSlim _sem;
@@ -37,6 +40,14 @@ internal sealed class AdaptiveParallelismController : IDisposable
     // concurrency stuck low across a long run, so keep it small.
     private static readonly TimeSpan RestoreBuffer    = TimeSpan.FromSeconds(3);
 
+    // AIMD ceiling: the highest limit we'll currently climb to. A throttle HALVES it (multiplicative
+    // decrease) so the pool doesn't immediately climb back into the same throttle; it then re-probes
+    // upward by 1 every ReprobeInterval of clean running (additive increase). This makes the pool
+    // settle just below the tenant's actual throttle threshold instead of oscillating at _max.
+    private          int            _ceiling;
+    private          DateTimeOffset _lastCeilingRaise = DateTimeOffset.MinValue;
+    private static readonly TimeSpan ReprobeInterval  = TimeSpan.FromSeconds(45);
+
     // Fired on the thread-pool when the effective limit changes.
     public event Action<int>? LimitChanged;
 
@@ -49,6 +60,9 @@ internal sealed class AdaptiveParallelismController : IDisposable
         _max   = Math.Max(1, max);
         int start = (softStart > 0 && softStart < _max) ? softStart : _max;
         _limit    = start;
+        _ceiling  = start;          // start conservative at the soft-start; probe UPWARD (additive
+                                    // increase) only after clean running, so a high slider can't cause
+                                    // an opening burst → throttle cascade. The slider is just the cap.
         _withheld = _max - start;   // pre-withheld slots; TryRestore releases one per 5s tick
         _sem      = new SemaphoreSlim(start, _max);
 
@@ -118,8 +132,14 @@ internal sealed class AdaptiveParallelismController : IDisposable
             if (_limit <= 1) return;
             if (now - _lastStepDown < StepDownCooldown) return;
             _lastStepDown = now;
-            _limit--;
-            _pendingWithhold++;
+
+            // Multiplicative decrease: halve the live limit and remember it as the new ceiling, so
+            // the pool settles below the throttle instead of climbing straight back into it. Withhold
+            // the dropped slots (absorbed as in-flight work releases them).
+            int target = Math.Max(1, _limit / 2);
+            _pendingWithhold += _limit - target;
+            _limit            = target;
+            _ceiling          = Math.Min(_ceiling, target);
             LimitChanged?.Invoke(_limit);
         }
     }
@@ -138,9 +158,29 @@ internal sealed class AdaptiveParallelismController : IDisposable
             int  newLimit;
             lock (_lock)
             {
+                var now = DateTimeOffset.UtcNow;
                 // Honour the quiet period — do not restore during an active throttle window.
-                if (DateTimeOffset.UtcNow < _nextRestoreTime) return;
-                if (_limit >= _max) return;
+                if (now < _nextRestoreTime) return;
+
+                // Additive increase: after a stable stretch with no throttle, cautiously raise the
+                // ceiling by 1 to probe whether more capacity is now available. Capped at _max.
+                if (_ceiling < _max
+                    && now - _lastStepDown     > ReprobeInterval
+                    && now - _lastCeilingRaise > ReprobeInterval)
+                {
+                    _ceiling++;
+                    _lastCeilingRaise = now;
+                }
+
+                // Climb only up to the discovered ceiling, not all the way back to _max.
+                if (_limit >= _ceiling) return;
+
+                // Only grow UNDER LOAD. If slots are sitting free, downloads aren't saturating the
+                // current limit, so there's no demand for more — and ramping up while idle (e.g. during
+                // the pre-download provisioning/analyze phase) just makes the next burst start at full
+                // concurrency, which is exactly what triggers the opening throttle. When the pool is
+                // exhausted (callers waiting on slots), CurrentCount is 0 and we climb normally.
+                if (_sem.CurrentCount > 0) return;
 
                 // Prefer cancelling a pending withhold (slot never actually left pool) over
                 // releasing a fully absorbed slot — either way the effective limit goes up by 1.
