@@ -46,10 +46,11 @@ public partial class SharePointNode : ObservableObject
 
     partial void OnIsCheckedChanged(bool? value)
     {
-        // null = items-only mode: check all children but skip structure creation.
-        // true  = full copy: check all children + structure.
-        // false = deselect: uncheck all children.
-        var childValue = value == false ? (bool?)false : true;
+        // Folder null (indeterminate): parent deselected but children retain their state — no cascade.
+        // Custom list null (items-only): cascade true to children so their content is included.
+        // true: cascade true. false: cascade false.
+        if (value == null && !IsCustomList) return;
+        var childValue = value == false ? (bool?)false : (bool?)true;
         foreach (var child in Children)
         {
             if (!child.IsPlaceholder)

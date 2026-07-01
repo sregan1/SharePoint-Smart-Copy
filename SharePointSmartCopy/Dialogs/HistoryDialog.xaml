@@ -168,10 +168,20 @@
                     Style="{StaticResource DangerBtn}"
                     IsEnabled="False" Click="DeleteButton_Click"/>
 
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+                <TextBlock x:Name="VerifyStatus" FontSize="12" Visibility="Collapsed"
+                           Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                <Button x:Name="VerifyCancelButton" Content="Cancel" Style="{StaticResource DangerBtn}"
+                        Visibility="Collapsed" Margin="10,0,0,0" Click="VerifyCancelButton_Click"/>
+            </StackPanel>
+
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Button x:Name="ExportButton" Content="Export CSV"
                         Style="{StaticResource SecondaryBtn}"
                         IsEnabled="False" Margin="0,0,10,0" Click="ExportButton_Click"/>
+                <Button x:Name="VerifyButton" Content="Verify with Excel Report"
+                        Style="{StaticResource SecondaryBtn}"
+                        IsEnabled="False" Margin="0,0,10,0" Click="VerifyButton_Click"/>
                 <Button Content="Close" Style="{StaticResource SecondaryBtn}" Click="Close_Click"/>
             </StackPanel>
         </Grid>

@@ -240,7 +240,7 @@
             <Setter Property="Padding" Value="2"/>
         </Style>
 
-        <!-- CheckBox that shows indeterminate (null) as a plain empty box — no black fill -->
+        <!-- CheckBox with three visual states: empty (false), checkmark (true), dash (null/indeterminate) -->
         <Style x:Key="ItemsOnlyCheckBox" TargetType="CheckBox">
             <Setter Property="Template">
                 <Setter.Value>
@@ -249,10 +249,15 @@
                             <BulletDecorator.Bullet>
                                 <Border x:Name="Box" Width="14" Height="14" CornerRadius="2"
                                         BorderBrush="{DynamicResource BorderInputBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}">
-                                    <Path x:Name="Check" Visibility="Collapsed"
-                                          Stroke="{DynamicResource AccentBrush}" StrokeThickness="1.8" StrokeLineJoin="Round"
-                                          Data="M2,7 L5.5,10.5 L12,3.5"
-                                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Grid>
+                                        <Path x:Name="Check" Visibility="Collapsed"
+                                              Stroke="{DynamicResource AccentBrush}" StrokeThickness="1.8" StrokeLineJoin="Round"
+                                              Data="M2,7 L5.5,10.5 L12,3.5"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Rectangle x:Name="Dash" Visibility="Collapsed"
+                                                   Width="7" Height="2" Fill="{DynamicResource AccentBrush}"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Grid>
                                 </Border>
                             </BulletDecorator.Bullet>
                             <ContentPresenter Margin="6,0,0,0" VerticalAlignment="Center"/>
@@ -260,6 +265,9 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="{x:Null}">
+                                <Setter TargetName="Dash" Property="Visibility" Value="Visible"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
@@ -686,7 +694,7 @@
                             </TextBlock>
                         </Border>
 
-                        <Border BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}" MinHeight="300">
+                        <Border BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}" MinHeight="300" MaxHeight="480">
                             <TreeView x:Name="TargetTreeView"
                                       ItemsSource="{Binding TargetLibraries}"
                                       ItemTemplate="{StaticResource TargetNodeTemplate}"
@@ -1288,7 +1296,7 @@
                         <Button Content="Cancel" Style="{StaticResource DangerBtn}"
                                 HorizontalAlignment="Left" Margin="0,12,0,0"
                                 Command="{Binding CancelCopyCommand}"
-                                Visibility="{Binding IsCopying, Converter={StaticResource BoolToVis}}"/>
+                                Visibility="{Binding IsCancelable, Converter={StaticResource BoolToVis}}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
                                     Visibility="{Binding IsPreflightInProgress, Converter={StaticResource BoolToVis}}">
                             <ProgressBar IsIndeterminate="True" Width="80" Height="4"
@@ -1353,13 +1361,28 @@
                                     Visibility="{Binding IsMetadataInProgress, Converter={StaticResource BoolToVis}}">
                             <ProgressBar IsIndeterminate="True" Width="80" Height="4"
                                          VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <TextBlock Text="Updating folder metadata…" FontSize="13"
-                                       Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                            <TextBlock FontSize="13"
+                                       Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center">
+                                <Run Text="Updating folder metadata…"/>
+                                <Run Text="{Binding MetadataFolderCountText, Mode=OneWay}"/>
+                                <Run Text="{Binding MetadataEta, Mode=OneWay}"/>
+                                <Run Text="  "/>
+                                <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE916;"
+                                     Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                <Run Text=" "/>
+                                <Run Text="{Binding MetadataElapsedTime}"/>
+                            </TextBlock>
                         </StackPanel>
                         <TextBlock Margin="0,4,0,0" FontSize="13" Foreground="{DynamicResource TextTertiaryBrush}"
                                    Visibility="{Binding IsMetadataComplete, Converter={StaticResource BoolToVis}}">
                             <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;"/>
-                            <Run Text=" Metadata updated"/>
+                            <Run Text=" Metadata updated · took "/>
+                            <Run Text="{Binding MetadataElapsedTime}"/>
+                        </TextBlock>
+                        <TextBlock Margin="0,4,0,0" FontSize="13" Foreground="{DynamicResource TextTertiaryBrush}"
+                                   Visibility="{Binding IsMetadataCancelled, Converter={StaticResource BoolToVis}}">
+                            <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE711;"/>
+                            <Run Text=" Metadata update cancelled"/>
                         </TextBlock>
                     </StackPanel>
                 </Border>
@@ -1497,13 +1520,29 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Margin="0,8,0,8">
-                        <Button Style="{StaticResource SecondaryBtn}" Command="{Binding ExportFilesReportCommand}"
-                                HorizontalAlignment="Left">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE896;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
-                                <TextBlock Text="Export CSV" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Button Style="{StaticResource SecondaryBtn}" Command="{Binding ExportFilesReportCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE896;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Export CSV" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource SecondaryBtn}" Margin="8,0,0,0"
+                                    Command="{Binding ExportVerificationReportCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE896;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Verify with Excel Report" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource DangerBtn}" Margin="8,0,0,0"
+                                    Command="{Binding CancelVerificationCommand}"
+                                    Visibility="{Binding IsVerifying, Converter={StaticResource BoolToVis}}">
+                                <TextBlock Text="Cancel"/>
+                            </Button>
+                            <TextBlock Text="{Binding StatusMessage}" FontSize="12" Margin="12,0,0,0"
+                                       VerticalAlignment="Center" Foreground="{DynamicResource TextTertiaryBrush}"
+                                       Visibility="{Binding IsVerifying, Converter={StaticResource BoolToVis}}"/>
+                        </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter" Content="All"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=All}"/>

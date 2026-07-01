@@ -25,6 +25,14 @@ public partial class App : Application
         new MainWindow().Show();
     }
 
+    protected override void OnExit(ExitEventArgs e)
+    {
+        base.OnExit(e);
+        // Force-terminate the process so MSAL/Graph SDK background threads don't
+        // keep the process alive after the main window closes.
+        Environment.Exit(0);
+    }
+
     private bool _demoStarted;
     partial void InitDemoMode(StartupEventArgs e);  // implemented in App.Demo.cs when present
 }

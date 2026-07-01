@@ -1,0 +1,227 @@
+using System.Collections.Concurrent;
+using SharePointSmartCopy.Models;
+
+namespace SharePointSmartCopy.Services;
+
+// Independently re-scans a source location and a target location via fresh Graph calls (never
+// reusing in-memory CopyResults) and compares them by relative path, for post-copy verification.
+public sealed class VerificationReportService(SharePointService spService)
+{
+    // Mirrors CopyService/MigrationJobService's throttle-driven parallelism reporting.
+    public event Action<int>? ParallelismChanged;
+
+    public sealed record Result(
+        List<ScannedFile> SourceFiles,
+        List<ScannedFile> TargetFiles,
+        List<ComparisonRow> Comparison,
+        List<string> ScanErrors);
+
+    // Reported as files are discovered on each side — kept separate (rather than one combined
+    // count) so the displayed text can say exactly what it means: files found so far in the
+    // source scan and files found so far in the target scan, never folders or file versions.
+    public readonly record struct ScanProgress(int SourceFilesFound, int TargetFilesFound);
+
+    // Absorbs SharePoint's own clock-skew on copy rather than flagging near-identical timestamps.
+    private static readonly TimeSpan ModifiedTolerance = TimeSpan.FromSeconds(5);
+
+    public async Task<Result> RunAsync(
+        IReadOnlyList<VerificationRoot> roots,
+        int maxParallel,
+        IProgress<string>? activityLog,
+        IProgress<ScanProgress>? progress,
+        CancellationToken ct)
+    {
+        int softStart = Math.Min(maxParallel, 8);
+        using var controller = new AdaptiveParallelismController(maxParallel, softStart);
+        controller.LimitChanged += n => ParallelismChanged?.Invoke(n);
+        void onThrottle(TimeSpan delay, int _, int __, string? ___) => controller.StepDown(delay);
+        spService.Throttled += onThrottle;
+
+        try
+        {
+            var scanErrors = new ConcurrentBag<string>();
+            int sourceCount = 0, targetCount = 0;
+            void BumpSource() => progress?.Report(new ScanProgress(Interlocked.Increment(ref sourceCount), targetCount));
+            void BumpTarget() => progress?.Report(new ScanProgress(sourceCount, Interlocked.Increment(ref targetCount)));
+
+            // Source roots: de-duplicate by (drive, item) — the actual scan starting point.
+            var sourceRoots = roots
+                .Select(r => (r.SourceDriveId, r.SourceItemId, r.SourceName, r.IsFolder, r.IsLibrary))
+                .Distinct()
+                .ToList();
+
+            // Target roots: TargetParentItemId is the library root, and TargetSubFolderPath is the
+            // *destination container* the user picked in Step 2 — NOT the copied item's own path.
+            // The copied item itself lands at TargetSubFolderPath/SourceName (File and Folder jobs
+            // both get their own name appended there); a Library job's contents land directly under
+            // TargetSubFolderPath with no wrapper name. NavigatePath is what we resolve-then-scan
+            // from; BasePath is what the results get labeled with — matching the source side's
+            // SourceName/"" labeling so the two scans' relative paths actually align for the join.
+            var targetRoots = roots
+                .Select(r => new TargetRoot(
+                    r.TargetDriveId,
+                    r.TargetParentItemId,
+                    r.IsLibrary ? r.TargetSubFolderPath : CombinePath(r.TargetSubFolderPath, r.SourceName),
+                    r.IsLibrary ? "" : r.SourceName,
+                    r.IsFolder,
+                    r.IsLibrary))
+                .Distinct()
+                .ToList();
+
+            var sourceTask = ScanSourceRootsAsync(sourceRoots, controller, scanErrors, activityLog, BumpSource, ct);
+            var targetTask = ScanTargetRootsAsync(targetRoots, controller, scanErrors, activityLog, BumpTarget, ct);
+            await Task.WhenAll(sourceTask, targetTask);
+
+            var sourceFiles = await sourceTask;
+            var targetFiles = await targetTask;
+            var comparison  = Merge(sourceFiles, targetFiles);
+
+            return new Result(sourceFiles, targetFiles, comparison, scanErrors.ToList());
+        }
+        finally
+        {
+            spService.Throttled -= onThrottle;
+        }
+    }
+
+    private async Task<List<ScannedFile>> ScanSourceRootsAsync(
+        List<(string SourceDriveId, string SourceItemId, string SourceName, bool IsFolder, bool IsLibrary)> roots,
+        AdaptiveParallelismController controller, ConcurrentBag<string> scanErrors,
+        IProgress<string>? activityLog, Action bump, CancellationToken ct)
+    {
+        var results = new ConcurrentBag<ScannedFile>();
+        await Task.WhenAll(roots.Select(async root =>
+        {
+            try
+            {
+                if (!root.IsFolder && !root.IsLibrary)
+                {
+                    // Plain single-file root — fetch directly, no recursion.
+                    var single = await spService.GetFileForVerificationAsync(
+                        root.SourceDriveId, root.SourceItemId, root.SourceName);
+                    if (single != null) { results.Add(single); bump(); }
+                    return;
+                }
+
+                var basePath = root.IsLibrary ? "" : root.SourceName;
+                await foreach (var f in spService.EnumerateFilesWithMetadataAsync(
+                    root.SourceDriveId, root.SourceItemId, basePath, controller, ct))
+                {
+                    results.Add(f);
+                    bump();
+                }
+            }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex)
+            {
+                scanErrors.Add($"Source '{root.SourceName}': {ex.Message}");
+                activityLog?.Report($"⚠ Could not scan source root '{root.SourceName}': {ex.Message}");
+            }
+        }));
+        return results.ToList();
+    }
+
+    private sealed record TargetRoot(
+        string DriveId, string ParentItemId, string NavigatePath, string BasePath, bool IsFolder, bool IsLibrary);
+
+    private static string CombinePath(string basePath, string name) =>
+        string.IsNullOrEmpty(basePath) ? name : $"{basePath}/{name}";
+
+    private async Task<List<ScannedFile>> ScanTargetRootsAsync(
+        List<TargetRoot> roots,
+        AdaptiveParallelismController controller, ConcurrentBag<string> scanErrors,
+        IProgress<string>? activityLog, Action bump, CancellationToken ct)
+    {
+        var results = new ConcurrentBag<ScannedFile>();
+        await Task.WhenAll(roots.Select(async root =>
+        {
+            var label = string.IsNullOrEmpty(root.NavigatePath) ? "(library root)" : root.NavigatePath;
+            try
+            {
+                // Navigate from the library root down to the actual copied item — TargetParentItemId
+                // is never the item itself, so this resolution is required before scanning anything.
+                string? scanRootId = string.IsNullOrEmpty(root.NavigatePath)
+                    ? root.ParentItemId
+                    : await spService.ResolveItemIdByPathAsync(root.DriveId, root.ParentItemId, root.NavigatePath);
+                if (scanRootId == null)
+                {
+                    scanErrors.Add($"Target '{label}': not found (it may have been deleted or renamed since the copy)");
+                    activityLog?.Report($"⚠ Target '{label}' no longer exists");
+                    return;
+                }
+
+                if (!root.IsFolder && !root.IsLibrary)
+                {
+                    var single = await spService.GetFileForVerificationAsync(root.DriveId, scanRootId, root.BasePath);
+                    if (single != null) { results.Add(single); bump(); }
+                    return;
+                }
+
+                await foreach (var f in spService.EnumerateFilesWithMetadataAsync(
+                    root.DriveId, scanRootId, root.BasePath, controller, ct))
+                {
+                    results.Add(f);
+                    bump();
+                }
+            }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex)
+            {
+                scanErrors.Add($"Target '{label}': {ex.Message}");
+                activityLog?.Report($"⚠ Could not scan target root '{label}': {ex.Message}");
+            }
+        }));
+        return results.ToList();
+    }
+
+    private static List<ComparisonRow> Merge(List<ScannedFile> sourceFiles, List<ScannedFile> targetFiles)
+    {
+        var targetByPath = new Dictionary<string, ScannedFile>(StringComparer.OrdinalIgnoreCase);
+        foreach (var f in targetFiles) targetByPath[f.RelativePath] = f;
+
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var rows = new List<ComparisonRow>();
+
+        foreach (var s in sourceFiles)
+        {
+            seen.Add(s.RelativePath);
+            if (targetByPath.TryGetValue(s.RelativePath, out var t))
+            {
+                ComparisonStatus status;
+                if (s.Size != t.Size)
+                    status = ComparisonStatus.SizeMismatch;
+                else if (s.LastModified.HasValue && t.LastModified.HasValue &&
+                         (s.LastModified.Value - t.LastModified.Value).Duration() > ModifiedTolerance)
+                    status = ComparisonStatus.ModifiedMismatch;
+                else
+                    status = ComparisonStatus.Match;
+
+                rows.Add(new ComparisonRow
+                {
+                    RelativePath = s.RelativePath, SourceSize = s.Size, TargetSize = t.Size,
+                    SourceModified = s.LastModified, TargetModified = t.LastModified, Status = status
+                });
+            }
+            else
+            {
+                rows.Add(new ComparisonRow
+                {
+                    RelativePath = s.RelativePath, SourceSize = s.Size, TargetSize = null,
+                    SourceModified = s.LastModified, TargetModified = null, Status = ComparisonStatus.OnlyInSource
+                });
+            }
+        }
+
+        foreach (var t in targetFiles)
+        {
+            if (seen.Contains(t.RelativePath)) continue;
+            rows.Add(new ComparisonRow
+            {
+                RelativePath = t.RelativePath, SourceSize = null, TargetSize = t.Size,
+                SourceModified = null, TargetModified = t.LastModified, Status = ComparisonStatus.OnlyInTarget
+            });
+        }
+
+        return rows;
+    }
+}

@@ -10,10 +10,13 @@ namespace SharePointSmartCopy.Dialogs;
 public partial class HistoryDialog : Window
 {
     private List<SavedReport> _reports = [];
+    private readonly VerificationReportService _verificationReportService;
+    private CancellationTokenSource? _verifyCts;
 
-    public HistoryDialog()
+    public HistoryDialog(SharePointService spService)
     {
         InitializeComponent();
+        _verificationReportService = new VerificationReportService(spService);
         LoadReports();
     }
 
@@ -36,6 +39,12 @@ public partial class HistoryDialog : Window
         ExportButton.IsEnabled  = hasSelection;
         SummaryCards.Visibility = hasSelection ? Visibility.Visible : Visibility.Collapsed;
         EmptyHint.Visibility    = hasSelection ? Visibility.Collapsed : Visibility.Visible;
+
+        bool canVerify = hasSelection && report!.Roots.Count > 0;
+        VerifyButton.IsEnabled = canVerify;
+        VerifyButton.ToolTip = hasSelection && !canVerify
+            ? "This run predates verification support — re-run the copy to enable this."
+            : null;
 
         if (report == null)
         {
@@ -95,6 +104,61 @@ public partial class HistoryDialog : Window
         System.Diagnostics.Process.Start(
             new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
     }
+
+    private async void VerifyButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (ReportList.SelectedItem is not SavedReport report || report.Roots.Count == 0) return;
+
+        var dlg = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter   = "Excel Workbook (*.xlsx)|*.xlsx",
+            FileName = $"VerificationReport_{report.Id}.xlsx"
+        };
+        if (dlg.ShowDialog() != true) return;
+
+        _verifyCts?.Dispose();
+        _verifyCts = new CancellationTokenSource();
+
+        ReportList.IsEnabled   = false;
+        DeleteButton.IsEnabled = false;
+        ExportButton.IsEnabled = false;
+        VerifyButton.IsEnabled = false;
+        VerifyCancelButton.Visibility = Visibility.Visible;
+        VerifyStatus.Visibility = Visibility.Visible;
+        VerifyStatus.Text = "Scanning…";
+
+        try
+        {
+            var roots       = VerificationRoot.FromSavedReport(report);
+            var maxParallel = AppSettings.Load().MaxParallelCopies;
+            var onScanned   = new Progress<VerificationReportService.ScanProgress>(p =>
+                VerifyStatus.Text = $"Scanning… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)");
+            var result = await _verificationReportService.RunAsync(
+                roots, maxParallel, activityLog: null, progress: onScanned, _verifyCts.Token);
+            ExcelReportWriter.Write(dlg.FileName, result);
+            if (result.ScanErrors.Count > 0)
+                MessageBox.Show(
+                    $"{result.ScanErrors.Count} root(s) could not be scanned — see the Scan Errors tab in the workbook.",
+                    "Verification", MessageBoxButton.OK, MessageBoxImage.Warning);
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
+        }
+        catch (OperationCanceledException) { /* user cancelled — no message needed */ }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Verification failed: {ex.Message}", "Verification", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            ReportList.IsEnabled   = true;
+            DeleteButton.IsEnabled = ReportList.SelectedItem != null;
+            ExportButton.IsEnabled = ReportList.SelectedItem != null;
+            VerifyButton.IsEnabled = ReportList.SelectedItem is SavedReport r && r.Roots.Count > 0;
+            VerifyCancelButton.Visibility = Visibility.Collapsed;
+            VerifyStatus.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void VerifyCancelButton_Click(object sender, RoutedEventArgs e) => _verifyCts?.Cancel();
 
     private void Close_Click(object sender, RoutedEventArgs e) => Close();
 }

@@ -30,7 +30,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         Dictionary<string, bool>? permissionFlags = null,
         IProgress<(int, int)>? preflightProgress = null,
         IProgress<string>? activityLog = null,
-        IProgress<int>? onFilePacked = null)
+        IProgress<int>? onFilePacked = null,
+        IProgress<(int done, int total)>? onFolderProgress = null)
     {
         // In SPMI mode the controller semaphore is never used as a download gate
         // (MigrationJobService has its own download controller). Suppress cosmetic step-downs.
@@ -204,11 +205,34 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
 
         spService.Throttled -= onThrottled;
 
-        // Apply folder metadata in the background (skipped when preserveMetadata is off)
+        // SPMI already stamps folder timestamps via the manifest's TimeLastModified / TimeCreated /
+        // Author / ModifiedBy attributes on <SPFolder> elements during import — no post-processing needed.
+        if (isMigrationMode)
+        {
+            onMetadataDone?.Report(true);
+            return;
+        }
+
+        // For REST mode: only update folders that received at least one successful copy.
+        // Build an ancestor-inclusive set from successful file job paths so we skip
+        // every clean branch (e.g. unchanged folders when running "If Newer").
+        var dirtyFolderPaths = allTasks
+            .Where(t => t.result.Status == CopyStatus.Success
+                     && !string.IsNullOrEmpty(t.job.TargetSubFolderPath))
+            .SelectMany(t =>
+            {
+                var parts = t.job.TargetSubFolderPath!.Split('/');
+                return Enumerable.Range(1, parts.Length)
+                                 .Select(i => string.Join("/", parts.Take(i)));
+            })
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
         var folderJobs = jobs.Where(j => j.IsFolder).ToList();
-        if (folderJobs.Count > 0 && preserveMetadata)
+        bool anyFileCopied = results.Any(r => r.Status == CopyStatus.Success);
+        if (folderJobs.Count > 0 && preserveMetadata && anyFileCopied)
             _ = ApplyAllFolderMetadataAsync(folderJobs, maxParallel, onMetadataDone, cancellationToken,
-                copyPermissions, permissionService, results);
+                copyPermissions, permissionService, results, onFolderProgress,
+                dirtyFolderPaths: dirtyFolderPaths.Count > 0 ? dirtyFolderPaths : null);
         else
             onMetadataDone?.Report(true);
     }
@@ -218,19 +242,23 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         IProgress<bool>? onDone, CancellationToken ct,
         bool copyPermissions = false,
         PermissionCopyService? permissionService = null,
-        ObservableCollection<CopyResult>? permissionResults = null)
+        ObservableCollection<CopyResult>? permissionResults = null,
+        IProgress<(int done, int total)>? folderProgress = null,
+        HashSet<string>? dirtyFolderPaths = null)
     {
+        bool completed = true;
         try
         {
+            int[] done  = { 0 };
+            int[] total = { 0 };
             foreach (var job in folderJobs)
                 await ApplyFolderMetadataRecursiveAsync(job, maxParallel, ct,
-                    copyPermissions, permissionService, permissionResults);
+                    copyPermissions, permissionService, permissionResults,
+                    done, total, folderProgress, dirtyFolderPaths);
         }
+        catch (OperationCanceledException) { completed = false; }
         catch { }
-        finally
-        {
-            onDone?.Report(true);
-        }
+        onDone?.Report(completed);
     }
 
     private async Task CopySingleFileAsync(
@@ -633,12 +661,21 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         CopyJob job, int maxParallel, CancellationToken ct,
         bool copyPermissions = false,
         PermissionCopyService? permissionService = null,
-        ObservableCollection<CopyResult>? permissionResults = null)
+        ObservableCollection<CopyResult>? permissionResults = null,
+        int[]? folderDone = null, int[]? folderTotal = null,
+        IProgress<(int done, int total)>? folderProgress = null,
+        HashSet<string>? dirtyFolderPaths = null)
     {
         var prefix = string.IsNullOrEmpty(job.TargetSubFolderPath) ? "" : job.TargetSubFolderPath + "/";
 
-        if (!job.IsLibrary && job.SourceItemId != "root")
+        // With dirty tracking, only update the root folder if a file was copied into it or a descendant.
+        bool hasRoot = !job.IsLibrary && job.SourceItemId != "root"
+                    && (dirtyFolderPaths == null || dirtyFolderPaths.Contains(prefix + job.SourceName));
+        if (hasRoot)
         {
+            if (folderTotal != null) Interlocked.Increment(ref folderTotal[0]);
+            folderProgress?.Report((folderDone?[0] ?? 0, folderTotal?[0] ?? 0));
+
             var rootTargetId = await spService.GetOrCreateFolderPathAsync(
                 job.TargetDriveId, job.TargetParentItemId, prefix + job.SourceName);
             var rootMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
@@ -670,11 +707,29 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 catch (OperationCanceledException) { throw; }
                 catch { /* non-fatal */ }
             }
+
+            if (folderDone != null) Interlocked.Increment(ref folderDone[0]);
+            folderProgress?.Report((folderDone?[0] ?? 0, folderTotal?[0] ?? 0));
         }
 
         var subFolders = new List<(string driveId, string itemId, string relativePath)>();
         await foreach (var item in spService.EnumerateFoldersAsync(job.SourceDriveId, job.SourceItemId))
             subFolders.Add(item);
+
+        // With dirty tracking, skip subfolders that received no successful copies.
+        // EnumerateFoldersAsync returns all descendants, so we filter the flat list here.
+        if (dirtyFolderPaths != null)
+            subFolders = subFolders
+                .Where(sf =>
+                {
+                    var tp = job.IsLibrary ? prefix + sf.relativePath
+                                           : prefix + $"{job.SourceName}/{sf.relativePath}";
+                    return dirtyFolderPaths.Contains(tp);
+                })
+                .ToList();
+
+        if (folderTotal != null) Interlocked.Add(ref folderTotal[0], subFolders.Count);
+        folderProgress?.Report((folderDone?[0] ?? 0, folderTotal?[0] ?? 0));
 
         await Parallel.ForEachAsync(subFolders,
             new ParallelOptions { MaxDegreeOfParallelism = maxParallel, CancellationToken = ct },
@@ -713,6 +768,9 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     catch (OperationCanceledException) { throw; }
                     catch { /* non-fatal */ }
                 }
+
+                if (folderDone != null) Interlocked.Increment(ref folderDone[0]);
+                folderProgress?.Report((folderDone?[0] ?? 0, folderTotal?[0] ?? 0));
             });
     }
 

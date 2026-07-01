@@ -51,9 +51,11 @@ public class MigrationJobService(SharePointService spService)
         // copy), so throttling is far milder and the opening burst tolerates a higher floor.
         int migrationSoftStart = Math.Min(maxParallel, 8);
         using var downloadController = new AdaptiveParallelismController(maxParallel, migrationSoftStart);
+        // Registered only during the download/upload phase — NOT during analysis (metadata fetches,
+        // folder enumeration). Analysis throttles are transient and shouldn't pre-damage the download
+        // slot count before any file transfers have started.
         void onMigrationThrottle(TimeSpan delay, int __, int ___, string? ____) =>
             downloadController.StepDown(delay);
-        spService.Throttled += onMigrationThrottle;
         if (activityLog != null)
         {
             int lastDlLimit = maxParallel;
@@ -138,7 +140,7 @@ public class MigrationJobService(SharePointService spService)
                     // makes concurrent creates safe: races on shared path prefixes resolve via 409 conflict
                     // recovery, and the cache ensures each unique segment is created at most once.
                     await Parallel.ForEachAsync(subFolderPaths,
-                        new ParallelOptions { MaxDegreeOfParallelism = 4, CancellationToken = cancellationToken },
+                        new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
                         async (folderPath, ct) =>
                         {
                             var id = await spService.GetOrCreateFolderPathAsync(
@@ -173,6 +175,43 @@ public class MigrationJobService(SharePointService spService)
                         });
                 }
 
+                // Skip mode: a file matched by name here will always be skipped later in the per-batch
+                // pre-flight, so fetching its metadata/versions for batching below is pure waste. On a
+                // mostly-already-copied library that waste dominates — thousands of metadata calls for
+                // files that were never going to be copied, which is what exhausts the tenant's Graph
+                // rate limit and causes throttling to bleed into the (much smaller) real download work.
+                // Filter them out here, before the metadata analysis, using the same by-name check the
+                // per-batch pre-flight uses. Overwrite/IfNewer still need every file's metadata (Overwrite
+                // re-copies everything; IfNewer's skip decision itself depends on modified date), so this
+                // only applies to Skip.
+                if (overwriteMode == OverwriteMode.Skip)
+                {
+                    var toProcess = new List<(CopyJob job, CopyResult result)>(groupTasks.Count);
+                    int preskipped = 0;
+                    foreach (var t in groupTasks)
+                    {
+                        var subPath = t.job.TargetSubFolderPath ?? string.Empty;
+                        if (sharedExistingByFolder.TryGetValue(subPath, out var existing) &&
+                            existing.ContainsKey(t.job.SourceName))
+                        {
+                            t.result.Status = CopyStatus.Skipped;
+                            preskipped++;
+                        }
+                        else
+                        {
+                            toProcess.Add(t);
+                        }
+                    }
+                    if (preskipped > 0)
+                    {
+                        int done = Interlocked.Add(ref preflightCounter[0], preskipped);
+                        preflightProgress?.Report((done, preflightTotal));
+                        activityLog?.Report($"{preskipped:N0} of {groupTasks.Count:N0} already exist — skipping metadata fetch for those");
+                        groupTasks = toProcess;
+                    }
+                }
+                if (groupTasks.Count == 0) continue; // whole drive group already copied
+
                 // Split into SEQUENTIAL jobs small enough that SharePoint imports them cleanly. Above a
                 // ceiling SP fails every SPListItem with "Missing file info for list item" → the
                 // 100-failure threshold → whole job cancels.
@@ -206,11 +245,12 @@ public class MigrationJobService(SharePointService spService)
                 // Fetch metadata + versions for the whole group ONCE, upfront, into a cache the download
                 // producer reuses — so the producer makes no Graph metadata calls during the copy (those
                 // per-batch $batch calls were being silently throttled and stalling the pipeline). This
-                // both sizes the batches (version counts) and feeds packaging. 12-wide: throttling is now
-                // mild, and any throttle here only delays the start, it can't stall a running batch.
+                // 6-wide: leaves more SP API quota headroom for container provisioning immediately after.
+                // At 12-wide the analysis exhausts the tenant's rate limit, causing 120s Retry-After
+                // waits when the first prep tasks try to provision Azure containers.
                 var metaCache = await spService.FetchMetadataAndVersionCacheAsync(
                     groupTasks.Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
-                    maxConcurrency: 12, progress: sizingProgress, ct: cancellationToken);
+                    maxConcurrency: 6, progress: sizingProgress, ct: cancellationToken);
 
                 // Any files still missing from the cache after its retry rounds get version-counted as 1
                 // for batching, but the producer re-fetches their real versions at download time — a
@@ -272,6 +312,7 @@ public class MigrationJobService(SharePointService spService)
                 // sequential prep producer (one pipeline can't package fast enough to feed >2 imports).
                 // To tell them apart, watch the activity log at =4: if ~4 jobs import concurrently it's
                 // prep-bound (→ multiple prep producers would help); if only ~2 progress it's SP-bound.
+                const int MaxConcurrentPrep    = 3;
                 const int MaxConcurrentImports = 6;
 
                 Task<PreparedBatch> Prep(int idx) => PrepareBatchAsync(
@@ -289,6 +330,10 @@ public class MigrationJobService(SharePointService spService)
                     folderMetadata: folderMetadata,
                     metaCache: metaCache);
 
+                // Connect throttle → download-slot step-down now that downloads are about to begin.
+                // Analysis throttles (above) are isolated; only download-phase throttles shrink the gate.
+                spService.Throttled += onMigrationThrottle;
+
                 // Bounded so prep runs at most MaxConcurrentImports+1 batches ahead — keeps memory and
                 // the per-batch SAS tokens bounded (a prepared batch is just blobs-in-Azure + refs).
                 var prepChannel = Channel.CreateBounded<PreparedBatch>(
@@ -300,12 +345,14 @@ public class MigrationJobService(SharePointService spService)
                 {
                     try
                     {
-                        for (int idx = 0; idx < batches.Count; idx++)
-                        {
-                            cancellationToken.ThrowIfCancellationRequested();
-                            var prepared = await Prep(idx);
-                            await prepChannel.Writer.WriteAsync(prepared, cancellationToken);
-                        }
+                        await Parallel.ForEachAsync(
+                            Enumerable.Range(0, batches.Count),
+                            new ParallelOptions { MaxDegreeOfParallelism = MaxConcurrentPrep, CancellationToken = cancellationToken },
+                            async (idx, ct) =>
+                            {
+                                var prepared = await Prep(idx);
+                                await prepChannel.Writer.WriteAsync(prepared, ct);
+                            });
                     }
                     finally { prepChannel.Writer.Complete(); }
                 }, cancellationToken);
@@ -395,15 +442,10 @@ public class MigrationJobService(SharePointService spService)
         var pfx = string.IsNullOrEmpty(batchLabel) ? "" : $"[{batchLabel}] ";
         try
         {
-            // Step 1: provision SP-provided encrypted containers (one set per job)
-            activityLog?.Report($"{pfx}Provisioning Azure migration containers...");
-            var (dataUri, metadataUri, encryptionKey) =
-                await spService.ProvisionMigrationContainersAsync(targetSiteUrl);
-
-            // Step 2: for overwrite mode, delete any existing files so SPMI does a fresh INSERT
-            // (SPMI UPDATE appends versions instead of replacing them, causing duplication).
-            // For non-overwrite mode, mark files that already exist (Graph) as Skipped, and
-            // purge any zombies (AllDocs entry without SPListItem) so SPMI won't reject them.
+            // Step 2: pre-flight — determine what needs copying (and delete stale targets for
+            // Overwrite/IfNewer) BEFORE provisioning containers.  Containers are only needed when
+            // we actually have files to upload; skipping this for all-skipped batches avoids
+            // hundreds of Azure provisioning calls in large "copy-if-newer" runs.
             //
             // Step 2a: use the pre-built folder ID cache passed in from ExecuteAsync, which already
             // created all subfolders (at MaxDegree=4 with segment-cache conflict resolution) and captured
@@ -481,7 +523,14 @@ public class MigrationJobService(SharePointService spService)
                     {
                         if (existingByFolder[subPath].TryGetValue(job.SourceName, out var existing))
                         {
-                            var srcMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
+                            // Use upfront-fetched metadata when available — avoids an extra Graph call
+                            // per file during the preflight (the same metadata was already fetched in
+                            // the analysis phase; re-fetching it doubles the API pressure).
+                            FileMetadata srcMeta;
+                            if (metaCache != null && metaCache.TryGetValue(job.SourceItemId, out var ifNewerCached))
+                                srcMeta = ifNewerCached.Metadata;
+                            else
+                                srcMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
                             if (srcMeta.ModifiedDateTime is { } srcModified && srcModified <= existing.Modified)
                             {
                                 result.Status       = CopyStatus.Skipped;
@@ -530,9 +579,15 @@ public class MigrationJobService(SharePointService spService)
             if (copyingCount == 0)
             {
                 activityLog?.Report($"{pfx}All files already exist — nothing to copy");
-                return new PreparedBatch(batchLabel, fileTasks, 0, dataUri, metadataUri, encryptionKey,
+                return new PreparedBatch(batchLabel, fileTasks, 0, string.Empty, string.Empty, Array.Empty<byte>(),
                     new Dictionary<string, CopyResult>());
             }
+
+            // Step 1: provision SP-provided encrypted containers — deferred until after preflight
+            // so all-skipped batches never touch Azure at all.
+            activityLog?.Report($"{pfx}Provisioning Azure migration containers...");
+            var (dataUri, metadataUri, encryptionKey) =
+                await spService.ProvisionMigrationContainersAsync(targetSiteUrl);
 
             System.Diagnostics.Debug.WriteLine($"[Migration] encryptionKey length={encryptionKey.Length}");
             System.Diagnostics.Debug.WriteLine($"[Migration] dataUri prefix={dataUri[..Math.Min(dataUri.Length,80)]}");
@@ -693,10 +748,29 @@ public class MigrationJobService(SharePointService spService)
                                     ?? throw new InvalidOperationException("Encrypted content already released.");
                                 var ivB64 = Convert.ToBase64String(content[..16]);
                                 var opts  = new BlobUploadOptions { Metadata = new Dictionary<string, string> { ["IV"] = ivB64 } };
-                                using var ms = new MemoryStream(content, 16, content.Length - 16);
                                 var blob = dataClient.GetBlobClient(version.StreamId);
-                                await blob.UploadAsync(ms, opts, cancellationToken);
-                                await blob.CreateSnapshotAsync(cancellationToken: cancellationToken);
+
+                                // Azure Storage's own internal retry (ClientOptions.Retry) already exhausts
+                                // itself on sustained network blips ("Retry failed after N tries") — retry
+                                // again here with backoff rather than failing the file on one bad window.
+                                // A fresh MemoryStream is needed each attempt since UploadAsync consumes it.
+                                for (int attempt = 0; ; attempt++)
+                                {
+                                    try
+                                    {
+                                        using var ms = new MemoryStream(content, 16, content.Length - 16);
+                                        await blob.UploadAsync(ms, opts, cancellationToken);
+                                        await blob.CreateSnapshotAsync(cancellationToken: cancellationToken);
+                                        break;
+                                    }
+                                    catch (OperationCanceledException) { throw; }
+                                    catch (Exception ex) when (attempt < 3 && (ex is IOException || ex is System.Net.Http.HttpRequestException || ex is Azure.RequestFailedException))
+                                    {
+                                        int waitsecs = (attempt + 1) * 5;
+                                        activityLog?.Report($"⚠ {pfx}{fileName} — upload connection reset, retrying in {waitsecs}s ({attempt + 1}/3)");
+                                        await Task.Delay(TimeSpan.FromSeconds(waitsecs), cancellationToken);
+                                    }
+                                }
                                 version.EncryptedContent = null;
                             }
                             dataResult.VersionsCopied = versCount;
@@ -1070,7 +1144,9 @@ public class MigrationJobService(SharePointService spService)
                         break;
                     }
                     catch (OperationCanceledException) { throw; }
-                    catch (System.IO.IOException) when (attempt < 3)
+                    // HTTP/2 stream resets surface as HttpRequestException, not IOException — must be
+                    // caught alongside it or a single mid-stream RST_STREAM fails the file outright.
+                    catch (Exception ex) when (attempt < 3 && (ex is System.IO.IOException || ex is System.Net.Http.HttpRequestException))
                     {
                         int waitsecs = (attempt + 1) * 5;
                         activityLog?.Report($"⚠ {pfxLabel}{job.SourceName} — connection reset, retrying in {waitsecs}s ({attempt + 1}/3)");

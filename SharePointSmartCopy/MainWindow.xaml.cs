@@ -107,11 +107,25 @@ public partial class MainWindow : Window
         public int dwFlags;
     }
 
+    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+    {
+        base.OnClosing(e);
+        VM.CancelAllOperations();
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        base.OnClosed(e);
+        // Force-kill the process — MSAL/Graph SDK create threads that outlive WPF's
+        // Dispatcher shutdown, causing the process to linger in Task Manager.
+        Environment.Exit(0);
+    }
+
     private void CloseWindow_Click(object sender, RoutedEventArgs e)
         => Close();
 
     private void HistoryButton_Click(object sender, RoutedEventArgs e)
-        => new HistoryDialog { Owner = this }.ShowDialog();
+        => new HistoryDialog(VM.SpService) { Owner = this }.ShowDialog();
 
     private void SettingsButton_Click(object sender, RoutedEventArgs e)
     {
@@ -151,21 +165,23 @@ public partial class MainWindow : Window
     private void SourceNode_CheckChanged(object sender, RoutedEventArgs e)
         => VM.NotifySelectionChanged();
 
-    // Cycles custom list nodes: blank → checked (structure+items) → blank (items only) → blank (nothing).
-    // The null state is visually identical to unchecked via the ItemsOnlyCheckBox style.
-    // All other nodes are a plain two-state toggle — without this, WPF's native tri-state
-    // cycle sends "checked → indeterminate" on uncheck, leaving stray null states the app
-    // would misread as items-only mode (phantom entries in the Copy Preview).
+    // Cycles folder/library and custom-list nodes through three states:
+    //   false → true  (select this node + all children)
+    //   true  → null  (deselect this node only; children stay checked)
+    //   null  → false (deselect this node + all children)
+    // For custom lists: null = items-only (no structure). For folders: null = indeterminate
+    // (parent header unchecked, sub-items still checked). Files/list items: plain toggle.
     private void SourceCheckBox_PreviewClick(object sender, MouseButtonEventArgs e)
     {
         if ((sender as CheckBox)?.DataContext is not SharePointNode node)
             return;
-        node.IsChecked = node.IsCustomList
+        bool isFolder = node.Type is NodeType.Folder or NodeType.Library;
+        node.IsChecked = (node.IsCustomList || isFolder)
             ? node.IsChecked switch
               {
-                  false => true,   // blank → checked
-                  true  => null,   // checked → blank (items only, no structure)
-                  _     => false   // null/blank → blank (deselect all)
+                  false => true,   // unchecked → all selected
+                  true  => null,   // all selected → parent only deselected
+                  _     => false   // indeterminate → all deselected
               }
             : node.IsChecked != true;
         e.Handled = true;

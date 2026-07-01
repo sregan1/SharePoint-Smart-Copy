@@ -16,10 +16,12 @@ public partial class MainViewModel : ObservableObject
     private readonly CopyService _copyService;
     private readonly LibraryCopyService _libraryCopyService;
     private readonly PermissionCopyService _permissionCopyService;
+    private readonly VerificationReportService _verificationReportService;
 
     private CancellationTokenSource? _copyCts;
     private CancellationTokenSource? _connectSourceCts;
     private CancellationTokenSource? _connectTargetCts;
+    private CancellationTokenSource? _verifyCts;
 
     // Bulk custom field cache keyed by SP list item integer ID (populated before copy starts)
     private Dictionary<string, Dictionary<string, object?>> _bulkFieldCache = [];
@@ -39,6 +41,8 @@ public partial class MainViewModel : ObservableObject
         _copyService.ParallelismChanged += OnParallelismChanged;
         _libraryCopyService       = new LibraryCopyService(SpService);
         _permissionCopyService    = new PermissionCopyService(SpService);
+        _verificationReportService                    = new VerificationReportService(SpService);
+        _verificationReportService.ParallelismChanged += OnParallelismChanged;
         Settings             = settings ?? AppSettings.Load();
 
         if (Settings.IsConfigured)
@@ -767,16 +771,22 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private double _totalProgress;
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsPackingInProgress))] private int _completedCount;
     [ObservableProperty] private int _totalCount;
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] [NotifyCanExecuteChangedFor(nameof(BackCommand))] private bool _isCopying;
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] [NotifyCanExecuteChangedFor(nameof(BackCommand))] [NotifyCanExecuteChangedFor(nameof(ExportVerificationReportCommand))] [NotifyPropertyChangedFor(nameof(IsCancelable))] private bool _isCopying;
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] [NotifyPropertyChangedFor(nameof(IsMetadataComplete))] [NotifyPropertyChangedFor(nameof(IsMetadataInProgress))] [NotifyPropertyChangedFor(nameof(IsReadyForReport))] private bool _isCopyComplete;
     [ObservableProperty] private string _copyDuration = string.Empty;
     [ObservableProperty] private string _elapsedTime = string.Empty;
     [ObservableProperty] private string _estimatedTimeRemaining = string.Empty;
     [ObservableProperty] private string _packagedEstimatedTimeRemaining = string.Empty;
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] [NotifyPropertyChangedFor(nameof(IsMetadataComplete))] [NotifyPropertyChangedFor(nameof(IsMetadataInProgress))] [NotifyPropertyChangedFor(nameof(IsReadyForReport))] private bool _isUpdatingMetadata;
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] [NotifyPropertyChangedFor(nameof(IsMetadataComplete))] [NotifyPropertyChangedFor(nameof(IsMetadataInProgress))] [NotifyPropertyChangedFor(nameof(IsReadyForReport))] [NotifyPropertyChangedFor(nameof(IsCancelable))] private bool _isUpdatingMetadata;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsMetadataComplete))] private bool _isMetadataCancelled;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(MetadataFolderCountText))] private int _metadataFolderDone;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(MetadataFolderCountText))] private int _metadataFolderTotal;
+    [ObservableProperty] private string _metadataElapsedTime = string.Empty;
+    [ObservableProperty] private string _metadataEta = string.Empty;
     [ObservableProperty] private int _preflightChecked;
     [ObservableProperty] private int _preflightTotal;
     [ObservableProperty] private int _packedCount;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsCancelable))] [NotifyCanExecuteChangedFor(nameof(ExportVerificationReportCommand))] private bool _isVerifying;
 
     private readonly List<string> _activityLines = [];
     private string _activityText = "";
@@ -831,8 +841,12 @@ public partial class MainViewModel : ObservableObject
     }
 
     public bool IsMetadataInProgress  => IsCopyComplete && IsUpdatingMetadata;
-    public bool IsMetadataComplete    => IsCopyComplete && !IsUpdatingMetadata;
+    public bool IsMetadataComplete    => IsCopyComplete && !IsUpdatingMetadata && !IsMetadataCancelled;
     public bool IsReadyForReport      => IsCopyComplete && !IsUpdatingMetadata;
+    public bool IsCancelable          => IsCopying || IsUpdatingMetadata || IsVerifying;
+    public string MetadataFolderCountText => MetadataFolderTotal > 0
+        ? $" {MetadataFolderDone:N0} / {MetadataFolderTotal:N0} folders"
+        : string.Empty;
     public bool IsPreflightInProgress => IsCopying && PreflightTotal > 0 && PreflightChecked < PreflightTotal;
     public bool IsPackingInProgress   => IsCopying && PackedCount > 0 && CompletedCount < TotalCount;
 
@@ -862,6 +876,9 @@ public partial class MainViewModel : ObservableObject
     private int             _etaStartDone;
     private DateTimeOffset? _packStartTime;
     private int             _packStartDone;
+    private DateTimeOffset  _metadataStartTime;
+    private DateTimeOffset? _metadataRateAnchorTime;
+    private int             _metadataRateAnchorDone;
 
     public int SuccessCount => CopyResults.Count(r => r.Status == CopyStatus.Success);
     public int FailedCount  => CopyResults.Count(r => r.Status == CopyStatus.Failed);
@@ -883,6 +900,12 @@ public partial class MainViewModel : ObservableObject
         IsCopyComplete       = false;
         CopyDuration         = string.Empty;
         IsUpdatingMetadata   = _hasFolderJobs;
+        IsMetadataCancelled  = false;
+        // Set before ExecuteAsync starts, not after it returns: Migration API mode reports
+        // onMetadataDone synchronously from inside ExecuteAsync (no separate post-processing step),
+        // which raced ahead of the old post-return assignment and computed elapsed time against
+        // the field's uninitialized default (0001-01-01) — showing a ~2025-year duration.
+        _metadataStartTime   = DateTimeOffset.Now;
         CopyResults.Clear();
         ResultFilter     = ResultFilterKind.All;
         FileResultFilter = ResultFilterKind.All;
@@ -917,7 +940,23 @@ public partial class MainViewModel : ObservableObject
         StartActivityLogFile();
         if (ActivityLogPath != null)
             PushActivity($"Activity log: {ActivityLogPath}");
-        var onMetadataDone = new Progress<bool>(_ => IsUpdatingMetadata = false);
+        System.Windows.Threading.DispatcherTimer? metadataTimer = null;
+        var onMetadataDone = new Progress<bool>(completed =>
+        {
+            metadataTimer?.Stop();
+            if (completed)
+                MetadataElapsedTime = FormatDuration(DateTimeOffset.Now - _metadataStartTime);
+            else
+                IsMetadataCancelled = true;
+            MetadataEta        = string.Empty;
+            IsUpdatingMetadata = false;
+        });
+        var onFolderProgress = new Progress<(int done, int total)>(p =>
+        {
+            MetadataFolderDone  = p.done;
+            MetadataFolderTotal = p.total;
+            OnPropertyChanged(nameof(MetadataFolderCountText));
+        });
         var onPreflight    = new Progress<(int done, int total)>(p =>
         {
             PreflightTotal   = p.total;
@@ -1056,7 +1095,8 @@ public partial class MainViewModel : ObservableObject
                 permissionFlags: _permissionFlags,
                 preflightProgress: onPreflight,
                 activityLog: onActivity,
-                onFilePacked: onFilePacked);
+                onFilePacked: onFilePacked,
+                onFolderProgress: onFolderProgress);
         }
         catch (OperationCanceledException) { StatusMessage = "Copy cancelled."; }
         catch (Exception ex)              { StatusMessage = $"Copy error: {ex.Message}"; }
@@ -1079,11 +1119,33 @@ public partial class MainViewModel : ObservableObject
             OnPropertyChanged(nameof(FileFailedCount));
             OnPropertyChanged(nameof(FileSkippedCount));
             SaveReport();
+
+            if (IsUpdatingMetadata)
+            {
+                MetadataFolderDone      = 0;
+                MetadataFolderTotal     = 0;
+                MetadataElapsedTime     = string.Empty;
+                MetadataEta             = string.Empty;
+                _metadataStartTime      = DateTimeOffset.Now;
+                _metadataRateAnchorTime = null;
+                _metadataRateAnchorDone = 0;
+                metadataTimer = new System.Windows.Threading.DispatcherTimer
+                    { Interval = TimeSpan.FromMilliseconds(500) };
+                metadataTimer.Tick += (_, _) => UpdateMetadataProgress();
+                metadataTimer.Start();
+            }
         }
     }
 
     [RelayCommand]
     private void CancelCopy() => _copyCts?.Cancel();
+
+    public void CancelAllOperations()
+    {
+        _copyCts?.Cancel();
+        _connectSourceCts?.Cancel();
+        _connectTargetCts?.Cancel();
+    }
 
     // Copies items from a source list into an already-resolved target list.
     // Fetches live target columns (bypassing cache) and resolves source InternalName →
@@ -2222,6 +2284,35 @@ public partial class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(FileSkippedCount));
     }
 
+    private void UpdateMetadataProgress()
+    {
+        MetadataElapsedTime = FormatDuration(DateTimeOffset.Now - _metadataStartTime);
+
+        int done  = MetadataFolderDone;
+        int total = MetadataFolderTotal;
+        if (done > 0 && total > 0 && done < total)
+        {
+            if (_metadataRateAnchorTime == null)
+            {
+                _metadataRateAnchorTime = DateTimeOffset.Now;
+                _metadataRateAnchorDone = done;
+            }
+            var anchorElapsed = (DateTimeOffset.Now - _metadataRateAnchorTime.Value).TotalSeconds;
+            var anchorDone    = done - _metadataRateAnchorDone;
+            if (anchorDone > 0 && anchorElapsed >= 3)
+            {
+                var remainingSecs = (total - done) * anchorElapsed / anchorDone;
+                MetadataEta = remainingSecs >= 2
+                    ? $" · ~{FormatDuration(TimeSpan.FromSeconds(remainingSecs))} remaining"
+                    : string.Empty;
+            }
+        }
+        else
+        {
+            MetadataEta = string.Empty;
+        }
+    }
+
     public void RefreshCopyStats()
     {
         OnPropertyChanged(nameof(SuccessCount));
@@ -2260,6 +2351,46 @@ public partial class MainViewModel : ObservableObject
         System.IO.File.WriteAllText(dlg.FileName, sb.ToString());
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
     }
+
+    private bool CanExportVerificationReport() => !IsCopying && !IsVerifying && CopyJobs.Count > 0;
+
+    [RelayCommand(CanExecute = nameof(CanExportVerificationReport))]
+    private async Task ExportVerificationReportAsync()
+    {
+        var dlg = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter   = "Excel Workbook (*.xlsx)|*.xlsx",
+            FileName = $"VerificationReport_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
+        };
+        if (dlg.ShowDialog() != true) return;
+
+        _verifyCts?.Dispose();
+        _verifyCts   = new CancellationTokenSource();
+        IsVerifying  = true;
+        var onActivity = new Progress<string>(PushActivity);
+        var onScanned  = new Progress<VerificationReportService.ScanProgress>(p =>
+            StatusMessage = $"Verifying… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)");
+
+        try
+        {
+            StatusMessage = "Re-scanning source and target for verification…";
+            var roots  = VerificationRoot.FromCopyJobs(CopyJobs);
+            var result = await _verificationReportService.RunAsync(
+                roots, MaxParallelCopies, onActivity, onScanned, _verifyCts.Token);
+            ExcelReportWriter.Write(dlg.FileName, result);
+            PushActivity($"Verification report written: {dlg.FileName}");
+            if (result.ScanErrors.Count > 0)
+                PushActivity($"⚠ {result.ScanErrors.Count} root(s) could not be scanned — see the Scan Errors tab");
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
+            StatusMessage = string.Empty;
+        }
+        catch (OperationCanceledException) { StatusMessage = "Verification cancelled."; }
+        catch (Exception ex)              { StatusMessage = $"Verification error: {ex.Message}"; }
+        finally { IsVerifying = false; }
+    }
+
+    [RelayCommand]
+    private void CancelVerification() => _verifyCts?.Cancel();
 
     // ── Navigation ────────────────────────────────────────────────────────────
 
@@ -2399,6 +2530,17 @@ public partial class MainViewModel : ObservableObject
                     IsPermissionResult = r.IsPermissionResult,
                     PermissionStatus   = r.PermissionStatus,
                     PermissionDetails  = r.PermissionDetails,
+                }).ToList(),
+                Roots = CopyJobs.Select(j => new SavedReportRoot
+                {
+                    SourceDriveId       = j.SourceDriveId,
+                    SourceItemId        = j.SourceItemId,
+                    SourceName          = j.SourceName,
+                    IsFolder            = j.IsFolder,
+                    IsLibrary           = j.IsLibrary,
+                    TargetDriveId       = j.TargetDriveId,
+                    TargetParentItemId  = j.TargetParentItemId,
+                    TargetSubFolderPath = j.TargetSubFolderPath,
                 }).ToList()
             };
             ReportHistoryService.Save(report);

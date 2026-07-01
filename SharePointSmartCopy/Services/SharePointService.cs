@@ -250,6 +250,95 @@ public class SharePointService
         }
     }
 
+    // ── Enumerate all files with metadata, for independent post-copy verification ──────────
+    // Separate from EnumerateFilesAsync/GetChildrenAsync (used by the copy engine) so a
+    // verification re-scan never shares state/behavior with the copy path, and so its Graph
+    // payload can be trimmed with an explicit $select for 100k+ file scale.
+    internal async IAsyncEnumerable<ScannedFile> EnumerateFilesWithMetadataAsync(
+        string driveId, string rootItemId, string basePath,
+        AdaptiveParallelismController controller,
+        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct = default)
+    {
+        List<DriveItem> items;
+        await controller.WaitAsync(ct);
+        try { items = await GetChildrenWithMetadataAsync(driveId, rootItemId, ct); }
+        finally { controller.Release(); }
+
+        foreach (var item in items)
+        {
+            ct.ThrowIfCancellationRequested();
+            if (item.Id == null || item.Name == null) continue;
+            var childPath = string.IsNullOrEmpty(basePath) ? item.Name : $"{basePath}/{item.Name}";
+            if (item.Folder != null)
+            {
+                await foreach (var f in EnumerateFilesWithMetadataAsync(driveId, item.Id, childPath, controller, ct))
+                    yield return f;
+            }
+            else
+            {
+                yield return new ScannedFile(driveId, item.Id, item.Name, childPath,
+                    item.Size, item.LastModifiedDateTime);
+            }
+        }
+    }
+
+    // Read-only counterpart to GetOrCreateFolderPathAsync: walks an existing path segment-by-segment
+    // (same per-segment escaping, never creates anything) to resolve the item id a relative path
+    // points at — used by verification to navigate to the actual copied folder/file under a
+    // library root, rather than assuming the path IS the item id. Returns null if any segment is
+    // missing (e.g. the folder was deleted or renamed since the original copy).
+    internal async Task<string?> ResolveItemIdByPathAsync(string driveId, string parentItemId, string relativePath)
+    {
+        var current = parentItemId;
+        foreach (var part in relativePath.Split('/').Where(p => !string.IsNullOrEmpty(p)))
+        {
+            try
+            {
+                var item = await Graph.Drives[driveId].Items[current]
+                    .ItemWithPath(Uri.EscapeDataString(part))
+                    .GetAsync(cfg => cfg.QueryParameters.Select = ["id"]);
+                if (item?.Id == null) return null;
+                current = item.Id;
+            }
+            catch (Microsoft.Graph.Models.ODataErrors.ODataError ex) when (ex.ResponseStatusCode == 404)
+            {
+                return null;
+            }
+        }
+        return current;
+    }
+
+    // Fetches a single item directly (no recursion) for verification of a plain single-file root.
+    internal async Task<ScannedFile?> GetFileForVerificationAsync(string driveId, string itemId, string relativePath)
+    {
+        var item = await Graph.Drives[driveId].Items[itemId].GetAsync(cfg =>
+            cfg.QueryParameters.Select = ["id", "name", "size", "file", "lastModifiedDateTime"]);
+        if (item?.Id == null || item.Name == null || item.File == null) return null;
+        return new ScannedFile(driveId, item.Id, item.Name, relativePath, item.Size, item.LastModifiedDateTime);
+    }
+
+    // $select keeps the payload small at 100k+ files: only fields the comparison needs.
+    private async Task<List<DriveItem>> GetChildrenWithMetadataAsync(
+        string driveId, string itemId, CancellationToken ct)
+    {
+        var resolvedId = itemId == "root" ? "root" : itemId;
+        var page = await Graph.Drives[driveId].Items[resolvedId].Children.GetAsync(cfg =>
+        {
+            cfg.QueryParameters.Top    = 1000;
+            cfg.QueryParameters.Select = ["id", "name", "size", "file", "folder", "lastModifiedDateTime"];
+        }, ct);
+
+        var items = new List<DriveItem>();
+        while (page != null)
+        {
+            items.AddRange(page.Value ?? []);
+            if (page.OdataNextLink == null) break;
+            page = await Graph.Drives[driveId].Items[resolvedId].Children
+                .WithUrl(page.OdataNextLink).GetAsync(cancellationToken: ct);
+        }
+        return items;
+    }
+
     // ── File content ──────────────────────────────────────────────────────────
 
     public async Task<Stream> DownloadFileAsync(string driveId, string itemId)

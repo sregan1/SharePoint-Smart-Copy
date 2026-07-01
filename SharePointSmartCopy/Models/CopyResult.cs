@@ -47,7 +47,7 @@ public partial class CopyResult : ObservableObject
     public string StatusDisplay => Status switch
     {
         CopyStatus.Pending  => "⏳ Pending",
-        CopyStatus.Copying  => "⟳ Copying…",
+        CopyStatus.Copying  => "⟳ Processing…",
         CopyStatus.Success  => "✅ Success",
         CopyStatus.Failed   => "❌ Failed",
         CopyStatus.Skipped  => "⏭ Skipped",

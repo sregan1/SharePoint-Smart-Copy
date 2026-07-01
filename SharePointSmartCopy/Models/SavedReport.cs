@@ -39,6 +39,23 @@ public class SavedReportItem
     };
 }
 
+// Root scan scope for a saved run, captured at save time so a "Verify" re-scan can be launched
+// later from History — even in a future app session where the live CopyJobs list no longer
+// exists. Mirrors VerificationRoot's fields (kept as a separate, plain-data, JSON-serializable
+// type rather than reusing VerificationRoot directly, consistent with how SavedReportItem
+// mirrors CopyResult rather than being it).
+public class SavedReportRoot
+{
+    public string SourceDriveId { get; set; } = string.Empty;
+    public string SourceItemId { get; set; } = string.Empty;
+    public string SourceName { get; set; } = string.Empty;
+    public bool IsFolder { get; set; }
+    public bool IsLibrary { get; set; }
+    public string TargetDriveId { get; set; } = string.Empty;
+    public string TargetParentItemId { get; set; } = string.Empty;
+    public string TargetSubFolderPath { get; set; } = string.Empty;
+}
+
 public class SavedReport
 {
     public string Id { get; set; } = string.Empty;
@@ -55,6 +72,10 @@ public class SavedReport
     public CopyMode CopyMode { get; set; }
 
     public List<SavedReportItem> Items { get; set; } = [];
+
+    // Populated from CopyJobs at save time. Empty for reports saved before verification support
+    // shipped — that's the signal used to disable the History "Verify" button for old reports.
+    public List<SavedReportRoot> Roots { get; set; } = [];
 
     [JsonIgnore]
     public string DisplayDate => Timestamp.LocalDateTime.ToString("MMM d, yyyy  h:mm tt");
