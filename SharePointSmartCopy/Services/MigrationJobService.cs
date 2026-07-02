@@ -863,7 +863,18 @@ public class MigrationJobService(SharePointService spService)
                     // Hand this file's blob upload off to run concurrently with other files' uploads.
                     var entry      = builder.Files[^1];
                     var dataResult = data.Result;
-                    listItemMap[entry.ListItemId] = dataResult; // for per-item import-error attribution
+                    // Register EVERY GUID the manifest mints for this file — SP import errors reference
+                    // different ids depending on error type ([File] errors carry the FileId, list-item
+                    // errors the ListItemId, stream errors the StreamId). Keying only ListItemId left
+                    // [File]-level errors unattributed (observed 2026-07-01: 3 MD5 errors reported, 1
+                    // attributed — 2 failed files shown as Success in the grid).
+                    listItemMap[entry.ListItemId] = dataResult;
+                    listItemMap[entry.FileId]     = dataResult;
+                    foreach (var v in entry.Versions)
+                    {
+                        listItemMap[v.FileId]   = dataResult;
+                        listItemMap[v.StreamId] = dataResult;
+                    }
                     var versCount  = data.Versions.Count;
                     var fileName   = data.Job.SourceName;
                     await uploadGate.WaitAsync(cancellationToken); // back-pressure: cap in-flight uploads
@@ -878,7 +889,20 @@ public class MigrationJobService(SharePointService spService)
                                 var content = version.EncryptedContent
                                     ?? throw new InvalidOperationException("Encrypted content already released.");
                                 var ivB64 = Convert.ToBase64String(content[..16]);
-                                var opts  = new BlobUploadOptions { Metadata = new Dictionary<string, string> { ["IV"] = ivB64 } };
+                                // SPMI requires an MD5 for every content blob ("Missing MD5 property in
+                                // Manifest and Azure Blob" otherwise). Small blobs get one implicitly:
+                                // a single-request upload has Azure compute/store Content-MD5 itself. Blobs
+                                // above the SDK's single-shot threshold (~256 MB) upload as blocks, which
+                                // get NO automatic blob-level MD5 — so every large file failed import
+                                // (observed 2026-07-01: all >2 GB files in a batch rejected). Compute it
+                                // ourselves over exactly the uploaded bytes (ciphertext after the 16-byte
+                                // IV prefix — SP validates the stored blob, which is encrypted).
+                                var md5 = System.Security.Cryptography.MD5.HashData(content.AsSpan(16));
+                                var opts  = new BlobUploadOptions
+                                {
+                                    Metadata    = new Dictionary<string, string> { ["IV"] = ivB64 },
+                                    HttpHeaders = new BlobHttpHeaders { ContentHash = md5 },
+                                };
                                 var blob = dataClient.GetBlobClient(version.StreamId);
 
                                 // Azure Storage's own internal retry (ClientOptions.Retry) already exhausts
@@ -1110,14 +1134,19 @@ public class MigrationJobService(SharePointService spService)
                     {
                         var msg = evt.TryGetProperty("Message", out var m) ? m.GetString() : "Unknown error";
                         liveErrorCount++;
-                        // Attribute to the exact file when the message carries its list-item GUID, and
-                        // mark that file Failed so it shows in the Failed filter and can be re-copied.
-                        var guid = ExtractGuid(msg);
-                        if (guid != null && batch.ListItemMap.TryGetValue(guid, out var failedRes)
-                            && failedRes.Status == CopyStatus.Copying)
+                        // Attribute to the exact file and mark it Failed so it shows in the Failed filter
+                        // and can be re-copied. The GUID isn't always in Message (the MD5 errors carry
+                        // none there) — scan the WHOLE event for any GUID we minted for this batch; only
+                        // manifest-minted ids can match the map, so job/correlation GUIDs are inert.
+                        foreach (System.Text.RegularExpressions.Match gm in GuidRegex.Matches(evt.ToString()))
                         {
-                            failedRes.Status       = CopyStatus.Failed;
-                            failedRes.ErrorMessage = msg;
+                            if (batch.ListItemMap.TryGetValue(gm.Value, out var failedRes)
+                                && failedRes.Status == CopyStatus.Copying)
+                            {
+                                failedRes.Status       = CopyStatus.Failed;
+                                failedRes.ErrorMessage = msg;
+                                break;
+                            }
                         }
                         // Surface the first handful LIVE (as SP reports them) so a failing batch is
                         // visible immediately; suppress the rest to avoid flooding the feed.
@@ -1129,6 +1158,13 @@ public class MigrationJobService(SharePointService spService)
                     }
                 }
             }
+
+            // Fetch SP's report BEFORE final marking: the .err file names every failed object with its
+            // GUID, while the live queue events sometimes omit it (observed with the MD5 errors) — any
+            // failure left unattributed at this point would be marked Success below.
+            if (fatal || liveErrorCount > 0 || totalErrorsReported > 0)
+                await TryLogMigrationReportAsync(metadataClient, jobId, batch.EncryptionKey, activityLog, pfx,
+                    attributeMap: batch.ListItemMap);
 
             // Step 8: mark results accurately. Files already Failed (attributed above, or upload failures)
             // stay Failed; on a fatal abort every not-yet-succeeded file fails; otherwise the rest succeeded.
@@ -1152,7 +1188,6 @@ public class MigrationJobService(SharePointService spService)
             if (fatal)
             {
                 activityLog?.Report($"✗ {pfx}Import FAILED (fatal abort) — {importedCount} of {batch.CopyingCount} imported, {failedCount} failed");
-                await TryLogMigrationReportAsync(metadataClient, jobId, batch.EncryptionKey, activityLog, pfx);
             }
             else if (failedCount > 0 || liveErrorCount > 0 || totalErrorsReported > 0)
             {
@@ -1161,7 +1196,6 @@ public class MigrationJobService(SharePointService spService)
                 int reported = Math.Max(failedCount, Math.Max(liveErrorCount, totalErrorsReported));
                 var extra = reported > failedCount ? $" ({reported} errors reported, {failedCount} attributed)" : "";
                 activityLog?.Report($"⚠ {pfx}Import finished with errors — {importedCount} of {batch.CopyingCount} imported, {failedCount} failed{extra}");
-                await TryLogMigrationReportAsync(metadataClient, jobId, batch.EncryptionKey, activityLog, pfx);
             }
             else
             {
@@ -1370,16 +1404,10 @@ public class MigrationJobService(SharePointService spService)
         @"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
         System.Text.RegularExpressions.RegexOptions.Compiled);
 
-    private static string? ExtractGuid(string? text)
-    {
-        if (string.IsNullOrEmpty(text)) return null;
-        var m = GuidRegex.Match(text);
-        return m.Success ? m.Value : null;
-    }
-
     private static async Task TryLogMigrationReportAsync(
         Azure.Storage.Blobs.BlobContainerClient metadataClient, string jobId, byte[] key,
-        IProgress<string>? activityLog = null, string? pfx = null)
+        IProgress<string>? activityLog = null, string? pfx = null,
+        IReadOnlyDictionary<string, CopyResult>? attributeMap = null)
     {
         foreach (var suffix in new[] { ".err", ".log" })
         {
@@ -1424,14 +1452,39 @@ public class MigrationJobService(SharePointService spService)
                 var reportText = System.Text.Encoding.UTF8.GetString(plain);
                 System.Diagnostics.Debug.WriteLine($"[SP-{suffix[1..]}] {reportText}");
 
-                // Surface the first few lines of SP's .err report into the activity feed so the actual
-                // failure reason is visible to the user immediately (not just in VS Debug Output).
-                if (activityLog != null && suffix == ".err")
+                if (suffix == ".err")
                 {
                     var lines = reportText.Split('\n')
-                        .Select(l => l.Trim()).Where(l => l.Length > 0).Take(5).ToList();
-                    foreach (var line in lines)
-                        activityLog.Report($"   {pfx}SP: {line}");
+                        .Select(l => l.Trim()).Where(l => l.Length > 0).ToList();
+
+                    // Attribute each error line to its file: every line names the failed object's GUID,
+                    // which the batch minted (FileId/ListItemId/StreamId are all registered). This is the
+                    // authoritative failure list — live queue events can omit the GUID entirely.
+                    if (attributeMap != null)
+                    {
+                        foreach (var line in lines.Where(l => l.Contains("[Error]", StringComparison.OrdinalIgnoreCase)))
+                        {
+                            foreach (System.Text.RegularExpressions.Match gm in GuidRegex.Matches(line))
+                            {
+                                if (attributeMap.TryGetValue(gm.Value, out var res)
+                                    && res.Status == CopyStatus.Copying)
+                                {
+                                    res.Status       = CopyStatus.Failed;
+                                    res.ErrorMessage = line;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    // Surface the first few lines of SP's .err report into the activity feed so the
+                    // actual failure reason is visible to the user immediately (not just in VS Debug
+                    // Output).
+                    if (activityLog != null)
+                    {
+                        foreach (var line in lines.Take(5))
+                            activityLog.Report($"   {pfx}SP: {line}");
+                    }
                 }
             }
             catch (Exception ex)

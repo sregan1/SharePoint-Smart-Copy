@@ -131,10 +131,26 @@ public partial class HistoryDialog : Window
         {
             var roots       = VerificationRoot.FromSavedReport(report);
             var maxParallel = AppSettings.Load().MaxParallelCopies;
-            var onScanned   = new Progress<VerificationReportService.ScanProgress>(p =>
-                VerifyStatus.Text = $"Scanning… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)");
+
+            // Combine the scan-progress line with the most recent throttle/error notice (if any) so
+            // a long Retry-After wait — previously invisible here — shows up instead of just leaving
+            // the file counts frozen, which looked indistinguishable from a hang.
+            string scanText = "Scanning…";
+            string noticeText = "";
+            void UpdateStatus() =>
+                VerifyStatus.Text = string.IsNullOrEmpty(noticeText) ? scanText : $"{scanText}  {noticeText}";
+            var onScanned = new Progress<VerificationReportService.ScanProgress>(p =>
+            {
+                scanText = $"Scanning… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)";
+                UpdateStatus();
+            });
+            var onNotice = new Progress<string>(msg =>
+            {
+                noticeText = msg;
+                UpdateStatus();
+            });
             var result = await _verificationReportService.RunAsync(
-                roots, maxParallel, activityLog: null, progress: onScanned, _verifyCts.Token);
+                roots, maxParallel, activityLog: onNotice, progress: onScanned, _verifyCts.Token);
             ExcelReportWriter.Write(dlg.FileName, result);
             if (result.ScanErrors.Count > 0)
                 MessageBox.Show(

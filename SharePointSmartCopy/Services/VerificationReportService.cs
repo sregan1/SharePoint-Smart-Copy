@@ -34,6 +34,28 @@ public sealed class VerificationReportService(SharePointService spService)
         void onThrottle(TimeSpan delay, int _, int __, string? ___) => controller.StepDown(delay);
         spService.Throttled += onThrottle;
 
+        // Without this, a throttle wait (up to 120s, observed recurring for over an hour on a
+        // busy tenant) is completely silent — the scan-progress text only updates when a new file
+        // is found, so a long Retry-After window is indistinguishable from a hang. Mirrors the
+        // same "⚠ Graph throttled — waiting Ns" message and 5s dedup CopyService.ExecuteAsync
+        // already uses for copy runs.
+        if (activityLog != null)
+        {
+            var throttleLogLock = new object();
+            var lastThrottleLog = DateTimeOffset.MinValue;
+            spService.Throttled += (delay, attempt, max, reason) =>
+            {
+                lock (throttleLogLock)
+                {
+                    var now = DateTimeOffset.UtcNow;
+                    if (now - lastThrottleLog < TimeSpan.FromSeconds(5)) return;
+                    lastThrottleLog = now;
+                }
+                activityLog.Report($"⚠ Graph throttled — waiting {delay.TotalSeconds:0}s"
+                    + (string.IsNullOrEmpty(reason) ? "" : $" [{reason}]"));
+            };
+        }
+
         try
         {
             var scanErrors = new ConcurrentBag<string>();
