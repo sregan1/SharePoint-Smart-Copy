@@ -788,6 +788,34 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private int _packedCount;
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsCancelable))] [NotifyCanExecuteChangedFor(nameof(ExportVerificationReportCommand))] private bool _isVerifying;
 
+    // Frozen at copy-start (not a live binding to the Options step) so it always reflects what
+    // this run actually started with, even if the Options step's fields could otherwise still
+    // change — needed so mid-run/after-the-fact you can tell what a run was configured with
+    // without having to trust memory or dig through the Options screen.
+    [ObservableProperty] private string _runSettingsSummary = string.Empty;
+
+    internal string BuildRunSettingsSummary()
+    {
+        var overwrite = OverwriteMode switch
+        {
+            Models.OverwriteMode.IfNewer => "If Newer",
+            var m => m.ToString()
+        };
+        var copyMode = CopyMode == Models.CopyMode.MigrationApi ? "Migration API" : "Enhanced REST";
+        var versions = !CopyVersions ? "Off" : CopyAllVersions ? "All" : $"Max {MaxVersions}";
+
+        return string.Join("  ·  ",
+        [
+            $"Overwrite: {overwrite}",
+            $"Copy Mode: {copyMode}",
+            $"Versions: {versions}",
+            $"Parallel Copies: {MaxParallelCopies}",
+            $"Preserve Metadata: {(PreserveMetadata ? "Yes" : "No")}",
+            $"Permissions: {(CopyPermissions ? "Yes" : "No")}",
+            $"Custom Columns: {(EffectiveCopyCustomColumns ? "Yes" : "No")}"
+        ]);
+    }
+
     private readonly List<string> _activityLines = [];
     private string _activityText = "";
     public string ActivityText
@@ -940,6 +968,8 @@ public partial class MainViewModel : ObservableObject
         StartActivityLogFile();
         if (ActivityLogPath != null)
             PushActivity($"Activity log: {ActivityLogPath}");
+        RunSettingsSummary = BuildRunSettingsSummary();
+        PushActivity($"Settings: {RunSettingsSummary}");
         System.Windows.Threading.DispatcherTimer? metadataTimer = null;
         var onMetadataDone = new Progress<bool>(completed =>
         {
@@ -2367,6 +2397,13 @@ public partial class MainViewModel : ObservableObject
         _verifyCts?.Dispose();
         _verifyCts   = new CancellationTokenSource();
         IsVerifying  = true;
+        // Verification previously only appended to whatever log file a prior copy in this session had
+        // already opened — running Verify on its own (no copy this session, or after reopening the app)
+        // left zero on-disk record of the run, so a real failure had nothing to inspect afterward.
+        // Give it its own log file, same pattern as StartCopyAsync.
+        StartActivityLogFile();
+        if (ActivityLogPath != null)
+            PushActivity($"Activity log: {ActivityLogPath}");
         var onActivity = new Progress<string>(PushActivity);
         var onScanned  = new Progress<VerificationReportService.ScanProgress>(p =>
             StatusMessage = $"Verifying… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)");
@@ -2378,14 +2415,23 @@ public partial class MainViewModel : ObservableObject
             var result = await _verificationReportService.RunAsync(
                 roots, MaxParallelCopies, onActivity, onScanned, _verifyCts.Token);
             ExcelReportWriter.Write(dlg.FileName, result);
+
+            int matched      = result.Comparison.Count(r => r.Status == ComparisonStatus.Match);
+            int onlyInSource = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInSource);
+            int onlyInTarget = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInTarget);
+            PushActivity($"✔ Verification complete: {matched:N0} matched, {onlyInSource:N0} only in source, {onlyInTarget:N0} only in target");
             PushActivity($"Verification report written: {dlg.FileName}");
             if (result.ScanErrors.Count > 0)
                 PushActivity($"⚠ {result.ScanErrors.Count} root(s) could not be scanned — see the Scan Errors tab");
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
             StatusMessage = string.Empty;
         }
-        catch (OperationCanceledException) { StatusMessage = "Verification cancelled."; }
-        catch (Exception ex)              { StatusMessage = $"Verification error: {ex.Message}"; }
+        catch (OperationCanceledException) { StatusMessage = "Verification cancelled."; PushActivity("Verification cancelled."); }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Verification error: {ex.Message}";
+            PushActivity($"⚠ Verification error: {ex.Message}");
+        }
         finally { IsVerifying = false; }
     }
 

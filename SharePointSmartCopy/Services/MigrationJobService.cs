@@ -56,6 +56,30 @@ public class MigrationJobService(SharePointService spService)
         // slot count before any file transfers have started.
         void onMigrationThrottle(TimeSpan delay, int __, int ___, string? ____) =>
             downloadController.StepDown(delay);
+
+        // Separate adaptive gate for the pre-flight analysis loops (subfolder provisioning, existing-
+        // file scan) — same backoff mechanism as downloadController but kept fully isolated from it,
+        // per the isolation rationale above. Without this, those loops ran a plain fixed-width
+        // Parallel.ForEachAsync(8): each worker individually waited out its own Retry-After but then
+        // the full 8-wide burst resumed immediately, walking straight back into the same depleted
+        // throttle budget (observed as repeated 60-120s waits back to back). This settles the width
+        // below the threshold instead, same as the download gate does.
+        const int AnalysisMaxParallelism = 8;
+        using var analysisController = new AdaptiveParallelismController(AnalysisMaxParallelism);
+        void onAnalysisThrottle(TimeSpan delay, int __, int ___, string? ____) =>
+            analysisController.StepDown(delay);
+        if (activityLog != null)
+        {
+            int lastAnalysisLimit = AnalysisMaxParallelism;
+            analysisController.LimitChanged += n =>
+            {
+                bool down = n < lastAnalysisLimit;
+                lastAnalysisLimit = n;
+                activityLog.Report(down
+                    ? $"↓ Analysis: {n}/{AnalysisMaxParallelism} slots (throttle backoff)"
+                    : $"⬆ Analysis: {n}/{AnalysisMaxParallelism} slots (recovering)");
+            };
+        }
         if (activityLog != null)
         {
             int lastDlLimit = maxParallel;
@@ -132,83 +156,152 @@ public class MigrationJobService(SharePointService spService)
                 var targetIsEmpty = await spService.IsFolderEmptyAsync(
                     firstJob.TargetDriveId, firstJob.TargetParentItemId);
 
-                if (subFolderPaths.Count > 0)
-                {
-                    activityLog?.Report($"Provisioning {subFolderPaths.Count} target subfolder{(subFolderPaths.Count == 1 ? "" : "s")}...");
-                    var cacheLock = new object();
-                    // Parallel creation at MaxDegree=4 — the segment cache (SharePointService._folderSegmentCache)
-                    // makes concurrent creates safe: races on shared path prefixes resolve via 409 conflict
-                    // recovery, and the cache ensures each unique segment is created at most once.
-                    await Parallel.ForEachAsync(subFolderPaths,
-                        new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
-                        async (folderPath, ct) =>
-                        {
-                            var id = await spService.GetOrCreateFolderPathAsync(
-                                firstJob.TargetDriveId, firstJob.TargetParentItemId, folderPath);
-                            lock (cacheLock) sharedFolderIdCache[folderPath] = id;
-                        });
-                }
-
-                // Build the target-folder file listing once and share across all SPMI batches.
-                // Without sharing, N parallel batches each independently fetch all M folders = N×M calls.
-                // With sharing: M calls total (parallel at 8), then all batches read the snapshot.
+                // Adaptive gate scoped tightly to just these two pre-flight loops — subscribed only
+                // for their duration so throttles here don't bleed into the download-phase controller
+                // (and vice versa), matching the isolation already used for onMigrationThrottle below.
                 var sharedExistingByFolder = new System.Collections.Concurrent.ConcurrentDictionary<
                     string, Dictionary<string, (string ItemId, DateTimeOffset? Modified)>>(
                     StringComparer.OrdinalIgnoreCase);
-                if (targetIsEmpty)
+                spService.Throttled += onAnalysisThrottle;
+                try
                 {
-                    // Nothing exists — populate empty listings with no Graph calls at all. The per-batch
-                    // pre-flight fast-path then treats every file as new (no scan, no zombie checks).
-                    activityLog?.Report("Target is empty — skipping the existing-file scan.");
-                    foreach (var key in sharedFolderIdCache.Keys)
-                        sharedExistingByFolder[key] = new Dictionary<string, (string ItemId, DateTimeOffset? Modified)>(StringComparer.OrdinalIgnoreCase);
+                    if (subFolderPaths.Count > 0)
+                    {
+                        activityLog?.Report($"Provisioning {subFolderPaths.Count} target subfolder{(subFolderPaths.Count == 1 ? "" : "s")}...");
+                        var cacheLock = new object();
+                        // Outer MaxDegreeOfParallelism just provides enough lanes; analysisController's
+                        // own semaphore (capped at AnalysisMaxParallelism, shrunk on throttle) is what
+                        // actually governs live concurrency — the segment cache
+                        // (SharePointService._folderSegmentCache) makes concurrent creates safe: races on
+                        // shared path prefixes resolve via 409 conflict recovery, and the cache ensures
+                        // each unique segment is created at most once.
+                        await Parallel.ForEachAsync(subFolderPaths,
+                            new ParallelOptions { MaxDegreeOfParallelism = AnalysisMaxParallelism, CancellationToken = cancellationToken },
+                            async (folderPath, ct) =>
+                            {
+                                await analysisController.WaitAsync(ct);
+                                try
+                                {
+                                    var id = await spService.GetOrCreateFolderPathAsync(
+                                        firstJob.TargetDriveId, firstJob.TargetParentItemId, folderPath);
+                                    lock (cacheLock) sharedFolderIdCache[folderPath] = id;
+                                }
+                                finally { analysisController.Release(); }
+                            });
+                    }
+
+                    // Build the target-folder file listing once and share across all SPMI batches.
+                    // Without sharing, N parallel batches each independently fetch all M folders = N×M calls.
+                    // With sharing: M calls total (parallel at up to 8, adaptively), then all batches read
+                    // the snapshot.
+                    if (targetIsEmpty)
+                    {
+                        // Nothing exists — populate empty listings with no Graph calls at all. The per-batch
+                        // pre-flight fast-path then treats every file as new (no scan, no zombie checks).
+                        activityLog?.Report("Target is empty — skipping the existing-file scan.");
+                        foreach (var key in sharedFolderIdCache.Keys)
+                            sharedExistingByFolder[key] = new Dictionary<string, (string ItemId, DateTimeOffset? Modified)>(StringComparer.OrdinalIgnoreCase);
+                    }
+                    else
+                    {
+                        activityLog?.Report($"Scanning {sharedFolderIdCache.Count} target folder{(sharedFolderIdCache.Count == 1 ? "" : "s")} for existing files...");
+                        await Parallel.ForEachAsync(sharedFolderIdCache,
+                            new ParallelOptions { MaxDegreeOfParallelism = AnalysisMaxParallelism, CancellationToken = cancellationToken },
+                            async (kvp, ct) =>
+                            {
+                                await analysisController.WaitAsync(ct);
+                                try
+                                {
+                                    sharedExistingByFolder[kvp.Key] = await spService.FetchFolderItemsAsync(
+                                        firstJob.TargetDriveId, kvp.Value);
+                                }
+                                finally { analysisController.Release(); }
+                            });
+                    }
                 }
-                else
+                finally
                 {
-                    activityLog?.Report($"Scanning {sharedFolderIdCache.Count} target folder{(sharedFolderIdCache.Count == 1 ? "" : "s")} for existing files...");
-                    await Parallel.ForEachAsync(sharedFolderIdCache,
-                        new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
-                        async (kvp, ct) =>
-                        {
-                            sharedExistingByFolder[kvp.Key] = await spService.FetchFolderItemsAsync(
-                                firstJob.TargetDriveId, kvp.Value);
-                        });
+                    spService.Throttled -= onAnalysisThrottle;
                 }
 
-                // Skip mode: a file matched by name here will always be skipped later in the per-batch
-                // pre-flight, so fetching its metadata/versions for batching below is pure waste. On a
-                // mostly-already-copied library that waste dominates — thousands of metadata calls for
-                // files that were never going to be copied, which is what exhausts the tenant's Graph
-                // rate limit and causes throttling to bleed into the (much smaller) real download work.
-                // Filter them out here, before the metadata analysis, using the same by-name check the
-                // per-batch pre-flight uses. Overwrite/IfNewer still need every file's metadata (Overwrite
-                // re-copies everything; IfNewer's skip decision itself depends on modified date), so this
-                // only applies to Skip.
-                if (overwriteMode == OverwriteMode.Skip)
+                // A file matched by name here will be re-evaluated (and, for Skip, always skipped) later
+                // in the per-batch pre-flight anyway, so fetching its metadata/versions for batching below
+                // is wasted work for anything that turns out skippable. On a mostly-already-copied library
+                // that waste dominates — thousands of metadata calls for files that were never going to be
+                // copied, which is what exhausts the tenant's Graph rate limit and causes throttling to
+                // bleed into the (much smaller) real download work. Overwrite always needs every file's
+                // metadata (it re-copies everything unconditionally), so this only applies to Skip and If
+                // Newer — and If Newer additionally needs the source's modified date to decide, so it gets
+                // a cheap metadata-ONLY bulk fetch (1 sub-request/file) for just the existing subset,
+                // rather than the full metadata+version fetch (2 sub-requests/file) below.
+                if (overwriteMode is OverwriteMode.Skip or OverwriteMode.IfNewer)
                 {
-                    var toProcess = new List<(CopyJob job, CopyResult result)>(groupTasks.Count);
-                    int preskipped = 0;
+                    var existingAtTarget = new List<(CopyJob job, CopyResult result, DateTimeOffset? TargetModified)>();
+                    var newAtTarget = new List<(CopyJob job, CopyResult result)>();
                     foreach (var t in groupTasks)
                     {
                         var subPath = t.job.TargetSubFolderPath ?? string.Empty;
                         if (sharedExistingByFolder.TryGetValue(subPath, out var existing) &&
-                            existing.ContainsKey(t.job.SourceName))
-                        {
-                            t.result.Status = CopyStatus.Skipped;
-                            preskipped++;
-                        }
+                            existing.TryGetValue(t.job.SourceName, out var existingEntry))
+                            existingAtTarget.Add((t.job, t.result, existingEntry.Modified));
                         else
-                        {
-                            toProcess.Add(t);
-                        }
+                            newAtTarget.Add(t);
                     }
+
+                    List<(CopyJob job, CopyResult result)> toProcess;
+                    int preskipped;
+                    if (overwriteMode == OverwriteMode.Skip)
+                    {
+                        foreach (var t in existingAtTarget) t.result.Status = CopyStatus.Skipped;
+                        preskipped = existingAtTarget.Count;
+                        toProcess = newAtTarget;
+                    }
+                    else // IfNewer
+                    {
+                        if (existingAtTarget.Count > 0)
+                            activityLog?.Report($"Checking modified dates for {existingAtTarget.Count:N0} existing file(s)...");
+                        var modDateProgress = new Progress<int>(d =>
+                            activityLog?.Report($"Checking modified dates: {d:N0} / {existingAtTarget.Count:N0}"));
+                        var modDates = await spService.FetchModifiedDatesAsync(
+                            existingAtTarget.Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
+                            maxConcurrency: 6, progress: modDateProgress, ct: cancellationToken);
+
+                        var stillNeedsCopy = new List<(CopyJob job, CopyResult result)>();
+                        preskipped = 0;
+                        int undetermined = 0;
+                        foreach (var t in existingAtTarget)
+                        {
+                            // Undetermined (fetch failed even after retries) is treated as needing a copy,
+                            // not silently skipped — the full pass below will resolve it for real, same
+                            // fallback direction the cache-miss handling elsewhere in this file already uses.
+                            if (modDates.TryGetValue(t.job.SourceItemId, out var srcModified) &&
+                                srcModified.HasValue && srcModified.Value <= t.TargetModified)
+                            {
+                                t.result.Status       = CopyStatus.Skipped;
+                                t.result.ErrorMessage  = CopyResult.UpToDate;
+                                preskipped++;
+                            }
+                            else
+                            {
+                                if (!modDates.ContainsKey(t.job.SourceItemId)) undetermined++;
+                                stillNeedsCopy.Add((t.job, t.result));
+                            }
+                        }
+                        // Surfaced so a repeat of the 114k-file throttle storm (2026-07-01, see
+                        // FetchModifiedDatesAsync) is visible immediately instead of only showing up as
+                        // an inexplicably low skip rate discovered many minutes later.
+                        if (undetermined > 0)
+                            activityLog?.Report($"⚠ {undetermined:N0} file(s) had no confirmed modified date after retries — treated as needing a copy");
+                        toProcess = stillNeedsCopy.Concat(newAtTarget).ToList();
+                    }
+
                     if (preskipped > 0)
                     {
                         int done = Interlocked.Add(ref preflightCounter[0], preskipped);
                         preflightProgress?.Report((done, preflightTotal));
-                        activityLog?.Report($"{preskipped:N0} of {groupTasks.Count:N0} already exist — skipping metadata fetch for those");
-                        groupTasks = toProcess;
+                        activityLog?.Report($"{preskipped:N0} of {groupTasks.Count:N0} already up to date — skipping metadata fetch for those");
                     }
+                    groupTasks = toProcess;
                 }
                 if (groupTasks.Count == 0) continue; // whole drive group already copied
 
@@ -272,8 +365,20 @@ public class MigrationJobService(SharePointService spService)
                     .Where(g => g.Key.Length > 0)
                     .Select(g => (folderKey: g.Key, driveId: g.First().job.SourceDriveId, sampleFileItemId: g.First().job.SourceItemId))
                     .ToList();
+                // Previously silent — for a deep/wide folder structure this is 2 Graph calls per
+                // distinct folder, each subject to Kiota's own throttle retries, and could run for a
+                // long time right after the metadata-analysis pass above with zero visible progress,
+                // making the app look hung. Report it the same way as that pass.
+                if (folderMetaInput.Count > 0)
+                    activityLog?.Report($"Fetching metadata for {folderMetaInput.Count:N0} folders...");
+                var folderProgress = new Progress<int>(d =>
+                {
+                    if (folderMetaInput.Count > 20 && (d % 100 == 0 || d == folderMetaInput.Count))
+                        activityLog?.Report($"Fetching folder metadata: {d:N0} / {folderMetaInput.Count:N0}");
+                });
                 var folderMetadata = await spService.FetchFolderMetadataAsync(
-                    groupTasks[0].job.SourceDriveId, folderMetaInput, maxConcurrency: 6, ct: cancellationToken);
+                    groupTasks[0].job.SourceDriveId, folderMetaInput, maxConcurrency: 6,
+                    progress: folderProgress, ct: cancellationToken);
 
                 int VersionsOf((CopyJob job, CopyResult result) t)
                 {

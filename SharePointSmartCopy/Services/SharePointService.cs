@@ -101,10 +101,17 @@ public class SharePointService
         // Configure the underlying socket handler: gzip so metadata/JSON responses transfer
         // compressed (binary downloads are already-compressed and unaffected), and recycle pooled
         // connections every few minutes for stability across multi-hour 20k+ file runs.
+        // EnableMultipleHttp2Connections matters at our concurrency levels: SocketsHttpHandler
+        // multiplexes ALL requests to a host over a SINGLE HTTP/2 connection by default, so up to
+        // 16 concurrent Graph calls (the app's max parallel-copies setting) would otherwise share
+        // one TCP connection's congestion window and frame-processing loop instead of spreading
+        // across several — a client-side ceiling independent of (and easy to mistake for) Graph's
+        // own throttling.
         var finalHandler = new System.Net.Http.SocketsHttpHandler
         {
-            AutomaticDecompression   = System.Net.DecompressionMethods.All,
-            PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+            AutomaticDecompression         = System.Net.DecompressionMethods.All,
+            PooledConnectionLifetime       = TimeSpan.FromMinutes(2),
+            EnableMultipleHttp2Connections = true,
         };
         var httpClient = KiotaClientFactory.Create(handlers, finalHandler);
         httpClient.Timeout = TimeSpan.FromMinutes(30);
@@ -254,16 +261,43 @@ public class SharePointService
     // Separate from EnumerateFilesAsync/GetChildrenAsync (used by the copy engine) so a
     // verification re-scan never shares state/behavior with the copy path, and so its Graph
     // payload can be trimmed with an explicit $select for 100k+ file scale.
+    //
+    // Sibling subfolders are walked CONCURRENTLY (fanned out as tasks, funneled through a
+    // channel), not one at a time — a plain recursive `await foreach` would serialize the entire
+    // folder-tree walk to one Graph call in flight at a time regardless of how much concurrency
+    // the controller allows, since each subfolder's whole subtree would have to finish before its
+    // sibling starts. The controller still bounds how many of those concurrent walks are actually
+    // making Graph calls at once (extra tasks just queue on controller.WaitAsync), so this doesn't
+    // bypass throttle protection — it just lets the walk actually use the concurrency budget the
+    // controller already grants, the same way the file-copy pipeline does with Parallel.ForEachAsync.
     internal async IAsyncEnumerable<ScannedFile> EnumerateFilesWithMetadataAsync(
         string driveId, string rootItemId, string basePath,
         AdaptiveParallelismController controller,
         [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct = default)
     {
+        var channel = System.Threading.Channels.Channel.CreateUnbounded<ScannedFile>();
+        var walkTask = Task.Run(async () =>
+        {
+            try { await WalkFilesWithMetadataAsync(driveId, rootItemId, basePath, controller, channel.Writer, ct); }
+            finally { channel.Writer.Complete(); }
+        }, ct);
+
+        await foreach (var f in channel.Reader.ReadAllAsync(ct))
+            yield return f;
+
+        await walkTask; // propagate any exception from the walk (channel completion alone would swallow it)
+    }
+
+    private async Task WalkFilesWithMetadataAsync(
+        string driveId, string itemId, string basePath, AdaptiveParallelismController controller,
+        System.Threading.Channels.ChannelWriter<ScannedFile> writer, CancellationToken ct)
+    {
         List<DriveItem> items;
         await controller.WaitAsync(ct);
-        try { items = await GetChildrenWithMetadataAsync(driveId, rootItemId, ct); }
+        try { items = await GetChildrenWithMetadataAsync(driveId, itemId, ct); }
         finally { controller.Release(); }
 
+        var subfolderWalks = new List<Task>();
         foreach (var item in items)
         {
             ct.ThrowIfCancellationRequested();
@@ -271,15 +305,15 @@ public class SharePointService
             var childPath = string.IsNullOrEmpty(basePath) ? item.Name : $"{basePath}/{item.Name}";
             if (item.Folder != null)
             {
-                await foreach (var f in EnumerateFilesWithMetadataAsync(driveId, item.Id, childPath, controller, ct))
-                    yield return f;
+                subfolderWalks.Add(WalkFilesWithMetadataAsync(driveId, item.Id, childPath, controller, writer, ct));
             }
             else
             {
-                yield return new ScannedFile(driveId, item.Id, item.Name, childPath,
-                    item.Size, item.LastModifiedDateTime);
+                await writer.WriteAsync(new ScannedFile(driveId, item.Id, item.Name, childPath,
+                    item.LastModifiedDateTime), ct);
             }
         }
+        await Task.WhenAll(subfolderWalks);
     }
 
     // Read-only counterpart to GetOrCreateFolderPathAsync: walks an existing path segment-by-segment
@@ -312,12 +346,14 @@ public class SharePointService
     internal async Task<ScannedFile?> GetFileForVerificationAsync(string driveId, string itemId, string relativePath)
     {
         var item = await Graph.Drives[driveId].Items[itemId].GetAsync(cfg =>
-            cfg.QueryParameters.Select = ["id", "name", "size", "file", "lastModifiedDateTime"]);
+            cfg.QueryParameters.Select = ["id", "name", "file", "lastModifiedDateTime"]);
         if (item?.Id == null || item.Name == null || item.File == null) return null;
-        return new ScannedFile(driveId, item.Id, item.Name, relativePath, item.Size, item.LastModifiedDateTime);
+        return new ScannedFile(driveId, item.Id, item.Name, relativePath, item.LastModifiedDateTime);
     }
 
-    // $select keeps the payload small at 100k+ files: only fields the comparison needs.
+    // $select keeps the payload small at 100k+ files: only fields the comparison needs. Size and
+    // content hash were tried as match signals and dropped (see ComparisonStatus) — verification
+    // is existence-only now, so only identity/type/date fields are requested.
     private async Task<List<DriveItem>> GetChildrenWithMetadataAsync(
         string driveId, string itemId, CancellationToken ct)
     {
@@ -325,7 +361,7 @@ public class SharePointService
         var page = await Graph.Drives[driveId].Items[resolvedId].Children.GetAsync(cfg =>
         {
             cfg.QueryParameters.Top    = 1000;
-            cfg.QueryParameters.Select = ["id", "name", "size", "file", "folder", "lastModifiedDateTime"];
+            cfg.QueryParameters.Select = ["id", "name", "file", "folder", "lastModifiedDateTime"];
         }, ct);
 
         var items = new List<DriveItem>();
@@ -450,6 +486,112 @@ public class SharePointService
             });
 
         return new Dictionary<string, int>(counts);
+    }
+
+    // Bulk-fetches ONLY each item's LastModifiedDateTime — 1 sub-request/file (vs. 2 for the full
+    // metadata+version fetch below), so twice as many files fit per $batch call. Used by If Newer
+    // mode's pre-filter to decide skip-vs-copy for files that already exist at the target WITHOUT
+    // paying for the full metadata+version fetch those files may never need if they turn out
+    // skippable — the same waste the Skip-mode pre-filter avoids, just for a mode that still needs
+    // *something* from Graph (the date) to make its decision, unlike Skip's pure by-name check.
+    public async Task<Dictionary<string, DateTimeOffset?>> FetchModifiedDatesAsync(
+        IReadOnlyList<(string driveId, string itemId)> items,
+        int maxConcurrency,
+        IProgress<int>? progress = null,
+        CancellationToken ct = default)
+    {
+        var result = new System.Collections.Concurrent.ConcurrentDictionary<string, DateTimeOffset?>();
+        if (items.Count == 0) return new Dictionary<string, DateTimeOffset?>();
+
+        const int ItemsPerBatch = 20; // metadata-only = 1 sub-request/file → 20 files per $batch
+
+        // Adaptive gate scoped to this call: shrinks concurrency on throttle and re-probes upward,
+        // instead of every retry round re-bursting at the same fixed width straight back into the
+        // still-depleted budget. VERIFIED (114k-file run, 2026-07-01): under sustained throttling the
+        // old fixed-width 3-round retry left ~111k of 114k items unresolved, and the caller's
+        // "undetermined → treat as needing a copy" fallback then misclassified nearly an entire
+        // up-to-date library as needing re-copy — hours of wasted download/upload/import for files
+        // that didn't need touching. The gate makes the retry rounds actually converge instead.
+        using var gate = new AdaptiveParallelismController(maxConcurrency);
+        void onThrottle(TimeSpan delay, int __, int ___, string? ____) => gate.StepDown(delay);
+        Throttled += onThrottle;
+
+        int lastReported = 0;
+        var reportLock = new object();
+        void ReportProgress()
+        {
+            int resolved = result.Count;
+            lock (reportLock)
+            {
+                if (resolved - lastReported < 500 && resolved != items.Count) return;
+                lastReported = resolved;
+            }
+            progress?.Report(resolved);
+        }
+
+        async Task RunPassAsync(IReadOnlyList<(string driveId, string itemId)> toFetch)
+        {
+            await Parallel.ForEachAsync(toFetch.Chunk(ItemsPerBatch),
+                new ParallelOptions { MaxDegreeOfParallelism = maxConcurrency, CancellationToken = ct },
+                async (chunk, c) =>
+                {
+                    await gate.WaitAsync(c);
+                    try
+                    {
+                        var batch = new BatchRequestContentCollection(Graph);
+                        var ids = new string?[chunk.Length];
+                        for (int i = 0; i < chunk.Length; i++)
+                        {
+                            var (driveId, itemId) = chunk[i];
+                            var req = new HttpRequestMessage(HttpMethod.Get,
+                                $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}?$select=lastModifiedDateTime");
+                            ids[i] = batch.AddBatchRequestStep(req);
+                        }
+
+                        BatchResponseContentCollection response;
+                        try { response = await Graph.Batch.PostAsync(batch, c); }
+                        catch (OperationCanceledException) { throw; }
+                        catch { return; } // whole batch call failed — retry rounds below cover these items
+
+                        for (int i = 0; i < chunk.Length; i++)
+                        {
+                            if (ids[i] == null) continue;
+                            try
+                            {
+                                using var http = await response.GetResponseByIdAsync(ids[i]!);
+                                if (!http.IsSuccessStatusCode) continue;
+                                using var doc = JsonDocument.Parse(await http.Content.ReadAsStringAsync(c));
+                                result[chunk[i].itemId] = TryGetBatchDateTimeOffset(doc.RootElement, "lastModifiedDateTime");
+                            }
+                            catch { /* leave absent; retried below, then caller falls back if still missing */ }
+                        }
+                    }
+                    finally { gate.Release(); }
+
+                    ReportProgress();
+                });
+        }
+
+        try
+        {
+            await RunPassAsync(items);
+
+            // Retry rounds for anything still missing (transient throttle). The adaptive gate above
+            // keeps concurrency below the throttle threshold so this converges rather than needing a
+            // large fixed round count; capped at 8 as a backstop against a genuinely unresolvable item
+            // (e.g. a source file deleted mid-run) looping forever. Progress is reported every round,
+            // not just the first pass — a prior version went silent here, which under heavy throttling
+            // looked identical to a hang for many minutes at a time.
+            for (int round = 0; round < 8; round++)
+            {
+                var missing = items.Where(i => !result.ContainsKey(i.itemId)).ToList();
+                if (missing.Count == 0) break;
+                await RunPassAsync(missing);
+            }
+        }
+        finally { Throttled -= onThrottle; }
+
+        return new Dictionary<string, DateTimeOffset?>(result);
     }
 
     // Fetches metadata + versions for every item ONCE, in PARALLEL, into a reusable cache the download
@@ -747,8 +889,10 @@ public class SharePointService
         string rootDriveId,
         IReadOnlyList<(string folderKey, string driveId, string sampleFileItemId)> folders,
         int maxConcurrency,
+        IProgress<int>? progress = null,
         CancellationToken ct = default)
     {
+        int completed = 0;
         var result = new System.Collections.Concurrent.ConcurrentDictionary<string, FileMetadata>();
 
         // Library root folder.
@@ -781,6 +925,7 @@ public class SharePointService
                     result[f.folderKey] = await GetFileMetadataAsync(f.driveId, parentId);
                 }
                 catch { /* keep placeholder */ }
+                finally { progress?.Report(Interlocked.Increment(ref completed)); }
             });
 
         return new Dictionary<string, FileMetadata>(result);
@@ -1335,26 +1480,40 @@ public class SharePointService
     public async Task<Dictionary<string, (string ItemId, DateTimeOffset? Modified)>> FetchFolderItemsAsync(
         string driveId, string folderId)
     {
-        var result = new Dictionary<string, (string, DateTimeOffset?)>(StringComparer.OrdinalIgnoreCase);
-        var page = await Graph.Drives[driveId].Items[folderId].Children
-            .GetAsync(cfg =>
-            {
-                cfg.QueryParameters.Top    = 1000;
-                cfg.QueryParameters.Select = ["id", "name", "lastModifiedDateTime", "file"];
-            });
-
-        while (page != null)
+        // Retries the WHOLE paginated walk on a transient transport failure (see
+        // IsTransientTransportError) rather than leaving a mid-pagination blip to propagate out of the
+        // whole drive-group scan and fail every pending file. Re-walking from page 1 is cheap relative
+        // to the cost of failing the entire run.
+        for (int attempt = 0; ; attempt++)
         {
-            foreach (var item in page.Value ?? [])
+            try
             {
-                if (item.File == null || item.Name == null || item.Id == null) continue;
-                result[item.Name] = (item.Id, item.LastModifiedDateTime);
+                var result = new Dictionary<string, (string, DateTimeOffset?)>(StringComparer.OrdinalIgnoreCase);
+                var page = await Graph.Drives[driveId].Items[folderId].Children
+                    .GetAsync(cfg =>
+                    {
+                        cfg.QueryParameters.Top    = 1000;
+                        cfg.QueryParameters.Select = ["id", "name", "lastModifiedDateTime", "file"];
+                    });
+
+                while (page != null)
+                {
+                    foreach (var item in page.Value ?? [])
+                    {
+                        if (item.File == null || item.Name == null || item.Id == null) continue;
+                        result[item.Name] = (item.Id, item.LastModifiedDateTime);
+                    }
+                    if (page.OdataNextLink == null) break;
+                    page = await Graph.Drives[driveId].Items[folderId].Children
+                        .WithUrl(page.OdataNextLink).GetAsync();
+                }
+                return result;
             }
-            if (page.OdataNextLink == null) break;
-            page = await Graph.Drives[driveId].Items[folderId].Children
-                .WithUrl(page.OdataNextLink).GetAsync();
+            catch (Exception ex) when (attempt < 4 && IsTransientTransportError(ex))
+            {
+                await Task.Delay(TimeSpan.FromSeconds((attempt + 1) * 3));
+            }
         }
-        return result;
     }
 
     // Cheap "is this folder completely empty?" check (files OR subfolders), via a single $top=1
@@ -1362,13 +1521,23 @@ public class SharePointService
     // skipped entirely — on an empty target nothing can already exist.
     public async Task<bool> IsFolderEmptyAsync(string driveId, string folderId)
     {
-        var page = await Graph.Drives[driveId].Items[folderId].Children
-            .GetAsync(cfg =>
+        for (int attempt = 0; ; attempt++)
+        {
+            try
             {
-                cfg.QueryParameters.Top    = 1;
-                cfg.QueryParameters.Select = ["id"];
-            });
-        return (page?.Value?.Count ?? 0) == 0;
+                var page = await Graph.Drives[driveId].Items[folderId].Children
+                    .GetAsync(cfg =>
+                    {
+                        cfg.QueryParameters.Top    = 1;
+                        cfg.QueryParameters.Select = ["id"];
+                    });
+                return (page?.Value?.Count ?? 0) == 0;
+            }
+            catch (Exception ex) when (attempt < 4 && IsTransientTransportError(ex))
+            {
+                await Task.Delay(TimeSpan.FromSeconds((attempt + 1) * 3));
+            }
+        }
     }
 
     public async Task<bool> FileExistsAsync(string driveId, string parentItemId, string fileName)
@@ -1770,7 +1939,34 @@ public class SharePointService
         return current;
     }
 
+    // True for exceptions that represent a dropped/failed connection rather than a real Graph response
+    // (including a proper throttle response, which Kiota's own retry handler already resolves before
+    // it would ever reach this code). VERIFIED (114k-file run, 2026-07-01): under sustained throttling
+    // a single "An error occurred while sending the request" transport blip during pre-flight folder
+    // provisioning/scanning went uncaught here, propagated out of the whole drive-group loop, and hit
+    // MigrationJobService's top-level catch-all — which marked EVERY file still pending (i.e. nearly
+    // the entire 114k-file job) as Failed. The download/upload paths elsewhere in this codebase already
+    // retry on exactly these exception types; pre-flight Graph calls need the same treatment so one
+    // blip doesn't take down an entire run.
+    private static bool IsTransientTransportError(Exception ex) =>
+        ex is System.Net.Http.HttpRequestException || ex is IOException;
+
     private async Task<string> GetOrCreateFolderAsync(string driveId, string parentItemId, string folderName)
+    {
+        for (int attempt = 0; ; attempt++)
+        {
+            try
+            {
+                return await GetOrCreateFolderCoreAsync(driveId, parentItemId, folderName);
+            }
+            catch (Exception ex) when (attempt < 4 && IsTransientTransportError(ex))
+            {
+                await Task.Delay(TimeSpan.FromSeconds((attempt + 1) * 3));
+            }
+        }
+    }
+
+    private async Task<string> GetOrCreateFolderCoreAsync(string driveId, string parentItemId, string folderName)
     {
         try
         {

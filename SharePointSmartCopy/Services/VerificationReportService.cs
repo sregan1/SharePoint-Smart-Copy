@@ -21,9 +21,6 @@ public sealed class VerificationReportService(SharePointService spService)
     // source scan and files found so far in the target scan, never folders or file versions.
     public readonly record struct ScanProgress(int SourceFilesFound, int TargetFilesFound);
 
-    // Absorbs SharePoint's own clock-skew on copy rather than flagging near-identical timestamps.
-    private static readonly TimeSpan ModifiedTolerance = TimeSpan.FromSeconds(5);
-
     public async Task<Result> RunAsync(
         IReadOnlyList<VerificationRoot> roots,
         int maxParallel,
@@ -41,8 +38,28 @@ public sealed class VerificationReportService(SharePointService spService)
         {
             var scanErrors = new ConcurrentBag<string>();
             int sourceCount = 0, targetCount = 0;
-            void BumpSource() => progress?.Report(new ScanProgress(Interlocked.Increment(ref sourceCount), targetCount));
-            void BumpTarget() => progress?.Report(new ScanProgress(sourceCount, Interlocked.Increment(ref targetCount)));
+
+            // Reporting on every single file (up to ~240k dispatcher round-trips for a 120k-per-side
+            // scan, now more concurrent than ever with the folder walk parallelized above) is exactly
+            // the UI-freeze pattern CopyService already hit and fixed once for CopyResults — throttle
+            // to a fixed cadence instead, plus one guaranteed final report so the displayed count is
+            // never stale after a throttled-out update.
+            var progressLock = new object();
+            var lastReport   = DateTime.MinValue;
+            var reportInterval = TimeSpan.FromMilliseconds(250);
+            void ReportProgress(int s, int t)
+            {
+                if (progress == null) return;
+                lock (progressLock)
+                {
+                    var now = DateTime.UtcNow;
+                    if (now - lastReport < reportInterval) return;
+                    lastReport = now;
+                }
+                progress.Report(new ScanProgress(s, t));
+            }
+            void BumpSource() => ReportProgress(Interlocked.Increment(ref sourceCount), targetCount);
+            void BumpTarget() => ReportProgress(sourceCount, Interlocked.Increment(ref targetCount));
 
             // Source roots: de-duplicate by (drive, item) — the actual scan starting point.
             var sourceRoots = roots
@@ -74,6 +91,7 @@ public sealed class VerificationReportService(SharePointService spService)
 
             var sourceFiles = await sourceTask;
             var targetFiles = await targetTask;
+            progress?.Report(new ScanProgress(sourceCount, targetCount)); // final tally, bypassing the throttle
             var comparison  = Merge(sourceFiles, targetFiles);
 
             return new Result(sourceFiles, targetFiles, comparison, scanErrors.ToList());
@@ -176,50 +194,24 @@ public sealed class VerificationReportService(SharePointService spService)
 
     private static List<ComparisonRow> Merge(List<ScannedFile> sourceFiles, List<ScannedFile> targetFiles)
     {
-        var targetByPath = new Dictionary<string, ScannedFile>(StringComparer.OrdinalIgnoreCase);
-        foreach (var f in targetFiles) targetByPath[f.RelativePath] = f;
-
+        var targetPaths = new HashSet<string>(targetFiles.Select(f => f.RelativePath), StringComparer.OrdinalIgnoreCase);
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var rows = new List<ComparisonRow>();
 
         foreach (var s in sourceFiles)
         {
             seen.Add(s.RelativePath);
-            if (targetByPath.TryGetValue(s.RelativePath, out var t))
+            rows.Add(new ComparisonRow
             {
-                ComparisonStatus status;
-                if (s.Size != t.Size)
-                    status = ComparisonStatus.SizeMismatch;
-                else if (s.LastModified.HasValue && t.LastModified.HasValue &&
-                         (s.LastModified.Value - t.LastModified.Value).Duration() > ModifiedTolerance)
-                    status = ComparisonStatus.ModifiedMismatch;
-                else
-                    status = ComparisonStatus.Match;
-
-                rows.Add(new ComparisonRow
-                {
-                    RelativePath = s.RelativePath, SourceSize = s.Size, TargetSize = t.Size,
-                    SourceModified = s.LastModified, TargetModified = t.LastModified, Status = status
-                });
-            }
-            else
-            {
-                rows.Add(new ComparisonRow
-                {
-                    RelativePath = s.RelativePath, SourceSize = s.Size, TargetSize = null,
-                    SourceModified = s.LastModified, TargetModified = null, Status = ComparisonStatus.OnlyInSource
-                });
-            }
+                RelativePath = s.RelativePath,
+                Status = targetPaths.Contains(s.RelativePath) ? ComparisonStatus.Match : ComparisonStatus.OnlyInSource
+            });
         }
 
         foreach (var t in targetFiles)
         {
             if (seen.Contains(t.RelativePath)) continue;
-            rows.Add(new ComparisonRow
-            {
-                RelativePath = t.RelativePath, SourceSize = null, TargetSize = t.Size,
-                SourceModified = null, TargetModified = t.LastModified, Status = ComparisonStatus.OnlyInTarget
-            });
+            rows.Add(new ComparisonRow { RelativePath = t.RelativePath, Status = ComparisonStatus.OnlyInTarget });
         }
 
         return rows;

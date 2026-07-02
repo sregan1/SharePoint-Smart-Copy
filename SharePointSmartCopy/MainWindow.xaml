@@ -1259,18 +1259,22 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock" BasedOn="{StaticResource SectionHeader}">
-                            <Setter Property="Text" Value="Copying Files…"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsLibraryOrSiteScope}" Value="True">
-                                    <Setter Property="Text" Value="Copying Libraries…"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+                <StackPanel Grid.Row="0">
+                    <TextBlock>
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource SectionHeader}">
+                                <Setter Property="Text" Value="Copying Files…"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsLibraryOrSiteScope}" Value="True">
+                                        <Setter Property="Text" Value="Copying Libraries…"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock Text="{Binding RunSettingsSummary}" FontSize="11" Margin="0,4,0,0"
+                               TextWrapping="Wrap" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                </StackPanel>
 
                 <Border Grid.Row="1" Style="{StaticResource Card}" Padding="16" Margin="0,0,0,16">
                     <StackPanel>
@@ -1520,7 +1524,12 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Margin="0,8,0,8">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
                             <Button Style="{StaticResource SecondaryBtn}" Command="{Binding ExportFilesReportCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xE896;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
@@ -1539,11 +1548,13 @@
                                     Visibility="{Binding IsVerifying, Converter={StaticResource BoolToVis}}">
                                 <TextBlock Text="Cancel"/>
                             </Button>
-                            <TextBlock Text="{Binding StatusMessage}" FontSize="12" Margin="12,0,0,0"
-                                       VerticalAlignment="Center" Foreground="{DynamicResource TextTertiaryBrush}"
-                                       Visibility="{Binding IsVerifying, Converter={StaticResource BoolToVis}}"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock Grid.Column="1" Text="{Binding StatusMessage}" ToolTip="{Binding StatusMessage}"
+                                   FontSize="12" Margin="12,0,12,0"
+                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                   Foreground="{DynamicResource TextTertiaryBrush}"
+                                   Visibility="{Binding IsVerifying, Converter={StaticResource BoolToVis}}"/>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter" Content="All"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=All}"/>
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter"

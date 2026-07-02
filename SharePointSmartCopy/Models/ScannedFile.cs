@@ -7,5 +7,4 @@ public sealed record ScannedFile(
     string ItemId,
     string Name,
     string RelativePath,
-    long? Size,
     DateTimeOffset? LastModified);
