@@ -258,24 +258,42 @@ public class MigrationJobService(SharePointService spService)
                     }
                     else // IfNewer
                     {
-                        if (existingAtTarget.Count > 0)
-                            activityLog?.Report($"Checking modified dates for {existingAtTarget.Count:N0} existing file(s)...");
-                        var modDateProgress = new Progress<int>(d =>
-                            activityLog?.Report($"Checking modified dates: {d:N0} / {existingAtTarget.Count:N0}"));
-                        var modDates = await spService.FetchModifiedDatesAsync(
-                            existingAtTarget.Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
-                            maxConcurrency: 6, progress: modDateProgress, ct: cancellationToken);
+                        // Source modified dates captured during the scan walk (job.SourceModified) decide
+                        // skip-vs-copy with ZERO Graph calls. Only jobs built outside the walk (single-file
+                        // picks → SourceModified null) still need the bulk fetch. VERIFIED (114k-file run,
+                        // 2026-07-01): fetching all 114k dates here took 22 minutes under throttling and
+                        // still left 110k unresolved — which the "undetermined → needs copy" fallback then
+                        // misrouted into hours of per-file re-checking. Dates in hand make that impossible.
+                        var needsFetch = existingAtTarget
+                            .Where(t => t.job.SourceModified == null)
+                            .ToList();
+                        Dictionary<string, DateTimeOffset?> modDates;
+                        if (needsFetch.Count > 0)
+                        {
+                            activityLog?.Report($"Checking modified dates for {needsFetch.Count:N0} existing file(s)...");
+                            var modDateProgress = new Progress<int>(d =>
+                                activityLog?.Report($"Checking modified dates: {d:N0} / {needsFetch.Count:N0}"));
+                            modDates = await spService.FetchModifiedDatesAsync(
+                                needsFetch.Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
+                                maxConcurrency: 6, progress: modDateProgress, ct: cancellationToken);
+                        }
+                        else
+                        {
+                            modDates = [];
+                        }
 
                         var stillNeedsCopy = new List<(CopyJob job, CopyResult result)>();
                         preskipped = 0;
                         int undetermined = 0;
                         foreach (var t in existingAtTarget)
                         {
-                            // Undetermined (fetch failed even after retries) is treated as needing a copy,
-                            // not silently skipped — the full pass below will resolve it for real, same
-                            // fallback direction the cache-miss handling elsewhere in this file already uses.
-                            if (modDates.TryGetValue(t.job.SourceItemId, out var srcModified) &&
-                                srcModified.HasValue && srcModified.Value <= t.TargetModified)
+                            // Undetermined (no scan-captured date AND fetch failed even after retries) is
+                            // treated as needing a copy, not silently skipped — the full pass below will
+                            // resolve it for real, same fallback direction the cache-miss handling
+                            // elsewhere in this file already uses.
+                            var srcModified = t.job.SourceModified
+                                ?? (modDates.TryGetValue(t.job.SourceItemId, out var fetched) ? fetched : null);
+                            if (srcModified.HasValue && srcModified.Value <= t.TargetModified)
                             {
                                 t.result.Status       = CopyStatus.Skipped;
                                 t.result.ErrorMessage  = CopyResult.UpToDate;
@@ -283,7 +301,7 @@ public class MigrationJobService(SharePointService spService)
                             }
                             else
                             {
-                                if (!modDates.ContainsKey(t.job.SourceItemId)) undetermined++;
+                                if (!srcModified.HasValue) undetermined++;
                                 stillNeedsCopy.Add((t.job, t.result));
                             }
                         }
@@ -341,9 +359,12 @@ public class MigrationJobService(SharePointService spService)
                 // 6-wide: leaves more SP API quota headroom for container provisioning immediately after.
                 // At 12-wide the analysis exhausts the tenant's rate limit, causing 120s Retry-After
                 // waits when the first prep tasks try to provision Azure containers.
+                // Versions: Off (maxVersions == 1) → the version list would be sliced to the current
+                // version anyway, so skip the /versions sub-request per file (halves the Graph calls).
                 var metaCache = await spService.FetchMetadataAndVersionCacheAsync(
                     groupTasks.Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
-                    maxConcurrency: 6, progress: sizingProgress, ct: cancellationToken);
+                    maxConcurrency: 6, progress: sizingProgress,
+                    includeVersions: maxVersions != 1, ct: cancellationToken);
 
                 // Any files still missing from the cache after its retry rounds get version-counted as 1
                 // for batching, but the producer re-fetches their real versions at download time — a
@@ -628,15 +649,20 @@ public class MigrationJobService(SharePointService spService)
                     {
                         if (existingByFolder[subPath].TryGetValue(job.SourceName, out var existing))
                         {
-                            // Use upfront-fetched metadata when available — avoids an extra Graph call
-                            // per file during the preflight (the same metadata was already fetched in
-                            // the analysis phase; re-fetching it doubles the API pressure).
-                            FileMetadata srcMeta;
+                            // Date sources in preference order: upfront metadata cache → the scan-captured
+                            // date on the job → a per-file Graph call as last resort. VERIFIED (114k-file
+                            // run, 2026-07-01): when throttling starved the metadata cache, this fallback
+                            // made one live Graph call per file — 109k calls across 442 batches, hours of
+                            // wall-clock. The scan-captured date makes the live call unreachable for any
+                            // job built by the folder walk.
+                            DateTimeOffset? srcModifiedDate;
                             if (metaCache != null && metaCache.TryGetValue(job.SourceItemId, out var ifNewerCached))
-                                srcMeta = ifNewerCached.Metadata;
+                                srcModifiedDate = ifNewerCached.Metadata.ModifiedDateTime;
+                            else if (job.SourceModified != null)
+                                srcModifiedDate = job.SourceModified;
                             else
-                                srcMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
-                            if (srcMeta.ModifiedDateTime is { } srcModified && srcModified <= existing.Modified)
+                                srcModifiedDate = (await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId)).ModifiedDateTime;
+                            if (srcModifiedDate is { } srcModified && srcModified <= existing.Modified)
                             {
                                 result.Status       = CopyStatus.Skipped;
                                 result.ErrorMessage = CopyResult.UpToDate;

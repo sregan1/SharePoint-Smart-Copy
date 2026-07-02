@@ -880,6 +880,18 @@ public partial class MainViewModel : ObservableObject
 
     partial void OnPackedCountChanged(int value) => OnPropertyChanged(nameof(IsPackingInProgress));
 
+    // Hold off system sleep while any long-running phase is active (see SleepPreventionService).
+    // Property-changed hooks cover every code path that toggles these flags — both copy commands,
+    // the metadata post-pass, and verification — without each needing its own Begin/End calls.
+    partial void OnIsCopyingChanged(bool value)          => UpdateSleepPrevention();
+    partial void OnIsVerifyingChanged(bool value)        => UpdateSleepPrevention();
+    partial void OnIsUpdatingMetadataChanged(bool value) => UpdateSleepPrevention();
+    private void UpdateSleepPrevention()
+    {
+        if (IsCopying || IsVerifying || IsUpdatingMetadata) Services.SleepPreventionService.Begin();
+        else Services.SleepPreventionService.End();
+    }
+
     partial void OnPreflightCheckedChanged(int value)
     {
         OnPropertyChanged(nameof(IsPreflightInProgress));

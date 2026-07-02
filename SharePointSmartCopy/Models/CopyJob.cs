@@ -7,6 +7,13 @@ public class CopyJob
     public string SourceName { get; set; } = string.Empty;
     public string SourceDisplayPath { get; set; } = string.Empty;
 
+    // Captured during the source enumeration walk (the Children listing returns it anyway) so the
+    // If Newer decision compares dates already in hand instead of re-fetching them from Graph —
+    // per-file date lookups at 100k+ scale are what exhausted the tenant throttle budget and, when
+    // they failed, misclassified up-to-date files as needing a copy. Null for jobs built outside
+    // the walk (e.g. single-file picks); those fall back to the bulk Graph fetch.
+    public DateTimeOffset? SourceModified { get; set; }
+
     public string TargetDriveId { get; set; } = string.Empty;
     public string TargetParentItemId { get; set; } = string.Empty;
     public string TargetSiteId { get; set; } = string.Empty;

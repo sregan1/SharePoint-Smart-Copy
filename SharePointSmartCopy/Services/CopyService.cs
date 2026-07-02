@@ -94,52 +94,84 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             }).Task;
         }
 
-        foreach (var job in jobs)
+        // Expansion-scoped adaptive gate for the source walk, same pattern as the pre-flight gate in
+        // MigrationJobService: without it the walk either serialized (the old one-call-at-a-time
+        // recursive enumeration — ~30 silent minutes on a 3,000-folder library) or would burst at a
+        // fixed width straight back into a depleted throttle budget.
+        const int ScanMaxParallelism = 8;
+        using var scanController = new AdaptiveParallelismController(ScanMaxParallelism);
+        void onScanThrottle(TimeSpan delay, int _, int __, string? ___) => scanController.StepDown(delay);
+
+        bool anyFolderJobs = jobs.Any(j => j.IsFolder);
+        if (anyFolderJobs)
+            activityLog?.Report("Scanning source for files to copy...");
+        int scannedFiles = 0;
+        var lastScanReport = DateTimeOffset.UtcNow;
+
+        spService.Throttled += onScanThrottle;
+        try
         {
-            if (!job.IsFolder)
+            foreach (var job in jobs)
             {
-                var result = FindResult(results, job.SourceDisplayPath) ?? CreateResult(job);
-                allTasks.Add((job, result));
-            }
-            else
-            {
-                await foreach (var (driveId, itemId, name, relativePath)
-                    in spService.EnumerateFilesAsync(job.SourceDriveId, job.SourceItemId))
+                if (!job.IsFolder)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    var targetSubFolder = ComputeTargetSubFolder(
-                        relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
-                    var fileJob = new CopyJob
+                    var result = FindResult(results, job.SourceDisplayPath) ?? CreateResult(job);
+                    allTasks.Add((job, result));
+                }
+                else
+                {
+                    await foreach (var entry in spService.EnumerateFilesForCopyAsync(
+                        job.SourceDriveId, job.SourceItemId, "", scanController, cancellationToken))
                     {
-                        SourceDriveId                  = driveId,
-                        SourceItemId                   = itemId,
-                        SourceName                     = name,
-                        SourceSiteUrl                  = job.SourceSiteUrl,
-                        SourceDisplayPath              = $"{job.SourceDisplayPath}/{relativePath}",
-                        TargetDriveId                  = job.TargetDriveId,
-                        TargetParentItemId             = job.TargetParentItemId,
-                        TargetSiteId                   = job.TargetSiteId,
-                        TargetSiteUrl                  = job.TargetSiteUrl,
-                        TargetSubFolderPath            = targetSubFolder,
-                        TargetLibraryServerRelativeUrl = job.TargetLibraryServerRelativeUrl,
-                        TargetDisplayPath              = $"{job.TargetDisplayPath}/{relativePath}",
-                        IsPage                         = copyPages,
-                        IsFolder                       = false
-                    };
+                        cancellationToken.ThrowIfCancellationRequested();
+                        var (driveId, itemId, name, relativePath) = (entry.DriveId, entry.ItemId, entry.Name, entry.RelativePath);
+                        scannedFiles++;
+                        if (DateTimeOffset.UtcNow - lastScanReport >= TimeSpan.FromSeconds(3))
+                        {
+                            lastScanReport = DateTimeOffset.UtcNow;
+                            activityLog?.Report($"Scanning source: {scannedFiles:N0} file(s) found so far...");
+                        }
+                        var targetSubFolder = ComputeTargetSubFolder(
+                            relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
+                        var fileJob = new CopyJob
+                        {
+                            SourceDriveId                  = driveId,
+                            SourceItemId                   = itemId,
+                            SourceName                     = name,
+                            SourceModified                 = entry.Modified,
+                            SourceSiteUrl                  = job.SourceSiteUrl,
+                            SourceDisplayPath              = $"{job.SourceDisplayPath}/{relativePath}",
+                            TargetDriveId                  = job.TargetDriveId,
+                            TargetParentItemId             = job.TargetParentItemId,
+                            TargetSiteId                   = job.TargetSiteId,
+                            TargetSiteUrl                  = job.TargetSiteUrl,
+                            TargetSubFolderPath            = targetSubFolder,
+                            TargetLibraryServerRelativeUrl = job.TargetLibraryServerRelativeUrl,
+                            TargetDisplayPath              = $"{job.TargetDisplayPath}/{relativePath}",
+                            IsPage                         = copyPages,
+                            IsFolder                       = false
+                        };
 
-                    var result = new CopyResult
-                    {
-                        FileName   = name,
-                        SourcePath = fileJob.SourceDisplayPath,
-                        TargetPath = fileJob.TargetDisplayPath
-                    };
+                        var result = new CopyResult
+                        {
+                            FileName   = name,
+                            SourcePath = fileJob.SourceDisplayPath,
+                            TargetPath = fileJob.TargetDisplayPath
+                        };
 
-                    pendingResults.Add(result);
-                    allTasks.Add((fileJob, result));
-                    if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
+                        pendingResults.Add(result);
+                        allTasks.Add((fileJob, result));
+                        if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
+                    }
                 }
             }
         }
+        finally
+        {
+            spService.Throttled -= onScanThrottle;
+        }
+        if (anyFolderJobs)
+            activityLog?.Report($"Source scan complete: {scannedFiles:N0} file(s) found");
         await FlushPendingResultsAsync();
 
         if (copyMode == CopyMode.MigrationApi)

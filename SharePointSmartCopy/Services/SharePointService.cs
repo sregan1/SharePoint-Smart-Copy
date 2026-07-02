@@ -223,23 +223,56 @@ public class SharePointService
 
     // ── Enumerate all files under a folder (for copy) ─────────────────────────
 
-    public async IAsyncEnumerable<(string driveId, string itemId, string name, string relativePath)>
-        EnumerateFilesAsync(string driveId, string rootItemId, string basePath = "")
+    // One discovered source file, with the modified date the Children listing already carries —
+    // captured here so the If Newer overwrite decision never has to re-fetch it per file later.
+    public readonly record struct SourceFileEntry(
+        string DriveId, string ItemId, string Name, string RelativePath, DateTimeOffset? Modified);
+
+    // Concurrent replacement for the old sequential recursive walk (same channel + sibling-fan-out
+    // pattern as EnumerateFilesWithMetadataAsync below). The sequential version issued ONE Graph
+    // call at a time — on a 3,000+-folder library that alone took ~30 minutes before the copy could
+    // even start, with nothing logged. The controller bounds concurrent listings and backs off on
+    // throttle; $select trims 100k+ full DriveItem payloads down to the five fields the copy needs.
+    internal async IAsyncEnumerable<SourceFileEntry> EnumerateFilesForCopyAsync(
+        string driveId, string rootItemId, string basePath,
+        AdaptiveParallelismController controller,
+        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken ct = default)
     {
-        var children = await GetChildrenAsync(driveId, rootItemId, string.Empty);
-        foreach (var child in children)
+        var channel = System.Threading.Channels.Channel.CreateUnbounded<SourceFileEntry>();
+        var walkTask = Task.Run(async () =>
         {
-            var childPath = string.IsNullOrEmpty(basePath) ? child.Name : $"{basePath}/{child.Name}";
-            if (child.Type == NodeType.File)
-            {
-                yield return (driveId, child.Id, child.Name, childPath);
-            }
+            try { await WalkFilesForCopyAsync(driveId, rootItemId, basePath, controller, channel.Writer, ct); }
+            finally { channel.Writer.Complete(); }
+        }, ct);
+
+        await foreach (var f in channel.Reader.ReadAllAsync(ct))
+            yield return f;
+
+        await walkTask; // propagate walk exceptions (channel completion alone would swallow them)
+    }
+
+    private async Task WalkFilesForCopyAsync(
+        string driveId, string itemId, string basePath, AdaptiveParallelismController controller,
+        System.Threading.Channels.ChannelWriter<SourceFileEntry> writer, CancellationToken ct)
+    {
+        List<DriveItem> items;
+        await controller.WaitAsync(ct);
+        try { items = await GetChildrenWithMetadataAsync(driveId, itemId, ct); }
+        finally { controller.Release(); }
+
+        var subfolderWalks = new List<Task>();
+        foreach (var item in items)
+        {
+            ct.ThrowIfCancellationRequested();
+            if (item.Id == null || item.Name == null) continue;
+            var childPath = string.IsNullOrEmpty(basePath) ? item.Name : $"{basePath}/{item.Name}";
+            if (item.Folder != null)
+                subfolderWalks.Add(WalkFilesForCopyAsync(driveId, item.Id, childPath, controller, writer, ct));
             else
-            {
-                await foreach (var item in EnumerateFilesAsync(driveId, child.Id, childPath))
-                    yield return item;
-            }
+                await writer.WriteAsync(new SourceFileEntry(
+                    driveId, item.Id, item.Name, childPath, item.LastModifiedDateTime), ct);
         }
+        await Task.WhenAll(subfolderWalks);
     }
 
     // ── Enumerate all sub-folders under a folder ──────────────────────────────
@@ -608,26 +641,52 @@ public class SharePointService
             IReadOnlyList<(string driveId, string itemId)> items,
             int maxConcurrency,
             IProgress<int>? progress = null,
+            bool includeVersions = true,
             CancellationToken ct = default)
     {
         var cache = new System.Collections.Concurrent.ConcurrentDictionary<string, (FileMetadata, List<DriveItemVersion>?)>();
         if (items.Count == 0) return new Dictionary<string, (FileMetadata, List<DriveItemVersion>?)>();
 
-        const int ItemsPerBatch = 10; // metadata + versions = 2 sub-requests/file → 10 files per $batch
+        // includeVersions=false (copy runs with Versions: Off, maxVersions=1) skips the /versions
+        // sub-request entirely — the version list would be sliced to the current version anyway, so
+        // fetching it is pure waste. Metadata-only = 1 sub-request/file → 20 files per $batch call,
+        // halving the Graph call count for the whole analysis phase.
+        int itemsPerBatch = includeVersions ? 10 : 20;
+        var skipAllVersions = includeVersions ? null : new HashSet<string>(); // empty set = "no item is multi-version"
 
-        int done = 0, lastReported = 0;
+        // Adaptive gate + progress-on-every-round: parity with FetchModifiedDatesAsync above. The prior
+        // fixed-width retry rounds re-burst into a depleted throttle budget AND went silent after the
+        // first pass — on the 114k-file run (2026-07-01) that meant 29 minutes of no log output while
+        // retries churned, indistinguishable from a hang.
+        using var gate = new AdaptiveParallelismController(maxConcurrency);
+        void onThrottle(TimeSpan delay, int __, int ___, string? ____) => gate.StepDown(delay);
+        Throttled += onThrottle;
+
+        int lastReported = 0;
         var reportLock = new object();
-
-        async Task RunPassAsync(IReadOnlyList<(string driveId, string itemId)> toFetch, int concurrency, bool reportProgress)
+        void ReportProgress()
         {
-            await Parallel.ForEachAsync(toFetch.Chunk(ItemsPerBatch),
-                new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, concurrency), CancellationToken = ct },
+            int resolved = cache.Count;
+            lock (reportLock)
+            {
+                if (resolved - lastReported < 500 && resolved != items.Count) return;
+                lastReported = resolved;
+            }
+            progress?.Report(resolved);
+        }
+
+        async Task RunPassAsync(IReadOnlyList<(string driveId, string itemId)> toFetch)
+        {
+            await Parallel.ForEachAsync(toFetch.Chunk(itemsPerBatch),
+                new ParallelOptions { MaxDegreeOfParallelism = maxConcurrency, CancellationToken = ct },
                 async (chunk, c) =>
                 {
                     var local = new Dictionary<string, (FileMetadata, List<DriveItemVersion>)>();
-                    try { await FetchBatchChunkAsync(chunk, local, c); }
+                    await gate.WaitAsync(c);
+                    try { await FetchBatchChunkAsync(chunk, local, c, multiVersionItemIds: skipAllVersions); }
                     catch (OperationCanceledException) { throw; }
                     catch { /* items absent → retried below, then producer falls back if still missing */ }
+                    finally { gate.Release(); }
                     foreach (var kv in local)
                     {
                         var versions = kv.Value.Item2;
@@ -636,28 +695,25 @@ public class SharePointService
                             ? (kv.Value.Item1, (List<DriveItemVersion>?)null)
                             : (kv.Value.Item1, versions);
                     }
-                    if (reportProgress)
-                    {
-                        int d = Interlocked.Add(ref done, chunk.Length);
-                        lock (reportLock)
-                        {
-                            if (d - lastReported >= 500 || d == items.Count) { lastReported = d; progress?.Report(d); }
-                        }
-                    }
+                    ReportProgress();
                 });
         }
 
-        // First pass at full concurrency.
-        await RunPassAsync(items, maxConcurrency, reportProgress: true);
-
-        // Retry rounds for any item the first pass missed (transient throttle), at halved concurrency
-        // to stay gentler on the already-pressured Graph budget. A handful of rounds closes the gap.
-        for (int round = 0; round < 3; round++)
+        try
         {
-            var missing = items.Where(i => !cache.ContainsKey(i.itemId)).ToList();
-            if (missing.Count == 0) break;
-            await RunPassAsync(missing, Math.Max(1, maxConcurrency / 2), reportProgress: false);
+            await RunPassAsync(items);
+
+            // Retry rounds for any item the first pass missed (transient throttle). The adaptive gate
+            // keeps concurrency below the throttle threshold so rounds converge; capped as a backstop
+            // against genuinely unresolvable items (e.g. a file deleted mid-run).
+            for (int round = 0; round < 8; round++)
+            {
+                var missing = items.Where(i => !cache.ContainsKey(i.itemId)).ToList();
+                if (missing.Count == 0) break;
+                await RunPassAsync(missing);
+            }
         }
+        finally { Throttled -= onThrottle; }
 
         return new Dictionary<string, (FileMetadata, List<DriveItemVersion>?)>(cache);
     }
