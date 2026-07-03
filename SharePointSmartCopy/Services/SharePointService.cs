@@ -747,7 +747,7 @@ public class SharePointService
             {
                 var metaReq = new HttpRequestMessage(HttpMethod.Get,
                     $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}" +
-                    "?$select=createdDateTime,lastModifiedDateTime,createdBy,lastModifiedBy,sharepointIds");
+                    "?$select=createdDateTime,lastModifiedDateTime,createdBy,lastModifiedBy,sharepointIds,size");
                 metaIds[i] = batch.AddBatchRequestStep(metaReq);
 
                 // Skip the versions round-trip for files an upstream pass already counted as single-version.
@@ -832,6 +832,8 @@ public class SharePointService
             ModifiedDateTime = TryGetBatchDateTimeOffset(root, "lastModifiedDateTime"),
             CreatedByEmail   = ParseBatchIdentityEmail(root, "createdBy"),
             ModifiedByEmail  = ParseBatchIdentityEmail(root, "lastModifiedBy"),
+            Size             = root.TryGetProperty("size", out var sz) && sz.ValueKind == JsonValueKind.Number
+                ? sz.GetInt64() : null,
         };
     }
 
@@ -924,7 +926,7 @@ public class SharePointService
     public async Task<FileMetadata> GetFileMetadataAsync(string driveId, string itemId)
     {
         var item = await Graph.Drives[driveId].Items[itemId].GetAsync(cfg =>
-            cfg.QueryParameters.Select = ["createdDateTime", "lastModifiedDateTime", "createdBy", "lastModifiedBy"]);
+            cfg.QueryParameters.Select = ["createdDateTime", "lastModifiedDateTime", "createdBy", "lastModifiedBy", "size"]);
 
         return new FileMetadata
         {
@@ -932,6 +934,7 @@ public class SharePointService
             CreatedByEmail   = GetIdentityEmail(item?.CreatedBy?.User),
             ModifiedDateTime = item?.LastModifiedDateTime,
             ModifiedByEmail  = GetIdentityEmail(item?.LastModifiedBy?.User),
+            Size             = item?.Size,
         };
     }
 
@@ -1572,6 +1575,76 @@ public class SharePointService
         }
     }
 
+    // Lists a folder's files via SP REST (GetFolderByServerRelativeUrl/Files) — the same AllDocs
+    // store the Migration API validates imports against. Graph's Children listing does NOT return
+    // rows left behind by a previous SPMI job that fatal-aborted mid-import, so an overwrite
+    // pre-flight that trusts Graph alone reports "0 already exist" while SPMI then rejects those
+    // same files with "already exists" (observed 2026-07-02: 100+ per batch). Returns name →
+    // TimeLastModified; a missing folder (404) returns empty. Follows odata.nextLink paging.
+    public async Task<Dictionary<string, DateTimeOffset?>> FetchFolderFileNamesRestAsync(
+        string siteUrl, string folderServerRelativeUrl)
+    {
+        var result  = new Dictionary<string, DateTimeOffset?>(StringComparer.OrdinalIgnoreCase);
+        var baseUrl = siteUrl.TrimEnd('/');
+        // *Path (not *Url) API: folder names with #, %, or + (e.g. "A+C 091522") are unresolvable
+        // via GetFolderByServerRelativeUrl, so its /Files listing 404s and the pre-flight wrongly
+        // reports the folder empty. See ServerRelativePathArg.
+        string? nextUrl = $"{baseUrl}/_api/web/GetFolderByServerRelativePath({ServerRelativePathArg(folderServerRelativeUrl)})/Files" +
+                          "?$select=Name,TimeLastModified&$top=5000";
+
+        for (int attempt = 0; nextUrl != null; )
+        {
+            try
+            {
+                var requestUrl = nextUrl;
+                using var response = await SendSharePointRequestAsync(token =>
+                {
+                    var r = new HttpRequestMessage(HttpMethod.Get, requestUrl);
+                    r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                    return r;
+                }, siteUrl);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    // 404 = folder doesn't exist yet (fresh target) — genuinely empty. Anything else is
+                    // logged but still returns what we have: the caller merges this with the Graph
+                    // listing, so a degraded REST view falls back to Graph-only behavior, not failure.
+                    System.Diagnostics.Debug.WriteLine(
+                        $"[RestFolderList] HTTP {(int)response.StatusCode} for {folderServerRelativeUrl}");
+                    return result;
+                }
+
+                var body = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(body);
+                if (doc.RootElement.TryGetProperty("value", out var items))
+                {
+                    foreach (var item in items.EnumerateArray())
+                    {
+                        if (!item.TryGetProperty("Name", out var n) || n.ValueKind != JsonValueKind.String) continue;
+                        DateTimeOffset? modified = null;
+                        if (item.TryGetProperty("TimeLastModified", out var tm) &&
+                            tm.ValueKind == JsonValueKind.String &&
+                            DateTimeOffset.TryParse(tm.GetString(), out var dt))
+                            modified = dt;
+                        result[n.GetString()!] = modified;
+                    }
+                }
+                nextUrl = doc.RootElement.TryGetProperty("odata.nextLink", out var nl) &&
+                          nl.ValueKind == JsonValueKind.String
+                    ? nl.GetString()
+                    : null;
+                attempt = 0; // reset the retry budget per page
+            }
+            catch (Exception ex) when (attempt < 4 && IsTransientTransportError(ex))
+            {
+                attempt++;
+                await Task.Delay(TimeSpan.FromSeconds(attempt * 3));
+            }
+        }
+        return result;
+    }
+
     // Cheap "is this folder completely empty?" check (files OR subfolders), via a single $top=1
     // request. Used to detect a fresh migration target so the per-folder existing-file scan can be
     // skipped entirely — on an empty target nothing can already exist.
@@ -1641,13 +1714,23 @@ public class SharePointService
         }
     }
 
+    // Builds the OData "...ByServerRelativePath(decodedurl='…')" argument for a REST call.
+    // The *Path (not *Url) API family is REQUIRED for any path containing #, %, or + — the
+    // GetFileByServerRelativeUrl/GetFolderByServerRelativeUrl variants cannot resolve those even
+    // when percent-encoded, so listings 404 (→ pre-flight misses the file) and deletes silently
+    // fail (→ the file survives into the SPMI import as an "already exists" conflict). Observed
+    // 2026-07-02 on folders like "A+C 091522" (+) and files like "…SOW#3-MUC16.docx" (#).
+    // decodedurl takes the LITERAL path: OData-escape embedded quotes (' → ''), then percent-encode
+    // the whole thing for transport; SharePoint decodes it back to the literal server-relative path.
+    private static string ServerRelativePathArg(string serverRelativeUrl) =>
+        $"decodedurl='{Uri.EscapeDataString(serverRelativeUrl.Replace("'", "''"))}'";
+
     // Returns the SharePoint UniqueId (AllDocs GUID) for a file by its server-relative URL.
     // Works via REST (not Graph) so it finds zombie files — SPFile blobs without a list item
     // that Graph returns 404 for. Returns null if the file doesn't exist.
     public async Task<string?> GetFileUniqueIdAsync(string siteUrl, string serverRelativeUrl)
     {
-        var encodedPath = Uri.EscapeDataString($"'{serverRelativeUrl}'");
-        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativeUrl({encodedPath})/UniqueId";
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativePath({ServerRelativePathArg(serverRelativeUrl)})/UniqueId";
         try
         {
             using var response = await SendSharePointRequestAsync(token =>
@@ -1671,91 +1754,165 @@ public class SharePointService
     // Permanently deletes a file by recycling it then immediately purging the recycle bin entry.
     // Graph DeleteAsync only soft-deletes (recycle bin); soft-deleted list item records interfere
     // with SPMI imports at the same URL, producing "Missing file info for list item" errors.
-    public async Task PermanentlyDeleteFileAsync(string siteUrl, string serverRelativeUrl)
+    //
+    // Retries transient failures at each step and returns false (rather than silently swallowing
+    // the error) if the file can't be confirmed gone. Previously a single dropped call here — under
+    // sustained throttling on a large batch — left the old item in place while the caller proceeded
+    // as if it had been deleted, so SPMI rejected the re-import with "already exists" even though
+    // overwrite was requested (observed on a 5,000-file overwrite run, 2026-07-02). Callers must
+    // check the result and fail the item cleanly rather than queue a doomed import.
+    // onFail, when provided, receives a short human-readable reason (HTTP status + trimmed SharePoint
+    // error body) whenever this returns false — so the caller can surface WHY a delete failed into the
+    // activity log instead of only "still present after delete." SharePoint's REST error body usually
+    // names the real cause (locked/checked-out/access-denied/not-found).
+    // onFail receives a short reason when this returns false. onTrace (when provided) ALWAYS receives
+    // a one-line trace of what each REST step actually returned — recycle status, bin id, purge status —
+    // even on success. That trace is the only way to see these steps in a Release build (the old
+    // Debug.WriteLine calls are compiled out unless a debugger is attached), and it's what finally
+    // showed the delete "succeeding" while the file survived.
+    public async Task<bool> PermanentlyDeleteFileAsync(
+        string siteUrl, string serverRelativeUrl, Action<string>? onFail = null, Action<string>? onTrace = null)
     {
-        // Step 1: recycle — returns the recycle bin item GUID
-        var encodedPath = Uri.EscapeDataString($"'{serverRelativeUrl}'");
-        var recycleUrl  = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativeUrl({encodedPath})/recycleObject";
+        const int maxAttempts = 4;
+        var baseUrl = siteUrl.TrimEnd('/');
+        string lastReason = "unknown";
+        var trace = new System.Text.StringBuilder();
+        void Trace(string s) { trace.Append(s).Append(' '); }
+        bool Done(bool ok, string? reason = null)
+        {
+            onTrace?.Invoke(trace.ToString().TrimEnd());
+            if (!ok) onFail?.Invoke(reason ?? lastReason);
+            return ok;
+        }
 
+        var uniqueId = await GetFileUniqueIdAsync(siteUrl, serverRelativeUrl);
+        if (string.IsNullOrEmpty(uniqueId)) { Trace("resolve=null(gone)"); return Done(true); }
+        Trace($"id={uniqueId}");
+
+        // Step 1: recycle by ID. GetFileById('{guid}') keeps the path (and its '#'/'+'/'%' hazards) out
+        // of the URL entirely. A recycle 404 is NOT treated as "already gone" here — the caller's verify
+        // loop is the real gone-check; a false 404 would otherwise mask a delete that never happened.
+        var recycleUrl = $"{baseUrl}/_api/web/GetFileById('{uniqueId}')/recycleObject";
         string? recycleBinGuid = null;
-        try
+        for (int attempt = 0; attempt < maxAttempts; attempt++)
         {
-            using var recycleResponse = await SendSharePointRequestAsync(token =>
+            bool lastAttempt = attempt == maxAttempts - 1;
+            try
             {
-                var r = new HttpRequestMessage(HttpMethod.Post, recycleUrl);
-                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
-                r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
-                return r;
-            }, siteUrl);
+                using var recycleResponse = await SendSharePointRequestAsync(token =>
+                {
+                    var r = new HttpRequestMessage(HttpMethod.Post, recycleUrl);
+                    r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                    r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
+                    return r;
+                }, siteUrl);
 
-            System.Diagnostics.Debug.WriteLine($"[PermDelete] recycleObject status={recycleResponse.StatusCode} path={serverRelativeUrl}");
+                var body = await recycleResponse.Content.ReadAsStringAsync();
+                Trace($"recycle={(int)recycleResponse.StatusCode}");
 
-            if (!recycleResponse.IsSuccessStatusCode)
-            {
-                // recycleObject fails for zombie blobs (no SPListItem → can't create recycle entry).
-                // Fall back to deleteObject which operates at the AllDocs level directly.
-                await TryDeleteObjectAsync(siteUrl, encodedPath);
-                return;
+                if (!recycleResponse.IsSuccessStatusCode)
+                {
+                    lastReason = $"recycle HTTP {(int)recycleResponse.StatusCode}: {Trim(body)}";
+                    // recycleObject fails for a file with no list item (zombie AllDocs row) — fall back to
+                    // deleteObject by ID, which removes the row at the AllDocs level directly.
+                    if (lastAttempt)
+                    {
+                        var (delOk, delReason) = await TryDeleteObjectByIdAsync(siteUrl, uniqueId, Trace);
+                        return Done(delOk, delReason ?? lastReason);
+                    }
+                    await Task.Delay(TimeSpan.FromSeconds(3 * (attempt + 1)));
+                    continue;
+                }
+
+                using var doc = JsonDocument.Parse(body);
+                recycleBinGuid = doc.RootElement.ValueKind == JsonValueKind.String
+                    ? doc.RootElement.GetString()
+                    : doc.RootElement.TryGetProperty("value", out var v) ? v.GetString() : null;
+                break;
             }
-
-            var body = await recycleResponse.Content.ReadAsStringAsync();
-            System.Diagnostics.Debug.WriteLine($"[PermDelete] recycleObject body={body[..Math.Min(body.Length, 200)]}");
-            using var doc = JsonDocument.Parse(body);
-            recycleBinGuid = doc.RootElement.ValueKind == JsonValueKind.String
-                ? doc.RootElement.GetString()
-                : doc.RootElement.TryGetProperty("value", out var v) ? v.GetString() : null;
-        }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"[PermDelete] recycleObject error: {ex.Message}");
-            return;
-        }
-
-        System.Diagnostics.Debug.WriteLine($"[PermDelete] recycleBinGuid={recycleBinGuid}");
-        if (string.IsNullOrEmpty(recycleBinGuid)) return;
-
-        // Step 2: purge from recycle bin — removes all DB records so SPMI can import cleanly.
-        // SP REST RecycleBin key uses single-quoted string (not guid'...' OData Guid literal).
-        // Uses Sites.ReadWrite.All — user is SCA so this token is already cached and sufficient.
-        try
-        {
-            var purgeUrl = $"{siteUrl.TrimEnd('/')}/_api/site/RecycleBin('{recycleBinGuid}')/DeleteObject";
-            using var purgeResponse = await SendSharePointRequestAsync(token =>
+            catch (Exception ex)
             {
-                var r = new HttpRequestMessage(HttpMethod.Post, purgeUrl);
-                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
-                r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
-                return r;
-            }, siteUrl);
-            System.Diagnostics.Debug.WriteLine($"[PermDelete] purge status={purgeResponse.StatusCode}");
+                lastReason = $"recycle exception: {ex.Message}";
+                if (lastAttempt) return Done(false);
+                await Task.Delay(TimeSpan.FromSeconds(3 * (attempt + 1)));
+            }
         }
-        catch (Exception ex)
+
+        Trace($"bin={recycleBinGuid ?? "null"}");
+        if (string.IsNullOrEmpty(recycleBinGuid)) return Done(false, $"recycle returned no bin id ({lastReason})");
+
+        // Step 2: purge. recycleObject drops the item in the WEB (first-stage) recycle bin, so purge from
+        // _api/web/RecycleBin; the previous code purged _api/site/RecycleBin (site collection / second
+        // stage), where a web-bin id isn't found — that 404 was then wrongly treated as success, so the
+        // file was only recycled, never purged (and the item lingered). Try web first, site as fallback.
+        // NOTE: a purge failure still leaves the file recycled (out of the folder), which is enough for
+        // SPMI to re-import — so we return true once recycle succeeded even if the purge is imperfect.
+        foreach (var scope in new[] { "web", "site" })
         {
-            System.Diagnostics.Debug.WriteLine($"[PermDelete] purge error: {ex.Message}");
+            var purgeUrl = $"{baseUrl}/_api/{scope}/RecycleBin('{recycleBinGuid}')/DeleteObject";
+            try
+            {
+                using var purgeResponse = await SendSharePointRequestAsync(token =>
+                {
+                    var r = new HttpRequestMessage(HttpMethod.Post, purgeUrl);
+                    r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                    r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
+                    return r;
+                }, siteUrl);
+                Trace($"purge[{scope}]={(int)purgeResponse.StatusCode}");
+                if (purgeResponse.IsSuccessStatusCode) return Done(true);
+            }
+            catch (Exception ex)
+            {
+                Trace($"purge[{scope}]=ex");
+                lastReason = $"purge exception: {ex.Message}";
+            }
         }
+
+        // Recycle succeeded (file left the folder) but neither bin purge confirmed. Still good enough for
+        // the re-import; report success but leave the trace so a lingering-file case is diagnosable.
+        return Done(true);
     }
 
-    private async Task TryDeleteObjectAsync(string siteUrl, string encodedPath)
+    // Trims a SharePoint REST error body to a short single line for logging.
+    private static string Trim(string body) =>
+        System.Text.RegularExpressions.Regex.Replace(body ?? "", @"\s+", " ").Trim() is { Length: > 0 } s
+            ? s[..Math.Min(s.Length, 200)] : "(empty body)";
+
+    private async Task<(bool ok, string? reason)> TryDeleteObjectByIdAsync(
+        string siteUrl, string uniqueId, Action<string>? trace = null)
     {
-        var deleteUrl = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativeUrl({encodedPath})/deleteObject";
-        try
+        const int maxAttempts = 4;
+        var deleteUrl = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileById('{uniqueId}')/deleteObject";
+        string? lastReason = null;
+        for (int attempt = 0; attempt < maxAttempts; attempt++)
         {
-            using var response = await SendSharePointRequestAsync(token =>
+            try
             {
-                var r = new HttpRequestMessage(HttpMethod.Post, deleteUrl);
-                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
-                r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
-                return r;
-            }, siteUrl);
-            System.Diagnostics.Debug.WriteLine($"[PermDelete] deleteObject status={response.StatusCode}");
+                using var response = await SendSharePointRequestAsync(token =>
+                {
+                    var r = new HttpRequestMessage(HttpMethod.Post, deleteUrl);
+                    r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                    r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
+                    return r;
+                }, siteUrl);
+                var body = await response.Content.ReadAsStringAsync();
+                trace?.Invoke($"deleteObject={(int)response.StatusCode}");
+                if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    return (true, null);
+                lastReason = $"deleteObject HTTP {(int)response.StatusCode}: {Trim(body)}";
+            }
+            catch (Exception ex)
+            {
+                lastReason = $"deleteObject exception: {ex.Message}";
+            }
+            if (attempt < maxAttempts - 1)
+                await Task.Delay(TimeSpan.FromSeconds(3 * (attempt + 1)));
         }
-        catch (Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine($"[PermDelete] deleteObject error: {ex.Message}");
-        }
+        return (false, lastReason);
     }
 
     public async Task<string> UploadFileAsync(

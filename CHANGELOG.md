@@ -4,6 +4,37 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 3.2.0 — 2026-07-02
+
+### Added
+
+- **Verification Report** — Click "Verify" on any run in the History dialog (including runs saved before this feature existed, if their scope is still resolvable) to independently re-scan source and target via fresh Graph calls and produce an `.xlsx` workbook with Overview, Source, Target, Comparison, and Scan Errors sheets. Comparison is existence-only (Match / Only in Source / Only in Target) — size and modified-date signals were tried and dropped because SharePoint routinely re-serializes the ZIP container behind `.docx`/`.xlsx`/`.pptx` files (indexing, thumbnails, co-authoring), changing size and hash for files that are genuinely fine.
+- **Tri-state folder/library selection** — Folders and libraries in the source tree now cycle unchecked → fully selected → indeterminate (parent deselected, its children stay selected) → unchecked, matching the existing "items only" behavior for custom lists, with a dash glyph shown for the indeterminate state.
+- **Run settings summary** — The copy-progress screen and activity log now show a one-line summary of the run's configuration (Overwrite mode, Copy Mode, Versions, Parallel Copies, Preserve Metadata, Permissions, Custom Columns), captured at copy start so it always reflects what actually ran.
+- **Sleep prevention during long runs** — The app now blocks Windows system sleep (display sleep is still allowed) while a copy, metadata update, or verification is in progress. Added after a 114,000-file run went to sleep mid-run and stalled every in-flight Graph retry for 95 minutes.
+
+### Changed
+
+- **"If Newer" reuses the modified date captured during the initial scan** — Both the pre-flight skip filter and the per-batch pre-flight now check the source-modified date already captured for free during the folder walk before falling back to a Graph date fetch. On a 114,000-file run under sustained throttling, the old bulk fetch alone took 22 minutes and still left 110,000 dates unresolved — which the "undetermined → treat as needing copy" fallback then misrouted into hours of unnecessary re-copying. That fallback path is now unreachable for any file discovered by the normal folder scan.
+- **Adaptive throttle backoff extended to every Graph-heavy phase, and isolated per phase** — Pre-flight analysis (subfolder creation, existing-file scan), the source scan, the Verification Report scan, and bulk metadata/date fetches each now get their own adaptive concurrency gate, separate from the download-phase gate. Previously a shared gate meant analysis-phase throttling could pre-shrink download concurrency before any transfer started, and several loops resumed at full width immediately after waiting out a `Retry-After`, walking straight back into the same depleted budget — observed as repeated 60–120s waits back to back. Throttling now converges instead of oscillating.
+- **Source folder-tree scan parallelized** — The folder walk now fans out across sibling subfolders concurrently instead of issuing one Graph call at a time. A 3,000+-folder library previously took roughly 30 silent minutes to scan before a copy could even start; progress ("Scanning source: N files found so far…") is now reported continuously.
+- **Fewer Graph calls during large-run analysis** — HTTP/2 multiplexing is now enabled so concurrent Graph calls spread across multiple connections instead of contending for one; metadata fetches skip the `/versions` sub-request entirely when Copy Versions is off; and Skip/If Newer runs no longer fetch full metadata for files already identified as skippable before the batching pass.
+- **SPMI batch preparation and container provisioning made more efficient** — Batch prep (download → encrypt → upload → manifest) now runs up to 3 batches concurrently instead of one at a time. Azure container provisioning is deferred until a batch is confirmed to actually have files to upload, avoiding hundreds of needless provisioning calls on large "copy if newer" runs where most batches are all-skip.
+- Cancel is now available during metadata-update and verification phases, not just during the copy itself.
+- The "Copying…" status label is now "Processing…", reflecting that the phase includes download/encrypt/upload, not just a network transfer.
+
+### Fixed
+
+- **SPMI import failures on large files (>256 MB) eliminated** — SharePoint's importer requires an MD5 hash on every content blob. Small blobs get one automatically from Azure's single-request upload path, but blobs above the SDK's ~256 MB single-shot threshold upload as blocks and receive no automatic blob-level MD5, so every large file in an affected batch was rejected. The app now computes and attaches the MD5 itself for every blob upload.
+- **Per-file import-error attribution fixed** — Errors were previously matched to files by `ListItemId` only, but SharePoint's import errors reference different GUIDs depending on error type ([File]-level errors carry the `FileId`, stream errors the `StreamId`). A batch with 3 MD5 errors could previously attribute only 1, leaving 2 genuinely failed files shown as Success. Every GUID a batch mints is now registered for attribution, and SharePoint's `.err` report is now fetched and cross-referenced on any batch with errors — not just fatal ones — before final status is assigned.
+- **Large runs no longer fail outright on a single dropped connection** — A transient transport blip during pre-flight folder creation, existing-file scanning, or the empty-target check previously propagated out of the whole drive-group loop and was caught by a top-level handler that marked every still-pending file as Failed — on a 114,000-file run this meant nearly the entire job. These calls now retry with backoff, matching the download/upload paths.
+- **Metadata-update elapsed time no longer shows an absurd duration** (observed as "~2025 years") — Migration API mode reported completion before its start-time field had been set. The start time is now captured before the copy begins.
+- **App no longer lingers in Task Manager after closing** — background MSAL/Graph SDK threads outlived WPF's dispatcher shutdown; the process now force-exits on window close.
+- **Verification Report scans no longer look hung during throttling** — a Graph throttle wait (observed recurring for over an hour on a busy tenant, up to 120s per wait) was previously silent. The scan status now shows a "⚠ Graph throttled — waiting Ns" notice, matching what copy runs already show.
+- **Folder-metadata fetches and modified-date checks no longer go silent for minutes during throttling** — both previously showed no log output for up to ~29 minutes at a time; both now report progress on every retry round.
+
+---
+
 ## 3.1.1 — 2026-06-28
 
 ### Fixed

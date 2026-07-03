@@ -6,5 +6,6 @@ public class FileMetadata
     public string?         CreatedByEmail   { get; init; }
     public DateTimeOffset? ModifiedDateTime { get; init; }
     public string?         ModifiedByEmail  { get; init; }
+    public long?           Size             { get; init; }
     public Dictionary<string, object?> CustomFields { get; init; } = [];
 }

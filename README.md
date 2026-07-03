@@ -47,9 +47,10 @@ Choose from four copy scopes in a step-by-step wizard:
 - Custom column values copied — including **Person/User** and **Managed Metadata** columns
 - Custom column mapping dialog — map source columns to target columns, or create missing columns in the target
 - Overwrite / skip / **copy-if-newer** incremental mode
-- **HTTP 429 throttle handling** — automatic Retry-After backoff so large jobs complete without manual intervention
+- **Adaptive throttle handling** — each Graph-heavy phase backs off and re-probes independently, so large jobs complete without manual intervention or stalling on shared throttle state
+- **System sleep is blocked** while a copy, metadata update, or verification is running, so long unattended jobs aren't interrupted
 - Detailed per-item report with CSV export and inline permission status
-- Run history viewable in-app
+- Run history viewable in-app, with an independent **Verification Report** (Excel) that re-scans source and target to confirm every file actually landed
 
 **Files scope:**
 - Full version history — version numbers, dates, and per-version editors preserved exactly

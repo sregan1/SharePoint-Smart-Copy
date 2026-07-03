@@ -14,6 +14,18 @@ namespace SharePointSmartCopy.Services;
 // blob uploads within each job also run at up to maxParallel concurrency.
 public class MigrationJobService(SharePointService spService)
 {
+    // Files at or above this size get funneled through largeFileGate below, on top of the normal
+    // maxParallel download slots. Each in-flight download holds the WHOLE file in memory twice —
+    // once as the raw MemoryStream, again as the AES-encrypted byte[] handed to the uploader (see
+    // DownloadFileDataAsync / AddFileAsync) — so several multi-GB files downloading at once can
+    // exhaust the process working set. Observed 2026-07-02: OutOfMemoryException on .fastq/.czi
+    // files (multi-GB genomics/microscopy) mid-download and mid-package-build on a 5,000-file run.
+    private const long LargeFileThresholdBytes = 500L * 1024 * 1024; // 500 MB
+    // Only this many large files may be downloaded/encrypted concurrently, independent of maxParallel,
+    // so oversized files can't stack up multiple full in-memory copies at once. Small files are
+    // unaffected — they never touch this gate.
+    private const int MaxConcurrentLargeFiles = 2;
+
     public async Task ExecuteAsync(
         IList<(CopyJob job, CopyResult result)> fileTasks,
         OverwriteMode overwriteMode,
@@ -51,6 +63,7 @@ public class MigrationJobService(SharePointService spService)
         // copy), so throttling is far milder and the opening burst tolerates a higher floor.
         int migrationSoftStart = Math.Min(maxParallel, 8);
         using var downloadController = new AdaptiveParallelismController(maxParallel, migrationSoftStart);
+        using var largeFileGate = new SemaphoreSlim(MaxConcurrentLargeFiles);
         // Registered only during the download/upload phase — NOT during analysis (metadata fetches,
         // folder enumeration). Analysis throttles are transient and shouldn't pre-damage the download
         // slot count before any file transfers have started.
@@ -149,12 +162,14 @@ public class MigrationJobService(SharePointService spService)
                 var sharedFolderUniqueIdCache =
                     new System.Collections.Concurrent.ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-                // Fresh-target fast path: check (cheaply, BEFORE we create any subfolders) whether the
-                // destination is completely empty. If so, nothing can already exist, so the per-folder
-                // existing-file scan below is skipped entirely — one $top=1 call instead of O(folders)
-                // listings. Must be checked before creating subfolders, which would make it non-empty.
-                var targetIsEmpty = await spService.IsFolderEmptyAsync(
-                    firstJob.TargetDriveId, firstJob.TargetParentItemId);
+                // The Graph-based "is the target empty?" fast path was REMOVED here. Graph's folder
+                // listing lags behind SharePoint's content database after an SPMI import — for a while
+                // after a migration writes files, Graph still reports the folder empty. On an overwrite
+                // re-run that false "empty" skipped the entire existing-file scan, so nothing got
+                // deleted and every file bounced off SPMI as "already exists" (reproduced 2026-07-02:
+                // fresh target imported 100%, an immediate second pass failed 100%). Always run the scan
+                // below — it reads the content DB via SP REST (no lag) and is cheap on empty folders.
+                var targetIsEmpty = false;
 
                 // Adaptive gate scoped tightly to just these two pre-flight loops — subscribed only
                 // for their duration so throttles here don't bleed into the download-phase controller
@@ -212,11 +227,27 @@ public class MigrationJobService(SharePointService spService)
                                 await analysisController.WaitAsync(ct);
                                 try
                                 {
-                                    sharedExistingByFolder[kvp.Key] = await spService.FetchFolderItemsAsync(
-                                        firstJob.TargetDriveId, kvp.Value);
+                                    // Graph + SP REST merged: REST sees leftovers from aborted SPMI
+                                    // imports that Graph omits (see FetchTargetFolderSnapshotAsync).
+                                    var folderRelUrl = string.IsNullOrEmpty(kvp.Key)
+                                        ? libraryServerRelUrl
+                                        : $"{libraryServerRelUrl}/{kvp.Key}";
+                                    sharedExistingByFolder[kvp.Key] = await FetchTargetFolderSnapshotAsync(
+                                        firstJob.TargetDriveId, kvp.Value, targetSiteUrl, folderRelUrl);
                                 }
                                 finally { analysisController.Release(); }
                             });
+
+                        // Diagnostic tally: how many existing files the scan actually found, and via
+                        // which source. REST-supplied entries carry an empty ItemId (Graph entries carry
+                        // a real one), so we can split the two without extra bookkeeping. If this reports
+                        // 0 on an overwrite re-run whose target clearly has files, the scan itself is the
+                        // fault (not the delete) — and the Graph/REST split says which listing went blind.
+                        int totalExisting = sharedExistingByFolder.Values.Sum(d => d.Count);
+                        int restOnly      = sharedExistingByFolder.Values.Sum(d => d.Count(e => string.IsNullOrEmpty(e.Value.ItemId)));
+                        activityLog?.Report(
+                            $"Existing-file scan: {totalExisting:N0} file(s) already in target " +
+                            $"(Graph saw {totalExisting - restOnly:N0}, REST-only {restOnly:N0}).");
                     }
                 }
                 finally
@@ -441,20 +472,122 @@ public class MigrationJobService(SharePointService spService)
                 const int MaxConcurrentPrep    = 3;
                 const int MaxConcurrentImports = 6;
 
-                Task<PreparedBatch> Prep(int idx) => PrepareBatchAsync(
-                    batches[idx], overwriteMode, maxVersions, maxParallel,
+                // isRetryPass omits the preflight counter/progress reporting — those already counted
+                // this batch's files once during the original pass, and re-counting on a post-conflict
+                // retry would overshoot the run's total and skew the progress bar. It also withholds
+                // the prebuilt existing-file snapshot: the aborted first attempt imported files before
+                // dying, and that snapshot predates them, so a retry reusing it re-inserts those files
+                // and conflicts all over again (observed 2026-07-02 17:04 run — the retry's errors were
+                // files attempt 1 had just imported). A null snapshot makes PrepareBatchAsync re-list
+                // the target folders fresh (Graph + REST merged).
+                Task<PreparedBatch> PrepTasks(
+                    IList<(CopyJob job, CopyResult result)> tasks, string label, bool isRetryPass = false) => PrepareBatchAsync(
+                    tasks, overwriteMode, maxVersions, maxParallel,
                     targetSiteUrl, webId, webRelUrl, siteId,
                     libraryServerRelUrl, listId, libraryTitle, cancellationToken,
                     copyCustomColumns, columnMappings, bulkFieldCache,
-                    preflightCounter, preflightTotal, preflightProgress,
-                    sharedFolderIdCache, sharedExistingByFolder,
-                    batchLabel: batches.Count > 1 ? $"{idx + 1}/{batches.Count}" : "",
+                    isRetryPass ? null : preflightCounter, preflightTotal, isRetryPass ? null : preflightProgress,
+                    sharedFolderIdCache, isRetryPass ? null : sharedExistingByFolder,
+                    batchLabel: label,
                     activityLog: activityLog,
                     onFilePacked: onFilePacked,
                     downloadController: downloadController,
+                    largeFileGate: largeFileGate,
                     folderUniqueIdCache: sharedFolderUniqueIdCache,
                     folderMetadata: folderMetadata,
                     metaCache: metaCache);
+
+                Task<PreparedBatch> Prep(int idx) =>
+                    PrepTasks(batches[idx], batches.Count > 1 ? $"{idx + 1}/{batches.Count}" : "");
+
+                // Re-runs a batch once after SharePoint aborts the whole job over "already exists"
+                // conflicts. SPMI cancels the ENTIRE job once ~100 items conflict — but it KEEPS the
+                // files it already imported, and every other valid file is discarded as collateral
+                // (observed 2026-07-02: 246-file batch, 100 reported conflicts, 0-of-246 credited).
+                // Deletes the specific conflicting targets (with verification + re-delete for orphaned
+                // rows), resets the batch back to Copying, and re-submits once; the retry's fresh
+                // pre-flight listing also catches whatever attempt 1 imported before dying. A second
+                // fatal abort is left as a genuine failure rather than retried again.
+                async Task RetryBatchAfterConflictAsync(
+                    PreparedBatch prepared, List<(CopyJob job, CopyResult result)> conflicts)
+                {
+                    var rpfx = string.IsNullOrEmpty(prepared.BatchLabel) ? "" : $"[{prepared.BatchLabel}] ";
+                    activityLog?.Report(
+                        $"↻ {rpfx}SharePoint aborted the batch after {conflicts.Count} name conflict{(conflicts.Count == 1 ? "" : "s")} — clearing and retrying the batch once...");
+
+                    var stillBlocked = new HashSet<CopyResult>();
+                    var blockedLock  = new object();
+                    int clearedCount = 0, blockedCount = 0;
+                    await Parallel.ForEachAsync(conflicts,
+                        new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
+                        async (conflict, ct) =>
+                    {
+                        var (job, result) = conflict;
+                        var subPath = job.TargetSubFolderPath ?? string.Empty;
+                        var fileServerRelUrl = string.IsNullOrEmpty(subPath)
+                            ? $"{libraryServerRelUrl}/{job.SourceName}"
+                            : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
+
+                        string? failReason = null;
+                        string? deleteTrace = null;
+                        bool ok = await spService.PermanentlyDeleteFileAsync(
+                            targetSiteUrl, fileServerRelUrl, r => failReason = r, t => deleteTrace = t);
+                        if (ok)
+                        {
+                            // Confirm it's ACTUALLY gone before trusting the recycle/purge HTTP status —
+                            // and if the URL still resolves, DELETE AGAIN. Observed 2026-07-02 17:09:
+                            // recycle+purge reported success on 100 conflicts yet all 100 still resolved
+                            // ("cleared 0/100"), consistent with a second row surviving at the same URL
+                            // (aborted SPMI imports leave orphaned rows alongside the list item). A second
+                            // delete pass finds no list item, so recycleObject fails over to deleteObject,
+                            // which removes rows at the AllDocs level — the one path the first pass never
+                            // took while the recycle succeeded.
+                            for (int v = 0; ; v++)
+                            {
+                                if (await spService.GetFileUniqueIdAsync(targetSiteUrl, fileServerRelUrl) == null) break;
+                                if (v >= 2) { ok = false; failReason ??= "still resolves after delete+verify"; break; }
+                                await spService.PermanentlyDeleteFileAsync(
+                                    targetSiteUrl, fileServerRelUrl, r => failReason = r, t => deleteTrace = t);
+                                await Task.Delay(TimeSpan.FromSeconds(3 * (v + 1)), ct);
+                            }
+                        }
+
+                        if (ok) { Interlocked.Increment(ref clearedCount); return; }
+                        int nowBlocked;
+                        lock (blockedLock)
+                        {
+                            nowBlocked = ++blockedCount;
+                            stillBlocked.Add(result);
+                        }
+                        if (nowBlocked <= 5)
+                            activityLog?.Report($"  ⚠ {rpfx}delete failed [{failReason ?? "unknown"}] (trace: {deleteTrace ?? "n/a"}): {fileServerRelUrl}");
+                        else if (nowBlocked == 6)
+                            activityLog?.Report($"  ⚠ {rpfx}…more still-blocked conflicts (suppressing)");
+                    });
+                    activityLog?.Report($"  {rpfx}cleared {clearedCount}/{conflicts.Count} conflicting file(s)" +
+                        (blockedCount > 0 ? $", {blockedCount} still blocked" : ""));
+
+                    foreach (var (_, result) in prepared.FileTasks)
+                    {
+                        if (stillBlocked.Contains(result))
+                        {
+                            result.Status       = CopyStatus.Failed;
+                            result.ErrorMessage = "Could not remove the existing file before retry — re-run to try again.";
+                            continue;
+                        }
+                        result.Status       = CopyStatus.Copying;
+                        result.ErrorMessage = null;
+                    }
+
+                    if (!prepared.FileTasks.Any(t => t.result.Status == CopyStatus.Copying))
+                    {
+                        activityLog?.Report($"✗ {rpfx}Retry skipped — every conflicting file is still blocked.");
+                        return;
+                    }
+
+                    var retried = await PrepTasks(prepared.FileTasks, prepared.BatchLabel, isRetryPass: true);
+                    await SubmitAndPollBatchAsync(retried, webId, targetSiteUrl, activityLog, cancellationToken);
+                }
 
                 // Connect throttle → download-slot step-down now that downloads are about to begin.
                 // Analysis throttles (above) are isolated; only download-phase throttles shrink the gate.
@@ -488,7 +621,11 @@ public class MigrationJobService(SharePointService spService)
                 var importWorkers = Enumerable.Range(0, MaxConcurrentImports).Select(_ => Task.Run(async () =>
                 {
                     await foreach (var prepared in prepChannel.Reader.ReadAllAsync(cancellationToken))
-                        await SubmitAndPollBatchAsync(prepared, webId, targetSiteUrl, activityLog, cancellationToken);
+                    {
+                        var conflicts = await SubmitAndPollBatchAsync(prepared, webId, targetSiteUrl, activityLog, cancellationToken);
+                        if (conflicts.Count > 0 && overwriteMode != OverwriteMode.Skip)
+                            await RetryBatchAfterConflictAsync(prepared, conflicts);
+                    }
                 }, cancellationToken)).ToArray();
 
                 await Task.WhenAll(importWorkers);
@@ -532,6 +669,26 @@ public class MigrationJobService(SharePointService spService)
         // and marked Failed — instead of blanket-marking the whole batch Success.
         IReadOnlyDictionary<string, CopyResult> ListItemMap);
 
+    // Merges Graph's folder listing with the SP REST view of the same folder. SPMI's duplicate
+    // check runs against SharePoint's internal file table, which can hold rows Graph doesn't
+    // return (files landed by a previous SPMI job that fatal-aborted mid-import). A pre-flight
+    // that trusts Graph alone reports those folders as empty, skips the deletes, and every such
+    // file then bounces off the import with "already exists" (observed 2026-07-02, 100+ per
+    // batch). REST-only names carry an empty ItemId — nothing downstream reads ItemId; the
+    // Overwrite/IfNewer branches delete by server-relative URL and Skip matches by name.
+    private async Task<Dictionary<string, (string ItemId, DateTimeOffset? Modified)>>
+        FetchTargetFolderSnapshotAsync(string driveId, string folderId, string siteUrl, string folderServerRelUrl)
+    {
+        var graphTask = spService.FetchFolderItemsAsync(driveId, folderId);
+        var restTask  = spService.FetchFolderFileNamesRestAsync(siteUrl, folderServerRelUrl);
+        await Task.WhenAll(graphTask, restTask);
+        var merged = graphTask.Result;
+        foreach (var (name, modified) in restTask.Result)
+            if (!merged.ContainsKey(name))
+                merged[name] = (string.Empty, modified);
+        return merged;
+    }
+
     // Phase 1 of a batch: provision containers, pre-flight, download → encrypt → upload blobs, and
     // upload the manifest. Does NOT submit the import job, so this can safely run (for batch N+1)
     // while a previous batch (N) is still importing — only the import itself must be serialized.
@@ -561,6 +718,7 @@ public class MigrationJobService(SharePointService spService)
         IProgress<string>? activityLog = null,
         IProgress<int>? onFilePacked = null,
         AdaptiveParallelismController? downloadController = null,
+        SemaphoreSlim? largeFileGate = null,
         IReadOnlyDictionary<string, (FileMetadata Metadata, List<Microsoft.Graph.Models.DriveItemVersion>? Versions)>? metaCache = null,
         System.Collections.Concurrent.ConcurrentDictionary<string, string>? folderUniqueIdCache = null,
         IReadOnlyDictionary<string, FileMetadata>? folderMetadata = null)
@@ -597,8 +755,15 @@ public class MigrationJobService(SharePointService spService)
                     new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
                     async (kvp, ct) =>
                     {
-                        existingByFolder[kvp.Key] = await spService.FetchFolderItemsAsync(
-                            fileTasks[0].job.TargetDriveId, kvp.Value);
+                        // Graph + SP REST merged (see FetchTargetFolderSnapshotAsync). Also the path
+                        // taken by a post-abort retry (prebuilt snapshot deliberately withheld): the
+                        // aborted job imported files before dying, so the retry MUST re-list or it
+                        // re-inserts those files and conflicts all over again.
+                        var folderRelUrl = string.IsNullOrEmpty(kvp.Key)
+                            ? libraryServerRelUrl
+                            : $"{libraryServerRelUrl}/{kvp.Key}";
+                        existingByFolder[kvp.Key] = await FetchTargetFolderSnapshotAsync(
+                            fileTasks[0].job.TargetDriveId, kvp.Value, targetSiteUrl, folderRelUrl);
                     });
             }
 
@@ -621,19 +786,44 @@ public class MigrationJobService(SharePointService spService)
                 async (task, ct) =>
                 {
                     var (job, result) = task;
+
+                    // A task can arrive here already Failed (a post-abort retry keeps still-blocked
+                    // conflicts Failed while re-running the rest of its batch). Deleting that task's
+                    // target here would destroy the existing file with no re-import to replace it —
+                    // only files actually being copied may have their targets cleared.
+                    if (result.Status != CopyStatus.Copying)
+                    {
+                        if (preflightCounter != null)
+                        {
+                            int doneNow = Interlocked.Increment(ref preflightCounter[0]);
+                            preflightProgress?.Report((doneNow, preflightTotal));
+                        }
+                        return;
+                    }
+
                     var subPath          = job.TargetSubFolderPath ?? string.Empty;
                     var fileServerRelUrl = string.IsNullOrEmpty(subPath)
                         ? $"{libraryServerRelUrl}/{job.SourceName}"
                         : $"{libraryServerRelUrl}/{subPath}/{job.SourceName}";
 
+                    // Marks the item Failed with a clear, actionable message instead of letting it fall
+                    // through to SPMI, which would otherwise reject it with a confusing "already exists"
+                    // error (blank modified-by/date — SPMI's own message template, not ours) once the
+                    // stale target survives into the import.
+                    void failDeleteConflict() {
+                        result.Status       = CopyStatus.Failed;
+                        result.ErrorMessage = "Could not remove the existing file before overwrite (after retries) — skipped to avoid a duplicate-version import error. Re-run to retry.";
+                    }
+
                     if (overwriteMode == OverwriteMode.Overwrite)
                     {
+                        bool deleteOk = true;
                         if (existingByFolder[subPath].ContainsKey(job.SourceName))
                         {
                             // Real file: delete first so SPMI does a fresh INSERT.
                             // SPMI UPDATE (with existing GUID) appends imported versions to the
                             // existing version history instead of replacing it, causing duplication.
-                            await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                            deleteOk = await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
                         }
                         else if (existingByFolder[subPath].Count > 0 &&
                                  await spService.GetFileUniqueIdAsync(targetSiteUrl, fileServerRelUrl) != null)
@@ -641,9 +831,10 @@ public class MigrationJobService(SharePointService spService)
                             // Zombie blob (AllDocs row without SPListItem) — delete via deleteObject,
                             // which bypasses the SPListItem requirement that recycleObject needs.
                             // Guard: if the folder is empty, no prior SPMI import ran here so no zombies exist.
-                            await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                            deleteOk = await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
                         }
-                        existingFileIds[fileServerRelUrl] = null;
+                        if (!deleteOk) failDeleteConflict();
+                        else existingFileIds[fileServerRelUrl] = null;
                     }
                     else if (overwriteMode == OverwriteMode.IfNewer)
                     {
@@ -671,14 +862,16 @@ public class MigrationJobService(SharePointService spService)
                             {
                                 // Source is newer — delete so SPMI does a fresh INSERT
                                 // (same reasoning as overwrite mode).
-                                await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                                if (!await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl))
+                                    failDeleteConflict();
                             }
                         }
                         else if (existingByFolder[subPath].Count > 0 &&
                                  await spService.GetFileUniqueIdAsync(targetSiteUrl, fileServerRelUrl) != null)
                         {
                             // Zombie SPFile blob — purge so SPMI can import cleanly.
-                            await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                            if (!await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl))
+                                failDeleteConflict();
                         }
                     }
                     else // Skip
@@ -691,7 +884,8 @@ public class MigrationJobService(SharePointService spService)
                             // Zombie SPFile blob (AllDocs row exists but Graph returns 404).
                             // Guard: only check when the folder has prior Graph-visible files,
                             // meaning a previous import ran and could have left orphaned blobs.
-                            await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                            if (!await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl))
+                                failDeleteConflict();
                         }
                     }
 
@@ -803,13 +997,23 @@ public class MigrationJobService(SharePointService spService)
                                 Interlocked.Increment(ref currentOnlyMisses);
                             }
 
+                            // Oversized files (multi-GB genomics/microscopy files etc.) get an extra gate on
+                            // top of the normal download slot: each one holds its full content in memory
+                            // twice (raw + AES-encrypted) until upload completes, so only a couple may be
+                            // in flight at once regardless of maxParallel — acquired BEFORE the general
+                            // slot so a large file waiting on this gate doesn't tie up a slot small files
+                            // could otherwise use.
+                            bool isLargeFile = (cachedMeta?.Size ?? 0) >= LargeFileThresholdBytes;
+                            if (isLargeFile && largeFileGate != null)
+                                await largeFileGate.WaitAsync(ct);
+
                             // Acquire a global download slot — limits total concurrent Graph
                             // content downloads across all SPMI batches to maxParallel.
                             if (downloadController != null)
                                 await downloadController.WaitAsync(ct);
                             try
                             {
-                                if (verbosePerFile) activityLog?.Report($"{pfx}↓ {job.SourceName}");
+                                if (verbosePerFile || isLargeFile) activityLog?.Report($"{pfx}↓ {job.SourceName}");
                                 var data = await DownloadFileDataAsync(
                                     job, result, maxVersions, versionParallelism, existingFileId, ct,
                                     cachedMeta, cachedVersions,
@@ -826,6 +1030,7 @@ public class MigrationJobService(SharePointService spService)
                             finally
                             {
                                 downloadController?.Release();
+                                if (isLargeFile) largeFileGate?.Release();
                             }
                         });
                 }
@@ -1072,11 +1277,16 @@ public class MigrationJobService(SharePointService spService)
     // Phase 2 of a batch: submit the import job and poll to completion. This is the ONLY phase that
     // must be serialized across batches — SharePoint soft-cancels concurrent import jobs. No-op when
     // the prepared batch has nothing to import (all files skipped, or prep failed).
-    private async Task SubmitAndPollBatchAsync(
+    //
+    // Returns the (job, result) pairs that were attributed a genuine "already exists" conflict when
+    // the job hit a JobFatalError — empty otherwise. The caller uses this to retry the whole batch
+    // once after clearing those specific conflicts, instead of accepting SPMI's blanket abort as final
+    // for every other (perfectly valid) file in the batch.
+    private async Task<List<(CopyJob job, CopyResult result)>> SubmitAndPollBatchAsync(
         PreparedBatch batch, string webId, string targetSiteUrl,
         IProgress<string>? activityLog, CancellationToken cancellationToken)
     {
-        if (batch.CopyingCount == 0) return;
+        if (batch.CopyingCount == 0) return new List<(CopyJob job, CopyResult result)>();
 
         var pfx       = string.IsNullOrEmpty(batch.BatchLabel) ? "" : $"[{batch.BatchLabel}] ";
         var fileTasks = batch.FileTasks;
@@ -1201,6 +1411,14 @@ public class MigrationJobService(SharePointService spService)
             {
                 activityLog?.Report($"{pfx}✓ Import complete — {importedCount} file{(importedCount == 1 ? "" : "s")} imported");
             }
+
+            // Only a fatal abort warrants a batch-wide retry — the plain "some items failed" path
+            // already reports honest per-file results and doesn't need a whole-batch redo.
+            return fatal
+                ? fileTasks.Where(t => t.result.Status == CopyStatus.Failed &&
+                    t.result.ErrorMessage != null &&
+                    t.result.ErrorMessage.Contains("already exists", StringComparison.OrdinalIgnoreCase)).ToList()
+                : new List<(CopyJob job, CopyResult result)>();
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -1209,6 +1427,7 @@ public class MigrationJobService(SharePointService spService)
                 result.Status       = CopyStatus.Failed;
                 result.ErrorMessage = "Cancelled";
             }
+            return new List<(CopyJob job, CopyResult result)>();
         }
         catch (Exception ex)
         {
@@ -1217,6 +1436,7 @@ public class MigrationJobService(SharePointService spService)
                 result.Status       = CopyStatus.Failed;
                 result.ErrorMessage = ex.Message;
             }
+            return new List<(CopyJob job, CopyResult result)>();
         }
     }
 

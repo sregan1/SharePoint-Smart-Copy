@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 3.1.1  ·  June 2026**
+**Version 3.2.0  ·  July 2026**
 
 ---
 
@@ -38,7 +38,9 @@ Two copy engines are available. **Migration API** mode uses SharePoint's server-
 - Parallel transfers with 1–16 simultaneous file copies for faster bulk operations
 - Real-time progress monitoring with per-file status updates (Enhanced REST) or job-level results (Migration API)
 - Copy report with succeeded, failed, and skipped counts, inline permission status, and CSV export
+- **Verification Report** — independently re-scans source and target after a run and produces an Excel workbook confirming what actually matches
 - Full copy history stored locally — browse, re-export, or delete previous runs
+- System sleep is blocked automatically for the duration of a copy, metadata update, or verification
 - ← Back navigation available on every step, including the final report screen
 - Light, Dark, and System-follows-Windows themes
 
@@ -176,6 +178,7 @@ The application loads all document libraries from the source site into a tree vi
 *Step 2 — Browse and select files from the source site*
 
 - Checking a folder automatically selects all files and sub-folders within it.
+- Clicking a fully-checked folder again cycles it to an indeterminate state (shown with a dash) — the folder itself is deselected but its children remain selected, letting you exclude just the folder's own direct files while still copying its subfolders.
 - Use **Select All** to check everything across all libraries, or **Deselect All** to clear all selections.
 - File type icons indicate the format: 📝 Word, 📊 Excel/PowerPoint, 📄 PDF, and so on.
 - File sizes are displayed to the right of each file name.
@@ -328,10 +331,31 @@ The left panel lists previous runs in reverse chronological order. Each entry sh
 With a run selected, the right panel shows the summary cards and the complete per-file results table for that run. Available actions:
 
 - **Export CSV** — saves the selected run's per-file report to a comma-separated file
+- **Verify** — runs an independent Verification Report for the selected run (see below)
 - **Delete Run** — permanently removes the selected run from the history
 - **Close** — returns to the main application window
 
 > **Note:** History is capped at 50 entries. When the limit is reached, the oldest entries are automatically pruned. All history is stored locally in `%AppData%\SharePointSmartCopy\Reports\` — it is never uploaded or shared.
+
+### Verification Report
+
+The copy report itself only reflects what the app *attempted* — the Verification Report independently confirms what is actually present, by re-scanning both the source and target with fresh Graph API calls rather than reusing any data collected during the copy.
+
+Select a run in History and click **Verify**. You will be prompted for a location to save an Excel (`.xlsx`) workbook, then the app re-walks the source and target folder trees. This can take some time on large libraries — the status line shows files found on each side as the scan progresses, and shows a throttle notice if the Microsoft Graph API is rate-limiting the scan, so a slow scan is never mistaken for a hang. Click **Cancel** at any point to stop the verification.
+
+The resulting workbook contains:
+
+| Sheet | Contents |
+|---|---|
+| **Overview** | Summary counts — matched, only in source, only in target |
+| **Source** | Every file found on the source side, with its relative path |
+| **Target** | Every file found on the target side, with its relative path |
+| **Comparison** | Every relative path with its match status: Match, Only in Source, or Only in Target |
+| **Scan Errors** | Present only if a source or target root could not be scanned (e.g. it was deleted or renamed since the copy) |
+
+> **Note:** The comparison is existence-based (does a file with the same relative path exist on both sides), not a byte-for-byte or checksum comparison. File size and modified-date checks were deliberately left out — SharePoint routinely re-serializes the internal ZIP container of Office files (`.docx`, `.xlsx`, `.pptx`) for indexing, thumbnails, and co-authoring, which changes the file's size and hash without changing its actual content. A path-based match avoids flagging those files as mismatched.
+>
+> Verification can only be run for saved reports that recorded their source/target scope. Runs from before this feature was added do not have that information, and the **Verify** button is disabled for them.
 
 ---
 
