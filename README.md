@@ -49,6 +49,7 @@ Choose from four copy scopes in a step-by-step wizard:
 - Overwrite / skip / **copy-if-newer** incremental mode
 - **Adaptive throttle handling** — each Graph-heavy phase backs off and re-probes independently, so large jobs complete without manual intervention or stalling on shared throttle state
 - **System sleep is blocked** while a copy, metadata update, or verification is running, so long unattended jobs aren't interrupted
+- **Automatic recovery from Migration API batch aborts** — if SharePoint cancels an entire import after hitting its internal per-batch conflict threshold, the app clears the specific conflicting files and retries the batch automatically instead of requiring a manual re-run
 - Detailed per-item report with CSV export and inline permission status
 - Run history viewable in-app, with an independent **Verification Report** (Excel) that re-scans source and target to confirm every file actually landed
 

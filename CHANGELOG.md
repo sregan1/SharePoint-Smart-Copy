@@ -4,7 +4,7 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
-## 3.2.0 — 2026-07-02
+## 3.2.0 — 2026-07-03
 
 ### Added
 
@@ -12,6 +12,7 @@ All notable changes to SharePoint Smart Copy are documented here.
 - **Tri-state folder/library selection** — Folders and libraries in the source tree now cycle unchecked → fully selected → indeterminate (parent deselected, its children stay selected) → unchecked, matching the existing "items only" behavior for custom lists, with a dash glyph shown for the indeterminate state.
 - **Run settings summary** — The copy-progress screen and activity log now show a one-line summary of the run's configuration (Overwrite mode, Copy Mode, Versions, Parallel Copies, Preserve Metadata, Permissions, Custom Columns), captured at copy start so it always reflects what actually ran.
 - **Sleep prevention during long runs** — The app now blocks Windows system sleep (display sleep is still allowed) while a copy, metadata update, or verification is in progress. Added after a 114,000-file run went to sleep mid-run and stalled every in-flight Graph retry for 95 minutes.
+- **Automatic recovery when SharePoint cancels an entire import batch** — SharePoint's Migration API aborts a whole job once enough per-item name conflicts accumulate within it (observed threshold: 100), discarding every other valid file in that batch as collateral — a 250-file batch with a cluster of conflicts previously showed as 250 failures needing a full manual re-run. The app now detects this specific abort, clears the conflicting targets, and retries the batch once automatically before giving up on it.
 
 ### Changed
 
@@ -25,6 +26,9 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ### Fixed
 
+- **Overwrite mode could fail entire batches with "already exists" errors, even on a re-copy of files the app itself had just written** — the pre-flight existing-file scan relied on Microsoft Graph, which does not reliably reflect files recently written by a Migration API import; a target folder could report as empty via Graph while genuinely containing files. The existing-file scan now cross-checks the same folder via SharePoint REST as well, and a Graph-only "is the target completely empty" fast path (previously used to skip the scan outright) has been removed — it was the single largest source of missed detections.
+- **File deletion during Overwrite/If Newer now verifies removal instead of trusting a misleading success response** — recycling and purging an existing file could report success without the file actually being removed, because the purge step targeted the wrong recycle bin scope (site-collection instead of web). Deletion now operates by file ID, purges the correct bin, and follows up with an existence check and a second delete pass for any file that survives the first attempt.
+- **Large files (500 MB+) no longer risk exhausting memory during Migration API copies** — each in-flight download holds the file's content in memory twice (raw, then AES-encrypted for upload); several large files downloading at once could trigger an `OutOfMemoryException`. Such files are now capped to a small number of concurrent downloads, independent of the overall Parallel Copies setting.
 - **SPMI import failures on large files (>256 MB) eliminated** — SharePoint's importer requires an MD5 hash on every content blob. Small blobs get one automatically from Azure's single-request upload path, but blobs above the SDK's ~256 MB single-shot threshold upload as blocks and receive no automatic blob-level MD5, so every large file in an affected batch was rejected. The app now computes and attaches the MD5 itself for every blob upload.
 - **Per-file import-error attribution fixed** — Errors were previously matched to files by `ListItemId` only, but SharePoint's import errors reference different GUIDs depending on error type ([File]-level errors carry the `FileId`, stream errors the `StreamId`). A batch with 3 MD5 errors could previously attribute only 1, leaving 2 genuinely failed files shown as Success. Every GUID a batch mints is now registered for attribution, and SharePoint's `.err` report is now fetched and cross-referenced on any batch with errors — not just fatal ones — before final status is assigned.
 - **Large runs no longer fail outright on a single dropped connection** — A transient transport blip during pre-flight folder creation, existing-file scanning, or the empty-target check previously propagated out of the whole drive-group loop and was caught by a top-level handler that marked every still-pending file as Failed — on a 114,000-file run this meant nearly the entire job. These calls now retry with backoff, matching the download/upload paths.

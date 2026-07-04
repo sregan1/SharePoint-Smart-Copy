@@ -57,8 +57,8 @@ public class SharePointService
     public async Task<string?> GetLibraryRootFolderUniqueIdAsync(string siteUrl, string libraryServerRelativeUrl)
     {
         // Use GetFolderByServerRelativePath(decodedurl=...) instead of ...ByServerRelativeUrl(...):
-        // the Url variant mishandles special characters in folder names (e.g. '#' in "SOW#3", '%',
-        // '&') and returns 404 for them, which then failed the whole batch's manifest with the
+        // the Url variant mishandles special characters in folder names (e.g. '#', '%', '&') and
+        // returns 404 for them, which then failed the whole batch's manifest with the
         // "Could not resolve target subfolder ID" guard. The Path/decodedurl variant resolves them
         // correctly. Single quotes are OData-escaped (doubled), then the literal is URL-encoded.
         var odataLiteral = libraryServerRelativeUrl.Replace("'", "''");
@@ -1586,8 +1586,8 @@ public class SharePointService
     {
         var result  = new Dictionary<string, DateTimeOffset?>(StringComparer.OrdinalIgnoreCase);
         var baseUrl = siteUrl.TrimEnd('/');
-        // *Path (not *Url) API: folder names with #, %, or + (e.g. "A+C 091522") are unresolvable
-        // via GetFolderByServerRelativeUrl, so its /Files listing 404s and the pre-flight wrongly
+        // *Path (not *Url) API: folder names containing #, %, or + are unresolvable via
+        // GetFolderByServerRelativeUrl, so its /Files listing 404s and the pre-flight wrongly
         // reports the folder empty. See ServerRelativePathArg.
         string? nextUrl = $"{baseUrl}/_api/web/GetFolderByServerRelativePath({ServerRelativePathArg(folderServerRelativeUrl)})/Files" +
                           "?$select=Name,TimeLastModified&$top=5000";
@@ -1719,7 +1719,7 @@ public class SharePointService
     // GetFileByServerRelativeUrl/GetFolderByServerRelativeUrl variants cannot resolve those even
     // when percent-encoded, so listings 404 (→ pre-flight misses the file) and deletes silently
     // fail (→ the file survives into the SPMI import as an "already exists" conflict). Observed
-    // 2026-07-02 on folders like "A+C 091522" (+) and files like "…SOW#3-MUC16.docx" (#).
+    // 2026-07-02 on folder and file names containing '+' and '#'.
     // decodedurl takes the LITERAL path: OData-escape embedded quotes (' → ''), then percent-encode
     // the whole thing for transport; SharePoint decodes it back to the literal server-relative path.
     private static string ServerRelativePathArg(string serverRelativeUrl) =>

@@ -381,6 +381,7 @@ The resulting workbook contains:
 - **Permission denied** — verify the signed-in account has Contribute or higher access on the target folder.
 - **Path too long** — SharePoint Online has a 400-character limit on the full URL path. Shorten folder names or use a shallower structure.
 - **Throttling (429 Too Many Requests)** — the Microsoft Graph API rate-limits heavy usage. The application retries automatically, but very large batches may take longer.
+- **"SharePoint aborted the batch after N name conflicts — clearing and retrying" in the activity log (Migration API mode)** — this is expected automatic recovery, not a failure. SharePoint's Migration API cancels an entire import batch once enough files at the destination already exist, which would otherwise discard every other valid file in that batch. The app detects this, removes the conflicting files, and resubmits the batch once. If the retry also fails, the affected files are reported individually in the final results — re-running the copy again typically clears them, since a fresh pre-flight scan re-detects the current state of the target.
 
 ### Version history not copying
 

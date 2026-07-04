@@ -432,7 +432,7 @@ public class MigrationPackageBuilder
             var currentVersion = file.Versions[^1];
             var folderId = ContainingFolderId(file);
             // DirName: web-relative directory the item lives in (no leading/trailing slash),
-            // e.g. "Shared Documents/09. Specifica/Platform/AriaIII". The migration schema's
+            // e.g. "Shared Documents/Projects/Reports". The migration schema's
             // File and ListItem elements both carry it; without it SP cannot locate the file a
             // nested list item refers to and fails with "Missing file info for list item".
             var dirName = string.IsNullOrEmpty(file.FolderRelativePath)

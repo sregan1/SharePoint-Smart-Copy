@@ -1327,7 +1327,7 @@
                             </TextBlock>
                         </StackPanel>
                         <!-- Live activity feed -->
-                        <Border Margin="0,8,0,0" MaxHeight="152"
+                        <Border Margin="0,8,0,0" MaxHeight="90"
                                 BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1"
                                 CornerRadius="4" Padding="8,6"
                                 Visibility="{Binding IsCopying, Converter={StaticResource BoolToVis}}">
