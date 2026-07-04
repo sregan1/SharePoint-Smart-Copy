@@ -94,3 +94,47 @@ public class SavedReport
     [JsonIgnore]
     public string Summary => $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   ⏱ {DurationDisplay}";
 }
+
+// Everything the History list needs to show one row, deliberately WITHOUT Items. Deserializing a
+// report's JSON into this type instead of SavedReport makes System.Text.Json skip over the (often
+// huge) Items array token-by-token rather than materializing a SavedReportItem per file — on a
+// tenant with several 100,000+-file runs in its history, decoding all 50 saved reports' full Items
+// graphs just to show a one-line summary per run was the dominant cost of opening History. Roots is
+// included (cheap — one entry per copy root, not per file) since the Verify button's
+// enable/disable check and the verification re-scan itself both only need Roots, not Items. Load a
+// specific report's Items lazily via ReportHistoryService.LoadFull only once the user actually
+// selects that run or exports/verifies it.
+public class SavedReportSummary
+{
+    public string Id { get; set; } = string.Empty;
+    public DateTimeOffset Timestamp { get; set; }
+    public string SourceUrl { get; set; } = string.Empty;
+    public string TargetUrl { get; set; } = string.Empty;
+    public int SuccessCount { get; set; }
+    public int FailedCount { get; set; }
+    public int SkippedCount { get; set; }
+    public int TotalCount { get; set; }
+    public TimeSpan Duration { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public CopyMode CopyMode { get; set; }
+
+    public List<SavedReportRoot> Roots { get; set; } = [];
+
+    [JsonIgnore]
+    public string DisplayDate => Timestamp.LocalDateTime.ToString("MMM d, yyyy  h:mm tt");
+
+    [JsonIgnore]
+    public string DurationDisplay
+    {
+        get
+        {
+            if (Duration.TotalHours >= 1)   return $"{(int)Duration.TotalHours}h {Duration.Minutes}m {Duration.Seconds}s";
+            if (Duration.TotalMinutes >= 1) return $"{(int)Duration.TotalMinutes}m {Duration.Seconds}s";
+            return $"{Duration.Seconds}s";
+        }
+    }
+
+    [JsonIgnore]
+    public string Summary => $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   ⏱ {DurationDisplay}";
+}

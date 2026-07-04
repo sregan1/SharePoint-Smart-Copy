@@ -52,6 +52,7 @@ Choose from four copy scopes in a step-by-step wizard:
 - **Automatic recovery from Migration API batch aborts** — if SharePoint cancels an entire import after hitting its internal per-batch conflict threshold, the app clears the specific conflicting files and retries the batch automatically instead of requiring a manual re-run
 - Detailed per-item report with CSV export and inline permission status
 - Run history viewable in-app, with an independent **Verification Report** (Excel) that re-scans source and target to confirm every file actually landed
+- History opens instantly regardless of run size — a saved run's full per-file results load only when you open, export, or verify that run, not for every entry in the list
 
 **Files scope:**
 - Full version history — version numbers, dates, and per-version editors preserved exactly

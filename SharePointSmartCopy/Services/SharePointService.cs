@@ -343,7 +343,7 @@ public class SharePointService
             else
             {
                 await writer.WriteAsync(new ScannedFile(driveId, item.Id, item.Name, childPath,
-                    item.LastModifiedDateTime), ct);
+                    item.LastModifiedDateTime, item.File?.Hashes?.QuickXorHash), ct);
             }
         }
         await Task.WhenAll(subfolderWalks);
@@ -381,12 +381,17 @@ public class SharePointService
         var item = await Graph.Drives[driveId].Items[itemId].GetAsync(cfg =>
             cfg.QueryParameters.Select = ["id", "name", "file", "lastModifiedDateTime"]);
         if (item?.Id == null || item.Name == null || item.File == null) return null;
-        return new ScannedFile(driveId, item.Id, item.Name, relativePath, item.LastModifiedDateTime);
+        return new ScannedFile(driveId, item.Id, item.Name, relativePath, item.LastModifiedDateTime,
+            item.File.Hashes?.QuickXorHash);
     }
 
-    // $select keeps the payload small at 100k+ files: only fields the comparison needs. Size and
-    // content hash were tried as match signals and dropped (see ComparisonStatus) — verification
-    // is existence-only now, so only identity/type/date fields are requested.
+    // $select keeps the payload small at 100k+ files: only fields the comparison needs. The "file"
+    // facet is requested for identity/type anyway, and Graph returns its Hashes sub-object (including
+    // QuickXorHash) as part of that same facet at no extra cost — no additional field or round-trip
+    // needed. See ComparisonStatus for how the hash and date fields are actually used: a genuine
+    // content-hash comparison for most file types, and a date comparison for Office Open XML formats
+    // specifically, since those get re-serialized by SharePoint's backend independently of content
+    // changes (making size/hash unreliable for them, but not for anything else).
     private async Task<List<DriveItem>> GetChildrenWithMetadataAsync(
         string driveId, string itemId, CancellationToken ct)
     {

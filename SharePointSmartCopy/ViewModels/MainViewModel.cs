@@ -2428,10 +2428,12 @@ public partial class MainViewModel : ObservableObject
                 roots, MaxParallelCopies, onActivity, onScanned, _verifyCts.Token);
             ExcelReportWriter.Write(dlg.FileName, result);
 
-            int matched      = result.Comparison.Count(r => r.Status == ComparisonStatus.Match);
-            int onlyInSource = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInSource);
-            int onlyInTarget = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInTarget);
-            PushActivity($"✔ Verification complete: {matched:N0} matched, {onlyInSource:N0} only in source, {onlyInTarget:N0} only in target");
+            int matched         = result.Comparison.Count(r => r.Status == ComparisonStatus.Match);
+            int contentMismatch = result.Comparison.Count(r => r.Status == ComparisonStatus.ContentMismatch);
+            int dateMismatch    = result.Comparison.Count(r => r.Status == ComparisonStatus.DateMismatch);
+            int onlyInSource    = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInSource);
+            int onlyInTarget    = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInTarget);
+            PushActivity($"✔ Verification complete: {matched:N0} matched, {contentMismatch:N0} content mismatch, {dateMismatch:N0} date mismatch, {onlyInSource:N0} only in source, {onlyInTarget:N0} only in target");
             PushActivity($"Verification report written: {dlg.FileName}");
             if (result.ScanErrors.Count > 0)
                 PushActivity($"⚠ {result.ScanErrors.Count} root(s) could not be scanned — see the Scan Errors tab");

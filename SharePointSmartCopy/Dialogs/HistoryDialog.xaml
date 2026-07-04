@@ -48,7 +48,13 @@
                 <TextBlock Grid.Row="0" Text="Previous runs" FontWeight="SemiBold"
                            FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
 
-                <ListBox Grid.Row="2" x:Name="ReportList"
+                <StackPanel x:Name="ReportListLoading" Grid.Row="2" Orientation="Horizontal"
+                            HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,16,0,0">
+                    <ProgressBar IsIndeterminate="True" Width="60" Height="4" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="Loading…" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                </StackPanel>
+
+                <ListBox Grid.Row="2" x:Name="ReportList" Visibility="Collapsed"
                          BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}"
                          SelectionChanged="ReportList_SelectionChanged">
                     <ListBox.ItemContainerStyle>

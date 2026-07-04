@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using System.IO;
 using SharePointSmartCopy.Models;
 
 namespace SharePointSmartCopy.Services;
@@ -25,9 +26,11 @@ public static class ExcelReportWriter
 
     private static void WriteOverviewSheet(IXLWorksheet ws, VerificationReportService.Result result)
     {
-        int onlyInSource = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInSource);
-        int onlyInTarget = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInTarget);
-        int matched      = result.Comparison.Count(r => r.Status == ComparisonStatus.Match);
+        int onlyInSource   = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInSource);
+        int onlyInTarget   = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInTarget);
+        int matched        = result.Comparison.Count(r => r.Status == ComparisonStatus.Match);
+        int contentMismatch = result.Comparison.Count(r => r.Status == ComparisonStatus.ContentMismatch);
+        int dateMismatch    = result.Comparison.Count(r => r.Status == ComparisonStatus.DateMismatch);
 
         ws.Cell(1, 1).Value = "Verification Summary";
         ws.Cell(1, 1).Style.Font.Bold = true;
@@ -39,19 +42,23 @@ public static class ExcelReportWriter
         ws.Cell(4, 2).Value = result.TargetFiles.Count;
         ws.Cell(5, 1).Value = "Matched (in both)";
         ws.Cell(5, 2).Value = matched;
-        ws.Cell(6, 1).Value = "Only in Source";
-        ws.Cell(6, 2).Value = onlyInSource;
-        ws.Cell(7, 1).Value = "Only in Target";
-        ws.Cell(7, 2).Value = onlyInTarget;
-        ws.Range(3, 1, 7, 1).Style.Font.Bold = true;
+        ws.Cell(6, 1).Value = "Content Mismatch";
+        ws.Cell(6, 2).Value = contentMismatch;
+        ws.Cell(7, 1).Value = "Date Mismatch";
+        ws.Cell(7, 2).Value = dateMismatch;
+        ws.Cell(8, 1).Value = "Only in Source";
+        ws.Cell(8, 2).Value = onlyInSource;
+        ws.Cell(9, 1).Value = "Only in Target";
+        ws.Cell(9, 2).Value = onlyInTarget;
+        ws.Range(3, 1, 9, 1).Style.Font.Bold = true;
 
         // Not merged: Excel does not reliably auto-size row height for wrapped text in a merged
         // cell (a well-known Excel limitation, not a ClosedXML bug), which clipped this message.
         // Left in a single unmerged cell, AdjustToContents below widens column 1 to fit it on one
         // line instead — the fill is still applied across the row for the banner look.
-        var messageCell = ws.Cell(9, 1);
+        var messageCell = ws.Cell(11, 1);
         XLColor fill;
-        if (onlyInSource == 0 && onlyInTarget == 0 && result.ScanErrors.Count == 0)
+        if (onlyInSource == 0 && onlyInTarget == 0 && contentMismatch == 0 && dateMismatch == 0 && result.ScanErrors.Count == 0)
         {
             messageCell.Value = "✓ Exact match — every file in source was found in target, with no extras.";
             fill = MatchFill;
@@ -64,7 +71,7 @@ public static class ExcelReportWriter
             messageCell.Value = string.Join(" ", parts);
             fill = MismatchFill;
         }
-        ws.Range(9, 1, 9, 4).Style.Fill.BackgroundColor = fill;
+        ws.Range(11, 1, 11, 4).Style.Fill.BackgroundColor = fill;
 
         ws.Columns(1, 2).AdjustToContents();
     }
@@ -92,20 +99,35 @@ public static class ExcelReportWriter
     {
         ws.Cell(1, 1).Value = "Relative Path";
         ws.Cell(1, 2).Value = "Status";
-        FormatHeader(ws, 2);
+        ws.Cell(1, 3).Value = "Source Value";
+        ws.Cell(1, 4).Value = "Target Value";
+        FormatHeader(ws, 4);
 
         int row = 2;
         foreach (var r in rows.OrderBy(r => r.RelativePath, StringComparer.OrdinalIgnoreCase))
         {
             ws.Cell(row, 1).Value = r.RelativePath;
             ws.Cell(row, 2).Value = r.Status.ToString();
+            SetComparisonValue(ws.Cell(row, 3), r, r.SourceHash, r.SourceModified);
+            SetComparisonValue(ws.Cell(row, 4), r, r.TargetHash, r.TargetModified);
 
             var fill = r.Status == ComparisonStatus.Match ? MatchFill : MismatchFill;
-            ws.Range(row, 1, row, 2).Style.Fill.BackgroundColor = fill;
+            ws.Range(row, 1, row, 4).Style.Fill.BackgroundColor = fill;
             row++;
         }
 
-        FinishSheet(ws, row - 1, 2);
+        FinishSheet(ws, row - 1, 4);
+    }
+
+    // Shows whichever signal was actually used to compare this file (see ComparisonStatus):
+    // modified date for Office/OLE compound-document formats, content hash for everything else.
+    // Left blank when that side has no file at all (Only in Source/Target) or the signal wasn't available.
+    private static void SetComparisonValue(IXLCell cell, ComparisonRow r, string? hash, DateTimeOffset? modified)
+    {
+        if (VerificationReportService.OfficeReserializedExtensions.Contains(Path.GetExtension(r.RelativePath)))
+            SetModified(cell, modified);
+        else
+            cell.Value = hash;
     }
 
     private static void WriteScanErrorsSheet(IXLWorksheet ws, List<string> errors)

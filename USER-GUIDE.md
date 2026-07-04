@@ -347,13 +347,18 @@ The resulting workbook contains:
 
 | Sheet | Contents |
 |---|---|
-| **Overview** | Summary counts — matched, only in source, only in target |
+| **Overview** | Summary counts — matched, content mismatch, date mismatch, only in source, only in target |
 | **Source** | Every file found on the source side, with its relative path |
 | **Target** | Every file found on the target side, with its relative path |
-| **Comparison** | Every relative path with its match status: Match, Only in Source, or Only in Target |
+| **Comparison** | Every relative path with its match status (Match, Content Mismatch, Date Mismatch, Only in Source, or Only in Target), plus the actual Source Value and Target Value that were compared — a content hash for most files, a modified date for Office files, blank on whichever side has no file |
 | **Scan Errors** | Present only if a source or target root could not be scanned (e.g. it was deleted or renamed since the copy) |
 
-> **Note:** The comparison is existence-based (does a file with the same relative path exist on both sides), not a byte-for-byte or checksum comparison. File size and modified-date checks were deliberately left out — SharePoint routinely re-serializes the internal ZIP container of Office files (`.docx`, `.xlsx`, `.pptx`) for indexing, thumbnails, and co-authoring, which changes the file's size and hash without changing its actual content. A path-based match avoids flagging those files as mismatched.
+> **Note:** Whether a file went missing is confirmed by relative path (does a file with the same name and location exist on both sides). Whether its *content* actually matches uses a different signal depending on file type, because a single approach doesn't work for everything:
+>
+> - **Most file types** (PDFs, images, archives, and other non-Office formats) get a genuine content comparison — Microsoft Graph's content hash for the source and target files must match exactly. A difference is reported as **Content Mismatch**.
+> - **Office and Outlook files** — both modern formats (`.docx`, `.xlsx`, `.pptx`, and related) and legacy binary formats (`.doc`, `.xls`, `.ppt`, `.msg`) — cannot use a hash comparison. SharePoint routinely re-serializes these files' internal container (the ZIP structure behind modern formats, or the OLE metadata streams behind legacy ones) for indexing, thumbnails, and co-authoring, which changes the file's size and hash without changing its actual content. These files are instead checked by **modified date** (within a few seconds' tolerance): the app is already responsible for preserving the source's modified date onto the target, so a mismatch here means that didn't happen. This is reported as **Date Mismatch**.
+>
+> **Preserve Metadata must have been enabled on the original copy** for the Office-file date check to be meaningful — if it was off, the target's date was never set to match the source, and a Date Mismatch does not necessarily indicate a real problem.
 >
 > Verification can only be run for saved reports that recorded their source/target scope. Runs from before this feature was added do not have that information, and the **Verify** button is disabled for them.
 

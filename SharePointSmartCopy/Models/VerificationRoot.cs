@@ -19,8 +19,10 @@ public sealed record VerificationRoot(
                 j.TargetDriveId, j.TargetParentItemId, j.TargetSubFolderPath))
             .ToList();
 
-    public static List<VerificationRoot> FromSavedReport(SavedReport report) =>
-        report.Roots
+    // Takes the roots list directly (rather than a whole SavedReport) so it works equally from a
+    // full SavedReport or the lighter SavedReportSummary used to populate the History list quickly.
+    public static List<VerificationRoot> FromSavedReport(List<SavedReportRoot> roots) =>
+        roots
             .Select(r => new VerificationRoot(
                 r.SourceDriveId, r.SourceItemId, r.SourceName, r.IsFolder, r.IsLibrary,
                 r.TargetDriveId, r.TargetParentItemId, r.TargetSubFolderPath))

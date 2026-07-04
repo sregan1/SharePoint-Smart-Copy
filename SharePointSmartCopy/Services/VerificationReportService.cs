@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.IO;
 using SharePointSmartCopy.Models;
 
 namespace SharePointSmartCopy.Services;
@@ -214,28 +215,91 @@ public sealed class VerificationReportService(SharePointService spService)
         return results.ToList();
     }
 
+    // Office/OLE compound-document formats: SharePoint's backend re-serializes these independently
+    // of content changes (indexing, thumbnails, co-authoring), so size/hash are unreliable — modified
+    // date is used instead (see ComparisonStatus for the full rationale). Internal (not private) so
+    // ExcelReportWriter can reuse the same list when deciding which raw value to display per row.
+    //
+    // Covers both container families: modern OOXML (.docx/.xlsx/.pptx, ZIP-based) AND legacy
+    // binary Office formats (.doc/.xls/.ppt, OLE Compound File Binary Format) plus other formats
+    // sharing that same OLE container (.msg). Confirmed 2026-07-03: a real verification run showed
+    // 100% of ContentMismatch rows were legacy .xls and .msg files with completely different hashes
+    // on both sides — the OLE container's internal metadata streams (summary info, calculation
+    // chains, etc.) get touched by background processing the same way OOXML's ZIP does, so the
+    // original list (which only covered modern OOXML) was producing false positives for these.
+    internal static readonly HashSet<string> OfficeReserializedExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        // Modern OOXML (ZIP-based)
+        ".docx", ".xlsx", ".pptx", ".docm", ".xlsm", ".pptm",
+        ".dotx", ".xltx", ".potx", ".ppsx", ".ppsm", ".dotm",
+        // Legacy binary Office formats (OLE Compound File Binary Format)
+        ".doc", ".dot", ".xls", ".xlt", ".xla", ".ppt", ".pot", ".pps", ".ppa",
+        // Other OLE-compound formats subject to the same background metadata churn
+        ".msg"
+    };
+
+    // Absorbs clock/rounding differences (e.g. Migration API manifest timestamps) without masking
+    // a genuine metadata-preservation failure.
+    private static readonly TimeSpan DateMismatchTolerance = TimeSpan.FromSeconds(5);
+
     private static List<ComparisonRow> Merge(List<ScannedFile> sourceFiles, List<ScannedFile> targetFiles)
     {
-        var targetPaths = new HashSet<string>(targetFiles.Select(f => f.RelativePath), StringComparer.OrdinalIgnoreCase);
+        var targetByPath = new Dictionary<string, ScannedFile>(StringComparer.OrdinalIgnoreCase);
+        foreach (var t in targetFiles) targetByPath.TryAdd(t.RelativePath, t);
+
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var rows = new List<ComparisonRow>();
 
         foreach (var s in sourceFiles)
         {
             seen.Add(s.RelativePath);
+            targetByPath.TryGetValue(s.RelativePath, out var t);
             rows.Add(new ComparisonRow
             {
-                RelativePath = s.RelativePath,
-                Status = targetPaths.Contains(s.RelativePath) ? ComparisonStatus.Match : ComparisonStatus.OnlyInSource
+                RelativePath   = s.RelativePath,
+                Status         = ClassifyMatch(s, t),
+                SourceHash     = s.QuickXorHash,
+                TargetHash     = t?.QuickXorHash,
+                SourceModified = s.LastModified,
+                TargetModified = t?.LastModified
             });
         }
 
         foreach (var t in targetFiles)
         {
             if (seen.Contains(t.RelativePath)) continue;
-            rows.Add(new ComparisonRow { RelativePath = t.RelativePath, Status = ComparisonStatus.OnlyInTarget });
+            rows.Add(new ComparisonRow
+            {
+                RelativePath   = t.RelativePath,
+                Status         = ComparisonStatus.OnlyInTarget,
+                TargetHash     = t.QuickXorHash,
+                TargetModified = t.LastModified
+            });
         }
 
         return rows;
+    }
+
+    private static ComparisonStatus ClassifyMatch(ScannedFile s, ScannedFile? t)
+    {
+        if (t == null) return ComparisonStatus.OnlyInSource;
+
+        if (OfficeReserializedExtensions.Contains(Path.GetExtension(s.RelativePath)))
+        {
+            // Hash/size are unreliable here — modified date is the signal instead, since the app is
+            // already responsible for preserving it onto the target.
+            if (s.LastModified is not { } srcDate || t.LastModified is not { } tgtDate)
+                return ComparisonStatus.Match; // missing signal on either side → don't manufacture a false mismatch
+            return (srcDate - tgtDate).Duration() <= DateMismatchTolerance
+                ? ComparisonStatus.Match
+                : ComparisonStatus.DateMismatch;
+        }
+
+        if (s.QuickXorHash == null || t.QuickXorHash == null)
+            return ComparisonStatus.Match; // missing signal on either side → don't manufacture a false mismatch
+
+        return string.Equals(s.QuickXorHash, t.QuickXorHash, StringComparison.Ordinal)
+            ? ComparisonStatus.Match
+            : ComparisonStatus.ContentMismatch;
     }
 }
