@@ -58,12 +58,17 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         {
             if (!isMigrationMode) controller.StepDown(delay);
         }
+        // Both handlers MUST come off in a finally: spService outlives this run, so any handler
+        // left behind (the old code unsubscribed mid-body, skipped on exception, and never
+        // unsubscribed the logging one at all) kept firing on later runs — duplicate throttle log
+        // lines and StepDown calls into this run's disposed controller.
+        Action<TimeSpan, int, int, string?>? onThrottleLog = null;
         spService.Throttled += onThrottled;
         if (activityLog != null)
         {
             var throttleLogLock  = new object();
             var lastThrottleLog  = DateTimeOffset.MinValue;
-            spService.Throttled += (delay, attempt, max, reason) =>
+            onThrottleLog = (delay, attempt, max, reason) =>
             {
                 lock (throttleLogLock)
                 {
@@ -74,7 +79,36 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 activityLog.Report($"⚠ Graph throttled — waiting {delay.TotalSeconds:0}s"
                     + (string.IsNullOrEmpty(reason) ? "" : $" [{reason}]"));
             };
+            spService.Throttled += onThrottleLog;
         }
+
+        try
+        {
+            await ExecuteCoreAsync();
+        }
+        catch
+        {
+            // The core threw (cancel during the scan, migration fatal, …) before it could hand
+            // off to — or complete — the metadata phase. Without this, IsUpdatingMetadata stayed
+            // true forever: wizard wedged on "updating metadata" and sleep prevention held until
+            // app exit. Reporting false is safe: the fire-and-forget metadata pass only starts as
+            // the core's final statement, so a throw here means it never started.
+            onMetadataDone?.Report(false);
+            throw;
+        }
+        finally
+        {
+            spService.Throttled -= onThrottled;
+            if (onThrottleLog != null) spService.Throttled -= onThrottleLog;
+        }
+        return;
+
+        async Task ExecuteCoreAsync()
+        {
+        // Target folder item IDs cached in a previous run go stale if folders were deleted or
+        // renamed between runs — and a faulted entry must never poison a fresh run.
+        spService.ResetFolderSegmentCache();
+
         var allTasks  = new List<(CopyJob job, CopyResult result)>();
 
         // Buffer new result rows and flush them to the bound collection in chunks. Adding tens of
@@ -181,48 +215,64 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             // (current version only) to honor the toggle. With versions on, maxVersions is already
             // the intended cap (and 0 there legitimately means "all versions").
             int migrationMaxVersions = copyVersions ? maxVersions : 1;
+            // The SPMI manifest no longer carries per-item <Fields> (standalone SPListItem objects
+            // caused "Missing file info" import failures — see MigrationPackageBuilder), so custom
+            // column values cannot be applied by this mode. Say so instead of silently ignoring the
+            // option.
+            if (copyCustomColumns)
+                activityLog?.Report("⚠ Custom column values are not applied in Migration API mode — after this run, re-run in Enhanced REST mode with Copy-If-Newer to stamp custom columns");
             await migrationJobService.ExecuteAsync(allTasks, overwriteMode, migrationMaxVersions, maxParallel, cancellationToken,
                 copyCustomColumns, columnMappings, bulkFieldCache, preflightProgress, activityLog, onFilePacked);
 
             // Permissions: run after the migration job completes so the target items exist.
             // We can't use Graph item IDs here (the migration API doesn't surface them), so we
             // resolve the target via its server-relative URL using the SP REST file endpoint.
-            if (copyPermissions && permissionService != null && permissionFlags != null)
+            // Skip the whole pass when the bulk flags say no item has unique permissions — the
+            // per-file GetSharePointIdsAsync resolution below is one Graph round-trip per file,
+            // which on a 100k-file run is pure waste when 0 items need it. When some do, resolve
+            // in parallel (bounded) instead of strictly sequentially.
+            if (copyPermissions && permissionService != null && permissionFlags != null &&
+                permissionFlags.Values.Any(v => v))
             {
-                foreach (var (job, result) in allTasks)
-                {
+                var permCandidates = allTasks.Where(t =>
+                    t.result.Status == CopyStatus.Success ||
                     // Files skipped as "Up to date" by Copy-if-newer still get their
                     // permissions refreshed — only permission changes may have occurred.
-                    bool upToDate = result.Status == CopyStatus.Skipped &&
-                                    result.ErrorMessage == CopyResult.UpToDate;
-                    if (result.Status != CopyStatus.Success && !upToDate) continue;
-                    cancellationToken.ThrowIfCancellationRequested();
+                    (t.result.Status == CopyStatus.Skipped && t.result.ErrorMessage == CopyResult.UpToDate)).ToList();
+
+                await Parallel.ForEachAsync(permCandidates,
+                    new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
+                    async (t, ct) =>
+                {
+                    var (job, result) = t;
                     try
                     {
                         var srcIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
-                        if (!srcIds.HasValue) continue;
+                        if (!srcIds.HasValue) return;
                         var flagKey = SharePointService.PermissionFlagKey(srcIds.Value.listId, srcIds.Value.listItemId);
-                        if (!permissionFlags.TryGetValue(flagKey, out var hu) || !hu) continue;
+                        if (!permissionFlags.TryGetValue(flagKey, out var hu) || !hu) return;
 
                         var sub = job.TargetSubFolderPath?.Trim('/');
                         var tgtRelUrl = string.IsNullOrEmpty(sub)
                             ? $"{job.TargetLibraryServerRelativeUrl}/{job.SourceName}"
                             : $"{job.TargetLibraryServerRelativeUrl.TrimEnd('/')}/{sub}/{job.SourceName}";
 
-                        var escapedTgtRelUrl = tgtRelUrl.Replace("'", "''");
+                        // *ByServerRelativePath(decodedurl=…): the *Url variant cannot resolve
+                        // paths containing '#'/'%'/'+' even when percent-encoded (see
+                        // ServerRelativePathArg), so those files silently lost their permissions.
                         var perm = await permissionService.CopyObjectPermissionsAsync(
                             job.SourceSiteUrl, job.TargetSiteUrl,
                             $"web/lists('{srcIds.Value.listId}')/items({srcIds.Value.listItemId})",
-                            $"web/GetFileByServerRelativeUrl('{escapedTgtRelUrl}')/ListItemAllFields",
+                            $"web/GetFileByServerRelativePath(decodedurl='{Uri.EscapeDataString(tgtRelUrl.Replace("'", "''"))}')/ListItemAllFields",
                             hasUniquePermissions: true,
-                            job.SourceName, cancellationToken);
+                            job.SourceName, ct);
 
                         if (perm.HasActivity)
                             AddPermissionRow(results, perm, result.TargetPath);
                     }
                     catch (OperationCanceledException) { throw; }
                     catch { /* non-fatal */ }
-                }
+                });
             }
         }
         else
@@ -235,13 +285,21 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             await Task.WhenAll(parallelTasks);
         }
 
-        spService.Throttled -= onThrottled;
-
         // SPMI already stamps folder timestamps via the manifest's TimeLastModified / TimeCreated /
-        // Author / ModifiedBy attributes on <SPFolder> elements during import — no post-processing needed.
+        // Author / ModifiedBy attributes on <SPFolder> elements during import — no metadata
+        // post-processing needed. Folder-level unique PERMISSIONS, however, are not representable
+        // in the manifest, so with permissions enabled run the folder pass in permission-only mode
+        // (applyMetadata: false) — previously folders with broken inheritance silently kept target
+        // defaults in this mode.
         if (isMigrationMode)
         {
-            onMetadataDone?.Report(true);
+            var spmiFolderJobs = jobs.Where(j => j.IsFolder).ToList();
+            if (copyPermissions && permissionService != null && spmiFolderJobs.Count > 0)
+                _ = ApplyAllFolderMetadataAsync(spmiFolderJobs, maxParallel, onMetadataDone, cancellationToken,
+                    copyPermissions, permissionService, results, onFolderProgress,
+                    dirtyFolderPaths: null, applyMetadata: false);
+            else
+                onMetadataDone?.Report(true);
             return;
         }
 
@@ -261,12 +319,20 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
 
         var folderJobs = jobs.Where(j => j.IsFolder).ToList();
         bool anyFileCopied = results.Any(r => r.Status == CopyStatus.Success);
-        if (folderJobs.Count > 0 && preserveMetadata && anyFileCopied)
+        // Permissions must not be gated on metadata options: with "Preserve metadata" off, or an
+        // If-Newer re-run where every file was up to date but folder permissions changed at
+        // source, folder permissions were silently skipped (files, by contrast, refresh their
+        // permissions even when skipped as up to date). With permissions on, walk ALL folders
+        // (dirty tracking only knows about file copies, not permission changes).
+        bool wantsFolderPermissions = copyPermissions && permissionService != null;
+        if (folderJobs.Count > 0 && ((preserveMetadata && anyFileCopied) || wantsFolderPermissions))
             _ = ApplyAllFolderMetadataAsync(folderJobs, maxParallel, onMetadataDone, cancellationToken,
                 copyPermissions, permissionService, results, onFolderProgress,
-                dirtyFolderPaths: dirtyFolderPaths.Count > 0 ? dirtyFolderPaths : null);
+                dirtyFolderPaths: (wantsFolderPermissions || dirtyFolderPaths.Count == 0) ? null : dirtyFolderPaths,
+                applyMetadata: preserveMetadata && anyFileCopied);
         else
             onMetadataDone?.Report(true);
+        } // end ExecuteCoreAsync
     }
 
     private async Task ApplyAllFolderMetadataAsync(
@@ -276,7 +342,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         PermissionCopyService? permissionService = null,
         ObservableCollection<CopyResult>? permissionResults = null,
         IProgress<(int done, int total)>? folderProgress = null,
-        HashSet<string>? dirtyFolderPaths = null)
+        HashSet<string>? dirtyFolderPaths = null,
+        bool applyMetadata = true)
     {
         bool completed = true;
         try
@@ -286,7 +353,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             foreach (var job in folderJobs)
                 await ApplyFolderMetadataRecursiveAsync(job, maxParallel, ct,
                     copyPermissions, permissionService, permissionResults,
-                    done, total, folderProgress, dirtyFolderPaths);
+                    done, total, folderProgress, dirtyFolderPaths, applyMetadata);
         }
         catch (OperationCanceledException) { completed = false; }
         catch { }
@@ -342,7 +409,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     }
                     // IfNewer: copy only when the source changed since the target was written.
                     var srcMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
-                    if (srcMeta.ModifiedDateTime is { } srcModified && srcModified <= existing.Value.Modified)
+                    if (srcMeta.ModifiedDateTime is { } srcModified && existing.Value.Modified is { } tgtModified &&
+                        TimestampComparer.IsUpToDate(srcModified, tgtModified))
                         upToDateItemId = existing.Value.ItemId;
                 }
             }
@@ -498,8 +566,10 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     job.TargetSiteUrl, targetSitePagesId, pageMeta, effectiveSrc);
                 if (saveErr != null)
                 {
-                    System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] SavePage warning: {saveErr}");
-                    result.ErrorMessage = saveErr;
+                    // Fail loudly: a stub whose content never saved is a blank page, and marking
+                    // it Success hid exactly that. Re-running with overwrite recreates it.
+                    System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] SavePage FAILED: {saveErr}");
+                    throw new Exception($"Page created but its content could not be saved: {saveErr}");
                 }
                 else
                 {
@@ -552,13 +622,10 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
 
             if (preserveMetadata)
             {
-                System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] applying file metadata…");
-                var err = await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetItemId, job.TargetSiteId, metadata);
-                if (err != null)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] ApplyFileMetadata warning: {err}");
-                    result.ErrorMessage ??= err;
-                }
+                // PatchFileSystemDate FIRST: it creates a phantom version attributed to the
+                // migrating user (see the version-replay path's design note), so the Editor/dates
+                // stamp must come after it — the old Apply→Patch order left the newest version
+                // attributed to the copying account.
                 if (metadata.ModifiedDateTime.HasValue)
                 {
                     var fsErr = await spService.PatchFileSystemDateAsync(
@@ -569,6 +636,13 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] PatchFileSystemDate warning: {fsErr}");
                         result.ErrorMessage ??= fsErr;
                     }
+                }
+                System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] applying file metadata…");
+                var err = await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetItemId, job.TargetSiteId, metadata);
+                if (err != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] ApplyFileMetadata warning: {err}");
+                    result.ErrorMessage ??= err;
                 }
             }
         }
@@ -613,9 +687,13 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             await stream.CopyToAsync(ms, ct);
             ms.Position = 0;
 
+            // Always overwrite during version replay: after version 1 uploads, the file exists,
+            // so the final (current) version's upload must replace it too — with overwrite=false
+            // (Skip mode) the ≥4MB upload-session path 409'd and left an OLD version as the
+            // target's current content. Skip semantics are enforced by the existence check in
+            // CopySingleFileAsync before replay ever starts.
             targetItemId = await spService.UploadFileAsync(
-                job.TargetDriveId, targetParentId, job.SourceName, ms,
-                overwrite: isLast ? overwrite : true);
+                job.TargetDriveId, targetParentId, job.SourceName, ms, overwrite: true);
 
             if (preserveMetadata)
             {
@@ -696,7 +774,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         ObservableCollection<CopyResult>? permissionResults = null,
         int[]? folderDone = null, int[]? folderTotal = null,
         IProgress<(int done, int total)>? folderProgress = null,
-        HashSet<string>? dirtyFolderPaths = null)
+        HashSet<string>? dirtyFolderPaths = null,
+        bool applyMetadata = true)
     {
         var prefix = string.IsNullOrEmpty(job.TargetSubFolderPath) ? "" : job.TargetSubFolderPath + "/";
 
@@ -710,11 +789,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
 
             var rootTargetId = await spService.GetOrCreateFolderPathAsync(
                 job.TargetDriveId, job.TargetParentItemId, prefix + job.SourceName);
-            var rootMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
-            await spService.ApplyFileMetadataAsync(job.TargetDriveId, rootTargetId, job.TargetSiteId, rootMeta);
-            if (rootMeta.ModifiedDateTime.HasValue)
-                await spService.PatchFileSystemDateAsync(job.TargetDriveId, rootTargetId,
-                    rootMeta.ModifiedDateTime.Value, rootMeta.CreatedDateTime);
+            if (applyMetadata)
+            {
+                var rootMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
+                await spService.ApplyFileMetadataAsync(job.TargetDriveId, rootTargetId, job.TargetSiteId, rootMeta);
+                if (rootMeta.ModifiedDateTime.HasValue)
+                    await spService.PatchFileSystemDateAsync(job.TargetDriveId, rootTargetId,
+                        rootMeta.ModifiedDateTime.Value, rootMeta.CreatedDateTime);
+            }
 
             if (copyPermissions && permissionService != null && permissionResults != null)
             {
@@ -771,11 +853,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 var targetPath = job.IsLibrary ? prefix + relativePath : prefix + $"{job.SourceName}/{relativePath}";
                 var targetFolderId = await spService.GetOrCreateFolderPathAsync(
                     job.TargetDriveId, job.TargetParentItemId, targetPath);
-                var meta = await spService.GetFileMetadataAsync(driveId, itemId);
-                await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetFolderId, job.TargetSiteId, meta);
-                if (meta.ModifiedDateTime.HasValue)
-                    await spService.PatchFileSystemDateAsync(job.TargetDriveId, targetFolderId,
-                        meta.ModifiedDateTime.Value, meta.CreatedDateTime);
+                if (applyMetadata)
+                {
+                    var meta = await spService.GetFileMetadataAsync(driveId, itemId);
+                    await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetFolderId, job.TargetSiteId, meta);
+                    if (meta.ModifiedDateTime.HasValue)
+                        await spService.PatchFileSystemDateAsync(job.TargetDriveId, targetFolderId,
+                            meta.ModifiedDateTime.Value, meta.CreatedDateTime);
+                }
 
                 if (copyPermissions && permissionService != null && permissionResults != null)
                 {
@@ -854,9 +939,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             status = CopyStatus.Success;
         }
 
+        // Match by full target path first — the same file name routinely exists in multiple
+        // folders, and a name-only match stamped the outcome on the first row with that name.
         var row = results.FirstOrDefault(r =>
-            !r.IsPermissionResult &&
-            string.Equals(r.FileName, perm.ItemName, StringComparison.OrdinalIgnoreCase));
+                !r.IsPermissionResult &&
+                string.Equals(r.TargetPath, targetPath, StringComparison.OrdinalIgnoreCase))
+            ?? results.FirstOrDefault(r =>
+                !r.IsPermissionResult &&
+                string.Equals(r.FileName, perm.ItemName, StringComparison.OrdinalIgnoreCase));
 
         if (row == null) return;
 

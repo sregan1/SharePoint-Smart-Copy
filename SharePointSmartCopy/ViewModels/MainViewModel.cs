@@ -97,7 +97,11 @@ public partial class MainViewModel : ObservableObject
     // (unless another status message has replaced it in the meantime).
     private void OnThrottled(TimeSpan delay, int attempt, int maxAttempts, string? reason)
     {
-        var msg = $"SharePoint is throttling requests — retrying in {Math.Ceiling(delay.TotalSeconds):N0}s (attempt {attempt}/{maxAttempts})…";
+        // maxAttempts == 0: notification-only source (GraphThrottleNotifyHandler observes while
+        // Kiota retries internally) — no meaningful attempt counter to show.
+        var msg = maxAttempts > 0
+            ? $"SharePoint is throttling requests — retrying in {Math.Ceiling(delay.TotalSeconds):N0}s (attempt {attempt}/{maxAttempts})…"
+            : $"SharePoint is throttling requests — retrying in {Math.Ceiling(delay.TotalSeconds):N0}s…";
         var dispatcher = System.Windows.Application.Current?.Dispatcher;
         if (dispatcher == null) return;
         dispatcher.BeginInvoke(() => StatusMessage = msg);
@@ -801,8 +805,11 @@ public partial class MainViewModel : ObservableObject
             Models.OverwriteMode.IfNewer => "If Newer",
             var m => m.ToString()
         };
-        var copyMode = CopyMode == Models.CopyMode.MigrationApi ? "Migration API" : "Enhanced REST";
-        var versions = !CopyVersions ? "Off" : CopyAllVersions ? "All" : $"Max {MaxVersions}";
+        // Record the EFFECTIVE values, not the selected ones: Pages scope forces Enhanced REST
+        // with versions off, and this summary's whole purpose is "what this run actually used".
+        bool pagesOverride = IsPagesScope;
+        var copyMode = CopyMode == Models.CopyMode.MigrationApi && !pagesOverride ? "Migration API" : "Enhanced REST";
+        var versions = !CopyVersions || pagesOverride ? "Off" : CopyAllVersions ? "All" : $"Max {MaxVersions}";
 
         return string.Join("  ·  ",
         [
@@ -1187,6 +1194,7 @@ public partial class MainViewModel : ObservableObject
         _copyCts?.Cancel();
         _connectSourceCts?.Cancel();
         _connectTargetCts?.Cancel();
+        _verifyCts?.Cancel();
     }
 
     // Copies items from a source list into an already-resolved target list.
@@ -1294,7 +1302,8 @@ public partial class MainViewModel : ObservableObject
                     {
                         var srcModified = item.TryGetValue("Modified", out var sm) && sm is string sms &&
                                           DateTimeOffset.TryParse(sms, out var smv) ? smv : (DateTimeOffset?)null;
-                        if (srcModified is { } sv && existing.Value.Modified is { } tv && sv <= tv)
+                        if (srcModified is { } sv && existing.Value.Modified is { } tv &&
+                            TimestampComparer.IsUpToDate(sv, tv))
                         {
                             itemResult.Status       = CopyStatus.Skipped;
                             itemResult.ErrorMessage = "Up to date";
@@ -1404,9 +1413,14 @@ public partial class MainViewModel : ObservableObject
             status = CopyStatus.Success;
         }
 
+        // Match by full target path first — name-only matching stamps the wrong row when the
+        // same item name exists in more than one place.
         var row = CopyResults.FirstOrDefault(r =>
-            !r.IsPermissionResult &&
-            string.Equals(r.FileName, perm.ItemName, StringComparison.OrdinalIgnoreCase));
+                !r.IsPermissionResult &&
+                string.Equals(r.TargetPath, targetPath, StringComparison.OrdinalIgnoreCase))
+            ?? CopyResults.FirstOrDefault(r =>
+                !r.IsPermissionResult &&
+                string.Equals(r.FileName, perm.ItemName, StringComparison.OrdinalIgnoreCase));
 
         if (row != null)
         {
@@ -1553,6 +1567,10 @@ public partial class MainViewModel : ObservableObject
                     var (newDriveId, newServerRelUrl) = await _libraryCopyService.CreateLibraryAsync(
                         TargetUrl.TrimEnd('/'), TargetSiteId, def, ColumnMappings);
                     libResult.Status = CopyStatus.Success;
+                    if (_libraryCopyService.LastColumnCreationFailures.Count > 0)
+                        libResult.ErrorMessage =
+                            $"{_libraryCopyService.LastColumnCreationFailures.Count} column(s) could not be created: "
+                            + string.Join("; ", _libraryCopyService.LastColumnCreationFailures.Take(3));
 
                     if (CopyPermissions)
                     {
@@ -1655,7 +1673,7 @@ public partial class MainViewModel : ObservableObject
                             var existingListId = await SpService.GetListIdByServerRelativeUrlAsync(
                                 TargetUrl.TrimEnd('/'), alreadyEx.ServerRelativeUrl);
                             var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
-                                TargetUrl.TrimEnd('/'), existingListId, def.Columns);
+                                TargetUrl.TrimEnd('/'), existingListId, def.Columns, def.SourceSiteUrl);
                             AddColumnCreationResult(def.Title, $"{TargetUrl.TrimEnd('/')}/{def.Title}", createdCols);
                         }
                         catch { }
@@ -1788,7 +1806,7 @@ public partial class MainViewModel : ObservableObject
                             try
                             {
                                 var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
-                                    TargetUrl.TrimEnd('/'), targetListId, def.Columns);
+                                    TargetUrl.TrimEnd('/'), targetListId, def.Columns, def.SourceSiteUrl);
                                 AddColumnCreationResult(colTitle, $"{TargetUrl.TrimEnd('/')}/{colTitle}", createdCols);
                             }
                             catch { /* non-fatal — column creation best-effort */ }
@@ -1834,7 +1852,7 @@ public partial class MainViewModel : ObservableObject
                         try
                         {
                             var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
-                                TargetUrl.TrimEnd('/'), alreadyEx.ListId, def.Columns);
+                                TargetUrl.TrimEnd('/'), alreadyEx.ListId, def.Columns, def.SourceSiteUrl);
                             AddColumnCreationResult(def.Title, $"{TargetUrl.TrimEnd('/')}/{def.Title}", createdCols);
                         }
                         catch { }
@@ -2057,7 +2075,7 @@ public partial class MainViewModel : ObservableObject
                                 try
                                 {
                                     var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
-                                        TargetUrl.TrimEnd('/'), alreadyEx.ListId, definition.Columns);
+                                        TargetUrl.TrimEnd('/'), alreadyEx.ListId, definition.Columns, definition.SourceSiteUrl);
                                     AddColumnCreationResult(listTitle, $"{TargetUrl.TrimEnd('/')}/{listTitle}", createdCols);
                                 }
                                 catch { }
@@ -2426,14 +2444,18 @@ public partial class MainViewModel : ObservableObject
             var roots  = VerificationRoot.FromCopyJobs(CopyJobs);
             var result = await _verificationReportService.RunAsync(
                 roots, MaxParallelCopies, onActivity, onScanned, _verifyCts.Token);
-            ExcelReportWriter.Write(dlg.FileName, result);
+            StatusMessage = "Writing verification workbook…";
+            // Off the UI thread: ClosedXML SaveAs is CPU-heavy on 100k+ row runs.
+            await Task.Run(() => ExcelReportWriter.Write(dlg.FileName, result));
 
             int matched         = result.Comparison.Count(r => r.Status == ComparisonStatus.Match);
             int contentMismatch = result.Comparison.Count(r => r.Status == ComparisonStatus.ContentMismatch);
             int dateMismatch    = result.Comparison.Count(r => r.Status == ComparisonStatus.DateMismatch);
             int onlyInSource    = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInSource);
             int onlyInTarget    = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInTarget);
-            PushActivity($"✔ Verification complete: {matched:N0} matched, {contentMismatch:N0} content mismatch, {dateMismatch:N0} date mismatch, {onlyInSource:N0} only in source, {onlyInTarget:N0} only in target");
+            int unverified      = result.Comparison.Count(r => r.Status == ComparisonStatus.Unverified);
+            PushActivity($"✔ Verification complete: {matched:N0} matched, {contentMismatch:N0} content mismatch, {dateMismatch:N0} date mismatch, {onlyInSource:N0} only in source, {onlyInTarget:N0} only in target"
+                + (unverified > 0 ? $", {unverified:N0} unverified (no comparable signal)" : ""));
             PushActivity($"Verification report written: {dlg.FileName}");
             if (result.ScanErrors.Count > 0)
                 PushActivity($"⚠ {result.ScanErrors.Count} root(s) could not be scanned — see the Scan Errors tab");
@@ -2464,6 +2486,12 @@ public partial class MainViewModel : ObservableObject
     {
         if (CurrentStep == 3)
             ColumnMappings.Clear();
+        // Leaving the progress/report steps invalidates the completed run: without this, Back →
+        // change options → Next silently jumped to the OLD results ("case 3: if (IsCopyComplete)")
+        // and the new options never ran, while the UI presented them as applied. Next now re-runs
+        // the copy with whatever is currently selected.
+        if (CurrentStep == 4 && IsCopyComplete && !IsUpdatingMetadata)
+            IsCopyComplete = false;
         CurrentStep--;
     }
 

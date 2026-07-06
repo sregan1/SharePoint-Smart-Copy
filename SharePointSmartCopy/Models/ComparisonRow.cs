@@ -12,9 +12,12 @@ namespace SharePointSmartCopy.Models;
 //     count or change the editor), so the item's official Modified date stays stable even as the
 //     underlying bytes drift — and the app is already responsible for preserving that date onto
 //     the target, so this checks something already guaranteed rather than a new heuristic.
-// Either signal missing on one side (e.g. a Graph anomaly) falls back to existence-only rather than
-// manufacturing a false mismatch from absent data.
-public enum ComparisonStatus { Match, ContentMismatch, DateMismatch, OnlyInSource, OnlyInTarget }
+// Either signal missing on one side (e.g. a Graph anomaly — quickXorHash is observed missing for a
+// nontrivial fraction of items in children listings) first falls back to a size comparison; when
+// size is missing too, the row is reported as Unverified — never as a fabricated Match. Office/OLE
+// rows additionally short-circuit to Match when both quickXorHashes are present and EQUAL (equal
+// hashes are always trustworthy; they only stop being meaningful when they differ).
+public enum ComparisonStatus { Match, ContentMismatch, DateMismatch, OnlyInSource, OnlyInTarget, Unverified }
 
 public sealed class ComparisonRow
 {

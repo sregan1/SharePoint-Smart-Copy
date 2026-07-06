@@ -16,6 +16,14 @@ public class AuthService
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, AuthenticationResult> _tokenCache = new();
     private static readonly TimeSpan TokenRefreshSkew = TimeSpan.FromMinutes(5);
 
+    // Single-flight gate for the cache-miss path. Every Graph/REST request funnels through the
+    // token getters; at the 5-minute expiry boundary dozens of workers used to miss the cache
+    // simultaneously and each run its own GetAccountsAsync + AcquireTokenSilent — and if silent
+    // refresh failed mid-job (CA policy, revoked session), each one fell through to
+    // AcquireTokenInteractive, spawning multiple browser prompts and MSAL concurrent-interactive
+    // exceptions. One refresher runs; the rest wait and pick up its cached result.
+    private readonly SemaphoreSlim _refreshLock = new(1, 1);
+
     private bool TryGetCachedToken(string key, out string accessToken)
     {
         if (_tokenCache.TryGetValue(key, out var r) && r.ExpiresOn > DateTimeOffset.UtcNow + TokenRefreshSkew)
@@ -58,30 +66,39 @@ public class AuthService
             throw new InvalidOperationException("Auth service not configured. Please set Client ID in Settings.");
 
         var cacheKey = string.Join(' ', _scopes);
-        if (!forceInteractive)
+        if (!forceInteractive && TryGetCachedToken(cacheKey, out var fastToken))
+            return fastToken;
+
+        await _refreshLock.WaitAsync(cancellationToken);
+        try
         {
-            if (TryGetCachedToken(cacheKey, out var cachedToken))
-                return cachedToken;
-
-            var accounts = await _app.GetAccountsAsync();
-            var account = accounts.FirstOrDefault();
-            if (account != null)
+            if (!forceInteractive)
             {
-                try
-                {
-                    _authResult = await _app.AcquireTokenSilent(_scopes, account).ExecuteAsync(cancellationToken);
-                    _tokenCache[cacheKey] = _authResult;
-                    return _authResult.AccessToken;
-                }
-                catch (MsalUiRequiredException) { /* fall through to interactive */ }
-            }
-        }
+                // Re-check after acquiring: another waiter may have refreshed while we queued.
+                if (TryGetCachedToken(cacheKey, out var cachedToken))
+                    return cachedToken;
 
-        _authResult = await _app.AcquireTokenInteractive(_scopes)
-            .WithPrompt(Prompt.SelectAccount)
-            .ExecuteAsync(cancellationToken);
-        _tokenCache[cacheKey] = _authResult;
-        return _authResult.AccessToken;
+                var accounts = await _app.GetAccountsAsync();
+                var account = accounts.FirstOrDefault();
+                if (account != null)
+                {
+                    try
+                    {
+                        _authResult = await _app.AcquireTokenSilent(_scopes, account).ExecuteAsync(cancellationToken);
+                        _tokenCache[cacheKey] = _authResult;
+                        return _authResult.AccessToken;
+                    }
+                    catch (MsalUiRequiredException) { /* fall through to interactive */ }
+                }
+            }
+
+            _authResult = await _app.AcquireTokenInteractive(_scopes)
+                .WithPrompt(Prompt.SelectAccount)
+                .ExecuteAsync(cancellationToken);
+            _tokenCache[cacheKey] = _authResult;
+            return _authResult.AccessToken;
+        }
+        finally { _refreshLock.Release(); }
     }
 
     // Returns a token scoped for the SharePoint REST API (audience = tenant.sharepoint.com).
@@ -97,29 +114,38 @@ public class AuthService
         var scopes = new[] { $"{uri.Scheme}://{uri.Host}/{spScope}" };
         var cacheKey = scopes[0];
 
-        if (!forceRefresh && TryGetCachedToken(cacheKey, out var cachedToken))
-            return cachedToken;
+        if (!forceRefresh && TryGetCachedToken(cacheKey, out var fastToken))
+            return fastToken;
 
-        var accounts = await _app.GetAccountsAsync();
-        var account  = accounts.FirstOrDefault();
-        if (account != null)
+        await _refreshLock.WaitAsync(cancellationToken);
+        try
         {
-            try
-            {
-                var result = await _app.AcquireTokenSilent(scopes, account)
-                    .WithForceRefresh(forceRefresh)
-                    .ExecuteAsync(cancellationToken);
-                _tokenCache[cacheKey] = result;
-                return result.AccessToken;
-            }
-            catch (MsalUiRequiredException) { /* fall through to interactive */ }
-        }
+            // Re-check after acquiring: another waiter may have refreshed while we queued.
+            if (!forceRefresh && TryGetCachedToken(cacheKey, out var cachedToken))
+                return cachedToken;
 
-        var authResult = await _app.AcquireTokenInteractive(scopes)
-            .WithPrompt(Prompt.SelectAccount)
-            .ExecuteAsync(cancellationToken);
-        _tokenCache[cacheKey] = authResult;
-        return authResult.AccessToken;
+            var accounts = await _app.GetAccountsAsync();
+            var account  = accounts.FirstOrDefault();
+            if (account != null)
+            {
+                try
+                {
+                    var result = await _app.AcquireTokenSilent(scopes, account)
+                        .WithForceRefresh(forceRefresh)
+                        .ExecuteAsync(cancellationToken);
+                    _tokenCache[cacheKey] = result;
+                    return result.AccessToken;
+                }
+                catch (MsalUiRequiredException) { /* fall through to interactive */ }
+            }
+
+            var authResult = await _app.AcquireTokenInteractive(scopes)
+                .WithPrompt(Prompt.SelectAccount)
+                .ExecuteAsync(cancellationToken);
+            _tokenCache[cacheKey] = authResult;
+            return authResult.AccessToken;
+        }
+        finally { _refreshLock.Release(); }
     }
 
     public async Task SignOutAsync()

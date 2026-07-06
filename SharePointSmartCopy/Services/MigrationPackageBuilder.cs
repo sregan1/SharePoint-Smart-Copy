@@ -355,8 +355,12 @@ public class MigrationPackageBuilder
         // Url attributes must be web-relative (no leading site path).
         // SP prepends the target web's server-relative URL when computing the destination path,
         // so including the full server-relative URL causes doubling (e.g. /sites/x/sites/x/...).
+        // Case-insensitive: the two URLs come from different APIs (Graph webUrl vs SP REST
+        // server-relative URL) and can differ in casing — an ordinal miss here silently leaves
+        // the full server-relative URL in place, producing exactly the /sites/x/sites/x doubling
+        // described above.
         var webPrefix = webRelUrl.TrimEnd('/');
-        var libraryWebRelUrl = libraryRelUrl.StartsWith(webPrefix + "/")
+        var libraryWebRelUrl = libraryRelUrl.StartsWith(webPrefix + "/", StringComparison.OrdinalIgnoreCase)
             ? libraryRelUrl[(webPrefix.Length + 1)..]
             : libraryRelUrl.TrimStart('/');
 

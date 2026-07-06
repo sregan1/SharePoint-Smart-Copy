@@ -19,7 +19,13 @@ public class SharePointService
     private readonly AuthService _authService;
     private GraphServiceClient? _graphClient;
     // 30-minute timeout: site copies involve large file downloads and long-running REST calls.
-    private readonly HttpClient _httpClient = new() { Timeout = TimeSpan.FromMinutes(30) };
+    // 2-min pooled connection lifetime (matching the Graph client): the default is infinite,
+    // which pins DNS resolution for the whole multi-hour run.
+    private readonly HttpClient _httpClient = new(new System.Net.Http.SocketsHttpHandler
+    {
+        PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+        AutomaticDecompression   = System.Net.DecompressionMethods.All,
+    }) { Timeout = TimeSpan.FromMinutes(30) };
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, (string siteUrl, string listId, string listItemId)> _spIdsCache = new();
     // Deduplicates concurrent folder-creation calls for the same path segment.
     // Lazy<Task<string>> ensures only one Graph call is made per "{driveId}|{parentId}|{segment}"
@@ -141,10 +147,19 @@ public class SharePointService
     {
         // No $select — the Kiota SDK does not reliably populate webUrl when explicitly selected
         // on the drives collection; the default response includes it.
-        var drives = await Graph.Sites[siteId].Drives.GetAsync();
+        // Paginated: reading only the first page silently missed libraries on sites with many
+        // drives (Site scope then skipped them without a trace).
+        var page      = await Graph.Sites[siteId].Drives.GetAsync();
+        var allDrives = new List<Drive>();
+        while (page != null)
+        {
+            allDrives.AddRange(page.Value ?? []);
+            if (page.OdataNextLink == null) break;
+            page = await Graph.Sites[siteId].Drives.WithUrl(page.OdataNextLink).GetAsync();
+        }
         var result = new List<SharePointNode>();
 
-        foreach (var d in drives?.Value ?? [])
+        foreach (var d in allDrives)
         {
             if (d.Id == null || d.Name == null) continue;
 
@@ -343,7 +358,7 @@ public class SharePointService
             else
             {
                 await writer.WriteAsync(new ScannedFile(driveId, item.Id, item.Name, childPath,
-                    item.LastModifiedDateTime, item.File?.Hashes?.QuickXorHash), ct);
+                    item.LastModifiedDateTime, item.File?.Hashes?.QuickXorHash, item.Size), ct);
             }
         }
         await Task.WhenAll(subfolderWalks);
@@ -379,10 +394,10 @@ public class SharePointService
     internal async Task<ScannedFile?> GetFileForVerificationAsync(string driveId, string itemId, string relativePath)
     {
         var item = await Graph.Drives[driveId].Items[itemId].GetAsync(cfg =>
-            cfg.QueryParameters.Select = ["id", "name", "file", "lastModifiedDateTime"]);
+            cfg.QueryParameters.Select = ["id", "name", "file", "size", "lastModifiedDateTime"]);
         if (item?.Id == null || item.Name == null || item.File == null) return null;
         return new ScannedFile(driveId, item.Id, item.Name, relativePath, item.LastModifiedDateTime,
-            item.File.Hashes?.QuickXorHash);
+            item.File.Hashes?.QuickXorHash, item.Size);
     }
 
     // $select keeps the payload small at 100k+ files: only fields the comparison needs. The "file"
@@ -399,7 +414,7 @@ public class SharePointService
         var page = await Graph.Drives[driveId].Items[resolvedId].Children.GetAsync(cfg =>
         {
             cfg.QueryParameters.Top    = 1000;
-            cfg.QueryParameters.Select = ["id", "name", "file", "folder", "lastModifiedDateTime"];
+            cfg.QueryParameters.Select = ["id", "name", "file", "folder", "size", "lastModifiedDateTime"];
         }, ct);
 
         var items = new List<DriveItem>();
@@ -1054,11 +1069,16 @@ public class SharePointService
 
         var (siteUrl, listId, listItemId) = ids.Value;
 
+        // ISO 8601 with a trailing Z: ValidateUpdateListItem parses non-ISO date strings per the
+        // TARGET WEB's regional settings — "M/d/yyyy" transposes day/month on non-US sites (dates
+        // ≤12th silently wrong) and a bare time is interpreted in the site's local time zone,
+        // shifting stored Created/Modified by the UTC offset (which then corrupts Copy-If-Newer
+        // comparisons). ISO-with-Z is unambiguous in both respects on any locale.
         var formValues = new List<object>();
         if (modified.HasValue)
-            formValues.Add(new { FieldName = "Modified", FieldValue = modified.Value.ToUniversalTime().ToString("M/d/yyyy H:mm:ss", System.Globalization.CultureInfo.InvariantCulture) });
+            formValues.Add(new { FieldName = "Modified", FieldValue = modified.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture) });
         if (created.HasValue)
-            formValues.Add(new { FieldName = "Created",  FieldValue = created.Value.ToUniversalTime().ToString("M/d/yyyy H:mm:ss", System.Globalization.CultureInfo.InvariantCulture) });
+            formValues.Add(new { FieldName = "Created",  FieldValue = created.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture) });
         if (!string.IsNullOrEmpty(modifiedByEmail))
             formValues.Add(new { FieldName = "Editor", FieldValue = $"i:0#.f|membership|{modifiedByEmail}" });
         if (!string.IsNullOrEmpty(createdByEmail))
@@ -1412,9 +1432,9 @@ public class SharePointService
     public async IAsyncEnumerable<JsonElement> PollMigrationJobAsync(
         string siteUrl, string jobId, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var token = await _authService.GetSharePointTokenAsync(siteUrl);
         int nextToken  = 0;
         int pollCount  = 0;
+        int consecutiveTimeouts = 0;
         var pollDelay  = TimeSpan.FromSeconds(2);
 
         while (!cancellationToken.IsCancellationRequested)
@@ -1440,8 +1460,22 @@ public class SharePointService
             try
             {
                 response = await _httpClient.SendAsync(req, cancellationToken);
+                consecutiveTimeouts = 0;
             }
-            catch (TaskCanceledException) { yield break; }
+            catch (TaskCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                // User cancellation — propagate so the caller marks the batch Cancelled
+                // instead of the iterator ending "cleanly" (which used to read as success).
+                throw new OperationCanceledException("Migration job polling cancelled", cancellationToken);
+            }
+            catch (TaskCanceledException)
+            {
+                // HttpClient timeout on a single poll GET — the import is still running
+                // server-side, so retry; only give up after several hung polls in a row.
+                if (++consecutiveTimeouts >= 3)
+                    throw new Exception("Migration job progress polling timed out 3 consecutive times — import outcome unknown");
+                continue;
+            }
 
             bool hitJobEnd = false;
             using (response)
@@ -1706,6 +1740,9 @@ public class SharePointService
     public async Task<(string ItemId, DateTimeOffset? Modified)?> GetFileInfoAsync(
         string driveId, string parentItemId, string fileName)
     {
+        // Only a genuine 404 may map to null ("doesn't exist"): swallowing every failure here made
+        // a transient error (post-retry 429, network blip) read as "not there", which in Skip mode
+        // proceeded to upload — and the small-file PUT then silently clobbered the existing target.
         try
         {
             var item = await Graph.Drives[driveId].Items[parentItemId]
@@ -1713,7 +1750,7 @@ public class SharePointService
                 .GetAsync(cfg => cfg.QueryParameters.Select = ["id", "lastModifiedDateTime"]);
             return item?.Id is { } id ? (id, item.LastModifiedDateTime) : null;
         }
-        catch
+        catch (Microsoft.Graph.Models.ODataErrors.ODataError ex) when (ex.ResponseStatusCode == 404)
         {
             return null;
         }
@@ -1934,8 +1971,24 @@ public class SharePointService
 
         if (size < 4 * 1024 * 1024)
         {
-            var item = await Graph.Drives[targetDriveId].Items[targetParentItemId]
-                .ItemWithPath(Uri.EscapeDataString(fileName)).Content.PutAsync(content);
+            var contentRb = Graph.Drives[targetDriveId].Items[targetParentItemId]
+                .ItemWithPath(Uri.EscapeDataString(fileName)).Content;
+            DriveItem? item;
+            if (overwrite)
+            {
+                item = await contentRb.PutAsync(content);
+            }
+            else
+            {
+                // A plain PUT to /content always replaces — it ignores conflict semantics entirely,
+                // so any path reaching here with overwrite=false (a race where the file appeared
+                // after the existence check) silently clobbered the target. Ask Graph to fail on
+                // conflict instead, matching the large-file upload-session behavior.
+                var req = contentRb.ToPutRequestInformation(content);
+                var url = req.URI.ToString();
+                url += (url.Contains('?') ? "&" : "?") + "@microsoft.graph.conflictBehavior=fail";
+                item = await contentRb.WithUrl(url).PutAsync(content);
+            }
             progress?.Report(100);
             return item?.Id ?? string.Empty;
         }
@@ -1954,8 +2007,11 @@ public class SharePointService
         var session = await Graph.Drives[targetDriveId].Items[targetParentItemId]
             .ItemWithPath(Uri.EscapeDataString(fileName)).CreateUploadSession.PostAsync(sessionBody);
 
+        // 10 MiB slices (a multiple of the required 320 KiB granularity): at the old 320 KiB a
+        // 1 GB file took ~3,200 sequential round trips; this cuts them ~32×. Graph allows slices
+        // up to 60 MiB.
         var uploadTask = new Microsoft.Graph.LargeFileUploadTask<DriveItem>(
-            session!, content, 320 * 1024, Graph.RequestAdapter);
+            session!, content, 32 * 320 * 1024, Graph.RequestAdapter);
 
         var uploadResult = await uploadTask.UploadAsync(new Progress<long>(uploaded =>
         {
@@ -2152,10 +2208,26 @@ public class SharePointService
                 _ => new Lazy<Task<string>>(
                     () => GetOrCreateFolderAsync(d, p, n),
                     System.Threading.LazyThreadSafetyMode.ExecutionAndPublication));
-            current = await lazy.Value;
+            try
+            {
+                current = await lazy.Value;
+            }
+            catch
+            {
+                // Never cache a faulted resolution: the service lives for the whole app session,
+                // so a single transient failure here used to poison this folder for every later
+                // file — and every later run.
+                _folderSegmentTasks.TryRemove(new KeyValuePair<string, Lazy<Task<string>>>(cacheKey, lazy));
+                throw;
+            }
         }
         return current;
     }
+
+    // Clears the folder-segment cache. Called at the start of each copy run: cached item IDs go
+    // stale if a target folder was deleted/renamed between runs, and a session-lifetime cache
+    // otherwise serves those dead IDs forever.
+    public void ResetFolderSegmentCache() => _folderSegmentTasks.Clear();
 
     // True for exceptions that represent a dropped/failed connection rather than a real Graph response
     // (including a proper throttle response, which Kiota's own retry handler already resolves before
@@ -2481,7 +2553,13 @@ public class SharePointService
                 }, siteUrl, cancellationToken: ct);
 
                 var body = await response.Content.ReadAsStringAsync(ct);
-                if (!response.IsSuccessStatusCode) break;
+                if (!response.IsSuccessStatusCode)
+                {
+                    // A failed page silently dropped every item beyond it from the bulk cache —
+                    // their files then copied with NO custom column values and reported Success.
+                    throw new HttpRequestException(
+                        $"Bulk custom-field read failed: HTTP {(int)response.StatusCode} — {body[..Math.Min(body.Length, 300)]}");
+                }
 
                 using var doc = JsonDocument.Parse(body);
                 var root = doc.RootElement;
@@ -2755,6 +2833,11 @@ public class SharePointService
         // SharePoint resolves WssId and the hidden note field server-side.
         if (value is TaxonomyFieldValue taxonomy)
             return string.Join(";", taxonomy.Terms.Select(t => $"{t.Label}|{t.TermGuid}"));
+
+        // ValidateUpdateListItem resolves lookup display text server-side (same as quick edit).
+        // Unresolvable values surface as per-field errors rather than failing the item create.
+        if (value is LookupFieldValue lookup)
+            return string.Join(";#", lookup.Entries.Select(e => e.DisplayValue));
 
         if (value is bool b)
             return b ? "1" : "0";
@@ -3110,17 +3193,40 @@ public class SharePointService
 
     internal static string SubstituteUrls(string json, string sourceUrl, string targetUrl)
     {
-        var src     = sourceUrl.TrimEnd('/');
-        var tgt     = targetUrl.TrimEnd('/');
-        var srcEnc  = Uri.EscapeDataString(src);
-        var tgtEnc  = Uri.EscapeDataString(tgt);
-        var srcEnc2 = src.Replace(":", "%3A").Replace("/", "%2F");
-        var tgtEnc2 = tgt.Replace(":", "%3A").Replace("/", "%2F");
+        var src = sourceUrl.TrimEnd('/');
+        var tgt = targetUrl.TrimEnd('/');
 
-        return json
-            .Replace(srcEnc2, tgtEnc2, StringComparison.OrdinalIgnoreCase)
-            .Replace(srcEnc,  tgtEnc,  StringComparison.OrdinalIgnoreCase)
-            .Replace(src,     tgt,     StringComparison.OrdinalIgnoreCase);
+        // Boundary-checked replace: a raw substring replace corrupted sibling sites — with source
+        // /sites/HR, a link to /sites/HRArchive became "<target>Archive". The character after the
+        // match must not extend the same path segment.
+        static string ReplaceBounded(string input, string find, string repl)
+        {
+            if (string.IsNullOrEmpty(find)) return input;
+            var pattern = System.Text.RegularExpressions.Regex.Escape(find) + @"(?![A-Za-z0-9_\-])";
+            return System.Text.RegularExpressions.Regex.Replace(
+                input, pattern, repl.Replace("$", "$$"),
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        }
+
+        var result = json;
+        result = ReplaceBounded(result, src.Replace(":", "%3A").Replace("/", "%2F"),
+                                        tgt.Replace(":", "%3A").Replace("/", "%2F"));
+        result = ReplaceBounded(result, Uri.EscapeDataString(src), Uri.EscapeDataString(tgt));
+        result = ReplaceBounded(result, src, tgt);
+
+        // Server-relative references too: modern-page CanvasContent1 stores image/web-part URLs
+        // as "/sites/HR/SiteAssets/..." — the absolute-only replace left those pointing at the
+        // source site even with URL remapping on.
+        static string RelOf(string abs) =>
+            Uri.TryCreate(abs, UriKind.Absolute, out var u) ? u.AbsolutePath.TrimEnd('/') : "";
+        var srcRel = RelOf(src);
+        var tgtRel = RelOf(tgt);
+        if (srcRel.Length > 1 && !string.Equals(srcRel, tgtRel, StringComparison.OrdinalIgnoreCase))
+        {
+            result = ReplaceBounded(result, srcRel.Replace("/", "%2F"), tgtRel.Replace("/", "%2F"));
+            result = ReplaceBounded(result, srcRel, tgtRel);
+        }
+        return result;
     }
 
     // ── Navigation ────────────────────────────────────────────────────────────
@@ -3128,7 +3234,9 @@ public class SharePointService
     public record NavigationNode(int Id, string Title, string Url, bool IsExternal, List<NavigationNode> Children);
 
     // Reads Quick Launch (quickLaunch=true) or Top Navigation Bar (quickLaunch=false) nodes.
-    public async Task<List<NavigationNode>> GetNavigationNodesAsync(string siteUrl, bool quickLaunch)
+    // throwOnError: pass true when an empty result would be acted on destructively — the default
+    // swallow-to-empty is only safe for display purposes.
+    public async Task<List<NavigationNode>> GetNavigationNodesAsync(string siteUrl, bool quickLaunch, bool throwOnError = false)
     {
         var section  = quickLaunch ? "quicklaunch" : "topnavigationbar";
         var endpoint = $"{siteUrl.TrimEnd('/')}/_api/web/navigation/{section}?$expand=Children&$select=Id,Title,Url,IsExternal";
@@ -3143,24 +3251,32 @@ public class SharePointService
                 return r;
             }, siteUrl);
 
-            if (!resp.IsSuccessStatusCode) return [];
+            if (!resp.IsSuccessStatusCode)
+            {
+                if (throwOnError)
+                    throw new HttpRequestException($"Navigation read failed: HTTP {(int)resp.StatusCode}");
+                return [];
+            }
             var body = await resp.Content.ReadAsStringAsync();
             using var doc = JsonDocument.Parse(body);
             return doc.RootElement.TryGetProperty("value", out var arr)
                 ? ParseNavigationNodes(arr)
                 : [];
         }
-        catch { return []; }
+        catch when (!throwOnError) { return []; }
     }
 
     // Copies Quick Launch and/or Top Navigation from source to target, remapping site URLs.
     public async Task CopyNavigationAsync(string sourceSiteUrl, string targetSiteUrl, bool quickLaunch)
     {
-        var nodes   = await GetNavigationNodesAsync(sourceSiteUrl, quickLaunch);
+        // Fail loudly if the SOURCE read fails: this method deletes the target's existing
+        // navigation before recreating it, so a swallowed source failure (transient 503 after
+        // retries) used to wipe the target nav, rebuild nothing, and report Success.
+        var nodes   = await GetNavigationNodesAsync(sourceSiteUrl, quickLaunch, throwOnError: true);
         var section = quickLaunch ? "quicklaunch" : "topnavigationbar";
 
         // Clear existing nodes at target first
-        var existing = await GetNavigationNodesAsync(targetSiteUrl, quickLaunch);
+        var existing = await GetNavigationNodesAsync(targetSiteUrl, quickLaunch, throwOnError: true);
         foreach (var node in existing)
             await DeleteNavigationNodeAsync(targetSiteUrl, section, node.Id);
 
@@ -3313,6 +3429,29 @@ public class SharePointService
         catch { return null; }
     }
 
+    // Returns the display title for a list looked up by GUID, or null if not found.
+    // Used to re-bind Lookup columns at the target: the source column stores the SOURCE list's
+    // GUID, so the equivalent target list is resolved by matching title.
+    public async Task<string?> GetListTitleByIdAsync(string siteUrl, string listId)
+    {
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')?$select=Title";
+        try
+        {
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl);
+            if (!resp.IsSuccessStatusCode) return null;
+            var body = await resp.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(body);
+            return doc.RootElement.TryGetProperty("Title", out var tp) ? tp.GetString() : null;
+        }
+        catch { return null; }
+    }
+
     // Reads all items from a list with the given custom field names plus Created/Modified.
     // Returns each item as a string-keyed dictionary. Handles pagination automatically.
     public async Task<List<Dictionary<string, object?>>> GetListItemsAsync(
@@ -3325,6 +3464,9 @@ public class SharePointService
         var colsByName = cols.ToDictionary(c => c.InternalName, StringComparer.OrdinalIgnoreCase);
 
         // User fields are lookups: $expand them and read {name}/Name (claims login).
+        // Lookup fields must ALSO be $expand-ed ({name}/LookupId + LookupValue, same as
+        // BulkReadCustomFieldsAsync) — selecting a lookup by bare internal name is a 400,
+        // which used to abort the read and silently "copy" zero items.
         var selectParts = new List<string> { "Id", "Title", "Created", "Modified" };
         var expandParts = new List<string>();
         foreach (var c in cols)
@@ -3332,6 +3474,12 @@ public class SharePointService
             if (SpColumnDef.IsUserType(c.FieldType))
             {
                 selectParts.Add($"{c.InternalName}/Name");
+                expandParts.Add(c.InternalName);
+            }
+            else if (SpColumnDef.IsLookupType(c.FieldType))
+            {
+                selectParts.Add($"{c.InternalName}/LookupId");
+                selectParts.Add($"{c.InternalName}/LookupValue");
                 expandParts.Add(c.InternalName);
             }
             else
@@ -3361,8 +3509,15 @@ public class SharePointService
                 return r;
             }, siteUrl);
 
-            if (!resp.IsSuccessStatusCode) break;
-            var body = await resp.Content.ReadAsStringAsync();
+            if (!resp.IsSuccessStatusCode)
+            {
+                // Never truncate silently: a failed page used to `break`, returning a partial
+                // (or empty) list the caller then reported as a successful copy of 0 items.
+                var err = await resp.Content.ReadAsStringAsync(ct);
+                throw new HttpRequestException(
+                    $"Reading list items failed: HTTP {(int)resp.StatusCode} — {err[..Math.Min(err.Length, 300)]}");
+            }
+            var body = await resp.Content.ReadAsStringAsync(ct);
             using var doc = JsonDocument.Parse(body);
 
             if (doc.RootElement.TryGetProperty("value", out var values))
@@ -3403,7 +3558,14 @@ public class SharePointService
                 return r;
             }, siteUrl);
 
-            if (!resp.IsSuccessStatusCode) break;
+            if (!resp.IsSuccessStatusCode)
+            {
+                // A partial titles list corrupts skip/overwrite matching (existing items would
+                // look absent and duplicate) — fail loudly instead.
+                var err = await resp.Content.ReadAsStringAsync(ct);
+                throw new HttpRequestException(
+                    $"Reading target list items failed: HTTP {(int)resp.StatusCode} — {err[..Math.Min(err.Length, 300)]}");
+            }
             var body = await resp.Content.ReadAsStringAsync(ct);
             using var doc = JsonDocument.Parse(body);
 
@@ -3479,7 +3641,9 @@ public class SharePointService
         foreach (var (name, value) in fields)
         {
             if (value == null) continue;
-            if (value is PersonFieldValue or TaxonomyFieldValue)
+            // Lookups are complex too: serializing a LookupFieldValue record into the plain POST
+            // body produced JSON SharePoint rejects, failing the item create.
+            if (value is PersonFieldValue or TaxonomyFieldValue or LookupFieldValue)
                 complex.Add((name, value));
             else
                 simple[name] = value;
@@ -3814,6 +3978,6 @@ public class SharePointService
             Uri uri,
             Dictionary<string, object>? additionalAuthenticationContext = null,
             CancellationToken cancellationToken = default)
-            => await _auth.GetAccessTokenAsync();
+            => await _auth.GetAccessTokenAsync(cancellationToken: cancellationToken);
     }
 }

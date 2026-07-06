@@ -40,11 +40,15 @@ public sealed class VerificationReportService(SharePointService spService)
         // is found, so a long Retry-After window is indistinguishable from a hang. Mirrors the
         // same "⚠ Graph throttled — waiting Ns" message and 5s dedup CopyService.ExecuteAsync
         // already uses for copy runs.
+        // Named so it can be unsubscribed in the finally — an anonymous handler leaked once per
+        // verification run onto the app-lifetime service (duplicate throttle lines on later runs,
+        // plus closed HistoryDialog UI kept alive via the captured IProgress).
+        Action<TimeSpan, int, int, string?>? onThrottleLog = null;
         if (activityLog != null)
         {
             var throttleLogLock = new object();
             var lastThrottleLog = DateTimeOffset.MinValue;
-            spService.Throttled += (delay, attempt, max, reason) =>
+            onThrottleLog = (delay, attempt, max, reason) =>
             {
                 lock (throttleLogLock)
                 {
@@ -55,6 +59,7 @@ public sealed class VerificationReportService(SharePointService spService)
                 activityLog.Report($"⚠ Graph throttled — waiting {delay.TotalSeconds:0}s"
                     + (string.IsNullOrEmpty(reason) ? "" : $" [{reason}]"));
             };
+            spService.Throttled += onThrottleLog;
         }
 
         try
@@ -122,6 +127,7 @@ public sealed class VerificationReportService(SharePointService spService)
         finally
         {
             spService.Throttled -= onThrottle;
+            if (onThrottleLog != null) spService.Throttled -= onThrottleLog;
         }
     }
 
@@ -220,20 +226,34 @@ public sealed class VerificationReportService(SharePointService spService)
     // date is used instead (see ComparisonStatus for the full rationale). Internal (not private) so
     // ExcelReportWriter can reuse the same list when deciding which raw value to display per row.
     //
-    // Covers both container families: modern OOXML (.docx/.xlsx/.pptx, ZIP-based) AND legacy
-    // binary Office formats (.doc/.xls/.ppt, OLE Compound File Binary Format) plus other formats
-    // sharing that same OLE container (.msg). Confirmed 2026-07-03: a real verification run showed
-    // 100% of ContentMismatch rows were legacy .xls and .msg files with completely different hashes
-    // on both sides — the OLE container's internal metadata streams (summary info, calculation
-    // chains, etc.) get touched by background processing the same way OOXML's ZIP does, so the
-    // original list (which only covered modern OOXML) was producing false positives for these.
+    // Covers both container families used by Office applications, not just Word/Excel/PowerPoint's
+    // primary document types:
+    //   - Modern OOXML/ZIP-based: Word, Excel (including the binary-sheet .xlsb variant, which is
+    //     still a ZIP with the same docProps/customXml parts), PowerPoint, and Visio, plus their
+    //     templates and add-ins.
+    //   - Legacy OLE Compound File Binary Format: the pre-2007 Word/Excel/PowerPoint/Visio formats,
+    //     Outlook .msg, Publisher, and Project — all share the same OLE metadata-stream container
+    //     that gets touched by SharePoint's background processing the same way OOXML's ZIP does.
+    // Confirmed 2026-07-03: a real verification run showed 100% of ContentMismatch rows were legacy
+    // .xls and .msg files with completely different hashes on both sides despite identical content —
+    // the original list (modern OOXML only) was producing false positives for every legacy format.
+    // Confirmed 2026-07-06: .xlsb (missing from the original OOXML list) showed the same false
+    // ContentMismatch pattern — any Office container format not in this set will.
     internal static readonly HashSet<string> OfficeReserializedExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        // Modern OOXML (ZIP-based)
-        ".docx", ".xlsx", ".pptx", ".docm", ".xlsm", ".pptm",
-        ".dotx", ".xltx", ".potx", ".ppsx", ".ppsm", ".dotm",
-        // Legacy binary Office formats (OLE Compound File Binary Format)
+        // Modern OOXML (ZIP-based) — Word
+        ".docx", ".docm", ".dotx", ".dotm",
+        // Modern OOXML (ZIP-based) — Excel, including the binary-sheet .xlsb variant (still a ZIP
+        // container with the same docProps/customXml parts SharePoint rewrites)
+        ".xlsx", ".xlsm", ".xltx", ".xltm", ".xlsb", ".xlam",
+        // Modern OOXML (ZIP-based) — PowerPoint
+        ".pptx", ".pptm", ".potx", ".potm", ".ppsx", ".ppsm", ".ppam", ".sldx", ".sldm",
+        // Modern OOXML (ZIP-based) — Visio
+        ".vsdx", ".vsdm", ".vssx", ".vssm", ".vstx", ".vstm",
+        // Legacy binary Office formats (OLE Compound File Binary Format) — Word/Excel/PowerPoint
         ".doc", ".dot", ".xls", ".xlt", ".xla", ".ppt", ".pot", ".pps", ".ppa",
+        // Legacy binary Office formats (OLE Compound File Binary Format) — Visio/Publisher/Project
+        ".vsd", ".vst", ".vss", ".pub", ".mpp",
         // Other OLE-compound formats subject to the same background metadata churn
         ".msg"
     };
@@ -284,21 +304,36 @@ public sealed class VerificationReportService(SharePointService spService)
     {
         if (t == null) return ComparisonStatus.OnlyInSource;
 
+        bool hashesPresent = s.QuickXorHash != null && t.QuickXorHash != null;
+        bool hashesEqual   = hashesPresent && string.Equals(s.QuickXorHash, t.QuickXorHash, StringComparison.Ordinal);
+
         if (OfficeReserializedExtensions.Contains(Path.GetExtension(s.RelativePath)))
         {
-            // Hash/size are unreliable here — modified date is the signal instead, since the app is
-            // already responsible for preserving it onto the target.
+            // Equal hashes are always trustworthy — SharePoint didn't rewrite this one (common
+            // for Migration API imports, which bypass the upload pipeline). Only a hash
+            // DIFFERENCE is meaningless for these formats.
+            if (hashesEqual) return ComparisonStatus.Match;
+
+            // Otherwise modified date is the signal, since the app is already responsible for
+            // preserving it onto the target. A missing date on either side is Unverified — the
+            // old "call it Match" behavior let a 0-byte or corrupt Office file pass green.
             if (s.LastModified is not { } srcDate || t.LastModified is not { } tgtDate)
-                return ComparisonStatus.Match; // missing signal on either side → don't manufacture a false mismatch
+                return ComparisonStatus.Unverified;
             return (srcDate - tgtDate).Duration() <= DateMismatchTolerance
                 ? ComparisonStatus.Match
                 : ComparisonStatus.DateMismatch;
         }
 
-        if (s.QuickXorHash == null || t.QuickXorHash == null)
-            return ComparisonStatus.Match; // missing signal on either side → don't manufacture a false mismatch
+        if (!hashesPresent)
+        {
+            // Graph returns null quickXorHash for a nontrivial share of items in listings.
+            // Fall back to size before giving up; never report an unverifiable row as Match.
+            if (s.Size is { } srcSize && t.Size is { } tgtSize)
+                return srcSize == tgtSize ? ComparisonStatus.Match : ComparisonStatus.ContentMismatch;
+            return ComparisonStatus.Unverified;
+        }
 
-        return string.Equals(s.QuickXorHash, t.QuickXorHash, StringComparison.Ordinal)
+        return hashesEqual
             ? ComparisonStatus.Match
             : ComparisonStatus.ContentMismatch;
     }

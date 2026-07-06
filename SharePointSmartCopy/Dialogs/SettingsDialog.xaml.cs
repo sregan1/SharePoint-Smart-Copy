@@ -114,8 +114,17 @@ public partial class SettingsDialog : Window
 
     private async void SignOutButton_Click(object sender, RoutedEventArgs e)
     {
-        await _authService.SignOutAsync();
-        MessageBox.Show("Signed out. You will be prompted to sign in on the next connection.",
-            "Signed Out", MessageBoxButton.OK, MessageBoxImage.Information);
+        // async void: an unhandled MSAL cache exception here would crash the app.
+        try
+        {
+            await _authService.SignOutAsync();
+            MessageBox.Show("Signed out. You will be prompted to sign in on the next connection.",
+                "Signed Out", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Sign out failed: {ex.Message}", "Signed Out",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
     }
 }

@@ -37,7 +37,15 @@ public partial class HistoryDialog : Window
         DetailHeader.Text = _reports.Count == 0 ? "No previous runs found." : "Select a run to view details";
     }
 
-    private void ReportList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    // Closing the window must stop an in-flight verification — without this the scan of a
+    // potentially 100k-file pair kept running headless after the dialog was gone.
+    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+    {
+        _verifyCts?.Cancel();
+        base.OnClosing(e);
+    }
+
+    private async void ReportList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         var report     = ReportList.SelectedItem as SavedReportSummary;
         bool hasSelection = report != null;
@@ -66,8 +74,22 @@ public partial class HistoryDialog : Window
         SkippedCard.Text  = report.SkippedCount.ToString();
 
         // Items lives only in the full report on disk (see SavedReportSummary) — load it now that
-        // this specific run's detail is actually being viewed, not for every row up front.
-        DetailGrid.ItemsSource = ReportHistoryService.LoadFull(report.Id)?.Items ?? [];
+        // this specific run's detail is actually being viewed, not for every row up front. Parsed
+        // off the UI thread: a 100k-item run is tens of MB of JSON and froze the window for
+        // seconds when parsed inside SelectionChanged. Guarded against selection changing again
+        // while the load is in flight.
+        DetailGrid.ItemsSource = null;
+        try
+        {
+            var id    = report.Id;
+            var items = await Task.Run(() => ReportHistoryService.LoadFull(id)?.Items ?? []);
+            if (ReferenceEquals(ReportList.SelectedItem, report))
+                DetailGrid.ItemsSource = items;
+        }
+        catch
+        {
+            DetailHeader.Text = "Could not load this run's details.";
+        }
     }
 
     private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -160,10 +182,26 @@ public partial class HistoryDialog : Window
             {
                 noticeText = msg;
                 UpdateStatus();
+                // Self-clear: a throttle/scan-error notice reports something that JUST happened, not
+                // a persisting state — without this it stayed appended to the status line for the
+                // rest of a multi-hour verification even after SharePoint recovered, indistinguishable
+                // from an actual ongoing problem. Mirrors the clear-after-delay pattern MainViewModel
+                // already uses for the main window's throttle status (OnThrottled). 10s comfortably
+                // exceeds the service's 5s notice dedup window, so a genuinely still-throttled scan
+                // keeps refreshing the line before this can clear it.
+                var shown = msg;
+                _ = Task.Delay(TimeSpan.FromSeconds(10)).ContinueWith(_ =>
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        if (noticeText == shown) { noticeText = ""; UpdateStatus(); }
+                    }));
             });
             var result = await _verificationReportService.RunAsync(
                 roots, maxParallel, activityLog: onNotice, progress: onScanned, _verifyCts.Token);
-            ExcelReportWriter.Write(dlg.FileName, result);
+            VerifyStatus.Text = "Writing workbook…";
+            // Off the UI thread: ClosedXML builds the whole workbook in memory and SaveAs is
+            // CPU-heavy — a 100k-row run froze the window for a long time.
+            await Task.Run(() => ExcelReportWriter.Write(dlg.FileName, result));
             if (result.ScanErrors.Count > 0)
                 MessageBox.Show(
                     $"{result.ScanErrors.Count} root(s) could not be scanned — see the Scan Errors tab in the workbook.",

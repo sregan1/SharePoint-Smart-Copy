@@ -10,4 +10,5 @@ public sealed record ScannedFile(
     string Name,
     string RelativePath,
     DateTimeOffset? LastModified,
-    string? QuickXorHash);
+    string? QuickXorHash,
+    long? Size = null);

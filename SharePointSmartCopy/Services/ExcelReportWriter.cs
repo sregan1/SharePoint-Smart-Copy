@@ -9,8 +9,9 @@ namespace SharePointSmartCopy.Services;
 public static class ExcelReportWriter
 {
     private const string DateFormat = "yyyy-mm-dd hh:mm:ss";
-    private static readonly XLColor MismatchFill = XLColor.FromHtml("#FDE7E9");
-    private static readonly XLColor MatchFill    = XLColor.FromHtml("#DFF6DD");
+    private static readonly XLColor MismatchFill   = XLColor.FromHtml("#FDE7E9");
+    private static readonly XLColor MatchFill      = XLColor.FromHtml("#DFF6DD");
+    private static readonly XLColor UnverifiedFill = XLColor.FromHtml("#FFF4CE");
 
     public static void Write(string path, VerificationReportService.Result result)
     {
@@ -31,6 +32,7 @@ public static class ExcelReportWriter
         int matched        = result.Comparison.Count(r => r.Status == ComparisonStatus.Match);
         int contentMismatch = result.Comparison.Count(r => r.Status == ComparisonStatus.ContentMismatch);
         int dateMismatch    = result.Comparison.Count(r => r.Status == ComparisonStatus.DateMismatch);
+        int unverified      = result.Comparison.Count(r => r.Status == ComparisonStatus.Unverified);
 
         ws.Cell(1, 1).Value = "Verification Summary";
         ws.Cell(1, 1).Style.Font.Bold = true;
@@ -50,28 +52,39 @@ public static class ExcelReportWriter
         ws.Cell(8, 2).Value = onlyInSource;
         ws.Cell(9, 1).Value = "Only in Target";
         ws.Cell(9, 2).Value = onlyInTarget;
-        ws.Range(3, 1, 9, 1).Style.Font.Bold = true;
+        ws.Cell(10, 1).Value = "Unverified (no comparable signal)";
+        ws.Cell(10, 2).Value = unverified;
+        ws.Range(3, 1, 10, 1).Style.Font.Bold = true;
 
         // Not merged: Excel does not reliably auto-size row height for wrapped text in a merged
         // cell (a well-known Excel limitation, not a ClosedXML bug), which clipped this message.
         // Left in a single unmerged cell, AdjustToContents below widens column 1 to fit it on one
         // line instead — the fill is still applied across the row for the banner look.
-        var messageCell = ws.Cell(11, 1);
+        var messageCell = ws.Cell(12, 1);
         XLColor fill;
-        if (onlyInSource == 0 && onlyInTarget == 0 && contentMismatch == 0 && dateMismatch == 0 && result.ScanErrors.Count == 0)
+        bool noDifferences = onlyInSource == 0 && onlyInTarget == 0 && contentMismatch == 0
+                          && dateMismatch == 0 && result.ScanErrors.Count == 0;
+        if (noDifferences && unverified == 0)
         {
             messageCell.Value = "✓ Exact match — every file in source was found in target, with no extras.";
             fill = MatchFill;
         }
+        else if (noDifferences)
+        {
+            messageCell.Value = $"✓ No differences found, but {unverified:N0} file(s) had no comparable signal (hash and size unavailable) and could not be verified — see the Comparison tab.";
+            fill = UnverifiedFill;
+        }
         else
         {
             var parts = new List<string> { "⚠ Differences found — see the Comparison tab for details." };
+            if (unverified > 0)
+                parts.Add($"{unverified:N0} file(s) could not be verified (no comparable signal).");
             if (result.ScanErrors.Count > 0)
                 parts.Add($"{result.ScanErrors.Count} location(s) could not be scanned — see the Scan Errors tab.");
             messageCell.Value = string.Join(" ", parts);
             fill = MismatchFill;
         }
-        ws.Range(11, 1, 11, 4).Style.Fill.BackgroundColor = fill;
+        ws.Range(12, 1, 12, 4).Style.Fill.BackgroundColor = fill;
 
         ws.Columns(1, 2).AdjustToContents();
     }
@@ -111,7 +124,12 @@ public static class ExcelReportWriter
             SetComparisonValue(ws.Cell(row, 3), r, r.SourceHash, r.SourceModified);
             SetComparisonValue(ws.Cell(row, 4), r, r.TargetHash, r.TargetModified);
 
-            var fill = r.Status == ComparisonStatus.Match ? MatchFill : MismatchFill;
+            var fill = r.Status switch
+            {
+                ComparisonStatus.Match      => MatchFill,
+                ComparisonStatus.Unverified => UnverifiedFill,
+                _                           => MismatchFill,
+            };
             ws.Range(row, 1, row, 4).Style.Fill.BackgroundColor = fill;
             row++;
         }

@@ -35,7 +35,27 @@ public class PermissionCopyService(SharePointService spService)
         if (!hasUniquePermissions)
             return new PermissionCopyResult(itemDisplayName, 0, []);
 
+        // Guard BEFORE breaking inheritance: with an empty role-definition cache (failed/skipped
+        // InitializeAsync) every role would fail "no such role on target" AFTER inheritance was
+        // already broken — stripping the item's permissions down to the migrating account. Not
+        // copying is recoverable; breaking without applying is destructive.
+        if (_targetRoleDefs.Count == 0)
+            return new PermissionCopyResult(itemDisplayName, 0, [],
+                "Target role definitions unavailable — permissions not copied (inheritance left unchanged); re-run to retry");
+
         var assignments = await spService.GetRoleAssignmentsAsync(sourceSiteUrl, sourceApiPath, ct);
+
+        // "Limited Access" bindings are hierarchy plumbing SharePoint maintains itself and rejects
+        // when granted directly — copying them only produced failed-role noise, and an object whose
+        // unique assignments were ONLY Limited Access broke inheritance and applied nothing.
+        static bool IsLimitedAccess(string roleName) =>
+            roleName.Equals("Limited Access", StringComparison.OrdinalIgnoreCase) ||
+            roleName.Equals("Web-Only Limited Access", StringComparison.OrdinalIgnoreCase);
+        assignments = assignments
+            .Select(a => a with { RoleNames = a.RoleNames.Where(r => !IsLimitedAccess(r)).ToList() })
+            .Where(a => a.RoleNames.Count > 0)
+            .ToList();
+
         if (assignments.Count == 0)
             return new PermissionCopyResult(itemDisplayName, 0, []);
 
@@ -90,11 +110,14 @@ public class PermissionCopyService(SharePointService spService)
             }
         }
 
-        // Inheritance was broken but nothing could be applied — the target object would be
-        // inaccessible. Surface this as a hard error so a log row is always written.
+        // Inheritance was broken but nothing could be applied — the target object is now
+        // accessible only to the migrating account. This includes the all-principals-unresolvable
+        // case (cross-tenant users, missing groups), which used to report Success.
         string? error = null;
-        if (!isRootWeb && applied == 0 && failed.Count > 0)
-            error = $"Inheritance broken but no role assignments applied: {string.Join("; ", failed.Take(3))}";
+        if (!isRootWeb && applied == 0 && (failed.Count > 0 || skipped.Count > 0))
+            error = failed.Count > 0
+                ? $"Inheritance broken but no role assignments applied: {string.Join("; ", failed.Take(3))}"
+                : $"Inheritance broken but no principals could be resolved on target: {string.Join("; ", skipped.Take(3))}";
 
         return new PermissionCopyResult(itemDisplayName, applied, skipped, error, failed);
     }

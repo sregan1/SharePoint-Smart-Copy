@@ -131,29 +131,40 @@ public class LibraryCopyService(SharePointService spService)
             }
         }
 
-        // Step 3: create custom columns
-        // Build a lookup only when there are actual mapping decisions.
-        // An empty mapping list means the user never opened the dialog — treat as "create all".
+        // Step 3: create custom columns.
+        // Distinguish three cases per column:
+        //  - dialog never opened at all (no mapping entries) → create everything;
+        //  - column never SHOWN in the dialog (mappings were loaded from a different library in a
+        //    Site/multi-library run) → create it, the user made no decision about it — the old
+        //    logic silently created NO columns for every library after the first;
+        //  - column shown and decided → honor the decision, including an explicit all-skip (which
+        //    the old "empty dict means never opened" check inverted into create-all).
+        var decidedColumns = columnMappings?
+            .Select(m => m.SourceColumn.InternalName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
         var mappingEntries = columnMappings?
             .Where(m => m.TargetColumn != null || m.CreateNew)
-            .ToDictionary(m => m.SourceColumn.InternalName);
-        var mappingLookup = mappingEntries?.Count > 0 ? mappingEntries : null;
+            .ToDictionary(m => m.SourceColumn.InternalName, StringComparer.OrdinalIgnoreCase);
 
         var columnsToCreate = definition.Columns.Where(col =>
         {
-            if (mappingLookup == null) return true;
-            if (!mappingLookup.TryGetValue(col.InternalName, out var mapping)) return false;
-            return mapping.CreateNew;
+            if (decidedColumns == null || decidedColumns.Count == 0) return true;
+            if (!decidedColumns.Contains(col.InternalName)) return true;
+            return mappingEntries != null &&
+                   mappingEntries.TryGetValue(col.InternalName, out var mapping) && mapping.CreateNew;
         }).ToList();
 
+        var columnFailures = new List<string>();
         foreach (var col in columnsToCreate)
         {
-            try { await CreateColumnAsync(targetSiteUrl, listId, col); }
+            try { await CreateColumnAsync(targetSiteUrl, listId, col, definition.SourceSiteUrl); }
             catch (Exception ex)
             {
+                columnFailures.Add($"{col.DisplayName} ({ex.Message})");
                 System.Diagnostics.Debug.WriteLine($"[LibraryCopy] Column '{col.InternalName}' create failed: {ex.Message}");
             }
         }
+        LastColumnCreationFailures = columnFailures;
 
         // Step 4: discover new drive ID (retry — Graph lags ~2s after list provisioning)
         string newDriveId      = string.Empty;
@@ -249,19 +260,34 @@ public class LibraryCopyService(SharePointService spService)
         var existingCols          = await spService.GetLibraryColumnsAsync(targetSiteUrl, listId, skipCache: true);
         var existingInternalNames = existingCols.Select(c => c.InternalName).ToHashSet(StringComparer.OrdinalIgnoreCase);
         var existingDisplayNames  = existingCols.Select(c => c.DisplayName).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var listColumnFailures = new List<string>();
         foreach (var col in definition.Columns.Where(c =>
             !existingInternalNames.Contains(c.InternalName) &&
             !existingDisplayNames.Contains(c.DisplayName)))
         {
-            try { await CreateColumnAsync(targetSiteUrl, listId, col); }
-            catch { }
+            try { await CreateColumnAsync(targetSiteUrl, listId, col, definition.SourceSiteUrl); }
+            catch (Exception ex) { listColumnFailures.Add($"{col.DisplayName} ({ex.Message})"); }
         }
+        LastColumnCreationFailures = listColumnFailures;
 
         return listId;
     }
 
-    private async Task CreateColumnAsync(string siteUrl, string listId, ColumnDefinition col)
+    // Column-creation failures from the most recent CreateLibraryAsync — surfaced by callers
+    // into the run report (previously Debug-output only, so the user was never told).
+    public List<string> LastColumnCreationFailures { get; private set; } = [];
+
+    private async Task CreateColumnAsync(string siteUrl, string listId, ColumnDefinition col, string? sourceSiteUrl = null)
     {
+        // Lookup columns bind to a target list, not a field type — the old fallthrough to the
+        // JSON path created them as plain TEXT columns, after which every file's lookup value
+        // failed with "Lookup unresolved".
+        if (ColumnDefinition.IsLookupType(col.FieldType))
+        {
+            await CreateLookupColumnAsync(siteUrl, listId, col, sourceSiteUrl);
+            return;
+        }
+
         // User, taxonomy, and choice columns with options need schema XML.
         // The plain JSON /fields endpoint rejects typed properties (Choices, __metadata)
         // regardless of the odata=nometadata accept header.
@@ -284,15 +310,19 @@ public class LibraryCopyService(SharePointService spService)
             SupportedFieldType.MultiChoice => 15,
             _ => 2,
         };
+        // Create with Title = INTERNAL name: SharePoint derives InternalName from the creation
+        // Title (StaticName is ignored for that), so creating with the display name broke every
+        // renamed column — the target's internal name became the encoded display name while all
+        // value writers still wrote to the source internal name. Create-then-rename yields the
+        // exact source internal name with the right display title.
         var json = JsonSerializer.Serialize(new
         {
             FieldTypeKind = fieldTypeKind,
-            Title         = col.DisplayName,
+            Title         = col.InternalName,
             StaticName    = col.InternalName,
             Required      = false,
         });
 
-        // Create the field and read back the actual InternalName (SP may mangle spaces)
         var createUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/fields";
         string actualInternalName = col.InternalName;
 
@@ -310,12 +340,64 @@ public class LibraryCopyService(SharePointService spService)
             throw new HttpRequestException(
                 $"SharePoint rejected column creation ({(int)createResp.StatusCode}): {createBody}");
 
-        using var doc = JsonDocument.Parse(createBody);
-        if (doc.RootElement.TryGetProperty("InternalName", out var n))
-            actualInternalName = n.GetString() ?? col.InternalName;
+        using (var doc = JsonDocument.Parse(createBody))
+        {
+            if (doc.RootElement.TryGetProperty("InternalName", out var n))
+                actualInternalName = n.GetString() ?? col.InternalName;
+        }
+
+        // Rename to the display title (MERGE only changes Title; InternalName is now fixed).
+        if (!string.Equals(col.DisplayName, actualInternalName, StringComparison.Ordinal))
+        {
+            var renameBody = JsonSerializer.Serialize(new { Title = col.DisplayName });
+            using var renameResp = await spService.SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post,
+                    $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/fields/getbyinternalnameortitle('{Uri.EscapeDataString(actualInternalName.Replace("'", "''"))}')");
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                r.Headers.TryAddWithoutValidation("IF-MATCH", "*");
+                r.Headers.TryAddWithoutValidation("X-HTTP-Method", "MERGE");
+                r.Content = new StringContent(renameBody, System.Text.Encoding.UTF8, "application/json");
+                return r;
+            }, siteUrl);
+            // Non-critical: a failed rename leaves the internal name as the display title,
+            // which is cosmetic — values still land in the right field.
+        }
 
         // Add to default view (non-critical)
         await AddColumnToDefaultViewAsync(siteUrl, listId, actualInternalName);
+    }
+
+    // Recreates a Lookup/LookupMulti column bound to the TARGET list equivalent to the source's
+    // lookup list (matched by title — the source column stores the source list's GUID, which is
+    // meaningless at the target). Throws with an actionable message when the list can't be
+    // resolved, instead of silently degrading the column to Text as the old fallthrough did.
+    private async Task CreateLookupColumnAsync(string siteUrl, string listId, ColumnDefinition col, string? sourceSiteUrl)
+    {
+        string? targetLookupListId = null;
+        if (!string.IsNullOrEmpty(col.LookupListId) && !string.IsNullOrEmpty(sourceSiteUrl))
+        {
+            var srcListTitle = await spService.GetListTitleByIdAsync(sourceSiteUrl, col.LookupListId!);
+            if (!string.IsNullOrEmpty(srcListTitle))
+                targetLookupListId = await spService.GetListIdByTitleAsync(siteUrl, srcListTitle!);
+        }
+        if (string.IsNullOrEmpty(targetLookupListId))
+            throw new Exception(
+                $"Lookup column '{col.DisplayName}' not created — its looked-up list was not found on the target. Copy that list first, then re-run (or add the column manually).");
+
+        var el = new System.Xml.Linq.XElement("Field",
+            new System.Xml.Linq.XAttribute("Type", col.FieldType == SupportedFieldType.LookupMulti ? "LookupMulti" : "Lookup"),
+            new System.Xml.Linq.XAttribute("DisplayName", col.DisplayName),
+            new System.Xml.Linq.XAttribute("Name", col.InternalName),
+            new System.Xml.Linq.XAttribute("StaticName", col.InternalName),
+            new System.Xml.Linq.XAttribute("List", $"{{{targetLookupListId!.Trim('{', '}')}}}"),
+            new System.Xml.Linq.XAttribute("ShowField", string.IsNullOrEmpty(col.LookupShowField) ? "Title" : col.LookupShowField!),
+            new System.Xml.Linq.XAttribute("Required", "FALSE"));
+        if (col.FieldType == SupportedFieldType.LookupMulti)
+            el.Add(new System.Xml.Linq.XAttribute("Mult", "TRUE"));
+
+        await PostCreateFieldAsXmlAsync(siteUrl, listId, el.ToString(System.Xml.Linq.SaveOptions.DisableFormatting), col);
     }
 
     // Creates a User or Taxonomy column via fields/createfieldasxml.
@@ -379,6 +461,11 @@ public class LibraryCopyService(SharePointService spService)
             schemaXml = el.ToString(System.Xml.Linq.SaveOptions.DisableFormatting);
         }
 
+        await PostCreateFieldAsXmlAsync(siteUrl, listId, schemaXml, col);
+    }
+
+    private async Task PostCreateFieldAsXmlAsync(string siteUrl, string listId, string schemaXml, ColumnDefinition col)
+    {
         var url  = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/fields/createfieldasxml";
         var json = JsonSerializer.Serialize(new { parameters = new { SchemaXml = schemaXml } });
 
@@ -425,7 +512,8 @@ public class LibraryCopyService(SharePointService spService)
     // Returns (created display names, failed display names with reason).
     public async Task<(List<string> Created, List<string> Failed)> AddMissingColumnsAsync(
         string targetSiteUrl, string targetListId,
-        IEnumerable<ColumnDefinition> sourceColumns)
+        IEnumerable<ColumnDefinition> sourceColumns,
+        string? sourceSiteUrl = null)
     {
         // Skip cache so we always see the live column list — a stale cached snapshot
         // would cause columns that were just created to appear "missing" and get duplicated.
@@ -440,7 +528,7 @@ public class LibraryCopyService(SharePointService spService)
         {
             try
             {
-                await CreateColumnAsync(targetSiteUrl, targetListId, col);
+                await CreateColumnAsync(targetSiteUrl, targetListId, col, sourceSiteUrl);
                 created.Add(col.DisplayName);
             }
             catch (Exception ex)

@@ -324,7 +324,8 @@ public class MigrationJobService(SharePointService spService)
                             // elsewhere in this file already uses.
                             var srcModified = t.job.SourceModified
                                 ?? (modDates.TryGetValue(t.job.SourceItemId, out var fetched) ? fetched : null);
-                            if (srcModified.HasValue && srcModified.Value <= t.TargetModified)
+                            if (srcModified.HasValue && t.TargetModified.HasValue &&
+                                TimestampComparer.IsUpToDate(srcModified.Value, t.TargetModified.Value))
                             {
                                 t.result.Status       = CopyStatus.Skipped;
                                 t.result.ErrorMessage  = CopyResult.UpToDate;
@@ -380,6 +381,11 @@ public class MigrationJobService(SharePointService spService)
                 // 120k; verify a clean run, then try higher (250) if it holds.
                 const int MaxVersionsPerJob = 250;
                 const int MaxItemsPerJob    = 250;
+                // Byte budget alongside the entry budgets: 250 small files is fine, but 250 large
+                // files (or version-heavy ones — version content counts) would otherwise produce a
+                // multi-GB package, inflating import time, memory pressure, and the blast radius of
+                // a fatal batch abort. Sizes are already in metaCache, so this costs nothing extra.
+                const long MaxBytesPerJob   = 10L * 1024 * 1024 * 1024;
 
                 activityLog?.Report($"Analyzing {groupTasks.Count:N0} files for version-aware batching...");
                 var sizingProgress = new Progress<int>(d =>
@@ -439,21 +445,37 @@ public class MigrationJobService(SharePointService spService)
                     return maxVersions > 0 ? Math.Min(raw, maxVersions) : raw;
                 }
 
+                long BytesOf((CopyJob job, CopyResult result) t)
+                {
+                    if (!metaCache.TryGetValue(t.job.SourceItemId, out var c)) return 0;
+                    long current = c.Metadata.Size ?? 0;
+                    if (c.Versions == null) return current;
+                    var counted = maxVersions > 0 ? c.Versions.TakeLast(maxVersions) : c.Versions;
+                    long total = 0;
+                    foreach (var v in counted) total += v.Size ?? current;
+                    return Math.Max(total, current);
+                }
+
                 var batches      = new List<List<(CopyJob job, CopyResult result)>>();
                 var currentBatch = new List<(CopyJob job, CopyResult result)>();
-                int currentVersions = 0;
+                int  currentVersions = 0;
+                long currentBytes    = 0;
                 foreach (var t in groupTasks)
                 {
-                    int v = VersionsOf(t);
+                    int  v = VersionsOf(t);
+                    long b = BytesOf(t);
                     if (currentBatch.Count > 0 &&
-                        (currentVersions + v > MaxVersionsPerJob || currentBatch.Count >= MaxItemsPerJob))
+                        (currentVersions + v > MaxVersionsPerJob || currentBatch.Count >= MaxItemsPerJob
+                         || currentBytes + b > MaxBytesPerJob))
                     {
                         batches.Add(currentBatch);
                         currentBatch = [];
                         currentVersions = 0;
+                        currentBytes    = 0;
                     }
                     currentBatch.Add(t);
                     currentVersions += v;
+                    currentBytes    += b;
                 }
                 if (currentBatch.Count > 0) batches.Add(currentBatch);
 
@@ -470,7 +492,15 @@ public class MigrationJobService(SharePointService spService)
                 // To tell them apart, watch the activity log at =4: if ~4 jobs import concurrently it's
                 // prep-bound (→ multiple prep producers would help); if only ~2 progress it's SP-bound.
                 const int MaxConcurrentPrep    = 3;
-                const int MaxConcurrentImports = 6;
+                // 4 balances the structural limits: SPMI imports run server-side (a held job costs
+                // this app only a 2-30s polling loop), so extra slots exist to keep SharePoint's
+                // queue fed with zero idle gap between batches — but SP processes only ~2 jobs per
+                // site collection at once (queueing the rest), the prep producer is 3-wide so more
+                // than ~4 imports can't be fed continuously anyway, and higher values (6+) have
+                // shown SP-side "Operation canceled" soft-aborts plus a bigger blast radius when a
+                // conflict abort forces a batch retry. Earlier 2-vs-4 wall-clock measurements were
+                // confounded by other since-fixed issues; re-measure before changing.
+                const int MaxConcurrentImports = 4;
 
                 // isRetryPass omits the preflight counter/progress reporting — those already counted
                 // this batch's files once during the original pass, and re-counting on a post-conflict
@@ -512,6 +542,35 @@ public class MigrationJobService(SharePointService spService)
                     PreparedBatch prepared, List<(CopyJob job, CopyResult result)> conflicts)
                 {
                     var rpfx = string.IsNullOrEmpty(prepared.BatchLabel) ? "" : $"[{prepared.BatchLabel}] ";
+
+                    // Skip mode: "already exists" is exactly what Skip means — the conflicting files
+                    // are Skipped (not Failed, and nothing is deleted), and the collateral valid files
+                    // SPMI discarded with the abort get one retry. The retry's fresh pre-flight
+                    // re-skips whatever exists (including files attempt 1 imported before dying).
+                    if (overwriteMode == OverwriteMode.Skip)
+                    {
+                        activityLog?.Report(
+                            $"↻ {rpfx}SharePoint aborted the batch after {conflicts.Count} 'already exists' conflict{(conflicts.Count == 1 ? "" : "s")} — marking those Skipped and retrying the rest once...");
+                        var conflictSet = new HashSet<CopyResult>(conflicts.Select(c => c.result));
+                        foreach (var (_, result) in prepared.FileTasks)
+                        {
+                            if (conflictSet.Contains(result))
+                            {
+                                result.Status       = CopyStatus.Skipped;
+                                result.ErrorMessage = "Already exists";
+                            }
+                            else if (result.Status == CopyStatus.Failed)
+                            {
+                                result.Status       = CopyStatus.Copying;
+                                result.ErrorMessage = null;
+                            }
+                        }
+                        if (!prepared.FileTasks.Any(t => t.result.Status == CopyStatus.Copying)) return;
+                        var retriedSkip = await PrepTasks(prepared.FileTasks, prepared.BatchLabel, isRetryPass: true);
+                        await SubmitAndPollBatchAsync(retriedSkip, webId, targetSiteUrl, activityLog, cancellationToken);
+                        return;
+                    }
+
                     activityLog?.Report(
                         $"↻ {rpfx}SharePoint aborted the batch after {conflicts.Count} name conflict{(conflicts.Count == 1 ? "" : "s")} — clearing and retrying the batch once...");
 
@@ -575,8 +634,15 @@ public class MigrationJobService(SharePointService spService)
                             result.ErrorMessage = "Could not remove the existing file before retry — re-run to try again.";
                             continue;
                         }
-                        result.Status       = CopyStatus.Copying;
-                        result.ErrorMessage = null;
+                        // Only files the abort failed go back to Copying. Skipped results (IfNewer's
+                        // "Up to date" decisions from the first pass) must survive the retry — resetting
+                        // them forced the fresh pre-flight to re-evaluate (and, pre-tolerance-fix,
+                        // sub-second skew could convert a former Skip into a full delete+re-copy).
+                        if (result.Status == CopyStatus.Failed)
+                        {
+                            result.Status       = CopyStatus.Copying;
+                            result.ErrorMessage = null;
+                        }
                     }
 
                     if (!prepared.FileTasks.Any(t => t.result.Status == CopyStatus.Copying))
@@ -590,8 +656,13 @@ public class MigrationJobService(SharePointService spService)
                 }
 
                 // Connect throttle → download-slot step-down now that downloads are about to begin.
-                // Analysis throttles (above) are isolated; only download-phase throttles shrink the gate.
+                // Analysis throttles (above) are isolated; only download-phase throttles shrink the
+                // gate. Unsubscribed per-iteration (finally below): subscribing here but removing
+                // only once in the method's outer finally leaked one handler per additional target
+                // library, and left group 1's download handler attached during group 2's analysis.
                 spService.Throttled += onMigrationThrottle;
+                try
+                {
 
                 // Bounded so prep runs at most MaxConcurrentImports+1 batches ahead — keeps memory and
                 // the per-batch SAS tokens bounded (a prepared batch is just blobs-in-Azure + refs).
@@ -623,13 +694,19 @@ public class MigrationJobService(SharePointService spService)
                     await foreach (var prepared in prepChannel.Reader.ReadAllAsync(cancellationToken))
                     {
                         var conflicts = await SubmitAndPollBatchAsync(prepared, webId, targetSiteUrl, activityLog, cancellationToken);
-                        if (conflicts.Count > 0 && overwriteMode != OverwriteMode.Skip)
+                        if (conflicts.Count > 0)
                             await RetryBatchAfterConflictAsync(prepared, conflicts);
                     }
                 }, cancellationToken)).ToArray();
 
                 await Task.WhenAll(importWorkers);
                 await prepProducer;
+
+                }
+                finally
+                {
+                    spService.Throttled -= onMigrationThrottle;
+                }
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -853,7 +930,8 @@ public class MigrationJobService(SharePointService spService)
                                 srcModifiedDate = job.SourceModified;
                             else
                                 srcModifiedDate = (await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId)).ModifiedDateTime;
-                            if (srcModifiedDate is { } srcModified && srcModified <= existing.Modified)
+                            if (srcModifiedDate is { } srcModified && existing.Modified is { } targetModified &&
+                                TimestampComparer.IsUpToDate(srcModified, targetModified))
                             {
                                 result.Status       = CopyStatus.Skipped;
                                 result.ErrorMessage = CopyResult.UpToDate;
@@ -997,13 +1075,34 @@ public class MigrationJobService(SharePointService spService)
                                 Interlocked.Increment(ref currentOnlyMisses);
                             }
 
+                            // This path buffers each version fully in memory (MemoryStream is capped at
+                            // int.MaxValue bytes) — a version above 2 GiB cannot be packaged. Fail fast
+                            // with an honest message instead of downloading it 3 times and surfacing
+                            // "Stream was too long" as a connection problem.
+                            long largestVersionBytes = Math.Max(cachedMeta?.Size ?? 0,
+                                cachedVersions?.Max(v => v.Size ?? 0) ?? 0);
+                            if (largestVersionBytes > int.MaxValue)
+                            {
+                                result.Status       = CopyStatus.Failed;
+                                result.ErrorMessage = $"File version is {largestVersionBytes / (1024.0 * 1024 * 1024):F1} GB — larger than the 2 GB this mode can buffer. Copy this file with Enhanced REST mode.";
+                                return;
+                            }
+
                             // Oversized files (multi-GB genomics/microscopy files etc.) get an extra gate on
                             // top of the normal download slot: each one holds its full content in memory
                             // twice (raw + AES-encrypted) until upload completes, so only a couple may be
                             // in flight at once regardless of maxParallel — acquired BEFORE the general
                             // slot so a large file waiting on this gate doesn't tie up a slot small files
                             // could otherwise use.
-                            bool isLargeFile = (cachedMeta?.Size ?? 0) >= LargeFileThresholdBytes;
+                            // Gate on the file's TOTAL bytes across all versions, not just the current
+                            // version: all versions download concurrently and are held (raw + encrypted)
+                            // until upload — a small current version with gigabytes of history is exactly
+                            // the OOM class this gate exists for.
+                            long totalVersionBytes = 0;
+                            if (cachedVersions != null)
+                                foreach (var v in cachedVersions)
+                                    totalVersionBytes += v.Size ?? cachedMeta?.Size ?? 0;
+                            bool isLargeFile = Math.Max(cachedMeta?.Size ?? 0, totalVersionBytes) >= LargeFileThresholdBytes;
                             if (isLargeFile && largeFileGate != null)
                                 await largeFileGate.WaitAsync(ct);
 
@@ -1274,9 +1373,10 @@ public class MigrationJobService(SharePointService spService)
             new Dictionary<string, CopyResult>());
     }
 
-    // Phase 2 of a batch: submit the import job and poll to completion. This is the ONLY phase that
-    // must be serialized across batches — SharePoint soft-cancels concurrent import jobs. No-op when
-    // the prepared batch has nothing to import (all files skipped, or prep failed).
+    // Phase 2 of a batch: submit the import job and poll to completion. Runs at most
+    // MaxConcurrentImports wide (measured sweet spot ~2; SharePoint soft-cancels imports when too
+    // many run concurrently). No-op when the prepared batch has nothing to import (all files
+    // skipped, or prep failed).
     //
     // Returns the (job, result) pairs that were attributed a genuine "already exists" conflict when
     // the job hit a JobFatalError — empty otherwise. The caller uses this to retry the whole batch
@@ -1306,6 +1406,7 @@ public class MigrationJobService(SharePointService spService)
             bool   fatal          = false;
             string? fatalMsg      = null;
             bool   seenJobStart   = false;
+            bool   sawJobEnd      = false;
             int    liveErrorCount = 0; // per-item errors surfaced live so failures show as they happen
             int    totalErrorsReported = 0;
             await foreach (var evt in spService.PollMigrationJobAsync(targetSiteUrl, jobId, cancellationToken))
@@ -1326,6 +1427,7 @@ public class MigrationJobService(SharePointService spService)
                     }
                     if (name == "JobEnd")
                     {
+                        sawJobEnd = true;
                         if (evt.TryGetProperty("TotalErrors", out var te) &&
                             te.ValueKind == JsonValueKind.Number)
                             totalErrorsReported = te.GetInt32();
@@ -1369,12 +1471,51 @@ public class MigrationJobService(SharePointService spService)
                 }
             }
 
+            // Never fabricate Success: if polling ended without a JobEnd (cancellation, hung poll
+            // endpoint, job evicted server-side) the import outcome is unknown for every file
+            // still in flight — surface that honestly instead of promoting them below.
+            cancellationToken.ThrowIfCancellationRequested();
+            if (!sawJobEnd && !fatal)
+                throw new Exception("Import polling ended before SharePoint reported completion — outcome unknown; re-run in Copy-If-Newer mode to reconcile");
+
             // Fetch SP's report BEFORE final marking: the .err file names every failed object with its
             // GUID, while the live queue events sometimes omit it (observed with the MD5 errors) — any
             // failure left unattributed at this point would be marked Success below.
             if (fatal || liveErrorCount > 0 || totalErrorsReported > 0)
                 await TryLogMigrationReportAsync(metadataClient, jobId, batch.EncryptionKey, activityLog, pfx,
                     attributeMap: batch.ListItemMap);
+
+            // If SP reported more errors than we could attribute to a specific file (no minted GUID
+            // in the live event or any .err line), never promote the remainder to Success blindly —
+            // confirm each still-in-flight file actually landed on the target. A lookup failure here
+            // marks the file Failed (re-runnable), which is the safe direction; fabricated Success
+            // is not.
+            int attributedFailed = fileTasks.Count(t => t.result.Status == CopyStatus.Failed);
+            int reportedErrors   = Math.Max(liveErrorCount, totalErrorsReported);
+            if (!fatal && reportedErrors > attributedFailed)
+            {
+                var unconfirmed = fileTasks.Where(t => t.result.Status == CopyStatus.Copying).ToList();
+                if (unconfirmed.Count > 0)
+                {
+                    activityLog?.Report($"⚠ {pfx}{reportedErrors - attributedFailed} import error(s) could not be attributed — confirming {unconfirmed.Count:N0} file(s) on target...");
+                    await Parallel.ForEachAsync(unconfirmed,
+                        new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
+                        async (t, ct) =>
+                        {
+                            var (job, result) = t;
+                            var subPath = job.TargetSubFolderPath ?? string.Empty;
+                            var lib     = job.TargetLibraryServerRelativeUrl;
+                            var fileUrl = string.IsNullOrEmpty(subPath)
+                                ? $"{lib}/{job.SourceName}"
+                                : $"{lib}/{subPath}/{job.SourceName}";
+                            if (await spService.GetFileUniqueIdAsync(targetSiteUrl, fileUrl) == null)
+                            {
+                                result.Status       = CopyStatus.Failed;
+                                result.ErrorMessage = "SharePoint reported import errors and this file was not found on the target afterward — re-run to retry";
+                            }
+                        });
+                }
+            }
 
             // Step 8: mark results accurately. Files already Failed (attributed above, or upload failures)
             // stay Failed; on a fatal abort every not-yet-succeeded file fails; otherwise the rest succeeded.
@@ -1529,6 +1670,13 @@ public class MigrationJobService(SharePointService spService)
                         break;
                     }
                     catch (OperationCanceledException) { throw; }
+                    // A MemoryStream past int.MaxValue is a hard size limit, not a transient network
+                    // failure — retrying re-downloads the whole multi-GB file for nothing.
+                    catch (System.IO.IOException ex) when (ex.Message.Contains("Stream was too long", StringComparison.OrdinalIgnoreCase))
+                    {
+                        throw new NotSupportedException(
+                            $"{job.SourceName} has a version larger than the 2 GB this mode can buffer — copy it with Enhanced REST mode.", ex);
+                    }
                     // HTTP/2 stream resets surface as HttpRequestException, not IOException — must be
                     // caught alongside it or a single mid-stream RST_STREAM fails the file outright.
                     catch (Exception ex) when (attempt < 3 && (ex is System.IO.IOException || ex is System.Net.Http.HttpRequestException))
@@ -1540,39 +1688,13 @@ public class MigrationJobService(SharePointService spService)
                 }
             });
 
-        // Custom field lookup from bulk cache.
+        // Custom field values are NOT packaged: the manifest's standalone SPListItem objects (the
+        // only element SPMI accepts <Fields> on) were removed because they caused "Missing file
+        // info" import failures (see MigrationPackageBuilder.EmitStandaloneListItems). Fetching
+        // per-file field data here was pure waste — one sequential Graph round-trip per file,
+        // during the throttle-sensitive download phase, feeding data the manifest never emits.
+        // CopyService surfaces a warning when custom columns are requested in this mode.
         Dictionary<string, string>? customFields = null;
-        if (copyCustomColumns && bulkFieldCache != null && columnMappings != null)
-        {
-            var spIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
-            if (spIds.HasValue && bulkFieldCache.TryGetValue($"{spIds.Value.listId}:{spIds.Value.listItemId}", out var rawFields))
-            {
-                var mappingLookup = ColumnMapping.BuildTargetNameMap(columnMappings);
-                customFields = new Dictionary<string, string>();
-                foreach (var (srcName, value) in rawFields)
-                {
-                    if (value == null) continue;
-                    string targetName;
-                    if (mappingLookup.TryGetValue(srcName, out var mapped))
-                    {
-                        if (mapped == null) continue;
-                        targetName = mapped;
-                    }
-                    else
-                    {
-                        targetName = srcName;
-                    }
-                    // SPMI lookup-value encoding: "-1;#value" asks SP to resolve at import.
-                    customFields[targetName] = value switch
-                    {
-                        PersonFieldValue p   => string.Join(";#", p.Logins.Select(l => $"-1;#{l}")),
-                        TaxonomyFieldValue t => string.Join(";#", t.Terms.Select(x => $"-1;#{x.Label}|{x.TermGuid}")),
-                        LookupFieldValue l   => string.Join(";#", l.Entries.Select(e => $"-1;#{e.DisplayValue}")),
-                        _ => value.ToString() ?? "",
-                    };
-                }
-            }
-        }
 
         var folderRelPath = string.IsNullOrEmpty(job.TargetSubFolderPath)
             ? ""
@@ -1631,7 +1753,12 @@ public class MigrationJobService(SharePointService spService)
     {
         foreach (var suffix in new[] { ".err", ".log" })
         {
-            var name = $"Import-{jobId}-1{suffix}";
+            // SP splits large reports into numbered segments (Import-{jobId}-1.err, -2.err, …);
+            // reading only segment 1 left errors in later segments unattributed. Walk segments
+            // until the first missing one.
+            for (int segment = 1; segment <= 20; segment++)
+            {
+            var name = $"Import-{jobId}-{segment}{suffix}";
             try
             {
                 var blob = metadataClient.GetBlobClient(name);
@@ -1645,9 +1772,9 @@ public class MigrationJobService(SharePointService spService)
                 }
                 catch (Azure.RequestFailedException ex) when (ex.Status == 404)
                 {
-                    // Blob not written by SP — skip rather than falling through to DownloadToAsync
+                    // Blob not written by SP — stop walking segments for this suffix.
                     System.Diagnostics.Debug.WriteLine($"[SP-{suffix[1..]}] {name} not present (SP did not write it)");
-                    continue;
+                    break;
                 }
                 catch { /* 403: metadata read not permitted by SAS; still attempt download */ }
 
@@ -1699,8 +1826,8 @@ public class MigrationJobService(SharePointService spService)
 
                     // Surface the first few lines of SP's .err report into the activity feed so the
                     // actual failure reason is visible to the user immediately (not just in VS Debug
-                    // Output).
-                    if (activityLog != null)
+                    // Output). First segment only — later segments repeat the same error shapes.
+                    if (activityLog != null && segment == 1)
                     {
                         foreach (var line in lines.Take(5))
                             activityLog.Report($"   {pfx}SP: {line}");
@@ -1710,7 +1837,9 @@ public class MigrationJobService(SharePointService spService)
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[SP-{suffix[1..]}] Cannot read {name}: {ex.Message}");
+                break; // don't probe further segments after an unexpected read failure
             }
+            } // end segment loop
         }
     }
 

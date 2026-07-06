@@ -117,6 +117,7 @@ internal sealed class AdaptiveParallelismController : IDisposable
     // so that repeated throttles within the same window don't allow premature slot reuse.
     public void StepDown(TimeSpan retryAfter = default)
     {
+        int newLimit;
         lock (_lock)
         {
             var now = DateTimeOffset.UtcNow;
@@ -140,8 +141,11 @@ internal sealed class AdaptiveParallelismController : IDisposable
             _pendingWithhold += _limit - target;
             _limit            = target;
             _ceiling          = Math.Min(_ceiling, target);
-            LimitChanged?.Invoke(_limit);
+            newLimit          = _limit;
         }
+        // Invoked OUTSIDE the lock (matching TryRestore): this runs on the HTTP-pipeline thread,
+        // and a slow subscriber inside the lock would stall every WaitAsync/Release/StepDown.
+        LimitChanged?.Invoke(newLimit);
     }
 
     // Number of slots restored per heartbeat tick. Restoring more than one lets the pool climb

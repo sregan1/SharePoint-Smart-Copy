@@ -75,7 +75,13 @@ public class AppSettings
                 return settings;
             }
         }
-        catch { /* fall through to default */ }
+        catch
+        {
+            // Preserve the corrupt file before falling back to defaults: the next Save() would
+            // otherwise overwrite the evidence and the user's registrations would be lost with
+            // no way to recover them by hand.
+            try { File.Copy(SettingsPath, SettingsPath + ".corrupt", overwrite: true); } catch { }
+        }
         return new AppSettings();
     }
 
