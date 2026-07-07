@@ -18,7 +18,19 @@ public partial class HistoryDialog : Window
         InitializeComponent();
         _verificationReportService = new VerificationReportService(spService);
         DetailHeader.Text = "Loading previous runs…";
+        // Seeds the checkbox from the user's last choice; the live IsChecked value (read in
+        // VerifyButton_Click, not this settings snapshot) is what actually gates a given run.
+        DeepVerifyCheckBox.IsChecked = AppSettings.Load().DeepVerifyOfficeFiles;
         _ = LoadReportsAsync();
+    }
+
+    // Persisted immediately, same as MainViewModel's DeepVerifyOfficeFiles setter — this dialog
+    // has no other commit point (no "Next" step) to save on.
+    private void DeepVerifyCheckBox_Changed(object sender, RoutedEventArgs e)
+    {
+        var settings = AppSettings.Load();
+        settings.DeepVerifyOfficeFiles = DeepVerifyCheckBox.IsChecked == true;
+        settings.Save();
     }
 
     // Off the UI thread: on a tenant with several very large (100,000+-file) runs in its history,
@@ -157,47 +169,65 @@ public partial class HistoryDialog : Window
         DeleteButton.IsEnabled = false;
         ExportButton.IsEnabled = false;
         VerifyButton.IsEnabled = false;
+        DeepVerifyCheckBox.IsEnabled = false;
         VerifyCancelButton.Visibility = Visibility.Visible;
         VerifyStatus.Visibility = Visibility.Visible;
         VerifyStatus.Text = "Scanning…";
 
         try
         {
-            var roots       = VerificationRoot.FromSavedReport(report.Roots);
-            var maxParallel = AppSettings.Load().MaxParallelCopies;
+            var roots    = VerificationRoot.FromSavedReport(report.Roots);
+            var settings = AppSettings.Load();
+            var maxParallel = settings.MaxParallelCopies;
+            // Live checkbox state, not the settings snapshot above — see the field's own doc
+            // comment on why this must never be re-read from disk at run time.
+            bool deepVerify = DeepVerifyCheckBox.IsChecked == true;
 
-            // Combine the scan-progress line with the most recent throttle/error notice (if any) so
-            // a long Retry-After wait — previously invisible here — shows up instead of just leaving
-            // the file counts frozen, which looked indistinguishable from a hang.
-            string scanText = "Scanning…";
+            // Combine the persistent phase-status line with the most recent throttle/error notice
+            // (if any) so a long Retry-After wait shows up instead of just leaving the base text
+            // frozen, which looked indistinguishable from a hang.
+            string baseText = "Scanning…";
             string noticeText = "";
             void UpdateStatus() =>
-                VerifyStatus.Text = string.IsNullOrEmpty(noticeText) ? scanText : $"{scanText}  {noticeText}";
+                VerifyStatus.Text = string.IsNullOrEmpty(noticeText) ? baseText : $"{baseText}  {noticeText}";
             var onScanned = new Progress<VerificationReportService.ScanProgress>(p =>
             {
-                scanText = $"Scanning… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)";
+                baseText = $"Scanning… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)";
                 UpdateStatus();
             });
             var onNotice = new Progress<string>(msg =>
             {
-                noticeText = msg;
-                UpdateStatus();
-                // Self-clear: a throttle/scan-error notice reports something that JUST happened, not
-                // a persisting state — without this it stayed appended to the status line for the
-                // rest of a multi-hour verification even after SharePoint recovered, indistinguishable
-                // from an actual ongoing problem. Mirrors the clear-after-delay pattern MainViewModel
-                // already uses for the main window's throttle status (OnThrottled). 10s comfortably
-                // exceeds the service's 5s notice dedup window, so a genuinely still-throttled scan
-                // keeps refreshing the line before this can clear it.
-                var shown = msg;
-                _ = Task.Delay(TimeSpan.FromSeconds(10)).ContinueWith(_ =>
-                    Dispatcher.BeginInvoke(() =>
-                    {
-                        if (noticeText == shown) { noticeText = ""; UpdateStatus(); }
-                    }));
+                // "⚠"-prefixed messages (throttle waits, scan errors) are genuinely transient blips —
+                // something that JUST happened, not an ongoing state — and self-clear after 10s so
+                // they don't stay glued to the line for the rest of a multi-hour run once resolved.
+                // Everything else (scan-complete summaries, and — critically — the deep-verify pass's
+                // own "N need deep verification" / "Deep-verifying: N/Total" / "complete" messages)
+                // is real ongoing phase progress and replaces the PERSISTENT base text instead.
+                // Before this split, deep-verify progress went through the same self-clearing path as
+                // throttle notices — and since deep-verify downloads/compares one Office file at a
+                // time and can easily take longer than 10s per file (large files, throttling, low
+                // parallelism), the status line would blank back to the stale "Scanning… found X
+                // source, Y target" text between updates, making an actively-running deep verify look
+                // stalled or cut off.
+                if (msg.StartsWith('⚠'))
+                {
+                    noticeText = msg;
+                    UpdateStatus();
+                    var shown = msg;
+                    _ = Task.Delay(TimeSpan.FromSeconds(10)).ContinueWith(_ =>
+                        Dispatcher.BeginInvoke(() =>
+                        {
+                            if (noticeText == shown) { noticeText = ""; UpdateStatus(); }
+                        }));
+                }
+                else
+                {
+                    baseText = msg;
+                    UpdateStatus();
+                }
             });
             var result = await _verificationReportService.RunAsync(
-                roots, maxParallel, activityLog: onNotice, progress: onScanned, _verifyCts.Token);
+                roots, maxParallel, activityLog: onNotice, progress: onScanned, _verifyCts.Token, deepVerify);
             VerifyStatus.Text = "Writing workbook…";
             // Off the UI thread: ClosedXML builds the whole workbook in memory and SaveAs is
             // CPU-heavy — a 100k-row run froze the window for a long time.
@@ -219,6 +249,7 @@ public partial class HistoryDialog : Window
             DeleteButton.IsEnabled = ReportList.SelectedItem != null;
             ExportButton.IsEnabled = ReportList.SelectedItem != null;
             VerifyButton.IsEnabled = ReportList.SelectedItem is SavedReportSummary r && r.Roots.Count > 0;
+            DeepVerifyCheckBox.IsEnabled = true;
             VerifyCancelButton.Visibility = Visibility.Collapsed;
             VerifyStatus.Visibility = Visibility.Collapsed;
         }

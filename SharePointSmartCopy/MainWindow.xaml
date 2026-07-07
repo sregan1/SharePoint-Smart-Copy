@@ -1521,6 +1521,7 @@
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Margin="0,8,0,8">
@@ -1548,12 +1549,22 @@
                                     Visibility="{Binding IsVerifying, Converter={StaticResource BoolToVis}}">
                                 <TextBlock Text="Cancel"/>
                             </Button>
+                            <CheckBox IsChecked="{Binding DeepVerifyOfficeFiles}" Margin="14,0,0,0" FontSize="12"
+                                      VerticalAlignment="Center" IsEnabled="{Binding IsVerifying, Converter={StaticResource InvBool}}"
+                                      AutomationProperties.Name="Deep verify Office files">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="Deep verify Office files" VerticalAlignment="Center"/>
+                                    <TextBlock Style="{StaticResource ToolTipIcon}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip MaxWidth="280">
+                                                <TextBlock TextWrapping="Wrap" FontSize="12"
+                                                           Text="Downloads both copies of each mismatched Office file and compares their internal content, ignoring the metadata parts SharePoint rewrites on upload (Document ID, custom properties, etc.). Slower — use when a hash or date difference needs to be proven real or harmless."/>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </StackPanel>
+                            </CheckBox>
                         </StackPanel>
-                        <TextBlock Grid.Column="1" Text="{Binding StatusMessage}" ToolTip="{Binding StatusMessage}"
-                                   FontSize="12" Margin="12,0,12,0"
-                                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
-                                   Foreground="{DynamicResource TextTertiaryBrush}"
-                                   Visibility="{Binding IsVerifying, Converter={StaticResource BoolToVis}}"/>
                         <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter" Content="All"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=All}"/>
@@ -1577,7 +1588,16 @@
                             </RadioButton>
                         </StackPanel>
                     </Grid>
-                    <Border Grid.Row="1" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1">
+
+                    <!-- Full-width row below the button bar — wraps rather than truncates, so a
+                         long status message (deep-verify progress, throttle notices, file counts) is
+                         always fully visible instead of being clipped in a narrow shared column. -->
+                    <TextBlock Grid.Row="1" Text="{Binding StatusMessage}"
+                               FontSize="12" Margin="0,0,0,8" TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextTertiaryBrush}"
+                               Visibility="{Binding IsVerifying, Converter={StaticResource BoolToVis}}"/>
+
+                    <Border Grid.Row="2" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1">
                         <DataGrid ItemsSource="{Binding FileResultsView}"
                                   AutoGenerateColumns="False" IsReadOnly="True"
                                   CanUserAddRows="False" GridLinesVisibility="Horizontal"

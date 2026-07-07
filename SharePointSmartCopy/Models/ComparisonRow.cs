@@ -17,12 +17,20 @@ namespace SharePointSmartCopy.Models;
 // size is missing too, the row is reported as Unverified — never as a fabricated Match. Office/OLE
 // rows additionally short-circuit to Match when both quickXorHashes are present and EQUAL (equal
 // hashes are always trustworthy; they only stop being meaningful when they differ).
+//
+// The opt-in "Deep verify Office files" pass (see VerificationReportService's deep-verify pass and
+// OpcDeepComparer) can additionally resolve a ContentMismatch/DateMismatch to Match when the OOXML
+// package's content parts are byte-identical and only the parts SharePoint rewrites (docProps,
+// customXml, etc.) differ — reported as an ordinary Match with an explanatory Note, not a separate
+// status, so a user doesn't need to know deep verify exists to read the summary correctly.
 public enum ComparisonStatus { Match, ContentMismatch, DateMismatch, OnlyInSource, OnlyInTarget, Unverified }
 
 public sealed class ComparisonRow
 {
     public required string RelativePath { get; init; }
-    public required ComparisonStatus Status { get; init; }
+    // Settable: the deep-verify pass revisits a row's cheap-tier status after downloading and
+    // comparing the actual file content (see VerificationReportService).
+    public required ComparisonStatus Status { get; set; }
 
     // Raw signals from each side, whenever that side's file exists — populated regardless of which
     // signal actually decided Status, so the Comparison sheet can show source/target values for
@@ -31,4 +39,15 @@ public sealed class ComparisonRow
     public string? TargetHash { get; init; }
     public DateTimeOffset? SourceModified { get; init; }
     public DateTimeOffset? TargetModified { get; init; }
+    // Populated for every row (not just ones the size fallback actually used) so the report can
+    // show what it compared even for rows where hash is unavailable — a blank Source/Target
+    // Value column previously gave no indication a size comparison had even run, let alone what
+    // it found, for the "hash missing on one side" fallback path.
+    public long? SourceSize { get; init; }
+    public long? TargetSize { get; init; }
+
+    // Set by the deep-verify pass to explain what it found or why it couldn't run for this row
+    // (e.g. which content part differed, or "skipped — cap reached"). Null for rows deep verify
+    // never touched.
+    public string? Note { get; set; }
 }

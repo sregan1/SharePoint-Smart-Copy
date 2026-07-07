@@ -48,6 +48,14 @@ public class AppSettings
     public bool      CopyPermissions      { get; set; } = false;
     public AppTheme  Theme                { get; set; } = AppTheme.System;
 
+    // Deep verify: opt-in, off by default — see SharePointSmartCopy/Docs/DEEP-VERIFY-PLAN.md.
+    // The checkbox in each Verify UI is seeded from this value and persists the user's last choice,
+    // but the LIVE checkbox state (not a re-read of this setting) is what gates any given run.
+    // No candidate-count cap or time budget — a run always deep-verifies every candidate (removed
+    // 2026-07-10 at the user's request; a per-file size cap still exists in
+    // VerificationReportService to avoid downloading pathologically large single files).
+    public bool DeepVerifyOfficeFiles    { get; set; } = false;
+
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
         WriteIndented = true,

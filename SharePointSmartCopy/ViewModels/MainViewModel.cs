@@ -65,6 +65,7 @@ public partial class MainViewModel : ObservableObject
         CopyLibraryContent  = Settings.CopyLibraryContent;
         RemapPageWebPartUrls = Settings.RemapPageWebPartUrls;
         CopyPermissions      = Settings.CopyPermissions;
+        DeepVerifyOfficeFiles = Settings.DeepVerifyOfficeFiles;
 
         SourceLibraries.CollectionChanged += (_, _) =>
         {
@@ -792,6 +793,11 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private int _packedCount;
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsCancelable))] [NotifyCanExecuteChangedFor(nameof(ExportVerificationReportCommand))] private bool _isVerifying;
 
+    // Opt-in "Deep verify Office files" (see Docs/DEEP-VERIFY-PLAN.md). Seeded from Settings so the
+    // checkbox remembers the user's last choice, but ExportVerificationReportAsync reads THIS live
+    // property (not Settings) when it kicks off a run — this is the only gate for the whole feature.
+    [ObservableProperty] private bool _deepVerifyOfficeFiles;
+
     // Frozen at copy-start (not a live binding to the Options step) so it always reflects what
     // this run actually started with, even if the Options step's fields could otherwise still
     // change — needed so mid-run/after-the-fact you can tell what a run was configured with
@@ -893,6 +899,14 @@ public partial class MainViewModel : ObservableObject
     partial void OnIsCopyingChanged(bool value)          => UpdateSleepPrevention();
     partial void OnIsVerifyingChanged(bool value)        => UpdateSleepPrevention();
     partial void OnIsUpdatingMetadataChanged(bool value) => UpdateSleepPrevention();
+
+    // Persisted immediately (unlike the Step 3 Options, which save on Next) since this checkbox
+    // lives on the Verify controls, not a step with its own commit point.
+    partial void OnDeepVerifyOfficeFilesChanged(bool value)
+    {
+        Settings.DeepVerifyOfficeFiles = value;
+        Settings.Save();
+    }
     private void UpdateSleepPrevention()
     {
         if (IsCopying || IsVerifying || IsUpdatingMetadata) Services.SleepPreventionService.Begin();
@@ -2434,16 +2448,31 @@ public partial class MainViewModel : ObservableObject
         StartActivityLogFile();
         if (ActivityLogPath != null)
             PushActivity($"Activity log: {ActivityLogPath}");
-        var onActivity = new Progress<string>(PushActivity);
+        // StatusMessage previously only ever got updated by scan progress below — once the scan
+        // finished and the deep-verify pass started, its own progress messages (which DO arrive here
+        // via onActivity/PushActivity, appended to the scrolling log) never replaced the single
+        // status line, which stayed frozen on the last "found X source, Y target" text for the
+        // entire deep-verify phase, making an actively-running verification look stalled. "⚠"-
+        // prefixed messages (throttle waits, scan errors) are excluded — those are transient blips
+        // that belong in the log, not overwriting the main status line on every occurrence.
+        var onActivity = new Progress<string>(msg =>
+        {
+            PushActivity(msg);
+            if (!msg.StartsWith('⚠'))
+                StatusMessage = msg;
+        });
         var onScanned  = new Progress<VerificationReportService.ScanProgress>(p =>
             StatusMessage = $"Verifying… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)");
+
+        // Live checkbox state, not a settings re-read — see the field's own doc comment.
+        bool deepVerify = DeepVerifyOfficeFiles;
 
         try
         {
             StatusMessage = "Re-scanning source and target for verification…";
             var roots  = VerificationRoot.FromCopyJobs(CopyJobs);
             var result = await _verificationReportService.RunAsync(
-                roots, MaxParallelCopies, onActivity, onScanned, _verifyCts.Token);
+                roots, MaxParallelCopies, onActivity, onScanned, _verifyCts.Token, deepVerify);
             StatusMessage = "Writing verification workbook…";
             // Off the UI thread: ClosedXML SaveAs is CPU-heavy on 100k+ row runs.
             await Task.Run(() => ExcelReportWriter.Write(dlg.FileName, result));

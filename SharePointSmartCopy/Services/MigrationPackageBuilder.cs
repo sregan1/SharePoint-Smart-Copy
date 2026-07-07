@@ -196,6 +196,23 @@ public class MigrationPackageBuilder
             manifest[name] = EncryptXml(doc);
         }
 
+        // BUG FIX (2026-07-07): BuildManifest() below calls GetUserId() for every folder's
+        // Author/ModifiedBy (see FolderTimeAndAuthor) — the ONLY registration for those emails,
+        // since (unlike files, which are pre-registered per-file in AddFileAsync above, well
+        // before this method runs) folders have no separate pre-registration step. UserGroup.xml
+        // must therefore be built AFTER Manifest.xml's construction runs, not before: building it
+        // first (as originally written, with UserGroup.xml added ahead of Manifest.xml below)
+        // meant any user who appears ONLY as a folder's Author/ModifiedBy — never as any file's
+        // Author/Editor in the same batch — got a numeric ID with no corresponding UserGroup.xml
+        // entry. SharePoint can't resolve that reference and silently attributes the folder to
+        // whichever account is running the import instead. Confirmed via a real run: a targeted
+        // single-file re-copy (very few users registered in that batch) showed every affected
+        // folder's Modified By as the importing user rather than the real source author — the bug
+        // is general, just far more likely to bite a small batch than a large, author-diverse one.
+        var manifestXml = BuildManifest(
+            siteId, webId, listId, siteUrl, webServerRelativeUrl, libraryTitle, libraryServerRelativeUrl,
+            rootFolderGuid, folderGuids, folderMetadata);
+
         Add("ExportSettings.xml",              BuildExportSettings(siteUrl, overwrite));
         Add("LookupOrAddUserNamesFromSourceSite.xml", BuildUserNames());
         Add("Requirements.xml",               BuildRequirements());
@@ -203,9 +220,7 @@ public class MigrationPackageBuilder
         Add("SystemData.xml",                  BuildSystemData());
         Add("UserGroup.xml",                   BuildUserGroupMap());
         Add("ViewFormsList.xml",               BuildViewFormsList());
-        Add("Manifest.xml",                    BuildManifest(
-            siteId, webId, listId, siteUrl, webServerRelativeUrl, libraryTitle, libraryServerRelativeUrl,
-            rootFolderGuid, folderGuids, folderMetadata));
+        Add("Manifest.xml",                    manifestXml);
 
         return manifest;
     }

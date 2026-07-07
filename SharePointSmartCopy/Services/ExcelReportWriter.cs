@@ -27,9 +27,9 @@ public static class ExcelReportWriter
 
     private static void WriteOverviewSheet(IXLWorksheet ws, VerificationReportService.Result result)
     {
-        int onlyInSource   = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInSource);
-        int onlyInTarget   = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInTarget);
-        int matched        = result.Comparison.Count(r => r.Status == ComparisonStatus.Match);
+        int onlyInSource    = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInSource);
+        int onlyInTarget    = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInTarget);
+        int matched         = result.Comparison.Count(r => r.Status == ComparisonStatus.Match);
         int contentMismatch = result.Comparison.Count(r => r.Status == ComparisonStatus.ContentMismatch);
         int dateMismatch    = result.Comparison.Count(r => r.Status == ComparisonStatus.DateMismatch);
         int unverified      = result.Comparison.Count(r => r.Status == ComparisonStatus.Unverified);
@@ -38,53 +38,64 @@ public static class ExcelReportWriter
         ws.Cell(1, 1).Style.Font.Bold = true;
         ws.Cell(1, 1).Style.Font.FontSize = 14;
 
-        ws.Cell(3, 1).Value = "Files in Source";
-        ws.Cell(3, 2).Value = result.SourceFiles.Count;
-        ws.Cell(4, 1).Value = "Files in Target";
-        ws.Cell(4, 2).Value = result.TargetFiles.Count;
-        ws.Cell(5, 1).Value = "Matched (in both)";
-        ws.Cell(5, 2).Value = matched;
-        ws.Cell(6, 1).Value = "Content Mismatch";
-        ws.Cell(6, 2).Value = contentMismatch;
-        ws.Cell(7, 1).Value = "Date Mismatch";
-        ws.Cell(7, 2).Value = dateMismatch;
-        ws.Cell(8, 1).Value = "Only in Source";
-        ws.Cell(8, 2).Value = onlyInSource;
-        ws.Cell(9, 1).Value = "Only in Target";
-        ws.Cell(9, 2).Value = onlyInTarget;
-        ws.Cell(10, 1).Value = "Unverified (no comparable signal)";
-        ws.Cell(10, 2).Value = unverified;
-        ws.Range(3, 1, 10, 1).Style.Font.Bold = true;
-
-        // Not merged: Excel does not reliably auto-size row height for wrapped text in a merged
-        // cell (a well-known Excel limitation, not a ClosedXML bug), which clipped this message.
-        // Left in a single unmerged cell, AdjustToContents below widens column 1 to fit it on one
-        // line instead — the fill is still applied across the row for the banner look.
-        var messageCell = ws.Cell(12, 1);
-        XLColor fill;
+        // Headline banner comes FIRST, ahead of the breakdown table — a user should be able to open
+        // this sheet and know in one glance whether everything matched, not read eight numbers and
+        // do the arithmetic themselves. Not merged (Excel doesn't reliably auto-size row height for
+        // wrapped text in a merged cell, a well-known Excel limitation); the fill spans the row for
+        // the banner look, AdjustToContents below widens column 1 to fit each line.
         bool noDifferences = onlyInSource == 0 && onlyInTarget == 0 && contentMismatch == 0
                           && dateMismatch == 0 && result.ScanErrors.Count == 0;
+        var headline = ws.Cell(3, 1);
+        var detail   = ws.Cell(4, 1);
+        headline.Style.Font.Bold = true;
+        headline.Style.Font.FontSize = 16;
+        XLColor fill;
         if (noDifferences && unverified == 0)
         {
-            messageCell.Value = "✓ Exact match — every file in source was found in target, with no extras.";
+            headline.Value = "✓ ALL FILES MATCH";
+            detail.Value   = $"{matched:N0} file(s) matched — every file in source was found in target, with no extras.";
             fill = MatchFill;
         }
         else if (noDifferences)
         {
-            messageCell.Value = $"✓ No differences found, but {unverified:N0} file(s) had no comparable signal (hash and size unavailable) and could not be verified — see the Comparison tab.";
+            headline.Value = "✓ NO DIFFERENCES FOUND";
+            detail.Value   = $"{matched:N0} file(s) matched, but {unverified:N0} file(s) had no comparable signal (hash and size unavailable) and could not be verified — see the Comparison tab.";
             fill = UnverifiedFill;
         }
         else
         {
-            var parts = new List<string> { "⚠ Differences found — see the Comparison tab for details." };
-            if (unverified > 0)
-                parts.Add($"{unverified:N0} file(s) could not be verified (no comparable signal).");
-            if (result.ScanErrors.Count > 0)
-                parts.Add($"{result.ScanErrors.Count} location(s) could not be scanned — see the Scan Errors tab.");
-            messageCell.Value = string.Join(" ", parts);
+            headline.Value = "⚠ CONTENT DOES NOT MATCH";
+            var parts = new List<string> { $"{matched:N0} file(s) matched." };
+            if (contentMismatch > 0) parts.Add($"{contentMismatch:N0} content mismatch.");
+            if (dateMismatch    > 0) parts.Add($"{dateMismatch:N0} date mismatch.");
+            if (onlyInSource    > 0) parts.Add($"{onlyInSource:N0} only in source.");
+            if (onlyInTarget    > 0) parts.Add($"{onlyInTarget:N0} only in target.");
+            if (unverified      > 0) parts.Add($"{unverified:N0} could not be verified (no comparable signal).");
+            if (result.ScanErrors.Count > 0) parts.Add($"{result.ScanErrors.Count} location(s) could not be scanned — see the Scan Errors tab.");
+            parts.Add("See the Comparison tab for details.");
+            detail.Value = string.Join(" ", parts);
             fill = MismatchFill;
         }
-        ws.Range(12, 1, 12, 4).Style.Fill.BackgroundColor = fill;
+        ws.Range(3, 1, 3, 5).Style.Fill.BackgroundColor = fill;
+        ws.Range(4, 1, 4, 5).Style.Fill.BackgroundColor = fill;
+
+        ws.Cell(6, 1).Value = "Files in Source";
+        ws.Cell(6, 2).Value = result.SourceFiles.Count;
+        ws.Cell(7, 1).Value = "Files in Target";
+        ws.Cell(7, 2).Value = result.TargetFiles.Count;
+        ws.Cell(8, 1).Value = "Matched (in both)";
+        ws.Cell(8, 2).Value = matched;
+        ws.Cell(9, 1).Value = "Content Mismatch";
+        ws.Cell(9, 2).Value = contentMismatch;
+        ws.Cell(10, 1).Value = "Date Mismatch";
+        ws.Cell(10, 2).Value = dateMismatch;
+        ws.Cell(11, 1).Value = "Only in Source";
+        ws.Cell(11, 2).Value = onlyInSource;
+        ws.Cell(12, 1).Value = "Only in Target";
+        ws.Cell(12, 2).Value = onlyInTarget;
+        ws.Cell(13, 1).Value = "Unverified (no comparable signal)";
+        ws.Cell(13, 2).Value = unverified;
+        ws.Range(6, 1, 13, 1).Style.Font.Bold = true;
 
         ws.Columns(1, 2).AdjustToContents();
     }
@@ -114,38 +125,53 @@ public static class ExcelReportWriter
         ws.Cell(1, 2).Value = "Status";
         ws.Cell(1, 3).Value = "Source Value";
         ws.Cell(1, 4).Value = "Target Value";
-        FormatHeader(ws, 4);
+        ws.Cell(1, 5).Value = "Note";
+        FormatHeader(ws, 5);
 
         int row = 2;
         foreach (var r in rows.OrderBy(r => r.RelativePath, StringComparer.OrdinalIgnoreCase))
         {
             ws.Cell(row, 1).Value = r.RelativePath;
             ws.Cell(row, 2).Value = r.Status.ToString();
-            SetComparisonValue(ws.Cell(row, 3), r, r.SourceHash, r.SourceModified);
-            SetComparisonValue(ws.Cell(row, 4), r, r.TargetHash, r.TargetModified);
+            // Decided ONCE per row, not independently per cell: ClassifyMatch only trusts a hash
+            // comparison when BOTH sides have one — if either is missing, the verdict was decided
+            // by size on both sides. Picking hash-if-available per cell independently could show a
+            // hash for the side that has one right next to a size for the side that doesn't, which
+            // looks like an apples-to-oranges comparison even though the actual decision was
+            // size-vs-size throughout.
+            bool bothHashesPresent = r.SourceHash != null && r.TargetHash != null;
+            SetComparisonValue(ws.Cell(row, 3), r, r.SourceHash, r.SourceModified, r.SourceSize, bothHashesPresent);
+            SetComparisonValue(ws.Cell(row, 4), r, r.TargetHash, r.TargetModified, r.TargetSize, bothHashesPresent);
+            ws.Cell(row, 5).Value = r.Note ?? "";
 
             var fill = r.Status switch
             {
-                ComparisonStatus.Match      => MatchFill,
-                ComparisonStatus.Unverified => UnverifiedFill,
-                _                           => MismatchFill,
+                ComparisonStatus.Match       => MatchFill,
+                ComparisonStatus.Unverified  => UnverifiedFill,
+                _                            => MismatchFill,
             };
-            ws.Range(row, 1, row, 4).Style.Fill.BackgroundColor = fill;
+            ws.Range(row, 1, row, 5).Style.Fill.BackgroundColor = fill;
             row++;
         }
 
-        FinishSheet(ws, row - 1, 4);
+        FinishSheet(ws, row - 1, 5);
     }
 
     // Shows whichever signal was actually used to compare this file (see ComparisonStatus):
-    // modified date for Office/OLE compound-document formats, content hash for everything else.
-    // Left blank when that side has no file at all (Only in Source/Target) or the signal wasn't available.
-    private static void SetComparisonValue(IXLCell cell, ComparisonRow r, string? hash, DateTimeOffset? modified)
+    // modified date for Office/OLE compound-document formats, content hash when BOTH sides have
+    // one, otherwise file size for BOTH sides — matching ClassifyMatch's own logic, which only
+    // trusts a hash comparison when both sides have a hash and falls back to size for the pair
+    // otherwise (Graph returns a null quickXorHash for a nontrivial share of items in listings).
+    // Left genuinely blank only when that side has no file at all (Only in Source/Target) or no
+    // signal of any kind was available.
+    private static void SetComparisonValue(IXLCell cell, ComparisonRow r, string? hash, DateTimeOffset? modified, long? size, bool bothHashesPresent)
     {
         if (VerificationReportService.OfficeReserializedExtensions.Contains(Path.GetExtension(r.RelativePath)))
             SetModified(cell, modified);
-        else
+        else if (bothHashesPresent)
             cell.Value = hash;
+        else if (size.HasValue)
+            cell.Value = $"{size.Value:N0} bytes (by size — hash unavailable on at least one side)";
     }
 
     private static void WriteScanErrorsSheet(IXLWorksheet ws, List<string> errors)

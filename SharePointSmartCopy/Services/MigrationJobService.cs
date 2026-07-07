@@ -123,6 +123,12 @@ public class MigrationJobService(SharePointService spService)
             foreach (var driveGroup in driveGroups)
             {
                 var groupTasks = driveGroup.ToList();
+                // Full pre-skip task list: folder metadata (dates + Author/Editor) must cover EVERY
+                // folder in the selection, not just folders of files that still need copying —
+                // otherwise an up-to-date re-run can never repair folder metadata (the exact
+                // scenario after a completed 123k-file migration whose folder people fields are
+                // wrong: the fix must not require re-transferring anything).
+                var allGroupTasks = groupTasks;
                 var firstJob   = groupTasks[0].job;
 
                 var libraryServerRelUrl = firstJob.TargetLibraryServerRelativeUrl;
@@ -353,7 +359,175 @@ public class MigrationJobService(SharePointService spService)
                     }
                     groupTasks = toProcess;
                 }
-                if (groupTasks.Count == 0) continue; // whole drive group already copied
+                // Source folder created/modified metadata (relative path → metadata; "" = library root),
+                // so the manifest's SPFolder objects carry real dates/authors instead of a placeholder,
+                // and the post-import REST correction pass can set folder Author/Editor (which SPMI's
+                // <Folder> element does not honor). Built from allGroupTasks — the FULL pre-skip
+                // selection — not the needs-copy subset: folder metadata repair must cover every
+                // folder even on a fully-up-to-date re-run where nothing transfers (the repair path
+                // for an already-completed migration with wrong folder people fields).
+                // Key by the slash-trimmed path so it matches the SPFolder `relPath` keys the manifest
+                // builder uses (which come from TargetSubFolderPath.Trim('/')).
+                var directFolderGroups = allGroupTasks
+                    .Where(t => !string.IsNullOrEmpty(t.job.TargetSubFolderPath))
+                    .GroupBy(t => t.job.TargetSubFolderPath!.Trim('/'), StringComparer.OrdinalIgnoreCase)
+                    .Where(g => g.Key.Length > 0)
+                    .ToDictionary(g => g.Key,
+                        g => (driveId: g.First().job.SourceDriveId, sampleFileItemId: g.First().job.SourceItemId),
+                        StringComparer.OrdinalIgnoreCase);
+
+                // BUG FIX (2026-07-07): a folder containing ONLY subfolders — no file directly inside
+                // it — never appeared as a key above, so it silently kept MigrationPackageBuilder's
+                // hardcoded placeholder date. This surfaced as the two largest folders in a real run
+                // (114k and 5k files) showing a bogus 2000-01-01 date on the folder itself, because both
+                // organize everything into dated/categorized subfolders with nothing loose at their own
+                // top level — large, well-organized trees hit this far more often than small flat ones.
+                // Every ancestor segment of every file's path needs an entry (same expansion used for
+                // folderGuids below), not just paths that happen to hold a file directly. For an ancestor
+                // with no direct files, borrow the shallowest descendant that HAS one and walk up the
+                // extra levels via repeated parentReference hops — still ID-based, so folder/file names
+                // containing '#'/'%'/'+' are unaffected (unlike path-based Graph addressing elsewhere in
+                // this codebase, which specifically has to avoid those).
+                var folderMetaInput = new List<(string folderKey, string driveId, string sampleFileItemId, int hopsUp)>();
+                var allAncestorFolderPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var key in directFolderGroups.Keys)
+                {
+                    var segs = key.Split('/');
+                    for (int i = 1; i <= segs.Length; i++)
+                        allAncestorFolderPaths.Add(string.Join('/', segs[..i]));
+                }
+                foreach (var path in allAncestorFolderPaths)
+                {
+                    if (directFolderGroups.TryGetValue(path, out var direct))
+                    {
+                        folderMetaInput.Add((path, direct.driveId, direct.sampleFileItemId, 0));
+                        continue;
+                    }
+                    var pathDepth = path.Count(c => c == '/') + 1;
+                    var prefix    = path + "/";
+                    int bestDepth = int.MaxValue;
+                    (string driveId, string sampleFileItemId)? best = null;
+                    foreach (var (leafPath, leafInfo) in directFolderGroups)
+                    {
+                        if (!leafPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) continue;
+                        var leafDepth = leafPath.Count(c => c == '/') + 1;
+                        if (leafDepth < bestDepth) { bestDepth = leafDepth; best = leafInfo; }
+                    }
+                    // Every ancestor path was derived FROM some direct-file leaf above, so a matching
+                    // descendant always exists — best is never null here, but guard defensively anyway.
+                    if (best.HasValue)
+                        folderMetaInput.Add((path, best.Value.driveId, best.Value.sampleFileItemId, bestDepth - pathDepth));
+                }
+                // Previously silent — for a deep/wide folder structure this is 2+ Graph calls per
+                // distinct folder, each subject to Kiota's own throttle retries, and could run for a
+                // long time right after the metadata-analysis pass above with zero visible progress,
+                // making the app look hung. Report it the same way as that pass.
+                if (folderMetaInput.Count > 0)
+                    activityLog?.Report($"Fetching metadata for {folderMetaInput.Count:N0} folders...");
+                var folderProgress = new Progress<int>(d =>
+                {
+                    if (folderMetaInput.Count > 20 && (d % 100 == 0 || d == folderMetaInput.Count))
+                        activityLog?.Report($"Fetching folder metadata: {d:N0} / {folderMetaInput.Count:N0}");
+                });
+                var folderMetadata = await spService.FetchFolderMetadataAsync(
+                    allGroupTasks[0].job.SourceDriveId, folderMetaInput, maxConcurrency: 6,
+                    progress: folderProgress, ct: cancellationToken);
+                // Surfaced so a repeat of the "silently placeholder-dated folder" symptom is visible
+                // immediately in the log instead of only being discovered by eye in SharePoint later.
+                int foldersMissingMetadata = folderMetaInput.Count - folderMetadata.Count;
+                if (foldersMissingMetadata > 0)
+                    activityLog?.Report($"⚠ {foldersMissingMetadata:N0} folder(s) could not be dated (Graph lookup failed after retries) — they will show a 2000-01-01 placeholder date instead of their real source date");
+
+                // Post-import correction: SPMI's <Folder> manifest element doesn't honor
+                // Author/ModifiedBy (confirmed 2026-07-08 — even a brand-new folder creation still
+                // attributes to the importing account), unlike <File>, which sets both correctly via
+                // the same GetUserId/UserGroup.xml mechanism. Patch every folder we have source
+                // metadata for directly via REST — the WHOLE selection (root and every nested level),
+                // regardless of which batch (or whether ANY batch) touched which folder. Re-sends
+                // date alongside Author/Editor in the same call (see PatchFolderMetadataAsync) since
+                // a separate author-only write would otherwise reset Modified to "now".
+                async Task CorrectFolderMetadataAsync()
+                {
+                    var foldersNeedingAuthorFix = folderMetadata
+                        .Where(kv => !string.IsNullOrEmpty(kv.Value.CreatedByEmail) || !string.IsNullOrEmpty(kv.Value.ModifiedByEmail))
+                        .ToList();
+                    // Distinguish "we never had a source email to try" (folderMetadata's CreatedByEmail/
+                    // ModifiedByEmail came back null — GetIdentityEmail found no email/UPN on the Graph
+                    // identity for that folder) from "we tried and SharePoint rejected it" — these look
+                    // identical to the user (folder still shows the importing account) but have completely
+                    // different causes and fixes, and conflating them was making this hard to diagnose.
+                    int foldersMissingSourceEmail = folderMetadata.Count - foldersNeedingAuthorFix.Count;
+                    if (foldersMissingSourceEmail > 0)
+                        activityLog?.Report($"⚠ {foldersMissingSourceEmail:N0} folder(s) had no source Author/Modified-By email available — cannot correct those, they will show the importing account");
+                    if (foldersNeedingAuthorFix.Count == 0) return;
+
+                    activityLog?.Report($"Correcting folder metadata (dates + authorship) for {foldersNeedingAuthorFix.Count:N0} of {folderMetadata.Count:N0} folder(s)...");
+                    int authorFixFailures = 0;
+                    int authorFixDone = 0;
+                    var sampleErrors = new System.Collections.Concurrent.ConcurrentBag<string>();
+                    await Parallel.ForEachAsync(foldersNeedingAuthorFix,
+                        new ParallelOptions { MaxDegreeOfParallelism = 6, CancellationToken = cancellationToken },
+                        async (kv, ct) =>
+                        {
+                            var (relKey, meta) = kv;
+                            var folderRelUrl = string.IsNullOrEmpty(relKey) ? libraryServerRelUrl : $"{libraryServerRelUrl}/{relKey}";
+                            var guid = await GetCachedFolderUniqueIdAsync(sharedFolderUniqueIdCache, targetSiteUrl, folderRelUrl, ct);
+                            if (string.IsNullOrEmpty(guid))
+                            {
+                                Interlocked.Increment(ref authorFixFailures);
+                                sampleErrors.Add($"{(relKey.Length == 0 ? "(library root)" : relKey)}: could not resolve target folder GUID");
+                            }
+                            else
+                            {
+                                // Date and author go in the SAME call: a separate author-only write
+                                // after SPMI already set the correct date would bump Modified back to
+                                // "now" as a side effect (see PatchFolderMetadataAsync's doc comment).
+                                var err = await spService.PatchFolderMetadataAsync(
+                                    targetSiteUrl, listId, guid!, meta.CreatedDateTime, meta.ModifiedDateTime,
+                                    meta.CreatedByEmail, meta.ModifiedByEmail);
+                                if (err != null)
+                                {
+                                    Interlocked.Increment(ref authorFixFailures);
+                                    sampleErrors.Add($"{(relKey.Length == 0 ? "(library root)" : relKey)}: {err}");
+                                }
+                            }
+                            // Previously silent for the whole pass — on a large tree under sustained
+                            // throttling this ran for tens of minutes with zero visible progress,
+                            // indistinguishable from a hang (a real run: 39 minutes of nothing but
+                            // throttle-wait lines). Mirrors the "Fetching folder metadata: N / M"
+                            // reporting already used for the fetch phase just before this one.
+                            int done = Interlocked.Increment(ref authorFixDone);
+                            if (foldersNeedingAuthorFix.Count > 20 && (done % 100 == 0 || done == foldersNeedingAuthorFix.Count))
+                                activityLog?.Report($"Correcting folder metadata: {done:N0} / {foldersNeedingAuthorFix.Count:N0}");
+                        });
+                    // Never silent: a failure here leaves that folder attributed to the importing
+                    // account rather than crashing the run — surfaced with actual error text (not
+                    // just a count) so a real cause (e.g. the source's real author/editor not
+                    // existing as a resolvable account on the target — expected in a cross-tenant
+                    // migration, since SharePoint literally cannot attribute a Person field to an
+                    // account that doesn't exist there) is visible immediately instead of triggering
+                    // another guess-and-check round.
+                    if (authorFixFailures > 0)
+                    {
+                        var examples = string.Join(" | ", sampleErrors.Distinct().Take(3));
+                        activityLog?.Report($"⚠ Could not correct metadata for {authorFixFailures:N0} folder(s). Example(s): {examples}");
+                    }
+                    else
+                    {
+                        activityLog?.Report($"✓ Folder metadata verified for {foldersNeedingAuthorFix.Count:N0} folder(s)");
+                    }
+                }
+
+                if (groupTasks.Count == 0)
+                {
+                    // Whole drive group already copied — nothing to import, but the folder metadata
+                    // correction still runs. This is the cheap repair path for a completed migration
+                    // whose folder dates/people are wrong: re-run the same selection in Copy-If-Newer,
+                    // every file skips, and this pass patches every folder without re-transferring
+                    // anything.
+                    await CorrectFolderMetadataAsync();
+                    continue;
+                }
 
                 // Split into SEQUENTIAL jobs small enough that SharePoint imports them cleanly. Above a
                 // ceiling SP fails every SPListItem with "Missing file info for list item" → the
@@ -410,33 +584,6 @@ public class MigrationJobService(SharePointService spService)
                 int cacheMisses = groupTasks.Count(t => !metaCache.ContainsKey(t.job.SourceItemId));
                 if (cacheMisses > 0)
                     activityLog?.Report($"⚠ {cacheMisses:N0} file(s) missing metadata after retries — version counts may be approximate for those");
-
-                // Source folder created/modified metadata (relative path → metadata; "" = library root),
-                // so the manifest's SPFolder objects carry real dates/authors instead of a placeholder.
-                // One sample file per distinct folder identifies the source folder (its parent). Shared
-                // across all batches in this drive group.
-                // Key by the slash-trimmed path so it matches the SPFolder `relPath` keys the manifest
-                // builder uses (which come from TargetSubFolderPath.Trim('/')).
-                var folderMetaInput = groupTasks
-                    .Where(t => !string.IsNullOrEmpty(t.job.TargetSubFolderPath))
-                    .GroupBy(t => t.job.TargetSubFolderPath!.Trim('/'))
-                    .Where(g => g.Key.Length > 0)
-                    .Select(g => (folderKey: g.Key, driveId: g.First().job.SourceDriveId, sampleFileItemId: g.First().job.SourceItemId))
-                    .ToList();
-                // Previously silent — for a deep/wide folder structure this is 2 Graph calls per
-                // distinct folder, each subject to Kiota's own throttle retries, and could run for a
-                // long time right after the metadata-analysis pass above with zero visible progress,
-                // making the app look hung. Report it the same way as that pass.
-                if (folderMetaInput.Count > 0)
-                    activityLog?.Report($"Fetching metadata for {folderMetaInput.Count:N0} folders...");
-                var folderProgress = new Progress<int>(d =>
-                {
-                    if (folderMetaInput.Count > 20 && (d % 100 == 0 || d == folderMetaInput.Count))
-                        activityLog?.Report($"Fetching folder metadata: {d:N0} / {folderMetaInput.Count:N0}");
-                });
-                var folderMetadata = await spService.FetchFolderMetadataAsync(
-                    groupTasks[0].job.SourceDriveId, folderMetaInput, maxConcurrency: 6,
-                    progress: folderProgress, ct: cancellationToken);
 
                 int VersionsOf((CopyJob job, CopyResult result) t)
                 {
@@ -707,6 +854,11 @@ public class MigrationJobService(SharePointService spService)
                 {
                     spService.Throttled -= onMigrationThrottle;
                 }
+
+                // Post-import correction (see CorrectFolderMetadataAsync above): SPMI's <Folder>
+                // element doesn't honor Author/ModifiedBy, so folder people fields are patched via
+                // REST after the imports complete.
+                await CorrectFolderMetadataAsync();
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)

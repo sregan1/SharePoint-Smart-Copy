@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 3.2.0  ·  July 2026**
+**Version 3.3.0  ·  July 2026**
 
 ---
 
@@ -32,7 +32,7 @@ Two copy engines are available. **Migration API** mode uses SharePoint's server-
 - **Migration API mode** — exact version numbers, exact dates, exact editors (requires Site Collection Admin on target)
 - **Enhanced REST mode** — correct dates and editors per version; no admin rights required
 - **Copy-if-newer** incremental mode — only copies files that are newer on the source, skipping files already up to date
-- **Person/User and Managed Metadata columns** copied alongside content — no manual field re-entry
+- **Person/User, Managed Metadata, and Lookup columns** copied alongside content — no manual field re-entry
 - Custom column mapping dialog — map source columns to matching target columns or create missing ones
 - Automatic HTTP 429 throttle handling — large jobs complete without interruption
 - Parallel transfers with 1–16 simultaneous file copies for faster bulk operations
@@ -217,7 +217,7 @@ When **Copy versions** is enabled, two additional controls appear:
 
 The **Copy mode** selector is always available in Advanced options and controls how files are transferred:
 
-- **Migration API (Recommended)** — version numbers on the target exactly match the source (1.0, 2.0, 3.0…), with the correct Modified date and editor per version, and correct folder creation/modification dates. With Copy Versions off, only the current version is imported via the same fast batched path. Requires Site Collection Administrator on the target site. Hover the ⓘ icon for a summary.
+- **Migration API (Recommended)** — version numbers on the target exactly match the source (1.0, 2.0, 3.0…), with the correct Modified date and editor per version, and correct folder creation/modification dates and Created By/Modified By. With Copy Versions off, only the current version is imported via the same fast batched path. Requires Site Collection Administrator on the target site. Hover the ⓘ icon for a summary.
 - **Enhanced REST** — correct dates and editors per version, but version numbers are 2× the source count (e.g. 2, 4, 6 for a 3-version file) due to a SharePoint REST constraint. No admin rights required. Hover the ⓘ icon for a summary.
 
 > **Note:** Choose **Migration API** when exact version numbers matter or for large batches. Choose **Enhanced REST** when you do not have Site Collection Admin rights, or for small quick copies where sequential numbering is not critical.
@@ -298,6 +298,7 @@ Uses SharePoint's built-in Migration Import API (SPMI). Files are packaged clien
 - No per-file progress during SP's processing phase — results appear only after the full job completes
 - Error reporting is at the job level; individual file failures may have limited detail
 - Requires `AllSites.FullControl` delegated permission and Site Collection Administrator membership on the target site
+- Any single file version larger than 2 GB cannot be copied in this mode (each version is buffered fully in memory for encryption) — use Enhanced REST for files with a version this large
 
 ### Enhanced REST
 
@@ -347,10 +348,10 @@ The resulting workbook contains:
 
 | Sheet | Contents |
 |---|---|
-| **Overview** | Summary counts — matched, content mismatch, date mismatch, only in source, only in target |
+| **Overview** | A one-glance headline (✓ all files match, or ⚠ content does not match) followed by summary counts — matched, content mismatch, date mismatch, only in source, only in target |
 | **Source** | Every file found on the source side, with its relative path |
 | **Target** | Every file found on the target side, with its relative path |
-| **Comparison** | Every relative path with its match status (Match, Content Mismatch, Date Mismatch, Only in Source, or Only in Target), plus the actual Source Value and Target Value that were compared — a content hash for most files, a modified date for Office files, blank on whichever side has no file |
+| **Comparison** | Every relative path with its match status (Match, Content Mismatch, Date Mismatch, Only in Source, Only in Target, or Unverified), plus the Source Value/Target Value that were compared and a Note explaining anything Deep Verify found |
 | **Scan Errors** | Present only if a source or target root could not be scanned (e.g. it was deleted or renamed since the copy) |
 
 > **Note:** Whether a file went missing is confirmed by relative path (does a file with the same name and location exist on both sides). Whether its *content* actually matches uses a different signal depending on file type, because a single approach doesn't work for everything:
@@ -361,6 +362,8 @@ The resulting workbook contains:
 > **Preserve Metadata must have been enabled on the original copy** for the Office-file date check to be meaningful — if it was off, the target's date was never set to match the source, and a Date Mismatch does not necessarily indicate a real problem.
 >
 > Verification can only be run for saved reports that recorded their source/target scope. Runs from before this feature was added do not have that information, and the **Verify** button is disabled for them.
+
+**Deep verify Office files** (optional checkbox next to Verify): the date-based check above proves SharePoint preserved the modified date, not that the file's actual content matches — a rewritten-but-corrupt Office file could still pass. Checking this box downloads both copies of every modern Word/Excel/PowerPoint/Visio file (`.docx`/`.xlsx`/`.pptx`/`.vsdx` and variants) whose hash or date disagreed, and compares their actual internal content, ignoring only the specific parts SharePoint itself rewrites (Document ID stamps, custom document properties, and similar metadata). A file that's byte-identical in content is reported as an ordinary **Match** — with a Note on the Comparison tab explaining it was confirmed by deep verify — even though its raw hash differed. This is slower — it downloads files rather than just listing them — so it only runs on files that need it, but every flagged file is always checked; there's no cap or time limit that would leave some unverified. Off by default; legacy binary Office formats and non-Office files are unaffected by this option.
 
 ---
 
@@ -382,11 +385,12 @@ The resulting workbook contains:
 ### Files are failing with errors
 
 - **File too large** — SharePoint Online supports files up to 250 GB. Files above this limit cannot be copied.
+- **"File version is X GB — larger than the 2 GB this mode can buffer" (Migration API mode)** — a single version of the file exceeds what this mode can hold in memory during encryption. Switch to **Enhanced REST** mode for that file (or the whole batch).
 - **File is checked out** — check the file back in at the source site before retrying.
 - **Permission denied** — verify the signed-in account has Contribute or higher access on the target folder.
 - **Path too long** — SharePoint Online has a 400-character limit on the full URL path. Shorten folder names or use a shallower structure.
 - **Throttling (429 Too Many Requests)** — the Microsoft Graph API rate-limits heavy usage. The application retries automatically, but very large batches may take longer.
-- **"SharePoint aborted the batch after N name conflicts — clearing and retrying" in the activity log (Migration API mode)** — this is expected automatic recovery, not a failure. SharePoint's Migration API cancels an entire import batch once enough files at the destination already exist, which would otherwise discard every other valid file in that batch. The app detects this, removes the conflicting files, and resubmits the batch once. If the retry also fails, the affected files are reported individually in the final results — re-running the copy again typically clears them, since a fresh pre-flight scan re-detects the current state of the target.
+- **"SharePoint aborted the batch after N name conflicts" in the activity log (Migration API mode)** — this is expected automatic recovery, not a failure. SharePoint's Migration API cancels an entire import batch once enough files at the destination already exist, which would otherwise discard every other valid file in that batch. With **Skip existing** selected, the app marks the conflicting files Skipped (matching what Skip means) and resubmits the rest once. With **Overwrite** or **If newer**, the app clears the conflicting targets and resubmits the whole batch once. If a retry still fails, the affected files are reported individually in the final results — re-running the copy again typically clears them, since a fresh pre-flight scan re-detects the current state of the target.
 
 ### Version history not copying
 

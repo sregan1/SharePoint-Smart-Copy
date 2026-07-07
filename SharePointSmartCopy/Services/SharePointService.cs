@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
@@ -959,14 +960,19 @@ public class SharePointService
     }
 
     // Fetches each SOURCE folder's created/modified metadata for the migration manifest (folders
-    // otherwise get a hardcoded placeholder date, which surfaced as a wrong "1999" timestamp on the
-    // target). `folders` maps a caller key (the folder's relative path) to a sample FILE item id inside
-    // that folder — the file's parentReference IS the folder, so this needs no path-mapping assumptions.
-    // The library root ("" key) is read from the drive root. Parallel + the Graph client's own throttle
-    // retries; a folder that can't be read is simply absent (the builder keeps the placeholder for it).
+    // otherwise get a hardcoded placeholder date, which surfaced as a wrong "1999"/"2000" timestamp
+    // on the target). `folders` maps a caller key (the folder's relative path) to a sample FILE item
+    // id and a hop count: hopsUp=0 means the file sits DIRECTLY in that folder (its parentReference
+    // IS the folder); hopsUp=N means the caller is borrowing a file from N levels deeper and this
+    // method must walk up N extra parentReference links to reach the actual target folder — needed
+    // for a folder that contains only subfolders and no files of its own (see the 2026-07-07 fix in
+    // MigrationJobService, where the shallowest such descendant file is chosen). Still entirely
+    // ID-based, so folder/file names containing '#'/'%'/'+' are unaffected. The library root ("" key)
+    // is read from the drive root. Parallel + the Graph client's own throttle retries; a folder that
+    // can't be resolved is simply absent (the builder keeps the placeholder for it).
     public async Task<Dictionary<string, FileMetadata>> FetchFolderMetadataAsync(
         string rootDriveId,
-        IReadOnlyList<(string folderKey, string driveId, string sampleFileItemId)> folders,
+        IReadOnlyList<(string folderKey, string driveId, string sampleFileItemId, int hopsUp)> folders,
         int maxConcurrency,
         IProgress<int>? progress = null,
         CancellationToken ct = default)
@@ -999,9 +1005,15 @@ public class SharePointService
                 {
                     var file = await Graph.Drives[f.driveId].Items[f.sampleFileItemId].GetAsync(cfg =>
                         cfg.QueryParameters.Select = ["parentReference"], cancellationToken: c);
-                    var parentId = file?.ParentReference?.Id;
-                    if (string.IsNullOrEmpty(parentId)) return;
-                    result[f.folderKey] = await GetFileMetadataAsync(f.driveId, parentId);
+                    var currentId = file?.ParentReference?.Id;
+                    for (int hop = 0; hop < f.hopsUp && !string.IsNullOrEmpty(currentId); hop++)
+                    {
+                        var folderItem = await Graph.Drives[f.driveId].Items[currentId].GetAsync(cfg =>
+                            cfg.QueryParameters.Select = ["parentReference"], cancellationToken: c);
+                        currentId = folderItem?.ParentReference?.Id;
+                    }
+                    if (string.IsNullOrEmpty(currentId)) return;
+                    result[f.folderKey] = await GetFileMetadataAsync(f.driveId, currentId);
                 }
                 catch { /* keep placeholder */ }
                 finally { progress?.Report(Interlocked.Increment(ref completed)); }
@@ -1060,6 +1072,405 @@ public class SharePointService
         return null;
     }
 
+    // Corrects a folder's Created/Modified/Author/Editor via REST after a Migration API import.
+    // SPMI's <Folder> manifest element supports TimeCreated/TimeLastModified (confirmed working)
+    // but NOT Author/ModifiedBy — SharePoint silently attributes every imported folder to the
+    // account running the import, even on a brand-new folder creation, even though the exact same
+    // GetUserId/UserGroup.xml mechanism correctly sets Author/ModifiedBy on <File> elements. This
+    // is the one thing SPMI can't do for folders, so it's patched separately via the same
+    // ValidateUpdateListItem REST call already used for per-version file editor correction.
+    //
+    // Date and author are set in ONE call, not two: any write to a list item bumps its own
+    // Modified timestamp to "now" by default unless that SAME write also explicitly re-specifies
+    // Modified — a separate author-only follow-up call after SPMI already set the correct date
+    // would silently clobber it back to "now" (observed 2026-07-08: a freshly-corrected folder
+    // showed as modified "a minute ago" — exactly when this pass ran).
+    //
+    // Takes the folder's SharePoint UniqueId (GUID) and the target library's list ID —
+    // GetFolderById resolves the folder's own list item ID from the GUID (still fully ID-based, so
+    // folder/file names containing '#'/'%'/'+' are unaffected), and the actual field write goes
+    // through the direct lists('{listId}')/items({itemId}) path, matching the file-patch method
+    // exactly. NOTE: the real fix for the "invalid date range" misattribution bug turned out to be
+    // the Person field VALUE FORMAT (see below), not this path — routing through the direct path
+    // was tried first and kept since it now matches the proven file mechanism exactly, but it's
+    // unconfirmed whether the nested GetFolderById(...)/ListItemAllFields/ValidateUpdateListItem()
+    // path would have worked fine with the corrected Person format too.
+    public async Task<string?> PatchFolderMetadataAsync(
+        string siteUrl, string listId, string folderUniqueId,
+        DateTimeOffset? createdDateTime, DateTimeOffset? modifiedDateTime,
+        string? createdByEmail, string? modifiedByEmail)
+    {
+        if (createdDateTime == null && modifiedDateTime == null &&
+            string.IsNullOrEmpty(createdByEmail) && string.IsNullOrEmpty(modifiedByEmail))
+            return null;
+
+        // FAST PATH (added 2026-07-10) — the whole-tree repair fix made this correction pass run
+        // unconditionally on EVERY run, even an all-skip Copy-If-Newer re-run, because that's the
+        // only way an already-completed migration's wrong folder metadata gets fixed without a full
+        // re-transfer. But that means a 123,000-file library's routine "anything changed?" re-run
+        // was paying full EnsureUser+digest+CSOM+read-back cost for every folder, forever, not just
+        // the one repair run that actually needed it — observed as a genuinely slow steady-state
+        // re-run after the one-time repair completed successfully. Fix: read the folder's CURRENT
+        // metadata with a single cheap REST call first; if it already matches the source, skip
+        // EnsureUser/digest/CSOM entirely for that folder. Only a folder that's actually wrong (new,
+        // never corrected, or somehow reverted) pays the full cost.
+        int folderItemId;
+        var current = await GetFolderCurrentMetadataAsync(siteUrl, folderUniqueId);
+        if (current != null)
+        {
+            var (id, actualAuthorEmail, actualEditorEmail, actualCreated, actualModified) = current.Value;
+            folderItemId = id;
+            bool authorOk = string.IsNullOrEmpty(createdByEmail) || EmailsMatch(actualAuthorEmail, createdByEmail);
+            bool editorOk = string.IsNullOrEmpty(modifiedByEmail) || EmailsMatch(actualEditorEmail, modifiedByEmail);
+            bool createdOk = createdDateTime == null || DatesClose(actualCreated, createdDateTime.Value);
+            bool modifiedOk = modifiedDateTime == null || DatesClose(actualModified, modifiedDateTime.Value);
+            if (authorOk && editorOk && createdOk && modifiedOk)
+                return null; // already correct — nothing to write
+        }
+        else
+        {
+            // Fall back to the old ID-only resolution if the combined read failed for any reason
+            // (e.g. a transient error) — don't let an optimization's failure block the real fix.
+            var idUrl = $"{siteUrl.TrimEnd('/')}/_api/web/GetFolderById('{folderUniqueId}')/ListItemAllFields/Id";
+            using var idResponse = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, idUrl);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl);
+            var idBody = await idResponse.Content.ReadAsStringAsync();
+            if (!idResponse.IsSuccessStatusCode)
+                return $"Could not resolve folder's list item ID: HTTP {(int)idResponse.StatusCode}: {idBody[..Math.Min(idBody.Length, 200)]}";
+            try
+            {
+                using var idDoc = JsonDocument.Parse(idBody);
+                folderItemId = idDoc.RootElement.ValueKind == JsonValueKind.Object && idDoc.RootElement.TryGetProperty("value", out var v)
+                    ? v.GetInt32()
+                    : idDoc.RootElement.GetInt32();
+            }
+            catch (Exception ex)
+            {
+                return $"Could not parse folder's list item ID from '{idBody[..Math.Min(idBody.Length, 100)]}': {ex.Message}";
+            }
+        }
+
+        // A claims login for a person who has never been referenced anywhere on the target site
+        // doesn't resolve via ValidateUpdateListItem — the site has to know about the account
+        // first (its hidden User Information List), the same requirement any principal-resolution
+        // path in SharePoint has. EnsureUser registers it if missing.
+        //
+        // Unlike the original version of this method, an unresolved user is NOT sent to
+        // ValidateUpdateListItem at all — submitting Editor/Author alongside Modified/Created in
+        // one call and having the Person field fail is a known source of misleading errors:
+        // SharePoint's per-field validation can misattribute a Person-field resolution failure to
+        // an unrelated field in the SAME call (observed 2026-07-08: a folder's real editor doesn't
+        // exist on the target — a plausible cross-tenant migration scenario — and the reported
+        // error was "Modified: You must specify a valid date within the range of 1/1/1900 and
+        // 12/31/8900", not anything mentioning the Editor field at all). Skipping unresolvable
+        // fields up front means the date write still succeeds cleanly, and the reported error
+        // names the actual person field, not a confusing date complaint.
+        var skipped = new List<string>();
+        string? resolvedCreatedBy = createdByEmail;
+        string? resolvedModifiedBy = modifiedByEmail;
+        int? createdById = null;
+        int? modifiedById = null;
+        if (!string.IsNullOrEmpty(createdByEmail))
+        {
+            createdById = await EnsureUserAsync(siteUrl, createdByEmail);
+            if (createdById == null)
+            {
+                skipped.Add($"Author ({createdByEmail} not a resolvable account on this site)");
+                resolvedCreatedBy = null;
+            }
+        }
+        if (!string.IsNullOrEmpty(modifiedByEmail))
+        {
+            if (string.Equals(modifiedByEmail, createdByEmail, StringComparison.OrdinalIgnoreCase))
+            {
+                resolvedModifiedBy = resolvedCreatedBy; // same account — reuse the Author check above
+                modifiedById = createdById;
+            }
+            else
+            {
+                modifiedById = await EnsureUserAsync(siteUrl, modifiedByEmail);
+                if (modifiedById == null)
+                {
+                    skipped.Add($"Editor ({modifiedByEmail} not a resolvable account on this site)");
+                    resolvedModifiedBy = null;
+                }
+            }
+        }
+
+        if (createdById == null && modifiedById == null && createdDateTime == null && modifiedDateTime == null)
+            return skipped.Count > 0 ? $"Nothing to write — skipped: {string.Join(", ", skipped)}" : null;
+
+        // TENTH attempt 2026-07-09 — REST is now fully exhausted (Person-field format x2, REST path
+        // x2, bNewDocumentUpdate x2, field combination x2 — nine variations, all producing the
+        // identical "accepted but silently ignored" symptom for Author/Editor while Modified/Created
+        // always worked). Research into how migration tools like ShareGate actually pull this off
+        // turned up the real answer, from an archived Microsoft engineer note: setting Author/Editor
+        // to an ARBITRARY (non-calling) user requires SharePoint's THIRD update mode,
+        // `UpdateOverwriteVersion()` — distinct from both `Update()` (always stamps the calling
+        // account as Editor, confirmed via research) and `SystemUpdate()`/`bNewDocumentUpdate`
+        // (silently leaves Editor/Author unchanged, confirmed by our own read-back testing above).
+        // REST's ValidateUpdateListItem has NO equivalent to UpdateOverwriteVersion — only CSOM
+        // exposes it — which is exactly why every REST permutation failed identically no matter what
+        // was changed in the request. Switched the actual field write to a CSOM ProcessQuery call.
+        string? csomError = await PatchFolderViaCsomAsync(
+            siteUrl, listId, folderItemId, createdById, modifiedById, createdDateTime, modifiedDateTime,
+            resolvedCreatedBy, resolvedModifiedBy);
+        if (csomError != null)
+            return csomError + (skipped.Count > 0 ? $" | also skipped: {string.Join(", ", skipped)}" : "");
+
+        // The write itself succeeded, but still report it as a failure if a person field had
+        // to be skipped up front — the folder is only partially corrected (date fixed, that
+        // one person field still shows the importing account), and that's not "no error".
+        return skipped.Count > 0 ? $"Partially corrected — skipped: {string.Join(", ", skipped)}" : null;
+    }
+
+    // Sets a folder's Author/Editor/Created/Modified via CSOM's ProcessQuery endpoint, using
+    // UpdateOverwriteVersion() — the only SharePoint update mode that both (a) does not force
+    // Editor to the calling account (unlike a regular Update()) and (b) actually applies an
+    // explicitly-set Editor/Author value instead of silently ignoring it (unlike SystemUpdate(),
+    // confirmed unable to set Editor per Microsoft Q&A 914732 and PnP-PowerShell#2016). REST's
+    // ValidateUpdateListItem has no equivalent mode, which is why it could never do this.
+    private async Task<string?> PatchFolderViaCsomAsync(
+        string siteUrl, string listId, int itemId, int? authorUserId, int? editorUserId,
+        DateTimeOffset? created, DateTimeOffset? modified,
+        string? expectedAuthorEmail, string? expectedEditorEmail)
+    {
+        if (authorUserId == null && editorUserId == null && created == null && modified == null)
+            return null;
+
+        string? digest = await GetFormDigestAsync(siteUrl);
+        if (digest == null)
+            return "Could not obtain a request digest for the CSOM call";
+
+        const string fieldUserValueTypeId = "{c956ab54-16bd-4c18-89d2-996f57282a6f}";
+        const string clientContextTypeId = "{3747adcd-a3c3-41b9-bfab-4a64dd2f1e0a}";
+
+        var objectPaths = new StringBuilder();
+        objectPaths.Append($"<StaticProperty Id=\"1\" TypeId=\"{clientContextTypeId}\" Name=\"Current\" />");
+        objectPaths.Append("<Property Id=\"2\" ParentId=\"1\" Name=\"Web\" />");
+        objectPaths.Append("<Property Id=\"3\" ParentId=\"2\" Name=\"Lists\" />");
+        objectPaths.Append($"<Method Id=\"4\" ParentId=\"3\" Name=\"GetById\"><Parameters><Parameter Type=\"Guid\">{listId}</Parameter></Parameters></Method>");
+        objectPaths.Append($"<Method Id=\"5\" ParentId=\"4\" Name=\"GetItemById\"><Parameters><Parameter Type=\"Number\">{itemId}</Parameter></Parameters></Method>");
+
+        var actions = new StringBuilder();
+        int nextId = 10;
+        void SetFieldValueLiteral(string fieldName, string xmlValue)
+        {
+            actions.Append($"<Method Name=\"SetFieldValue\" Id=\"{nextId++}\" ObjectPathId=\"5\"><Parameters>" +
+                $"<Parameter Type=\"String\">{System.Security.SecurityElement.Escape(fieldName)}</Parameter>{xmlValue}" +
+                "</Parameters></Method>");
+        }
+        // FieldUserValue is a CSOM "ValueObject", not a server-tracked object — it's passed INLINE
+        // as a typed Parameter directly in the method call (a <Parameter TypeId="..."><Property .../>
+        // </Parameter> block), never via a separate <Constructor> ObjectPath + SetProperty pair (that
+        // pattern is for real objects with server-side identity, which a plain value type isn't).
+        // CORRECTED 2026-07-09 after "Cannot find stub for type" — the GUID itself was right, the
+        // Constructor-based usage of it was wrong.
+        void SetPersonField(string fieldName, int userId)
+        {
+            SetFieldValueLiteral(fieldName,
+                $"<Parameter TypeId=\"{fieldUserValueTypeId}\"><Property Name=\"LookupId\" Type=\"Int32\">{userId}</Property></Parameter>");
+        }
+
+        if (authorUserId.HasValue) SetPersonField("Author", authorUserId.Value);
+        if (editorUserId.HasValue) SetPersonField("Editor", editorUserId.Value);
+        if (created.HasValue)
+            SetFieldValueLiteral("Created", $"<Parameter Type=\"DateTime\">{created.Value.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}</Parameter>");
+        if (modified.HasValue)
+            SetFieldValueLiteral("Modified", $"<Parameter Type=\"DateTime\">{modified.Value.ToUniversalTime():yyyy-MM-ddTHH:mm:ssZ}</Parameter>");
+        actions.Append($"<Method Name=\"UpdateOverwriteVersion\" Id=\"{nextId++}\" ObjectPathId=\"5\" />");
+
+        var requestXml =
+            "<Request AddExpandoFieldTypeSuffix=\"true\" SchemaVersion=\"15.0.0.0\" LibraryVersion=\"16.0.0.0\" " +
+            "ApplicationName=\"SharePointSmartCopy\" xmlns=\"http://schemas.microsoft.com/sharepoint/clientquery/2009\">" +
+            $"<Actions>{actions}</Actions><ObjectPaths>{objectPaths}</ObjectPaths></Request>";
+
+        try
+        {
+            var url = $"{siteUrl.TrimEnd('/')}/_vti_bin/client.svc/ProcessQuery";
+            using var response = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Add("X-RequestDigest", digest);
+                r.Headers.Accept.ParseAdd("application/json");
+                r.Content = new StringContent(requestXml, System.Text.Encoding.UTF8, "text/xml");
+                return r;
+            }, siteUrl);
+
+            var body = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+                return $"CSOM ProcessQuery HTTP {(int)response.StatusCode}: {body[..Math.Min(body.Length, 300)]}";
+
+            // ProcessQuery's response is a flat JSON array: the first element carries ErrorInfo
+            // (null on success), interleaved afterward with [actionId, resultValue] pairs for any
+            // action that returns data (none of ours do — SetFieldValue/UpdateOverwriteVersion are
+            // void). We only need to check that first element for a non-null ErrorInfo.
+            try
+            {
+                using var doc = JsonDocument.Parse(body);
+                if (doc.RootElement.ValueKind == JsonValueKind.Array && doc.RootElement.GetArrayLength() > 0)
+                {
+                    var first = doc.RootElement[0];
+                    if (first.ValueKind == JsonValueKind.Object &&
+                        first.TryGetProperty("ErrorInfo", out var errInfo) &&
+                        errInfo.ValueKind == JsonValueKind.Object)
+                    {
+                        var msg = errInfo.TryGetProperty("ErrorMessage", out var m) ? m.GetString() : "unknown CSOM error";
+                        var code = errInfo.TryGetProperty("ErrorCode", out var c) ? c.ToString() : "?";
+                        return $"CSOM error (code {code}): {msg}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return $"Could not parse CSOM response: {ex.Message} | body: {body[..Math.Min(body.Length, 300)]}";
+            }
+
+            // As with the REST path, a clean response still isn't proof the Person fields actually
+            // persisted — read the item back and compare.
+            return (authorUserId.HasValue || editorUserId.HasValue)
+                ? await VerifyFolderPersonFieldsAsync(siteUrl, listId, itemId, expectedAuthorEmail, expectedEditorEmail)
+                : null;
+        }
+        catch (Exception ex)
+        {
+            return $"CSOM exception: {ex.Message}";
+        }
+    }
+
+    // Fetches an X-RequestDigest value via _api/contextinfo — required for CSOM ProcessQuery POSTs
+    // even when authenticating with an OAuth bearer token (unlike REST endpoints, which don't need it).
+    private async Task<string?> GetFormDigestAsync(string siteUrl)
+    {
+        try
+        {
+            var url = $"{siteUrl.TrimEnd('/')}/_api/contextinfo";
+            using var response = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                r.Content = new StringContent("", System.Text.Encoding.UTF8, "application/json");
+                return r;
+            }, siteUrl);
+            if (!response.IsSuccessStatusCode) return null;
+            var body = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(body);
+            if (doc.RootElement.TryGetProperty("FormDigestValue", out var fd)) return fd.GetString();
+            if (doc.RootElement.TryGetProperty("GetContextWebInformation", out var gcwi) &&
+                gcwi.TryGetProperty("FormDigestValue", out var fd2)) return fd2.GetString();
+            return null;
+        }
+        catch { return null; }
+    }
+
+    // Single cheap read of a folder's CURRENT Id/Author/Editor/Created/Modified, used by
+    // PatchFolderMetadataAsync's fast path to decide whether any write is needed at all. Returns
+    // null on any failure so the caller can fall back to the old (slower but proven) resolution.
+    private async Task<(int ItemId, string? AuthorEmail, string? EditorEmail, DateTimeOffset? Created, DateTimeOffset? Modified)?>
+        GetFolderCurrentMetadataAsync(string siteUrl, string folderUniqueId)
+    {
+        try
+        {
+            var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFolderById('{folderUniqueId}')/ListItemAllFields" +
+                "?$select=Id,Author/EMail,Editor/EMail,Created,Modified&$expand=Author,Editor";
+            using var response = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl);
+            if (!response.IsSuccessStatusCode) return null;
+
+            var body = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(body);
+            var root = doc.RootElement;
+            if (!root.TryGetProperty("Id", out var idEl)) return null;
+
+            string? authorEmail = root.TryGetProperty("Author", out var a) && a.ValueKind == JsonValueKind.Object &&
+                a.TryGetProperty("EMail", out var ae) ? ae.GetString() : null;
+            string? editorEmail = root.TryGetProperty("Editor", out var e) && e.ValueKind == JsonValueKind.Object &&
+                e.TryGetProperty("EMail", out var ee) ? ee.GetString() : null;
+            DateTimeOffset? created = root.TryGetProperty("Created", out var c) && c.ValueKind == JsonValueKind.String &&
+                DateTimeOffset.TryParse(c.GetString(), out var cv) ? cv : null;
+            DateTimeOffset? modified = root.TryGetProperty("Modified", out var m) && m.ValueKind == JsonValueKind.String &&
+                DateTimeOffset.TryParse(m.GetString(), out var mv) ? mv : null;
+
+            return (idEl.GetInt32(), authorEmail, editorEmail, created, modified);
+        }
+        catch { return null; }
+    }
+
+    private static bool EmailsMatch(string? actual, string? expected) =>
+        !string.IsNullOrEmpty(actual) && string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase);
+
+    // A couple of seconds' tolerance absorbs sub-second precision differences between how SPMI/CSOM
+    // round-trip a DateTime and how Graph originally reported it — not a meaningful "is this stale"
+    // threshold, just enough to avoid false mismatches on values that are actually identical.
+    private static bool DatesClose(DateTimeOffset? actual, DateTimeOffset expected) =>
+        actual.HasValue && Math.Abs((actual.Value - expected).TotalSeconds) < 2;
+
+    // Reads Author/Editor straight back off the item after a ValidateUpdateListItem write and
+    // compares against what was intended. ValidateUpdateListItem can report zero field errors while
+    // still leaving a Person field unchanged (a documented SharePoint quirk with SystemUpdate-style
+    // writes) — this is the only way to tell "actually persisted" from "silently ignored" without
+    // depending on the (possibly cached) SharePoint UI.
+    private async Task<string?> VerifyFolderPersonFieldsAsync(
+        string siteUrl, string listId, int itemId, string? expectedCreatedBy, string? expectedModifiedBy)
+    {
+        if (string.IsNullOrEmpty(expectedCreatedBy) && string.IsNullOrEmpty(expectedModifiedBy))
+            return null;
+
+        try
+        {
+            var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({itemId})" +
+                "?$select=Author/EMail,Author/Name,Editor/EMail,Editor/Name&$expand=Author,Editor";
+            using var response = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl);
+            var body = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+                return null; // don't fail the whole correction over a diagnostic read-back
+
+            using var doc = JsonDocument.Parse(body);
+            string? actualAuthor = doc.RootElement.TryGetProperty("Author", out var a) && a.ValueKind == JsonValueKind.Object
+                ? (a.TryGetProperty("EMail", out var ae) ? ae.GetString() : null) ?? (a.TryGetProperty("Name", out var an) ? an.GetString() : null)
+                : null;
+            string? actualEditor = doc.RootElement.TryGetProperty("Editor", out var e) && e.ValueKind == JsonValueKind.Object
+                ? (e.TryGetProperty("EMail", out var ee) ? ee.GetString() : null) ?? (e.TryGetProperty("Name", out var en) ? en.GetString() : null)
+                : null;
+
+            var problems = new List<string>();
+            if (!string.IsNullOrEmpty(expectedCreatedBy) &&
+                !string.Equals(actualAuthor, expectedCreatedBy, StringComparison.OrdinalIgnoreCase) &&
+                actualAuthor?.IndexOf(expectedCreatedBy, StringComparison.OrdinalIgnoreCase) < 0)
+                problems.Add($"Author still '{actualAuthor}', expected '{expectedCreatedBy}'");
+            if (!string.IsNullOrEmpty(expectedModifiedBy) &&
+                !string.Equals(actualEditor, expectedModifiedBy, StringComparison.OrdinalIgnoreCase) &&
+                actualEditor?.IndexOf(expectedModifiedBy, StringComparison.OrdinalIgnoreCase) < 0)
+                problems.Add($"Editor still '{actualEditor}', expected '{expectedModifiedBy}'");
+
+            return problems.Count > 0
+                ? $"Write reported no error but did not persist — {string.Join("; ", problems)}"
+                : null;
+        }
+        catch
+        {
+            return null; // diagnostic-only — never fail the correction pass because the read-back broke
+        }
+    }
+
     private async Task<string?> PatchTimestampsViaRestAsync(
         string driveId, string itemId, DateTimeOffset? modified, DateTimeOffset? created,
         string? createdByEmail = null, string? modifiedByEmail = null)
@@ -1069,16 +1480,22 @@ public class SharePointService
 
         var (siteUrl, listId, listItemId) = ids.Value;
 
-        // ISO 8601 with a trailing Z: ValidateUpdateListItem parses non-ISO date strings per the
-        // TARGET WEB's regional settings — "M/d/yyyy" transposes day/month on non-US sites (dates
-        // ≤12th silently wrong) and a bare time is interpreted in the site's local time zone,
-        // shifting stored Created/Modified by the UTC offset (which then corrupts Copy-If-Newer
-        // comparisons). ISO-with-Z is unambiguous in both respects on any locale.
+        // CORRECTED 2026-07-08 (was wrong all along, on both files and folders): ValidateUpdateListItem
+        // does NOT reliably parse ISO 8601 strings with a "T"/"Z" designator ("yyyy-MM-ddTHH:mm:ssZ") —
+        // this is a documented quirk (SharePoint/sp-dev-docs#4917, Microsoft Q&A 59836): the endpoint
+        // parses formValues date strings the way a browser form field would, not as machine-readable
+        // JSON dates, and a "T"/"Z"-bearing string can fail that parse and surface as a misleading
+        // "you must specify a valid date within the range of 1/1/1900 and 12/31/8900" error — even
+        // though the date itself is perfectly valid. This is what was actually behind the folder
+        // correction pass failing on every folder regardless of Editor field format or REST path
+        // (both red herrings chased first). The fix is a space-separated, locale-independent format
+        // with no "T"/"Z": "yyyy-MM-dd HH:mm:ss". Still UTC underneath (ToUniversalTime() first) —
+        // only the string shape changes, not the instant it represents.
         var formValues = new List<object>();
         if (modified.HasValue)
-            formValues.Add(new { FieldName = "Modified", FieldValue = modified.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture) });
+            formValues.Add(new { FieldName = "Modified", FieldValue = modified.Value.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) });
         if (created.HasValue)
-            formValues.Add(new { FieldName = "Created",  FieldValue = created.Value.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture) });
+            formValues.Add(new { FieldName = "Created",  FieldValue = created.Value.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) });
         if (!string.IsNullOrEmpty(modifiedByEmail))
             formValues.Add(new { FieldName = "Editor", FieldValue = $"i:0#.f|membership|{modifiedByEmail}" });
         if (!string.IsNullOrEmpty(createdByEmail))

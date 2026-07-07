@@ -27,7 +27,11 @@ public sealed class VerificationReportService(SharePointService spService)
         int maxParallel,
         IProgress<string>? activityLog,
         IProgress<ScanProgress>? progress,
-        CancellationToken ct)
+        CancellationToken ct,
+        // Opt-in "Deep verify Office files" (see Docs/DEEP-VERIFY-PLAN.md). Callers must pass the
+        // LIVE checkbox state here, not a settings re-read — this is the only gate for the whole
+        // feature. Every candidate is deep-verified when this is on — no count cap or time budget.
+        bool deepVerifyOffice = false)
     {
         int softStart = Math.Min(maxParallel, 8);
         using var controller = new AdaptiveParallelismController(maxParallel, softStart);
@@ -120,7 +124,10 @@ public sealed class VerificationReportService(SharePointService spService)
             var sourceFiles = await sourceTask;
             var targetFiles = await targetTask;
             progress?.Report(new ScanProgress(sourceCount, targetCount)); // final tally, bypassing the throttle
-            var comparison  = Merge(sourceFiles, targetFiles);
+            var (comparison, deepCandidates) = Merge(sourceFiles, targetFiles);
+
+            if (deepVerifyOffice && deepCandidates.Count > 0)
+                await RunDeepVerifyPassAsync(deepCandidates, controller, maxParallel, activityLog, ct);
 
             return new Result(sourceFiles, targetFiles, comparison, scanErrors.ToList());
         }
@@ -239,17 +246,24 @@ public sealed class VerificationReportService(SharePointService spService)
     // the original list (modern OOXML only) was producing false positives for every legacy format.
     // Confirmed 2026-07-06: .xlsb (missing from the original OOXML list) showed the same false
     // ContentMismatch pattern — any Office container format not in this set will.
-    internal static readonly HashSet<string> OfficeReserializedExtensions = new(StringComparer.OrdinalIgnoreCase)
+    //
+    // Split into OOXML (ZIP-based) and OLE (compound-binary) so the opt-in deep-verify pass can
+    // target OOXML only — OpcDeepComparer opens the file as a ZIP, which OLE formats aren't.
+    internal static readonly HashSet<string> OoxmlExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        // Modern OOXML (ZIP-based) — Word
+        // Word
         ".docx", ".docm", ".dotx", ".dotm",
-        // Modern OOXML (ZIP-based) — Excel, including the binary-sheet .xlsb variant (still a ZIP
-        // container with the same docProps/customXml parts SharePoint rewrites)
+        // Excel, including the binary-sheet .xlsb variant (still a ZIP container with the same
+        // docProps/customXml parts SharePoint rewrites)
         ".xlsx", ".xlsm", ".xltx", ".xltm", ".xlsb", ".xlam",
-        // Modern OOXML (ZIP-based) — PowerPoint
+        // PowerPoint
         ".pptx", ".pptm", ".potx", ".potm", ".ppsx", ".ppsm", ".ppam", ".sldx", ".sldm",
-        // Modern OOXML (ZIP-based) — Visio
+        // Visio
         ".vsdx", ".vsdm", ".vssx", ".vssm", ".vstx", ".vstm",
+    };
+
+    internal static readonly HashSet<string> OleExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
         // Legacy binary Office formats (OLE Compound File Binary Format) — Word/Excel/PowerPoint
         ".doc", ".dot", ".xls", ".xlt", ".xla", ".ppt", ".pot", ".pps", ".ppa",
         // Legacy binary Office formats (OLE Compound File Binary Format) — Visio/Publisher/Project
@@ -258,31 +272,54 @@ public sealed class VerificationReportService(SharePointService spService)
         ".msg"
     };
 
+    internal static readonly HashSet<string> OfficeReserializedExtensions =
+        new(OoxmlExtensions.Concat(OleExtensions), StringComparer.OrdinalIgnoreCase);
+
     // Absorbs clock/rounding differences (e.g. Migration API manifest timestamps) without masking
     // a genuine metadata-preservation failure.
     private static readonly TimeSpan DateMismatchTolerance = TimeSpan.FromSeconds(5);
 
-    private static List<ComparisonRow> Merge(List<ScannedFile> sourceFiles, List<ScannedFile> targetFiles)
+    // A row whose cheap-tier signals disagreed (or were missing) on an OOXML file — a candidate
+    // for the opt-in deep-verify pass, which needs both sides' DriveId/ItemId to download them.
+    private sealed record DeepVerifyCandidate(ComparisonRow Row, ScannedFile Source, ScannedFile Target);
+
+    private static (List<ComparisonRow> Rows, List<DeepVerifyCandidate> DeepVerifyCandidates) Merge(
+        List<ScannedFile> sourceFiles, List<ScannedFile> targetFiles)
     {
         var targetByPath = new Dictionary<string, ScannedFile>(StringComparer.OrdinalIgnoreCase);
         foreach (var t in targetFiles) targetByPath.TryAdd(t.RelativePath, t);
 
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var rows = new List<ComparisonRow>();
+        var candidates = new List<DeepVerifyCandidate>();
 
         foreach (var s in sourceFiles)
         {
             seen.Add(s.RelativePath);
             targetByPath.TryGetValue(s.RelativePath, out var t);
-            rows.Add(new ComparisonRow
+            var row = new ComparisonRow
             {
                 RelativePath   = s.RelativePath,
                 Status         = ClassifyMatch(s, t),
                 SourceHash     = s.QuickXorHash,
                 TargetHash     = t?.QuickXorHash,
                 SourceModified = s.LastModified,
-                TargetModified = t?.LastModified
-            });
+                TargetModified = t?.LastModified,
+                SourceSize     = s.Size,
+                TargetSize     = t?.Size
+            };
+            rows.Add(row);
+
+            // Candidates need both sides present (to download both) and an OOXML extension (the
+            // deep comparer opens the file as a ZIP, which OLE formats aren't). Excludes the
+            // trusted equal-hash fast path — those are never candidates, deep verify would just
+            // re-confirm what the hash already proved.
+            if (t != null && OoxmlExtensions.Contains(Path.GetExtension(s.RelativePath)) &&
+                !(s.QuickXorHash != null && t.QuickXorHash != null &&
+                  string.Equals(s.QuickXorHash, t.QuickXorHash, StringComparison.Ordinal)))
+            {
+                candidates.Add(new DeepVerifyCandidate(row, s, t));
+            }
         }
 
         foreach (var t in targetFiles)
@@ -293,11 +330,135 @@ public sealed class VerificationReportService(SharePointService spService)
                 RelativePath   = t.RelativePath,
                 Status         = ComparisonStatus.OnlyInTarget,
                 TargetHash     = t.QuickXorHash,
-                TargetModified = t.LastModified
+                TargetModified = t.LastModified,
+                TargetSize     = t.Size
             });
         }
 
-        return rows;
+        return (rows, candidates);
+    }
+
+    // Downloads both copies of each OOXML candidate and compares their content parts, ignoring the
+    // parts SharePoint rewrites independently of content. See Docs/DEEP-VERIFY-PLAN.md §5.5.
+    private async Task RunDeepVerifyPassAsync(
+        List<DeepVerifyCandidate> candidates,
+        AdaptiveParallelismController controller,
+        int maxParallel,
+        IProgress<string>? activityLog,
+        CancellationToken ct)
+    {
+        // Per-file download size cap — a handful of pathologically huge mismatched files shouldn't
+        // be able to exhaust memory. This doesn't shrink the run — it just marks that one file
+        // NotComparable and moves on.
+        const long SizeCapBytes = 250L * 1024 * 1024;
+
+        activityLog?.Report(
+            $"{candidates.Count:N0} Office file(s) need deep verification (hash/date signals disagreed)...");
+
+        int attempted = 0, resolvedToMatch = 0, mismatched = 0, inconclusive = 0;
+
+        var reportLock = new object();
+        var lastReport = DateTimeOffset.MinValue;
+        void ReportDeepProgress(int done, int total)
+        {
+            if (activityLog == null) return;
+            lock (reportLock)
+            {
+                var now = DateTimeOffset.UtcNow;
+                if (now - lastReport < TimeSpan.FromSeconds(3) && done < total) return;
+                lastReport = now;
+            }
+            activityLog.Report($"Deep-verifying Office files: {done:N0} / {total:N0}");
+        }
+
+        // The outer degree just needs to be high enough that AdaptiveParallelismController (not
+        // this loop) is the real gate — same shape as the migration/copy pipelines elsewhere in
+        // this app, which pair a fixed-width Parallel.ForEachAsync with an adaptive inner gate.
+        await Parallel.ForEachAsync(candidates,
+            new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, maxParallel), CancellationToken = ct },
+            async (candidate, itemCt) =>
+            {
+                await controller.WaitAsync(itemCt);
+                try
+                {
+                    var (outcome, skipReason) = await DeepVerifyOneAsync(candidate, SizeCapBytes, itemCt);
+                    ApplyDeepVerifyOutcome(candidate.Row, outcome, skipReason);
+                    Interlocked.Increment(ref attempted);
+                    switch (outcome.Result)
+                    {
+                        case OpcCompareResult.VolatileOnlyDifferences: Interlocked.Increment(ref resolvedToMatch); break;
+                        case OpcCompareResult.ContentMismatch:         Interlocked.Increment(ref mismatched);      break;
+                        case OpcCompareResult.NotComparable:           Interlocked.Increment(ref inconclusive);    break;
+                    }
+                }
+                finally { controller.Release(); }
+
+                ReportDeepProgress(attempted, candidates.Count);
+            });
+
+        activityLog?.Report(
+            $"Deep verify complete: {attempted:N0} compared" +
+            (resolvedToMatch > 0 ? $", {resolvedToMatch:N0} confirmed matched" : "") +
+            (mismatched      > 0 ? $", {mismatched:N0} content mismatch" : "") +
+            (inconclusive    > 0 ? $", {inconclusive:N0} could not be compared" : ""));
+    }
+
+    private async Task<(OpcCompareOutcome Outcome, string? SkipReason)> DeepVerifyOneAsync(
+        DeepVerifyCandidate candidate, long sizeCapBytes, CancellationToken ct)
+    {
+        if ((candidate.Source.Size ?? 0) > sizeCapBytes || (candidate.Target.Size ?? 0) > sizeCapBytes)
+            return (new OpcCompareOutcome(OpcCompareResult.NotComparable, []),
+                $"file exceeds the {sizeCapBytes / (1024 * 1024):N0} MB deep-verify size cap");
+
+        try
+        {
+            using var sourceMs = new MemoryStream();
+            using var targetMs = new MemoryStream();
+            await Task.WhenAll(
+                DownloadIntoAsync(candidate.Source.DriveId, candidate.Source.ItemId, sourceMs, ct),
+                DownloadIntoAsync(candidate.Target.DriveId, candidate.Target.ItemId, targetMs, ct));
+            sourceMs.Position = 0;
+            targetMs.Position = 0;
+
+            var outcome = OpcDeepComparer.Compare(sourceMs, targetMs);
+            return (outcome, outcome.Result == OpcCompareResult.NotComparable
+                ? "not a valid OOXML package (label-encrypted or corrupt)"
+                : null);
+        }
+        catch (OperationCanceledException) { throw; }
+        catch (Exception ex)
+        {
+            return (new OpcCompareOutcome(OpcCompareResult.NotComparable, []), $"download failed: {ex.Message}");
+        }
+    }
+
+    private async Task DownloadIntoAsync(string driveId, string itemId, Stream destination, CancellationToken ct)
+    {
+        using var stream = await spService.DownloadFileAsync(driveId, itemId);
+        await stream.CopyToAsync(destination, ct);
+    }
+
+    // Never downgrades the cheap-tier status just because deep verify couldn't reach a conclusion
+    // (NotComparable) — that would destroy real information (e.g. a genuine DateMismatch) in favor
+    // of a less informative result. Only a definite content verdict changes Status.
+    private static void ApplyDeepVerifyOutcome(ComparisonRow row, OpcCompareOutcome outcome, string? skipReason)
+    {
+        switch (outcome.Result)
+        {
+            case OpcCompareResult.VolatileOnlyDifferences:
+                row.Status = ComparisonStatus.Match;
+                row.Note   = "Deep verify: content parts identical — only SharePoint-rewritten metadata (Document ID, custom properties, etc.) differs.";
+                break;
+            case OpcCompareResult.ContentMismatch:
+                row.Status = ComparisonStatus.ContentMismatch;
+                row.Note   = outcome.DifferingParts.Count > 0
+                    ? $"Deep verify: content differs in {string.Join(", ", outcome.DifferingParts)}"
+                    : "Deep verify: content differs.";
+                break;
+            case OpcCompareResult.NotComparable:
+                row.Note = $"Deep verify could not run — {skipReason ?? "unknown reason"}. Status reflects the date/hash check only.";
+                break;
+        }
     }
 
     private static ComparisonStatus ClassifyMatch(ScannedFile s, ScannedFile? t)

@@ -164,32 +164,63 @@
 
         <!-- Footer -->
         <Grid Grid.Row="4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <Button Grid.Column="0" x:Name="DeleteButton" Content="Delete Run"
-                    Style="{StaticResource DangerBtn}"
-                    IsEnabled="False" Click="DeleteButton_Click"/>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
-                <TextBlock x:Name="VerifyStatus" FontSize="12" Visibility="Collapsed"
-                           Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center"/>
-                <Button x:Name="VerifyCancelButton" Content="Cancel" Style="{StaticResource DangerBtn}"
-                        Visibility="Collapsed" Margin="10,0,0,0" Click="VerifyCancelButton_Click"/>
-            </StackPanel>
+                <Button Grid.Column="0" x:Name="DeleteButton" Content="Delete Run"
+                        Style="{StaticResource DangerBtn}"
+                        IsEnabled="False" Click="DeleteButton_Click"/>
 
-            <StackPanel Grid.Column="2" Orientation="Horizontal">
-                <Button x:Name="ExportButton" Content="Export CSV"
-                        Style="{StaticResource SecondaryBtn}"
-                        IsEnabled="False" Margin="0,0,10,0" Click="ExportButton_Click"/>
-                <Button x:Name="VerifyButton" Content="Verify with Excel Report"
-                        Style="{StaticResource SecondaryBtn}"
-                        IsEnabled="False" Margin="0,0,10,0" Click="VerifyButton_Click"/>
-                <Button Content="Close" Style="{StaticResource SecondaryBtn}" Click="Close_Click"/>
-            </StackPanel>
+                <!-- Cancel is alone in this column now — the status message moved to its own
+                     full-width row below, so this button is never at the mercy of unbounded status
+                     text length (that was the earlier bug: sharing a column with it either pushed
+                     Cancel out of view, or truncating the text to protect Cancel cut the message off
+                     instead — neither is acceptable, so they no longer share space at all). -->
+                <Button Grid.Column="1" x:Name="VerifyCancelButton" Content="Cancel" Style="{StaticResource DangerBtn}"
+                        Visibility="Collapsed" Margin="16,0,0,0" HorizontalAlignment="Left"
+                        Click="VerifyCancelButton_Click"/>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <CheckBox x:Name="DeepVerifyCheckBox" VerticalAlignment="Center" FontSize="12"
+                              Margin="0,0,14,0" Checked="DeepVerifyCheckBox_Changed" Unchecked="DeepVerifyCheckBox_Changed"
+                              AutomationProperties.Name="Deep verify Office files">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="Deep verify Office files" VerticalAlignment="Center"/>
+                            <TextBlock Style="{StaticResource ToolTipIcon}">
+                                <TextBlock.ToolTip>
+                                    <ToolTip MaxWidth="280">
+                                        <TextBlock TextWrapping="Wrap" FontSize="12"
+                                                   Text="Downloads both copies of each mismatched Office file and compares their internal content, ignoring the metadata parts SharePoint rewrites on upload (Document ID, custom properties, etc.). Slower — use when a hash or date difference needs to be proven real or harmless."/>
+                                    </ToolTip>
+                                </TextBlock.ToolTip>
+                            </TextBlock>
+                        </StackPanel>
+                    </CheckBox>
+                    <Button x:Name="ExportButton" Content="Export CSV"
+                            Style="{StaticResource SecondaryBtn}"
+                            IsEnabled="False" Margin="0,0,10,0" Click="ExportButton_Click"/>
+                    <Button x:Name="VerifyButton" Content="Verify with Excel Report"
+                            Style="{StaticResource SecondaryBtn}"
+                            IsEnabled="False" Margin="0,0,10,0" Click="VerifyButton_Click"/>
+                    <Button Content="Close" Style="{StaticResource SecondaryBtn}" Click="Close_Click"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Full-width row, own line below the buttons — wraps rather than truncates, so a long
+                 status message (file counts, deep-verify progress, throttle notices) is always fully
+                 visible instead of being clipped by a narrow shared column. -->
+            <TextBlock Grid.Row="1" x:Name="VerifyStatus" FontSize="12" Visibility="Collapsed"
+                       Margin="0,6,0,0" TextWrapping="Wrap"
+                       Foreground="{DynamicResource TextTertiaryBrush}"/>
         </Grid>
     </Grid>
 </Window>

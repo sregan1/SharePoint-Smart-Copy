@@ -44,7 +44,7 @@ Choose from four copy scopes in a step-by-step wizard:
 | **Pages** | Modern SharePoint pages (.aspx), with optional web part URL remapping |
 
 **All scopes:**
-- Custom column values copied — including **Person/User** and **Managed Metadata** columns
+- Custom column values copied — including **Person/User**, **Managed Metadata**, and **Lookup** columns
 - Custom column mapping dialog — map source columns to target columns, or create missing columns in the target
 - Overwrite / skip / **copy-if-newer** incremental mode
 - **Adaptive throttle handling** — each Graph-heavy phase backs off and re-probes independently, so large jobs complete without manual intervention or stalling on shared throttle state
@@ -52,6 +52,7 @@ Choose from four copy scopes in a step-by-step wizard:
 - **Automatic recovery from Migration API batch aborts** — if SharePoint cancels an entire import after hitting its internal per-batch conflict threshold, the app clears the specific conflicting files and retries the batch automatically instead of requiring a manual re-run
 - Detailed per-item report with CSV export and inline permission status
 - Run history viewable in-app, with an independent **Verification Report** (Excel) that re-scans source and target to confirm every file actually landed
+- **Deep Verify** (optional) — for Office files flagged as mismatched, downloads both copies and compares actual internal content, ignoring only the parts SharePoint itself rewrites on upload, so a hash/date difference can be proven real or harmless instead of left unresolved
 - History opens instantly regardless of run size — a saved run's full per-file results load only when you open, export, or verify that run, not for every entry in the list
 
 **Files scope:**
