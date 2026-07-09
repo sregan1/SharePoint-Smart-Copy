@@ -518,6 +518,57 @@ public class MigrationJobService(SharePointService spService)
                     }
                 }
 
+                // Post-import correction: ProgId (e.g. "OneNote.Notebook" for OneNote notebook
+                // folders) is what tells SharePoint's UI a folder is a special container rather
+                // than a plain folder — without it, a copied OneNote notebook shows up as an
+                // ordinary folder full of .onetoc2/.one files instead of opening in the OneNote
+                // web app (2026-07-10 investigation). MigrationPackageBuilder now emits the
+                // source's real ProgId in the manifest, but going by the same "SPMI's <Folder>
+                // element silently drops fields not in {TimeCreated, TimeLastModified}" pattern
+                // already confirmed for Author/ModifiedBy, that's unlikely to be honored on
+                // import — so it's patched via the same kind of REST write afterward, unverified
+                // against a live tenant until this run.
+                async Task CorrectProgIdAsync()
+                {
+                    var foldersNeedingProgIdFix = folderMetadata
+                        .Where(kv => !string.IsNullOrEmpty(kv.Value.ProgId))
+                        .ToList();
+                    if (foldersNeedingProgIdFix.Count == 0) return;
+
+                    activityLog?.Report($"Correcting {foldersNeedingProgIdFix.Count:N0} special folder(s) (e.g. OneNote notebooks)...");
+                    int progIdFixFailures = 0;
+                    var progIdErrors = new System.Collections.Concurrent.ConcurrentBag<string>();
+                    await Parallel.ForEachAsync(foldersNeedingProgIdFix,
+                        new ParallelOptions { MaxDegreeOfParallelism = 6, CancellationToken = cancellationToken },
+                        async (kv, ct) =>
+                        {
+                            var (relKey, meta) = kv;
+                            var folderRelUrl = string.IsNullOrEmpty(relKey) ? libraryServerRelUrl : $"{libraryServerRelUrl}/{relKey}";
+                            var guid = await GetCachedFolderUniqueIdAsync(sharedFolderUniqueIdCache, targetSiteUrl, folderRelUrl, ct);
+                            if (string.IsNullOrEmpty(guid))
+                            {
+                                Interlocked.Increment(ref progIdFixFailures);
+                                progIdErrors.Add($"{(relKey.Length == 0 ? "(library root)" : relKey)}: could not resolve target folder GUID");
+                                return;
+                            }
+                            var err = await spService.PatchFolderProgIdAsync(targetSiteUrl, listId, guid!, meta.ProgId!);
+                            if (err != null)
+                            {
+                                Interlocked.Increment(ref progIdFixFailures);
+                                progIdErrors.Add($"{(relKey.Length == 0 ? "(library root)" : relKey)}: {err}");
+                            }
+                        });
+                    if (progIdFixFailures > 0)
+                    {
+                        var examples = string.Join(" | ", progIdErrors.Distinct().Take(3));
+                        activityLog?.Report($"⚠ Could not correct ProgId for {progIdFixFailures:N0} folder(s). Example(s): {examples}");
+                    }
+                    else
+                    {
+                        activityLog?.Report($"✓ Special folder association verified for {foldersNeedingProgIdFix.Count:N0} folder(s)");
+                    }
+                }
+
                 if (groupTasks.Count == 0)
                 {
                     // Whole drive group already copied — nothing to import, but the folder metadata
@@ -526,6 +577,7 @@ public class MigrationJobService(SharePointService spService)
                     // every file skips, and this pass patches every folder without re-transferring
                     // anything.
                     await CorrectFolderMetadataAsync();
+                    await CorrectProgIdAsync();
                     continue;
                 }
 
@@ -855,10 +907,11 @@ public class MigrationJobService(SharePointService spService)
                     spService.Throttled -= onMigrationThrottle;
                 }
 
-                // Post-import correction (see CorrectFolderMetadataAsync above): SPMI's <Folder>
-                // element doesn't honor Author/ModifiedBy, so folder people fields are patched via
-                // REST after the imports complete.
+                // Post-import correction (see CorrectFolderMetadataAsync/CorrectProgIdAsync above):
+                // SPMI's <Folder> element doesn't honor Author/ModifiedBy or (likely) ProgId, so
+                // both are patched via REST after the imports complete.
                 await CorrectFolderMetadataAsync();
+                await CorrectProgIdAsync();
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)

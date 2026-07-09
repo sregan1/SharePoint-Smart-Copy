@@ -337,6 +337,13 @@ public class MigrationPackageBuilder
             return attrs.ToArray();
         }
 
+        // Real ProgId when we have one (e.g. "OneNote.Notebook" for OneNote notebook folders) —
+        // without it every migrated folder loses whatever special-container association it had on
+        // the source (SPMI's <Folder> element may not even honor this on import; the definitive fix
+        // is the post-import REST correction pass in MigrationJobService, this is best-effort only).
+        string FolderProgId(string relKey) =>
+            folderMetadata != null && folderMetadata.TryGetValue(relKey, out var fm) ? fm.ProgId ?? "" : "";
+
         XElement BuildFields(FileEntry file, VersionEntry currentVersion)
         {
             var fields = new List<object>
@@ -397,7 +404,7 @@ public class MigrationPackageBuilder
                     new XAttribute("Name", libraryTitle),
                     new XAttribute("ParentWebId", webId),
                     new XAttribute("ParentFolderId", listId),
-                    new XAttribute("ProgId", ""),
+                    new XAttribute("ProgId", FolderProgId(string.Empty)),
                     FolderTimeAndAuthor(string.Empty))));
         }
 
@@ -440,7 +447,7 @@ public class MigrationPackageBuilder
                         new XAttribute("Name", name),
                         new XAttribute("ParentWebId", webId),
                         new XAttribute("ParentFolderId", parentGuid),
-                        new XAttribute("ProgId", ""),
+                        new XAttribute("ProgId", FolderProgId(relPath)),
                         FolderTimeAndAuthor(relPath))));
             }
         }

@@ -17,6 +17,13 @@ namespace SharePointSmartCopy.Services;
 
 public class SharePointService
 {
+    // OneNote notebooks (and similar container items) can come back from Graph with only a
+    // "package" facet (packageType "oneNote") and no populated "folder" facet, even though the
+    // item is a real folder with children. Treating those as files misclassifies them throughout
+    // scan/copy/verify — the file-copy path ends up copying the underlying folder anyway (Graph
+    // copies the real object), while our own scan and verification keep comparing it as a file.
+    private static bool IsFolderLike(DriveItem item) => item.Folder != null || item.Package != null;
+
     private readonly AuthService _authService;
     private GraphServiceClient? _graphClient;
     // 30-minute timeout: site copies involve large file downloads and long-running REST calls.
@@ -213,9 +220,9 @@ public class SharePointService
         foreach (var item in items)
         {
             if (item.Id == null || item.Name == null) continue;
-            if (foldersOnly && item.Folder == null) continue;
+            if (foldersOnly && !IsFolderLike(item)) continue;
 
-            bool isFolder = item.Folder != null;
+            bool isFolder = IsFolderLike(item);
             var node = new SharePointNode
             {
                 Id          = item.Id,
@@ -226,7 +233,9 @@ public class SharePointService
                 Type        = isFolder ? NodeType.Folder : NodeType.File,
                 Size        = item.Size,
                 WebUrl      = item.WebUrl,
-                HasChildren = isFolder && (item.Folder?.ChildCount ?? 0) > 0
+                // Package-only folders (e.g. OneNote notebooks) have no Folder facet, so ChildCount
+                // is unavailable — assume they may have children rather than hiding the expander.
+                HasChildren = isFolder && (item.Folder != null ? item.Folder.ChildCount > 0 : true)
             };
 
             if (node.HasChildren)
@@ -241,8 +250,16 @@ public class SharePointService
 
     // One discovered source file, with the modified date the Children listing already carries —
     // captured here so the If Newer overwrite decision never has to re-fetch it per file later.
+    // IsSpecialFolder marks a different kind of entry entirely: a folder (e.g. a OneNote notebook)
+    // that carries a ProgID SharePoint sets internally and doesn't expose as writable via any
+    // public API (see PatchFolderProgIdAsync) — reconstructing it file-by-file through SPMI/Enhanced
+    // REST would silently lose that association, so the walk stops descending into it here and
+    // hands it back as a single unit for the caller to copy natively (Graph's server-side /copy
+    // action, which duplicates the real object instead of rebuilding one). ItemId/Name/RelativePath
+    // refer to the FOLDER itself in that case, not a file, and Modified is unused.
     public readonly record struct SourceFileEntry(
-        string DriveId, string ItemId, string Name, string RelativePath, DateTimeOffset? Modified);
+        string DriveId, string ItemId, string Name, string RelativePath, DateTimeOffset? Modified,
+        bool IsSpecialFolder = false);
 
     // Concurrent replacement for the old sequential recursive walk (same channel + sibling-fan-out
     // pattern as EnumerateFilesWithMetadataAsync below). The sequential version issued ONE Graph
@@ -282,8 +299,18 @@ public class SharePointService
             ct.ThrowIfCancellationRequested();
             if (item.Id == null || item.Name == null) continue;
             var childPath = string.IsNullOrEmpty(basePath) ? item.Name : $"{basePath}/{item.Name}";
-            if (item.Folder != null)
-                subfolderWalks.Add(WalkFilesForCopyAsync(driveId, item.Id, childPath, controller, writer, ct));
+            if (IsFolderLike(item))
+            {
+                // A non-empty ProgID (e.g. "OneNote.Notebook") marks a folder SharePoint treats as
+                // a special container — see SourceFileEntry.IsSpecialFolder. Checked per-folder
+                // (not per-file), so the extra REST call only applies to the tree's folder count.
+                var progId = await GetFolderProgIdAsync(driveId, item.Id);
+                if (!string.IsNullOrEmpty(progId))
+                    await writer.WriteAsync(new SourceFileEntry(
+                        driveId, item.Id, item.Name, childPath, item.LastModifiedDateTime, IsSpecialFolder: true), ct);
+                else
+                    subfolderWalks.Add(WalkFilesForCopyAsync(driveId, item.Id, childPath, controller, writer, ct));
+            }
             else
                 await writer.WriteAsync(new SourceFileEntry(
                     driveId, item.Id, item.Name, childPath, item.LastModifiedDateTime), ct);
@@ -352,7 +379,7 @@ public class SharePointService
             ct.ThrowIfCancellationRequested();
             if (item.Id == null || item.Name == null) continue;
             var childPath = string.IsNullOrEmpty(basePath) ? item.Name : $"{basePath}/{item.Name}";
-            if (item.Folder != null)
+            if (IsFolderLike(item))
             {
                 subfolderWalks.Add(WalkFilesWithMetadataAsync(driveId, item.Id, childPath, controller, writer, ct));
             }
@@ -415,7 +442,7 @@ public class SharePointService
         var page = await Graph.Drives[driveId].Items[resolvedId].Children.GetAsync(cfg =>
         {
             cfg.QueryParameters.Top    = 1000;
-            cfg.QueryParameters.Select = ["id", "name", "file", "folder", "size", "lastModifiedDateTime"];
+            cfg.QueryParameters.Select = ["id", "name", "file", "folder", "package", "size", "lastModifiedDateTime"];
         }, ct);
 
         var items = new List<DriveItem>();
@@ -993,6 +1020,7 @@ public class SharePointService
                     CreatedByEmail   = GetIdentityEmail(root.CreatedBy?.User),
                     ModifiedDateTime = root.LastModifiedDateTime,
                     ModifiedByEmail  = GetIdentityEmail(root.LastModifiedBy?.User),
+                    ProgId           = await GetFolderProgIdAsync(rootDriveId, "root"),
                 };
         }
         catch { /* keep placeholder */ }
@@ -1013,13 +1041,246 @@ public class SharePointService
                         currentId = folderItem?.ParentReference?.Id;
                     }
                     if (string.IsNullOrEmpty(currentId)) return;
-                    result[f.folderKey] = await GetFileMetadataAsync(f.driveId, currentId);
+                    var metadata = await GetFileMetadataAsync(f.driveId, currentId);
+                    var progId   = await GetFolderProgIdAsync(f.driveId, currentId);
+                    result[f.folderKey] = string.IsNullOrEmpty(progId) ? metadata : new FileMetadata
+                    {
+                        CreatedDateTime  = metadata.CreatedDateTime,
+                        CreatedByEmail   = metadata.CreatedByEmail,
+                        ModifiedDateTime = metadata.ModifiedDateTime,
+                        ModifiedByEmail  = metadata.ModifiedByEmail,
+                        Size             = metadata.Size,
+                        ProgId           = progId,
+                        CustomFields     = metadata.CustomFields,
+                    };
                 }
                 catch { /* keep placeholder */ }
                 finally { progress?.Report(Interlocked.Increment(ref completed)); }
             });
 
         return new Dictionary<string, FileMetadata>(result);
+    }
+
+    // Reads a folder's ProgID (e.g. "OneNote.Notebook" for OneNote notebook containers) via
+    // SharePoint REST — Graph has no equivalent property. ProgID is what tells SharePoint's UI a
+    // folder is a special container rather than a plain folder (it's what makes a notebook folder
+    // open in the OneNote web app instead of just browsing into it). This is a property of the
+    // SP.Folder resource, reached here via the list item's /Folder navigation property rather than
+    // GetFolderById(GUID) — an earlier version used Graph's sharepointIds.ListItemUniqueId as that
+    // GUID and it silently 404'd (never confirmed to equal the folder's own UniqueId), which reads
+    // as "no ProgID" identically to a real plain folder, so the bug was invisible without comparing
+    // against a live tenant. Routing through GetSharePointIdsAsync (listId + list-item ID, retried,
+    // already proven reliable elsewhere in this file) and then Folder?$select=ProgID avoids that
+    // GUID-identity assumption entirely. It's silently dropped by the Migration API's <Folder>
+    // import (which only carries TimeCreated/TimeLastModified — see PatchFolderMetadataAsync), so
+    // it has to be read from the source and reapplied after import the same way Author/Editor
+    // already are. Returns null (not empty string) for a plain folder with no ProgID, so callers
+    // can tell "no value" apart from "fetch failed".
+    internal async Task<string?> GetFolderProgIdAsync(string driveId, string itemId)
+    {
+        var ids = await GetSharePointIdsAsync(driveId, itemId);
+        if (ids == null) return null;
+        var (siteUrl, listId, listItemId) = ids.Value;
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({listItemId})/Folder?$select=ProgID";
+        try
+        {
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl);
+            if (!resp.IsSuccessStatusCode) return null;
+            var body = await resp.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(body);
+            var value = doc.RootElement.TryGetProperty("ProgID", out var v) ? v.GetString() : null;
+            return string.IsNullOrEmpty(value) ? null : value;
+        }
+        catch { return null; }
+    }
+
+    // Writes a folder's ProgID via CSOM's ProcessQuery endpoint. A plain REST MERGE on the
+    // SP.Folder resource (GetFolderById(...) + X-HTTP-Method: MERGE) returns HTTP 200 but silently
+    // drops the write — confirmed 2026-07-08 by reading the folder back afterward and finding
+    // ProgID still null, the exact same "accepted but ignored" symptom already documented for
+    // Author/Editor on list items (see PatchFolderViaCsomAsync above). CSOM's Folder.Update() after
+    // a direct SetProperty on the folder object (not a list-item SetFieldValue call) is the
+    // working path for this specific property.
+    public async Task<string?> PatchFolderProgIdAsync(string siteUrl, string listId, string folderUniqueId, string progId)
+    {
+        string? digest = await GetFormDigestAsync(siteUrl);
+        if (digest == null)
+            return "Could not obtain a request digest for the CSOM call";
+
+        const string clientContextTypeId = "{3747adcd-a3c3-41b9-bfab-4a64dd2f1e0a}";
+        var objectPaths =
+            $"<StaticProperty Id=\"1\" TypeId=\"{clientContextTypeId}\" Name=\"Current\" />" +
+            "<Property Id=\"2\" ParentId=\"1\" Name=\"Web\" />" +
+            $"<Method Id=\"3\" ParentId=\"2\" Name=\"GetFolderById\"><Parameters><Parameter Type=\"Guid\">{folderUniqueId}</Parameter></Parameters></Method>";
+        var actions =
+            $"<SetProperty Id=\"10\" ObjectPathId=\"3\" Name=\"ProgID\"><Parameter Type=\"String\">{System.Security.SecurityElement.Escape(progId)}</Parameter></SetProperty>" +
+            "<Method Name=\"Update\" Id=\"11\" ObjectPathId=\"3\" />";
+
+        var requestXml =
+            "<Request AddExpandoFieldTypeSuffix=\"true\" SchemaVersion=\"15.0.0.0\" LibraryVersion=\"16.0.0.0\" " +
+            "ApplicationName=\"SharePointSmartCopy\" xmlns=\"http://schemas.microsoft.com/sharepoint/clientquery/2009\">" +
+            $"<Actions>{actions}</Actions><ObjectPaths>{objectPaths}</ObjectPaths></Request>";
+
+        try
+        {
+            var url = $"{siteUrl.TrimEnd('/')}/_vti_bin/client.svc/ProcessQuery";
+            using var response = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Add("X-RequestDigest", digest);
+                r.Headers.Accept.ParseAdd("application/json");
+                r.Content = new StringContent(requestXml, System.Text.Encoding.UTF8, "text/xml");
+                return r;
+            }, siteUrl);
+
+            var body = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+                return $"CSOM ProcessQuery HTTP {(int)response.StatusCode}: {body[..Math.Min(body.Length, 300)]}";
+
+            using var doc = JsonDocument.Parse(body);
+            if (doc.RootElement.ValueKind == JsonValueKind.Array && doc.RootElement.GetArrayLength() > 0)
+            {
+                var first = doc.RootElement[0];
+                if (first.ValueKind == JsonValueKind.Object &&
+                    first.TryGetProperty("ErrorInfo", out var errInfo) &&
+                    errInfo.ValueKind == JsonValueKind.Object)
+                {
+                    var msg  = errInfo.TryGetProperty("ErrorMessage", out var m) ? m.GetString() : "unknown CSOM error";
+                    var code = errInfo.TryGetProperty("ErrorCode", out var c) ? c.ToString() : "?";
+                    return $"CSOM error (code {code}): {msg}";
+                }
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            return $"CSOM exception: {ex.Message}";
+        }
+    }
+
+    // Checks whether a child with this exact name exists directly under the given parent — used to
+    // decide whether a native folder copy (which has no overwrite concept of its own) should
+    // proceed under Skip/IfNewer.
+    public async Task<bool> ChildExistsAsync(string driveId, string parentItemId, string name)
+    {
+        try
+        {
+            var existing = await Graph.Drives[driveId].Items[parentItemId]
+                .ItemWithPath(Uri.EscapeDataString(name))
+                .GetAsync(cfg => cfg.QueryParameters.Select = ["id"]);
+            return existing?.Id != null;
+        }
+        catch { return false; }
+    }
+
+    // Deletes a child with this exact name directly under the given parent, if one exists — Graph's
+    // native /copy action has no "overwrite" concept of its own (a same-named existing item just
+    // 409s with nameAlreadyExists), so Overwrite mode for a native folder copy has to clear the old
+    // item first. Mirrors the existing-item check CreatePageStubAsync already uses for pages.
+    // Returns true if something was deleted.
+    public async Task<bool> DeleteChildIfExistsAsync(string driveId, string parentItemId, string name)
+    {
+        try
+        {
+            var existing = await Graph.Drives[driveId].Items[parentItemId]
+                .ItemWithPath(Uri.EscapeDataString(name))
+                .GetAsync(cfg => cfg.QueryParameters.Select = ["id"]);
+            if (existing?.Id == null) return false;
+            await Graph.Drives[driveId].Items[existing.Id].DeleteAsync();
+            return true;
+        }
+        catch { return false; }
+    }
+
+    // Copies a special folder (see SourceFileEntry.IsSpecialFolder) as a single server-side Graph
+    // operation instead of reconstructing it file-by-file. Confirmed 2026-07-08: SharePoint's own
+    // "Copy to" feature preserves a OneNote notebook's special behavior across libraries — proof
+    // that a native copy duplicates the real backing object rather than rebuilding a new one from a
+    // manifest/re-upload, which is why this is the only path that can carry over properties like
+    // ProgID that aren't writable through any public API (see PatchFolderProgIdAsync above). Graph's
+    // /copy action is async: it 202s immediately with a Location header pointing at a monitor
+    // resource, which is polled here until it reports completed/failed.
+    public async Task<string?> CopyFolderNativeAsync(
+        string sourceDriveId, string sourceItemId,
+        string targetDriveId, string targetParentItemId, string name,
+        CancellationToken ct = default)
+    {
+        try
+        {
+            var copyBody = JsonSerializer.Serialize(new
+            {
+                parentReference = new { driveId = targetDriveId, id = targetParentItemId },
+                name
+            });
+            var req = new HttpRequestMessage(HttpMethod.Post, $"{GraphBaseUrl}/drives/{sourceDriveId}/items/{sourceItemId}/copy")
+            {
+                Content = new System.Net.Http.StringContent(copyBody, System.Text.Encoding.UTF8, "application/json")
+            };
+            var batch = new BatchRequestContentCollection(Graph);
+            var stepId = batch.AddBatchRequestStep(req);
+            var batchResponse = await Graph.Batch.PostAsync(batch, ct);
+            using var http = await batchResponse.GetResponseByIdAsync(stepId);
+
+            if (http.StatusCode != System.Net.HttpStatusCode.Accepted)
+            {
+                var body = await http.Content.ReadAsStringAsync(ct);
+                return $"Native copy failed to start: HTTP {(int)http.StatusCode}: {body[..Math.Min(body.Length, 300)]}";
+            }
+
+            var monitorUrl = http.Headers.Location?.ToString();
+            if (string.IsNullOrEmpty(monitorUrl))
+                return "Native copy started but returned no monitor URL to track completion";
+
+            // The monitor URL isn't guaranteed to be on graph.microsoft.com — for a SharePoint
+            // (as opposed to OneDrive personal) drive it points at a SharePoint-hosted tracking
+            // endpoint instead, e.g. .../_api/v2.1/drives/.../operations/{id}?...&tempauth=v1.ey...
+            // That tempauth query parameter IS a complete, self-signed bearer credential for this
+            // one resource — attaching an ADDITIONAL Authorization header of our own (confirmed
+            // 2026-07-09: even a correctly-audienced SharePoint token) 401s, presumably because the
+            // endpoint expects exactly one credential and rejects the mismatch/redundancy. So: no
+            // header at all when the URL already carries tempauth; only attach our own bearer token
+            // for the unconfirmed-but-possible case of a bare graph.microsoft.com monitor URL with
+            // no embedded credential of its own.
+            var monitorHost   = new Uri(monitorUrl).Host;
+            var hasEmbeddedAuth = monitorUrl.Contains("tempauth=", StringComparison.OrdinalIgnoreCase);
+            string? token = hasEmbeddedAuth
+                ? null
+                : monitorHost.Equals("graph.microsoft.com", StringComparison.OrdinalIgnoreCase)
+                    ? await _authService.GetAccessTokenAsync(cancellationToken: ct)
+                    : await _authService.GetSharePointTokenAsync($"https://{monitorHost}", cancellationToken: ct);
+            for (int attempt = 0; attempt < 120; attempt++) // up to ~10 minutes for a large notebook
+            {
+                await Task.Delay(TimeSpan.FromSeconds(attempt < 10 ? 2 : 5), ct);
+                using var monReq = new HttpRequestMessage(HttpMethod.Get, monitorUrl);
+                if (token != null) monReq.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                using var monResp = await _httpClient.SendAsync(monReq, ct);
+                var monBody = await monResp.Content.ReadAsStringAsync(ct);
+                if (!monResp.IsSuccessStatusCode)
+                    return $"Native copy monitor failed: HTTP {(int)monResp.StatusCode}: {monBody[..Math.Min(monBody.Length, 300)]} | monitor URL: {monitorUrl}";
+
+                using var monDoc = JsonDocument.Parse(monBody);
+                var status = monDoc.RootElement.TryGetProperty("status", out var s) ? s.GetString() : null;
+                if (string.Equals(status, "completed", StringComparison.OrdinalIgnoreCase)) return null;
+                if (string.Equals(status, "failed", StringComparison.OrdinalIgnoreCase))
+                {
+                    var err = monDoc.RootElement.TryGetProperty("error", out var e) ? e.ToString() : monBody;
+                    return $"Native copy failed: {err[..Math.Min(err.Length, 300)]}";
+                }
+                // otherwise "inProgress"/"notStarted" — keep polling
+            }
+            return "Native copy timed out waiting for completion";
+        }
+        catch (Exception ex)
+        {
+            return $"Native copy exception: {ex.Message}";
+        }
     }
 
     public static string? GetIdentityEmail(Microsoft.Graph.Models.Identity? identity)

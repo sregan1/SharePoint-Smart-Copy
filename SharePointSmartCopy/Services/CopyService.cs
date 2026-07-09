@@ -142,6 +142,21 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         int scannedFiles = 0;
         var lastScanReport = DateTimeOffset.UtcNow;
 
+        // Graph's native /copy action has no overwrite concept — a same-named item at the target
+        // just fails the copy outright (nameAlreadyExists). Overwrite clears it first; Skip/IfNewer
+        // both leave an existing target alone (a folder-level "newer than" comparison isn't
+        // meaningful the way a per-file one is, and this only affects the rare special-folder case).
+        // Returns true if the caller should proceed with the native copy, false to skip it.
+        async Task<bool> PrepareNativeCopyTargetAsync(string driveId, string parentId, string name)
+        {
+            if (overwriteMode == OverwriteMode.Overwrite)
+            {
+                await spService.DeleteChildIfExistsAsync(driveId, parentId, name);
+                return true;
+            }
+            return !await spService.ChildExistsAsync(driveId, parentId, name);
+        }
+
         spService.Throttled += onScanThrottle;
         try
         {
@@ -151,6 +166,49 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 {
                     var result = FindResult(results, job.SourceDisplayPath) ?? CreateResult(job);
                     allTasks.Add((job, result));
+                }
+                else if (!string.IsNullOrEmpty(await spService.GetFolderProgIdAsync(job.SourceDriveId, job.SourceItemId)))
+                {
+                    // The job's OWN root is the special folder (e.g. a notebook selected directly
+                    // as the copy source, not discovered as a descendant during a walk) — the
+                    // per-child check inside EnumerateFilesForCopyAsync never sees this case since
+                    // the walk starts AT this item rather than encountering it as someone's child.
+                    var folderResult = new CopyResult
+                    {
+                        FileName   = job.SourceName,
+                        SourcePath = job.SourceDisplayPath,
+                        TargetPath = job.TargetDisplayPath,
+                        Status     = CopyStatus.Copying
+                    };
+                    pendingResults.Add(folderResult);
+                    activityLog?.Report($"Copying special folder '{job.SourceName}' natively (preserves notebook/package association)...");
+                    try
+                    {
+                        var parentId = await spService.GetOrCreateFolderPathAsync(
+                            job.TargetDriveId, job.TargetParentItemId, job.TargetSubFolderPath);
+                        if (!await PrepareNativeCopyTargetAsync(job.TargetDriveId, parentId, job.SourceName))
+                        {
+                            folderResult.Status = CopyStatus.Skipped;
+                            activityLog?.Report($"⏭ Skipped '{job.SourceName}' — already exists at target");
+                        }
+                        else
+                        {
+                            var copyError = await spService.CopyFolderNativeAsync(
+                                job.SourceDriveId, job.SourceItemId, job.TargetDriveId, parentId, job.SourceName, cancellationToken);
+                            folderResult.Status       = copyError == null ? CopyStatus.Success : CopyStatus.Failed;
+                            folderResult.ErrorMessage = copyError;
+                            activityLog?.Report(copyError == null
+                                ? $"✓ Native copy of '{job.SourceName}' complete"
+                                : $"⚠ Native copy of '{job.SourceName}' failed: {copyError}");
+                        }
+                    }
+                    catch (Exception ex) when (ex is not OperationCanceledException)
+                    {
+                        folderResult.Status       = CopyStatus.Failed;
+                        folderResult.ErrorMessage = ex.Message;
+                        activityLog?.Report($"⚠ Native copy of '{job.SourceName}' failed: {ex.Message}");
+                    }
+                    await FlushPendingResultsAsync();
                 }
                 else
                 {
@@ -165,6 +223,54 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             lastScanReport = DateTimeOffset.UtcNow;
                             activityLog?.Report($"Scanning source: {scannedFiles:N0} file(s) found so far...");
                         }
+
+                        // Special folder (e.g. a OneNote notebook — see SourceFileEntry.IsSpecialFolder):
+                        // copy it as a single native Graph operation right here in the scan loop rather
+                        // than expanding it into per-file CopyJobs — SPMI/Enhanced REST would silently
+                        // lose the property that makes it a notebook (see CopyFolderNativeAsync).
+                        if (entry.IsSpecialFolder)
+                        {
+                            var parentSubFolder = ComputeTargetSubFolder(
+                                relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
+                            var folderResult = new CopyResult
+                            {
+                                FileName   = name,
+                                SourcePath = $"{job.SourceDisplayPath}/{relativePath}",
+                                TargetPath = $"{job.TargetDisplayPath}/{relativePath}",
+                                Status     = CopyStatus.Copying
+                            };
+                            pendingResults.Add(folderResult);
+                            activityLog?.Report($"Copying special folder '{name}' natively (preserves notebook/package association)...");
+                            try
+                            {
+                                var parentId = await spService.GetOrCreateFolderPathAsync(
+                                    job.TargetDriveId, job.TargetParentItemId, parentSubFolder);
+                                if (!await PrepareNativeCopyTargetAsync(job.TargetDriveId, parentId, name))
+                                {
+                                    folderResult.Status = CopyStatus.Skipped;
+                                    activityLog?.Report($"⏭ Skipped '{name}' — already exists at target");
+                                }
+                                else
+                                {
+                                    var copyError = await spService.CopyFolderNativeAsync(
+                                        driveId, itemId, job.TargetDriveId, parentId, name, cancellationToken);
+                                    folderResult.Status       = copyError == null ? CopyStatus.Success : CopyStatus.Failed;
+                                    folderResult.ErrorMessage = copyError;
+                                    activityLog?.Report(copyError == null
+                                        ? $"✓ Native copy of '{name}' complete"
+                                        : $"⚠ Native copy of '{name}' failed: {copyError}");
+                                }
+                            }
+                            catch (Exception ex) when (ex is not OperationCanceledException)
+                            {
+                                folderResult.Status       = CopyStatus.Failed;
+                                folderResult.ErrorMessage = ex.Message;
+                                activityLog?.Report($"⚠ Native copy of '{name}' failed: {ex.Message}");
+                            }
+                            if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
+                            continue;
+                        }
+
                         var targetSubFolder = ComputeTargetSubFolder(
                             relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
                         var fileJob = new CopyJob
