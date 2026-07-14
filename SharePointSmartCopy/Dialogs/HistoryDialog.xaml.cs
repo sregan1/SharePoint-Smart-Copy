@@ -127,7 +127,7 @@ public partial class HistoryDialog : Window
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
             Filter   = "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt",
-            FileName = $"CopyReport_{report.Id}.csv"
+            FileName = $"{SiteUrlHelper.ReportFilenamePrefix(report.SourceUrl, report.TargetUrl, AppSettings.Load().PrefixReportFilenamesWithSiteNames)}CopyReport_{report.Id}.csv"
         };
         if (dlg.ShowDialog() != true) return;
 
@@ -158,7 +158,7 @@ public partial class HistoryDialog : Window
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
             Filter   = "Excel Workbook (*.xlsx)|*.xlsx",
-            FileName = $"VerificationReport_{report.Id}.xlsx"
+            FileName = $"{SiteUrlHelper.ReportFilenamePrefix(report.SourceUrl, report.TargetUrl, AppSettings.Load().PrefixReportFilenamesWithSiteNames)}VerificationReport_{report.Id}.xlsx"
         };
         if (dlg.ShowDialog() != true) return;
 

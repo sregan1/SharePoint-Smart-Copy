@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 3.3.0  ·  July 2026**
+**Version 3.3.1  ·  July 2026**
 
 ---
 
@@ -38,6 +38,7 @@ Two copy engines are available. **Migration API** mode uses SharePoint's server-
 - Parallel transfers with 1–16 simultaneous file copies for faster bulk operations
 - Real-time progress monitoring with per-file status updates (Enhanced REST) or job-level results (Migration API)
 - Copy report with succeeded, failed, and skipped counts, inline permission status, and CSV export
+- **OneNote notebooks** copy correctly as a single native operation, preserving their special notebook association instead of being rebuilt as a plain folder of files
 - **Verification Report** — independently re-scans source and target after a run and produces an Excel workbook confirming what actually matches
 - Full copy history stored locally — browse, re-export, or delete previous runs
 - System sleep is blocked automatically for the duration of a copy, metadata update, or verification
@@ -128,9 +129,11 @@ Before using SharePoint Smart Copy for the first time, a one-time setup is requi
 2. Choose **Microsoft Graph** → **Delegated permissions**. Search for and add: `Sites.ReadWrite.All`
 3. Still under **Microsoft Graph** → **Delegated permissions**. Search for and add: `Files.ReadWrite.All`
 4. Click **Add a permission** again. Choose **SharePoint** → **Delegated permissions**. Search for and add: `AllSites.FullControl`
-5. Click **Grant admin consent for [your organization]** and confirm. This requires the Global Administrator or Cloud Application Administrator role.
+5. Click **Grant admin consent for [your organization]** and confirm. This requires the Global Administrator role (Cloud Application Administrator can add permissions but may not be able to fully consent to all of them).
 
 > **Note:** `AllSites.FullControl` (SharePoint delegated) is required for Migration API mode. If your organization uses only Enhanced REST mode, this permission can be omitted — but the app will display an error if Migration API is selected without it.
+
+> **Important — admin consent is per-tenant:** Consenting to these permissions in one Microsoft 365 tenant has no effect on any other tenant. If you're deploying to a new customer or a second tenant, repeat this entire Azure App Registration section — a new app registration, new permissions, and a fresh **Grant admin consent** click — inside *that* tenant. Consent can never be reused across tenants.
 
 ### Step 3 — Copy Your Application ID
 
@@ -260,7 +263,7 @@ The report screen summarises the completed copy with four summary cards:
 The full per-file results table is shown below the summary cards. Use the **filter chips** (All / Success / Failed / Skipped) to narrow the list. Available actions:
 
 - **← Back** — returns to Step 5 (progress screen) to review the run details, or navigate further back through the wizard
-- **Export CSV** — saves the complete report to a comma-separated file
+- **Export CSV** — saves the complete report to a comma-separated file. The suggested filename is prefixed with the source and target site names (e.g. `Marketing-Archive-CopyReport_Files_....csv`); turn this off in **Settings** if you'd rather not have it
 - **Start New Copy** — begins another copy operation; your sign-in session is reused automatically
 
 ---
@@ -331,7 +334,7 @@ The left panel lists previous runs in reverse chronological order. Each entry sh
 
 With a run selected, the right panel shows the summary cards and the complete per-file results table for that run. Available actions:
 
-- **Export CSV** — saves the selected run's per-file report to a comma-separated file
+- **Export CSV** — saves the selected run's per-file report to a comma-separated file, with the same source/target site name filename prefix as Step 6 (see Settings to turn it off)
 - **Verify** — runs an independent Verification Report for the selected run (see below)
 - **Delete Run** — permanently removes the selected run from the history
 - **Close** — returns to the main application window
@@ -374,7 +377,11 @@ The resulting workbook contains:
 - Verify the URL is the full root URL of the site collection, e.g. `https://company.sharepoint.com/sites/sitename` — not a document library URL.
 - Confirm the signed-in account has at least Read access (Visitor permission level) on the site.
 - Check that admin consent has been granted for `Sites.ReadWrite.All`, `Files.ReadWrite.All`, and `AllSites.FullControl` in the Azure portal.
-- If the browser shows **Need admin approval**, ask your Azure AD administrator to grant tenant-wide consent via **Azure Active Directory** → **Enterprise Applications**.
+- If the browser shows **Need admin approval** / **Approval required**, admin consent is missing or incomplete for *this specific tenant*. Have a Global Administrator for that tenant do the following:
+  - Confirm they're signed in as **Global Administrator** — Cloud Application Administrator or Application Administrator may not be able to consent to all of these permissions.
+  - Open the app registration's **API permissions** page and verify every row — both the Microsoft Graph block and the SharePoint block — shows a green "Granted for [tenant]" status. If a permission was added after consent was last granted, click **Grant admin consent** again to cover it.
+  - As a one-click alternative, visit `https://login.microsoftonline.com/{tenant-id}/adminconsent?client_id={app-client-id}` while signed in as Global Admin — this grants tenant-wide consent directly without navigating the portal.
+- **Admin consent does not transfer between tenants.** If this is a new Microsoft 365 tenant, repeat the full Azure App Registration setup in Section 4 — including a fresh admin consent grant — inside that tenant; consent granted for another tenant's app registration has no effect here.
 
 ### Migration API — Permission Denied
 

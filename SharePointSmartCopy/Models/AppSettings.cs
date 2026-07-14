@@ -56,6 +56,10 @@ public class AppSettings
     // VerificationReportService to avoid downloading pathologically large single files).
     public bool DeepVerifyOfficeFiles    { get; set; } = false;
 
+    // Prefixes default report filenames with "{SourceSite}-{TargetSite}-", e.g.
+    // "Marketing-Archive-CopyReport_Files_....csv" — see SiteUrlHelper.
+    public bool PrefixReportFilenamesWithSiteNames { get; set; } = true;
+
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
         WriteIndented = true,

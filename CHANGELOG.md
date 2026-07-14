@@ -4,6 +4,25 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 3.3.1 — 2026-07-14
+
+### Added
+
+- **Default report filenames now include the source and target site names** — e.g. `Marketing-Archive-CopyReport_Files_20260714_101500.csv` instead of a bare timestamp, for both the live Copy/Verification report exports and History's CSV/Verification exports. Falls back to the previous timestamp-only name if either site's URL doesn't contain a `/sites/` or `/teams/` path segment. Configurable via a new **Settings** checkbox (on by default).
+
+### Changed
+
+- **Migration API throttle events are now always logged** — a throttle landing inside the adaptive gate's cooldown window, or one Kiota's own retry handler quietly absorbs before `GraphThrottleNotifyHandler` reports it, previously produced no log line at all, showing up only as an unexplained stall. Rate-limited to one line per 5 seconds so a throttle storm doesn't flood the activity log.
+- **Azure AD setup docs now spell out that admin consent is per-tenant** — USER-GUIDE.md and README.md previously gave inconsistent single-/multi-tenant guidance and never mentioned that consent granted in one Microsoft 365 tenant has no effect on another; both now recommend single-tenant, and the Troubleshooting sections include a concrete checklist (confirm Global Administrator role, confirm both permission blocks show "Granted," the direct admin-consent URL shortcut) for the "Approval Required"/"Need admin approval" screen.
+
+### Fixed
+
+- **OneNote notebooks no longer copied as a broken plain folder** — SharePoint identifies a OneNote notebook (and similar container items) via a `package` facet that Microsoft Graph often returns with no populated `folder` facet alongside it; the app's folder detection previously missed these entirely, so scanning, browsing, and file-by-file copying all treated a notebook as an ordinary file or a misclassified folder, silently losing the notebook association that SharePoint's own "Copy to" preserves. Special folders are now detected up front and copied as a single native server-side Graph operation instead — in Migration API mode, a post-import correction pass (mirroring the existing folder Author/Editor/date fix) additionally repairs the folder's `ProgID` via CSOM, since SPMI's manifest doesn't honor it on import.
+- **Migration API job-submission failures now appear in the activity log** — unlike every other failure path in `MigrationJobService`, an exception thrown while submitting the import job itself (before a job ID was even obtained) previously marked the batch's files Failed with no explanation written anywhere, making a dead-on-arrival batch look identical to a silent hang.
+- **Settings dialog no longer silently resets "Deep Verify Office files" to off** — saving Settings for any reason (e.g. just switching the theme) rebuilt the persisted settings object without carrying that preference over, discarding the user's choice on the very next save.
+
+---
+
 ## 3.3.0 — 2026-07-10
 
 ### Added

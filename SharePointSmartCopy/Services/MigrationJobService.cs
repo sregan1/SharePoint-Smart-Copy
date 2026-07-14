@@ -106,6 +106,30 @@ public class MigrationJobService(SharePointService spService)
             };
         }
 
+        // LimitChanged above only fires when the adaptive gate's width actually changes — a throttle
+        // landing inside the StepDown cooldown window (or one Kiota's own RetryHandler quietly retries
+        // before GraphThrottleNotifyHandler reports it) produces no log line at all, showing up only
+        // as an unexplained stall. Log every throttle event directly, same pattern as CopyService's
+        // onThrottleLog, rate-limited so a throttle storm doesn't flood the feed.
+        Action<TimeSpan, int, int, string?>? onThrottleLog = null;
+        if (activityLog != null)
+        {
+            var throttleLogLock = new object();
+            var lastThrottleLog = DateTimeOffset.MinValue;
+            onThrottleLog = (delay, attempt, max, reason) =>
+            {
+                lock (throttleLogLock)
+                {
+                    var now = DateTimeOffset.UtcNow;
+                    if (now - lastThrottleLog < TimeSpan.FromSeconds(5)) return;
+                    lastThrottleLog = now;
+                }
+                activityLog.Report($"⚠ Graph throttled — waiting {delay.TotalSeconds:0}s"
+                    + (string.IsNullOrEmpty(reason) ? "" : $" [{reason}]"));
+            };
+            spService.Throttled += onThrottleLog;
+        }
+
         try
         {
             // Fetch shared pre-flight info concurrently — both calls are independent.
@@ -933,6 +957,7 @@ public class MigrationJobService(SharePointService spService)
         finally
         {
             spService.Throttled -= onMigrationThrottle;
+            if (onThrottleLog != null) spService.Throttled -= onThrottleLog;
         }
     }
 
@@ -1777,6 +1802,11 @@ public class MigrationJobService(SharePointService spService)
         }
         catch (Exception ex)
         {
+            // Unlike every other failure path in this method, a throw here (e.g. job submission
+            // itself failing/timing out before a job ID is even obtained) used to mark files Failed
+            // with no activity-log line at all — a batch could die silently mid-run with nothing to
+            // show why. Always surface it, matching the "✗ ... FAILED" convention used elsewhere.
+            activityLog?.Report($"✗ {pfx}Import FAILED — {ex.Message}");
             foreach (var (_, result) in fileTasks.Where(t => t.result.Status == CopyStatus.Copying))
             {
                 result.Status       = CopyStatus.Failed;

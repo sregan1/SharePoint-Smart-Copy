@@ -19,6 +19,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="12"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="16"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -163,8 +165,13 @@
             </Grid>
         </Grid>
 
+        <!-- General options -->
+        <CheckBox Grid.Row="4" x:Name="PrefixFilenamesCheckBox"
+                  Content="Prefix default report filenames with the source and target site names"
+                  FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+
         <!-- Footer buttons -->
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>

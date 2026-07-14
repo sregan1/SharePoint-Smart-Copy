@@ -33,6 +33,7 @@ public partial class SettingsDialog : Window
         }
 
         ThemeCombo.SelectedIndex = (int)current.Theme; // System=0, Light=1, Dark=2
+        PrefixFilenamesCheckBox.IsChecked = current.PrefixReportFilenamesWithSiteNames;
     }
 
     private void RegistrationList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -98,6 +99,8 @@ public partial class SettingsDialog : Window
             CopyNavigation          = _original.CopyNavigation,
             CopyPermissions         = _original.CopyPermissions,
             Theme                   = (AppTheme)Math.Max(0, ThemeCombo.SelectedIndex),
+            DeepVerifyOfficeFiles   = _original.DeepVerifyOfficeFiles,
+            PrefixReportFilenamesWithSiteNames = PrefixFilenamesCheckBox.IsChecked ?? true,
         };
 
         Result.Save();

@@ -61,10 +61,12 @@ Choose from four copy scopes in a step-by-step wizard:
 - Bulk copy with 1–16 parallel operations
 - Migration API mode for high-fidelity large batches; Enhanced REST for small or quick copies
 - Migration API engages whenever selected — independent of the Copy Versions toggle
+- **OneNote notebooks copy correctly** — copied as a single native server-side operation instead of being rebuilt file-by-file, preserving the special notebook association that would otherwise be lost
 
 **Copy log:**
 - Filter chips — All / Success / Failed / Skipped — on both the progress and report screens
 - Scales to 100,000+ files without UI freeze — batched row rendering and coalesced auto-scroll
+- Default report/verification filenames are prefixed with the source and target site names (e.g. `Marketing-Archive-CopyReport_Files_...csv`) — can be turned off in Settings
 
 **Appearance:**
 - Light / Dark / System theme — switchable in Settings
@@ -88,7 +90,7 @@ Choose from four copy scopes in a step-by-step wizard:
 
 1. Go to [Entra ID](https://entra.microsoft.com) → **App registrations** → **New registration**
 2. Name: `SharePoint Smart Copy` (or similar)
-3. Supported account types: **Single tenant** (your org only) or Multitenant as needed
+3. Supported account types: **Single tenant** (your org only) is recommended — each Microsoft 365 tenant then gets its own app registration and its own admin consent. Choose **Multitenant** only if you need one app registration reused across multiple tenants; admin consent must still be granted separately in *each* tenant that uses it — consent never carries over between tenants.
 4. Redirect URI: **Public client/native** → `http://localhost`
 5. Click **Register**
 6. Copy the **Application (client) ID** and **Directory (tenant) ID** — you will enter these in the app's Settings dialog
@@ -202,6 +204,14 @@ The running account must also appear explicitly in **Site Settings → Site Coll
 
 **Consent dialog appears on every sign-in**
 Admin consent has not been granted for the app registration. A Global Admin must click **Grant admin consent for [organization]** on the API permissions page in Entra ID, or check **"Consent on behalf of your organization"** the first time the consent dialog appears.
+
+**"Approval required" / "Need admin approval" screen appears instead of a consent prompt**
+This means the tenant's consent policy blocks users from granting these permissions themselves — only a Global Administrator can. It's expected, not a bug, and it means admin consent hasn't been fully granted for this tenant yet:
+- Confirm the person who clicked **Grant admin consent** was a **Global Administrator** — Cloud Application Administrator/Application Administrator can add permissions but may not fully consent to all of them.
+- Verify **both** the Microsoft Graph and SharePoint permission rows show a green "Granted for [tenant]" status — they're consented independently.
+- If a permission was added after admin consent was last granted, click **Grant admin consent** again.
+- As a shortcut, a Global Admin can visit `https://login.microsoftonline.com/{tenant-id}/adminconsent?client_id={app-client-id}` to grant tenant-wide consent directly.
+- **Admin consent is per-tenant and does not transfer.** Deploying to a new Microsoft 365 tenant (a new customer, a second environment) requires repeating the full Azure AD App Registration setup — including a fresh admin consent grant — inside that tenant.
 
 **Sign-in browser window does not open**
 The app has no Client ID configured. Open **Settings** (⚙ top-right) and enter the Application (client) ID from your Azure AD app registration.

@@ -2409,7 +2409,7 @@ public partial class MainViewModel : ObservableObject
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
             Filter   = "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt",
-            FileName = $"CopyReport_Files_{DateTime.Now:yyyyMMdd_HHmmss}.csv"
+            FileName = $"{SiteUrlHelper.ReportFilenamePrefix(SourceUrl, TargetUrl, Settings.PrefixReportFilenamesWithSiteNames)}CopyReport_Files_{DateTime.Now:yyyyMMdd_HHmmss}.csv"
         };
         if (dlg.ShowDialog() != true) return;
 
@@ -2434,7 +2434,7 @@ public partial class MainViewModel : ObservableObject
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
             Filter   = "Excel Workbook (*.xlsx)|*.xlsx",
-            FileName = $"VerificationReport_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
+            FileName = $"{SiteUrlHelper.ReportFilenamePrefix(SourceUrl, TargetUrl, Settings.PrefixReportFilenamesWithSiteNames)}VerificationReport_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
         };
         if (dlg.ShowDialog() != true) return;
 
