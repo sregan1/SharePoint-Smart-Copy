@@ -21,9 +21,10 @@ public class MigrationJobService(SharePointService spService)
     // exhaust the process working set. Observed 2026-07-02: OutOfMemoryException on .fastq/.czi
     // files (multi-GB genomics/microscopy) mid-download and mid-package-build on a 5,000-file run.
     private const long LargeFileThresholdBytes = 500L * 1024 * 1024; // 500 MB
-    // Only this many large files may be downloaded/encrypted concurrently, independent of maxParallel,
-    // so oversized files can't stack up multiple full in-memory copies at once. Small files are
-    // unaffected — they never touch this gate.
+    // Only this many large files may be IN MEMORY concurrently — the slot is held from download
+    // start until the file's encrypted blobs finish uploading (see DownloadedFile.HoldsLargeSlot),
+    // independent of maxParallel, so oversized files can't stack up multiple full in-memory copies
+    // at once anywhere in the pipeline. Small files are unaffected — they never touch this gate.
     private const int MaxConcurrentLargeFiles = 2;
 
     public async Task ExecuteAsync(
@@ -64,6 +65,27 @@ public class MigrationJobService(SharePointService spService)
         int migrationSoftStart = Math.Min(maxParallel, 8);
         using var downloadController = new AdaptiveParallelismController(maxParallel, migrationSoftStart);
         using var largeFileGate = new SemaphoreSlim(MaxConcurrentLargeFiles);
+        // Global BYTE budget for in-flight file payloads, shared across every concurrent batch —
+        // see TransferMemoryBudget for why the count-based gates alone aren't enough (a library of
+        // ~300-490 MB files slides under the large-file threshold and the per-batch pipe/upload
+        // queues stack up 15+ GB of live buffers; observed 2026-07-18, 19 GB heap on a 32 GB
+        // machine at Parallel Copies 5). Each file charges ~2× its total version bytes (raw
+        // download + AES-encrypted copy coexist) from download start until its blobs finish
+        // uploading. Sized to ~40% of machine RAM, clamped to [2 GB, 16 GB].
+        //
+        // This budget — not the download controller's slot count — was the real throughput limit
+        // on the large-file run: at 8 GB with the 2× charge only ~4 multi-hundred-MB scans could be
+        // in flight, far below the 16 download slots, yielding ~1 file/min (2026-07-18). Raising it
+        // lets the download controller actually use its slots (up to where Graph throttling becomes
+        // the limit). Safe to raise now that the smaller byte-per-job budget makes the batch-boundary
+        // LOH compaction run regularly, so freed buffers return to the OS instead of piling into a
+        // fragmented multi-GB floor. Still bounded: 40% of RAM leaves the rest for the OS, the .NET
+        // runtime, WPF, and in-flight garbage between compactions.
+        long machineRamBytes = GC.GetGCMemoryInfo().TotalAvailableMemoryBytes;
+        var memoryBudget = new TransferMemoryBudget(
+            Math.Clamp((long)(machineRamBytes * 0.40), 2L * 1024 * 1024 * 1024, 16L * 1024 * 1024 * 1024));
+        activityLog?.Report(
+            $"Transfer memory budget: {memoryBudget.Capacity / (1024.0 * 1024 * 1024):F1} GB (bounds concurrent file buffers)");
         // Registered only during the download/upload phase — NOT during analysis (metadata fetches,
         // folder enumeration). Analysis throttles are transient and shouldn't pre-damage the download
         // slot count before any file transfers have started.
@@ -129,6 +151,14 @@ public class MigrationJobService(SharePointService spService)
             };
             spService.Throttled += onThrottleLog;
         }
+
+        // Periodic resource snapshot so a UCEERR_RENDERTHREADFAILURE crash (a native WPF failure
+        // that bypasses every managed exception handler) still leaves a trail in the activity log
+        // of what the process looked like in the minutes before it died. See ProcessDiagnostics.
+        using var heartbeatCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        var heartbeatTask = activityLog is null
+            ? Task.CompletedTask
+            : RunHeartbeatAsync(activityLog, heartbeatCts.Token);
 
         try
         {
@@ -631,11 +661,19 @@ public class MigrationJobService(SharePointService spService)
                 // 120k; verify a clean run, then try higher (250) if it holds.
                 const int MaxVersionsPerJob = 250;
                 const int MaxItemsPerJob    = 250;
-                // Byte budget alongside the entry budgets: 250 small files is fine, but 250 large
-                // files (or version-heavy ones — version content counts) would otherwise produce a
-                // multi-GB package, inflating import time, memory pressure, and the blast radius of
-                // a fatal batch abort. Sizes are already in metaCache, so this costs nothing extra.
-                const long MaxBytesPerJob   = 10L * 1024 * 1024 * 1024;
+                // Byte budget alongside the entry budgets. This is what actually shapes batches for a
+                // large-file library, since the 250-item cap never bites when files are big. It is the
+                // key latency lever: an import fires only when a WHOLE batch finishes packaging, so a
+                // large byte budget means the first import waits for that many GB of scans to download
+                // → encrypt → upload before ANY of it starts importing. On a library of multi-hundred-MB
+                // scan files a 10 GB budget produced ~34-40-file batches that took ~2 HOURS to
+                // package before the first import even began (2026-07-18: 100+ min in, zero imports).
+                // 2 GB → ~5-7 such scans per batch → first import in ~20-25 min, and imports then flow
+                // continuously overlapping ongoing packaging instead of arriving in ~2-hour waves. It
+                // also means the batch-boundary LOH compaction (see CompactLargeObjectHeap) actually
+                // runs regularly instead of never, and a fatal abort costs a handful of files, not 40.
+                // Small-file regions are unaffected — they still fill to the 250-item cap well under 2 GB.
+                const long MaxBytesPerJob   = 2L * 1024 * 1024 * 1024;
 
                 activityLog?.Report($"Analyzing {groupTasks.Count:N0} files for version-aware batching...");
                 var sizingProgress = new Progress<int>(d =>
@@ -670,14 +708,35 @@ public class MigrationJobService(SharePointService spService)
 
                 long BytesOf((CopyJob job, CopyResult result) t)
                 {
-                    if (!metaCache.TryGetValue(t.job.SourceItemId, out var c)) return 0;
-                    long current = c.Metadata.Size ?? 0;
+                    // Cache miss (metadata fetch failed under throttling) → fall back to the size the
+                    // scan walk captured, NOT 0: with 0 the byte budget can't see multi-GB files, so a
+                    // throttled run packed batches of them unbounded (2026-07-18: 44 GB heap).
+                    if (!metaCache.TryGetValue(t.job.SourceItemId, out var c)) return t.job.SourceSize ?? 0;
+                    long current = c.Metadata.Size ?? t.job.SourceSize ?? 0;
                     if (c.Versions == null) return current;
                     var counted = maxVersions > 0 ? c.Versions.TakeLast(maxVersions) : c.Versions;
                     long total = 0;
                     foreach (var v in counted) total += v.Size ?? current;
                     return Math.Max(total, current);
                 }
+
+                // Warm-up ramp: the first two batches are deliberately tiny so the FIRST SharePoint
+                // import fires within a few minutes — an early, unambiguous confirmation that the
+                // import half of the pipeline works, on every run — then the caps grow to full size
+                // for efficiency. This is permanent and self-limiting: it only shrinks batches 0 and
+                // 1, so the worst-case cost on any library is two extra small job submissions, while
+                // the fast-feedback benefit applies universally. (Motivation: 2026-07-18, a run went
+                // 2+ hours with zero completed imports because the first full-size batch of multi-GB
+                // scans hadn't finished packaging — no signal at all that import even functioned.)
+                // Only items and bytes ramp; the version cap stays at its hard SPMI ceiling (a tiny
+                // batch can't approach it anyway). A single file larger than a ramp byte cap still
+                // forms its own batch via the Count > 0 guard below, so oversized files never stall.
+                (int items, long bytes) CapsForBatch(int index) => index switch
+                {
+                    0 => (8,  512L * 1024 * 1024),          // ~1-2 scans, or 8 small files → import in minutes
+                    1 => (32, 1L * 1024 * 1024 * 1024),     // medium step before full size
+                    _ => (MaxItemsPerJob, MaxBytesPerJob),  // steady state
+                };
 
                 var batches      = new List<List<(CopyJob job, CopyResult result)>>();
                 var currentBatch = new List<(CopyJob job, CopyResult result)>();
@@ -687,9 +746,11 @@ public class MigrationJobService(SharePointService spService)
                 {
                     int  v = VersionsOf(t);
                     long b = BytesOf(t);
+                    // Caps for the batch currently being filled (batches.Count is its index).
+                    var (itemCap, byteCap) = CapsForBatch(batches.Count);
                     if (currentBatch.Count > 0 &&
-                        (currentVersions + v > MaxVersionsPerJob || currentBatch.Count >= MaxItemsPerJob
-                         || currentBytes + b > MaxBytesPerJob))
+                        (currentVersions + v > MaxVersionsPerJob || currentBatch.Count >= itemCap
+                         || currentBytes + b > byteCap))
                     {
                         batches.Add(currentBatch);
                         currentBatch = [];
@@ -746,6 +807,7 @@ public class MigrationJobService(SharePointService spService)
                     onFilePacked: onFilePacked,
                     downloadController: downloadController,
                     largeFileGate: largeFileGate,
+                    memoryBudget: memoryBudget,
                     folderUniqueIdCache: sharedFolderUniqueIdCache,
                     folderMetadata: folderMetadata,
                     metaCache: metaCache);
@@ -942,7 +1004,9 @@ public class MigrationJobService(SharePointService spService)
         {
             foreach (var (_, result) in fileTasks.Where(t => t.result.Status == CopyStatus.Copying))
             {
-                result.Status       = CopyStatus.Failed;
+                // Cancelled, not Failed: this item was still Copying (never actually attempted)
+                // when the run stopped — see CopyStatus.Cancelled.
+                result.Status       = CopyStatus.Cancelled;
                 result.ErrorMessage = "Cancelled";
             }
         }
@@ -958,7 +1022,34 @@ public class MigrationJobService(SharePointService spService)
         {
             spService.Throttled -= onMigrationThrottle;
             if (onThrottleLog != null) spService.Throttled -= onThrottleLog;
+            heartbeatCts.Cancel();
+            try { await heartbeatTask; } catch (OperationCanceledException) { }
         }
+    }
+
+    private static async Task RunHeartbeatAsync(IProgress<string> activityLog, CancellationToken ct)
+    {
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
+        while (await timer.WaitForNextTickAsync(ct))
+            activityLog.Report(ProcessDiagnostics.Snapshot());
+    }
+
+    // Forces a blocking gen-2 collection with LOH compaction, at most once per minute across all
+    // concurrent batches. Called at batch boundaries (a natural lull, and right after a batch's
+    // buffers die). The blocking pause runs on a worker thread and costs well under a second even
+    // at multi-GB heaps — trivial next to batch import times, and far cheaper than the paging and
+    // GC thrash a 15 GB fragmented floor causes on a 32 GB machine.
+    private static long _lastLohCompactTicks;
+    private static void CompactLargeObjectHeap()
+    {
+        long now  = DateTime.UtcNow.Ticks;
+        long last = Interlocked.Read(ref _lastLohCompactTicks);
+        if (now - last < TimeSpan.FromSeconds(60).Ticks) return;
+        if (Interlocked.CompareExchange(ref _lastLohCompactTicks, now, last) != last) return;
+
+        System.Runtime.GCSettings.LargeObjectHeapCompactionMode =
+            System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+        GC.Collect(2, GCCollectionMode.Forced, blocking: true, compacting: true);
     }
 
     // A batch whose blobs + manifest have been uploaded and is ready to import. Carries only
@@ -1026,6 +1117,7 @@ public class MigrationJobService(SharePointService spService)
         IProgress<int>? onFilePacked = null,
         AdaptiveParallelismController? downloadController = null,
         SemaphoreSlim? largeFileGate = null,
+        TransferMemoryBudget? memoryBudget = null,
         IReadOnlyDictionary<string, (FileMetadata Metadata, List<Microsoft.Graph.Models.DriveItemVersion>? Versions)>? metaCache = null,
         System.Collections.Concurrent.ConcurrentDictionary<string, string>? folderUniqueIdCache = null,
         IReadOnlyDictionary<string, FileMetadata>? folderMetadata = null)
@@ -1230,10 +1322,21 @@ public class MigrationJobService(SharePointService spService)
             // blobs, then free the encrypted bytes. Uploading per file instead of buffering
             // the whole batch keeps peak memory at one file's versions rather than the
             // entire library (which OOMs on multi-GB copies).
-            // NetworkTimeout extends the per-request timeout from the 60-second Azure default
-            // so large files don't cancel mid-upload on slow connections.
+            // NetworkTimeout extends the per-request timeout from the 60-second Azure default so
+            // large files don't cancel mid-upload on slow connections. The retry settings make
+            // Azure's OWN pipeline ride out transient mid-transfer connection drops (the "Error
+            // while copying content to a stream" failures — a dropped TCP write, the upload-side
+            // twin of the download connection resets) with exponential backoff before it gives up
+            // and surfaces to our outer retry loop. Our outer loop then adds several more attempts;
+            // together with the reduced upload concurrency below this is what keeps the upload
+            // failure rate near zero on a flaky connection (2026-07-18: ~40% of files were failing
+            // here because too many multi-GB uploads ran at once and saturated the upload path).
             var blobOptions = new BlobClientOptions();
             blobOptions.Retry.NetworkTimeout = TimeSpan.FromMinutes(30);
+            blobOptions.Retry.MaxRetries     = 6;
+            blobOptions.Retry.Mode           = Azure.Core.RetryMode.Exponential;
+            blobOptions.Retry.Delay          = TimeSpan.FromSeconds(2);
+            blobOptions.Retry.MaxDelay       = TimeSpan.FromSeconds(30);
             var dataClient = new BlobContainerClient(new Uri(dataUri), blobOptions);
             var builder    = new MigrationPackageBuilder(encryptionKey);
 
@@ -1309,7 +1412,12 @@ public class MigrationJobService(SharePointService spService)
                             // int.MaxValue bytes) — a version above 2 GiB cannot be packaged. Fail fast
                             // with an honest message instead of downloading it 3 times and surfacing
                             // "Stream was too long" as a connection problem.
-                            long largestVersionBytes = Math.Max(cachedMeta?.Size ?? 0,
+                            // knownFileBytes falls back to the scan-captured size for cache-miss files —
+                            // with the old 0 fallback a throttled run's misses bypassed BOTH this guard
+                            // and the large-file gate below, so 16 multi-GB files buffered concurrently
+                            // (2026-07-18: 44 GB heap, connection-reset storms, mass failures).
+                            long knownFileBytes = cachedMeta?.Size ?? job.SourceSize ?? 0;
+                            long largestVersionBytes = Math.Max(knownFileBytes,
                                 cachedVersions?.Max(v => v.Size ?? 0) ?? 0);
                             if (largestVersionBytes > int.MaxValue)
                             {
@@ -1331,15 +1439,35 @@ public class MigrationJobService(SharePointService spService)
                             long totalVersionBytes = 0;
                             if (cachedVersions != null)
                                 foreach (var v in cachedVersions)
-                                    totalVersionBytes += v.Size ?? cachedMeta?.Size ?? 0;
-                            bool isLargeFile = Math.Max(cachedMeta?.Size ?? 0, totalVersionBytes) >= LargeFileThresholdBytes;
+                                    totalVersionBytes += v.Size ?? knownFileBytes;
+                            // A file whose size is genuinely unknown (cache miss AND built outside the
+                            // scan walk) is gated as large: the safe assumption costs at worst a little
+                            // queueing; the unsafe one is the OOM class this gate exists for.
+                            bool sizeUnknown = cachedMeta?.Size == null && job.SourceSize == null;
+                            bool isLargeFile = sizeUnknown ||
+                                Math.Max(knownFileBytes, totalVersionBytes) >= LargeFileThresholdBytes;
                             if (isLargeFile && largeFileGate != null)
                                 await largeFileGate.WaitAsync(ct);
+
+                            // Reserve the file's slice of the global byte budget BEFORE taking a
+                            // download slot — waiting on memory while holding a slot would idle the
+                            // slot for every other file. Charge ≈ 2× the payload (raw + encrypted
+                            // copies coexist from encrypt until upload completes); unknown sizes
+                            // charge the large-file threshold as a conservative nominal.
+                            long budgetCharge = 0;
+                            if (memoryBudget != null)
+                            {
+                                long payloadBytes = Math.Max(knownFileBytes, totalVersionBytes);
+                                if (payloadBytes <= 0) payloadBytes = LargeFileThresholdBytes;
+                                budgetCharge = memoryBudget.ClampCharge(2 * payloadBytes);
+                                await memoryBudget.WaitAsync(budgetCharge, ct);
+                            }
 
                             // Acquire a global download slot — limits total concurrent Graph
                             // content downloads across all SPMI batches to maxParallel.
                             if (downloadController != null)
                                 await downloadController.WaitAsync(ct);
+                            bool handedToConsumer = false;
                             try
                             {
                                 if (verbosePerFile || isLargeFile) activityLog?.Report($"{pfx}↓ {job.SourceName}");
@@ -1348,9 +1476,18 @@ public class MigrationJobService(SharePointService spService)
                                     cachedMeta, cachedVersions,
                                     copyCustomColumns, columnMappings, bulkFieldCache,
                                     pfxLabel: pfx, activityLog: activityLog);
+                                // Transfer the large slot AND the byte reservation to the consumer
+                                // (see HoldsLargeSlot/HeldBudgetBytes): both are released only after
+                                // this file's encrypted blobs finish uploading, so they bound the
+                                // file's WHOLE in-memory lifetime, not just the download.
+                                if (isLargeFile && largeFileGate != null)
+                                    data = data with { HoldsLargeSlot = true };
+                                if (budgetCharge > 0)
+                                    data = data with { HeldBudgetBytes = budgetCharge };
                                 await pipe.Writer.WriteAsync(data, ct);
+                                handedToConsumer = true;
                             }
-                            catch (OperationCanceledException) { throw; }
+                            catch (OperationCanceledException) when (ct.IsCancellationRequested) { throw; }
                             catch (Exception ex)
                             {
                                 result.Status       = CopyStatus.Failed;
@@ -1359,7 +1496,11 @@ public class MigrationJobService(SharePointService spService)
                             finally
                             {
                                 downloadController?.Release();
-                                if (isLargeFile) largeFileGate?.Release();
+                                if (!handedToConsumer)
+                                {
+                                    if (isLargeFile) largeFileGate?.Release();
+                                    if (budgetCharge > 0) memoryBudget?.Release(budgetCharge);
+                                }
                             }
                         });
                 }
@@ -1372,7 +1513,16 @@ public class MigrationJobService(SharePointService spService)
             // dominant prep bottleneck for libraries of many small files. Encryption stays sequential
             // in this consumer (builder.Files isn't thread-safe and AES is cheap); only the network
             // upload is parallelized. The gate bounds how many files' encrypted bytes are held at once.
-            int uploadConcurrency = Math.Max(2, Math.Min(16, maxParallel));
+            //
+            // Capped at 4 (was min(16, maxParallel)): this is a PER-BATCH gate, and up to
+            // MaxConcurrentPrep batches package at once, so 16 meant up to ~48 simultaneous multi-GB
+            // uploads to Azure — which saturated the upload path and caused ~40% of files to fail
+            // with "Error while copying content to a stream" after exhausting all retries (2026-07-18).
+            // 4 per batch → ~12 concurrent uploads across batches: still plenty of parallelism, far
+            // below the saturation point. Uploads are network-bound, so fewer-but-reliable beats
+            // more-but-failing (a failed file is pure rework). Small files are unaffected — they
+            // upload in one fast PUT regardless.
+            int uploadConcurrency = Math.Max(2, Math.Min(4, maxParallel));
             using var uploadGate  = new SemaphoreSlim(uploadConcurrency);
             var uploadTasks       = new List<Task>();
 
@@ -1383,6 +1533,10 @@ public class MigrationJobService(SharePointService spService)
             await foreach (var data in pipe.Reader.ReadAllAsync(cancellationToken))
             {
                 int filesBefore = builder.Files.Count;
+                // This iteration owns the file's large slot and byte reservation (if any) until
+                // ownership passes to its upload task; every failure path before that hand-off
+                // must release them here.
+                bool ownsGateAndBudget = data.HoldsLargeSlot || data.HeldBudgetBytes > 0;
                 try
                 {
                     var versionStreams = data.Slots
@@ -1440,9 +1594,17 @@ public class MigrationJobService(SharePointService spService)
                                 var blob = dataClient.GetBlobClient(version.StreamId);
 
                                 // Azure Storage's own internal retry (ClientOptions.Retry) already exhausts
-                                // itself on sustained network blips ("Retry failed after N tries") — retry
-                                // again here with backoff rather than failing the file on one bad window.
-                                // A fresh MemoryStream is needed each attempt since UploadAsync consumes it.
+                                // itself on sustained network blips — when it does it throws an
+                                // AggregateException ("Retry failed after 6 tries. ... (Error while copying
+                                // content to a stream.)"). The old catch listed specific types (IOException,
+                                // HttpRequestException, RequestFailedException, OperationCanceledException)
+                                // and AggregateException is NONE of them, so that exhausted-retry failure
+                                // slipped straight past this loop to the outer handler with ZERO extra
+                                // retries — the root cause of the ~40% upload failure rate on 2026-07-18.
+                                // Retry ANY failure except genuine user cancellation, with a longer,
+                                // more patient backoff. A fresh MemoryStream is needed each attempt since
+                                // UploadAsync consumes it.
+                                const int UploadMaxAttempts = 5;
                                 for (int attempt = 0; ; attempt++)
                                 {
                                     try
@@ -1452,11 +1614,16 @@ public class MigrationJobService(SharePointService spService)
                                         await blob.CreateSnapshotAsync(cancellationToken: cancellationToken);
                                         break;
                                     }
-                                    catch (OperationCanceledException) { throw; }
-                                    catch (Exception ex) when (attempt < 3 && (ex is IOException || ex is System.Net.Http.HttpRequestException || ex is Azure.RequestFailedException))
+                                    catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
+                                    // Anything else — including the AggregateException from Azure's own
+                                    // exhausted retry, or an OperationCanceledException from the SDK's
+                                    // 30-minute NetworkTimeout (ruled out as user cancellation above) —
+                                    // is a transient upload failure; retry it rather than failing the file
+                                    // on one bad window.
+                                    catch (Exception) when (attempt < UploadMaxAttempts - 1)
                                     {
-                                        int waitsecs = (attempt + 1) * 5;
-                                        activityLog?.Report($"⚠ {pfx}{fileName} — upload connection reset, retrying in {waitsecs}s ({attempt + 1}/3)");
+                                        int waitsecs = Math.Min(60, (attempt + 1) * 10);
+                                        activityLog?.Report($"⚠ {pfx}{fileName} — upload interrupted, retrying in {waitsecs}s ({attempt + 1}/{UploadMaxAttempts - 1})");
                                         await Task.Delay(TimeSpan.FromSeconds(waitsecs), cancellationToken);
                                     }
                                 }
@@ -1468,14 +1635,30 @@ public class MigrationJobService(SharePointService spService)
                             if (!verbosePerFile && (n == 1 || n % milestoneStep == 0 || n == copyingCount))
                                 activityLog?.Report($"{pfx}{n:N0} / {copyingCount:N0} files packaged");
                         }
-                        catch (Exception ex) when (ex is not OperationCanceledException)
+                        // Let a real user cancellation propagate unchanged; anything else — including an
+                        // OperationCanceledException from an exhausted-retry client timeout above — fails
+                        // just this file so the rest of the batch can still complete.
+                        catch (Exception ex) when (ex is not OperationCanceledException || !cancellationToken.IsCancellationRequested)
                         {
                             entry.Failed = true; // exclude from manifest — its blobs weren't all uploaded
                             dataResult.Status       = CopyStatus.Failed;
                             dataResult.ErrorMessage = $"Upload failed ({fileName}): {ex.Message}";
+                            // Never silent: this used to set ErrorMessage only, so a failed upload was
+                            // invisible in the activity log and showed up solely as a bare "K failed"
+                            // count with no reason (2026-07-18 — made this class of failure very hard to
+                            // diagnose). Surface it like the download/import failure paths do.
+                            activityLog?.Report($"✗ {pfx}Upload failed after retries: {fileName} — {ex.Message}");
                         }
-                        finally { uploadGate.Release(); }
+                        finally
+                        {
+                            uploadGate.Release();
+                            // End of this file's in-memory life (uploaded or failed, encrypted
+                            // buffers nulled/dropped) — return its large slot and byte reservation.
+                            if (data.HoldsLargeSlot) largeFileGate?.Release();
+                            if (data.HeldBudgetBytes > 0) memoryBudget?.Release(data.HeldBudgetBytes);
+                        }
                     }, cancellationToken));
+                    ownsGateAndBudget = false; // upload task now owns both (released in its finally)
                 }
                 catch (OperationCanceledException) { throw; }
                 catch (Exception ex)
@@ -1491,11 +1674,24 @@ public class MigrationJobService(SharePointService spService)
                 {
                     // Encryption is done (or failed) — free the original download buffers now.
                     foreach (var ms in data.Slots) ms?.Dispose();
+                    // Slot/reservation never reached an upload task (encrypt failed, or the upload
+                    // hand-off threw) — release here or the gates starve for the rest of the run.
+                    if (ownsGateAndBudget)
+                    {
+                        if (data.HoldsLargeSlot) largeFileGate?.Release();
+                        if (data.HeldBudgetBytes > 0) memoryBudget?.Release(data.HeldBudgetBytes);
+                    }
                 }
             }
 
             await producerTask;
             await Task.WhenAll(uploadTasks); // all blobs uploaded before the manifest is built
+
+            // This batch's multi-hundred-MB buffers just became garbage — compact the Large Object
+            // Heap so the memory actually returns to the OS. Without this the LOH fragments and the
+            // heap floor ratchets upward across the run (observed 2026-07-18: 0.5 GB → 15 GB floor
+            // over ~90 minutes; the resulting GC pauses surfaced as connection-reset storms).
+            CompactLargeObjectHeap();
 
             // Step 5: upload manifest XML blobs to the metadata container.
             // Fetch the root folder GUID so the manifest can include an explicit SPFolder entry.
@@ -1585,7 +1781,9 @@ public class MigrationJobService(SharePointService spService)
         {
             foreach (var (_, result) in fileTasks.Where(t => t.result.Status == CopyStatus.Copying))
             {
-                result.Status       = CopyStatus.Failed;
+                // Cancelled, not Failed: this item was still Copying (never actually attempted)
+                // when the run stopped — see CopyStatus.Cancelled.
+                result.Status       = CopyStatus.Cancelled;
                 result.ErrorMessage = "Cancelled";
             }
         }
@@ -1795,7 +1993,9 @@ public class MigrationJobService(SharePointService spService)
         {
             foreach (var (_, result) in fileTasks.Where(t => t.result.Status == CopyStatus.Copying))
             {
-                result.Status       = CopyStatus.Failed;
+                // Cancelled, not Failed: this item was still Copying (never actually attempted)
+                // when the run stopped — see CopyStatus.Cancelled.
+                result.Status       = CopyStatus.Cancelled;
                 result.ErrorMessage = "Cancelled";
             }
             return new List<(CopyJob job, CopyResult result)>();
@@ -1824,7 +2024,21 @@ public class MigrationJobService(SharePointService spService)
         FileMetadata Metadata,
         List<Microsoft.Graph.Models.DriveItemVersion> Versions,
         MemoryStream?[] Slots,
-        Dictionary<string, string>? CustomFields);
+        Dictionary<string, string>? CustomFields)
+    {
+        // True when this file still owns a largeFileGate slot. The producer transfers ownership
+        // here instead of releasing after download: the file's bytes stay in memory well past the
+        // download (raw stream in the pipe, then the AES-encrypted copy queued for upload), so
+        // releasing at download-end let more large files start while earlier ones' encrypted
+        // buffers were still piled up awaiting upload — the gate bounded only the first third of
+        // each file's memory lifetime. Whoever ends the file's in-memory life (upload task's
+        // finally, or the consumer's failure path) releases the slot.
+        public bool HoldsLargeSlot { get; init; }
+
+        // Bytes this file has reserved from the global TransferMemoryBudget (0 = none). Same
+        // ownership rules and release sites as HoldsLargeSlot.
+        public long HeldBudgetBytes { get; init; }
+    }
 
     private async Task<DownloadedFile> DownloadFileDataAsync(
         CopyJob job,
@@ -1889,22 +2103,46 @@ public class MigrationJobService(SharePointService spService)
                 // /versions list is skipped for a known single-version file; skipping it here (as the old
                 // unconditional guard did) left its content slot null → empty Versions → IndexOutOfRange.
                 if (!isLast && version.Id == null) return;
-                var ms = new MemoryStream();
+                // Pre-size the buffer when the version's byte size is known: letting MemoryStream
+                // grow by doubling allocates ~2× the file size in cumulative LOH churn per version,
+                // which at multi-GB scale is real GC pressure on top of an already-bounded budget.
+                long expectedBytes = version.Size ?? metadata.Size ?? 0;
+                var ms = expectedBytes > 0 && expectedBytes <= int.MaxValue
+                    ? new MemoryStream((int)expectedBytes)
+                    : new MemoryStream();
                 for (int attempt = 0; ; attempt++)
                 {
-                    ms.SetLength(0);
+                    // RESUME, don't restart: a reset partway through a multi-GB scan used to discard
+                    // everything received so far and redownload the entire file from byte 0 on every
+                    // retry — on a run where resets hit almost every large file 1-3 times, that meant
+                    // downloading several GB two or three times over for a single file (observed
+                    // 2026-07-18: ~1 file packaged per 1.8 minutes system-wide, ETA 160+ hours). ms's
+                    // current Length IS how many bytes survived the previous attempt, so ask the
+                    // server to continue from exactly there via Range instead of clearing it.
+                    long resumeFrom = ms.Length;
                     try
                     {
-                        var networkStream = isLast
-                            ? await spService.DownloadFileAsync(job.SourceDriveId, job.SourceItemId)
-                            : await spService.DownloadVersionAsync(job.SourceDriveId, job.SourceItemId, version.Id!);
-                        await using (networkStream)
-                            await networkStream.CopyToAsync(ms, ct);
+                        var content = await spService.DownloadContentRangeAsync(
+                            job.SourceDriveId, job.SourceItemId, isLast ? null : version.Id, resumeFrom, ct);
+
+                        // Some intermediary in the redirect chain can ignore the Range header and
+                        // return the WHOLE file from byte 0 (200, not 206) — appending that to bytes
+                        // already buffered would silently corrupt the content, so only append when
+                        // the server actually confirmed it's continuing from our offset; otherwise
+                        // discard the partial buffer and restart clean, same as before this change.
+                        bool resumed = resumeFrom > 0 && content.IsPartial && content.StartOffset == resumeFrom;
+                        if (resumeFrom > 0 && !resumed) ms.SetLength(0);
+
+                        await using (content.Content)
+                        {
+                            ms.Position = ms.Length; // append point (0 on a fresh/reset stream)
+                            await content.Content.CopyToAsync(ms, ct);
+                        }
                         ms.Position = 0;
                         slots[idx] = ms;
                         break;
                     }
-                    catch (OperationCanceledException) { throw; }
+                    catch (OperationCanceledException) when (ct.IsCancellationRequested) { throw; }
                     // A MemoryStream past int.MaxValue is a hard size limit, not a transient network
                     // failure — retrying re-downloads the whole multi-GB file for nothing.
                     catch (System.IO.IOException ex) when (ex.Message.Contains("Stream was too long", StringComparison.OrdinalIgnoreCase))
@@ -1913,11 +2151,15 @@ public class MigrationJobService(SharePointService spService)
                             $"{job.SourceName} has a version larger than the 2 GB this mode can buffer — copy it with Enhanced REST mode.", ex);
                     }
                     // HTTP/2 stream resets surface as HttpRequestException, not IOException — must be
-                    // caught alongside it or a single mid-stream RST_STREAM fails the file outright.
-                    catch (Exception ex) when (attempt < 3 && (ex is System.IO.IOException || ex is System.Net.Http.HttpRequestException))
+                    // caught alongside it or a single mid-stream RST_STREAM fails the file outright. A
+                    // stalled connection surfaces as OperationCanceledException from the client's own
+                    // 30-minute request timeout (ruled out as real cancellation above) and deserves the
+                    // same retry, not silent treatment as a cancel that then stalls the whole batch.
+                    catch (Exception ex) when (attempt < 3 && (ex is System.IO.IOException || ex is System.Net.Http.HttpRequestException || ex is OperationCanceledException))
                     {
                         int waitsecs = (attempt + 1) * 5;
-                        activityLog?.Report($"⚠ {pfxLabel}{job.SourceName} — connection reset, retrying in {waitsecs}s ({attempt + 1}/3)");
+                        var resumeNote = ms.Length > 0 ? $", resuming from {ms.Length / (1024.0 * 1024):F0} MB" : "";
+                        activityLog?.Report($"⚠ {pfxLabel}{job.SourceName} — connection {(ex is OperationCanceledException ? "timed out" : "reset")}, retrying in {waitsecs}s ({attempt + 1}/3{resumeNote})");
                         await Task.Delay(TimeSpan.FromSeconds(waitsecs), ct);
                     }
                 }

@@ -126,8 +126,9 @@ public class CopyStatusToColorConverter : IValueConverter
                 CopyStatus.Success => Themed("SuccessBrush", Color.FromRgb(16, 124, 16)),
                 CopyStatus.Failed  => Themed("DangerBrush", Color.FromRgb(164, 38, 44)),
                 CopyStatus.Copying => Themed("AccentBrush", Color.FromRgb(0, 120, 212)),
-                CopyStatus.Skipped => Themed("TextTertiaryBrush", Color.FromRgb(121, 119, 117)),
-                _                  => Themed("TextSecondaryBrush", Color.FromRgb(50, 49, 48))
+                CopyStatus.Skipped   => Themed("TextTertiaryBrush", Color.FromRgb(121, 119, 117)),
+                CopyStatus.Cancelled => Themed("TextTertiaryBrush", Color.FromRgb(121, 119, 117)),
+                _                    => Themed("TextSecondaryBrush", Color.FromRgb(50, 49, 48))
             };
         }
         return Themed("TextPrimaryBrush", Colors.Black);

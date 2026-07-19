@@ -680,7 +680,17 @@ public class MigrationPackageBuilder
 
     private static async Task<(byte[] Encrypted, long Size)> EncryptStreamAsync(Stream plaintext, byte[] key)
     {
-        using var ms = new MemoryStream();
+        // The download pipeline always hands us an already-buffered MemoryStream — encrypt straight
+        // out of its internal buffer. The old unconditional CopyToAsync duplicated the ENTIRE
+        // plaintext into a second (un-pre-sized, doubling-growth) MemoryStream first, which for
+        // multi-hundred-MB scan files meant every version transiently cost ~2× its size here
+        // alone, on top of the ciphertext (observed 2026-07-18: heap floor ratcheting to 15+ GB).
+        if (plaintext is MemoryStream direct && direct.TryGetBuffer(out var buf) && buf.Offset == 0)
+            return (AesEncrypt(buf.Array!, buf.Count, key), buf.Count);
+
+        using var ms = plaintext.CanSeek && plaintext.Length > 0 && plaintext.Length <= int.MaxValue
+            ? new MemoryStream((int)plaintext.Length)
+            : new MemoryStream();
         await plaintext.CopyToAsync(ms);
         long size = ms.Length;
         // GetBuffer() returns the internal array without copying it; ToArray() would allocate a second
@@ -708,22 +718,22 @@ public class MigrationPackageBuilder
     // SP reads the first 16 bytes as the IV when decrypting.
     // length: number of bytes to encrypt from plaintext (lets callers pass an oversized GetBuffer()
     // array without copying it down to the exact content length first).
+    // Writes [IV][ciphertext] into a single exactly-sized array via the one-shot CBC API. The old
+    // CryptoStream-over-MemoryStream version grew the ciphertext through doubling reallocations and
+    // then ToArray()'d a full second copy of it — for a multi-GB version that transient double was
+    // a large slice of the observed memory blowups on scan-heavy libraries.
     private static byte[] AesEncrypt(byte[] plaintext, int length, byte[] key)
     {
-        var iv = System.Security.Cryptography.RandomNumberGenerator.GetBytes(16);
-
         using var aes = Aes.Create();
-        aes.Key     = key;
-        aes.IV      = iv;
-        aes.Mode    = CipherMode.CBC;
-        aes.Padding = PaddingMode.PKCS7;
+        aes.Key = key;
 
-        using var output = new MemoryStream();
-        output.Write(iv, 0, iv.Length);
-        using (var encryptor = aes.CreateEncryptor())
-        using (var cs = new CryptoStream(output, encryptor, CryptoStreamMode.Write))
-            cs.Write(plaintext, 0, length);
-        return output.ToArray();
+        int cipherLen = aes.GetCiphertextLengthCbc(length, PaddingMode.PKCS7);
+        var result    = new byte[16 + cipherLen];
+        System.Security.Cryptography.RandomNumberGenerator.Fill(result.AsSpan(0, 16)); // IV prefix
+        if (!aes.TryEncryptCbc(plaintext.AsSpan(0, length), result.AsSpan(0, 16),
+                result.AsSpan(16), out int written, PaddingMode.PKCS7) || written != cipherLen)
+            throw new CryptographicException("CBC encryption did not fill the pre-sized buffer.");
+        return result;
     }
 
     private static byte[] AesEncrypt(byte[] plaintext, byte[] key) =>

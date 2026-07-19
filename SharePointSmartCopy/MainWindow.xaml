@@ -594,6 +594,9 @@
                     <TreeView x:Name="SourceTreeView"
                               ItemsSource="{Binding SourceLibraries}"
                               ItemTemplate="{StaticResource SourceNodeTemplate}"
+                              VirtualizingPanel.IsVirtualizing="False"
+                              ScrollViewer.CanContentScroll="False"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
                               Padding="4">
                         <TreeView.ItemContainerStyle>
                             <Style TargetType="TreeViewItem">
@@ -699,6 +702,9 @@
                                       ItemsSource="{Binding TargetLibraries}"
                                       ItemTemplate="{StaticResource TargetNodeTemplate}"
                                       SelectedItemChanged="TargetTree_SelectedItemChanged"
+                                      VirtualizingPanel.IsVirtualizing="False"
+                                      ScrollViewer.CanContentScroll="False"
+                                      ScrollViewer.VerticalScrollBarVisibility="Visible"
                                       Padding="4">
                                 <TreeView.ItemContainerStyle>
                                     <Style TargetType="TreeViewItem">
@@ -1514,6 +1520,17 @@
                             <TextBlock Text="{Binding CopyDuration}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
                             <TextBlock Text="Duration" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </Border>
+                    <!-- Only shown when the run was cancelled or the app closed mid-copy — a fully
+                         completed run has zero cancelled items, so this stays hidden (and the
+                         UniformGrid re-collapses to a clean 4-tile row) the vast majority of the time. -->
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WindowBgBrush}" BorderBrush="{DynamicResource BorderLightBrush}"
+                            Visibility="{Binding CancelledCount, Converter={StaticResource IntToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding CancelledCount}" FontSize="28" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Cancelled" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
                 </UniformGrid>

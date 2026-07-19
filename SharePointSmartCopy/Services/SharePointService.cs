@@ -257,9 +257,18 @@ public class SharePointService
     // hands it back as a single unit for the caller to copy natively (Graph's server-side /copy
     // action, which duplicates the real object instead of rebuilding one). ItemId/Name/RelativePath
     // refer to the FOLDER itself in that case, not a file, and Modified is unused.
+    // IsEmptyFolder: this entry is a folder with no files anywhere in its subtree (directly or via
+    // descendants) — the walk below never visits such a folder as anyone's child copy target, so
+    // without an explicit marker it silently never gets created at the destination. ItemId/Modified
+    // are unused for this case; RelativePath is the folder's own path, not a file's.
+    // Size: the file's byte size from the same Children listing (also already in the payload).
+    // Migration API mode uses it as the fallback for its large-file memory gate and per-batch byte
+    // budget when the upfront metadata cache missed the file under throttling — without it a
+    // multi-GB file whose metadata fetch failed was treated as size 0, bypassed the gate, and
+    // 16 of them downloading concurrently exhausted process memory (observed 2026-07-18).
     public readonly record struct SourceFileEntry(
         string DriveId, string ItemId, string Name, string RelativePath, DateTimeOffset? Modified,
-        bool IsSpecialFolder = false);
+        long? Size = null, bool IsSpecialFolder = false, bool IsEmptyFolder = false);
 
     // Concurrent replacement for the old sequential recursive walk (same channel + sibling-fan-out
     // pattern as EnumerateFilesWithMetadataAsync below). The sequential version issued ONE Graph
@@ -293,6 +302,20 @@ public class SharePointService
         try { items = await GetChildrenWithMetadataAsync(driveId, itemId, ct); }
         finally { controller.Release(); }
 
+        // A folder with no children at all can never otherwise be represented — every other entry
+        // this walk produces is a file (or special folder) that drags its ancestor chain into
+        // existence as a side effect of its own target path. A genuinely empty folder has no such
+        // file, so without this it is silently never created at the destination (see the
+        // Translational(1) case: it existed at the source with zero files and never showed up at
+        // the target, with no error anywhere — because nothing ever attempted to create it).
+        if (items.Count == 0)
+        {
+            await writer.WriteAsync(new SourceFileEntry(
+                driveId, itemId, basePath.Contains('/') ? basePath[(basePath.LastIndexOf('/') + 1)..] : basePath,
+                basePath, null, IsEmptyFolder: true), ct);
+            return;
+        }
+
         var subfolderWalks = new List<Task>();
         foreach (var item in items)
         {
@@ -313,7 +336,7 @@ public class SharePointService
             }
             else
                 await writer.WriteAsync(new SourceFileEntry(
-                    driveId, item.Id, item.Name, childPath, item.LastModifiedDateTime), ct);
+                    driveId, item.Id, item.Name, childPath, item.LastModifiedDateTime, item.Size), ct);
         }
         await Task.WhenAll(subfolderWalks);
     }
@@ -468,6 +491,42 @@ public class SharePointService
     {
         var stream = await Graph.Drives[driveId].Items[itemId].Versions[versionId].Content.GetAsync();
         return stream ?? throw new Exception("Empty response downloading version content.");
+    }
+
+    // Result of a ranged content fetch: whether the server actually honored the Range request
+    // (206 + a Content-Range starting at the byte we asked for) vs. silently ignoring it and
+    // sending the WHOLE file back from byte 0 (200) — the caller must know which happened, since
+    // appending a 200 response to already-buffered bytes would corrupt the file.
+    public readonly record struct RangedContent(Stream Content, bool IsPartial, long StartOffset);
+
+    // Fetches file/version content starting at rangeStart, bypassing the Kiota-generated Content
+    // accessor so a Range header can be attached to the request. Graph's content endpoint redirects
+    // (302) to a pre-authenticated SharePoint/OneDrive blob URL; HttpClient's default redirect
+    // handling forwards the Range header across that redirect, and the blob endpoint honors it with
+    // a 206 + Content-Range — this is what lets a connection reset on a multi-GB file resume from
+    // where it left off instead of re-downloading the whole thing (the single biggest cost observed
+    // on a run dominated by multi-GB scan files hitting frequent mid-transfer resets).
+    // versionId null = current version; otherwise a specific historical version.
+    public async Task<RangedContent> DownloadContentRangeAsync(
+        string driveId, string itemId, string? versionId, long rangeStart, CancellationToken ct)
+    {
+        var token = await _authService.GetAccessTokenAsync(cancellationToken: ct);
+        var url = versionId == null
+            ? $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}/content"
+            : $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}/versions/{versionId}/content";
+
+        var req = new HttpRequestMessage(HttpMethod.Get, url);
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        if (rangeStart > 0)
+            req.Headers.Range = new RangeHeaderValue(rangeStart, null);
+
+        var response = await _httpClient.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
+        response.EnsureSuccessStatusCode(); // 4xx/5xx -> HttpRequestException, same as the old Kiota path threw
+
+        bool isPartial = response.StatusCode == System.Net.HttpStatusCode.PartialContent;
+        long startOffset = isPartial && response.Content.Headers.ContentRange?.From is { } from ? from : 0;
+        var stream = await response.Content.ReadAsStreamAsync(ct);
+        return new RangedContent(stream, isPartial, startOffset);
     }
 
     public async Task<List<DriveItemVersion>> GetVersionsAsync(string driveId, string itemId)
@@ -634,18 +693,30 @@ public class SharePointService
                         catch (OperationCanceledException) { throw; }
                         catch { return; } // whole batch call failed — retry rounds below cover these items
 
+                        // Same sub-response throttle surfacing as FetchBatchChunkAsync: 429s inside a
+                        // 200-OK $batch envelope are invisible to the pipeline handlers, so without
+                        // this the retry rounds re-burst instantly into the depleted budget.
+                        TimeSpan? subThrottleDelay = null;
                         for (int i = 0; i < chunk.Length; i++)
                         {
                             if (ids[i] == null) continue;
                             try
                             {
                                 using var http = await response.GetResponseByIdAsync(ids[i]!);
-                                if (!http.IsSuccessStatusCode) continue;
+                                if (!http.IsSuccessStatusCode)
+                                {
+                                    if (GetBatchSubResponseThrottleDelay(http) is { } d &&
+                                        (subThrottleDelay == null || d > subThrottleDelay))
+                                        subThrottleDelay = d;
+                                    continue;
+                                }
                                 using var doc = JsonDocument.Parse(await http.Content.ReadAsStringAsync(c));
                                 result[chunk[i].itemId] = TryGetBatchDateTimeOffset(doc.RootElement, "lastModifiedDateTime");
                             }
                             catch { /* leave absent; retried below, then caller falls back if still missing */ }
                         }
+                        if (subThrottleDelay is { } throttle)
+                            Throttled?.Invoke(throttle, 1, 1, "inside $batch");
                     }
                     finally { gate.Release(); }
 
@@ -766,6 +837,25 @@ public class SharePointService
         return new Dictionary<string, (FileMetadata, List<DriveItemVersion>?)>(cache);
     }
 
+    // Extracts the Retry-After delay from a throttled (429/503) $batch SUB-response, or null when
+    // the sub-response wasn't throttled. Sub-request throttles never pass through the HTTP pipeline
+    // handlers — the $batch call itself returns 200 — so neither Kiota's retry handler nor
+    // GraphThrottleNotifyHandler ever sees them. Before these were surfaced via the Throttled event,
+    // the bulk-fetch retry rounds re-burst at full width straight back into the depleted budget and
+    // exhausted every round in seconds (2026-07-18 run: 4,301 of 5,295 files left metadata-less in
+    // ~100s, which then bypassed the large-file memory gate downstream).
+    private static TimeSpan? GetBatchSubResponseThrottleDelay(HttpResponseMessage http)
+    {
+        if ((int)http.StatusCode is not (429 or 503)) return null;
+        var delay = http.Headers.RetryAfter?.Delta
+            ?? (http.Headers.RetryAfter?.Date is { } when
+                    ? when - DateTimeOffset.UtcNow
+                    : TimeSpan.FromSeconds(15));
+        if (delay <= TimeSpan.Zero) delay = TimeSpan.FromSeconds(1);
+        if (delay > TimeSpan.FromSeconds(120)) delay = TimeSpan.FromSeconds(120);
+        return delay;
+    }
+
     private async Task FetchBatchChunkAsync(
         (string driveId, string itemId)[] chunk,
         Dictionary<string, (FileMetadata, List<DriveItemVersion>)> result,
@@ -810,6 +900,17 @@ public class SharePointService
 
         var response = await Graph.Batch.PostAsync(batch, ct);
 
+        // Max Retry-After across this chunk's throttled sub-responses — raised once (below) via the
+        // Throttled event so subscribed adaptive gates step down and hold their quiet window, making
+        // the caller's retry rounds actually wait out the throttle instead of re-bursting into it.
+        TimeSpan? subThrottleDelay = null;
+        void NoteSubThrottle(HttpResponseMessage http)
+        {
+            if (GetBatchSubResponseThrottleDelay(http) is { } d &&
+                (subThrottleDelay == null || d > subThrottleDelay))
+                subThrottleDelay = d;
+        }
+
         for (int i = 0; i < chunk.Length; i++)
         {
             var (driveId, itemId) = chunk[i];
@@ -830,6 +931,7 @@ public class SharePointService
                         metadata = ParseBatchFileMetadata(metaJson);
                         TryCacheBatchSpIds(driveId, itemId, metaJson);
                     }
+                    else NoteSubThrottle(metaHttp);
                 }
                 catch { }
             }
@@ -861,6 +963,7 @@ public class SharePointService
                         }
                         versions = SortVersions(vList);
                     }
+                    else NoteSubThrottle(versHttp);
                 }
                 catch { }
             }
@@ -868,6 +971,9 @@ public class SharePointService
             if (metadata != null && versions != null)
                 result[itemId] = (metadata, versions);
         }
+
+        if (subThrottleDelay is { } throttle)
+            Throttled?.Invoke(throttle, 1, 1, "inside $batch");
     }
 
     private static FileMetadata ParseBatchFileMetadata(string json)

@@ -23,19 +23,21 @@ public class SavedReportItem
     [JsonIgnore]
     public string StatusDisplay => Status switch
     {
-        CopyStatus.Success => "✅ Success",
-        CopyStatus.Failed  => "❌ Failed",
-        CopyStatus.Skipped => "⏭ Skipped",
-        _                  => Status.ToString()
+        CopyStatus.Success   => "✅ Success",
+        CopyStatus.Failed    => "❌ Failed",
+        CopyStatus.Skipped   => "⏭ Skipped",
+        CopyStatus.Cancelled => "🚫 Cancelled",
+        _                    => Status.ToString()
     };
 
     [JsonIgnore]
     public string StatusColor => Status switch
     {
-        CopyStatus.Success => "#107C10",
-        CopyStatus.Failed  => "#A4262C",
-        CopyStatus.Skipped => "#797775",
-        _                  => "#323130"
+        CopyStatus.Success   => "#107C10",
+        CopyStatus.Failed    => "#A4262C",
+        CopyStatus.Skipped   => "#797775",
+        CopyStatus.Cancelled => "#797775",
+        _                    => "#323130"
     };
 }
 
@@ -65,6 +67,9 @@ public class SavedReport
     public int SuccessCount { get; set; }
     public int FailedCount { get; set; }
     public int SkippedCount { get; set; }
+    // Still-Copying items swept up when the run was cancelled or the app closed mid-copy — never
+    // actually attempted, so excluded from FailedCount (see CopyStatus.Cancelled).
+    public int CancelledCount { get; set; }
     public int TotalCount { get; set; }
     public TimeSpan Duration { get; set; }
 
@@ -92,7 +97,9 @@ public class SavedReport
     }
 
     [JsonIgnore]
-    public string Summary => $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   ⏱ {DurationDisplay}";
+    public string Summary => CancelledCount > 0
+        ? $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   🚫 {CancelledCount}   ⏱ {DurationDisplay}"
+        : $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   ⏱ {DurationDisplay}";
 }
 
 // Everything the History list needs to show one row, deliberately WITHOUT Items. Deserializing a
@@ -113,6 +120,7 @@ public class SavedReportSummary
     public int SuccessCount { get; set; }
     public int FailedCount { get; set; }
     public int SkippedCount { get; set; }
+    public int CancelledCount { get; set; }
     public int TotalCount { get; set; }
     public TimeSpan Duration { get; set; }
 
@@ -136,5 +144,7 @@ public class SavedReportSummary
     }
 
     [JsonIgnore]
-    public string Summary => $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   ⏱ {DurationDisplay}";
+    public string Summary => CancelledCount > 0
+        ? $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   🚫 {CancelledCount}   ⏱ {DurationDisplay}"
+        : $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   ⏱ {DurationDisplay}";
 }

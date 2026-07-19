@@ -14,6 +14,13 @@ public class CopyJob
     // the walk (e.g. single-file picks); those fall back to the bulk Graph fetch.
     public DateTimeOffset? SourceModified { get; set; }
 
+    // Byte size from the same walk, for the same reason as SourceModified: Migration API mode's
+    // large-file memory gate, 2 GB buffer guard, and per-batch byte budget all need a size even
+    // when the upfront metadata fetch for the file failed under throttling — falling back to 0
+    // let multi-GB files bypass the gate and exhaust process memory (2026-07-18 run: 44 GB heap,
+    // connection resets, mass failures). Null for jobs built outside the walk.
+    public long? SourceSize { get; set; }
+
     public string TargetDriveId { get; set; } = string.Empty;
     public string TargetParentItemId { get; set; } = string.Empty;
     public string TargetSiteId { get; set; } = string.Empty;

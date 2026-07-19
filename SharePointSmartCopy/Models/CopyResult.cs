@@ -4,7 +4,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SharePointSmartCopy.Models;
 
-public enum CopyStatus { Pending, Copying, Success, Failed, Skipped }
+// Cancelled: the item was still Copying (never resolved) when the run was cancelled or the app
+// closed mid-copy — distinct from Failed, which means the item was actually attempted and a real
+// error occurred. Conflating the two used to dump every in-flight item into Failed on shutdown,
+// making an interrupted run's saved report look like a mass failure (e.g. 5,295 "failed" out of
+// 5,295 remaining, when in fact none of them had even been attempted yet).
+public enum CopyStatus { Pending, Copying, Success, Failed, Skipped, Cancelled }
 
 // Which rows the copy-log grids display (chips above the log).
 public enum ResultFilterKind { All, Success, Failed, Skipped }
@@ -15,11 +20,30 @@ public partial class CopyResult : ObservableObject
     // Compared against ErrorMessage to decide whether permissions still refresh.
     public const string UpToDate = "Up to date";
 
+    // Exposed so ProcessDiagnostics can report the current BeginInvoke backlog — if background
+    // threads enqueue UI updates faster than the dispatcher drains them, this grows unbounded
+    // with no other visible symptom before a crash.
+    private static int _pendingUiDispatches;
+    public static int PendingUiDispatches => _pendingUiDispatches;
+
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
         var dispatcher = Application.Current?.Dispatcher;
         if (dispatcher is not null && !dispatcher.CheckAccess())
-            dispatcher.Invoke(() => base.OnPropertyChanged(e));
+        {
+            // BeginInvoke, not Invoke: this fires from many concurrent background upload/download
+            // threads (one per in-flight file) during large migration jobs. A blocking Invoke here
+            // forces every one of those threads to stall on the UI thread's dispatcher queue, which
+            // under sustained high-concurrency load is a known trigger for WPF's composition engine
+            // to fail with UCEERR_RENDERTHREADFAILURE. The backing field is already set by the time
+            // this runs, so nothing depends on the notification completing synchronously.
+            Interlocked.Increment(ref _pendingUiDispatches);
+            dispatcher.BeginInvoke(() =>
+            {
+                base.OnPropertyChanged(e);
+                Interlocked.Decrement(ref _pendingUiDispatches);
+            });
+        }
         else
             base.OnPropertyChanged(e);
     }

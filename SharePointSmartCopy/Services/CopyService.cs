@@ -271,6 +271,40 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             continue;
                         }
 
+                        // A folder with no files anywhere in its subtree (see SourceFileEntry.IsEmptyFolder) —
+                        // nothing else would ever create it at the target, since every other entry only
+                        // provisions its ancestor chain as a side effect of copying an actual file.
+                        if (entry.IsEmptyFolder)
+                        {
+                            var displayName = string.IsNullOrEmpty(relativePath) ? job.SourceName : name;
+                            var emptyFolderTarget = ComputeTargetFolderPath(
+                                relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
+                            var folderResult = new CopyResult
+                            {
+                                FileName   = displayName,
+                                SourcePath = string.IsNullOrEmpty(relativePath)
+                                    ? job.SourceDisplayPath : $"{job.SourceDisplayPath}/{relativePath}",
+                                TargetPath = string.IsNullOrEmpty(relativePath)
+                                    ? job.TargetDisplayPath : $"{job.TargetDisplayPath}/{relativePath}",
+                                Status     = CopyStatus.Copying
+                            };
+                            pendingResults.Add(folderResult);
+                            try
+                            {
+                                await spService.GetOrCreateFolderPathAsync(
+                                    job.TargetDriveId, job.TargetParentItemId, emptyFolderTarget);
+                                folderResult.Status = CopyStatus.Success;
+                            }
+                            catch (Exception ex) when (ex is not OperationCanceledException)
+                            {
+                                folderResult.Status       = CopyStatus.Failed;
+                                folderResult.ErrorMessage = ex.Message;
+                                activityLog?.Report($"⚠ Creating empty folder '{displayName}' failed: {ex.Message}");
+                            }
+                            if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
+                            continue;
+                        }
+
                         var targetSubFolder = ComputeTargetSubFolder(
                             relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
                         var fileJob = new CopyJob
@@ -279,6 +313,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             SourceItemId                   = itemId,
                             SourceName                     = name,
                             SourceModified                 = entry.Modified,
+                            SourceSize                     = entry.Size,
                             SourceSiteUrl                  = job.SourceSiteUrl,
                             SourceDisplayPath              = $"{job.SourceDisplayPath}/{relativePath}",
                             TargetDriveId                  = job.TargetDriveId,
@@ -489,7 +524,9 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         try { await controller.WaitAsync(ct); semaphoreAcquired = true; }
         catch (OperationCanceledException)
         {
-            result.Status       = CopyStatus.Skipped;
+            // Cancelled, not Skipped: this item never started (or didn't finish) — Skipped
+            // otherwise means "compared and found already up to date." See CopyStatus.Cancelled.
+            result.Status       = CopyStatus.Cancelled;
             result.ErrorMessage = "Cancelled";
             return;
         }
@@ -584,7 +621,9 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         }
         catch (OperationCanceledException)
         {
-            result.Status       = CopyStatus.Skipped;
+            // Cancelled, not Skipped: this item never started (or didn't finish) — Skipped
+            // otherwise means "compared and found already up to date." See CopyStatus.Cancelled.
+            result.Status       = CopyStatus.Cancelled;
             result.ErrorMessage = "Cancelled";
         }
         catch (Microsoft.Graph.Models.ODataErrors.ODataError oe)
@@ -1007,6 +1046,22 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         var relToParent = isLibrary
             ? fileDir
             : (string.IsNullOrEmpty(fileDir) ? jobSourceName : $"{jobSourceName}/{fileDir}");
+        return string.IsNullOrEmpty(jobTargetSubFolderPath)
+            ? relToParent
+            : string.IsNullOrEmpty(relToParent)
+                ? jobTargetSubFolderPath
+                : $"{jobTargetSubFolderPath}/{relToParent}";
+    }
+
+    // Same shape as ComputeTargetSubFolder, but for an IsEmptyFolder entry: relativePath is already
+    // the folder's OWN path (there's no filename to strip a directory from), so it's used as-is
+    // rather than via GetDirectoryName.
+    internal static string ComputeTargetFolderPath(
+        string relativePath, string jobSourceName, bool isLibrary, string jobTargetSubFolderPath)
+    {
+        var relToParent = isLibrary
+            ? relativePath
+            : (string.IsNullOrEmpty(relativePath) ? jobSourceName : $"{jobSourceName}/{relativePath}");
         return string.IsNullOrEmpty(jobTargetSubFolderPath)
             ? relToParent
             : string.IsNullOrEmpty(relToParent)

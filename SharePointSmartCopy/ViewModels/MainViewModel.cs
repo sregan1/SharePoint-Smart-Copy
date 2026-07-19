@@ -739,7 +739,10 @@ public partial class MainViewModel : ObservableObject
                     return ResultFilter switch
                     {
                         ResultFilterKind.Success => r.Status == CopyStatus.Success,
-                        ResultFilterKind.Failed  => r.Status == CopyStatus.Failed || r.PermissionStatus == CopyStatus.Failed,
+                        // Cancelled items surface under Failed too — they represent unfinished
+                        // work a user reviewing "what didn't succeed" needs to see, even though
+                        // they're tallied separately (CancelledCount) so the summary stays honest.
+                        ResultFilterKind.Failed  => r.Status == CopyStatus.Failed || r.Status == CopyStatus.Cancelled || r.PermissionStatus == CopyStatus.Failed,
                         ResultFilterKind.Skipped => r.Status == CopyStatus.Skipped,
                         _                        => true,
                     };
@@ -764,7 +767,10 @@ public partial class MainViewModel : ObservableObject
                     return FileResultFilter switch
                     {
                         ResultFilterKind.Success => r.Status == CopyStatus.Success,
-                        ResultFilterKind.Failed  => r.Status == CopyStatus.Failed || r.PermissionStatus == CopyStatus.Failed,
+                        // Cancelled items surface under Failed too — they represent unfinished
+                        // work a user reviewing "what didn't succeed" needs to see, even though
+                        // they're tallied separately (CancelledCount) so the summary stays honest.
+                        ResultFilterKind.Failed  => r.Status == CopyStatus.Failed || r.Status == CopyStatus.Cancelled || r.PermissionStatus == CopyStatus.Failed,
                         ResultFilterKind.Skipped => r.Status == CopyStatus.Skipped,
                         _                        => true,
                     };
@@ -941,14 +947,19 @@ public partial class MainViewModel : ObservableObject
     private DateTimeOffset? _metadataRateAnchorTime;
     private int             _metadataRateAnchorDone;
 
-    public int SuccessCount => CopyResults.Count(r => r.Status == CopyStatus.Success);
-    public int FailedCount  => CopyResults.Count(r => r.Status == CopyStatus.Failed);
-    public int SkippedCount => CopyResults.Count(r => r.Status == CopyStatus.Skipped);
+    public int SuccessCount   => CopyResults.Count(r => r.Status == CopyStatus.Success);
+    public int FailedCount    => CopyResults.Count(r => r.Status == CopyStatus.Failed);
+    public int SkippedCount   => CopyResults.Count(r => r.Status == CopyStatus.Skipped);
+    // Never actually attempted — the run was cancelled or the app closed while these were still
+    // Copying. Kept separate from FailedCount so an interrupted run's summary doesn't read as a
+    // mass failure (see CopyStatus.Cancelled).
+    public int CancelledCount => CopyResults.Count(r => r.Status == CopyStatus.Cancelled);
 
     public int FileTotalCount   => CopyResults.Count(r => !r.IsPermissionResult);
     public int FileSuccessCount => CopyResults.Count(r => !r.IsPermissionResult && r.Status == CopyStatus.Success);
     public int FileFailedCount  => CopyResults.Count(r => !r.IsPermissionResult && (r.Status == CopyStatus.Failed || r.PermissionStatus == CopyStatus.Failed));
     public int FileSkippedCount => CopyResults.Count(r => !r.IsPermissionResult && r.Status == CopyStatus.Skipped);
+    public int FileCancelledCount => CopyResults.Count(r => !r.IsPermissionResult && r.Status == CopyStatus.Cancelled);
 
     public double PermColumnWidth        => CopyPermissions ? 100 : 0;
     public double PermDetailsColumnWidth => CopyPermissions ? 200 : 0;
@@ -1177,10 +1188,12 @@ public partial class MainViewModel : ObservableObject
             OnPropertyChanged(nameof(SuccessCount));
             OnPropertyChanged(nameof(FailedCount));
             OnPropertyChanged(nameof(SkippedCount));
+            OnPropertyChanged(nameof(CancelledCount));
             OnPropertyChanged(nameof(FileTotalCount));
             OnPropertyChanged(nameof(FileSuccessCount));
             OnPropertyChanged(nameof(FileFailedCount));
             OnPropertyChanged(nameof(FileSkippedCount));
+            OnPropertyChanged(nameof(FileCancelledCount));
             SaveReport();
 
             if (IsUpdatingMetadata)
@@ -2127,10 +2140,12 @@ public partial class MainViewModel : ObservableObject
             OnPropertyChanged(nameof(SuccessCount));
             OnPropertyChanged(nameof(FailedCount));
             OnPropertyChanged(nameof(SkippedCount));
+            OnPropertyChanged(nameof(CancelledCount));
             OnPropertyChanged(nameof(FileTotalCount));
             OnPropertyChanged(nameof(FileSuccessCount));
             OnPropertyChanged(nameof(FileFailedCount));
             OnPropertyChanged(nameof(FileSkippedCount));
+            OnPropertyChanged(nameof(FileCancelledCount));
             SaveReport();
         }
     }
@@ -2630,10 +2645,11 @@ public partial class MainViewModel : ObservableObject
                 Duration     = DateTimeOffset.Now - _copyStartTime,
                 SourceUrl    = SourceUrl,
                 TargetUrl    = TargetUrl,
-                SuccessCount = SuccessCount,
-                FailedCount  = FailedCount,
-                SkippedCount = SkippedCount,
-                TotalCount   = TotalCount,
+                SuccessCount   = SuccessCount,
+                FailedCount    = FailedCount,
+                SkippedCount   = SkippedCount,
+                CancelledCount = CancelledCount,
+                TotalCount     = TotalCount,
                 CopyMode     = CopyMode,
                 Items        = CopyResults.Select(r => new SavedReportItem
                 {
