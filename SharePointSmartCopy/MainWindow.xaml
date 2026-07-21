@@ -497,7 +497,13 @@
             </StackPanel>
 
             <!-- ── Step 1: Browse Source ──────────────────────────────────── -->
-            <Grid Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=1}">
+            <!-- Outer scroll so the whole step stays reachable when the expanded source tree + headers
+                 exceed the window height (small windows or deeply expanded folders). The tree keeps its
+                 own internal scroll via the MaxHeight on its Border below; this viewer scrolls the
+                 surrounding chrome. Trees are non-virtualized, so wrapping them costs no virtualization. -->
+            <ScrollViewer Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=1}"
+                          VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -589,7 +595,7 @@
                 </StackPanel>
 
                 <Border Grid.Row="5" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1"
-                        Background="{DynamicResource SurfaceBrush}" MinHeight="200"
+                        Background="{DynamicResource SurfaceBrush}" MinHeight="200" MaxHeight="480"
                         Visibility="{Binding IsSiteScope, Converter={StaticResource InvBoolToVis}}">
                     <TreeView x:Name="SourceTreeView"
                               ItemsSource="{Binding SourceLibraries}"
@@ -607,10 +613,15 @@
                     </TreeView>
                 </Border>
             </Grid>
+            </ScrollViewer>
 
             <!-- ── Step 2: Target URL + Folder ───────────────────────────── -->
-            <Grid Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=2}"
-                  MaxWidth="1000" HorizontalAlignment="Center">
+            <!-- Outer scroll: on small windows the destination-folder tree (capped at 480px) plus its
+                 headers can exceed the window; without this the bottom of the tree was clipped with no
+                 way to reach it. The tree keeps its own internal scroll. -->
+            <ScrollViewer Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=2}"
+                          VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Grid MaxWidth="1000" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" MinWidth="300"/>
                     <ColumnDefinition Width="16"/>
@@ -763,6 +774,7 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
+            </ScrollViewer>
 
             <!-- ── Step 3: Options + Review ───────────────────────────────── -->
             <Grid Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=3}">
@@ -957,6 +969,24 @@
                                             <ToolTip MaxWidth="280">
                                                 <TextBlock TextWrapping="Wrap" FontSize="12"
                                                            Text="Preserves Created By, Created Date, Modified By, and Modified Date on every copied item. When off, items appear as created by you today."/>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </StackPanel>
+                            </CheckBox>
+
+                            <!-- Only meaningful while Preserve metadata is on; disabled otherwise so its
+                                 effect is never ambiguous. Off = big speed win on repeated mostly-skipped runs. -->
+                            <CheckBox IsChecked="{Binding ReapplyFolderMetadataEveryRun}" Margin="0,0,0,8" FontSize="12"
+                                      IsEnabled="{Binding PreserveMetadata}"
+                                      AutomationProperties.Name="Re-apply folder metadata on every run">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="Re-apply folder metadata every run" VerticalAlignment="Center"/>
+                                    <TextBlock Style="{StaticResource ToolTipIcon}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip MaxWidth="280">
+                                                <TextBlock TextWrapping="Wrap" FontSize="12"
+                                                           Text="On: repairs folder Created/Modified dates and authors for every folder in the selection on each run — needed to fix folder metadata on an already-copied target, but adds a per-folder scan that runs even when every file is skipped. Off: only folders that receive new files this run are dated, making repeated 'mostly skipped' runs much faster. Applies only when Preserve metadata is on."/>
                                             </ToolTip>
                                         </TextBlock.ToolTip>
                                     </TextBlock>

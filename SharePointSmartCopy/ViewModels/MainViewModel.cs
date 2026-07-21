@@ -61,6 +61,7 @@ public partial class MainViewModel : ObservableObject
         MaxVersions       = Settings.MaxVersions;
         MaxParallelCopies = Settings.MaxParallelCopies;
         PreserveMetadata    = Settings.PreserveMetadata;
+        ReapplyFolderMetadataEveryRun = Settings.ReapplyFolderMetadataEveryRun;
         CopyNavigation      = Settings.CopyNavigation;
         CopyLibraryContent  = Settings.CopyLibraryContent;
         RemapPageWebPartUrls = Settings.RemapPageWebPartUrls;
@@ -600,6 +601,9 @@ public partial class MainViewModel : ObservableObject
 
     // New options
     [ObservableProperty] private bool _preserveMetadata = true;
+    // When false, folder date/author repair is limited to folders receiving new files this run (faster
+    // repeated incremental runs). Only meaningful while PreserveMetadata is on. See AppSettings.
+    [ObservableProperty] private bool _reapplyFolderMetadataEveryRun = true;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(EffectiveCopyCustomColumns))]
     [NotifyPropertyChangedFor(nameof(CanConfigureMappings))]
@@ -830,6 +834,7 @@ public partial class MainViewModel : ObservableObject
             $"Versions: {versions}",
             $"Parallel Copies: {MaxParallelCopies}",
             $"Preserve Metadata: {(PreserveMetadata ? "Yes" : "No")}",
+            $"Folder Metadata Repair: {(PreserveMetadata && ReapplyFolderMetadataEveryRun ? "Every run" : "New folders only")}",
             $"Permissions: {(CopyPermissions ? "Yes" : "No")}",
             $"Custom Columns: {(EffectiveCopyCustomColumns ? "Yes" : "No")}"
         ]);
@@ -1680,6 +1685,7 @@ public partial class MainViewModel : ObservableObject
                                 columnMappings: [.. ColumnMappings],
                                 bulkFieldCache: _bulkFieldCache,
                                 preserveMetadata: PreserveMetadata,
+                                reapplyFolderMetadata: ReapplyFolderMetadataEveryRun,
                                 copyPermissions: CopyPermissions,
                                 permissionService: CopyPermissions ? _permissionCopyService : null,
                                 permissionFlags: libPermFlags);
@@ -1766,6 +1772,7 @@ public partial class MainViewModel : ObservableObject
                                 columnMappings: [.. ColumnMappings],
                                 bulkFieldCache: _bulkFieldCache,
                                 preserveMetadata: PreserveMetadata,
+                                reapplyFolderMetadata: ReapplyFolderMetadataEveryRun,
                                 copyPermissions: CopyPermissions,
                                 permissionService: CopyPermissions ? _permissionCopyService : null,
                                 permissionFlags: existLibPermFlags);
@@ -1988,6 +1995,7 @@ public partial class MainViewModel : ObservableObject
                                 copyPages: true,
                                 remapPageWebPartUrls: RemapPageWebPartUrls,
                                 preserveMetadata: PreserveMetadata,
+                                reapplyFolderMetadata: ReapplyFolderMetadataEveryRun,
                                 copyCustomColumns: EffectiveCopyCustomColumns,
                                 columnMappings: [.. ColumnMappings],
                                 bulkFieldCache: pageBulkCache,
@@ -2449,7 +2457,9 @@ public partial class MainViewModel : ObservableObject
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
             Filter   = "Excel Workbook (*.xlsx)|*.xlsx",
-            FileName = $"{SiteUrlHelper.ReportFilenamePrefix(SourceUrl, TargetUrl, Settings.PrefixReportFilenamesWithSiteNames)}VerificationReport_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
+            // "DeepVerificationReport_" when the deep Office-file pass is on, so the file is
+            // distinguishable from a standard verification at a glance. Live checkbox state.
+            FileName = $"{SiteUrlHelper.ReportFilenamePrefix(SourceUrl, TargetUrl, Settings.PrefixReportFilenamesWithSiteNames)}{(DeepVerifyOfficeFiles ? "Deep" : "")}VerificationReport_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
         };
         if (dlg.ShowDialog() != true) return;
 
@@ -2470,6 +2480,14 @@ public partial class MainViewModel : ObservableObject
         // entire deep-verify phase, making an actively-running verification look stalled. "⚠"-
         // prefixed messages (throttle waits, scan errors) are excluded — those are transient blips
         // that belong in the log, not overwriting the main status line on every occurrence.
+        // Live checkbox state, not a settings re-read — see the field's own doc comment. Read up front
+        // so every status/activity line below can label the run as "Deep verification" when the deep
+        // Office-file pass is enabled, matching the checkbox the user ticked.
+        bool deepVerify   = DeepVerifyOfficeFiles;
+        string verifyName = deepVerify ? "Deep verification" : "Verification";  // sentence-initial
+        string verifyLow  = deepVerify ? "deep verification" : "verification";  // mid-sentence
+        string verifyIng  = deepVerify ? "Deep verifying"    : "Verifying";
+
         var onActivity = new Progress<string>(msg =>
         {
             PushActivity(msg);
@@ -2477,18 +2495,15 @@ public partial class MainViewModel : ObservableObject
                 StatusMessage = msg;
         });
         var onScanned  = new Progress<VerificationReportService.ScanProgress>(p =>
-            StatusMessage = $"Verifying… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)");
-
-        // Live checkbox state, not a settings re-read — see the field's own doc comment.
-        bool deepVerify = DeepVerifyOfficeFiles;
+            StatusMessage = $"{verifyIng}… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)");
 
         try
         {
-            StatusMessage = "Re-scanning source and target for verification…";
+            StatusMessage = $"Re-scanning source and target for {verifyLow}…";
             var roots  = VerificationRoot.FromCopyJobs(CopyJobs);
             var result = await _verificationReportService.RunAsync(
                 roots, MaxParallelCopies, onActivity, onScanned, _verifyCts.Token, deepVerify);
-            StatusMessage = "Writing verification workbook…";
+            StatusMessage = $"Writing {verifyLow} workbook…";
             // Off the UI thread: ClosedXML SaveAs is CPU-heavy on 100k+ row runs.
             await Task.Run(() => ExcelReportWriter.Write(dlg.FileName, result));
 
@@ -2498,19 +2513,19 @@ public partial class MainViewModel : ObservableObject
             int onlyInSource    = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInSource);
             int onlyInTarget    = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInTarget);
             int unverified      = result.Comparison.Count(r => r.Status == ComparisonStatus.Unverified);
-            PushActivity($"✔ Verification complete: {matched:N0} matched, {contentMismatch:N0} content mismatch, {dateMismatch:N0} date mismatch, {onlyInSource:N0} only in source, {onlyInTarget:N0} only in target"
+            PushActivity($"✔ {verifyName} complete: {matched:N0} matched, {contentMismatch:N0} content mismatch, {dateMismatch:N0} date mismatch, {onlyInSource:N0} only in source, {onlyInTarget:N0} only in target"
                 + (unverified > 0 ? $", {unverified:N0} unverified (no comparable signal)" : ""));
-            PushActivity($"Verification report written: {dlg.FileName}");
+            PushActivity($"{verifyName} report written: {dlg.FileName}");
             if (result.ScanErrors.Count > 0)
                 PushActivity($"⚠ {result.ScanErrors.Count} root(s) could not be scanned — see the Scan Errors tab");
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
             StatusMessage = string.Empty;
         }
-        catch (OperationCanceledException) { StatusMessage = "Verification cancelled."; PushActivity("Verification cancelled."); }
+        catch (OperationCanceledException) { StatusMessage = $"{verifyName} cancelled."; PushActivity($"{verifyName} cancelled."); }
         catch (Exception ex)
         {
-            StatusMessage = $"Verification error: {ex.Message}";
-            PushActivity($"⚠ Verification error: {ex.Message}");
+            StatusMessage = $"{verifyName} error: {ex.Message}";
+            PushActivity($"⚠ {verifyName} error: {ex.Message}");
         }
         finally { IsVerifying = false; }
     }
@@ -2596,6 +2611,7 @@ public partial class MainViewModel : ObservableObject
                     Settings.CopyLibraryContent   = CopyLibraryContent;
                     Settings.RemapPageWebPartUrls = RemapPageWebPartUrls;
                     Settings.PreserveMetadata     = PreserveMetadata;
+                    Settings.ReapplyFolderMetadataEveryRun = ReapplyFolderMetadataEveryRun;
                     Settings.CopyNavigation       = CopyNavigation;
                     Settings.Scope                = CopyScope;
                     Settings.Save();

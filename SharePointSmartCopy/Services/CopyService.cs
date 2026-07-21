@@ -31,7 +31,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         IProgress<(int, int)>? preflightProgress = null,
         IProgress<string>? activityLog = null,
         IProgress<int>? onFilePacked = null,
-        IProgress<(int done, int total)>? onFolderProgress = null)
+        IProgress<(int done, int total)>? onFolderProgress = null,
+        bool reapplyFolderMetadata = true)
     {
         // In SPMI mode the controller semaphore is never used as a download gate
         // (MigrationJobService has its own download controller). Suppress cosmetic step-downs.
@@ -363,7 +364,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             if (copyCustomColumns)
                 activityLog?.Report("⚠ Custom column values are not applied in Migration API mode — after this run, re-run in Enhanced REST mode with Copy-If-Newer to stamp custom columns");
             await migrationJobService.ExecuteAsync(allTasks, overwriteMode, migrationMaxVersions, maxParallel, cancellationToken,
-                copyCustomColumns, columnMappings, bulkFieldCache, preflightProgress, activityLog, onFilePacked);
+                copyCustomColumns, columnMappings, bulkFieldCache, preflightProgress, activityLog, onFilePacked,
+                reapplyFolderMetadata: preserveMetadata && reapplyFolderMetadata);
 
             // Permissions: run after the migration job completes so the target items exist.
             // We can't use Graph item IDs here (the migration API doesn't surface them), so we

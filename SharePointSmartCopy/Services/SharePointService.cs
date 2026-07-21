@@ -48,6 +48,36 @@ public class SharePointService
     public SharePointService(AuthService authService)
     {
         _authService = authService;
+        // Decorate the raw HTTP client (content downloads + SharePoint REST) — see MigrationUserAgent.
+        // Pipe-delimited value isn't a valid structured UA, so add it without validation.
+        _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", MigrationUserAgent);
+    }
+
+    // SharePoint Online and Graph throttle UNDECORATED traffic more aggressively than traffic that
+    // carries a stable, structured User-Agent. Microsoft's documented format for a line-of-business
+    // (non-ISV) app is "NONISV|Company|AppName/Version". Undecorated before 2026-07-20 — both the
+    // Graph (Kiota) client and this raw HttpClient sent only a default/empty UA, which lands us in the
+    // harder-throttled tier. This is a general-purpose tool, so the app's own name fills the company
+    // field too — nothing organization-specific is embedded.
+    private const string UserAgentApp = "SharePointSmartCopy";
+    private static readonly string MigrationUserAgent = BuildUserAgent();
+    private static string BuildUserAgent()
+    {
+        var v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+        var version = v == null ? "1.0" : $"{v.Major}.{v.Minor}.{v.Build}";
+        return $"NONISV|{UserAgentApp}|{UserAgentApp}/{version}";
+    }
+
+    // Forces the decorated User-Agent onto every Graph request, overriding Kiota's default
+    // "kiota-dotnet/…" UA (undecorated as far as SharePoint's throttling tiers are concerned).
+    private sealed class SpoUserAgentHandler(string userAgent) : System.Net.Http.DelegatingHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
+        {
+            request.Headers.Remove("User-Agent");
+            request.Headers.TryAddWithoutValidation("User-Agent", userAgent);
+            return base.SendAsync(request, ct);
+        }
     }
 
     public Task<string> GetSharePointTokenAsync(string siteUrl, string scope = "Sites.ReadWrite.All")
@@ -112,6 +142,9 @@ public class SharePointService
         // This makes Graph throttles visible to the adaptive parallelism controller.
         handlers.Insert(3, new GraphThrottleNotifyHandler(
             (delay, attempt, max, reason) => Throttled?.Invoke(delay, attempt, max, reason)));
+        // Decorate every Graph request with our structured User-Agent (see MigrationUserAgent),
+        // appended last so it runs closest to the wire and overrides Kiota's default UA.
+        handlers.Add(new SpoUserAgentHandler(MigrationUserAgent));
         // Configure the underlying socket handler: gzip so metadata/JSON responses transfer
         // compressed (binary downloads are already-compressed and unaffected), and recycle pooled
         // connections every few minutes for stability across multi-hour 20k+ file runs.
@@ -131,10 +164,58 @@ public class SharePointService
         httpClient.Timeout = TimeSpan.FromMinutes(30);
         var adapter  = new HttpClientRequestAdapter(provider, httpClient: httpClient);
         _graphClient = new GraphServiceClient(adapter);
+        HookThrottleTracker();
     }
 
     private GraphServiceClient Graph => _graphClient
         ?? throw new InvalidOperationException("Not initialized. Please sign in first.");
+
+    // ── Shared throttle awareness ───────────────────────────────────────────────
+    // Every Throttled event (from any phase — scan, analysis, download, $batch) records how long the
+    // tenant asked us to back off. A fresh adaptive gate created for a LATER phase then inherits that
+    // window via CreateThrottleAwareGate, so back-to-back analysis phases don't each re-discover the
+    // same throttle by bursting into it and earning another long Retry-After. State lives on the
+    // SharePointService instance, so it also carries across runs in the same app session.
+    private readonly object _throttleStateLock = new();
+    private DateTimeOffset _throttleSensitiveUntilUtc = DateTimeOffset.MinValue;
+    private bool _throttleTrackerHooked;
+
+    private void HookThrottleTracker()
+    {
+        if (_throttleTrackerHooked) return;   // Initialize can run more than once; subscribe only once
+        _throttleTrackerHooked = true;
+        Throttled += (delay, _, _, _) =>
+        {
+            if (delay <= TimeSpan.Zero) return;
+            lock (_throttleStateLock)
+            {
+                var until = DateTimeOffset.UtcNow + delay;
+                if (until > _throttleSensitiveUntilUtc) _throttleSensitiveUntilUtc = until;
+            }
+        };
+    }
+
+    // Remaining time the tenant is expected to stay throttle-sensitive (TimeSpan.Zero once clear).
+    public TimeSpan RecentThrottleBackoff()
+    {
+        lock (_throttleStateLock)
+        {
+            var remaining = _throttleSensitiveUntilUtc - DateTimeOffset.UtcNow;
+            return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
+        }
+    }
+
+    // Creates an adaptive gate for a metadata/analysis phase that (a) SOFT-STARTS so it eases into the
+    // tenant rate limit instead of bursting to full width on the first tick, and (b) inherits any
+    // active throttle window from an earlier phase/run (via RecentThrottleBackoff) so it starts at its
+    // floor and waits that window out rather than slamming straight back into the same 429.
+    internal AdaptiveParallelismController CreateThrottleAwareGate(int max, int softStart)
+    {
+        var gate = new AdaptiveParallelismController(max, Math.Clamp(softStart, 1, Math.Max(1, max)));
+        var backoff = RecentThrottleBackoff();
+        if (backoff > TimeSpan.Zero) gate.StepDown(backoff);
+        return gate;
+    }
 
     // ── Site ──────────────────────────────────────────────────────────────────
 
@@ -324,11 +405,10 @@ public class SharePointService
             var childPath = string.IsNullOrEmpty(basePath) ? item.Name : $"{basePath}/{item.Name}";
             if (IsFolderLike(item))
             {
-                // A non-empty ProgID (e.g. "OneNote.Notebook") marks a folder SharePoint treats as
-                // a special container — see SourceFileEntry.IsSpecialFolder. Checked per-folder
-                // (not per-file), so the extra REST call only applies to the tree's folder count.
-                var progId = await GetFolderProgIdAsync(driveId, item.Id);
-                if (!string.IsNullOrEmpty(progId))
+                // Special containers (OneNote notebooks, Document Sets) are detected from the fields
+                // already in this listing — see IsSpecialContainer. This replaced a per-folder ProgID
+                // probe that cost two extra round-trips on EVERY folder in the tree.
+                if (IsSpecialContainer(item))
                     await writer.WriteAsync(new SourceFileEntry(
                         driveId, item.Id, item.Name, childPath, item.LastModifiedDateTime, IsSpecialFolder: true), ct);
                 else
@@ -458,6 +538,33 @@ public class SharePointService
     // content-hash comparison for most file types, and a date comparison for Office Open XML formats
     // specifically, since those get re-serialized by SharePoint's backend independently of content
     // changes (making size/hash unreliable for them, but not for anything else).
+    // Document Set base content-type id. Document Sets present as ordinary folders (folder facet,
+    // no package facet) but must be treated as special containers just like OneNote notebooks —
+    // and their content-type id always begins with this prefix regardless of any custom Document
+    // Set type derived from it. See IsSpecialContainer.
+    private const string DocumentSetContentTypeIdPrefix = "0x0120D520";
+
+    // Whether a folder-like DriveItem is a special container that must NOT be walked into as a
+    // plain folder (its contents are handled by a server-side special-folder copy instead — see
+    // SourceFileEntry.IsSpecialFolder / CopySpecialFolderAsync). Detected entirely from the fields
+    // already returned by the children listing below — NO per-folder round-trip:
+    //   • OneNote notebooks (and similar bundles) come back with a "package" facet.
+    //   • Document Sets come back as folders carrying the Document Set content type, surfaced via
+    //     the expanded listItem.contentType.
+    // This replaces the old per-folder GetFolderProgIdAsync probe, which cost TWO extra round-trips
+    // (a Graph sharepointIds call + a SharePoint REST ProgID read) on EVERY folder in the tree just
+    // to find the rare special one — the dominant hidden cost of the source scan. NOTE: an exotic
+    // folder carrying some OTHER non-empty ProgID (neither a package nor a Document Set) would no
+    // longer be flagged special and would be walked as a plain folder. OneNote and Document Sets are
+    // the only special containers this app has ever handled; if a tenant turns out to use another,
+    // this is the spot to extend. Needs a live-tenant sanity check on a library that has Document Sets.
+    private static bool IsSpecialContainer(DriveItem item)
+    {
+        if (item.Package != null) return true;
+        var ctId = item.ListItem?.ContentType?.Id;
+        return ctId != null && ctId.StartsWith(DocumentSetContentTypeIdPrefix, StringComparison.OrdinalIgnoreCase);
+    }
+
     private async Task<List<DriveItem>> GetChildrenWithMetadataAsync(
         string driveId, string itemId, CancellationToken ct)
     {
@@ -466,6 +573,11 @@ public class SharePointService
         {
             cfg.QueryParameters.Top    = 1000;
             cfg.QueryParameters.Select = ["id", "name", "file", "folder", "package", "size", "lastModifiedDateTime"];
+            // Expand only the listItem's content type so Document Sets can be told apart from plain
+            // folders without a per-folder round-trip (see IsSpecialContainer). If a tenant/library
+            // doesn't return it, contentType is simply null and detection falls back to the package
+            // facet — no failure, just the pre-existing OneNote-only behavior.
+            cfg.QueryParameters.Expand = ["listItem($select=contentType)"];
         }, ct);
 
         var items = new List<DriveItem>();
@@ -507,6 +619,13 @@ public class SharePointService
     // where it left off instead of re-downloading the whole thing (the single biggest cost observed
     // on a run dominated by multi-GB scan files hitting frequent mid-transfer resets).
     // versionId null = current version; otherwise a specific historical version.
+    // Thrown by DownloadContentRangeAsync on a 429/503 so the download retry loop can distinguish a
+    // throttle (wait out the server's Retry-After) from a connection reset (short fixed backoff).
+    internal sealed class DownloadThrottledException(TimeSpan retryAfter) : Exception
+    {
+        public TimeSpan RetryAfter { get; } = retryAfter;
+    }
+
     public async Task<RangedContent> DownloadContentRangeAsync(
         string driveId, string itemId, string? versionId, long rangeStart, CancellationToken ct)
     {
@@ -521,7 +640,23 @@ public class SharePointService
             req.Headers.Range = new RangeHeaderValue(rangeStart, null);
 
         var response = await _httpClient.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
-        response.EnsureSuccessStatusCode(); // 4xx/5xx -> HttpRequestException, same as the old Kiota path threw
+        // Content downloads use the raw HttpClient (needed for Range/resume), which bypasses the Graph
+        // client's GraphThrottleNotifyHandler — so a 429/503 here is otherwise INVISIBLE to the adaptive
+        // download controller, which then keeps hammering a throttled endpoint at full width (observed
+        // 2026-07-20: 20+ min download stalls with no "Downloads: throttle backoff" line). Surface it via
+        // the Throttled event (so the controller steps down) and throw a distinct exception carrying the
+        // Retry-After so the caller's retry loop can wait the real window out instead of a blind 5s.
+        if (response.StatusCode is System.Net.HttpStatusCode.TooManyRequests or System.Net.HttpStatusCode.ServiceUnavailable)
+        {
+            var retryAfter = response.Headers.RetryAfter?.Delta
+                ?? (response.Headers.RetryAfter?.Date is { } when ? when - DateTimeOffset.UtcNow : (TimeSpan?)null)
+                ?? TimeSpan.FromSeconds(10);
+            if (retryAfter < TimeSpan.Zero) retryAfter = TimeSpan.FromSeconds(10);
+            response.Dispose();
+            Throttled?.Invoke(retryAfter, 1, 1, "content download");
+            throw new DownloadThrottledException(retryAfter);
+        }
+        response.EnsureSuccessStatusCode(); // other 4xx/5xx -> HttpRequestException, same as the old Kiota path threw
 
         bool isPartial = response.StatusCode == System.Net.HttpStatusCode.PartialContent;
         long startOffset = isPartial && response.Content.Headers.ContentRange?.From is { } from ? from : 0;
@@ -652,7 +787,9 @@ public class SharePointService
         // "undetermined → treat as needing a copy" fallback then misclassified nearly an entire
         // up-to-date library as needing re-copy — hours of wasted download/upload/import for files
         // that didn't need touching. The gate makes the retry rounds actually converge instead.
-        using var gate = new AdaptiveParallelismController(maxConcurrency);
+        // Soft-start + inherit any active throttle window (see CreateThrottleAwareGate) so a phase that
+        // follows an already-throttled one starts low instead of bursting into the same limit.
+        using var gate = CreateThrottleAwareGate(maxConcurrency, Math.Min(maxConcurrency, 2));
         void onThrottle(TimeSpan delay, int __, int ___, string? ____) => gate.StepDown(delay);
         Throttled += onThrottle;
 
@@ -777,7 +914,8 @@ public class SharePointService
         // fixed-width retry rounds re-burst into a depleted throttle budget AND went silent after the
         // first pass — on the 114k-file run (2026-07-01) that meant 29 minutes of no log output while
         // retries churned, indistinguishable from a hang.
-        using var gate = new AdaptiveParallelismController(maxConcurrency);
+        // Soft-start + inherit any active throttle window (see CreateThrottleAwareGate).
+        using var gate = CreateThrottleAwareGate(maxConcurrency, Math.Min(maxConcurrency, 2));
         void onThrottle(TimeSpan delay, int __, int ___, string? ____) => gate.StepDown(delay);
         Throttled += onThrottle;
 
@@ -1113,6 +1251,16 @@ public class SharePointService
         int completed = 0;
         var result = new System.Collections.Concurrent.ConcurrentDictionary<string, FileMetadata>();
 
+        // This is the heaviest per-item analysis phase (~4-5 Graph/REST calls per folder). Previously
+        // it ran at a fixed width on the Graph client's per-request retry alone, so under throttling it
+        // kept every lane hammering. Route it through a soft-starting, throttle-window-inheriting gate
+        // (see CreateThrottleAwareGate) so it eases in and steps down on 429s like the other phases.
+        using var gate = CreateThrottleAwareGate(maxConcurrency, Math.Min(Math.Max(1, maxConcurrency), 2));
+        void onThrottle(TimeSpan delay, int __, int ___, string? ____) => gate.StepDown(delay);
+        Throttled += onThrottle;
+        try
+        {
+
         // Library root folder.
         try
         {
@@ -1135,6 +1283,9 @@ public class SharePointService
             new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, maxConcurrency), CancellationToken = ct },
             async (f, c) =>
             {
+                // The gate (not MaxDegreeOfParallelism) governs live concurrency: it soft-starts and
+                // shrinks on throttle, so effective width = min(MDOP, gate limit).
+                await gate.WaitAsync(c);
                 try
                 {
                     var file = await Graph.Drives[f.driveId].Items[f.sampleFileItemId].GetAsync(cfg =>
@@ -1161,10 +1312,12 @@ public class SharePointService
                     };
                 }
                 catch { /* keep placeholder */ }
-                finally { progress?.Report(Interlocked.Increment(ref completed)); }
+                finally { gate.Release(); progress?.Report(Interlocked.Increment(ref completed)); }
             });
 
         return new Dictionary<string, FileMetadata>(result);
+        }
+        finally { Throttled -= onThrottle; }
     }
 
     // Reads a folder's ProgID (e.g. "OneNote.Notebook" for OneNote notebook containers) via

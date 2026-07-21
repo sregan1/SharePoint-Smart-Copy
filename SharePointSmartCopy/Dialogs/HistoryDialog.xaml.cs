@@ -158,7 +158,9 @@ public partial class HistoryDialog : Window
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
             Filter   = "Excel Workbook (*.xlsx)|*.xlsx",
-            FileName = $"{SiteUrlHelper.ReportFilenamePrefix(report.SourceUrl, report.TargetUrl, AppSettings.Load().PrefixReportFilenamesWithSiteNames)}VerificationReport_{report.Id}.xlsx"
+            // "DeepVerificationReport_" when the deep Office-file pass is on, so the file is
+            // distinguishable from a standard verification at a glance. Live checkbox state.
+            FileName = $"{SiteUrlHelper.ReportFilenamePrefix(report.SourceUrl, report.TargetUrl, AppSettings.Load().PrefixReportFilenamesWithSiteNames)}{(DeepVerifyCheckBox.IsChecked == true ? "Deep" : "")}VerificationReport_{report.Id}.xlsx"
         };
         if (dlg.ShowDialog() != true) return;
 
@@ -174,14 +176,17 @@ public partial class HistoryDialog : Window
         VerifyStatus.Visibility = Visibility.Visible;
         VerifyStatus.Text = "Scanning…";
 
+        // Live checkbox state, not a re-read of AppSettings from disk — see the field's own doc comment
+        // on why deep-verify must be captured from the live UI at run time. Read before the try so the
+        // catch/finally can also label the run "Deep verification" when the deep Office-file pass is on.
+        bool deepVerify   = DeepVerifyCheckBox.IsChecked == true;
+        string verifyName = deepVerify ? "Deep verification" : "Verification";
+
         try
         {
             var roots    = VerificationRoot.FromSavedReport(report.Roots);
             var settings = AppSettings.Load();
             var maxParallel = settings.MaxParallelCopies;
-            // Live checkbox state, not the settings snapshot above — see the field's own doc
-            // comment on why this must never be re-read from disk at run time.
-            bool deepVerify = DeepVerifyCheckBox.IsChecked == true;
 
             // Combine the persistent phase-status line with the most recent throttle/error notice
             // (if any) so a long Retry-After wait shows up instead of just leaving the base text
@@ -235,13 +240,13 @@ public partial class HistoryDialog : Window
             if (result.ScanErrors.Count > 0)
                 MessageBox.Show(
                     $"{result.ScanErrors.Count} root(s) could not be scanned — see the Scan Errors tab in the workbook.",
-                    "Verification", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    verifyName, MessageBoxButton.OK, MessageBoxImage.Warning);
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
         }
         catch (OperationCanceledException) { /* user cancelled — no message needed */ }
         catch (Exception ex)
         {
-            MessageBox.Show($"Verification failed: {ex.Message}", "Verification", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"{verifyName} failed: {ex.Message}", verifyName, MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
         {

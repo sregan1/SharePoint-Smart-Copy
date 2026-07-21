@@ -26,6 +26,38 @@ public class MigrationJobService(SharePointService spService)
     // independent of maxParallel, so oversized files can't stack up multiple full in-memory copies
     // at once anywhere in the pipeline. Small files are unaffected — they never touch this gate.
     private const int MaxConcurrentLargeFiles = 2;
+    // Initial concurrent-upload width for the adaptive upload gate. Deliberately well below the
+    // point the upload path starts resetting connections (~12 concurrent mid-size PUTs, observed
+    // 2026-07-19) — the gate then probes UPWARD from here under clean running and halves on any
+    // upload interruption, so it self-tunes to the tenant/link instead of relying on a fixed cap.
+    private const int UploadSoftStart = 4;
+
+    // In-flight content downloads, surfaced in the heartbeat so a slow large-file download reads as
+    // progress instead of a silent stall (a ~1.4 GB deck took ~20 min with no visible activity,
+    // 2026-07-20). Keyed by a monotonic id; value carries the file name, its total size, and start
+    // time. Pure observability — never affects copy behavior.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<long, (string Name, long TotalBytes, DateTimeOffset StartUtc)> _inFlightDownloads = new();
+    private long _downloadSeq;
+
+    private long RegisterDownload(string name, long totalBytes)
+    {
+        var id = Interlocked.Increment(ref _downloadSeq);
+        _inFlightDownloads[id] = (name, totalBytes, DateTimeOffset.UtcNow);
+        return id;
+    }
+    private void UnregisterDownload(long id) => _inFlightDownloads.TryRemove(id, out _);
+
+    // One-line summary of what's downloading right now, appended to the heartbeat (empty when idle).
+    private string InFlightDownloadSummary()
+    {
+        var snapshot = _inFlightDownloads.Values.ToList();
+        if (snapshot.Count == 0) return "";
+        var oldest     = snapshot.OrderBy(d => d.StartUtc).First();
+        var oldestSecs = (int)Math.Max(0, (DateTimeOffset.UtcNow - oldest.StartUtc).TotalSeconds);
+        long totalMb   = snapshot.Sum(d => d.TotalBytes) / (1024 * 1024);
+        var sizeNote   = oldest.TotalBytes > 0 ? $" ({oldest.TotalBytes / (1024.0 * 1024):N0} MB)" : "";
+        return $" · ↓ {snapshot.Count} download(s) in flight, ~{totalMb:N0} MB total; oldest: {oldest.Name}{sizeNote} {oldestSecs}s";
+    }
 
     public async Task ExecuteAsync(
         IList<(CopyJob job, CopyResult result)> fileTasks,
@@ -38,7 +70,8 @@ public class MigrationJobService(SharePointService spService)
         Dictionary<string, Dictionary<string, object?>>? bulkFieldCache = null,
         IProgress<(int completed, int total)>? preflightProgress = null,
         IProgress<string>? activityLog = null,
-        IProgress<int>? onFilePacked = null)
+        IProgress<int>? onFilePacked = null,
+        bool reapplyFolderMetadata = true)
     {
         if (fileTasks.Count == 0) return;
 
@@ -65,6 +98,17 @@ public class MigrationJobService(SharePointService spService)
         int migrationSoftStart = Math.Min(maxParallel, 8);
         using var downloadController = new AdaptiveParallelismController(maxParallel, migrationSoftStart);
         using var largeFileGate = new SemaphoreSlim(MaxConcurrentLargeFiles);
+        // Global ADAPTIVE upload gate — bounds the number of concurrent Azure blob PUTs across EVERY
+        // batch. The memory budget below bounds live bytes; this bounds concurrent connections, which
+        // is the resource that actually saturates. The prior per-batch cap of 4 still allowed ~12
+        // simultaneous uploads with 3 batches packaging at once — enough to saturate the upload path:
+        // 16 large scan files in the 300-490 MB "dead zone" (under the large-file gate, so ungated there)
+        // failed with "Error while copying content to a stream" after exhausting Azure's own retries
+        // (observed 2026-07-19, Parallel Copies 16). Starting small and ramping up under clean running
+        // — halving on any upload interruption (see the retry loop in PrepareBatchAsync) — lets it
+        // settle just below the saturation point regardless of the run's file-size mix, so a high
+        // Parallel Copies slider drives download concurrency without over-driving uploads.
+        using var uploadController = new AdaptiveParallelismController(maxParallel, Math.Min(maxParallel, UploadSoftStart));
         // Global BYTE budget for in-flight file payloads, shared across every concurrent batch —
         // see TransferMemoryBudget for why the count-based gates alone aren't enough (a library of
         // ~300-490 MB files slides under the large-file threshold and the per-batch pipe/upload
@@ -100,7 +144,9 @@ public class MigrationJobService(SharePointService spService)
         // throttle budget (observed as repeated 60-120s waits back to back). This settles the width
         // below the threshold instead, same as the download gate does.
         const int AnalysisMaxParallelism = 8;
-        using var analysisController = new AdaptiveParallelismController(AnalysisMaxParallelism);
+        // Soft-start + inherit any active throttle window from a prior phase/run so the first analysis
+        // burst doesn't slam an already-throttled tenant (see SharePointService.CreateThrottleAwareGate).
+        using var analysisController = spService.CreateThrottleAwareGate(AnalysisMaxParallelism, 3);
         void onAnalysisThrottle(TimeSpan delay, int __, int ___, string? ____) =>
             analysisController.StepDown(delay);
         if (activityLog != null)
@@ -125,6 +171,18 @@ public class MigrationJobService(SharePointService spService)
                 activityLog.Report(down
                     ? $"↓ Downloads: {n}/{maxParallel} slots (throttle backoff)"
                     : $"⬆ Downloads: {n}/{maxParallel} slots (recovering)");
+            };
+        }
+        if (activityLog != null)
+        {
+            int lastUpLimit = Math.Min(maxParallel, UploadSoftStart);
+            uploadController.LimitChanged += n =>
+            {
+                bool down = n < lastUpLimit;
+                lastUpLimit = n;
+                activityLog.Report(down
+                    ? $"↓ Uploads: {n}/{maxParallel} slots (backing off — upload interrupted)"
+                    : $"⬆ Uploads: {n}/{maxParallel} slots (recovering)");
             };
         }
 
@@ -422,7 +480,18 @@ public class MigrationJobService(SharePointService spService)
                 // for an already-completed migration with wrong folder people fields).
                 // Key by the slash-trimmed path so it matches the SPFolder `relPath` keys the manifest
                 // builder uses (which come from TargetSubFolderPath.Trim('/')).
-                var directFolderGroups = allGroupTasks
+                //
+                // reapplyFolderMetadata=true (default) derives folder metadata from allGroupTasks — the
+                // FULL pre-skip selection — so folder dates/authors are repaired for every folder even on
+                // a fully-up-to-date re-run where nothing transfers (the repair path for an already-
+                // completed migration with wrong folder people fields). reapplyFolderMetadata=false
+                // derives from groupTasks (the needs-copy subset only), so a repeated "mostly skipped"
+                // run fetches metadata for just the handful of folders receiving new files instead of
+                // every folder in the library — the per-folder fetch is the biggest fixed pre-transfer
+                // cost and it otherwise does not shrink with the skip rate. Existing target folders keep
+                // their current metadata either way (SPMI doesn't re-stamp folders it isn't creating).
+                var folderMetaSource = reapplyFolderMetadata ? allGroupTasks : groupTasks;
+                var directFolderGroups = folderMetaSource
                     .Where(t => !string.IsNullOrEmpty(t.job.TargetSubFolderPath))
                     .GroupBy(t => t.job.TargetSubFolderPath!.Trim('/'), StringComparer.OrdinalIgnoreCase)
                     .Where(g => g.Key.Length > 0)
@@ -775,7 +844,19 @@ public class MigrationJobService(SharePointService spService)
                 // sequential prep producer (one pipeline can't package fast enough to feed >2 imports).
                 // To tell them apart, watch the activity log at =4: if ~4 jobs import concurrently it's
                 // prep-bound (→ multiple prep producers would help); if only ~2 progress it's SP-bound.
-                const int MaxConcurrentPrep    = 3;
+                //
+                // Raised 3 → 8 (2026-07-20): on a throttle-slow tenant a batch's downloads finish except
+                // for one big file trickling in at ~1 MB/s, so the batch spends minutes with a SINGLE
+                // download in flight. With only 3 prep workers, when all three are on such tails the
+                // global 16-slot download controller sits ~13 lanes idle and later batches never start —
+                // the dominant wasted time observed 2026-07-20 (a 730 MB deck downloading alone for 10+
+                // min while nothing else moved). More prep workers feed those idle lanes from later
+                // batches. This does NOT raise peak load: total concurrent downloads are still capped by
+                // the shared downloadController (maxParallel) and total in-flight bytes by the memory
+                // budget — it just keeps the existing 16 lanes fed. Import concurrency (below) and the
+                // prep channel bound are unchanged, so SP-side import behavior and SAS-token exposure are
+                // unaffected. Bounded by maxParallel so a low slider can't spawn more prep than lanes.
+                int MaxConcurrentPrep = Math.Min(maxParallel, 8);
                 // 4 balances the structural limits: SPMI imports run server-side (a held job costs
                 // this app only a 2-30s polling loop), so extra slots exist to keep SharePoint's
                 // queue fed with zero idle gap between batches — but SP processes only ~2 jobs per
@@ -807,6 +888,8 @@ public class MigrationJobService(SharePointService spService)
                     onFilePacked: onFilePacked,
                     downloadController: downloadController,
                     largeFileGate: largeFileGate,
+                    uploadController: uploadController,
+                    reapplyFolderMetadata: reapplyFolderMetadata,
                     memoryBudget: memoryBudget,
                     folderUniqueIdCache: sharedFolderUniqueIdCache,
                     folderMetadata: folderMetadata,
@@ -1027,11 +1110,11 @@ public class MigrationJobService(SharePointService spService)
         }
     }
 
-    private static async Task RunHeartbeatAsync(IProgress<string> activityLog, CancellationToken ct)
+    private async Task RunHeartbeatAsync(IProgress<string> activityLog, CancellationToken ct)
     {
         using var timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
         while (await timer.WaitForNextTickAsync(ct))
-            activityLog.Report(ProcessDiagnostics.Snapshot());
+            activityLog.Report(ProcessDiagnostics.Snapshot() + InFlightDownloadSummary());
     }
 
     // Forces a blocking gen-2 collection with LOH compaction, at most once per minute across all
@@ -1117,6 +1200,8 @@ public class MigrationJobService(SharePointService spService)
         IProgress<int>? onFilePacked = null,
         AdaptiveParallelismController? downloadController = null,
         SemaphoreSlim? largeFileGate = null,
+        AdaptiveParallelismController? uploadController = null,
+        bool reapplyFolderMetadata = true,
         TransferMemoryBudget? memoryBudget = null,
         IReadOnlyDictionary<string, (FileMetadata Metadata, List<Microsoft.Graph.Models.DriveItemVersion>? Versions)>? metaCache = null,
         System.Collections.Concurrent.ConcurrentDictionary<string, string>? folderUniqueIdCache = null,
@@ -1514,17 +1599,19 @@ public class MigrationJobService(SharePointService spService)
             // in this consumer (builder.Files isn't thread-safe and AES is cheap); only the network
             // upload is parallelized. The gate bounds how many files' encrypted bytes are held at once.
             //
-            // Capped at 4 (was min(16, maxParallel)): this is a PER-BATCH gate, and up to
-            // MaxConcurrentPrep batches package at once, so 16 meant up to ~48 simultaneous multi-GB
-            // uploads to Azure — which saturated the upload path and caused ~40% of files to fail
-            // with "Error while copying content to a stream" after exhausting all retries (2026-07-18).
-            // 4 per batch → ~12 concurrent uploads across batches: still plenty of parallelism, far
-            // below the saturation point. Uploads are network-bound, so fewer-but-reliable beats
-            // more-but-failing (a failed file is pure rework). Small files are unaffected — they
-            // upload in one fast PUT regardless.
-            int uploadConcurrency = Math.Max(2, Math.Min(4, maxParallel));
-            using var uploadGate  = new SemaphoreSlim(uploadConcurrency);
-            var uploadTasks       = new List<Task>();
+            // Concurrency is governed by the SHARED, ADAPTIVE uploadController (created in ExecuteAsync),
+            // NOT a per-batch semaphore. A per-batch cap can't see the other batches: with up to
+            // MaxConcurrentPrep batches packaging at once, even a per-batch 4 meant ~12 simultaneous
+            // PUTs — enough to saturate the upload path and fail mid-size files with "Error while
+            // copying content to a stream" (2026-07-18/19). The shared controller caps TOTAL concurrent
+            // PUTs across all batches, starts small, ramps up under clean running, and halves on any
+            // upload interruption (StepDown call in the retry loop below), so it self-tunes to the link.
+            // Defensive fallback: if no controller was supplied (never happens from ExecuteAsync) keep a
+            // small per-batch gate so uploads are still bounded.
+            using var localUploadGate = uploadController == null
+                ? new SemaphoreSlim(Math.Max(2, Math.Min(4, maxParallel)))
+                : null;
+            var uploadTasks = new List<Task>();
 
             // GUID → CopyResult, built as files are added, so per-item SP import errors can be
             // attributed back to the exact file. Written only in this sequential consumer loop.
@@ -1565,13 +1652,17 @@ public class MigrationJobService(SharePointService spService)
                     }
                     var versCount  = data.Versions.Count;
                     var fileName   = data.Job.SourceName;
-                    await uploadGate.WaitAsync(cancellationToken); // back-pressure: cap in-flight uploads
+                    // Back-pressure: cap in-flight uploads via the shared adaptive controller (or the
+                    // defensive per-batch fallback). Also waits out any active upload-backoff window.
+                    if (uploadController != null) await uploadController.WaitAsync(cancellationToken);
+                    else await localUploadGate!.WaitAsync(cancellationToken);
                     uploadTasks.Add(Task.Run(async () =>
                     {
                         try
                         {
                             // Versions within a file upload sequentially; cross-file concurrency comes
-                            // from the gate, so total concurrent blob PUTs stay ~uploadConcurrency.
+                            // from the shared uploadController, so total concurrent blob PUTs stay within
+                            // its current adaptive limit.
                             foreach (var version in entry.Versions)
                             {
                                 var content = version.EncryptedContent
@@ -1623,6 +1714,14 @@ public class MigrationJobService(SharePointService spService)
                                     catch (Exception) when (attempt < UploadMaxAttempts - 1)
                                     {
                                         int waitsecs = Math.Min(60, (attempt + 1) * 10);
+                                        // Treat the interruption like a throttle: halve concurrent uploads
+                                        // and pause new PUTs for the backoff window, so THIS retry (and every
+                                        // other in-flight upload) runs at a lower, less-saturating width. The
+                                        // controller's 2s step-down cooldown collapses a burst of simultaneous
+                                        // interruptions into a single halving; the heartbeat ramps back up once
+                                        // uploads run clean again. This is what makes 16 parallel copies safe
+                                        // without any fixed upload cap.
+                                        uploadController?.StepDown(TimeSpan.FromSeconds(waitsecs));
                                         activityLog?.Report($"⚠ {pfx}{fileName} — upload interrupted, retrying in {waitsecs}s ({attempt + 1}/{UploadMaxAttempts - 1})");
                                         await Task.Delay(TimeSpan.FromSeconds(waitsecs), cancellationToken);
                                     }
@@ -1651,7 +1750,8 @@ public class MigrationJobService(SharePointService spService)
                         }
                         finally
                         {
-                            uploadGate.Release();
+                            if (uploadController != null) uploadController.Release();
+                            else localUploadGate!.Release();
                             // End of this file's in-memory life (uploaded or failed, encrypted
                             // buffers nulled/dropped) — return its large slot and byte reservation.
                             if (data.HoldsLargeSlot) largeFileGate?.Release();
@@ -2090,6 +2190,9 @@ public class MigrationJobService(SharePointService spService)
         // Download all version content concurrently, buffering each stream immediately so the
         // HTTP connection is consumed before it can go stale. Index-keyed array preserves order.
         var slots = new MemoryStream?[versions.Count];
+        long dlId = RegisterDownload(job.SourceName, metadata.Size ?? job.SourceSize ?? 0);
+        try
+        {
         await Parallel.ForEachAsync(
             Enumerable.Range(0, versions.Count),
             new ParallelOptions { MaxDegreeOfParallelism = maxParallel, CancellationToken = ct },
@@ -2143,6 +2246,18 @@ public class MigrationJobService(SharePointService spService)
                         break;
                     }
                     catch (OperationCanceledException) when (ct.IsCancellationRequested) { throw; }
+                    // Content-download throttle (429/503): the controller has already stepped down (the
+                    // event fired in DownloadContentRangeAsync). Wait out the server's real Retry-After
+                    // and retry MORE patiently than a reset — a throttle is expected to clear, so failing
+                    // the file after 3 short waits (the reset budget below) would abandon it needlessly
+                    // under sustained throttling. Resumes from bytes already buffered.
+                    catch (SharePointService.DownloadThrottledException tex) when (attempt < 6)
+                    {
+                        var wait = tex.RetryAfter > TimeSpan.Zero ? tex.RetryAfter : TimeSpan.FromSeconds(10);
+                        var resumeNote = ms.Length > 0 ? $", resuming from {ms.Length / (1024.0 * 1024):F0} MB" : "";
+                        activityLog?.Report($"⚠ {pfxLabel}{job.SourceName} — download throttled, waiting {wait.TotalSeconds:F0}s ({attempt + 1}/6{resumeNote})");
+                        await Task.Delay(wait, ct);
+                    }
                     // A MemoryStream past int.MaxValue is a hard size limit, not a transient network
                     // failure — retrying re-downloads the whole multi-GB file for nothing.
                     catch (System.IO.IOException ex) when (ex.Message.Contains("Stream was too long", StringComparison.OrdinalIgnoreCase))
@@ -2164,6 +2279,8 @@ public class MigrationJobService(SharePointService spService)
                     }
                 }
             });
+        }
+        finally { UnregisterDownload(dlId); }
 
         // Custom field values are NOT packaged: the manifest's standalone SPListItem objects (the
         // only element SPMI accepts <Fields> on) were removed because they caused "Missing file

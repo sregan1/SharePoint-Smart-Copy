@@ -44,6 +44,13 @@ public class AppSettings
     public bool      CopyLibraryContent   { get; set; } = true;
     public bool      RemapPageWebPartUrls { get; set; } = true;
     public bool      PreserveMetadata     { get; set; } = true;
+    // When true (default), folder Created/Modified dates and Author/Editor are re-applied for EVERY
+    // selected folder on every run — needed to repair folder metadata on an already-copied target
+    // without re-transferring files, but it costs a per-folder Graph fetch that does not shrink with
+    // the skip rate. When false, only folders that actually receive a copied file this run are dated,
+    // so repeated "mostly skipped" incremental runs skip that whole phase. Only has any effect while
+    // PreserveMetadata is on. See MigrationJobService's folder-metadata fetch.
+    public bool      ReapplyFolderMetadataEveryRun { get; set; } = true;
     public bool      CopyNavigation       { get; set; } = true;
     public bool      CopyPermissions      { get; set; } = false;
     public AppTheme  Theme                { get; set; } = AppTheme.System;

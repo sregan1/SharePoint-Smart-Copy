@@ -96,6 +96,7 @@ public partial class SettingsDialog : Window
             CopyLibraryContent      = _original.CopyLibraryContent,
             RemapPageWebPartUrls    = _original.RemapPageWebPartUrls,
             PreserveMetadata        = _original.PreserveMetadata,
+            ReapplyFolderMetadataEveryRun = _original.ReapplyFolderMetadataEveryRun,
             CopyNavigation          = _original.CopyNavigation,
             CopyPermissions         = _original.CopyPermissions,
             Theme                   = (AppTheme)Math.Max(0, ThemeCombo.SelectedIndex),
