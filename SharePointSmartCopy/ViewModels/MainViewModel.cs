@@ -392,6 +392,16 @@ public partial class MainViewModel : ObservableObject
         IsCreatingNewList ? NewListName : (SelectedTargetList?.Title ?? string.Empty);
     [ObservableProperty] private bool _isConnectingTarget;
 
+    // Editing the target URL invalidates any existing connection state. Without this, retyping the
+    // URL — or clicking "Connect to Target" again for a DIFFERENT site without an explicit Disconnect
+    // first — left SelectedTargetFolder/TargetLibraries pointing at the PREVIOUSLY connected site
+    // while TargetUrl's text (and hence the Review screen's "To:" banner) showed the new,
+    // correct-looking destination. CanGoNext's Step 2 gate only checks
+    // `TargetConnected && SelectedTargetFolder != null` — both already true from the stale
+    // connection — so nothing forced a re-pick before Next. Observed 2026-07-20: a copy intended for
+    // one site instead copied into an unrelated, previously-connected site because of exactly this gap.
+    partial void OnTargetUrlChanged(string value) => DisconnectTarget();
+
     [RelayCommand]
     private async Task ConnectTargetAsync()
     {
