@@ -127,6 +127,9 @@ public partial class MainWindow : Window
     private void HistoryButton_Click(object sender, RoutedEventArgs e)
         => new HistoryDialog(VM.SpService) { Owner = this }.ShowDialog();
 
+    private void CompareButton_Click(object sender, RoutedEventArgs e)
+        => new CompareDialog(VM.SpService) { Owner = this }.ShowDialog();
+
     private void SettingsButton_Click(object sender, RoutedEventArgs e)
     {
         var dlg = new SettingsDialog(VM.Settings, VM.AuthService) { Owner = this };

@@ -565,6 +565,24 @@ public class SharePointService
         return ctId != null && ctId.StartsWith(DocumentSetContentTypeIdPrefix, StringComparison.OrdinalIgnoreCase);
     }
 
+    // Cheap special-container check for a folder that is itself the ROOT of a user's directly
+    // selected copy source — the one case IsSpecialContainer's children-listing shortcut can't
+    // cover, since the walk starts AT this item rather than encountering it as someone's child (see
+    // CopyService.cs's scan loop). Previously this used GetFolderProgIdAsync unconditionally on
+    // every folder-scope root — a REST round-trip that ran even for the overwhelming majority of
+    // ordinary (non-special) roots, purely to learn "no." A single Graph GET for just the package
+    // facet + listItem content type gives the same yes/no answer via IsSpecialContainer's existing
+    // logic, at the same cost as the per-child check already used during the walk.
+    internal async Task<bool> IsRootFolderSpecialContainerAsync(string driveId, string itemId)
+    {
+        var item = await Graph.Drives[driveId].Items[itemId].GetAsync(cfg =>
+        {
+            cfg.QueryParameters.Select = ["package"];
+            cfg.QueryParameters.Expand = ["listItem($select=contentType)"];
+        });
+        return item != null && IsSpecialContainer(item);
+    }
+
     private async Task<List<DriveItem>> GetChildrenWithMetadataAsync(
         string driveId, string itemId, CancellationToken ct)
     {

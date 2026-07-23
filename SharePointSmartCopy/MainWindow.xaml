@@ -366,6 +366,13 @@
                                 <TextBlock Text="History" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
+                        <Button Style="{StaticResource AppBarBtn}" Margin="0,0,8,0" Click="CompareButton_Click"
+                                WindowChrome.IsHitTestVisibleInChrome="True">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE895;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                                <TextBlock Text="Compare" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
                         <Button Style="{StaticResource AppBarBtn}" Click="SettingsButton_Click"
                                 WindowChrome.IsHitTestVisibleInChrome="True">
                             <StackPanel Orientation="Horizontal">

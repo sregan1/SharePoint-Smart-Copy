@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 3.3.1  ·  July 2026**
+**Version 3.4.0  ·  July 2026**
 
 ---
 
@@ -40,6 +40,7 @@ Two copy engines are available. **Migration API** mode uses SharePoint's server-
 - Copy report with succeeded, failed, and skipped counts, inline permission status, and CSV export
 - **OneNote notebooks** copy correctly as a single native operation, preserving their special notebook association instead of being rebuilt as a plain folder of files
 - **Verification Report** — independently re-scans source and target after a run and produces an Excel workbook confirming what actually matches
+- **Compare** — generate the same kind of difference report for any source and target you connect to, without needing a prior copy or a saved history entry
 - Full copy history stored locally — browse, re-export, or delete previous runs
 - System sleep is blocked automatically for the duration of a copy, metadata update, or verification
 - ← Back navigation available on every step, including the final report screen
@@ -210,6 +211,7 @@ Configure how the copy operation should behave:
   - **If newer** — files are copied only when the source is more recently modified than the target. Files already up to date are recorded as Skipped.
 - **Copy versions** — when checked, SharePoint version history is copied alongside each file. Requires versioning to be enabled on the source library.
 - **Parallel copies** — controls how many files (or Migration API jobs) run simultaneously. The default of 4 is a good balance; raise to 8 or 16 on a fast connection for large batches.
+- **Preserve metadata** — when checked, folder Created/Modified dates and Author/Editor are copied to the target. The **Re-apply folder metadata every run** option underneath it (on by default) controls whether that repair runs for every folder on every run, or only for folders receiving new files this run — turning it off speeds up repeated incremental runs on large libraries where most files are already up to date.
 
 When **Copy versions** is enabled, two additional controls appear:
 
@@ -242,14 +244,15 @@ Each file appears in the list with its current status:
 | ✅ | Success | Copied successfully (version count shown when version copying is enabled) |
 | ❌ | Failed | An error occurred; the reason appears in the Error column |
 | ⏭ | Skipped | File already exists at the destination and Overwrite was not enabled |
+| 🚫 | Cancelled | Still in progress when the run was stopped or the app was closed — not attempted, and not counted as a failure |
 
-Use the **filter chips** (All / Success / Failed / Skipped) above the file list to focus on a subset of results — useful when copying thousands of files.
+Use the **filter chips** (All / Success / Failed / Skipped) above the file list to focus on a subset of results — useful when copying thousands of files. Cancelled items appear under the **Failed** chip, since they're still unfinished work, but they're counted separately in the summary so an interrupted run doesn't look like a mass failure.
 
 Click **Cancel** to stop the copy at any time. Files already transferred remain in the destination — the operation is not rolled back. When all files are processed, the **Next →** button becomes active.
 
 ### Step 6 — Copy Report
 
-The report screen summarises the completed copy with four summary cards:
+The report screen summarises the completed copy with four summary cards (a fifth, **Cancelled**, appears only if the run was stopped early):
 
 *Step 6 — Copy report with summary cards and per-file results*
 
@@ -259,6 +262,7 @@ The report screen summarises the completed copy with four summary cards:
 | Red — **Failed** | Number of files that could not be copied (see the Error column for details) |
 | Yellow — **Skipped** | Files not copied because they already existed at the destination |
 | **Duration** | Total elapsed time for the entire copy operation |
+| **Cancelled** *(hidden when zero)* | Items still in progress when the run was stopped or the app was closed — not attempted, so not counted as Failed |
 
 The full per-file results table is shown below the summary cards. Use the **filter chips** (All / Success / Failed / Skipped) to narrow the list. Available actions:
 
@@ -367,6 +371,14 @@ The resulting workbook contains:
 > Verification can only be run for saved reports that recorded their source/target scope. Runs from before this feature was added do not have that information, and the **Verify** button is disabled for them.
 
 **Deep verify Office files** (optional checkbox next to Verify): the date-based check above proves SharePoint preserved the modified date, not that the file's actual content matches — a rewritten-but-corrupt Office file could still pass. Checking this box downloads both copies of every modern Word/Excel/PowerPoint/Visio file (`.docx`/`.xlsx`/`.pptx`/`.vsdx` and variants) whose hash or date disagreed, and compares their actual internal content, ignoring only the specific parts SharePoint itself rewrites (Document ID stamps, custom document properties, and similar metadata). A file that's byte-identical in content is reported as an ordinary **Match** — with a Note on the Comparison tab explaining it was confirmed by deep verify — even though its raw hash differed. This is slower — it downloads files rather than just listing them — so it only runs on files that need it, but every flagged file is always checked; there's no cap or time limit that would leave some unverified. Off by default; legacy binary Office formats and non-Office files are unaffected by this option.
+
+### Compare (Source vs. Target)
+
+Click the **Compare** button in the top-right corner, next to History, to generate a difference report between any two locations — without needing a prior copy or a saved History entry first. This is useful for checking whether a site copied by another means (or edited independently on both sides since a copy) still matches, or for a one-off audit that was never meant to be a full copy job.
+
+*Compare — connect to any source and target and pick a library or folder on each side*
+
+Connect a **Source** and a **Target** independently, the same way you would in the main wizard, then select a library or folder in each side's tree. Click **Compare with Excel Report** to scan and save the resulting workbook — it's produced by the same engine and has the same sheet layout (Overview/Source/Target/Comparison/Scan Errors) as the Verification Report above, including the optional **Deep verify Office files** checkbox. A Compare run is never saved to History.
 
 ---
 

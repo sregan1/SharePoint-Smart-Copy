@@ -1185,7 +1185,8 @@ public partial class MainViewModel : ObservableObject
                 preflightProgress: onPreflight,
                 activityLog: onActivity,
                 onFilePacked: onFilePacked,
-                onFolderProgress: onFolderProgress);
+                onFolderProgress: onFolderProgress,
+                reapplyFolderMetadata: ReapplyFolderMetadataEveryRun);
         }
         catch (OperationCanceledException) { StatusMessage = "Copy cancelled."; }
         catch (Exception ex)              { StatusMessage = $"Copy error: {ex.Message}"; }

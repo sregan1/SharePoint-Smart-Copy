@@ -4,6 +4,36 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 3.4.0 — 2026-07-23
+
+### Added
+
+- **Compare dialog** — a new "Compare" button in the app bar opens a standalone dialog that connects to any source and target location, lets you pick a library or folder on each side, and generates a difference report — independent of running a copy or re-verifying a History entry. Produces the same Excel report shape (Overview/Source/Target/Comparison/Scan Errors) as the existing verification report.
+- **"Re-apply folder metadata every run" option** — a new Options checkbox (on by default) controls whether folder Created/Modified dates and Author/Editor are re-checked for every folder on every run, or only for folders that actually receive new files this run. Turning it off makes repeated "mostly skipped" incremental runs significantly faster on large libraries. The run-settings summary now reports which mode was used.
+- **Cancelled status** — items still in progress when a run is cancelled or the app is closed mid-copy are now reported as Cancelled rather than Failed, so an interrupted run's saved report no longer looks like a mass failure (e.g. thousands of untouched items previously showed up as "failed").
+
+### Changed
+
+- **Large-file transfer reliability overhaul** (Migration API mode): a shared, self-tuning upload-concurrency gate replaces the old fixed per-batch cap, which allowed dozens of simultaneous multi-GB uploads and caused a high failure rate ("Error while copying content to a stream") on large libraries; a new global in-memory byte budget (sized to ~40% of machine RAM, 2–16 GB) bounds total in-flight file payloads across every concurrent batch, preventing multi-GB heap growth and connection-reset storms on libraries of very large files; the first couple of batches are now deliberately small so the first SharePoint import starts within minutes instead of after hours of packaging; and a periodic resource snapshot is now logged so a native WPF crash still leaves a trail of what the process looked like beforehand.
+- **Wider prep pipeline** — up to 8 batches (was 3) can now package concurrently, keeping the shared download slots fed even when a batch is stuck waiting on one slow large file.
+- **User-Agent decoration** — Graph and SharePoint REST calls now send a structured, company-neutral User-Agent (`NONISV|SharePointSmartCopy|<version>`), since undecorated traffic is throttled more aggressively by SharePoint Online.
+- **Throttle-aware retries** — download/upload throttling (429/503) is now handled with patience proportional to the server's Retry-After, and a throttle window discovered during one phase now carries over to the next phase instead of each one re-discovering it independently.
+- **Deep Verify report naming** — exported verification reports get a "Deep" filename prefix and on-screen status/activity text says "Deep verification" when the deep Office-file comparison pass is enabled, so a deep run is distinguishable from a standard one at a glance.
+- The main wizard's Step 1 (Browse Source) and Step 2 (Target folder) now scroll as a whole on small windows, instead of clipping the bottom of the folder tree.
+
+### Fixed
+
+- **Target-site mismatch** — editing the Target URL after already connecting, without an explicit Disconnect first, could copy into the previously-connected (and now unrelated) site while the screen showed the newly-typed URL.
+- **OneNote (.one/.onetoc2) false-positive comparisons** — these files were flagged as content mismatches based on size alone despite being unchanged; they now use the same date-based fallback already applied to other Office formats SharePoint re-serializes internally.
+- **Incorrect "Modified By" stamp on a directly-selected source folder** — caused by an unconditional ProgID probe that ran against the source root even for ordinary, non-special folders.
+- **Empty folders not created at the target** — a folder with no files anywhere in its subtree was previously never created, since every other folder was only provisioned as a side effect of copying a file into it.
+- **Empty folders always reported "Success," even on a fully up-to-date re-run** — they now correctly report "Skipped" when the target folder already exists.
+- **"Re-apply folder metadata" toggle had no effect for ordinary Files/Folders-scope copies** — it only worked for Library/Site-scope and Pages copies; a missing argument at one of four call sites meant Files-scope runs always repaired every folder regardless of the setting.
+- **Large heap growth / connection-reset storms on large-file libraries** — files whose size fetch failed under throttling fell back to a size of 0, letting multi-GB files bypass the large-file memory gate entirely; they now fall back to the size already captured during the initial scan.
+- **WPF render-thread crash (`UCEERR_RENDERTHREADFAILURE`) on long migration jobs** — high-concurrency background threads posting UI updates via a blocking dispatcher call could overwhelm WPF's composition engine; updates are now posted asynchronously instead.
+
+---
+
 ## 3.3.1 — 2026-07-14
 
 ### Added

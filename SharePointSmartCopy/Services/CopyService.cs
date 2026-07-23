@@ -168,12 +168,18 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     var result = FindResult(results, job.SourceDisplayPath) ?? CreateResult(job);
                     allTasks.Add((job, result));
                 }
-                else if (!string.IsNullOrEmpty(await spService.GetFolderProgIdAsync(job.SourceDriveId, job.SourceItemId)))
+                else if (await spService.IsRootFolderSpecialContainerAsync(job.SourceDriveId, job.SourceItemId))
                 {
                     // The job's OWN root is the special folder (e.g. a notebook selected directly
                     // as the copy source, not discovered as a descendant during a walk) — the
                     // per-child check inside EnumerateFilesForCopyAsync never sees this case since
                     // the walk starts AT this item rather than encountering it as someone's child.
+                    // Uses the same cheap package-facet/content-type check as that per-child path —
+                    // not GetFolderProgIdAsync's REST probe, which used to run unconditionally on
+                    // every directly-selected folder root (including plain, non-special ones) purely
+                    // to learn "no" (observed 2026-07-21: this extra read against the SOURCE root was
+                    // the suspected cause of the source folder showing an unexpected Modified By
+                    // stamp — a plain-folder root has no reason to be probed for a ProgID at all).
                     var folderResult = new CopyResult
                     {
                         FileName   = job.SourceName,
@@ -292,9 +298,26 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             pendingResults.Add(folderResult);
                             try
                             {
-                                await spService.GetOrCreateFolderPathAsync(
+                                // Unconditionally calling GetOrCreateFolderPathAsync (a get-OR-create) used to
+                                // report Success on every run regardless of whether the folder already existed
+                                // — on an otherwise fully up-to-date re-run, every empty folder in the source
+                                // still showed as a fresh "Success", with no way to tell it apart from a real
+                                // creation. Check existence first (the same read-only path-walk verification
+                                // already uses) so an already-there folder reports Skipped, matching how every
+                                // other already-exists case in this file is reported.
+                                var existingId = await spService.ResolveItemIdByPathAsync(
                                     job.TargetDriveId, job.TargetParentItemId, emptyFolderTarget);
-                                folderResult.Status = CopyStatus.Success;
+                                if (existingId != null)
+                                {
+                                    folderResult.Status = CopyStatus.Skipped;
+                                    activityLog?.Report($"⏭ Skipped '{displayName}' — already exists at target");
+                                }
+                                else
+                                {
+                                    await spService.GetOrCreateFolderPathAsync(
+                                        job.TargetDriveId, job.TargetParentItemId, emptyFolderTarget);
+                                    folderResult.Status = CopyStatus.Success;
+                                }
                             }
                             catch (Exception ex) when (ex is not OperationCanceledException)
                             {

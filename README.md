@@ -52,12 +52,15 @@ Choose from four copy scopes in a step-by-step wizard:
 - **Automatic recovery from Migration API batch aborts** — if SharePoint cancels an entire import after hitting its internal per-batch conflict threshold, the app clears the specific conflicting files and retries the batch automatically instead of requiring a manual re-run
 - Detailed per-item report with CSV export and inline permission status
 - Run history viewable in-app, with an independent **Verification Report** (Excel) that re-scans source and target to confirm every file actually landed
+- **Compare** — a standalone dialog (Compare button, top-right) generates the same kind of difference report for any source and target you connect to, with no copy or saved history required
 - **Deep Verify** (optional) — for Office files flagged as mismatched, downloads both copies and compares actual internal content, ignoring only the parts SharePoint itself rewrites on upload, so a hash/date difference can be proven real or harmless instead of left unresolved
 - History opens instantly regardless of run size — a saved run's full per-file results load only when you open, export, or verify that run, not for every entry in the list
+- **Cancelled status** — items still in progress when a run is stopped or the app closes mid-copy are reported as Cancelled rather than Failed, so an interrupted run's summary doesn't look like a mass failure
+- **Large-file transfer reliability** — a self-tuning upload-concurrency gate and a global in-memory byte budget keep libraries containing many very large (multi-GB) files copying without exhausting memory or saturating the upload path
 
 **Files scope:**
 - Full version history — version numbers, dates, and per-version editors preserved exactly
-- Folder creation/modification dates and authors preserved on target
+- Folder creation/modification dates and authors preserved on target, with an option to limit the repair to newly-copied folders for faster repeated incremental runs
 - Bulk copy with 1–16 parallel operations
 - Migration API mode for high-fidelity large batches; Enhanced REST for small or quick copies
 - Migration API engages whenever selected — independent of the Copy Versions toggle

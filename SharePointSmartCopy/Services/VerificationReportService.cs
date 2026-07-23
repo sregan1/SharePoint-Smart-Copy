@@ -232,6 +232,8 @@ public sealed class VerificationReportService(SharePointService spService)
     // of content changes (indexing, thumbnails, co-authoring), so size/hash are unreliable — modified
     // date is used instead (see ComparisonStatus for the full rationale). Internal (not private) so
     // ExcelReportWriter can reuse the same list when deciding which raw value to display per row.
+    // Despite the name, the combined set below also covers OneNote (see OneNoteExtensions) for a
+    // related but distinct reason — different mechanism, same size/hash-unreliable symptom.
     //
     // Covers both container families used by Office applications, not just Word/Excel/PowerPoint's
     // primary document types:
@@ -272,8 +274,20 @@ public sealed class VerificationReportService(SharePointService spService)
         ".msg"
     };
 
+    // OneNote section/table-of-contents files: unlike the OOXML/OLE formats above, these aren't
+    // touched by SharePoint's backend re-serialization — the churn comes from OneNote's own
+    // MS-ONESTORE storage format and its client/server sync-and-consolidation behavior, which can
+    // rewrite a section file's bytes with no logical content change. Different mechanism, same
+    // false-positive symptom, so it gets the same date-based fallback rather than its own bespoke
+    // path. Confirmed 2026-07-21: .one files were showing ContentMismatch on size alone despite the
+    // user confirming identical content — .one/.onetoc2 were previously in neither set here.
+    internal static readonly HashSet<string> OneNoteExtensions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ".one", ".onetoc2",
+    };
+
     internal static readonly HashSet<string> OfficeReserializedExtensions =
-        new(OoxmlExtensions.Concat(OleExtensions), StringComparer.OrdinalIgnoreCase);
+        new(OoxmlExtensions.Concat(OleExtensions).Concat(OneNoteExtensions), StringComparer.OrdinalIgnoreCase);
 
     // Absorbs clock/rounding differences (e.g. Migration API manifest timestamps) without masking
     // a genuine metadata-preservation failure.
