@@ -26,6 +26,10 @@ public partial class MainViewModel : ObservableObject
 
     // Bulk custom field cache keyed by SP list item integer ID (populated before copy starts)
     private Dictionary<string, Dictionary<string, object?>> _bulkFieldCache = [];
+    // Source Modified/Created/Editor/Author, bulk-read in the SAME pass as _bulkFieldCache (same
+    // "{listId}:{itemId}" keys) — lets the Migration API custom-fields restamp use the already-paid-for
+    // scan instead of a per-file GetFileMetadataAsync Graph call.
+    private Dictionary<string, FileMetadata> _sourceMetaCache = [];
     // Source and target library columns for the column mapping dialog
     private List<SpColumnDef> _sourceColumns = [];
     private List<SpColumnDef> _targetColumns = [];
@@ -1342,6 +1346,7 @@ public partial class MainViewModel : ObservableObject
             // Build bulk field cache for custom columns (single paginated pass)
             // Also build permission flags when CopyPermissions is on.
             _bulkFieldCache = [];
+            _sourceMetaCache = [];
             var _permissionFlags = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
             if ((EffectiveCopyCustomColumns || CopyPermissions) && CopyJobs.Count > 0)
             {
@@ -1359,9 +1364,19 @@ public partial class MainViewModel : ObservableObject
                             var srvUrl = await SpService.GetLibraryServerRelativeUrlAsync(driveId);
                             var listId = await SpService.GetListIdByServerRelativeUrlAsync(SourceUrl.TrimEnd('/'), srvUrl);
                             var cols   = await SpService.GetLibraryColumnsAsync(SourceUrl.TrimEnd('/'), listId);
-                            var cache  = await SpService.BulkReadCustomFieldsAsync(SourceUrl.TrimEnd('/'), listId, cols, warningLog: onActivity, ct: _copyCts.Token);
+                            // System metadata (Modified/Created/Editor/Author) is only needed by the
+                            // Migration API's post-import restamp — riding it along on this SAME scan
+                            // (rather than a per-file Graph call later) only when it'll actually be used.
+                            var wantsSystemMeta = CopyMode == CopyMode.MigrationApi && PreserveMetadata;
+                            var systemMeta = wantsSystemMeta ? new Dictionary<string, FileMetadata>() : null;
+                            var cache  = await SpService.BulkReadCustomFieldsAsync(
+                                SourceUrl.TrimEnd('/'), listId, cols, warningLog: onActivity,
+                                systemMetadataOut: systemMeta, ct: _copyCts.Token);
                             foreach (var (itemId, fields) in cache)
                                 _bulkFieldCache[$"{listId}:{itemId}"] = fields;
+                            if (systemMeta != null)
+                                foreach (var (itemId, meta) in systemMeta)
+                                    _sourceMetaCache[$"{listId}:{itemId}"] = meta;
                         }
                         catch (Exception ex)
                         {
@@ -1462,6 +1477,7 @@ public partial class MainViewModel : ObservableObject
                 activityLog: onActivity,
                 onFilePacked: onFilePacked,
                 onFolderProgress: onFolderProgress,
+                sourceMetaCache: _sourceMetaCache,
                 reapplyFolderMetadata: ReapplyFolderMetadataEveryRun);
         }
         catch (OperationCanceledException) { StatusMessage = "Copy cancelled."; }
@@ -1981,16 +1997,22 @@ public partial class MainViewModel : ObservableObject
 
                             // Build bulk field cache for this library; also permission flags if enabled
                             _bulkFieldCache = [];
+                            _sourceMetaCache = [];
                             var libPermFlags = new Dictionary<string, bool>();
                             try
                             {
                                 if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
                                 {
+                                    var wantsSystemMeta = CopyMode == CopyMode.MigrationApi && PreserveMetadata;
+                                    var systemMeta = wantsSystemMeta ? new Dictionary<string, FileMetadata>() : null;
                                     var raw = await SpService.BulkReadCustomFieldsAsync(
                                         def.SourceSiteUrl, def.SourceListId, def.Columns,
-                                        ct: _copyCts.Token);
+                                        systemMetadataOut: systemMeta, ct: _copyCts.Token);
                                     _bulkFieldCache = raw.ToDictionary(
                                         kvp => $"{def.SourceListId}:{kvp.Key}", kvp => kvp.Value);
+                                    if (systemMeta != null)
+                                        _sourceMetaCache = systemMeta.ToDictionary(
+                                            kvp => $"{def.SourceListId}:{kvp.Key}", kvp => kvp.Value);
                                 }
                                 if (CopyPermissions)
                                     libPermFlags = await SpService.BulkReadPermissionFlagsAsync(
@@ -2011,7 +2033,8 @@ public partial class MainViewModel : ObservableObject
                                 reapplyFolderMetadata: ReapplyFolderMetadataEveryRun,
                                 copyPermissions: CopyPermissions,
                                 permissionService: CopyPermissions ? _permissionCopyService : null,
-                                permissionFlags: libPermFlags);
+                                permissionFlags: libPermFlags,
+                                sourceMetaCache: _sourceMetaCache);
                         }
                         StatusMessage = string.Empty;
                     }
@@ -2069,16 +2092,22 @@ public partial class MainViewModel : ObservableObject
                             };
 
                             _bulkFieldCache = [];
+                            _sourceMetaCache = [];
                             var existLibPermFlags = new Dictionary<string, bool>();
                             try
                             {
                                 if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
                                 {
+                                    var wantsSystemMeta = CopyMode == CopyMode.MigrationApi && PreserveMetadata;
+                                    var systemMeta = wantsSystemMeta ? new Dictionary<string, FileMetadata>() : null;
                                     var raw = await SpService.BulkReadCustomFieldsAsync(
                                         def.SourceSiteUrl, def.SourceListId, def.Columns,
-                                        ct: _copyCts.Token);
+                                        systemMetadataOut: systemMeta, ct: _copyCts.Token);
                                     _bulkFieldCache = raw.ToDictionary(
                                         kvp => $"{def.SourceListId}:{kvp.Key}", kvp => kvp.Value);
+                                    if (systemMeta != null)
+                                        _sourceMetaCache = systemMeta.ToDictionary(
+                                            kvp => $"{def.SourceListId}:{kvp.Key}", kvp => kvp.Value);
                                 }
                                 if (CopyPermissions)
                                     existLibPermFlags = await SpService.BulkReadPermissionFlagsAsync(
@@ -2099,7 +2128,8 @@ public partial class MainViewModel : ObservableObject
                                 reapplyFolderMetadata: ReapplyFolderMetadataEveryRun,
                                 copyPermissions: CopyPermissions,
                                 permissionService: CopyPermissions ? _permissionCopyService : null,
-                                permissionFlags: existLibPermFlags);
+                                permissionFlags: existLibPermFlags,
+                                sourceMetaCache: _sourceMetaCache);
                         }
                         StatusMessage = string.Empty;
                     }

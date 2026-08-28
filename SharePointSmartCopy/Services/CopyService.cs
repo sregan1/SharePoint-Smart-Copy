@@ -100,7 +100,12 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         IProgress<string>? activityLog = null,
         IProgress<long>? onFilePacked = null,
         IProgress<(int done, int total)>? onFolderProgress = null,
-        bool reapplyFolderMetadata = true)
+        bool reapplyFolderMetadata = true,
+        // Source Modified/Created/Editor/Author, bulk-read alongside bulkFieldCache (same
+        // "{listId}:{itemId}" keys) — lets the Migration API custom-fields restamp reuse that
+        // already-paid-for scan instead of a per-file GetFileMetadataAsync Graph call. Only
+        // consulted in Migration API mode; falls back to a live per-file fetch on a cache miss.
+        Dictionary<string, FileMetadata>? sourceMetaCache = null)
     {
         // In SPMI mode the controller semaphore is never used as a download gate
         // (MigrationJobService has its own download controller). Suppress cosmetic step-downs.
@@ -716,9 +721,18 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             // SOURCE file's own metadata. Folded into the SAME call as the custom-field
                             // write (via `restamp`) rather than a separate call afterward — one call
                             // instead of two, and one list-item-ID resolution instead of two.
-                            var srcMeta = preserveMetadata
-                                ? await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId)
-                                : null;
+                            //
+                            // Prefer the bulk-read cache (same scan that fetched customFields, same
+                            // cacheKey) over a live Graph call — falls back to GetFileMetadataAsync
+                            // only on a cache miss (e.g. sourceMetaCache wasn't built, or this item
+                            // was added to the source library after the bulk scan ran).
+                            FileMetadata? srcMeta = null;
+                            if (preserveMetadata)
+                            {
+                                srcMeta = sourceMetaCache != null && sourceMetaCache.TryGetValue(cacheKey, out var cachedMeta)
+                                    ? cachedMeta
+                                    : await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId);
+                            }
                             var cfErr = await spService.ApplyFileCustomFieldsByPathAsync(
                                 job.TargetSiteUrl, targetListId, tgtRelUrl, customFields, columnMappings, srcMeta, ct);
                             result.CustomFieldStatus  = cfErr != null ? CopyStatus.Failed : CopyStatus.Success;

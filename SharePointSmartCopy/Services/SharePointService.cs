@@ -4337,9 +4337,17 @@ public class SharePointService
     // Bulk-reads custom field values for all items in a library in one paginated pass.
     // Returns a dictionary keyed by SP list item integer ID (as string, e.g. "42").
     // This key matches the listItemId returned by GetSharePointIdsAsync, enabling O(1) cache lookup per file.
+    //
+    // `systemMetadataOut`, when given, is populated with each item's Modified/Created/Editor/Author
+    // in the SAME paginated scan — riding along on chunk 0's request rather than costing a separate
+    // per-file Graph call later. This is what the Migration API post-import custom-fields pass uses
+    // to restamp Modified/Editor without a GetFileMetadataAsync call per file (that call previously
+    // ran once per file with custom columns, on top of the custom-field write itself).
     public async Task<Dictionary<string, Dictionary<string, object?>>> BulkReadCustomFieldsAsync(
         string siteUrl, string listId, IEnumerable<SpColumnDef> columns,
-        IProgress<int>? progress = null, IProgress<string>? warningLog = null, CancellationToken ct = default)
+        IProgress<int>? progress = null, IProgress<string>? warningLog = null,
+        Dictionary<string, FileMetadata>? systemMetadataOut = null,
+        CancellationToken ct = default)
     {
         var cols = columns.ToList();
         if (cols.Count == 0) return [];
@@ -4366,6 +4374,13 @@ public class SharePointService
                 // (the claims login). Other field types are selected directly.
                 var selectParts = new List<string> { "ID" };
                 var expandParts = new List<string>();
+                // System metadata only needs to ride on ONE chunk's request, not every chunk —
+                // chunk 0 is as good as any, and every item appears in every chunk's page anyway.
+                if (chunk == 0 && systemMetadataOut != null)
+                {
+                    selectParts.AddRange(["Modified", "Editor/EMail", "Created", "Author/EMail"]);
+                    expandParts.AddRange(["Editor", "Author"]);
+                }
                 foreach (var c in chunkCols)
                 {
                     if (SpColumnDef.IsUserType(c.FieldType))
@@ -4442,6 +4457,30 @@ public class SharePointService
                             {
                                 if (!item.TryGetProperty(col.InternalName, out var valProp)) continue;
                                 fields[col.InternalName] = ParseFieldValue(valProp, col.FieldType);
+                            }
+
+                            if (chunk == 0 && systemMetadataOut != null)
+                            {
+                                DateTimeOffset? modified = item.TryGetProperty("Modified", out var mp) &&
+                                    mp.ValueKind == JsonValueKind.String &&
+                                    DateTimeOffset.TryParse(mp.GetString(), System.Globalization.CultureInfo.InvariantCulture,
+                                        System.Globalization.DateTimeStyles.None, out var mv) ? mv : null;
+                                DateTimeOffset? created = item.TryGetProperty("Created", out var cp) &&
+                                    cp.ValueKind == JsonValueKind.String &&
+                                    DateTimeOffset.TryParse(cp.GetString(), System.Globalization.CultureInfo.InvariantCulture,
+                                        System.Globalization.DateTimeStyles.None, out var cv) ? cv : null;
+                                string? modifiedByEmail = item.TryGetProperty("Editor", out var ed) && ed.ValueKind == JsonValueKind.Object &&
+                                    ed.TryGetProperty("EMail", out var ee) ? ee.GetString() : null;
+                                string? createdByEmail = item.TryGetProperty("Author", out var au) && au.ValueKind == JsonValueKind.Object &&
+                                    au.TryGetProperty("EMail", out var ae) ? ae.GetString() : null;
+
+                                systemMetadataOut[itemId] = new FileMetadata
+                                {
+                                    ModifiedDateTime = modified,
+                                    ModifiedByEmail  = modifiedByEmail,
+                                    CreatedDateTime  = created,
+                                    CreatedByEmail   = createdByEmail,
+                                };
                             }
                         }
                     }

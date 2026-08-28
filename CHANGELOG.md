@@ -4,6 +4,19 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 3.5.3 — 2026-08-28
+
+### Fixed
+
+- **Migration API mode's custom-column write was overwriting each file's real Modified date and Editor with the migrating account and the current time** — applying custom column values goes through `ValidateUpdateListItem`, which always re-stamps `Modified`/`Editor` as a side effect of the write, even though SPMI's own import had already set the correct values from the source file. The post-import custom-fields pass now re-stamps `Modified`/`Created`/`Editor`/`Author` from the source file's own metadata in the same write, so the correct values survive the custom-column write instead of being clobbered by it.
+- **That re-stamp landed on the wrong time of day** — `ValidateUpdateListItem`'s plain `"yyyy-MM-dd HH:mm:ss"` date format (no timezone designator) is parsed by SharePoint in the *site's* regional-settings time zone, not UTC, so submitting a UTC instant directly shifted it by the site's offset (e.g. a real 6:33am UTC modified time came back as 1:33pm on a UTC-7 site). Dates are now converted through the site's own `regionalsettings/timezone/UTCToLocalTime()` REST function before being submitted, so there's no separate zone/DST table to get out of sync with what SharePoint itself will use to parse the value back.
+
+### Changed
+
+- **Migration API custom columns + metadata restamp now cost far fewer REST/Graph calls per file** — the Modified/Editor re-stamp above is folded into the *same* `ValidateUpdateListItem` call as the custom-column write instead of a separate call afterward (one list-item lookup and one write instead of two), and the source file's Modified/Created/Editor/Author values are read once per library in the same bulk scan that already reads custom column values, instead of a live per-file lookup.
+
+---
+
 ## 3.5.2 — 2026-08-26
 
 ### Added
