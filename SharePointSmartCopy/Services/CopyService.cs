@@ -710,8 +710,17 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             var targetListId = await targetListIdCache.GetOrAdd(listIdKey,
                                 _ => spService.GetListIdByServerRelativeUrlAsync(job.TargetSiteUrl, job.TargetLibraryServerRelativeUrl));
 
+                            // ValidateUpdateListItem bumps Modified/Editor to the migrating account and
+                            // now — the Migration API import already stamped the correct Modified/Editor
+                            // via SPMI's <File> element, so this write must re-stamp them from the
+                            // SOURCE file's own metadata. Folded into the SAME call as the custom-field
+                            // write (via `restamp`) rather than a separate call afterward — one call
+                            // instead of two, and one list-item-ID resolution instead of two.
+                            var srcMeta = preserveMetadata
+                                ? await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId)
+                                : null;
                             var cfErr = await spService.ApplyFileCustomFieldsByPathAsync(
-                                job.TargetSiteUrl, targetListId, tgtRelUrl, customFields, columnMappings, ct);
+                                job.TargetSiteUrl, targetListId, tgtRelUrl, customFields, columnMappings, srcMeta, ct);
                             result.CustomFieldStatus  = cfErr != null ? CopyStatus.Failed : CopyStatus.Success;
                             result.CustomFieldDetails = cfErr;
                             if (cfErr != null) result.ErrorMessage ??= cfErr;

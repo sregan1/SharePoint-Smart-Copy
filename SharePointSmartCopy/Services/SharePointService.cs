@@ -55,6 +55,15 @@ public class SharePointService
     // Lazy<Task<string>> ensures only one Graph call is made per "{driveId}|{parentId}|{segment}"
     // key even when multiple parallel tasks race — all share the same Task and await its result.
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Lazy<Task<string>>> _folderSegmentTasks = new(StringComparer.OrdinalIgnoreCase);
+    // ValidateUpdateListItem's plain "yyyy-MM-dd HH:mm:ss" date strings (no "T"/"Z", see
+    // PatchTimestampsCoreAsync) are parsed by SharePoint as being in the SITE's regional-settings
+    // time zone, not UTC — a second, separate quirk from the "T"/"Z" parse failure fixed 2026-07-08.
+    // Submitting a UTC instant verbatim as that plain string gets it re-interpreted as site-local and
+    // shifted by the zone offset (e.g. a UTC-7 site showed 1:33pm for an actual 6:33am UTC modified
+    // time). Cached per (site, exact instant) — same site+timestamp recurs often enough (e.g. an
+    // unchanged CreatedDateTime reused across every version of a file) to make the dedup worthwhile,
+    // and it turns a repeat REST call into a completed-Task hit instead.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Lazy<Task<string>>> _siteLocalDateStringCache = new(StringComparer.Ordinal);
     // Limits concurrent Graph $batch calls across all parallel SPMI job pipelines.
     // Each batch call carries 20 sub-requests; 10 parallel jobs firing simultaneously
     // would produce 200 concurrent Graph ops, reliably hitting per-app throttle limits.
@@ -2743,7 +2752,34 @@ public class SharePointService
         if (ids == null) return "SP IDs unavailable — item not found or sharepointIds not propagated";
 
         var (siteUrl, listId, listItemId) = ids.Value;
+        return await PatchTimestampsCoreAsync(siteUrl, listId, listItemId, modified, created, createdByEmail, modifiedByEmail);
+    }
 
+    // Shared by PatchTimestampsCoreAsync (folders/files, standalone date+person correction) and
+    // ApplyFileCustomFieldsCoreAsync's Migration API restamp (date+person folded into the same
+    // ValidateUpdateListItem call as a custom-field write) — one place to build the
+    // Modified/Created/Editor/Author formValues so both write paths use identical field-name/value
+    // shapes and the same site-local date conversion.
+    private async Task<List<(string FieldName, string FieldValue)>> BuildDateAndPersonFormValuesAsync(
+        string siteUrl, DateTimeOffset? modified, DateTimeOffset? created,
+        string? createdByEmail, string? modifiedByEmail)
+    {
+        var values = new List<(string, string)>();
+        if (modified.HasValue)
+            values.Add(("Modified", await FormatAsSiteLocalDateStringAsync(siteUrl, modified.Value)));
+        if (created.HasValue)
+            values.Add(("Created", await FormatAsSiteLocalDateStringAsync(siteUrl, created.Value)));
+        if (!string.IsNullOrEmpty(modifiedByEmail))
+            values.Add(("Editor", $"i:0#.f|membership|{modifiedByEmail}"));
+        if (!string.IsNullOrEmpty(createdByEmail))
+            values.Add(("Author", $"i:0#.f|membership|{createdByEmail}"));
+        return values;
+    }
+
+    private async Task<string?> PatchTimestampsCoreAsync(
+        string siteUrl, string listId, string listItemId, DateTimeOffset? modified, DateTimeOffset? created,
+        string? createdByEmail = null, string? modifiedByEmail = null)
+    {
         // CORRECTED 2026-07-08 (was wrong all along, on both files and folders): ValidateUpdateListItem
         // does NOT reliably parse ISO 8601 strings with a "T"/"Z" designator ("yyyy-MM-ddTHH:mm:ssZ") —
         // this is a documented quirk (SharePoint/sp-dev-docs#4917, Microsoft Q&A 59836): the endpoint
@@ -2753,17 +2789,28 @@ public class SharePointService
         // though the date itself is perfectly valid. This is what was actually behind the folder
         // correction pass failing on every folder regardless of Editor field format or REST path
         // (both red herrings chased first). The fix is a space-separated, locale-independent format
-        // with no "T"/"Z": "yyyy-MM-dd HH:mm:ss". Still UTC underneath (ToUniversalTime() first) —
-        // only the string shape changes, not the instant it represents.
-        var formValues = new List<object>();
-        if (modified.HasValue)
-            formValues.Add(new { FieldName = "Modified", FieldValue = modified.Value.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) });
-        if (created.HasValue)
-            formValues.Add(new { FieldName = "Created",  FieldValue = created.Value.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) });
-        if (!string.IsNullOrEmpty(modifiedByEmail))
-            formValues.Add(new { FieldName = "Editor", FieldValue = $"i:0#.f|membership|{modifiedByEmail}" });
-        if (!string.IsNullOrEmpty(createdByEmail))
-            formValues.Add(new { FieldName = "Author", FieldValue = $"i:0#.f|membership|{createdByEmail}" });
+        // with no "T"/"Z": "yyyy-MM-dd HH:mm:ss".
+        //
+        // CORRECTED 2026-08-28: that plain string is NOT parsed as UTC — it's a second, separate
+        // quirk from the one above. With no offset in the string, ValidateUpdateListItem interprets
+        // it in the SITE's regional-settings time zone (the same "browser form field" behavior that
+        // caused the original parse failure), not UTC. Submitting a UTC instant verbatim there gets
+        // it shifted by the site's zone offset when SharePoint converts it to UTC for storage — e.g.
+        // a UTC-7 site turned an actual 6:33am UTC modified time into 1:33pm.
+        //
+        // CORRECTED again 2026-08-28, same day: a first attempt tried to replicate the site's zone
+        // locally by matching RegionalSettings/TimeZone's Description string against
+        // TimeZoneInfo.GetSystemTimeZones() DisplayNames. That never actually matched anything —
+        // SharePoint's classic time zone list uses "GMT"/"and" wording (e.g. "(GMT-08:00) Pacific
+        // Time (US and Canada)") where .NET's DisplayName uses "UTC"/"&" — so the lookup silently
+        // fell back to UTC every time, i.e. it changed nothing, matching the report that the time
+        // was still off after that fix. Rather than hand-roll a second, still-guessable text-matching
+        // heuristic, ask the SITE itself to do the conversion via its own
+        // regionalsettings/timezone/UTCToLocalTime() REST function — this uses the exact same
+        // zone/DST rules ValidateUpdateListItem will apply when it parses our submitted string back,
+        // by construction, so there's nothing left to get wrong about which zone or rule set applies.
+        var dateAndPersonValues = await BuildDateAndPersonFormValuesAsync(siteUrl, modified, created, createdByEmail, modifiedByEmail);
+        var formValues = dateAndPersonValues.Select(v => (object)new { FieldName = v.FieldName, FieldValue = v.FieldValue }).ToList();
         // Folder color is deliberately NOT sent here. The color fields are ReadOnlyField="TRUE", and
         // ValidateUpdateListItem's commit is ALL-OR-NOTHING — the spec states that if any field
         // raises an exception the item is not committed at all, and an unknown field name faults the
@@ -2844,6 +2891,57 @@ public class SharePointService
                 return $"ValidateUpdateListItem exception: {ex.Message}";
             }
         }
+    }
+
+    // Returns the wall-clock string ValidateUpdateListItem must be given so that, once SharePoint
+    // parses it using the SITE's regional-settings time zone (see PatchTimestampsCoreAsync), it lands
+    // back on the exact UTC instant `utcInstant` represents. Delegates the conversion to the site's
+    // own regionalsettings/timezone/UTCToLocalTime() REST function instead of guessing at the zone
+    // locally — a prior attempt matched RegionalSettings/TimeZone's Description string against
+    // TimeZoneInfo.GetSystemTimeZones() DisplayNames, but SharePoint's classic zone list wording
+    // ("GMT", "and") never matches .NET's ("UTC", "&"), so that match always failed and silently fell
+    // back to treating the instant as already-UTC — i.e. it changed nothing. Asking SharePoint itself
+    // to convert removes any need to reproduce its zone/DST rules correctly. Falls back to formatting
+    // `utcInstant` as-is (the pre-fix behavior) if the conversion call fails for any reason, so an
+    // unreachable site can't turn into a hard failure of the whole metadata write.
+    private Task<string> FormatAsSiteLocalDateStringAsync(string siteUrl, DateTimeOffset utcInstant)
+    {
+        var cacheKey = $"{siteUrl}|{utcInstant.UtcTicks}";
+        var lazy = _siteLocalDateStringCache.GetOrAdd(cacheKey, _ => new Lazy<Task<string>>(async () =>
+        {
+            var fallback = utcInstant.UtcDateTime.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            try
+            {
+                var utcParam = utcInstant.UtcDateTime.ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture);
+                var url = $"{siteUrl.TrimEnd('/')}/_api/web/regionalsettings/timezone/utctolocaltime(datetime'{utcParam}')";
+                using var response = await SendSharePointRequestAsync(token =>
+                {
+                    var r = new HttpRequestMessage(HttpMethod.Get, url);
+                    r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                    return r;
+                }, siteUrl);
+
+                if (!response.IsSuccessStatusCode) return fallback;
+                var body = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(body);
+                string? raw = doc.RootElement.ValueKind == JsonValueKind.String
+                    ? doc.RootElement.GetString()
+                    : doc.RootElement.TryGetProperty("value", out var v) && v.ValueKind == JsonValueKind.String
+                        ? v.GetString() : null;
+                if (raw == null) return fallback;
+
+                // The returned value is a naive local wall-clock string with no offset of its own —
+                // parse its components as-is, don't let DateTime infer/attach any zone of its own.
+                if (!DateTime.TryParse(raw, System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.NoCurrentDateDefault, out var local))
+                    return fallback;
+
+                return local.ToString("yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch { return fallback; }
+        }));
+        return lazy.Value;
     }
 
     public async Task<string?> ApplyFileMetadataAsync(
@@ -4532,7 +4630,7 @@ public class SharePointService
         var ids = await GetSharePointIdsAsync(driveId, itemId, ct)
             ?? throw new Exception($"Could not resolve SharePoint IDs for {driveId}/{itemId}");
 
-        return await ApplyFileCustomFieldsCoreAsync(ids.siteUrl, ids.listId, ids.listItemId, fields, mappings, ct);
+        return await ApplyFileCustomFieldsCoreAsync(ids.siteUrl, ids.listId, ids.listItemId, fields, mappings, null, ct);
     }
 
     // Same as ApplyFileCustomFieldsAsync, but resolves the target item via its REST server-relative
@@ -4540,18 +4638,25 @@ public class SharePointService
     // pass: SPMI-imported files have no Graph item ID to resolve (the migration API doesn't surface
     // one — see the permissions post-pass in CopyService for the same constraint), only the
     // server-relative path the file was imported to.
+    //
+    // `restamp`, when given, folds a Modified/Created/Editor/Author correction into the SAME
+    // ValidateUpdateListItem call as the custom-field write, instead of CopyService issuing a
+    // separate restamp call afterward. Migration API mode needs this restamp because the custom-
+    // field write itself bumps Modified/Editor to the migrating account — see the caller. Combining
+    // the two avoids resolving `serverRelativeUrl`'s list item ID twice and posting twice.
     public async Task<string?> ApplyFileCustomFieldsByPathAsync(
         string siteUrl, string listId, string serverRelativeUrl,
         Dictionary<string, object?> fields,
         IEnumerable<SpColumnMap> mappings,
+        FileMetadata? restamp = null,
         CancellationToken ct = default)
     {
-        if (fields.Count == 0) return null;
+        if (fields.Count == 0 && restamp == null) return null;
 
         var listItemId = await GetFileListItemIdAsync(siteUrl, serverRelativeUrl, ct)
             ?? throw new Exception($"Could not resolve list item ID for {serverRelativeUrl}");
 
-        return await ApplyFileCustomFieldsCoreAsync(siteUrl, listId, listItemId.ToString(), fields, mappings, ct);
+        return await ApplyFileCustomFieldsCoreAsync(siteUrl, listId, listItemId.ToString(), fields, mappings, restamp, ct);
     }
 
     // Returns a file's list item ID (not its UniqueId GUID) by server-relative path via REST.
@@ -4585,6 +4690,7 @@ public class SharePointService
         string siteUrl, string listId, string listItemId,
         Dictionary<string, object?> fields,
         IEnumerable<SpColumnMap> mappings,
+        FileMetadata? restamp,
         CancellationToken ct)
     {
         var mappingLookup = SpColumnMap.BuildTargetNameMap(mappings);
@@ -4652,6 +4758,23 @@ public class SharePointService
             var formattedValue = FormatFieldValueForValidate(value);
             formValues.Add((targetName, formattedValue));
             submittedFields.Add(targetName);
+        }
+
+        // Fold a Modified/Created/Editor/Author correction into this SAME ValidateUpdateListItem
+        // call instead of a separate call after this one returns — the write itself bumps
+        // Modified/Editor to the calling account (see the Migration API caller), so the correction
+        // must ride along in this call to land in the version this write actually creates, and doing
+        // so in one call instead of two saves one full round trip (and, via ApplyFileCustomFieldsByPathAsync,
+        // one duplicate list-item-ID resolution) per file.
+        if (restamp != null)
+        {
+            var dateAndPersonValues = await BuildDateAndPersonFormValuesAsync(
+                siteUrl, restamp.ModifiedDateTime, restamp.CreatedDateTime, restamp.CreatedByEmail, restamp.ModifiedByEmail);
+            foreach (var (name, val) in dateAndPersonValues)
+            {
+                formValues.Add((name, val));
+                submittedFields.Add(name);
+            }
         }
 
         if (formValues.Count == 0) return lookupErrors.Count > 0 ? $"Lookup unresolved: {string.Join(", ", lookupErrors)}" : null;
