@@ -1,3 +1,4 @@
+using SharePointSmartCopy.Localization;
 using System.ComponentModel;
 using System.Windows;
 using SharePointSmartCopy.Models;
@@ -28,7 +29,7 @@ public partial class ColumnMappingDialog : Window
 
         UpdateStatusBar();
         if (vm.ColumnLoadError != null)
-            StatusBar.Text = $"⚠ {vm.ColumnLoadError}";
+            StatusBar.Text = Loc.T("Dlg_ColLoadWarn", vm.ColumnLoadError);
     }
 
     private ColumnMappingViewModel DlgVM => (ColumnMappingViewModel)DataContext;
@@ -118,22 +119,22 @@ public partial class ColumnMappingDialog : Window
     {
         if (DlgVM.Mappings.Count == 0)
         {
-            StatusBar.Text = "ℹ No mappable columns found. Supported types: Text, Note, Number, Boolean, Date, Choice, Multi-choice, Person, Managed Metadata.";
+            StatusBar.Text = Loc.T("Dlg_NoMappableColumns");
             return;
         }
         var skipped = DlgVM.Mappings.Count(r => r.SelectedTargetItem == null || r.SelectedTargetItem.IsSkip);
         if (DlgVM.IsLibraryScope)
         {
             var creating = DlgVM.Mappings.Count(r => r.SelectedTargetItem?.IsCreate == true);
-            StatusBar.Text = $"✅ {creating} will be created    ⚠ {skipped} skipped";
+            StatusBar.Text = Loc.T("Dlg_ColStatusCreateSkip", creating, skipped);
         }
         else
         {
             var mapped   = DlgVM.Mappings.Count(r => r.SelectedTargetItem != null && !r.SelectedTargetItem.IsSkip && !r.SelectedTargetItem.IsCreate);
             var creating = DlgVM.Mappings.Count(r => r.SelectedTargetItem?.IsCreate == true);
             StatusBar.Text = creating > 0
-                ? $"✅ {mapped} mapped    + {creating} will be created    ⚠ {skipped} skipped"
-                : $"✅ {mapped} mapped    ⚠ {skipped} skipped";
+                ? Loc.T("Dlg_ColStatusMapCreateSkip", mapped, creating, skipped)
+                : Loc.T("Dlg_ColStatusMapSkip", mapped, skipped);
         }
     }
 }
@@ -148,9 +149,9 @@ public class ColumnMappingViewModel
     public bool                      IsLibraryScope      { get; }
 
     public string HeaderDescription  => IsLibraryScope
-        ? "Choose which columns to create in the new target library. Columns set to 'Skip' will not be created."
-        : "Map source columns to target columns, or choose 'Create in target' to add a missing column to the destination library. Unmatched columns will be skipped unless you assign a target. Use Auto-match to automatically match columns by name.";
-    public string TargetColumnHeader => IsLibraryScope ? "Action" : "Target Column";
+        ? Loc.T("Dlg_ColHeaderLibrary")
+        : Loc.T("Dlg_ColHeaderFiles");
+    public string TargetColumnHeader => IsLibraryScope ? Loc.T("Dlg_ColAction") : Loc.T("Dlg_ColTargetColumn");
 
     public ColumnMappingViewModel(
         IReadOnlyList<ColumnDefinition> sourceColumns,
@@ -165,8 +166,8 @@ public class ColumnMappingViewModel
             // Library/Site scope: target library is being created — offer Create or Skip only.
             TargetColumnOptions =
             [
-                new TargetColumnOption { DisplayName = "Create in target", IsCreate = true, InternalName = "__create__" },
-                new TargetColumnOption { DisplayName = "── Skip this column ──", IsSkip = true, InternalName = "__skip__" },
+                new TargetColumnOption { DisplayName = Loc.T("Dlg_CreateInTarget"), IsCreate = true, InternalName = "__create__" },
+                new TargetColumnOption { DisplayName = Loc.T("Dlg_SkipThisColumn"), IsSkip = true, InternalName = "__skip__" },
             ];
         }
         else
@@ -174,8 +175,8 @@ public class ColumnMappingViewModel
             // Files/Pages scope: map to an existing target column, create it, or skip.
             TargetColumnOptions =
             [
-                new TargetColumnOption { DisplayName = "── Skip this column ──", IsSkip = true, InternalName = "__skip__" },
-                new TargetColumnOption { DisplayName = "+ Create in target", IsCreate = true, InternalName = "__create__" },
+                new TargetColumnOption { DisplayName = Loc.T("Dlg_SkipThisColumn"), IsSkip = true, InternalName = "__skip__" },
+                new TargetColumnOption { DisplayName = Loc.T("Dlg_PlusCreateInTarget"), IsCreate = true, InternalName = "__create__" },
                 .. targetColumns.Select(c => new TargetColumnOption
                 {
                     DisplayName  = c.DisplayName,

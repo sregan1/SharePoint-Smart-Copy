@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SharePointSmartCopy.Localization;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,7 +18,7 @@ public partial class HistoryDialog : Window
     {
         InitializeComponent();
         _verificationReportService = new VerificationReportService(spService);
-        DetailHeader.Text = "Loading previous runs…";
+        DetailHeader.Text = Loc.T("Dlg_LoadingRuns");
         // Seeds the checkbox from the user's last choice; the live IsChecked value (read in
         // VerifyButton_Click, not this settings snapshot) is what actually gates a given run.
         DeepVerifyCheckBox.IsChecked = AppSettings.Load().DeepVerifyOfficeFiles;
@@ -46,7 +47,7 @@ public partial class HistoryDialog : Window
 
         ReportListLoading.Visibility = Visibility.Collapsed;
         ReportList.Visibility        = Visibility.Visible;
-        DetailHeader.Text = _reports.Count == 0 ? "No previous runs found." : "Select a run to view details";
+        DetailHeader.Text = _reports.Count == 0 ? Loc.T("Dlg_NoRuns") : Loc.T("Dlg_SelectRun");
     }
 
     // Closing the window must stop an in-flight verification — without this the scan of a
@@ -70,17 +71,17 @@ public partial class HistoryDialog : Window
         bool canVerify = hasSelection && report!.Roots.Count > 0;
         VerifyButton.IsEnabled = canVerify;
         VerifyButton.ToolTip = hasSelection && !canVerify
-            ? "This run predates verification support — re-run the copy to enable this."
+            ? Loc.T("Dlg_PredatesVerification")
             : null;
 
         if (report == null)
         {
-            DetailHeader.Text      = "Select a run to view details";
+            DetailHeader.Text      = Loc.T("Dlg_SelectRun");
             DetailGrid.ItemsSource = null;
             return;
         }
 
-        DetailHeader.Text = $"{report.DisplayDate}  —  {report.TotalCount} files  —  {report.DurationDisplay}";
+        DetailHeader.Text = Loc.T("Dlg_RunSummary", report.DisplayDate, report.TotalCount, report.DurationDisplay);
         SuccessCard.Text  = report.SuccessCount.ToString();
         FailedCard.Text   = report.FailedCount.ToString();
         SkippedCard.Text  = report.SkippedCount.ToString();
@@ -100,7 +101,7 @@ public partial class HistoryDialog : Window
         }
         catch
         {
-            DetailHeader.Text = "Could not load this run's details.";
+            DetailHeader.Text = Loc.T("Dlg_RunLoadFailed");
         }
     }
 
@@ -109,8 +110,8 @@ public partial class HistoryDialog : Window
         if (ReportList.SelectedItem is not SavedReportSummary report) return;
 
         var result = MessageBox.Show(
-            $"Delete the report from {report.DisplayDate}?",
-            "Delete Report", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            Loc.T("Dlg_DeleteReportPrompt", report.DisplayDate),
+            Loc.T("Dlg_DeleteReportTitle"), MessageBoxButton.YesNo, MessageBoxImage.Question);
 
         if (result != MessageBoxResult.Yes) return;
 
@@ -126,14 +127,14 @@ public partial class HistoryDialog : Window
 
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
-            Filter   = "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt",
+            Filter   = Loc.T("Dlg_FilterCsv"),
             FileName = $"{SiteUrlHelper.ReportFilenamePrefix(report.SourceUrl, report.TargetUrl, AppSettings.Load().PrefixReportFilenamesWithSiteNames)}CopyReport_{report.Id}.csv"
         };
         if (dlg.ShowDialog() != true) return;
 
         static string Csv(string? s) => $"\"{(s ?? "").Replace("\"", "\"\"")}\"";
         var sb = new StringBuilder();
-        sb.AppendLine("File Name,Source Path,Target Path,Status,Versions Copied,Error,Permissions Status,Permissions Details");
+        sb.AppendLine(Loc.T("Dlg_CsvHeader"));
         foreach (var item in report.Items)
         {
             sb.AppendLine(
@@ -157,7 +158,7 @@ public partial class HistoryDialog : Window
 
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
-            Filter   = "Excel Workbook (*.xlsx)|*.xlsx",
+            Filter   = Loc.T("Dlg_FilterXlsx"),
             // "DeepVerificationReport_" when the deep Office-file pass is on, so the file is
             // distinguishable from a standard verification at a glance. Live checkbox state.
             FileName = $"{SiteUrlHelper.ReportFilenamePrefix(report.SourceUrl, report.TargetUrl, AppSettings.Load().PrefixReportFilenamesWithSiteNames)}{(DeepVerifyCheckBox.IsChecked == true ? "Deep" : "")}VerificationReport_{report.Id}.xlsx"
@@ -174,13 +175,13 @@ public partial class HistoryDialog : Window
         DeepVerifyCheckBox.IsEnabled = false;
         VerifyCancelButton.Visibility = Visibility.Visible;
         VerifyStatus.Visibility = Visibility.Visible;
-        VerifyStatus.Text = "Scanning…";
+        VerifyStatus.Text = Loc.T("Dlg_Scanning");
 
         // Live checkbox state, not a re-read of AppSettings from disk — see the field's own doc comment
         // on why deep-verify must be captured from the live UI at run time. Read before the try so the
         // catch/finally can also label the run "Deep verification" when the deep Office-file pass is on.
         bool deepVerify   = DeepVerifyCheckBox.IsChecked == true;
-        string verifyName = deepVerify ? "Deep verification" : "Verification";
+        string verifyName = deepVerify ? Loc.T("Dlg_DeepVerification") : Loc.T("Dlg_Verification");
 
         try
         {
@@ -191,13 +192,13 @@ public partial class HistoryDialog : Window
             // Combine the persistent phase-status line with the most recent throttle/error notice
             // (if any) so a long Retry-After wait shows up instead of just leaving the base text
             // frozen, which looked indistinguishable from a hang.
-            string baseText = "Scanning…";
+            string baseText = Loc.T("Dlg_Scanning");
             string noticeText = "";
             void UpdateStatus() =>
                 VerifyStatus.Text = string.IsNullOrEmpty(noticeText) ? baseText : $"{baseText}  {noticeText}";
             var onScanned = new Progress<VerificationReportService.ScanProgress>(p =>
             {
-                baseText = $"Scanning… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)";
+                baseText = Loc.T("Dlg_ScanningFound", p.SourceFilesFound.ToString("N0"), p.TargetFilesFound.ToString("N0"));
                 UpdateStatus();
             });
             var onNotice = new Progress<string>(msg =>
@@ -233,20 +234,20 @@ public partial class HistoryDialog : Window
             });
             var result = await _verificationReportService.RunAsync(
                 roots, maxParallel, activityLog: onNotice, progress: onScanned, _verifyCts.Token, deepVerify);
-            VerifyStatus.Text = "Writing workbook…";
+            VerifyStatus.Text = Loc.T("Dlg_WritingWorkbook");
             // Off the UI thread: ClosedXML builds the whole workbook in memory and SaveAs is
             // CPU-heavy — a 100k-row run froze the window for a long time.
             await Task.Run(() => ExcelReportWriter.Write(dlg.FileName, result));
             if (result.ScanErrors.Count > 0)
                 MessageBox.Show(
-                    $"{result.ScanErrors.Count} root(s) could not be scanned — see the Scan Errors tab in the workbook.",
+                    Loc.T("Dlg_RootsNotScanned", result.ScanErrors.Count),
                     verifyName, MessageBoxButton.OK, MessageBoxImage.Warning);
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
         }
         catch (OperationCanceledException) { /* user cancelled — no message needed */ }
         catch (Exception ex)
         {
-            MessageBox.Show($"{verifyName} failed: {ex.Message}", verifyName, MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(Loc.T("Dlg_OpFailed", verifyName, ex.Message), verifyName, MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
         {

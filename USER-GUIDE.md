@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 3.5.2  ·  August 2026**
+**Version 3.6.0  ·  October 2026**
 
 ---
 
@@ -47,6 +47,7 @@ Two copy engines are available. **Migration API** mode uses SharePoint's server-
 - System sleep is blocked automatically for the duration of a copy, metadata update, or verification
 - ← Back navigation available on every step, including the final report screen
 - Light, Dark, and System-follows-Windows themes
+- 30 interface languages — follows your Windows display language by default; change it under Settings → Language (takes effect the next time the app starts). Translations are machine-generated and pending native-speaker review
 
 ---
 

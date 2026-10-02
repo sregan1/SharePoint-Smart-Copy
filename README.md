@@ -75,6 +75,7 @@ Choose from four copy scopes in a step-by-step wizard:
 
 **Appearance:**
 - Light / Dark / System theme — switchable in Settings
+- 30 UI languages (follows the Windows display language, or choose one in Settings → Language; applies on next launch). Arabic and Hebrew use right-to-left layout. Translations are machine-generated and pending native review
 
 ---
 

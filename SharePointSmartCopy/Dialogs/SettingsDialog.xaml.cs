@@ -33,6 +33,13 @@ public partial class SettingsDialog : Window
         }
 
         ThemeCombo.SelectedIndex = (int)current.Theme; // System=0, Light=1, Dark=2
+
+        // First entry = follow Windows; the rest are the 30 supported languages.
+        var langs = new List<Localization.Loc.LanguageInfo> { new("", Localization.Loc.T("Settings_LanguageSystem")) };
+        langs.AddRange(Localization.Loc.Languages);
+        LanguageCombo.ItemsSource = langs;
+        LanguageCombo.SelectedValue = current.Language ?? string.Empty;
+        if (LanguageCombo.SelectedIndex < 0) LanguageCombo.SelectedIndex = 0;
         PrefixFilenamesCheckBox.IsChecked = current.PrefixReportFilenamesWithSiteNames;
     }
 
@@ -100,12 +107,16 @@ public partial class SettingsDialog : Window
             CopyNavigation          = _original.CopyNavigation,
             CopyPermissions         = _original.CopyPermissions,
             Theme                   = (AppTheme)Math.Max(0, ThemeCombo.SelectedIndex),
+            Language                = LanguageCombo.SelectedValue as string ?? string.Empty,
             DeepVerifyOfficeFiles   = _original.DeepVerifyOfficeFiles,
             PrefixReportFilenamesWithSiteNames = PrefixFilenamesCheckBox.IsChecked ?? true,
         };
 
         Result.Save();
         ThemeManager.Apply(Result.Theme);
+        if (!string.Equals(Result.Language, _original.Language ?? string.Empty, StringComparison.OrdinalIgnoreCase))
+            MessageBox.Show(Localization.Loc.T("Settings_LanguageRestart"), Title,
+                MessageBoxButton.OK, MessageBoxImage.Information);
         DialogResult = true;
         Close();
     }

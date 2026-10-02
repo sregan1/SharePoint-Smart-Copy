@@ -1,8 +1,8 @@
-<Window x:Class="SharePointSmartCopy.Dialogs.SettingsDialog"
+﻿<Window xmlns:loc="clr-namespace:SharePointSmartCopy.Localization" x:Class="SharePointSmartCopy.Dialogs.SettingsDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Azure App Registrations"
-        Width="660" Height="600"
+        Title="{loc:Loc Ui_AzureAppRegistrations}"
+        Width="800" Height="600"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         Background="{DynamicResource WindowBgBrush}">
@@ -36,11 +36,8 @@
                    Height="70" VerticalAlignment="Center"
                    RenderOptions.BitmapScalingMode="HighQuality"/>
             <StackPanel Grid.Column="2" VerticalAlignment="Center">
-                <TextBlock Text="Azure App Registrations" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-                <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="{DynamicResource TextTertiaryBrush}" FontSize="12">
-                    Store one or more Azure AD app registrations. The one selected when you click Save becomes the active registration.
-                    Each app needs delegated permissions <Run FontWeight="Bold">Sites.ReadWrite.All</Run> and <Run FontWeight="Bold">Files.ReadWrite.All</Run>, with admin consent.
-                </TextBlock>
+                <TextBlock Text="{loc:Loc Ui_AzureAppRegistrations}" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="{DynamicResource TextTertiaryBrush}" FontSize="12" Text="{loc:Loc Ui2_AppRegsIntro}"/>
             </StackPanel>
         </Grid>
 
@@ -62,7 +59,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Registrations" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                <TextBlock Grid.Row="0" Text="{loc:Loc Ui_Registrations}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
 
                 <ListBox Grid.Row="2" x:Name="RegistrationList"
                          BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}"
@@ -97,9 +94,9 @@
                 </ListBox>
 
                 <StackPanel Grid.Row="4" Orientation="Horizontal">
-                    <Button Content="Add" Style="{StaticResource SmallButton}"
+                    <Button Content="{loc:Loc Ui_Add}" Style="{StaticResource SmallButton}"
                             Click="AddRegistration_Click" Margin="0,0,8,0"/>
-                    <Button x:Name="RemoveButton" Content="Remove" Style="{StaticResource SmallButton}"
+                    <Button x:Name="RemoveButton" Content="{loc:Loc Ui_Remove}" Style="{StaticResource SmallButton}"
                             Click="RemoveRegistration_Click" IsEnabled="False"/>
                 </StackPanel>
             </Grid>
@@ -134,40 +131,36 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Edit Selected Registration"
+                <TextBlock Grid.Row="0" Text="{loc:Loc Ui_EditSelectedRegistration}"
                            FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
 
                 <StackPanel Grid.Row="2">
-                    <TextBlock Text="Name" Style="{StaticResource FieldLabel}"/>
+                    <TextBlock Text="{loc:Loc Ui_Name}" Style="{StaticResource FieldLabel}"/>
                     <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="4">
-                    <TextBlock Text="Client ID (Application ID)" Style="{StaticResource FieldLabel}"/>
+                    <TextBlock Text="{loc:Loc Ui_ClientIdApplicationId}" Style="{StaticResource FieldLabel}"/>
                     <TextBox Text="{Binding ClientId, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="6">
-                    <TextBlock Text="Tenant ID" Style="{StaticResource FieldLabel}"/>
+                    <TextBlock Text="{loc:Loc Ui_TenantId}" Style="{StaticResource FieldLabel}"/>
                     <TextBox Text="{Binding TenantId, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock Text="Use 'common' for multi-tenant, or your tenant GUID or domain."
+                    <TextBlock Text="{loc:Loc Ui_UseCommonForMultiTenant}"
                                Foreground="{DynamicResource TextTertiaryBrush}" FontSize="11" Margin="0,4,0,0"/>
                 </StackPanel>
 
                 <!-- Setup instructions -->
                 <Border Grid.Row="8" Style="{StaticResource InfoBanner}" Padding="10,7">
-                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#004578">
-                        <Run FontWeight="Bold">Setup:</Run> portal.azure.com → Azure Active Directory → App registrations → New registration.
-                        Add a Mobile/Desktop redirect URI of <Run FontWeight="Bold">http://localhost</Run>.
-                        Under API permissions, add Graph delegated: Sites.ReadWrite.All + Files.ReadWrite.All, then grant admin consent.
-                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#004578" Text="{loc:Loc Ui2_AppRegsSetup}"/>
                 </Border>
             </Grid>
         </Grid>
 
         <!-- General options -->
         <CheckBox Grid.Row="4" x:Name="PrefixFilenamesCheckBox"
-                  Content="Prefix default report filenames with the source and target site names"
+                  Content="{loc:Loc Ui_PrefixDefaultReportFilenamesWith}"
                   FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
 
         <!-- Footer buttons -->
@@ -179,20 +172,25 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                <Button Content="Sign Out" Click="SignOutButton_Click"
+                <Button Content="{loc:Loc Ui_SignOut}" Click="SignOutButton_Click"
                         Style="{StaticResource SecondaryBtn}" Margin="0,0,16,0"/>
-                <TextBlock Text="Theme:" VerticalAlignment="Center" FontSize="12"
+                <TextBlock Text="{loc:Loc Ui_Theme}" VerticalAlignment="Center" FontSize="12"
                            Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,6,0"/>
                 <ComboBox x:Name="ThemeCombo" Width="110" VerticalAlignment="Center" FontSize="12">
-                    <ComboBoxItem Content="System"/>
-                    <ComboBoxItem Content="Light"/>
-                    <ComboBoxItem Content="Dark"/>
+                    <ComboBoxItem Content="{loc:Loc Ui_System}"/>
+                    <ComboBoxItem Content="{loc:Loc Ui_Light}"/>
+                    <ComboBoxItem Content="{loc:Loc Ui_Dark}"/>
                 </ComboBox>
+                <TextBlock Text="{loc:Loc Settings_Language}" VerticalAlignment="Center" FontSize="12"
+                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="16,0,6,0"/>
+                <ComboBox x:Name="LanguageCombo" Width="170" VerticalAlignment="Center" FontSize="12"
+                          DisplayMemberPath="NativeName" SelectedValuePath="Code"
+                          ToolTip="{loc:Loc Settings_LanguageRestart}"/>
             </StackPanel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal">
-                <Button Content="Cancel" Style="{StaticResource SecondaryBtn}" Margin="0,0,12,0" Click="Cancel_Click"/>
-                <Button Content="Save" Style="{StaticResource PrimaryBtn}" Click="Save_Click"/>
+                <Button Content="{loc:Loc Ui_Cancel}" Style="{StaticResource SecondaryBtn}" Margin="0,0,12,0" Click="Cancel_Click"/>
+                <Button Content="{loc:Loc Ui_Save}" Style="{StaticResource PrimaryBtn}" Click="Save_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

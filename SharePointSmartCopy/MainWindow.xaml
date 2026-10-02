@@ -1,10 +1,10 @@
-<Window x:Class="SharePointSmartCopy.MainWindow"
+﻿<Window xmlns:loc="clr-namespace:SharePointSmartCopy.Localization" x:Class="SharePointSmartCopy.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:SharePointSmartCopy.Converters"
         xmlns:vm="clr-namespace:SharePointSmartCopy.ViewModels"
         xmlns:models="clr-namespace:SharePointSmartCopy.Models"
-        Title="SharePoint Smart Copy"
+        Title="{loc:Loc Ui_SharepointSmartCopy}"
         Width="960" Height="720"
         MinWidth="800" MinHeight="600"
         Background="{DynamicResource WindowBgBrush}"
@@ -37,12 +37,12 @@
 
         <!-- ── Wizard step definitions ── -->
         <x:Array x:Key="WizardSteps" Type="models:StepInfo">
-            <models:StepInfo Index="0" Display="1" Label="Source"/>
-            <models:StepInfo Index="1" Display="2" Label="Browse"/>
-            <models:StepInfo Index="2" Display="3" Label="Target"/>
-            <models:StepInfo Index="3" Display="4" Label="Options"/>
-            <models:StepInfo Index="4" Display="5" Label="Copy"/>
-            <models:StepInfo Index="5" Display="✓" Label="Report" IsFinal="True"/>
+            <models:StepInfo Index="0" Display="1" Label="{loc:Loc Ui_Source}"/>
+            <models:StepInfo Index="1" Display="2" Label="{loc:Loc Ui_Browse}"/>
+            <models:StepInfo Index="2" Display="3" Label="{loc:Loc Ui_Target}"/>
+            <models:StepInfo Index="3" Display="4" Label="{loc:Loc Ui_Options}"/>
+            <models:StepInfo Index="4" Display="5" Label="{loc:Loc Ui_Copy}"/>
+            <models:StepInfo Index="5" Display="✓" Label="{loc:Loc Ui_Report}" IsFinal="True"/>
         </x:Array>
 
         <!-- Bubble for one wizard step: gray when upcoming, light accent with a check
@@ -352,7 +352,7 @@
                                 </Image.Source>
                             </Image>
                         </Border>
-                        <TextBlock Text="SharePoint Smart Copy" FontSize="16" FontWeight="SemiBold"
+                        <TextBlock Text="{loc:Loc Ui_SharepointSmartCopy}" FontSize="16" FontWeight="SemiBold"
                                    Foreground="White" VerticalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
@@ -363,21 +363,21 @@
                                 WindowChrome.IsHitTestVisibleInChrome="True">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="&#xE81C;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
-                                <TextBlock Text="History" VerticalAlignment="Center"/>
+                                <TextBlock Text="{loc:Loc Ui_History}" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                         <Button Style="{StaticResource AppBarBtn}" Margin="0,0,8,0" Click="CompareButton_Click"
                                 WindowChrome.IsHitTestVisibleInChrome="True">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="&#xE895;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
-                                <TextBlock Text="Compare" VerticalAlignment="Center"/>
+                                <TextBlock Text="{loc:Loc Ui_Compare}" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                         <Button Style="{StaticResource AppBarBtn}" Click="SettingsButton_Click"
                                 WindowChrome.IsHitTestVisibleInChrome="True">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="&#xE713;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
-                                <TextBlock Text="Settings" VerticalAlignment="Center"/>
+                                <TextBlock Text="{loc:Loc Ui_Settings}" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -386,11 +386,11 @@
                 <!-- Window caption buttons -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <Button Style="{StaticResource CaptionBtn}" Click="Minimize_Click"
-                            AutomationProperties.Name="Minimize">
+                            AutomationProperties.Name="{loc:Loc Ui2_AutoMinimize}">
                         <TextBlock Text="&#xE921;" FontFamily="{StaticResource GlyphFont}" FontSize="10"/>
                     </Button>
                     <Button Style="{StaticResource CaptionBtn}" Click="MaximizeRestore_Click"
-                            AutomationProperties.Name="Maximize or restore">
+                            AutomationProperties.Name="{loc:Loc Ui2_AutoMaximizeRestore}">
                         <TextBlock FontFamily="{StaticResource GlyphFont}" FontSize="10">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
@@ -406,7 +406,7 @@
                         </TextBlock>
                     </Button>
                     <Button Style="{StaticResource CaptionCloseBtn}" Click="CloseWindow_Click"
-                            AutomationProperties.Name="Close">
+                            AutomationProperties.Name="{loc:Loc Ui2_AutoClose}">
                         <TextBlock Text="&#xE8BB;" FontFamily="{StaticResource GlyphFont}" FontSize="10"/>
                     </Button>
                 </StackPanel>
@@ -447,12 +447,10 @@
             <StackPanel Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=0}"
                         MaxWidth="560" HorizontalAlignment="Center" Margin="0,32,0,0">
 
-                <TextBlock Text="Connect to Source Site" Style="{StaticResource SectionHeader}"/>
-                <TextBlock Style="{StaticResource SubHeader}">
-                    Enter the URL of the SharePoint site collection you want to copy <Run FontStyle="Italic">from</Run>.
-                </TextBlock>
+                <TextBlock Text="{loc:Loc Ui_ConnectToSourceSite}" Style="{StaticResource SectionHeader}"/>
+                <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Ui2_EnterSourceSiteUrl}"/>
 
-                <TextBlock Text="Source Site URL" Style="{StaticResource FieldLabel}"/>
+                <TextBlock Text="{loc:Loc Ui_SourceSiteUrl}" Style="{StaticResource FieldLabel}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -463,11 +461,11 @@
                              Tag="https://contoso.sharepoint.com/sites/source"
                              Style="{StaticResource WatermarkTextBox}"/>
                     <Grid Grid.Column="2">
-                        <Button Content="Connect" Style="{StaticResource PrimaryBtn}"
+                        <Button Content="{loc:Loc Ui_Connect}" Style="{StaticResource PrimaryBtn}"
                                 Command="{Binding ConnectSourceCommand}"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"
                                 Visibility="{Binding IsConnectingSource, Converter={StaticResource InvBoolToVis}}"/>
-                        <Button Content="Disconnect" Style="{StaticResource DangerBtn}"
+                        <Button Content="{loc:Loc Ui_Disconnect}" Style="{StaticResource DangerBtn}"
                                 Command="{Binding CancelConnectSourceCommand}"
                                 Visibility="{Binding IsConnectingSource, Converter={StaticResource BoolToVis}}"/>
                     </Grid>
@@ -478,7 +476,7 @@
                     <TextBlock Text="{Binding SourceStatus}" FontSize="13" VerticalAlignment="Center"/>
                     <TextBlock Text=" · " Foreground="{DynamicResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
                                Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
-                    <Button Content="Disconnect" Style="{StaticResource LinkBtn}"
+                    <Button Content="{loc:Loc Ui_Disconnect}" Style="{StaticResource LinkBtn}"
                             Command="{Binding DisconnectSourceCommand}"
                             Foreground="{DynamicResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
                             Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
@@ -489,7 +487,7 @@
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                             <TextBlock Text="&#xEA80;" Style="{StaticResource GlyphIcon}"
                                        Foreground="{DynamicResource AccentBrush}" FontSize="13" Margin="0,0,6,0"/>
-                            <TextBlock Text="Requirements" FontWeight="SemiBold" FontSize="13"/>
+                            <TextBlock Text="{loc:Loc Ui_Requirements}" FontWeight="SemiBold" FontSize="13"/>
                         </StackPanel>
                         <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="20">
                             <Run>• You must have read access to the source site collection.</Run>
@@ -520,81 +518,73 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="What would you like to copy?" Style="{StaticResource SectionHeader}"/>
+                <TextBlock Grid.Row="0" Text="{loc:Loc Ui_WhatWouldYouLikeTo}" Style="{StaticResource SectionHeader}"/>
 
                 <!-- ── Mode tile selector ── -->
                 <UniformGrid Grid.Row="1" Columns="4" Margin="0,8,0,12">
                     <Button Style="{StaticResource ModeTileButton}" Tag="{Binding IsFilesScope}"
                             Click="ModeFiles_Click"
-                            AutomationProperties.Name="Files and Folders mode">
+                            AutomationProperties.Name="{loc:Loc Ui2_AutoFilesFoldersMode}">
                         <StackPanel>
                             <TextBlock Text="&#xE7C3;" Style="{StaticResource ModeTileGlyph}"/>
-                            <TextBlock Text="Files &amp; Folders" Style="{StaticResource ModeTileTitle}"/>
-                            <TextBlock Text="Copy individual files between libraries" Style="{StaticResource ModeTileDesc}"/>
+                            <TextBlock Text="{loc:Loc Ui_FilesFolders}" Style="{StaticResource ModeTileTitle}"/>
+                            <TextBlock Text="{loc:Loc Ui_CopyIndividualFilesBetweenLibraries}" Style="{StaticResource ModeTileDesc}"/>
                         </StackPanel>
                     </Button>
 
                     <Button Style="{StaticResource ModeTileButton}" Tag="{Binding IsLibraryScope}"
                             Click="ModeLibrary_Click"
-                            AutomationProperties.Name="Libraries and Lists mode">
+                            AutomationProperties.Name="{loc:Loc Ui2_AutoLibrariesListsMode}">
                         <StackPanel>
                             <TextBlock Text="&#xE8F1;" Style="{StaticResource ModeTileGlyph}"/>
-                            <TextBlock Text="Libraries &amp; Lists" Style="{StaticResource ModeTileTitle}"/>
-                            <TextBlock Text="Recreate libraries &amp; lists with structure and columns" Style="{StaticResource ModeTileDesc}"/>
+                            <TextBlock Text="{loc:Loc Ui_LibrariesLists}" Style="{StaticResource ModeTileTitle}"/>
+                            <TextBlock Text="{loc:Loc Ui_RecreateLibrariesListsWithStructure}" Style="{StaticResource ModeTileDesc}"/>
                         </StackPanel>
                     </Button>
 
                     <Button Style="{StaticResource ModeTileButton}" Tag="{Binding IsSiteScope}"
                             Click="ModeSite_Click"
-                            AutomationProperties.Name="Entire Site mode">
+                            AutomationProperties.Name="{loc:Loc Ui2_AutoEntireSiteMode}">
                         <StackPanel>
                             <TextBlock Text="&#xE774;" Style="{StaticResource ModeTileGlyph}"/>
-                            <TextBlock Text="Entire Site" Style="{StaticResource ModeTileTitle}"/>
-                            <TextBlock Text="Copy all libraries from the source site" Style="{StaticResource ModeTileDesc}"/>
+                            <TextBlock Text="{loc:Loc Ui_EntireSite}" Style="{StaticResource ModeTileTitle}"/>
+                            <TextBlock Text="{loc:Loc Ui_CopyAllLibrariesFromThe}" Style="{StaticResource ModeTileDesc}"/>
                         </StackPanel>
                     </Button>
 
                     <Button Style="{StaticResource ModeTileButton}" Tag="{Binding IsPagesScope}" Margin="0"
                             Click="ModePages_Click"
-                            AutomationProperties.Name="Site Pages mode">
+                            AutomationProperties.Name="{loc:Loc Ui2_AutoSitePagesMode}">
                         <StackPanel>
                             <TextBlock Text="&#xE8A1;" Style="{StaticResource ModeTileGlyph}"/>
-                            <TextBlock Text="Site Pages" Style="{StaticResource ModeTileTitle}"/>
-                            <TextBlock Text="Copy modern pages with web parts" Style="{StaticResource ModeTileDesc}"/>
+                            <TextBlock Text="{loc:Loc Ui_SitePages}" Style="{StaticResource ModeTileTitle}"/>
+                            <TextBlock Text="{loc:Loc Ui_CopyModernPagesWithWeb}" Style="{StaticResource ModeTileDesc}"/>
                         </StackPanel>
                     </Button>
                 </UniformGrid>
 
                 <Border Grid.Row="2" Style="{StaticResource InfoBanner}" Padding="10,6" Margin="0,0,0,8">
                     <TextBlock FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis">
-                        <Run Text="Source: " FontWeight="SemiBold"/>
+                        <Run Text="{loc:Loc Ui_Source2}" FontWeight="SemiBold"/>
                         <Run Text="{Binding SourceUrl}"/>
                     </TextBlock>
                 </Border>
 
                 <!-- Scope-specific subheader -->
                 <TextBlock Grid.Row="3" Style="{StaticResource SubHeader}"
-                           Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}">
-                    Expand libraries and check the files or folders you want to copy.
-                </TextBlock>
+                           Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}" Text="{loc:Loc Ui2_SourceHintFiles}"/>
                 <TextBlock Grid.Row="3" Style="{StaticResource SubHeader}"
-                           Visibility="{Binding IsLibraryScope, Converter={StaticResource BoolToVis}}">
-                    Check the libraries and lists you want to recreate at the target site.
-                </TextBlock>
+                           Visibility="{Binding IsLibraryScope, Converter={StaticResource BoolToVis}}" Text="{loc:Loc Ui2_SourceHintLibraries}"/>
                 <TextBlock Grid.Row="3" Style="{StaticResource SubHeader}"
-                           Visibility="{Binding IsPagesScope, Converter={StaticResource BoolToVis}}">
-                    Check the pages you want to copy. Use Select All to copy the entire Site Pages library.
-                </TextBlock>
+                           Visibility="{Binding IsPagesScope, Converter={StaticResource BoolToVis}}" Text="{loc:Loc Ui2_SourceHintPages}"/>
                 <TextBlock Grid.Row="3" Style="{StaticResource SubHeader}"
-                           Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}">
-                    All libraries from the source site will be copied. Connect the target to continue.
-                </TextBlock>
+                           Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}" Text="{loc:Loc Ui2_SourceHintSite}"/>
 
                 <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,0,0,8"
                             Visibility="{Binding IsSiteScope, Converter={StaticResource InvBoolToVis}}">
-                    <Button Content="Select All" Style="{StaticResource LinkBtn}" Click="SelectAll_Click"/>
+                    <Button Content="{loc:Loc Ui_SelectAll}" Style="{StaticResource LinkBtn}" Click="SelectAll_Click"/>
                     <TextBlock Text=" | " Foreground="{DynamicResource BorderLightBrush}" VerticalAlignment="Center"/>
-                    <Button Content="Deselect All" Style="{StaticResource LinkBtn}" Click="DeselectAll_Click"/>
+                    <Button Content="{loc:Loc Ui_DeselectAll}" Style="{StaticResource LinkBtn}" Click="DeselectAll_Click"/>
                     <ProgressBar IsIndeterminate="True" Width="80" Height="4" Margin="16,0,0,0" VerticalAlignment="Center"
                                  Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
                     <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource TextTertiaryBrush}" FontSize="12"
@@ -636,22 +626,20 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
-                    <TextBlock Text="Connect to Target Site" Style="{StaticResource SectionHeader}"/>
-                    <TextBlock Style="{StaticResource SubHeader}">
-                        Enter the URL of the destination site collection.
-                    </TextBlock>
+                    <TextBlock Text="{loc:Loc Ui_ConnectToTargetSite}" Style="{StaticResource SectionHeader}"/>
+                    <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Ui2_EnterTargetSiteUrl}"/>
 
-                    <TextBlock Text="Target Site URL" Style="{StaticResource FieldLabel}" Margin="0,22,0,4"/>
+                    <TextBlock Text="{loc:Loc Ui_TargetSiteUrl}" Style="{StaticResource FieldLabel}" Margin="0,22,0,4"/>
                     <TextBox Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
                              Tag="https://contoso.sharepoint.com/sites/target"
                              Style="{StaticResource WatermarkTextBox}"
                              Margin="0,0,0,8"/>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="Connect to Target" Style="{StaticResource PrimaryBtn}"
+                        <Button Content="{loc:Loc Ui_ConnectToTarget}" Style="{StaticResource PrimaryBtn}"
                                 Command="{Binding ConnectTargetCommand}"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"
                                 Visibility="{Binding IsConnectingTarget, Converter={StaticResource InvBoolToVis}}"/>
-                        <Button Content="Disconnect" Style="{StaticResource DangerBtn}"
+                        <Button Content="{loc:Loc Ui_Disconnect}" Style="{StaticResource DangerBtn}"
                                 Command="{Binding CancelConnectTargetCommand}"
                                 Visibility="{Binding IsConnectingTarget, Converter={StaticResource BoolToVis}}"/>
                     </StackPanel>
@@ -661,7 +649,7 @@
                         <TextBlock Text="{Binding TargetStatus}" FontSize="13" VerticalAlignment="Center"/>
                         <TextBlock Text=" · " Foreground="{DynamicResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
                                    Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
-                        <Button Content="Disconnect" Style="{StaticResource LinkBtn}"
+                        <Button Content="{loc:Loc Ui_Disconnect}" Style="{StaticResource LinkBtn}"
                                 Command="{Binding DisconnectTargetCommand}"
                                 Foreground="{DynamicResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
                                 Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
@@ -672,30 +660,22 @@
 
                     <Border Style="{StaticResource WarningBanner}" Margin="0,20,0,0"
                             Visibility="{Binding NeedsTargetFolder, Converter={StaticResource BoolToVis}}">
-                        <TextBlock TextWrapping="Wrap" FontSize="12">
-                            Select the destination folder in the tree on the right.
-                            Files will be copied into that folder.
-                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Ui2_TargetHintSelectFolder}"/>
                     </Border>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2">
-                    <TextBlock Text="Select Destination Folder" Style="{StaticResource SectionHeader}"
+                    <TextBlock Text="{loc:Loc Ui_SelectDestinationFolder}" Style="{StaticResource SectionHeader}"
                                Visibility="{Binding NeedsTargetFolder, Converter={StaticResource BoolToVis}}"/>
-                    <TextBlock Text="Target Site" Style="{StaticResource SectionHeader}"
+                    <TextBlock Text="{loc:Loc Ui_TargetSite}" Style="{StaticResource SectionHeader}"
                                Visibility="{Binding NeedsTargetFolder, Converter={StaticResource InvBoolToVis}}"/>
 
                     <!-- Folder picker (Files / Pages scope) -->
                     <StackPanel Visibility="{Binding NeedsTargetFolder, Converter={StaticResource BoolToVis}}">
                         <TextBlock Style="{StaticResource SubHeader}"
-                                   Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}">
-                            Click a library or folder to select it as the copy destination.
-                        </TextBlock>
+                                   Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}" Text="{loc:Loc Ui2_TargetHintClickLibrary}"/>
                         <TextBlock Style="{StaticResource SubHeader}"
-                                   Visibility="{Binding IsPagesScope, Converter={StaticResource BoolToVis}}">
-                            The Site Pages library has been automatically selected as the destination.
-                            Pages can only be copied into a Site Pages library.
-                        </TextBlock>
+                                   Visibility="{Binding IsPagesScope, Converter={StaticResource BoolToVis}}" Text="{loc:Loc Ui2_TargetHintSitePages}"/>
 
                         <Border Padding="10,6" Margin="0,0,0,8">
                             <Border.Style>
@@ -710,7 +690,7 @@
                             </Border.Style>
                             <TextBlock FontSize="13">
                                 <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE8B7;"/>
-                                <Run Text=" Selected: "/>
+                                <Run Text="{loc:Loc Ui_Selected}"/>
                                 <Run Text="{Binding SelectedTargetFolder.Name}" FontWeight="SemiBold"/>
                             </TextBlock>
                         </Border>
@@ -736,27 +716,23 @@
 
                     <!-- Library / Site scope: no folder picker needed -->
                     <StackPanel Visibility="{Binding NeedsTargetFolder, Converter={StaticResource InvBoolToVis}}">
-                        <TextBlock Style="{StaticResource SubHeader}">
-                            Libraries and lists will be created at the root of the target site. No folder selection is needed.
-                        </TextBlock>
+                        <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Ui2_TargetHintRootNoFolder}"/>
                         <Border Style="{StaticResource InfoBanner}" Padding="14,12" Margin="0,16,0,0">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                     <TextBlock Text="&#xE946;" Style="{StaticResource GlyphIcon}"
                                                Foreground="{DynamicResource AccentBrush}" FontSize="13" Margin="0,0,6,0"/>
-                                    <TextBlock Text="Library / List Creation" FontSize="13" FontWeight="SemiBold"
+                                    <TextBlock Text="{loc:Loc Ui_LibraryListCreation}" FontSize="13" FontWeight="SemiBold"
                                                Foreground="{DynamicResource AccentBrush}"/>
                                 </StackPanel>
-                                <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}">
-                                    Libraries and lists will be created at the root of the target site, preserving column schema and versioning settings. If a library or list already exists, any missing source columns will be added to it.
-                                </TextBlock>
+                                <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Text="{loc:Loc Ui2_TargetHintRootDetail}"/>
                             </StackPanel>
                         </Border>
                         <Border Style="{StaticResource SuccessBanner}" Padding="10,6" Margin="0,12,0,0"
                                 Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}">
                             <TextBlock FontSize="12">
                                 <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;" Foreground="{DynamicResource SuccessBrush}"/>
-                                <Run Text=" Target: " FontWeight="SemiBold"/>
+                                <Run Text="{loc:Loc Ui_Target2}" FontWeight="SemiBold"/>
                                 <Run Text="{Binding TargetUrl}"/>
                             </TextBlock>
                         </Border>
@@ -764,7 +740,7 @@
                         <!-- Destination list picker — only when individual items are selected -->
                         <StackPanel Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}"
                                     Margin="0,16,0,0">
-                            <TextBlock Text="Destination List" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
+                            <TextBlock Text="{loc:Loc Ui_DestinationList}" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
                             <ComboBox ItemsSource="{Binding TargetCustomLists}"
                                       SelectedItem="{Binding SelectedTargetList}"
                                       DisplayMemberPath="Title"
@@ -774,9 +750,7 @@
                                      Text="{Binding NewListName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="0,0,0,6"
                                      Visibility="{Binding IsCreatingNewList, Converter={StaticResource BoolToVis}}"/>
-                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}">
-                                Select the list on the target site where the selected items will be copied.
-                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}" Text="{loc:Loc Ui2_TargetHintSelectList}"/>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
@@ -793,7 +767,7 @@
 
                 <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
                   <StackPanel>
-                    <TextBlock Text="Copy Options" Style="{StaticResource SectionHeader}"/>
+                    <TextBlock Text="{loc:Loc Ui_CopyOptions}" Style="{StaticResource SectionHeader}"/>
 
                     <!-- ── File options (Files, Library &amp; Site scopes) ────────── -->
                     <Border Style="{StaticResource Card}" Margin="0,8,0,0"
@@ -818,14 +792,14 @@
                             <!-- Library/Site scope: master toggle for copying file content -->
                             <CheckBox IsChecked="{Binding CopyLibraryContent}" Margin="0,0,0,8" FontSize="13"
                                       Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}"
-                                      AutomationProperties.Name="Copy library content (files)">
+                                      AutomationProperties.Name="{loc:Loc Ui2_AutoCopyLibraryContent}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Copy library content (files)" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{loc:Loc Ui_CopyLibraryContentFiles}" VerticalAlignment="Center"/>
                                     <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
                                                 <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                           Text="When off, only the column schema and library settings are recreated — no files are copied."/>
+                                                           Text="{loc:Loc Ui_WhenOffOnlyTheColumn}"/>
                                             </ToolTip>
                                         </TextBlock.ToolTip>
                                     </TextBlock>
@@ -835,20 +809,20 @@
                             <!-- Shared file copy options (Files scope, or Library/Site with content enabled) -->
                             <StackPanel Visibility="{Binding ShowFileCopyOptions, Converter={StaticResource BoolToVis}}">
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                    <TextBlock Text="If file exists:" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                    <RadioButton GroupName="OverwriteMode" FontSize="12" Content="Skip" VerticalAlignment="Center"
+                                    <TextBlock Text="{loc:Loc Ui_IfFileExists}" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <RadioButton GroupName="OverwriteMode" FontSize="12" Content="{loc:Loc Ui_Skip}" VerticalAlignment="Center"
                                                  IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=Skip}"/>
-                                    <RadioButton GroupName="OverwriteMode" FontSize="12" Content="Overwrite" Margin="10,0,0,0" VerticalAlignment="Center"
+                                    <RadioButton GroupName="OverwriteMode" FontSize="12" Content="{loc:Loc Ui_Overwrite}" Margin="10,0,0,0" VerticalAlignment="Center"
                                                  IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=Overwrite}"/>
                                     <RadioButton GroupName="OverwriteMode" FontSize="12" Margin="10,0,0,0" VerticalAlignment="Center"
                                                  IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=IfNewer}">
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <TextBlock Text="If newer" FontSize="12" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{loc:Loc Ui_IfNewer}" FontSize="12" VerticalAlignment="Center"/>
                                             <TextBlock Style="{StaticResource ToolTipIcon}">
                                                 <TextBlock.ToolTip>
                                                     <ToolTip MaxWidth="280">
                                                         <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                                   Text="Incremental re-copy: replaces a file only when the source was modified after the target. Unchanged files are reported as 'Up to date'. When 'Copy permissions' is enabled, permissions still refresh on up-to-date files. Ideal for a final top-up copy at cutover while users kept working in the source."/>
+                                                                   Text="{loc:Loc Ui_IncrementalReCopyReplacesA}"/>
                                                     </ToolTip>
                                                 </TextBlock.ToolTip>
                                             </TextBlock>
@@ -856,14 +830,14 @@
                                     </RadioButton>
                                 </StackPanel>
                                 <CheckBox IsChecked="{Binding CopyVersions}" Margin="0,0,0,8" FontSize="13"
-                                          AutomationProperties.Name="Copy version history">
+                                          AutomationProperties.Name="{loc:Loc Ui2_AutoCopyVersionHistory}">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="Copy version history" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{loc:Loc Ui_CopyVersionHistory}" VerticalAlignment="Center"/>
                                         <TextBlock Style="{StaticResource ToolTipIcon}">
                                             <TextBlock.ToolTip>
                                                 <ToolTip MaxWidth="280">
                                                     <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                               Text="Copies file version history. Versions are uploaded oldest-first so history builds naturally."/>
+                                                               Text="{loc:Loc Ui_CopiesFileVersionHistoryVersions}"/>
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
@@ -872,32 +846,32 @@
                                 <StackPanel Orientation="Horizontal"
                                             Visibility="{Binding CopyVersions, Converter={StaticResource BoolToVis}}"
                                             Margin="24,0,0,8">
-                                    <RadioButton GroupName="VersionDepth" Content="All versions"
+                                    <RadioButton GroupName="VersionDepth" Content="{loc:Loc Ui_AllVersions}"
                                                  IsChecked="{Binding CopyAllVersions}"
                                                  FontSize="12" VerticalAlignment="Center"/>
                                     <RadioButton GroupName="VersionDepth" Margin="14,0,0,0" VerticalAlignment="Center"
                                                  IsChecked="{Binding CopyAllVersions, Converter={StaticResource InvBool}}"
-                                                 AutomationProperties.Name="Latest N versions">
+                                                 AutomationProperties.Name="{loc:Loc Ui2_AutoLatestNVersions}">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Latest " FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{loc:Loc Ui_Latest}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                                             <TextBox Text="{Binding MaxVersions, UpdateSourceTrigger=PropertyChanged}"
                                                      IsEnabled="{Binding CopyAllVersions, Converter={StaticResource InvBool}}"
                                                      Width="48" FontSize="12" Padding="6,2" VerticalAlignment="Center"/>
-                                            <TextBlock Text=" versions" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{loc:Loc Ui_Versions}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </RadioButton>
                                 </StackPanel>
                                 <!-- ── Site-scope only: Navigation ─── -->
                                 <CheckBox IsChecked="{Binding CopyNavigation}" Margin="0,0,0,8" FontSize="13"
                                           Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}"
-                                          AutomationProperties.Name="Copy navigation">
+                                          AutomationProperties.Name="{loc:Loc Ui2_AutoCopyNavigation}">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="Copy navigation (Quick Launch &amp; top bar)" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{loc:Loc Ui_CopyNavigationQuickLaunchTop}" VerticalAlignment="Center"/>
                                         <TextBlock Style="{StaticResource ToolTipIcon}">
                                             <TextBlock.ToolTip>
                                                 <ToolTip MaxWidth="280">
                                                     <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                               Text="Replaces target navigation with source links. URLs are remapped to the target site."/>
+                                                               Text="{loc:Loc Ui_ReplacesTargetNavigationWithSource}"/>
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
@@ -905,14 +879,14 @@
                                 </CheckBox>
                                 <!-- ── Permissions ─── -->
                                 <CheckBox IsChecked="{Binding CopyPermissions, Mode=TwoWay}" Margin="0,0,0,0" FontSize="13"
-                                          AutomationProperties.Name="Copy permissions">
+                                          AutomationProperties.Name="{loc:Loc Ui2_AutoCopyPermissions}">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="Copy permissions" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{loc:Loc Ui_CopyPermissions}" VerticalAlignment="Center"/>
                                         <TextBlock Style="{StaticResource ToolTipIcon}">
                                             <TextBlock.ToolTip>
                                                 <ToolTip MaxWidth="280">
                                                     <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                               Text="Copies unique role assignments — for files in Files scope; for libraries, lists, folders, files, and items in Library and Site scopes. Works best for same-tenant copies."/>
+                                                               Text="{loc:Loc Ui_CopiesUniqueRoleAssignmentsFor}"/>
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
@@ -928,26 +902,26 @@
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                 <TextBlock Text="&#xE8A1;" Style="{StaticResource CardHeaderGlyph}"/>
-                                <TextBlock Text="Page Options" Style="{StaticResource CardHeader}"/>
+                                <TextBlock Text="{loc:Loc Ui_PageOptions}" Style="{StaticResource CardHeader}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                <TextBlock Text="If page exists:" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                <RadioButton GroupName="PageOverwriteMode" FontSize="12" Content="Skip" VerticalAlignment="Center"
+                                <TextBlock Text="{loc:Loc Ui_IfPageExists}" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <RadioButton GroupName="PageOverwriteMode" FontSize="12" Content="{loc:Loc Ui_Skip}" VerticalAlignment="Center"
                                              IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=Skip}"/>
-                                <RadioButton GroupName="PageOverwriteMode" FontSize="12" Content="Overwrite" Margin="10,0,0,0" VerticalAlignment="Center"
+                                <RadioButton GroupName="PageOverwriteMode" FontSize="12" Content="{loc:Loc Ui_Overwrite}" Margin="10,0,0,0" VerticalAlignment="Center"
                                              IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=Overwrite}"/>
-                                <RadioButton GroupName="PageOverwriteMode" FontSize="12" Content="If newer" Margin="10,0,0,0" VerticalAlignment="Center"
+                                <RadioButton GroupName="PageOverwriteMode" FontSize="12" Content="{loc:Loc Ui_IfNewer}" Margin="10,0,0,0" VerticalAlignment="Center"
                                              IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=IfNewer}"/>
                             </StackPanel>
                             <CheckBox IsChecked="{Binding RemapPageWebPartUrls}" Margin="0,0,0,0" FontSize="13"
-                                      AutomationProperties.Name="Remap web part URLs to target site">
+                                      AutomationProperties.Name="{loc:Loc Ui2_AutoRemapWebPartUrls}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Remap web part URLs to target site" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{loc:Loc Ui_RemapWebPartUrlsTo}" VerticalAlignment="Center"/>
                                     <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
                                                 <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                           Text="Replaces source site URLs in web part JSON. Web parts referencing specific list IDs may still need manual review after copy."/>
+                                                           Text="{loc:Loc Ui_ReplacesSourceSiteUrlsIn}"/>
                                             </ToolTip>
                                         </TextBlock.ToolTip>
                                     </TextBlock>
@@ -959,23 +933,23 @@
                     <!-- ── Advanced options (metadata, custom columns, copy mode, performance) ── -->
                     <Expander Style="{StaticResource OptionsExpander}" Margin="0,8,0,0">
                         <Expander.Header>
-                            <TextBlock Text="Advanced options" FontSize="12" FontWeight="SemiBold"
+                            <TextBlock Text="{loc:Loc Ui_AdvancedOptions}" FontSize="12" FontWeight="SemiBold"
                                        Foreground="{DynamicResource TextTertiaryBrush}"/>
                         </Expander.Header>
                         <StackPanel>
                             <!-- Metadata: preserved author/dates grouped with custom column values -->
-                            <TextBlock Text="Metadata" FontSize="12" FontWeight="SemiBold"
+                            <TextBlock Text="{loc:Loc Ui_Metadata}" FontSize="12" FontWeight="SemiBold"
                                        Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
 
                             <CheckBox IsChecked="{Binding PreserveMetadata}" Margin="0,0,0,8" FontSize="12"
-                                      AutomationProperties.Name="Preserve metadata">
+                                      AutomationProperties.Name="{loc:Loc Ui2_AutoPreserveMetadata}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Preserve metadata" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{loc:Loc Ui_PreserveMetadata}" VerticalAlignment="Center"/>
                                     <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
                                                 <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                           Text="Preserves Created By, Created Date, Modified By, and Modified Date on every copied item, and the folder color (if any) on copied folders. When off, items appear as created by you today."/>
+                                                           Text="{loc:Loc Ui_PreservesCreatedByCreatedDate}"/>
                                             </ToolTip>
                                         </TextBlock.ToolTip>
                                     </TextBlock>
@@ -986,14 +960,14 @@
                                  effect is never ambiguous. Off = big speed win on repeated mostly-skipped runs. -->
                             <CheckBox IsChecked="{Binding ReapplyFolderMetadataEveryRun}" Margin="0,0,0,8" FontSize="12"
                                       IsEnabled="{Binding PreserveMetadata}"
-                                      AutomationProperties.Name="Re-apply folder metadata on every run">
+                                      AutomationProperties.Name="{loc:Loc Ui2_AutoReapplyFolderMetadata}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Re-apply folder metadata every run" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{loc:Loc Ui_ReApplyFolderMetadataEvery}" VerticalAlignment="Center"/>
                                     <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
                                                 <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                           Text="On: repairs folder Created/Modified dates, authors, and color for every folder in the selection on each run — needed to fix folder metadata on an already-copied target, but adds a per-folder scan that runs even when every file is skipped. Off: only folders that receive new files this run are corrected, making repeated 'mostly skipped' runs much faster. Applies only when Preserve metadata is on."/>
+                                                           Text="{loc:Loc Ui_OnRepairsFolderCreatedModified}"/>
                                             </ToolTip>
                                         </TextBlock.ToolTip>
                                     </TextBlock>
@@ -1003,15 +977,15 @@
                             <!-- Files scope: opt-in checkbox + mapping button -->
                             <StackPanel Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}">
                                 <CheckBox IsChecked="{Binding CopyCustomColumns}" Margin="0,0,0,4" FontSize="12"
-                                          AutomationProperties.Name="Copy custom column values"
+                                          AutomationProperties.Name="{loc:Loc Ui2_AutoCopyCustomColumns}"
                                           x:Name="CopyCustomColumnsCheckBox" Checked="CopyCustomColumns_Changed" Unchecked="CopyCustomColumns_Changed">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="Copy custom column values" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{loc:Loc Ui_CopyCustomColumnValues}" VerticalAlignment="Center"/>
                                         <TextBlock Style="{StaticResource ToolTipIcon}">
                                             <TextBlock.ToolTip>
                                                 <ToolTip MaxWidth="280">
                                                     <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                               Text="Copies Text, Number, Choice, Date, Boolean, Multi-choice, Person, and Managed Metadata column values. Lookup columns are not supported."/>
+                                                               Text="{loc:Loc Ui_CopiesTextNumberChoiceDate}"/>
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
@@ -1022,7 +996,7 @@
                                         Click="ConfigureMappings_Click"
                                         Content="{Binding MappingButtonLabel}"
                                         IsEnabled="{Binding CanConfigureMappings}"/>
-                                <TextBlock Text="Enable 'Copy custom column values' to configure mappings."
+                                <TextBlock Text="{loc:Loc Ui_EnableCopyCustomColumnValues}"
                                            Style="{StaticResource OptionCaption}" Margin="20,4,0,0"
                                            Visibility="{Binding CopyCustomColumns, Converter={StaticResource InvBoolToVis}}"/>
                             </StackPanel>
@@ -1030,14 +1004,12 @@
                             <!-- Site scope (full copy): all column values are always transferred -->
                             <TextBlock Visibility="{Binding ShowLibrarySummaryLine, Converter={StaticResource BoolToVis}}"
                                        TextWrapping="Wrap" FontSize="12"
-                                       Foreground="{DynamicResource TextSecondaryBrush}">
-                                All custom column values are copied automatically.
-                            </TextBlock>
+                                       Foreground="{DynamicResource TextSecondaryBrush}" Text="{loc:Loc Ui2_CustomColumnsAuto}"/>
 
                             <!-- Library / List scope (full copy): mapping button -->
                             <StackPanel Visibility="{Binding ShowLibraryFullCopyMapping, Converter={StaticResource BoolToVis}}"
                                         Margin="0,4,0,0">
-                                <TextBlock Text="All custom column values are copied. Use mappings to control which columns are created at the destination."
+                                <TextBlock Text="{loc:Loc Ui_AllCustomColumnValuesAre}"
                                            Style="{StaticResource OptionCaption}" Margin="0,0,0,8" TextWrapping="Wrap"/>
                                 <Button HorizontalAlignment="Left"
                                         Style="{StaticResource SecondaryBtn}"
@@ -1049,7 +1021,7 @@
                             <!-- Pages scope: column values always copied — just show mapping button -->
                             <StackPanel Visibility="{Binding IsPagesScope, Converter={StaticResource BoolToVis}}"
                                         Margin="0,4,0,0">
-                                <TextBlock Text="All custom column values are copied. Use mappings to control which columns are created at the destination."
+                                <TextBlock Text="{loc:Loc Ui_AllCustomColumnValuesAre}"
                                            Style="{StaticResource OptionCaption}" Margin="0,0,0,8" TextWrapping="Wrap"/>
                                 <Button HorizontalAlignment="Left"
                                         Style="{StaticResource SecondaryBtn}"
@@ -1061,7 +1033,7 @@
                             <!-- Library scope (individual items): column values always copied — just show mapping button -->
                             <StackPanel Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}"
                                         Margin="0,4,0,0">
-                                <TextBlock Text="Custom column values are always copied for list items."
+                                <TextBlock Text="{loc:Loc Ui_CustomColumnValuesAreAlways}"
                                            Style="{StaticResource OptionCaption}" Margin="0,0,0,8"/>
                                 <Button HorizontalAlignment="Left"
                                         Style="{StaticResource SecondaryBtn}"
@@ -1073,19 +1045,19 @@
                             <!-- Copy mode + performance (not applicable to Pages scope) -->
                             <StackPanel Visibility="{Binding IsPagesScope, Converter={StaticResource InvBoolToVis}}">
                                 <Separator Margin="0,10,0,10" Background="{DynamicResource BorderLightBrush}"/>
-                                <TextBlock Text="Copy mode" FontSize="12" FontWeight="SemiBold"
+                                <TextBlock Text="{loc:Loc Ui_CopyMode}" FontSize="12" FontWeight="SemiBold"
                                            Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
                                 <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,6"
                                              IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=MigrationApi}">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="Migration API" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{loc:Loc Ui_MigrationApi}" VerticalAlignment="Center"/>
                                         <Border Background="{DynamicResource AccentBrush}" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
-                                            <TextBlock Text="Recommended" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{loc:Loc Ui_Recommended}" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
                                         </Border>
                                         <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
                                             <TextBlock.ToolTip>
                                                 <ToolTip>
-                                                    <TextBlock Text="Exact version numbers, dates, and editors. Requires Site Collection Admin on the target." TextWrapping="Wrap" MaxWidth="260"/>
+                                                    <TextBlock Text="{loc:Loc Ui_ExactVersionNumbersDatesAnd}" TextWrapping="Wrap" MaxWidth="260"/>
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
@@ -1094,18 +1066,18 @@
                                 <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,12"
                                              IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=EnhancedRest}">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="Enhanced REST" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{loc:Loc Ui_EnhancedRest}" VerticalAlignment="Center"/>
                                         <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
                                             <TextBlock.ToolTip>
                                                 <ToolTip>
-                                                    <TextBlock Text="Correct dates and editors per version, but version numbers double (2, 4, 6…). No admin rights required." TextWrapping="Wrap" MaxWidth="260"/>
+                                                    <TextBlock Text="{loc:Loc Ui_CorrectDatesAndEditorsPer}" TextWrapping="Wrap" MaxWidth="260"/>
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
                                     </StackPanel>
                                 </RadioButton>
                                 <Separator Margin="0,0,0,10" Background="{DynamicResource BorderLightBrush}"/>
-                                <TextBlock Text="Parallel copies" FontSize="12" FontWeight="SemiBold"
+                                <TextBlock Text="{loc:Loc Ui_ParallelCopies}" FontSize="12" FontWeight="SemiBold"
                                            Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
                                     <Slider Minimum="1" Maximum="16" Value="{Binding MaxParallelCopies}"
@@ -1113,7 +1085,7 @@
                                     <TextBlock Text="{Binding MaxParallelCopies}" FontSize="14" FontWeight="SemiBold"
                                                Margin="8,0,0,0" VerticalAlignment="Center"/>
                                 </StackPanel>
-                                <TextBlock Text="Higher values copy faster but may throttle on large sites."
+                                <TextBlock Text="{loc:Loc Ui_HigherValuesCopyFasterBut}"
                                            Style="{StaticResource OptionCaption}" Margin="0"/>
                             </StackPanel>
                         </StackPanel>
@@ -1130,67 +1102,63 @@
 
                     <!-- Header with selection summary, kept next to the preview it describes -->
                     <DockPanel Grid.Row="0" LastChildFill="False">
-                        <TextBlock DockPanel.Dock="Left" Text="Copy Preview" Style="{StaticResource SectionHeader}"/>
+                        <TextBlock DockPanel.Dock="Left" Text="{loc:Loc Ui_CopyPreview}" Style="{StaticResource SectionHeader}"/>
                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"
                                        Visibility="{Binding IsFilesOrPagesScope, Converter={StaticResource BoolToVis}}">
                                 <Run Text="{Binding CopyJobs.Count, Mode=OneWay}" FontWeight="Bold"/>
-                                <Run Text="items selected"/>
+                                <Run Text="{loc:Loc Ui_ItemsSelected}"/>
                                 <Run Text="{Binding CopyPreviewTotalSizeDisplay, Mode=OneWay}"/>
                             </TextBlock>
                             <TextBlock FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"
                                        Visibility="{Binding ShowLibrarySummaryLine, Converter={StaticResource BoolToVis}}">
                                 <Run Text="{Binding LibrarySummaryCount, Mode=OneWay}" FontWeight="Bold"/>
-                                <Run Text="libraries &amp; lists to copy"/>
+                                <Run Text="{loc:Loc Ui_LibrariesListsToCopy}"/>
                             </TextBlock>
                             <TextBlock FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"
                                        Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}">
                                 <Run Text="{Binding SelectedItemCount, Mode=OneWay}" FontWeight="Bold"/>
-                                <Run Text="list items to copy"/>
+                                <Run Text="{loc:Loc Ui_ListItemsToCopy}"/>
                             </TextBlock>
                         </StackPanel>
                     </DockPanel>
                     <StackPanel Grid.Row="1" Margin="0,0,0,8">
                         <Border Style="{StaticResource InfoBanner}" Padding="10,6" Margin="0,0,0,4">
                             <TextBlock FontSize="12" TextWrapping="Wrap">
-                                <Run Text="From: " FontWeight="SemiBold"/>
+                                <Run Text="{loc:Loc Ui_From}" FontWeight="SemiBold"/>
                                 <Run Text="{Binding SourceUrl}"/>
                             </TextBlock>
                         </Border>
                         <Border Style="{StaticResource InfoBanner}" Padding="10,6">
                             <TextBlock FontSize="12" TextWrapping="Wrap">
-                                <Run Text="To: " FontWeight="SemiBold"/>
+                                <Run Text="{loc:Loc Ui_To}" FontWeight="SemiBold"/>
                                 <Run Text="{Binding TargetUrl}"/>
                             </TextBlock>
                         </Border>
                         <Border Style="{StaticResource SuccessBanner}" Padding="10,6" Margin="0,4,0,0"
                                 Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}">
                             <TextBlock FontSize="12" TextWrapping="Wrap">
-                                <Run Text="Destination List: " FontWeight="SemiBold"/>
+                                <Run Text="{loc:Loc Ui_DestinationList2}" FontWeight="SemiBold"/>
                                 <Run Text="{Binding EffectiveDestinationListName, Mode=OneWay}"/>
                             </TextBlock>
                         </Border>
                         <TextBlock Margin="0,4,0,0" FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" TextWrapping="Wrap"
-                                   Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}">
-                            Folders are recursively enumerated during the copy.
-                        </TextBlock>
+                                   Visibility="{Binding IsFilesScope, Converter={StaticResource BoolToVis}}" Text="{loc:Loc Ui2_FoldersEnumerated}"/>
                         <TextBlock Margin="0,4,0,0" FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" TextWrapping="Wrap"
-                                   Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}">
-                            Files in each library and items in each list are enumerated at copy time.
-                        </TextBlock>
+                                   Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}" Text="{loc:Loc Ui2_FilesItemsEnumerated}"/>
                     </StackPanel>
 
                     <!-- Library / Site scope: list selected libraries -->
                     <Border Grid.Row="2" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}"
                             Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}">
                       <Grid>
-                        <TextBlock Text="Nothing selected yet — go back to Browse and check the libraries or lists you want to copy."
+                        <TextBlock Text="{loc:Loc Ui_NothingSelectedYetGoBack}"
                                    Style="{StaticResource GhostText}"
                                    Visibility="{Binding LibrarySummaryCount, Converter={StaticResource EqToVis}, ConverterParameter=0}"/>
                         <ListView ItemsSource="{Binding LibraryPreviewItems}" Padding="4" Background="Transparent">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Library / List" Width="220">
+                                    <GridViewColumn Header="{loc:Loc Ui_LibraryList}" Width="220">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
@@ -1201,7 +1169,7 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="Destination Name" Width="200">
+                                    <GridViewColumn Header="{loc:Loc Ui_DestinationName}" Width="200">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <!-- Item-level copies: the destination list was chosen on the Target
@@ -1241,14 +1209,14 @@
                     <Border Grid.Row="2" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}"
                             Visibility="{Binding IsFilesOrPagesScope, Converter={StaticResource BoolToVis}}">
                       <Grid>
-                        <TextBlock Text="Nothing selected yet — go back to Browse and check the files or folders you want to copy."
+                        <TextBlock Text="{loc:Loc Ui_NothingSelectedYetGoBack2}"
                                    Style="{StaticResource GhostText}"
                                    Visibility="{Binding CopyJobs.Count, Converter={StaticResource EqToVis}, ConverterParameter=0}"/>
                         <ListView ItemsSource="{Binding CopyJobs}" Background="Transparent"
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Type" Width="50">
+                                    <GridViewColumn Header="{loc:Loc Ui_Type}" Width="50">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock HorizontalAlignment="Center"
@@ -1268,7 +1236,7 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="Source Path" Width="360">
+                                    <GridViewColumn Header="{loc:Loc Ui_SourcePath}" Width="360">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding SourceDisplayPath}"
@@ -1277,7 +1245,7 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="Destination Path" Width="360">
+                                    <GridViewColumn Header="{loc:Loc Ui_DestinationPath}" Width="360">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding TargetDisplayPath}"
@@ -1325,9 +1293,9 @@
                         <Grid Margin="0,0,0,8">
                             <TextBlock FontSize="13">
                                 <Run Text="{Binding CompletedCount}"/>
-                                <Run Text=" of "/>
+                                <Run Text="{loc:Loc Ui_Of}"/>
                                 <Run Text="{Binding TotalCount}"/>
-                                <Run Text=" items processed"/>
+                                <Run Text="{loc:Loc Ui_ItemsProcessed}"/>
                                 <Run Text="{Binding SizeProgressDisplay, Mode=OneWay}" Foreground="{DynamicResource TextTertiaryBrush}"/>
                                 <Run Text="{Binding EstimatedTimeRemaining}" Foreground="{DynamicResource TextTertiaryBrush}"/>
                             </TextBlock>
@@ -1342,7 +1310,7 @@
                         </Grid>
                         <ProgressBar Value="{Binding TotalProgress}" Maximum="100" Height="12"
                                      Background="{DynamicResource BorderLightBrush}" Foreground="{DynamicResource AccentBrush}"/>
-                        <Button Content="Cancel" Style="{StaticResource DangerBtn}"
+                        <Button Content="{loc:Loc Ui_Cancel}" Style="{StaticResource DangerBtn}"
                                 HorizontalAlignment="Left" Margin="0,12,0,0"
                                 Command="{Binding CancelCopyCommand}"
                                 Visibility="{Binding IsCancelable, Converter={StaticResource BoolToVis}}"/>
@@ -1352,9 +1320,9 @@
                                          VerticalAlignment="Center" Margin="0,0,8,0"/>
                             <TextBlock FontSize="13" Foreground="{DynamicResource TextTertiaryBrush}"
                                        VerticalAlignment="Center">
-                                <Run Text="Checking files… "/>
+                                <Run Text="{loc:Loc Ui_CheckingFiles}"/>
                                 <Run Text="{Binding PreflightChecked}"/>
-                                <Run Text=" of "/>
+                                <Run Text="{loc:Loc Ui_Of}"/>
                                 <Run Text="{Binding PreflightTotal}"/>
                             </TextBlock>
                         </StackPanel>
@@ -1367,7 +1335,7 @@
                                 <Run Text="{Binding PackedCount, StringFormat={}{0:N0}}"/>
                                 <Run Text=" / "/>
                                 <Run Text="{Binding TotalCount, StringFormat={}{0:N0}}"/>
-                                <Run Text=" files packaged for import"/>
+                                <Run Text="{loc:Loc Ui_FilesPackagedForImport}"/>
                                 <Run Text="{Binding PackagedEstimatedTimeRemaining}"/>
                             </TextBlock>
                         </StackPanel>
@@ -1377,7 +1345,7 @@
                                 CornerRadius="4" Padding="8,6"
                                 Visibility="{Binding IsCopying, Converter={StaticResource BoolToVis}}">
                             <DockPanel>
-                                <TextBlock DockPanel.Dock="Top" Text="Activity"
+                                <TextBlock DockPanel.Dock="Top" Text="{loc:Loc Ui_Activity}"
                                            FontSize="10" FontWeight="SemiBold"
                                            Foreground="{DynamicResource TextTertiaryBrush}"
                                            Margin="0,0,0,4"/>
@@ -1400,11 +1368,11 @@
                                  FontSize="10" FontFamily="Consolas" Padding="0" Margin="0,4,0,0"
                                  Foreground="{DynamicResource TextTertiaryBrush}" TextWrapping="Wrap"
                                  FocusVisualStyle="{x:Null}"
-                                 ToolTip="Full activity log for this run — select and copy this path to open it after the migration"/>
+                                 ToolTip="{loc:Loc Ui_FullActivityLogForThis}"/>
                         <TextBlock Margin="0,8,0,0" FontSize="13" Foreground="{DynamicResource SuccessBrush}"
                                    Visibility="{Binding IsReadyForReport, Converter={StaticResource BoolToVis}}">
                             <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;"/>
-                            <Run Text=" Copy complete! Click Next to see the full report."/>
+                            <Run Text="{loc:Loc Ui_CopyCompleteClickNextTo}"/>
                         </TextBlock>
                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
                                     Visibility="{Binding IsMetadataInProgress, Converter={StaticResource BoolToVis}}">
@@ -1412,7 +1380,7 @@
                                          VerticalAlignment="Center" Margin="0,0,8,0"/>
                             <TextBlock FontSize="13"
                                        Foreground="{DynamicResource TextTertiaryBrush}" VerticalAlignment="Center">
-                                <Run Text="Updating folder metadata…"/>
+                                <Run Text="{loc:Loc Ui_UpdatingFolderMetadata}"/>
                                 <Run Text="{Binding MetadataFolderCountText, Mode=OneWay}"/>
                                 <Run Text="{Binding MetadataEta, Mode=OneWay}"/>
                                 <Run Text="  "/>
@@ -1425,39 +1393,39 @@
                         <TextBlock Margin="0,4,0,0" FontSize="13" Foreground="{DynamicResource TextTertiaryBrush}"
                                    Visibility="{Binding IsMetadataComplete, Converter={StaticResource BoolToVis}}">
                             <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;"/>
-                            <Run Text=" Metadata updated · took "/>
+                            <Run Text="{loc:Loc Ui_MetadataUpdatedTook}"/>
                             <Run Text="{Binding MetadataElapsedTime}"/>
                         </TextBlock>
                         <TextBlock Margin="0,4,0,0" FontSize="13" Foreground="{DynamicResource TextTertiaryBrush}"
                                    Visibility="{Binding IsMetadataCancelled, Converter={StaticResource BoolToVis}}">
                             <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE711;"/>
-                            <Run Text=" Metadata update cancelled"/>
+                            <Run Text="{loc:Loc Ui_MetadataUpdateCancelled}"/>
                         </TextBlock>
                     </StackPanel>
                 </Border>
 
                 <Grid Grid.Row="2" Margin="0,0,0,6">
-                    <TextBlock Text="Copy Log" Style="{StaticResource CardHeader}"/>
+                    <TextBlock Text="{loc:Loc Ui_CopyLog}" Style="{StaticResource CardHeader}"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4" Content="All"
+                        <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4" Content="{loc:Loc Ui_All}"
                                      IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=All}"
                                      />
                         <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4"
                                      IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Success}">
                             <TextBlock>
-                                <Run Text="Success ("/><Run Text="{Binding SuccessCount, Mode=OneWay}"/><Run Text=")"/>
+                                <Run Text="{loc:Loc Ui_Success}"/><Run Text="{Binding SuccessCount, Mode=OneWay}"/><Run Text=")"/>
                             </TextBlock>
                         </RadioButton>
                         <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4"
                                      IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Failed}">
                             <TextBlock>
-                                <Run Text="Failed ("/><Run Text="{Binding FailedCount, Mode=OneWay}"/><Run Text=")"/>
+                                <Run Text="{loc:Loc Ui_Failed}"/><Run Text="{Binding FailedCount, Mode=OneWay}"/><Run Text=")"/>
                             </TextBlock>
                         </RadioButton>
                         <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4" Margin="0"
                                      IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Skipped}">
                             <TextBlock>
-                                <Run Text="Skipped ("/><Run Text="{Binding SkippedCount, Mode=OneWay}"/><Run Text=")"/>
+                                <Run Text="{loc:Loc Ui_Skipped}"/><Run Text="{Binding SkippedCount, Mode=OneWay}"/><Run Text=")"/>
                             </TextBlock>
                         </RadioButton>
                     </StackPanel>
@@ -1468,8 +1436,8 @@
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Item"     Width="220" DisplayMemberBinding="{Binding FileName}"/>
-                                <GridViewColumn Header="Status"   Width="110">
+                                <GridViewColumn Header="{loc:Loc Ui_Item}"     Width="220" DisplayMemberBinding="{Binding FileName}"/>
+                                <GridViewColumn Header="{loc:Loc Ui_Status}"   Width="110">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding StatusDisplay}"
@@ -1478,9 +1446,9 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Source"   Width="260" DisplayMemberBinding="{Binding SourcePath}"/>
-                                <GridViewColumn Header="Target"   Width="260" DisplayMemberBinding="{Binding TargetPath}"/>
-                                <GridViewColumn Header="Versions" Width="70">
+                                <GridViewColumn Header="{loc:Loc Ui_Source}"   Width="260" DisplayMemberBinding="{Binding SourcePath}"/>
+                                <GridViewColumn Header="{loc:Loc Ui_Target}"   Width="260" DisplayMemberBinding="{Binding TargetPath}"/>
+                                <GridViewColumn Header="{loc:Loc Ui_Versions2}" Width="70">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock FontSize="12"
@@ -1492,7 +1460,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Details"  Width="220">
+                                <GridViewColumn Header="{loc:Loc Ui_Details}"  Width="220">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent"
@@ -1502,7 +1470,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Permissions Status"
+                                <GridViewColumn Header="{loc:Loc Ui_PermissionsStatus}"
                                     Width="{Binding DataContext.PermColumnWidth, RelativeSource={RelativeSource AncestorType=Window}}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
@@ -1512,10 +1480,10 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Permissions Details"
+                                <GridViewColumn Header="{loc:Loc Ui_PermissionsDetails}"
                                     Width="{Binding DataContext.PermDetailsColumnWidth, RelativeSource={RelativeSource AncestorType=Window}}"
                                     DisplayMemberBinding="{Binding PermissionDetails}"/>
-                                <GridViewColumn Header="Custom Fields"
+                                <GridViewColumn Header="{loc:Loc Ui_CustomFields}"
                                     Width="{Binding DataContext.CustomFieldColumnWidth, RelativeSource={RelativeSource AncestorType=Window}}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
@@ -1525,7 +1493,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Custom Fields Details"
+                                <GridViewColumn Header="{loc:Loc Ui_CustomFieldsDetails}"
                                     Width="{Binding DataContext.CustomFieldDetailsColumnWidth, RelativeSource={RelativeSource AncestorType=Window}}"
                                     DisplayMemberBinding="{Binding CustomFieldDetails}"/>
                             </GridView>
@@ -1542,7 +1510,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Copy Report" Style="{StaticResource SectionHeader}"/>
+                <TextBlock Grid.Row="0" Text="{loc:Loc Ui_CopyReport}" Style="{StaticResource SectionHeader}"/>
 
                 <UniformGrid Grid.Row="1" Columns="5" Margin="0,0,0,12"
                              HorizontalAlignment="Left" MaxWidth="1125">
@@ -1550,35 +1518,35 @@
                         <StackPanel>
                             <TextBlock Text="{Binding SuccessCount}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Succeeded" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{loc:Loc Ui_Succeeded}" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
                     <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource DangerBgBrush}" BorderBrush="{DynamicResource DangerBrush}">
                         <StackPanel>
                             <TextBlock Text="{Binding FailedCount}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Failed" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{loc:Loc Ui_Failed2}" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
                     <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WarningBgBrush}" BorderBrush="{DynamicResource WarningBrush}">
                         <StackPanel>
                             <TextBlock Text="{Binding SkippedCount}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Skipped" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{loc:Loc Ui_Skipped2}" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
                     <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WarningBgBrush}" BorderBrush="{DynamicResource WarningBrush}">
                         <StackPanel>
                             <TextBlock Text="{Binding CustomFieldWarningCount}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Metadata Warnings" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{loc:Loc Ui_MetadataWarnings}" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
                     <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WindowBgBrush}" BorderBrush="{DynamicResource BorderLightBrush}" Margin="0">
                         <StackPanel>
                             <TextBlock Text="{Binding CopyDuration}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Duration" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{loc:Loc Ui_Duration}" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
                     <!-- Hidden whenever too many rows lack a SourceSize to trust the total (see
@@ -1588,7 +1556,7 @@
                         <StackPanel>
                             <TextBlock Text="{Binding TotalSizeDisplay}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Total Size" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{loc:Loc Ui_TotalSize}" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
                     <!-- Only shown when the run was cancelled or the app closed mid-copy — a fully
@@ -1599,7 +1567,7 @@
                         <StackPanel>
                             <TextBlock Text="{Binding CancelledCount}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Cancelled" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                            <TextBlock Text="{loc:Loc Ui_Cancelled}" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
                 </UniformGrid>
@@ -1620,31 +1588,31 @@
                             <Button Style="{StaticResource SecondaryBtn}" Command="{Binding ExportFilesReportCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xE896;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
-                                    <TextBlock Text="Export CSV" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{loc:Loc Ui_ExportCsv}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                             <Button Style="{StaticResource SecondaryBtn}" Margin="8,0,0,0"
                                     Command="{Binding ExportVerificationReportCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xE896;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
-                                    <TextBlock Text="Verify with Excel Report" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{loc:Loc Ui_VerifyWithExcelReport}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
                             <Button Style="{StaticResource DangerBtn}" Margin="8,0,0,0"
                                     Command="{Binding CancelVerificationCommand}"
                                     Visibility="{Binding IsVerifying, Converter={StaticResource BoolToVis}}">
-                                <TextBlock Text="Cancel"/>
+                                <TextBlock Text="{loc:Loc Ui_Cancel}"/>
                             </Button>
                             <CheckBox IsChecked="{Binding DeepVerifyOfficeFiles}" Margin="14,0,0,0" FontSize="12"
                                       VerticalAlignment="Center" IsEnabled="{Binding IsVerifying, Converter={StaticResource InvBool}}"
-                                      AutomationProperties.Name="Deep verify Office files">
+                                      AutomationProperties.Name="{loc:Loc Ui2_AutoDeepVerifyOffice}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Deep verify Office files" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{loc:Loc Ui_DeepVerifyOfficeFiles}" VerticalAlignment="Center"/>
                                     <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
                                                 <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                           Text="Downloads both copies of each mismatched Office file and compares their internal content, ignoring the metadata parts SharePoint rewrites on upload (Document ID, custom properties, etc.). Slower — use when a hash or date difference needs to be proven real or harmless."/>
+                                                           Text="{loc:Loc Ui_DownloadsBothCopiesOfEach}"/>
                                             </ToolTip>
                                         </TextBlock.ToolTip>
                                     </TextBlock>
@@ -1652,24 +1620,24 @@
                             </CheckBox>
                         </StackPanel>
                         <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                            <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter" Content="All"
+                            <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter" Content="{loc:Loc Ui_All}"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=All}"/>
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Success}">
                                 <TextBlock>
-                                    <Run Text="Success ("/><Run Text="{Binding FileSuccessCount, Mode=OneWay}"/><Run Text=")"/>
+                                    <Run Text="{loc:Loc Ui_Success}"/><Run Text="{Binding FileSuccessCount, Mode=OneWay}"/><Run Text=")"/>
                                 </TextBlock>
                             </RadioButton>
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Failed}">
                                 <TextBlock>
-                                    <Run Text="Failed ("/><Run Text="{Binding FileFailedCount, Mode=OneWay}"/><Run Text=")"/>
+                                    <Run Text="{loc:Loc Ui_Failed}"/><Run Text="{Binding FileFailedCount, Mode=OneWay}"/><Run Text=")"/>
                                 </TextBlock>
                             </RadioButton>
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter" Margin="0"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Skipped}">
                                 <TextBlock>
-                                    <Run Text="Skipped ("/><Run Text="{Binding FileSkippedCount, Mode=OneWay}"/><Run Text=")"/>
+                                    <Run Text="{loc:Loc Ui_Skipped}"/><Run Text="{Binding FileSkippedCount, Mode=OneWay}"/><Run Text=")"/>
                                 </TextBlock>
                             </RadioButton>
                         </StackPanel>
@@ -1692,8 +1660,8 @@
                                   BorderThickness="0"
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Item"        Binding="{Binding FileName}"   Width="220"/>
-                                <DataGridTemplateColumn Header="Status" Width="110" SortMemberPath="Status">
+                                <DataGridTextColumn Header="{loc:Loc Ui_Item}"        Binding="{Binding FileName}"   Width="220"/>
+                                <DataGridTemplateColumn Header="{loc:Loc Ui_Status}" Width="110" SortMemberPath="Status">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding StatusDisplay}" Margin="4,2"
@@ -1702,9 +1670,9 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Source Path" Binding="{Binding SourcePath}" Width="260"/>
-                                <DataGridTextColumn Header="Target Path" Binding="{Binding TargetPath}" Width="260"/>
-                                <DataGridTemplateColumn Header="Versions" Width="65" SortMemberPath="VersionsCopied">
+                                <DataGridTextColumn Header="{loc:Loc Ui_SourcePath}" Binding="{Binding SourcePath}" Width="260"/>
+                                <DataGridTextColumn Header="{loc:Loc Ui_TargetPath}" Binding="{Binding TargetPath}" Width="260"/>
+                                <DataGridTemplateColumn Header="{loc:Loc Ui_Versions2}" Width="65" SortMemberPath="VersionsCopied">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding VersionsCopied}" Margin="4,2"
@@ -1712,7 +1680,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="Details" Width="220" SortMemberPath="ErrorMessage">
+                                <DataGridTemplateColumn Header="{loc:Loc Ui_Details}" Width="220" SortMemberPath="ErrorMessage">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBox IsReadOnly="True" BorderThickness="0" Background="Transparent"
@@ -1722,7 +1690,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="Permissions Status" SortMemberPath="PermissionStatus"
+                                <DataGridTemplateColumn Header="{loc:Loc Ui_PermissionsStatus}" SortMemberPath="PermissionStatus"
                                     Width="{Binding DataContext.PermColumnWidth, RelativeSource={RelativeSource AncestorType=Window}}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -1732,10 +1700,10 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Permissions Details"
+                                <DataGridTextColumn Header="{loc:Loc Ui_PermissionsDetails}"
                                     Binding="{Binding PermissionDetails}"
                                     Width="{Binding DataContext.PermDetailsColumnWidth, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                                <DataGridTemplateColumn Header="Custom Fields" SortMemberPath="CustomFieldStatus"
+                                <DataGridTemplateColumn Header="{loc:Loc Ui_CustomFields}" SortMemberPath="CustomFieldStatus"
                                     Width="{Binding DataContext.CustomFieldColumnWidth, RelativeSource={RelativeSource AncestorType=Window}}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -1745,7 +1713,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Custom Fields Details"
+                                <DataGridTextColumn Header="{loc:Loc Ui_CustomFieldsDetails}"
                                     Binding="{Binding CustomFieldDetails}"
                                     Width="{Binding DataContext.CustomFieldDetailsColumnWidth, RelativeSource={RelativeSource AncestorType=Window}}"/>
                             </DataGrid.Columns>
@@ -1760,7 +1728,7 @@
         <Border Grid.Row="3" Background="{DynamicResource FooterBgBrush}" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="0,1,0,0">
             <Grid Margin="32,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <Button Content="← Back" Style="{StaticResource SecondaryBtn}"
+                    <Button Content="{loc:Loc Ui_Back}" Style="{StaticResource SecondaryBtn}"
                             Command="{Binding BackCommand}"
                             AutomationProperties.Name="BackBtn"
                             Visibility="{Binding CurrentStep, Converter={StaticResource NeqToVis}, ConverterParameter=0}"/>
@@ -1770,7 +1738,7 @@
                             Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=5}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="&#xE72C;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
-                            <TextBlock Text="Start New Copy" VerticalAlignment="Center"/>
+                            <TextBlock Text="{loc:Loc Ui_StartNewCopy}" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>

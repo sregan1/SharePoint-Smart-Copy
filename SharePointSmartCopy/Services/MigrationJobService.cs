@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using SharePointSmartCopy.Localization;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Channels;
 using Azure.Storage.Blobs;
@@ -64,7 +65,7 @@ public class MigrationJobService(SharePointService spService)
         var oldestSecs = (int)Math.Max(0, (DateTimeOffset.UtcNow - oldest.StartUtc).TotalSeconds);
         long totalMb   = snapshot.Sum(d => d.TotalBytes) / (1024 * 1024);
         var sizeNote   = oldest.TotalBytes > 0 ? $" ({oldest.TotalBytes / (1024.0 * 1024):N0} MB)" : "";
-        return $" · ↓ {snapshot.Count} download(s) in flight, ~{totalMb:N0} MB total; oldest: {oldest.Name}{sizeNote} {oldestSecs}s";
+        return " " + Loc.T("Svc_Mig_DownloadSInFlight", snapshot.Count, totalMb, oldest.Name, sizeNote, oldestSecs);
     }
 
     public async Task ExecuteAsync(
@@ -99,8 +100,8 @@ public class MigrationJobService(SharePointService spService)
         if (maxVersions == 0 || maxVersions > MaxVersionsPerJob)
         {
             activityLog?.Report(maxVersions == 0
-                ? $"⚠ \"Copy all versions\" requested, but Migration API mode can copy at most {MaxVersionsPerJob:N0} versions per file — any document with more history will have its oldest versions truncated"
-                : $"⚠ Max versions ({maxVersions}) exceeds the {MaxVersionsPerJob:N0}-version-per-file ceiling Migration API mode can handle — clamping to {MaxVersionsPerJob:N0}");
+                ? Loc.T("Svc_Mig_CopyAllVersionsRequested", MaxVersionsPerJob)
+                : Loc.T("Svc_Mig_MaxVersionsExceedsThe", maxVersions, MaxVersionsPerJob, MaxVersionsPerJob));
             maxVersions = MaxVersionsPerJob;
         }
 
@@ -158,7 +159,7 @@ public class MigrationJobService(SharePointService spService)
         var memoryBudget = new TransferMemoryBudget(
             Math.Clamp((long)(machineRamBytes * 0.40), 2L * 1024 * 1024 * 1024, 16L * 1024 * 1024 * 1024));
         activityLog?.Report(
-            $"Transfer memory budget: {memoryBudget.Capacity / (1024.0 * 1024 * 1024):F1} GB (bounds concurrent file buffers)");
+            Loc.T("Svc_Mig_TransferMemoryBudgetGB", memoryBudget.Capacity / (1024.0 * 1024 * 1024)));
         // Registered only during the download/upload phase — NOT during analysis (metadata fetches,
         // folder enumeration). Analysis throttles are transient and shouldn't pre-damage the download
         // slot count before any file transfers have started.
@@ -186,8 +187,8 @@ public class MigrationJobService(SharePointService spService)
                 bool down = n < lastAnalysisLimit;
                 lastAnalysisLimit = n;
                 activityLog.Report(down
-                    ? $"↓ Analysis: {n}/{AnalysisMaxParallelism} slots (throttle backoff)"
-                    : $"⬆ Analysis: {n}/{AnalysisMaxParallelism} slots (recovering)");
+                    ? Loc.T("Svc_Mig_AnalysisSlotsThrottleBackoff", n, AnalysisMaxParallelism)
+                    : Loc.T("Svc_Mig_AnalysisSlotsRecovering", n, AnalysisMaxParallelism));
             };
         }
         if (activityLog != null)
@@ -198,8 +199,8 @@ public class MigrationJobService(SharePointService spService)
                 bool down = n < lastDlLimit;
                 lastDlLimit = n;
                 activityLog.Report(down
-                    ? $"↓ Downloads: {n}/{maxParallel} slots (throttle backoff)"
-                    : $"⬆ Downloads: {n}/{maxParallel} slots (recovering)");
+                    ? Loc.T("Svc_Mig_DownloadsSlotsThrottleBackoff", n, maxParallel)
+                    : Loc.T("Svc_Mig_DownloadsSlotsRecovering", n, maxParallel));
             };
         }
         if (activityLog != null)
@@ -210,8 +211,8 @@ public class MigrationJobService(SharePointService spService)
                 bool down = n < lastUpLimit;
                 lastUpLimit = n;
                 activityLog.Report(down
-                    ? $"↓ Uploads: {n}/{maxParallel} slots (backing off — upload interrupted)"
-                    : $"⬆ Uploads: {n}/{maxParallel} slots (recovering)");
+                    ? Loc.T("Svc_Mig_UploadsSlotsBackingOff", n, maxParallel)
+                    : Loc.T("Svc_Mig_UploadsSlotsRecovering", n, maxParallel));
             };
         }
 
@@ -233,7 +234,7 @@ public class MigrationJobService(SharePointService spService)
                     if (now - lastThrottleLog < TimeSpan.FromSeconds(5)) return;
                     lastThrottleLog = now;
                 }
-                activityLog.Report($"⚠ Graph throttled — waiting {delay.TotalSeconds:0}s"
+                activityLog.Report(Loc.T("Svc_Ver_Throttled", delay.TotalSeconds)
                     + (string.IsNullOrEmpty(reason) ? "" : $" [{reason}]"));
             };
             spService.Throttled += onThrottleLog;
@@ -288,7 +289,7 @@ public class MigrationJobService(SharePointService spService)
                     // Fall back to resolving the list ID directly from the drive via Graph.
                     var fallbackId = await spService.GetListIdFromDriveAsync(firstJob.TargetDriveId);
                     listId = fallbackId
-                        ?? throw new Exception($"Cannot resolve list ID for library at '{libraryServerRelUrl}'");
+                        ?? throw new Exception(Loc.T("Svc_Mig_CannotResolveListID", libraryServerRelUrl));
                 }
                 var libraryTitle = libraryServerRelUrl.Split('/').Last();
 
@@ -329,7 +330,7 @@ public class MigrationJobService(SharePointService spService)
                 {
                     if (subFolderPaths.Count > 0)
                     {
-                        activityLog?.Report($"Provisioning {subFolderPaths.Count} target subfolder{(subFolderPaths.Count == 1 ? "" : "s")}...");
+                        activityLog?.Report(Loc.T("Svc_Mig_ProvisioningTargetSubfolder", subFolderPaths.Count, (subFolderPaths.Count == 1 ? "" : "s")));
                         var cacheLock = new object();
                         // Outer MaxDegreeOfParallelism just provides enough lanes; analysisController's
                         // own semaphore (capped at AnalysisMaxParallelism, shrunk on throttle) is what
@@ -360,13 +361,13 @@ public class MigrationJobService(SharePointService spService)
                     {
                         // Nothing exists — populate empty listings with no Graph calls at all. The per-batch
                         // pre-flight fast-path then treats every file as new (no scan, no zombie checks).
-                        activityLog?.Report("Target is empty — skipping the existing-file scan.");
+                        activityLog?.Report(Loc.T("Svc_Mig_TargetIsEmptySkipping"));
                         foreach (var key in sharedFolderIdCache.Keys)
                             sharedExistingByFolder[key] = new Dictionary<string, (string ItemId, DateTimeOffset? Modified)>(StringComparer.OrdinalIgnoreCase);
                     }
                     else
                     {
-                        activityLog?.Report($"Scanning {sharedFolderIdCache.Count} target folder{(sharedFolderIdCache.Count == 1 ? "" : "s")} for existing files...");
+                        activityLog?.Report(Loc.T("Svc_Mig_ScanningTargetFolderFor", sharedFolderIdCache.Count, (sharedFolderIdCache.Count == 1 ? "" : "s")));
                         await Parallel.ForEachAsync(sharedFolderIdCache,
                             new ParallelOptions { MaxDegreeOfParallelism = AnalysisMaxParallelism, CancellationToken = cancellationToken },
                             async (kvp, ct) =>
@@ -393,8 +394,8 @@ public class MigrationJobService(SharePointService spService)
                         int totalExisting = sharedExistingByFolder.Values.Sum(d => d.Count);
                         int restOnly      = sharedExistingByFolder.Values.Sum(d => d.Count(e => string.IsNullOrEmpty(e.Value.ItemId)));
                         activityLog?.Report(
-                            $"Existing-file scan: {totalExisting:N0} file(s) already in target " +
-                            $"(Graph saw {totalExisting - restOnly:N0}, REST-only {restOnly:N0}).");
+                            Loc.T("Svc_Mig_ExistingFileScanFile", totalExisting) + " " +
+                            Loc.T("Svc_Mig_GraphSawRESTOnly", totalExisting - restOnly, restOnly));
                     }
                 }
                 finally
@@ -448,9 +449,9 @@ public class MigrationJobService(SharePointService spService)
                         Dictionary<string, DateTimeOffset?> modDates;
                         if (needsFetch.Count > 0)
                         {
-                            activityLog?.Report($"Checking modified dates for {needsFetch.Count:N0} existing file(s)...");
+                            activityLog?.Report(Loc.T("Svc_Mig_CheckingModifiedDatesFor", needsFetch.Count));
                             var modDateProgress = new Progress<int>(d =>
-                                activityLog?.Report($"Checking modified dates: {d:N0} / {needsFetch.Count:N0}"));
+                                activityLog?.Report(Loc.T("Svc_Mig_CheckingModifiedDates", d, needsFetch.Count)));
                             modDates = await spService.FetchModifiedDatesAsync(
                                 needsFetch.Select(t => (t.job.SourceDriveId, t.job.SourceItemId)).ToList(),
                                 maxConcurrency: 6, progress: modDateProgress, ct: cancellationToken);
@@ -488,7 +489,7 @@ public class MigrationJobService(SharePointService spService)
                         // FetchModifiedDatesAsync) is visible immediately instead of only showing up as
                         // an inexplicably low skip rate discovered many minutes later.
                         if (undetermined > 0)
-                            activityLog?.Report($"⚠ {undetermined:N0} file(s) had no confirmed modified date after retries — treated as needing a copy");
+                            activityLog?.Report(Loc.T("Svc_Mig_FileSHadNo", undetermined));
                         toProcess = stillNeedsCopy.Concat(newAtTarget).ToList();
                     }
 
@@ -496,7 +497,7 @@ public class MigrationJobService(SharePointService spService)
                     {
                         int done = Interlocked.Add(ref preflightCounter[0], preskipped);
                         preflightProgress?.Report((done, preflightTotal));
-                        activityLog?.Report($"{preskipped:N0} of {groupTasks.Count:N0} already up to date — skipping metadata fetch for those");
+                        activityLog?.Report(Loc.T("Svc_Mig_OfAlreadyUpTo", preskipped, groupTasks.Count));
                     }
                     groupTasks = toProcess;
                 }
@@ -561,11 +562,11 @@ public class MigrationJobService(SharePointService spService)
                         .Where(p => !scannedFolderIdentities.ContainsKey(p))
                         .ToList();
                     if (byIdentityInput.Count > 0)
-                        activityLog?.Report($"Fetching metadata for {byIdentityInput.Count:N0} folders...");
+                        activityLog?.Report(Loc.T("Svc_Mig_FetchingMetadataForFolders", byIdentityInput.Count));
                     var byIdentityProgress = new Progress<int>(d =>
                     {
                         if (byIdentityInput.Count > 20 && (d % 100 == 0 || d == byIdentityInput.Count))
-                            activityLog?.Report($"Fetching folder metadata: {d:N0} / {byIdentityInput.Count:N0}");
+                            activityLog?.Report(Loc.T("Svc_Mig_FetchingFolderMetadata", d, byIdentityInput.Count));
                     });
                     var (byIdentityMetadata, byIdentityFailures) = await spService.FetchFolderMetadataByIdentityAsync(
                         byIdentityInput, maxConcurrency: 6, progress: byIdentityProgress, ct: cancellationToken);
@@ -579,12 +580,12 @@ public class MigrationJobService(SharePointService spService)
                         // were never part of this job's own scanned source tree, e.g. a manually
                         // retargeted single-folder copy) or a genuine ownKey-registration bug.
                         var unscannedExamples = string.Join(" | ", unscannedAncestorPaths.OrderBy(p => p.Length));
-                        activityLog?.Report($"⚠ {unscannedAncestorPaths.Count:N0} folder(s) had no identity from the scan (not a Graph failure) — they will show a placeholder date. Path(s): {unscannedExamples}");
+                        activityLog?.Report(Loc.T("Svc_Mig_FolderSHadNo", unscannedAncestorPaths.Count, unscannedExamples));
                     }
                     if (byIdentityFailures.Count > 0)
                     {
                         var failureExamples = string.Join(" | ", byIdentityFailures.Take(3).Select(f => $"{f.FolderKey}: {f.Error}"));
-                        activityLog?.Report($"⚠ {byIdentityFailures.Count:N0} folder(s) failed the Graph metadata lookup — they will show a placeholder date. Example(s): {failureExamples}");
+                        activityLog?.Report(Loc.T("Svc_Mig_FolderSFailedThe", byIdentityFailures.Count, failureExamples));
                     }
                     // Root is a separate concern in both schemes — same call as the old path,
                     // just with an empty non-root list so only its dedicated root branch runs.
@@ -622,11 +623,11 @@ public class MigrationJobService(SharePointService spService)
                             folderMetaInput.Add((path, best.Value.driveId, best.Value.sampleFileItemId, bestDepth - pathDepth));
                     }
                     if (folderMetaInput.Count > 0)
-                        activityLog?.Report($"Fetching metadata for {folderMetaInput.Count:N0} folders...");
+                        activityLog?.Report(Loc.T("Svc_Mig_FetchingMetadataForFolders", folderMetaInput.Count));
                     var folderProgress = new Progress<int>(d =>
                     {
                         if (folderMetaInput.Count > 20 && (d % 100 == 0 || d == folderMetaInput.Count))
-                            activityLog?.Report($"Fetching folder metadata: {d:N0} / {folderMetaInput.Count:N0}");
+                            activityLog?.Report(Loc.T("Svc_Mig_FetchingFolderMetadata", d, folderMetaInput.Count));
                     });
                     folderMetadata = await spService.FetchFolderMetadataAsync(
                         allGroupTasks[0].job.SourceDriveId, folderMetaInput, maxConcurrency: 6,
@@ -644,7 +645,7 @@ public class MigrationJobService(SharePointService spService)
                 {
                     int foldersMissingMetadata = allAncestorFolderPaths.Count - folderMetadata.Count;
                     if (foldersMissingMetadata > 0)
-                        activityLog?.Report($"⚠ {foldersMissingMetadata:N0} folder(s) could not be dated (Graph lookup failed after retries) — they will show a 2000-01-01 placeholder date instead of their real source date");
+                        activityLog?.Report(Loc.T("Svc_Mig_FolderSCouldNot", foldersMissingMetadata));
                 }
 
                 // Post-import correction: SPMI's <Folder> manifest element doesn't honor
@@ -677,10 +678,10 @@ public class MigrationJobService(SharePointService spService)
                     int foldersMissingSourceEmail = folderMetadata
                         .Count(kv => string.IsNullOrEmpty(kv.Value.CreatedByEmail) && string.IsNullOrEmpty(kv.Value.ModifiedByEmail));
                     if (foldersMissingSourceEmail > 0)
-                        activityLog?.Report($"⚠ {foldersMissingSourceEmail:N0} folder(s) had no source Author/Modified-By email available — cannot correct those, they will show the importing account");
+                        activityLog?.Report(Loc.T("Svc_Mig_FolderSHadNo2", foldersMissingSourceEmail));
                     if (foldersNeedingAuthorFix.Count == 0) return;
 
-                    activityLog?.Report($"Correcting folder metadata (dates + authorship + color) for {foldersNeedingAuthorFix.Count:N0} of {folderMetadata.Count:N0} folder(s)...");
+                    activityLog?.Report(Loc.T("Svc_Mig_CorrectingFolderMetadataDates", foldersNeedingAuthorFix.Count, folderMetadata.Count));
                     int authorFixFailures = 0;
                     int authorFixDone = 0;
                     // Color failures are counted SEPARATELY from metadata failures. Folder color has no
@@ -701,7 +702,7 @@ public class MigrationJobService(SharePointService spService)
                             if (string.IsNullOrEmpty(guid))
                             {
                                 Interlocked.Increment(ref authorFixFailures);
-                                sampleErrors.Add($"{(relKey.Length == 0 ? "(library root)" : relKey)}: could not resolve target folder GUID");
+                                sampleErrors.Add(Loc.T("Svc_Mig_CouldNotResolveTarget", (relKey.Length == 0 ? Loc.T("Svc_Ver_LibraryRoot") : relKey)));
                             }
                             else
                             {
@@ -717,12 +718,12 @@ public class MigrationJobService(SharePointService spService)
                                 if (err != null)
                                 {
                                     Interlocked.Increment(ref authorFixFailures);
-                                    sampleErrors.Add($"{(relKey.Length == 0 ? "(library root)" : relKey)}: {err}");
+                                    sampleErrors.Add($"{(relKey.Length == 0 ? Loc.T("Svc_Ver_LibraryRoot") : relKey)}: {err}");
                                 }
                                 if (colorWarning != null)
                                 {
                                     Interlocked.Increment(ref colorFailures);
-                                    sampleColorErrors.Add($"{(relKey.Length == 0 ? "(library root)" : relKey)}: {colorWarning}");
+                                    sampleColorErrors.Add($"{(relKey.Length == 0 ? Loc.T("Svc_Ver_LibraryRoot") : relKey)}: {colorWarning}");
                                 }
                             }
                             // Previously silent for the whole pass — on a large tree under sustained
@@ -732,7 +733,7 @@ public class MigrationJobService(SharePointService spService)
                             // reporting already used for the fetch phase just before this one.
                             int done = Interlocked.Increment(ref authorFixDone);
                             if (foldersNeedingAuthorFix.Count > 20 && (done % 100 == 0 || done == foldersNeedingAuthorFix.Count))
-                                activityLog?.Report($"Correcting folder metadata: {done:N0} / {foldersNeedingAuthorFix.Count:N0}");
+                                activityLog?.Report(Loc.T("Svc_Mig_CorrectingFolderMetadata", done, foldersNeedingAuthorFix.Count));
                         });
                     // Never silent: a failure here leaves that folder attributed to the importing
                     // account rather than crashing the run — surfaced with actual error text (not
@@ -744,11 +745,11 @@ public class MigrationJobService(SharePointService spService)
                     if (authorFixFailures > 0)
                     {
                         var examples = string.Join(" | ", sampleErrors.Distinct().Take(3));
-                        activityLog?.Report($"⚠ Could not correct metadata for {authorFixFailures:N0} folder(s). Example(s): {examples}");
+                        activityLog?.Report(Loc.T("Svc_Mig_CouldNotCorrectMetadata", authorFixFailures, examples));
                     }
                     else
                     {
-                        activityLog?.Report($"✓ Folder metadata verified for {foldersNeedingAuthorFix.Count:N0} folder(s)");
+                        activityLog?.Report(Loc.T("Svc_Mig_FolderMetadataVerifiedFor", foldersNeedingAuthorFix.Count));
                     }
                     // Separate line, and deliberately worded as informational: dates and authorship
                     // succeeded above regardless. Folder color has no supported write API, so a tenant
@@ -756,7 +757,7 @@ public class MigrationJobService(SharePointService spService)
                     if (colorFailures > 0)
                     {
                         var colorExamples = string.Join(" | ", sampleColorErrors.Distinct().Take(2));
-                        activityLog?.Report($"ℹ Folder color could not be applied to {colorFailures:N0} folder(s) — dates and authorship were still corrected. Example(s): {colorExamples}");
+                        activityLog?.Report(Loc.T("Svc_Mig_FolderColorCouldNot", colorFailures, colorExamples));
                     }
                 }
 
@@ -777,7 +778,7 @@ public class MigrationJobService(SharePointService spService)
                         .ToList();
                     if (foldersNeedingProgIdFix.Count == 0) return;
 
-                    activityLog?.Report($"Correcting {foldersNeedingProgIdFix.Count:N0} special folder(s) (e.g. OneNote notebooks)...");
+                    activityLog?.Report(Loc.T("Svc_Mig_CorrectingSpecialFolderS", foldersNeedingProgIdFix.Count));
                     int progIdFixFailures = 0;
                     var progIdErrors = new System.Collections.Concurrent.ConcurrentBag<string>();
                     await Parallel.ForEachAsync(foldersNeedingProgIdFix,
@@ -790,24 +791,24 @@ public class MigrationJobService(SharePointService spService)
                             if (string.IsNullOrEmpty(guid))
                             {
                                 Interlocked.Increment(ref progIdFixFailures);
-                                progIdErrors.Add($"{(relKey.Length == 0 ? "(library root)" : relKey)}: could not resolve target folder GUID");
+                                progIdErrors.Add(Loc.T("Svc_Mig_CouldNotResolveTarget", (relKey.Length == 0 ? Loc.T("Svc_Ver_LibraryRoot") : relKey)));
                                 return;
                             }
                             var err = await spService.PatchFolderProgIdAsync(targetSiteUrl, listId, guid!, meta.ProgId!);
                             if (err != null)
                             {
                                 Interlocked.Increment(ref progIdFixFailures);
-                                progIdErrors.Add($"{(relKey.Length == 0 ? "(library root)" : relKey)}: {err}");
+                                progIdErrors.Add($"{(relKey.Length == 0 ? Loc.T("Svc_Ver_LibraryRoot") : relKey)}: {err}");
                             }
                         });
                     if (progIdFixFailures > 0)
                     {
                         var examples = string.Join(" | ", progIdErrors.Distinct().Take(3));
-                        activityLog?.Report($"⚠ Could not correct ProgId for {progIdFixFailures:N0} folder(s). Example(s): {examples}");
+                        activityLog?.Report(Loc.T("Svc_Mig_CouldNotCorrectProgId", progIdFixFailures, examples));
                     }
                     else
                     {
-                        activityLog?.Report($"✓ Special folder association verified for {foldersNeedingProgIdFix.Count:N0} folder(s)");
+                        activityLog?.Report(Loc.T("Svc_Mig_SpecialFolderAssociationVerified", foldersNeedingProgIdFix.Count));
                     }
                 }
 
@@ -865,9 +866,9 @@ public class MigrationJobService(SharePointService spService)
                 // Small-file regions are unaffected — they still fill to the 250-item cap well under 2 GB.
                 const long MaxBytesPerJob   = 2L * 1024 * 1024 * 1024;
 
-                activityLog?.Report($"Analyzing {groupTasks.Count:N0} files for version-aware batching...");
+                activityLog?.Report(Loc.T("Svc_Mig_AnalyzingFilesForVersion", groupTasks.Count));
                 var sizingProgress = new Progress<int>(d =>
-                    activityLog?.Report($"Analyzing files for batching: {d:N0} / {groupTasks.Count:N0}"));
+                    activityLog?.Report(Loc.T("Svc_Mig_AnalyzingFilesForBatching", d, groupTasks.Count)));
                 // Fetch metadata + versions for the whole group ONCE, upfront, into a cache the download
                 // producer reuses — so the producer makes no Graph metadata calls during the copy (those
                 // per-batch $batch calls were being silently throttled and stalling the pipeline). This
@@ -887,7 +888,7 @@ public class MigrationJobService(SharePointService spService)
                 // silent; if non-zero on a failing run, that's the lead to chase.
                 int cacheMisses = groupTasks.Count(t => !metaCache.ContainsKey(t.job.SourceItemId));
                 if (cacheMisses > 0)
-                    activityLog?.Report($"⚠ {cacheMisses:N0} file(s) missing metadata after retries — version counts may be approximate for those");
+                    activityLog?.Report(Loc.T("Svc_Mig_FileSMissingMetadata", cacheMisses));
 
                 int VersionsOf((CopyJob job, CopyResult result) t)
                 {
@@ -1039,7 +1040,7 @@ public class MigrationJobService(SharePointService spService)
                     if (overwriteMode == OverwriteMode.Skip)
                     {
                         activityLog?.Report(
-                            $"↻ {rpfx}SharePoint aborted the batch after {conflicts.Count} 'already exists' conflict{(conflicts.Count == 1 ? "" : "s")} — marking those Skipped and retrying the rest once...");
+                            Loc.T("Svc_Mig_SharePointAbortedTheBatch", rpfx, conflicts.Count, (conflicts.Count == 1 ? "" : "s")));
                         var conflictSet = new HashSet<CopyResult>(conflicts.Select(c => c.result));
                         foreach (var (_, result) in prepared.FileTasks)
                         {
@@ -1061,7 +1062,7 @@ public class MigrationJobService(SharePointService spService)
                     }
 
                     activityLog?.Report(
-                        $"↻ {rpfx}SharePoint aborted the batch after {conflicts.Count} name conflict{(conflicts.Count == 1 ? "" : "s")} — clearing and retrying the batch once...");
+                        Loc.T("Svc_Mig_SharePointAbortedTheBatch2", rpfx, conflicts.Count, (conflicts.Count == 1 ? "" : "s")));
 
                     var stillBlocked = new HashSet<CopyResult>();
                     var blockedLock  = new object();
@@ -1123,19 +1124,19 @@ public class MigrationJobService(SharePointService spService)
                             stillBlocked.Add(result);
                         }
                         if (nowBlocked <= 5)
-                            activityLog?.Report($"  ⚠ {rpfx}delete failed [{failReason ?? "unknown"}] (trace: {deleteTrace ?? "n/a"}): {fileServerRelUrl}");
+                            activityLog?.Report("  " + Loc.T("Svc_Mig_DeleteFailedTrace", rpfx, failReason ?? "unknown", deleteTrace ?? "n/a", fileServerRelUrl));
                         else if (nowBlocked == 6)
-                            activityLog?.Report($"  ⚠ {rpfx}…more still-blocked conflicts (suppressing)");
+                            activityLog?.Report("  " + Loc.T("Svc_Mig_MoreStillBlockedConflicts", rpfx));
                     });
-                    activityLog?.Report($"  {rpfx}cleared {clearedCount}/{conflicts.Count} conflicting file(s)" +
-                        (blockedCount > 0 ? $", {blockedCount} still blocked" : ""));
+                    activityLog?.Report("  " + Loc.T("Svc_Mig_ClearedConflictingFileS", rpfx, clearedCount, conflicts.Count) +
+                        (blockedCount > 0 ? Loc.T("Svc_Mig_StillBlocked", blockedCount) : ""));
 
                     foreach (var (_, result) in prepared.FileTasks)
                     {
                         if (stillBlocked.Contains(result))
                         {
                             result.Status       = CopyStatus.Failed;
-                            result.ErrorMessage = "Could not remove the existing file before retry — re-run to try again.";
+                            result.ErrorMessage = Loc.T("Svc_Mig_CouldNotRemoveThe");
                             continue;
                         }
                         // Only files the abort failed go back to Copying. Skipped results (IfNewer's
@@ -1151,7 +1152,7 @@ public class MigrationJobService(SharePointService spService)
 
                     if (!prepared.FileTasks.Any(t => t.result.Status == CopyStatus.Copying))
                     {
-                        activityLog?.Report($"✗ {rpfx}Retry skipped — every conflicting file is still blocked.");
+                        activityLog?.Report(Loc.T("Svc_Mig_RetrySkippedEveryConflicting", rpfx));
                         return;
                     }
 
@@ -1252,7 +1253,7 @@ public class MigrationJobService(SharePointService spService)
                 // Cancelled, not Failed: this item was still Copying (never actually attempted)
                 // when the run stopped — see CopyStatus.Cancelled.
                 result.Status       = CopyStatus.Cancelled;
-                result.ErrorMessage = "Cancelled";
+                result.ErrorMessage = Loc.T("Svc_Cancelled");
             }
         }
         catch (Exception ex)
@@ -1458,7 +1459,7 @@ public class MigrationJobService(SharePointService spService)
                     // stale target survives into the import.
                     void failDeleteConflict() {
                         result.Status       = CopyStatus.Failed;
-                        result.ErrorMessage = "Could not remove the existing file before overwrite (after retries) — skipped to avoid a duplicate-version import error. Re-run to retry.";
+                        result.ErrorMessage = Loc.T("Svc_Mig_CouldNotRemoveThe2");
                     }
 
                     if (overwriteMode == OverwriteMode.Overwrite)
@@ -1546,18 +1547,18 @@ public class MigrationJobService(SharePointService spService)
 
             var copyingCount = fileTasks.Count(t => t.result.Status == CopyStatus.Copying);
             var skippedCount = fileTasks.Count - copyingCount;
-            activityLog?.Report($"{pfx}Pre-flight: {copyingCount} to copy, {skippedCount} already exist");
+            activityLog?.Report(Loc.T("Svc_Mig_PreFlightToCopy", pfx, copyingCount, skippedCount));
 
             if (copyingCount == 0)
             {
-                activityLog?.Report($"{pfx}All files already exist — nothing to copy");
+                activityLog?.Report(Loc.T("Svc_Mig_AllFilesAlreadyExist", pfx));
                 return new PreparedBatch(batchLabel, fileTasks, 0, string.Empty, string.Empty, Array.Empty<byte>(),
                     new Dictionary<string, CopyResult>());
             }
 
             // Step 1: provision SP-provided encrypted containers — deferred until after preflight
             // so all-skipped batches never touch Azure at all.
-            activityLog?.Report($"{pfx}Provisioning Azure migration containers...");
+            activityLog?.Report(Loc.T("Svc_Mig_ProvisioningAzureMigrationContainers", pfx));
             var (dataUri, metadataUri, encryptionKey) =
                 await spService.ProvisionMigrationContainersAsync(targetSiteUrl);
 
@@ -1612,7 +1613,7 @@ public class MigrationJobService(SharePointService spService)
             bool verbosePerFile = copyingCount <= 20;
             int  milestoneStep  = Math.Max(1, copyingCount / 10);
 
-            activityLog?.Report($"{pfx}Downloading {copyingCount:N0} files ({maxParallel} concurrent, {versionParallelism} version stream{(versionParallelism > 1 ? "s" : "")} each)...");
+            activityLog?.Report(Loc.T("Svc_Mig_DownloadingFilesConcurrentVersion", pfx, copyingCount, maxParallel, versionParallelism, (versionParallelism > 1 ? "s" : "")));
 
             // Files absent from the upfront cache (metadata fetch failed under throttling) that we copy
             // current-version-only to stay within the batch's entry budget. Reported in the batch summary.
@@ -1678,7 +1679,7 @@ public class MigrationJobService(SharePointService spService)
                             if (largestVersionBytes > int.MaxValue)
                             {
                                 result.Status       = CopyStatus.Failed;
-                                result.ErrorMessage = $"File version is {largestVersionBytes / (1024.0 * 1024 * 1024):F1} GB — larger than the 2 GB this mode can buffer. Copy this file with Enhanced REST mode.";
+                                result.ErrorMessage = Loc.T("Svc_Mig_FileVersionIsGB", largestVersionBytes / (1024.0 * 1024 * 1024));
                                 return;
                             }
 
@@ -1747,7 +1748,7 @@ public class MigrationJobService(SharePointService spService)
                             catch (Exception ex)
                             {
                                 result.Status       = CopyStatus.Failed;
-                                result.ErrorMessage = $"Download failed: {ex.Message}";
+                                result.ErrorMessage = Loc.T("Svc_Mig_DownloadFailed", ex.Message);
                             }
                             finally
                             {
@@ -1895,7 +1896,7 @@ public class MigrationJobService(SharePointService spService)
                                         // uploads run clean again. This is what makes 16 parallel copies safe
                                         // without any fixed upload cap.
                                         uploadController?.StepDown(TimeSpan.FromSeconds(waitsecs));
-                                        activityLog?.Report($"⚠ {pfx}{fileName} — upload interrupted, retrying in {waitsecs}s ({attempt + 1}/{UploadMaxAttempts - 1})");
+                                        activityLog?.Report(Loc.T("Svc_Mig_UploadInterruptedRetryingIn", pfx, fileName, waitsecs, attempt + 1, UploadMaxAttempts - 1));
                                         await Task.Delay(TimeSpan.FromSeconds(waitsecs), cancellationToken);
                                     }
                                 }
@@ -1905,7 +1906,7 @@ public class MigrationJobService(SharePointService spService)
                             onFilePacked?.Report(data.Job.SourceSize ?? 0);
                             int n = Interlocked.Increment(ref packedInBatch);
                             if (!verbosePerFile && (n == 1 || n % milestoneStep == 0 || n == copyingCount))
-                                activityLog?.Report($"{pfx}{n:N0} / {copyingCount:N0} files packaged");
+                                activityLog?.Report(Loc.T("Svc_Mig_FilesPackaged", pfx, n, copyingCount));
                         }
                         // Let a real user cancellation propagate unchanged; anything else — including an
                         // OperationCanceledException from an exhausted-retry client timeout above — fails
@@ -1914,12 +1915,12 @@ public class MigrationJobService(SharePointService spService)
                         {
                             entry.Failed = true; // exclude from manifest — its blobs weren't all uploaded
                             dataResult.Status       = CopyStatus.Failed;
-                            dataResult.ErrorMessage = $"Upload failed ({fileName}): {ex.Message}";
+                            dataResult.ErrorMessage = Loc.T("Svc_Mig_UploadFailed", fileName, ex.Message);
                             // Never silent: this used to set ErrorMessage only, so a failed upload was
                             // invisible in the activity log and showed up solely as a bare "K failed"
                             // count with no reason (2026-07-18 — made this class of failure very hard to
                             // diagnose). Surface it like the download/import failure paths do.
-                            activityLog?.Report($"✗ {pfx}Upload failed after retries: {fileName} — {ex.Message}");
+                            activityLog?.Report(Loc.T("Svc_Mig_UploadFailedAfterRetries", pfx, fileName, ex.Message));
                         }
                         finally
                         {
@@ -1941,7 +1942,7 @@ public class MigrationJobService(SharePointService spService)
                     if (builder.Files.Count > filesBefore)
                         builder.RemoveLastFile();
                     data.Result.Status       = CopyStatus.Failed;
-                    data.Result.ErrorMessage = $"Package build failed: {ex.Message}";
+                    data.Result.ErrorMessage = Loc.T("Svc_Mig_PackageBuildFailed", ex.Message);
                 }
                 finally
                 {
@@ -1993,7 +1994,7 @@ public class MigrationJobService(SharePointService spService)
             // exhaust its retries and return null — so fail the batch CLEARLY and re-queueably rather
             // than submitting a manifest that's guaranteed to fail 100% with an opaque error.
             if (string.IsNullOrEmpty(rootFolderGuid))
-                throw new Exception("Could not resolve target library root folder ID — SharePoint throttling exhausted retries. Batch not submitted; re-run (ideally off-peak).");
+                throw new Exception(Loc.T("Svc_Mig_CouldNotResolveTarget2"));
 
             // Resolve the real target GUID of every nested subfolder (and all ancestor folders) so the
             // manifest can declare an SPFolder object for each. SP requires every SPFile to be preceded
@@ -2031,7 +2032,7 @@ public class MigrationJobService(SharePointService spService)
                 // "Missing file info for list item". Rather than submit a manifest that's partly broken,
                 // fail the whole batch clearly so it can be re-run (off-peak) intact.
                 if (unresolved.Count > 0)
-                    throw new Exception($"Could not resolve {unresolved.Count} target subfolder ID(s) — SharePoint throttling exhausted retries (e.g. '{unresolved[0]}'). Batch not submitted; re-run (ideally off-peak).");
+                    throw new Exception(Loc.T("Svc_Mig_CouldNotResolveTarget3", unresolved.Count, unresolved[0]));
             }
 
             // A path in folderGuids with no folderMetadata entry is a folder that isn't part of the
@@ -2074,7 +2075,7 @@ public class MigrationJobService(SharePointService spService)
                 $" webRelUrl={webRelUrl} libraryTitle={libraryTitle} libraryServerRelUrl={libraryServerRelUrl}" +
                 $" rootFolderGuid={rootFolderGuid ?? "(null)"} overwrite={spmiOverwrite}");
 
-            activityLog?.Report($"{pfx}Building and uploading SPMI manifest...");
+            activityLog?.Report(Loc.T("Svc_Mig_BuildingAndUploadingSPMI", pfx));
             var metadataClient = new BlobContainerClient(new Uri(metadataUri));
             var manifests = builder.BuildManifestXml(
                 siteId, webId, listId,
@@ -2094,8 +2095,8 @@ public class MigrationJobService(SharePointService spService)
             }
 
             if (currentOnlyMisses > 0)
-                activityLog?.Report($"⚠ {pfx}{currentOnlyMisses:N0} file(s) copied current-version-only (metadata unavailable under throttling; lossless for single-version files)");
-            activityLog?.Report($"{pfx}Packaged {copyingCount:N0} file{(copyingCount == 1 ? "" : "s")} — ready to import");
+                activityLog?.Report(Loc.T("Svc_Mig_FileSCopiedCurrent", pfx, currentOnlyMisses));
+            activityLog?.Report(Loc.T("Svc_Mig_PackagedFileReadyTo", pfx, copyingCount, (copyingCount == 1 ? "" : "s")));
             return new PreparedBatch(batchLabel, fileTasks, copyingCount, dataUri, metadataUri, encryptionKey, listItemMap);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -2105,7 +2106,7 @@ public class MigrationJobService(SharePointService spService)
                 // Cancelled, not Failed: this item was still Copying (never actually attempted)
                 // when the run stopped — see CopyStatus.Cancelled.
                 result.Status       = CopyStatus.Cancelled;
-                result.ErrorMessage = "Cancelled";
+                result.ErrorMessage = Loc.T("Svc_Cancelled");
             }
         }
         catch (Exception ex)
@@ -2147,7 +2148,7 @@ public class MigrationJobService(SharePointService spService)
             var jobId = await spService.CreateMigrationJobEncryptedAsync(
                 targetSiteUrl, webId, batch.DataUri, batch.MetadataUri, batch.EncryptionKey);
             System.Diagnostics.Debug.WriteLine($"[Migration] submitted job: {jobId}");
-            activityLog?.Report($"{pfx}Submitted to SharePoint — waiting for import...");
+            activityLog?.Report(Loc.T("Svc_Mig_SubmittedToSharePointWaiting", pfx));
 
             // Step 7: poll until JobEnd. Attribute each per-item error to its exact file via the
             // list-item GUID in the message, so we can mark only the truly-failed files (not the
@@ -2166,13 +2167,13 @@ public class MigrationJobService(SharePointService spService)
                     if (name == "JobStart" && !seenJobStart)
                     {
                         seenJobStart = true;
-                        activityLog?.Report($"{pfx}SharePoint import started");
+                        activityLog?.Report(Loc.T("Svc_Mig_SharePointImportStarted", pfx));
                     }
                     else if (name == "JobProgress")
                     {
                         if (evt.TryGetProperty("ObjectsProcessed", out var proc) &&
                             proc.ValueKind == System.Text.Json.JsonValueKind.Number)
-                            activityLog?.Report($"{pfx}SP importing: {proc.GetInt32():N0} / {batch.CopyingCount:N0} files");
+                            activityLog?.Report(Loc.T("Svc_Mig_SPImportingFiles", pfx, proc.GetInt32(), batch.CopyingCount));
                     }
                     if (name == "JobEnd")
                     {
@@ -2184,8 +2185,8 @@ public class MigrationJobService(SharePointService spService)
                     }
                     if (name == "JobFatalError")
                     {
-                        fatalMsg = evt.TryGetProperty("Message", out var m) ? m.GetString() : "Unknown error";
-                        activityLog?.Report($"⚠ {pfx}Fatal error: {fatalMsg}");
+                        fatalMsg = evt.TryGetProperty("Message", out var m) ? m.GetString() : Loc.T("Svc_Mig_UnknownError");
+                        activityLog?.Report(Loc.T("Svc_Mig_FatalError", pfx, fatalMsg));
                         // Log the full SP event — may contain an error code or richer reason
                         // (e.g. "Operation canceled" can mean concurrent-job limit, SAS expiry, bad manifest).
                         activityLog?.Report($"  SP event: {evt}");
@@ -2193,7 +2194,7 @@ public class MigrationJobService(SharePointService spService)
                     }
                     else if (name == "JobError")
                     {
-                        var msg = evt.TryGetProperty("Message", out var m) ? m.GetString() : "Unknown error";
+                        var msg = evt.TryGetProperty("Message", out var m) ? m.GetString() : Loc.T("Svc_Mig_UnknownError");
                         liveErrorCount++;
                         // Attribute to the exact file and mark it Failed so it shows in the Failed filter
                         // and can be re-copied. The GUID isn't always in Message (the MD5 errors carry
@@ -2212,9 +2213,9 @@ public class MigrationJobService(SharePointService spService)
                         // Surface the first handful LIVE (as SP reports them) so a failing batch is
                         // visible immediately; suppress the rest to avoid flooding the feed.
                         if (liveErrorCount <= 5)
-                            activityLog?.Report($"⚠ {pfx}import error {liveErrorCount}: {msg}");
+                            activityLog?.Report(Loc.T("Svc_Mig_ImportError", pfx, liveErrorCount, msg));
                         else if (liveErrorCount == 6)
-                            activityLog?.Report($"⚠ {pfx}…more errors this batch (suppressing; see batch summary)");
+                            activityLog?.Report(Loc.T("Svc_Mig_MoreErrorsThisBatch", pfx));
                         System.Diagnostics.Debug.WriteLine($"[Migration] JobError #{liveErrorCount}: {msg}");
                     }
                 }
@@ -2225,7 +2226,7 @@ public class MigrationJobService(SharePointService spService)
             // still in flight — surface that honestly instead of promoting them below.
             cancellationToken.ThrowIfCancellationRequested();
             if (!sawJobEnd && !fatal)
-                throw new Exception("Import polling ended before SharePoint reported completion — outcome unknown; re-run in Copy-If-Newer mode to reconcile");
+                throw new Exception(Loc.T("Svc_Mig_ImportPollingEndedBefore"));
 
             // Fetch SP's report BEFORE final marking: the .err file names every failed object with its
             // GUID, while the live queue events sometimes omit it (observed with the MD5 errors) — any
@@ -2246,7 +2247,7 @@ public class MigrationJobService(SharePointService spService)
                 var unconfirmed = fileTasks.Where(t => t.result.Status == CopyStatus.Copying).ToList();
                 if (unconfirmed.Count > 0)
                 {
-                    activityLog?.Report($"⚠ {pfx}{reportedErrors - attributedFailed} import error(s) could not be attributed — confirming {unconfirmed.Count:N0} file(s) on target...");
+                    activityLog?.Report(Loc.T("Svc_Mig_ImportErrorSCould", pfx, reportedErrors - attributedFailed, unconfirmed.Count));
                     await Parallel.ForEachAsync(unconfirmed,
                         new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
                         async (t, ct) =>
@@ -2260,7 +2261,7 @@ public class MigrationJobService(SharePointService spService)
                             if (await spService.GetFileUniqueIdAsync(targetSiteUrl, fileUrl) == null)
                             {
                                 result.Status       = CopyStatus.Failed;
-                                result.ErrorMessage = "SharePoint reported import errors and this file was not found on the target afterward — re-run to retry";
+                                result.ErrorMessage = Loc.T("Svc_Mig_SharePointReportedImportErrors");
                             }
                         });
                 }
@@ -2274,7 +2275,7 @@ public class MigrationJobService(SharePointService spService)
                 if (fatal)
                 {
                     result.Status       = CopyStatus.Failed;
-                    result.ErrorMessage ??= fatalMsg ?? "Migration job fatal error";
+                    result.ErrorMessage ??= fatalMsg ?? Loc.T("Svc_Mig_MigrationJobFatalError");
                 }
                 else
                 {
@@ -2287,19 +2288,19 @@ public class MigrationJobService(SharePointService spService)
 
             if (fatal)
             {
-                activityLog?.Report($"✗ {pfx}Import FAILED (fatal abort) — {importedCount} of {batch.CopyingCount} imported, {failedCount} failed");
+                activityLog?.Report(Loc.T("Svc_Mig_ImportFAILEDFatalAbort", pfx, importedCount, batch.CopyingCount, failedCount));
             }
             else if (failedCount > 0 || liveErrorCount > 0 || totalErrorsReported > 0)
             {
                 // Reconcile counts: if SP/JobError reported more errors than we could attribute to a
                 // specific GUID, surface the discrepancy so a silent shortfall is never hidden.
                 int reported = Math.Max(failedCount, Math.Max(liveErrorCount, totalErrorsReported));
-                var extra = reported > failedCount ? $" ({reported} errors reported, {failedCount} attributed)" : "";
-                activityLog?.Report($"⚠ {pfx}Import finished with errors — {importedCount} of {batch.CopyingCount} imported, {failedCount} failed{extra}");
+                var extra = reported > failedCount ? " " + Loc.T("Svc_Mig_ErrorsReportedAttributed", reported, failedCount) : "";
+                activityLog?.Report(Loc.T("Svc_Mig_ImportFinishedWithErrors", pfx, importedCount, batch.CopyingCount, failedCount, extra));
             }
             else
             {
-                activityLog?.Report($"{pfx}✓ Import complete — {importedCount} file{(importedCount == 1 ? "" : "s")} imported");
+                activityLog?.Report(Loc.T("Svc_Mig_ImportCompleteFileImported", pfx, importedCount, (importedCount == 1 ? "" : "s")));
             }
 
             // Only a fatal abort warrants a batch-wide retry — the plain "some items failed" path
@@ -2317,7 +2318,7 @@ public class MigrationJobService(SharePointService spService)
                 // Cancelled, not Failed: this item was still Copying (never actually attempted)
                 // when the run stopped — see CopyStatus.Cancelled.
                 result.Status       = CopyStatus.Cancelled;
-                result.ErrorMessage = "Cancelled";
+                result.ErrorMessage = Loc.T("Svc_Cancelled");
             }
             return new List<(CopyJob job, CopyResult result)>();
         }
@@ -2327,7 +2328,7 @@ public class MigrationJobService(SharePointService spService)
             // itself failing/timing out before a job ID is even obtained) used to mark files Failed
             // with no activity-log line at all — a batch could die silently mid-run with nothing to
             // show why. Always surface it, matching the "✗ ... FAILED" convention used elsewhere.
-            activityLog?.Report($"✗ {pfx}Import FAILED — {ex.Message}");
+            activityLog?.Report(Loc.T("Svc_Mig_ImportFAILED", pfx, ex.Message));
             foreach (var (_, result) in fileTasks.Where(t => t.result.Status == CopyStatus.Copying))
             {
                 result.Status       = CopyStatus.Failed;
@@ -2476,8 +2477,8 @@ public class MigrationJobService(SharePointService spService)
                     catch (SharePointService.DownloadThrottledException tex) when (attempt < 6)
                     {
                         var wait = tex.RetryAfter > TimeSpan.Zero ? tex.RetryAfter : TimeSpan.FromSeconds(10);
-                        var resumeNote = ms.Length > 0 ? $", resuming from {ms.Length / (1024.0 * 1024):F0} MB" : "";
-                        activityLog?.Report($"⚠ {pfxLabel}{job.SourceName} — download throttled, waiting {wait.TotalSeconds:F0}s ({attempt + 1}/6{resumeNote})");
+                        var resumeNote = ms.Length > 0 ? Loc.T("Svc_Mig_ResumingFromMB", ms.Length / (1024.0 * 1024)) : "";
+                        activityLog?.Report(Loc.T("Svc_Mig_DownloadThrottledWaitingS", pfxLabel, job.SourceName, wait.TotalSeconds, attempt + 1, resumeNote));
                         await Task.Delay(wait, ct);
                     }
                     // A MemoryStream past int.MaxValue is a hard size limit, not a transient network
@@ -2485,7 +2486,7 @@ public class MigrationJobService(SharePointService spService)
                     catch (System.IO.IOException ex) when (ex.Message.Contains("Stream was too long", StringComparison.OrdinalIgnoreCase))
                     {
                         throw new NotSupportedException(
-                            $"{job.SourceName} has a version larger than the 2 GB this mode can buffer — copy it with Enhanced REST mode.", ex);
+                            Loc.T("Svc_Mig_HasAVersionLarger", job.SourceName), ex);
                     }
                     // HTTP/2 stream resets surface as HttpRequestException, not IOException — must be
                     // caught alongside it or a single mid-stream RST_STREAM fails the file outright. A
@@ -2495,8 +2496,8 @@ public class MigrationJobService(SharePointService spService)
                     catch (Exception ex) when (attempt < 3 && (ex is System.IO.IOException || ex is System.Net.Http.HttpRequestException || ex is OperationCanceledException))
                     {
                         int waitsecs = (attempt + 1) * 5;
-                        var resumeNote = ms.Length > 0 ? $", resuming from {ms.Length / (1024.0 * 1024):F0} MB" : "";
-                        activityLog?.Report($"⚠ {pfxLabel}{job.SourceName} — connection {(ex is OperationCanceledException ? "timed out" : "reset")}, retrying in {waitsecs}s ({attempt + 1}/3{resumeNote})");
+                        var resumeNote = ms.Length > 0 ? Loc.T("Svc_Mig_ResumingFromMB", ms.Length / (1024.0 * 1024)) : "";
+                        activityLog?.Report(Loc.T("Svc_Mig_ConnectionRetryingInS", pfxLabel, job.SourceName, (ex is OperationCanceledException ? Loc.T("Svc_Mig_TimedOut") : Loc.T("Svc_Mig_Reset")), waitsecs, attempt + 1, resumeNote));
                         await Task.Delay(TimeSpan.FromSeconds(waitsecs), ct);
                     }
                 }

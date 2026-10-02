@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using SharePointSmartCopy.Localization;
+using System.Collections.ObjectModel;
 using System.IO;
 using SharePointSmartCopy.Models;
 
@@ -124,8 +125,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 bool down = n < lastLimit;
                 lastLimit = n;
                 activityLog.Report(down
-                    ? $"↓ Parallelism: {n}/{maxParallel} (throttled)"
-                    : $"⬆ Parallelism: {n}/{maxParallel} (recovering)");
+                    ? Loc.T("Svc_ParDown", n, maxParallel)
+                    : Loc.T("Svc_ParUp", n, maxParallel));
             };
         }
         void onThrottled(TimeSpan delay, int attempt, int max, string? reason)
@@ -150,7 +151,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     if (now - lastThrottleLog < TimeSpan.FromSeconds(5)) return;
                     lastThrottleLog = now;
                 }
-                activityLog.Report($"⚠ Graph throttled — waiting {delay.TotalSeconds:0}s"
+                activityLog.Report(Loc.T("Svc_Ver_Throttled", delay.TotalSeconds)
                     + (string.IsNullOrEmpty(reason) ? "" : $" [{reason}]"));
             };
             spService.Throttled += onThrottleLog;
@@ -269,15 +270,15 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 bool down = n < lastScanLimit;
                 lastScanLimit = n;
                 activityLog.Report(down
-                    ? $"↓ Scan concurrency: {n}/{ScanMaxParallelism} (throttled)"
-                    : $"⬆ Scan concurrency: {n}/{ScanMaxParallelism} (recovering)");
+                    ? Loc.T("Svc_ScanConcDown", n, ScanMaxParallelism)
+                    : Loc.T("Svc_ScanConcUp", n, ScanMaxParallelism));
             };
         }
 
         bool anyFolderJobs = jobs.Any(j => j.IsFolder);
         var scanStartTime = DateTimeOffset.UtcNow;
         if (anyFolderJobs)
-            activityLog?.Report("Scanning source for files to copy...");
+            activityLog?.Report(Loc.T("Svc_ScanningSource"));
         int scannedFiles = 0;
         var lastScanReport = DateTimeOffset.UtcNow;
 
@@ -338,7 +339,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         Status     = CopyStatus.Copying
                     };
                     pendingResults.Add(folderResult);
-                    activityLog?.Report($"Copying special folder '{job.SourceName}' natively (preserves notebook/package association)...");
+                    activityLog?.Report(Loc.T("Svc_NativeCopying", job.SourceName));
                     try
                     {
                         var parentId = await spService.GetOrCreateFolderPathAsync(
@@ -346,7 +347,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         if (!await PrepareNativeCopyTargetAsync(job.TargetDriveId, parentId, job.SourceName))
                         {
                             folderResult.Status = CopyStatus.Skipped;
-                            activityLog?.Report($"⏭ Skipped '{job.SourceName}' — already exists at target");
+                            activityLog?.Report(Loc.T("Svc_SkippedExists", job.SourceName));
                         }
                         else
                         {
@@ -355,15 +356,15 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             folderResult.Status       = copyError == null ? CopyStatus.Success : CopyStatus.Failed;
                             folderResult.ErrorMessage = copyError;
                             activityLog?.Report(copyError == null
-                                ? $"✓ Native copy of '{job.SourceName}' complete"
-                                : $"⚠ Native copy of '{job.SourceName}' failed: {copyError}");
+                                ? Loc.T("Svc_NativeDone", job.SourceName)
+                                : Loc.T("Svc_NativeFailedErr", job.SourceName, copyError));
                         }
                     }
                     catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         folderResult.Status       = CopyStatus.Failed;
                         folderResult.ErrorMessage = ex.Message;
-                        activityLog?.Report($"⚠ Native copy of '{job.SourceName}' failed: {ex.Message}");
+                        activityLog?.Report(Loc.T("Svc_NativeFailedErr", job.SourceName, ex.Message));
                     }
                     await FlushPendingResultsAsync();
                 }
@@ -411,7 +412,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         if (DateTimeOffset.UtcNow - lastScanReport >= TimeSpan.FromSeconds(3))
                         {
                             lastScanReport = DateTimeOffset.UtcNow;
-                            activityLog?.Report($"Scanning source: {scannedFiles:N0} file(s) found so far...");
+                            activityLog?.Report(Loc.T("Svc_ScanProgress", scannedFiles));
                         }
 
                         // Special folder (e.g. a OneNote notebook — see SourceFileEntry.IsSpecialFolder):
@@ -430,7 +431,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 Status     = CopyStatus.Copying
                             };
                             pendingResults.Add(folderResult);
-                            activityLog?.Report($"Copying special folder '{name}' natively (preserves notebook/package association)...");
+                            activityLog?.Report(Loc.T("Svc_NativeCopying", name));
                             try
                             {
                                 var parentId = await spService.GetOrCreateFolderPathAsync(
@@ -438,7 +439,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 if (!await PrepareNativeCopyTargetAsync(job.TargetDriveId, parentId, name))
                                 {
                                     folderResult.Status = CopyStatus.Skipped;
-                                    activityLog?.Report($"⏭ Skipped '{name}' — already exists at target");
+                                    activityLog?.Report(Loc.T("Svc_SkippedExists", name));
                                 }
                                 else
                                 {
@@ -447,15 +448,15 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                     folderResult.Status       = copyError == null ? CopyStatus.Success : CopyStatus.Failed;
                                     folderResult.ErrorMessage = copyError;
                                     activityLog?.Report(copyError == null
-                                        ? $"✓ Native copy of '{name}' complete"
-                                        : $"⚠ Native copy of '{name}' failed: {copyError}");
+                                        ? Loc.T("Svc_NativeDone", name)
+                                        : Loc.T("Svc_NativeFailedErr", name, copyError));
                                 }
                             }
                             catch (Exception ex) when (ex is not OperationCanceledException)
                             {
                                 folderResult.Status       = CopyStatus.Failed;
                                 folderResult.ErrorMessage = ex.Message;
-                                activityLog?.Report($"⚠ Native copy of '{name}' failed: {ex.Message}");
+                                activityLog?.Report(Loc.T("Svc_NativeFailedErr", name, ex.Message));
                             }
                             if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
                             continue;
@@ -493,7 +494,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 if (existingId != null)
                                 {
                                     folderResult.Status = CopyStatus.Skipped;
-                                    activityLog?.Report($"⏭ Skipped '{displayName}' — already exists at target");
+                                    activityLog?.Report(Loc.T("Svc_SkippedExists", displayName));
                                 }
                                 else
                                 {
@@ -507,7 +508,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             {
                                 folderResult.Status       = CopyStatus.Failed;
                                 folderResult.ErrorMessage = ex.Message;
-                                activityLog?.Report($"⚠ Creating empty folder '{displayName}' failed: {ex.Message}");
+                                activityLog?.Report(Loc.T("Svc_EmptyFolderFailed", displayName, ex.Message));
                             }
                             if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
                             continue;
@@ -569,9 +570,9 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             // all, without needing an external log-timestamp analysis after the fact.
             var overheadRatio = scanElapsed > TimeSpan.Zero
                 ? throttleWaitTotal.TotalSeconds / scanElapsed.TotalSeconds : 0;
-            activityLog?.Report($"Source scan complete: {scannedFiles:N0} file(s) found in {scanElapsed.TotalSeconds:0}s"
+            activityLog?.Report(Loc.T("Svc_ScanComplete", scannedFiles, scanElapsed.TotalSeconds)
                 + (throttleEvents > 0
-                    ? $" ({throttleEvents} throttle event(s), {throttleWaitTotal.TotalSeconds:0}s waited, {overheadRatio:P0} throttle overhead)"
+                    ? " " + Loc.T("Svc_ScanThrottleInfo", throttleEvents, throttleWaitTotal.TotalSeconds, overheadRatio)
                     : ""));
         }
         await FlushPendingResultsAsync();
@@ -688,7 +689,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
 
                 if (fieldCandidates.Count > 0)
                 {
-                    activityLog?.Report($"Applying custom column values to {fieldCandidates.Count:N0} file(s)...");
+                    activityLog?.Report(Loc.T("Svc_ApplyingCustom", fieldCandidates.Count));
                     // Target listId is the same for every file in a given target library — resolve
                     // it once per distinct (site, library) pair rather than once per file.
                     var targetListIdCache = new System.Collections.Concurrent.ConcurrentDictionary<string, Task<string>>();
@@ -744,7 +745,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         {
                             result.CustomFieldStatus  = CopyStatus.Failed;
                             result.CustomFieldDetails = ex.Message;
-                            result.ErrorMessage ??= $"Custom fields: {ex.Message}";
+                            result.ErrorMessage ??= Loc.T("Svc_CustomFieldsErr", ex.Message);
                         }
                     });
                 }
@@ -775,7 +776,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         {
             int customFieldFailures = allTasks.Count(t => t.result.CustomFieldStatus == CopyStatus.Failed);
             if (customFieldFailures > 0)
-                activityLog?.Report($"⚠ Custom column values could not be fully applied for {customFieldFailures:N0} file(s) — see the Custom Fields column for details");
+                activityLog?.Report(Loc.T("Svc_CustomFieldsPartial", customFieldFailures));
         }
 
         // SPMI already stamps folder timestamps via the manifest's TimeLastModified / TimeCreated /
@@ -886,7 +887,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             // folder in the sequential `foreach` above, yet the wizard reported "Folder metadata
             // updated" with no error visible anywhere, since this pass took no activityLog either.
             completed = false;
-            activityLog?.Report($"⚠ Folder metadata pass stopped early: {ex.Message}");
+            activityLog?.Report(Loc.T("Svc_FolderMetaStopped", ex.Message));
         }
         finally { spService.Throttled -= onThrottle; }
         onDone?.Report(completed);
@@ -918,7 +919,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             // Cancelled, not Skipped: this item never started (or didn't finish) — Skipped
             // otherwise means "compared and found already up to date." See CopyStatus.Cancelled.
             result.Status       = CopyStatus.Cancelled;
-            result.ErrorMessage = "Cancelled";
+            result.ErrorMessage = Loc.T("Svc_Cancelled");
             return;
         }
         // Set once the file itself has copied/skipped successfully — used below to tell "cancelled
@@ -1031,7 +1032,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 // Cancelled, not Skipped: this item never started (or didn't finish) — Skipped
                 // otherwise means "compared and found already up to date." See CopyStatus.Cancelled.
                 result.Status       = CopyStatus.Cancelled;
-                result.ErrorMessage = "Cancelled";
+                result.ErrorMessage = Loc.T("Svc_Cancelled");
             }
             // else: the file itself already copied/skipped successfully (result.Status is already
             // Success or Skipped) — cancellation only interrupted the best-effort permission
@@ -1043,7 +1044,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             var detail = oe.Error?.Message ?? oe.Message;
             System.Diagnostics.Debug.WriteLine($"[CopySingle] ODataError HTTP {oe.ResponseStatusCode}: code={oe.Error?.Code}, message={detail}");
             result.Status       = CopyStatus.Failed;
-            result.ErrorMessage = $"SharePoint error ({oe.ResponseStatusCode}): {detail}";
+            result.ErrorMessage = Loc.T("Svc_SpError", oe.ResponseStatusCode, detail);
         }
         catch (Exception ex)
         {
@@ -1059,7 +1060,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
     private async Task<string> ResolveTargetParentAsync(CopyJob job, CancellationToken ct)
     {
         if (string.IsNullOrEmpty(job.TargetParentItemId))
-            throw new Exception("No target parent folder specified.");
+            throw new Exception(Loc.T("Svc_NoTargetParent"));
 
         if (string.IsNullOrEmpty(job.TargetSubFolderPath))
             return job.TargetParentItemId;
@@ -1088,7 +1089,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         if (job.IsPage)
         {
             if (string.IsNullOrEmpty(job.TargetLibraryServerRelativeUrl))
-                throw new Exception("Cannot create page: target library server-relative URL is not set.");
+                throw new Exception(Loc.T("Svc_NoTargetLibUrl"));
             var targetFolderRelUrl = string.IsNullOrEmpty(job.TargetSubFolderPath)
                 ? job.TargetLibraryServerRelativeUrl
                 : $"{job.TargetLibraryServerRelativeUrl.TrimEnd('/')}/{job.TargetSubFolderPath}";
@@ -1126,7 +1127,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     // Fail loudly: a stub whose content never saved is a blank page, and marking
                     // it Success hid exactly that. Re-running with overwrite recreates it.
                     System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] SavePage FAILED: {saveErr}");
-                    throw new Exception($"Page created but its content could not be saved: {saveErr}");
+                    throw new Exception(Loc.T("Svc_PageSaveFailed", saveErr));
                 }
                 else
                 {
@@ -1146,13 +1147,13 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 // "content copy disabled" case, which never reaches this branch) — the stub that
                 // CreatePageStubAsync already created is a blank page, and letting the caller mark
                 // this Success hid exactly that.
-                throw new Exception($"Page created but its source content could not be read: {metaErr ?? "unknown error"}");
+                throw new Exception(Loc.T("Svc_PageReadFailed", metaErr ?? Loc.T("Svc_UnknownError")));
             }
             else
             {
                 // copyPages is deliberately off — pageMeta was never fetched, so this stub is an
                 // intentionally shallow copy, not a failure.
-                result.ErrorMessage = "Page copied without content (Copy Pages option is off)";
+                result.ErrorMessage = Loc.T("Svc_PageNoContent");
             }
         }
         else
@@ -1321,7 +1322,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     // since the `if` above simply skipped the delete with no error recorded. The
                     // upload-time version now stays behind as a permanent duplicate entry in the
                     // target's version history alongside the correctly-dated phantom.
-                    result.ErrorMessage ??= "Could not identify the temporary upload version to remove — an extra version may remain in history";
+                    result.ErrorMessage ??= Loc.T("Svc_TempVersionNotFound");
                 }
             }
 
@@ -1597,11 +1598,11 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         }
         else
         {
-            detail = perm.Applied == 1 ? "1 role assignment applied" : $"{perm.Applied} role assignments applied";
+            detail = perm.Applied == 1 ? Loc.T("Svc_OneRole") : Loc.T("Svc_RolesApplied", perm.Applied);
             if (perm.SkippedPrincipals.Count > 0)
-                detail += $"; skipped {perm.SkippedPrincipals.Count} unresolvable: {string.Join(", ", perm.SkippedPrincipals)}";
+                detail += Loc.T("Svc_PermSkipped", perm.SkippedPrincipals.Count, string.Join(", ", perm.SkippedPrincipals));
             if (perm.FailedRoles is { Count: > 0 })
-                detail += $"; {perm.FailedRoles.Count} failed: {string.Join(", ", perm.FailedRoles.Take(3))}";
+                detail += Loc.T("Svc_PermFailed", perm.FailedRoles.Count, string.Join(", ", perm.FailedRoles.Take(3)));
             status = CopyStatus.Success;
         }
 

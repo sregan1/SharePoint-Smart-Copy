@@ -1,4 +1,5 @@
-﻿using Microsoft.Identity.Client;
+﻿using SharePointSmartCopy.Localization;
+using Microsoft.Identity.Client;
 using SharePointSmartCopy.Models;
 
 namespace SharePointSmartCopy.Services;
@@ -63,7 +64,7 @@ public class AuthService
     public async Task<string> GetAccessTokenAsync(bool forceInteractive = false, CancellationToken cancellationToken = default)
     {
         if (_app == null)
-            throw new InvalidOperationException("Auth service not configured. Please set Client ID in Settings.");
+            throw new InvalidOperationException(Loc.T("Svc_Auth_NotConfiguredClientId"));
 
         var cacheKey = string.Join(' ', _scopes);
         if (!forceInteractive && TryGetCachedToken(cacheKey, out var fastToken))
@@ -108,7 +109,7 @@ public class AuthService
     public async Task<string> GetSharePointTokenAsync(string siteUrl, string spScope = "Sites.ReadWrite.All", CancellationToken cancellationToken = default, bool forceRefresh = false)
     {
         if (_app == null)
-            throw new InvalidOperationException("Auth service not configured. Please sign in first.");
+            throw new InvalidOperationException(Loc.T("Svc_Auth_NotConfiguredSignIn"));
 
         var uri    = new Uri(siteUrl.TrimEnd('/'));
         var scopes = new[] { $"{uri.Scheme}://{uri.Host}/{spScope}" };

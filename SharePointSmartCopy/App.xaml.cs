@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using SharePointSmartCopy.Localization;
+using System.Windows;
 
 namespace SharePointSmartCopy;
 
@@ -7,15 +8,20 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        Services.ThemeManager.Apply(Models.AppSettings.Load().Theme);
+        var settings = Models.AppSettings.Load();
+        Localization.Loc.Apply(settings.Language);
+        if (Localization.Loc.IsRtl)
+            EventManager.RegisterClassHandler(typeof(Window), FrameworkElement.LoadedEvent,
+                new EventHandler((s, _) => ((Window)s!).FlowDirection = Localization.Loc.FlowDirection));
+        Services.ThemeManager.Apply(settings.Theme);
         DispatcherUnhandledException += (_, args) =>
         {
             var ex  = args.Exception;
             var msg = ex.Message;
             if (ex.InnerException != null)
-                msg += $"\n\nInner: {ex.InnerException.Message}";
-            MessageBox.Show($"Unexpected error:\n\n{msg}",
-                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                msg += "\n\n" + Loc.T("Dlg_InnerError", ex.InnerException.Message);
+            MessageBox.Show(Loc.T("Dlg_UnexpectedError", msg),
+                Loc.T("Dlg_ErrorTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
             args.Handled = true;
         };
 

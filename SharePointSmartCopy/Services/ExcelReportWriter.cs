@@ -1,3 +1,4 @@
+using SharePointSmartCopy.Localization;
 using ClosedXML.Excel;
 using System.IO;
 using SharePointSmartCopy.Models;
@@ -16,12 +17,12 @@ public static class ExcelReportWriter
     public static void Write(string path, VerificationReportService.Result result)
     {
         using var wb = new XLWorkbook();
-        WriteOverviewSheet(wb.Worksheets.Add("Overview"), result);
-        WriteFileSheet(wb.Worksheets.Add("Source"), result.SourceFiles);
-        WriteFileSheet(wb.Worksheets.Add("Target"), result.TargetFiles);
-        WriteComparisonSheet(wb.Worksheets.Add("Comparison"), result.Comparison);
+        WriteOverviewSheet(wb.Worksheets.Add(Loc.T("Svc_Sheet_Overview")), result);
+        WriteFileSheet(wb.Worksheets.Add(Loc.T("Svc_Sheet_Source")), result.SourceFiles);
+        WriteFileSheet(wb.Worksheets.Add(Loc.T("Svc_Sheet_Target")), result.TargetFiles);
+        WriteComparisonSheet(wb.Worksheets.Add(Loc.T("Svc_Sheet_Comparison")), result.Comparison);
         if (result.ScanErrors.Count > 0)
-            WriteScanErrorsSheet(wb.Worksheets.Add("Scan Errors"), result.ScanErrors);
+            WriteScanErrorsSheet(wb.Worksheets.Add(Loc.T("Svc_Sheet_ScanErrors")), result.ScanErrors);
         wb.SaveAs(path);
     }
 
@@ -34,7 +35,7 @@ public static class ExcelReportWriter
         int dateMismatch    = result.Comparison.Count(r => r.Status == ComparisonStatus.DateMismatch);
         int unverified      = result.Comparison.Count(r => r.Status == ComparisonStatus.Unverified);
 
-        ws.Cell(1, 1).Value = "Verification Summary";
+        ws.Cell(1, 1).Value = Loc.T("Svc_Rpt_Summary");
         ws.Cell(1, 1).Style.Font.Bold = true;
         ws.Cell(1, 1).Style.Font.FontSize = 14;
 
@@ -52,52 +53,52 @@ public static class ExcelReportWriter
         XLColor fill;
         if (noDifferences && unverified == 0)
         {
-            headline.Value = "✓ ALL FILES MATCH";
-            detail.Value   = $"{matched:N0} file(s) matched — every file in source was found in target, with no extras.";
+            headline.Value = Loc.T("Svc_Rpt_AllMatch");
+            detail.Value   = Loc.T("Svc_Rpt_AllMatchDetail", matched);
             fill = MatchFill;
         }
         else if (noDifferences)
         {
-            headline.Value = "✓ NO DIFFERENCES FOUND";
-            detail.Value   = $"{matched:N0} file(s) matched, but {unverified:N0} file(s) had no comparable signal (hash and size unavailable) and could not be verified — see the Comparison tab.";
+            headline.Value = Loc.T("Svc_Rpt_NoDiff");
+            detail.Value   = Loc.T("Svc_Rpt_NoDiffDetail", matched, unverified);
             fill = UnverifiedFill;
         }
         else
         {
-            headline.Value = "⚠ CONTENT DOES NOT MATCH";
-            var parts = new List<string> { $"{matched:N0} file(s) matched." };
-            if (contentMismatch > 0) parts.Add($"{contentMismatch:N0} content mismatch.");
-            if (dateMismatch    > 0) parts.Add($"{dateMismatch:N0} date mismatch.");
-            if (onlyInSource    > 0) parts.Add($"{onlyInSource:N0} only in source.");
-            if (onlyInTarget    > 0) parts.Add($"{onlyInTarget:N0} only in target.");
-            if (unverified      > 0) parts.Add($"{unverified:N0} could not be verified (no comparable signal).");
-            if (result.ScanErrors.Count > 0) parts.Add($"{result.ScanErrors.Count} location(s) could not be scanned — see the Scan Errors tab.");
-            parts.Add("See the Comparison tab for details.");
+            headline.Value = Loc.T("Svc_Rpt_ContentNoMatch");
+            var parts = new List<string> { Loc.T("Svc_Rpt_PartMatched", matched) };
+            if (contentMismatch > 0) parts.Add(Loc.T("Svc_Rpt_PartContent", contentMismatch));
+            if (dateMismatch    > 0) parts.Add(Loc.T("Svc_Rpt_PartDate", dateMismatch));
+            if (onlyInSource    > 0) parts.Add(Loc.T("Svc_Rpt_PartOnlySrc", onlyInSource));
+            if (onlyInTarget    > 0) parts.Add(Loc.T("Svc_Rpt_PartOnlyTgt", onlyInTarget));
+            if (unverified      > 0) parts.Add(Loc.T("Svc_Rpt_PartUnverified", unverified));
+            if (result.ScanErrors.Count > 0) parts.Add(Loc.T("Svc_Rpt_PartScanErr", result.ScanErrors.Count));
+            parts.Add(Loc.T("Svc_Rpt_PartSee"));
             detail.Value = string.Join(" ", parts);
             fill = MismatchFill;
         }
         ws.Range(3, 1, 3, 5).Style.Fill.BackgroundColor = fill;
         ws.Range(4, 1, 4, 5).Style.Fill.BackgroundColor = fill;
 
-        ws.Cell(6, 1).Value = "Files in Source";
+        ws.Cell(6, 1).Value = Loc.T("Svc_Rpt_FilesInSource");
         ws.Cell(6, 2).Value = result.SourceFiles.Count;
-        ws.Cell(7, 1).Value = "Files in Target";
+        ws.Cell(7, 1).Value = Loc.T("Svc_Rpt_FilesInTarget");
         ws.Cell(7, 2).Value = result.TargetFiles.Count;
-        ws.Cell(8, 1).Value = "Matched (in both)";
+        ws.Cell(8, 1).Value = Loc.T("Svc_Rpt_Matched");
         ws.Cell(8, 2).Value = matched;
-        ws.Cell(9, 1).Value = "Content Mismatch";
+        ws.Cell(9, 1).Value = Loc.T("Svc_Rpt_ContentMismatch");
         ws.Cell(9, 2).Value = contentMismatch;
-        ws.Cell(10, 1).Value = "Date Mismatch";
+        ws.Cell(10, 1).Value = Loc.T("Svc_Rpt_DateMismatch");
         ws.Cell(10, 2).Value = dateMismatch;
-        ws.Cell(11, 1).Value = "Only in Source";
+        ws.Cell(11, 1).Value = Loc.T("Svc_Rpt_OnlyInSource");
         ws.Cell(11, 2).Value = onlyInSource;
-        ws.Cell(12, 1).Value = "Only in Target";
+        ws.Cell(12, 1).Value = Loc.T("Svc_Rpt_OnlyInTarget");
         ws.Cell(12, 2).Value = onlyInTarget;
-        ws.Cell(13, 1).Value = "Unverified (no comparable signal)";
+        ws.Cell(13, 1).Value = Loc.T("Svc_Rpt_Unverified");
         ws.Cell(13, 2).Value = unverified;
-        ws.Cell(14, 1).Value = "Total Size in Source";
+        ws.Cell(14, 1).Value = Loc.T("Svc_Rpt_TotalSrc");
         ws.Cell(14, 2).Value = SizeFormatter.FormatBytes(result.SourceFiles.Sum(f => f.Size ?? 0));
-        ws.Cell(15, 1).Value = "Total Size in Target";
+        ws.Cell(15, 1).Value = Loc.T("Svc_Rpt_TotalTgt");
         ws.Cell(15, 2).Value = SizeFormatter.FormatBytes(result.TargetFiles.Sum(f => f.Size ?? 0));
         ws.Range(6, 1, 15, 1).Style.Font.Bold = true;
 
@@ -106,9 +107,9 @@ public static class ExcelReportWriter
 
     private static void WriteFileSheet(IXLWorksheet ws, List<ScannedFile> files)
     {
-        ws.Cell(1, 1).Value = "Relative Path";
-        ws.Cell(1, 2).Value = "Name";
-        ws.Cell(1, 3).Value = "Last Modified (UTC)";
+        ws.Cell(1, 1).Value = Loc.T("Svc_Rpt_ColRelPath");
+        ws.Cell(1, 2).Value = Loc.T("Svc_Rpt_ColName");
+        ws.Cell(1, 3).Value = Loc.T("Svc_Rpt_ColLastMod");
         FormatHeader(ws, 3);
 
         int row = 2;
@@ -125,18 +126,18 @@ public static class ExcelReportWriter
 
     private static void WriteComparisonSheet(IXLWorksheet ws, List<ComparisonRow> rows)
     {
-        ws.Cell(1, 1).Value = "Relative Path";
-        ws.Cell(1, 2).Value = "Status";
-        ws.Cell(1, 3).Value = "Source Value";
-        ws.Cell(1, 4).Value = "Target Value";
-        ws.Cell(1, 5).Value = "Note";
+        ws.Cell(1, 1).Value = Loc.T("Svc_Rpt_ColRelPath");
+        ws.Cell(1, 2).Value = Loc.T("Svc_Rpt_ColStatus");
+        ws.Cell(1, 3).Value = Loc.T("Svc_Rpt_ColSrcValue");
+        ws.Cell(1, 4).Value = Loc.T("Svc_Rpt_ColTgtValue");
+        ws.Cell(1, 5).Value = Loc.T("Svc_Rpt_ColNote");
         FormatHeader(ws, 5);
 
         int row = 2;
         foreach (var r in rows.OrderBy(r => r.RelativePath, StringComparer.OrdinalIgnoreCase))
         {
             ws.Cell(row, 1).Value = r.RelativePath;
-            ws.Cell(row, 2).Value = r.Status.ToString();
+            ws.Cell(row, 2).Value = Loc.T("Svc_CmpStatus_" + r.Status);
             // Decided ONCE per row, not independently per cell: ClassifyMatch only trusts a hash
             // comparison when BOTH sides have one — if either is missing, the verdict was decided
             // by size on both sides. Picking hash-if-available per cell independently could show a
@@ -175,12 +176,12 @@ public static class ExcelReportWriter
         else if (bothHashesPresent)
             cell.Value = hash;
         else if (size.HasValue)
-            cell.Value = $"{size.Value:N0} bytes (by size — hash unavailable on at least one side)";
+            cell.Value = Loc.T("Svc_Rpt_BySize", size.Value);
     }
 
     private static void WriteScanErrorsSheet(IXLWorksheet ws, List<string> errors)
     {
-        ws.Cell(1, 1).Value = "Root that could not be scanned";
+        ws.Cell(1, 1).Value = Loc.T("Svc_Rpt_ScanErrRoot");
         FormatHeader(ws, 1);
 
         int row = 2;

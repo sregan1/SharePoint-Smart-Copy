@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using SharePointSmartCopy.Localization;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -193,7 +194,7 @@ public class SharePointService
     }
 
     private GraphServiceClient Graph => _graphClient
-        ?? throw new InvalidOperationException("Not initialized. Please sign in first.");
+        ?? throw new InvalidOperationException(Loc.T("Svc_Sp_NotInitializedPleaseSign"));
 
     // ── Shared throttle awareness ───────────────────────────────────────────────
     // Every Throttled event (from any phase — scan, analysis, download, $batch) records how long the
@@ -252,7 +253,7 @@ public class SharePointService
         var key = string.IsNullOrEmpty(path) ? hostname : $"{hostname}:/{path}";
 
         var site = await Graph.Sites[key].GetAsync();
-        return site?.Id ?? throw new Exception($"Could not find site at {siteUrl}");
+        return site?.Id ?? throw new Exception(Loc.T("Svc_Sp_CouldNotFindSite", siteUrl));
     }
 
     // ── Libraries ─────────────────────────────────────────────────────────────
@@ -914,13 +915,13 @@ public class SharePointService
     public async Task<Stream> DownloadFileAsync(string driveId, string itemId)
     {
         var stream = await Graph.Drives[driveId].Items[itemId].Content.GetAsync();
-        return stream ?? throw new Exception("Empty response downloading file.");
+        return stream ?? throw new Exception(Loc.T("Svc_Sp_EmptyResponseDownloadingFile"));
     }
 
     public async Task<Stream> DownloadVersionAsync(string driveId, string itemId, string versionId)
     {
         var stream = await Graph.Drives[driveId].Items[itemId].Versions[versionId].Content.GetAsync();
-        return stream ?? throw new Exception("Empty response downloading version content.");
+        return stream ?? throw new Exception(Loc.T("Svc_Sp_EmptyResponseDownloadingVersion"));
     }
 
     // Result of a ranged content fetch: whether the server actually honored the Range request
@@ -1933,7 +1934,7 @@ public class SharePointService
     {
         string? digest = await GetFormDigestAsync(siteUrl);
         if (digest == null)
-            return "Could not obtain a request digest for the CSOM call";
+            return Loc.T("Svc_Sp_CouldNotObtainA");
 
         const string clientContextTypeId = "{3747adcd-a3c3-41b9-bfab-4a64dd2f1e0a}";
         var objectPaths =
@@ -1974,9 +1975,9 @@ public class SharePointService
                     first.TryGetProperty("ErrorInfo", out var errInfo) &&
                     errInfo.ValueKind == JsonValueKind.Object)
                 {
-                    var msg  = errInfo.TryGetProperty("ErrorMessage", out var m) ? m.GetString() : "unknown CSOM error";
+                    var msg  = errInfo.TryGetProperty("ErrorMessage", out var m) ? m.GetString() : Loc.T("Svc_Sp_UnknownCSOMError");
                     var code = errInfo.TryGetProperty("ErrorCode", out var c) ? c.ToString() : "?";
-                    return $"CSOM error (code {code}): {msg}";
+                    return Loc.T("Svc_Sp_CSOMErrorCode", code, msg);
                 }
             }
             return null;
@@ -2071,12 +2072,12 @@ public class SharePointService
             if (http.StatusCode != System.Net.HttpStatusCode.Accepted)
             {
                 var body = await http.Content.ReadAsStringAsync(ct);
-                return $"Native copy failed to start: HTTP {(int)http.StatusCode}: {body[..Math.Min(body.Length, 300)]}";
+                return Loc.T("Svc_Sp_NativeCopyFailedTo", (int)http.StatusCode, body[..Math.Min(body.Length, 300)]);
             }
 
             var monitorUrl = http.Headers.Location?.ToString();
             if (string.IsNullOrEmpty(monitorUrl))
-                return "Native copy started but returned no monitor URL to track completion";
+                return Loc.T("Svc_Sp_NativeCopyStartedBut");
 
             // The monitor URL isn't guaranteed to be on graph.microsoft.com — for a SharePoint
             // (as opposed to OneDrive personal) drive it points at a SharePoint-hosted tracking
@@ -2103,7 +2104,7 @@ public class SharePointService
                 using var monResp = await _httpClient.SendAsync(monReq, ct);
                 var monBody = await monResp.Content.ReadAsStringAsync(ct);
                 if (!monResp.IsSuccessStatusCode)
-                    return $"Native copy monitor failed: HTTP {(int)monResp.StatusCode}: {monBody[..Math.Min(monBody.Length, 300)]} | monitor URL: {monitorUrl}";
+                    return Loc.T("Svc_Sp_NativeCopyMonitorFailed", (int)monResp.StatusCode, monBody[..Math.Min(monBody.Length, 300)], monitorUrl);
 
                 using var monDoc = JsonDocument.Parse(monBody);
                 var status = monDoc.RootElement.TryGetProperty("status", out var s) ? s.GetString() : null;
@@ -2111,15 +2112,15 @@ public class SharePointService
                 if (string.Equals(status, "failed", StringComparison.OrdinalIgnoreCase))
                 {
                     var err = monDoc.RootElement.TryGetProperty("error", out var e) ? e.ToString() : monBody;
-                    return $"Native copy failed: {err[..Math.Min(err.Length, 300)]}";
+                    return Loc.T("Svc_Sp_NativeCopyFailed", err[..Math.Min(err.Length, 300)]);
                 }
                 // otherwise "inProgress"/"notStarted" — keep polling
             }
-            return "Native copy timed out waiting for completion";
+            return Loc.T("Svc_Sp_NativeCopyTimedOut");
         }
         catch (Exception ex)
         {
-            return $"Native copy exception: {ex.Message}";
+            return Loc.T("Svc_Sp_NativeCopyException", ex.Message);
         }
     }
 
@@ -2260,7 +2261,7 @@ public class SharePointService
             }, siteUrl);
             var idBody = await idResponse.Content.ReadAsStringAsync();
             if (!idResponse.IsSuccessStatusCode)
-                return ($"Could not resolve folder's list item ID: HTTP {(int)idResponse.StatusCode}: {idBody[..Math.Min(idBody.Length, 200)]}", null);
+                return (Loc.T("Svc_Sp_CouldNotResolveFolder", (int)idResponse.StatusCode, idBody[..Math.Min(idBody.Length, 200)]), null);
             try
             {
                 using var idDoc = JsonDocument.Parse(idBody);
@@ -2270,7 +2271,7 @@ public class SharePointService
             }
             catch (Exception ex)
             {
-                return ($"Could not parse folder's list item ID from '{idBody[..Math.Min(idBody.Length, 100)]}': {ex.Message}", null);
+                return (Loc.T("Svc_Sp_CouldNotParseFolder", idBody[..Math.Min(idBody.Length, 100)], ex.Message), null);
             }
         }
 
@@ -2299,7 +2300,7 @@ public class SharePointService
             createdById = await EnsureUserAsync(siteUrl, createdByEmail);
             if (createdById == null)
             {
-                skipped.Add($"Author ({createdByEmail} not a resolvable account on this site)");
+                skipped.Add(Loc.T("Svc_Sp_AuthorNotAResolvable", createdByEmail));
                 resolvedCreatedBy = null;
             }
         }
@@ -2315,14 +2316,14 @@ public class SharePointService
                 modifiedById = await EnsureUserAsync(siteUrl, modifiedByEmail);
                 if (modifiedById == null)
                 {
-                    skipped.Add($"Editor ({modifiedByEmail} not a resolvable account on this site)");
+                    skipped.Add(Loc.T("Svc_Sp_EditorNotAResolvable", modifiedByEmail));
                     resolvedModifiedBy = null;
                 }
             }
         }
 
         if (createdById == null && modifiedById == null && createdDateTime == null && modifiedDateTime == null && !needsColorWrite)
-            return (skipped.Count > 0 ? $"Nothing to write — skipped: {string.Join(", ", skipped)}" : null, null);
+            return (skipped.Count > 0 ? Loc.T("Svc_Sp_NothingToWriteSkipped", string.Join(", ", skipped)) : null, null);
 
         // TENTH attempt 2026-07-09 — REST is now fully exhausted (Person-field format x2, REST path
         // x2, bNewDocumentUpdate x2, field combination x2 — nine variations, all producing the
@@ -2344,7 +2345,7 @@ public class SharePointService
         if (needsColorWrite && !string.IsNullOrEmpty(colorHex) && !string.IsNullOrEmpty(folderServerRelativeUrl))
         {
             var stampError = await StampFolderColorAsync(siteUrl, folderServerRelativeUrl!, colorHex!);
-            if (stampError != null) colorWarning = $"folder color not applied — {stampError}";
+            if (stampError != null) colorWarning = Loc.T("Svc_Sp_FolderColorNotApplied", stampError);
         }
 
         var csomError = await PatchFolderViaCsomAsync(
@@ -2357,7 +2358,7 @@ public class SharePointService
         // separately so an unsupported/absent color field never counts as a metadata failure.
         if (csomError != null)
             return (csomError + (skipped.Count > 0 ? $" | skipped: {string.Join(", ", skipped)}" : ""), colorWarning);
-        return (skipped.Count > 0 ? $"Partially corrected — skipped: {string.Join(", ", skipped)}" : null, colorWarning);
+        return (skipped.Count > 0 ? Loc.T("Svc_Sp_PartiallyCorrectedSkipped", string.Join(", ", skipped)) : null, colorWarning);
     }
 
     // Sets a folder's Author/Editor/Created/Modified via CSOM's ProcessQuery endpoint, using
@@ -2381,7 +2382,7 @@ public class SharePointService
 
         string? digest = await GetFormDigestAsync(siteUrl);
         if (digest == null)
-            return "Could not obtain a request digest for the CSOM call";
+            return Loc.T("Svc_Sp_CouldNotObtainA");
 
         const string fieldUserValueTypeId = "{c956ab54-16bd-4c18-89d2-996f57282a6f}";
         const string clientContextTypeId = "{3747adcd-a3c3-41b9-bfab-4a64dd2f1e0a}";
@@ -2463,15 +2464,15 @@ public class SharePointService
                             first.TryGetProperty("ErrorInfo", out var errInfo) &&
                             errInfo.ValueKind == JsonValueKind.Object)
                         {
-                            var msg = errInfo.TryGetProperty("ErrorMessage", out var m) ? m.GetString() : "unknown CSOM error";
+                            var msg = errInfo.TryGetProperty("ErrorMessage", out var m) ? m.GetString() : Loc.T("Svc_Sp_UnknownCSOMError");
                             var code = errInfo.TryGetProperty("ErrorCode", out var c) ? c.ToString() : "?";
-                            return $"CSOM error (code {code}): {msg}";
+                            return Loc.T("Svc_Sp_CSOMErrorCode", code, msg);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    return $"Could not parse CSOM response: {ex.Message} | body: {body[..Math.Min(body.Length, 300)]}";
+                    return Loc.T("Svc_Sp_CouldNotParseCSOM", ex.Message, body[..Math.Min(body.Length, 300)]);
                 }
                 return null;
             }
@@ -2728,14 +2729,14 @@ public class SharePointService
             if (!string.IsNullOrEmpty(expectedCreatedBy) &&
                 !string.Equals(actualAuthor, expectedCreatedBy, StringComparison.OrdinalIgnoreCase) &&
                 actualAuthor?.IndexOf(expectedCreatedBy, StringComparison.OrdinalIgnoreCase) < 0)
-                problems.Add($"Author still '{actualAuthor}', expected '{expectedCreatedBy}'");
+                problems.Add(Loc.T("Svc_Sp_AuthorStillExpected", actualAuthor, expectedCreatedBy));
             if (!string.IsNullOrEmpty(expectedModifiedBy) &&
                 !string.Equals(actualEditor, expectedModifiedBy, StringComparison.OrdinalIgnoreCase) &&
                 actualEditor?.IndexOf(expectedModifiedBy, StringComparison.OrdinalIgnoreCase) < 0)
-                problems.Add($"Editor still '{actualEditor}', expected '{expectedModifiedBy}'");
+                problems.Add(Loc.T("Svc_Sp_EditorStillExpected", actualEditor, expectedModifiedBy));
 
             return problems.Count > 0
-                ? $"Write reported no error but did not persist — {string.Join("; ", problems)}"
+                ? Loc.T("Svc_Sp_WriteReportedNoError", string.Join("; ", problems))
                 : null;
         }
         catch
@@ -2749,7 +2750,7 @@ public class SharePointService
         string? createdByEmail = null, string? modifiedByEmail = null)
     {
         var ids = await GetSharePointIdsAsync(driveId, itemId);
-        if (ids == null) return "SP IDs unavailable — item not found or sharepointIds not propagated";
+        if (ids == null) return Loc.T("Svc_Sp_SPIDsUnavailableItem");
 
         var (siteUrl, listId, listItemId) = ids.Value;
         return await PatchTimestampsCoreAsync(siteUrl, listId, listItemId, modified, created, createdByEmail, modifiedByEmail);
@@ -2875,13 +2876,13 @@ public class SharePointService
                             }
                         }
                         if (fieldErrors.Count > 0)
-                            return $"Field errors: {string.Join("; ", fieldErrors)}";
+                            return Loc.T("Svc_Sp_FieldErrors", string.Join("; ", fieldErrors));
                     }
                 }
                 catch (Exception ex)
                 {
-                    return $"Could not parse ValidateUpdateListItem response ({ex.Message}) — " +
-                           $"metadata may not have been applied: {body[..Math.Min(body.Length, 200)]}";
+                    return Loc.T("Svc_Sp_CouldNotParseValidateUpdateListItem", ex.Message) + " " +
+                           Loc.T("Svc_Sp_MetadataMayNotHave", body[..Math.Min(body.Length, 200)]);
                 }
 
                 return null;
@@ -3124,7 +3125,7 @@ public class SharePointService
         var root = await Graph.Drives[driveId].Root
             .GetAsync(cfg => cfg.QueryParameters.Select = ["webUrl"]);
         if (root?.WebUrl == null)
-            throw new InvalidOperationException($"Cannot determine library path for drive {driveId}.");
+            throw new InvalidOperationException(Loc.T("Svc_Sp_CannotDetermineLibraryPath", driveId));
         return Uri.UnescapeDataString(new Uri(root.WebUrl).AbsolutePath.TrimEnd('/'));
     }
 
@@ -3211,16 +3212,16 @@ public class SharePointService
             arr[0].TryGetProperty("ErrorInfo", out var errInfo) &&
             errInfo.ValueKind != JsonValueKind.Null)
         {
-            var msg = errInfo.TryGetProperty("ErrorMessage", out var m) ? m.GetString() : "Unknown CSOM error";
+            var msg = errInfo.TryGetProperty("ErrorMessage", out var m) ? m.GetString() : Loc.T("Svc_Sp_UnknownCSOMError2");
             var code = errInfo.TryGetProperty("ErrorCode", out var c) ? c.GetInt32() : 0;
             if (code == -2147024891) // E_ACCESSDENIED
             {
                 var (uTitle, uEmail, uIsAdmin) = await GetCurrentUserInfoAsync(siteUrl);
                 throw new UnauthorizedAccessException(
-                    $"The Migration API requires explicit Site Collection Administrator membership on {siteUrl}.\n\n" +
-                    $"SP sees you as: {uTitle} ({uEmail}), IsSiteAdmin={uIsAdmin}\n\n" +
-                    "Note: Global Admin / SharePoint Admin does not automatically populate this list.\n" +
-                    "Fix: go to the target site → Site Settings → Site Collection Administrators → add your account.",
+                    Loc.T("Svc_Sp_TheMigrationAPIRequires", siteUrl) +
+                    Loc.T("Svc_Sp_SPSeesYouAs", uTitle, uEmail, uIsAdmin) +
+                    Loc.T("Svc_Sp_NoteGlobalAdminSharePoint") +
+                    Loc.T("Svc_Sp_FixGoToThe"),
                     new Exception(msg));
             }
             throw new Exception($"CreateMigrationJobEncrypted CSOM error {code}: {msg}");
@@ -3238,7 +3239,7 @@ public class SharePointService
                 return g.ToString("D");
         }
 
-        throw new Exception($"Could not find job ID GUID in ProcessQuery response: {body[..Math.Min(body.Length, 500)]}");
+        throw new Exception(Loc.T("Svc_Sp_CouldNotFindJob", body[..Math.Min(body.Length, 500)]));
     }
 
     // Polls the migration job using the paging-based GetMigrationJobProgress endpoint.
@@ -3287,7 +3288,7 @@ public class SharePointService
                 // HttpClient timeout on a single poll GET — the import is still running
                 // server-side, so retry; only give up after several hung polls in a row.
                 if (++consecutiveTimeouts >= 3)
-                    throw new Exception("Migration job progress polling timed out 3 consecutive times — import outcome unknown");
+                    throw new Exception(Loc.T("Svc_Sp_MigrationJobProgressPolling"));
                 continue;
             }
 
@@ -3476,7 +3477,7 @@ public class SharePointService
                     // this method exists to prevent. Throw instead so the failure is visible.
                     var errBody = await response.Content.ReadAsStringAsync();
                     throw new HttpRequestException(
-                        $"Listing folder files failed: HTTP {(int)response.StatusCode} for {folderServerRelativeUrl} — " +
+                        Loc.T("Svc_Sp_ListingFolderFilesFailed", (int)response.StatusCode, folderServerRelativeUrl) + " " +
                         $"{errBody[..Math.Min(errBody.Length, 300)]}");
                 }
 
@@ -3709,7 +3710,7 @@ public class SharePointService
         }
 
         Trace($"bin={recycleBinGuid ?? "null"}");
-        if (string.IsNullOrEmpty(recycleBinGuid)) return Done(false, $"recycle returned no bin id ({lastReason})");
+        if (string.IsNullOrEmpty(recycleBinGuid)) return Done(false, Loc.T("Svc_Sp_RecycleReturnedNoBin", lastReason));
 
         // Step 2: purge. recycleObject drops the item in the WEB (first-stage) recycle bin, so purge from
         // _api/web/RecycleBin; the previous code purged _api/site/RecycleBin (site collection / second
@@ -3748,7 +3749,7 @@ public class SharePointService
     // Trims a SharePoint REST error body to a short single line for logging.
     private static string Trim(string body) =>
         System.Text.RegularExpressions.Regex.Replace(body ?? "", @"\s+", " ").Trim() is { Length: > 0 } s
-            ? s[..Math.Min(s.Length, 200)] : "(empty body)";
+            ? s[..Math.Min(s.Length, 200)] : Loc.T("Svc_Sp_EmptyBody");
 
     private async Task<(bool ok, string? reason)> TryDeleteObjectByIdAsync(
         string siteUrl, string uniqueId, Action<string>? trace = null)
@@ -3846,7 +3847,7 @@ public class SharePointService
         }));
 
         if (!uploadResult.UploadSucceeded)
-            throw new Exception("Large file upload failed.");
+            throw new Exception(Loc.T("Svc_Sp_LargeFileUploadFailed"));
 
         progress?.Report(100);
         return uploadResult.ItemResponse?.Id ?? string.Empty;
@@ -3949,7 +3950,7 @@ public class SharePointService
     public async Task<string?> SavePageContentAsync(
         string siteUrl, int sitePagesId, PageMetadata pageMeta, string sourceSiteUrl)
     {
-        if (sitePagesId == 0) return "SitePages ID unknown — cannot save content";
+        if (sitePagesId == 0) return Loc.T("Svc_Sp_SitePagesIDUnknownCannot");
 
         string? SubstUrl(string? json) =>
             json == null ? null : SubstituteUrls(json, sourceSiteUrl, siteUrl);
@@ -3997,7 +3998,7 @@ public class SharePointService
     // Must be called after SavePageContentAsync so the published version contains the content.
     public async Task<string?> PublishPageAsync(string siteUrl, int sitePagesId)
     {
-        if (sitePagesId == 0) return "SitePages ID unknown — cannot publish";
+        if (sitePagesId == 0) return Loc.T("Svc_Sp_SitePagesIDUnknownCannot2");
         var url = $"{siteUrl.TrimEnd('/')}/_api/sitepages/pages({sitePagesId})/Publish";
         try
         {
@@ -4099,7 +4100,7 @@ public class SharePointService
             var existing = await Graph.Drives[driveId].Items[parentItemId]
                 .ItemWithPath(Uri.EscapeDataString(folderName)).GetAsync();
             System.Diagnostics.Debug.WriteLine($"[GetOrCreateFolder] EXISTS: {folderName}");
-            return existing?.Id ?? throw new Exception("Null ID from existing folder.");
+            return existing?.Id ?? throw new Exception(Loc.T("Svc_Sp_NullIDFromExisting"));
         }
         catch (Microsoft.Graph.Models.ODataErrors.ODataError ex) when (ex.ResponseStatusCode == 404)
         {
@@ -4112,14 +4113,14 @@ public class SharePointService
                     Folder = new Folder()
                 });
                 System.Diagnostics.Debug.WriteLine($"[GetOrCreateFolder] created: {folderName}");
-                return created?.Id ?? throw new Exception("Null ID from created folder.");
+                return created?.Id ?? throw new Exception(Loc.T("Svc_Sp_NullIDFromCreated"));
             }
             catch (Microsoft.Graph.Models.ODataErrors.ODataError conflict) when (conflict.ResponseStatusCode == 409)
             {
                 System.Diagnostics.Debug.WriteLine($"[GetOrCreateFolder] 409 conflict (race), re-fetching: {folderName}");
                 var existing = await Graph.Drives[driveId].Items[parentItemId]
                     .ItemWithPath(Uri.EscapeDataString(folderName)).GetAsync();
-                return existing?.Id ?? throw new Exception("Null ID after concurrent folder creation.");
+                return existing?.Id ?? throw new Exception(Loc.T("Svc_Sp_NullIDAfterConcurrent"));
             }
         }
     }
@@ -4431,7 +4432,7 @@ public class SharePointService
                         // A failed page silently dropped every item beyond it from the bulk cache —
                         // their files then copied with NO custom column values and reported Success.
                         throw new HttpRequestException(
-                            $"Bulk custom-field read failed: HTTP {(int)response.StatusCode} — {body[..Math.Min(body.Length, 300)]}");
+                            Loc.T("Svc_Sp_BulkCustomFieldRead", (int)response.StatusCode, body[..Math.Min(body.Length, 300)]));
                     }
 
                     using var doc = JsonDocument.Parse(body);
@@ -4492,8 +4493,8 @@ public class SharePointService
             }
 
             if (excludedFields.Count > 0)
-                warningLog?.Report($"⚠ {excludedFields.Count} custom column(s) could not be read and were skipped "
-                    + $"(not valid at the item level): {string.Join(", ", excludedFields)}");
+                warningLog?.Report(Loc.T("Svc_Sp_CustomColumnSCould", excludedFields.Count) + " "
+                    + Loc.T("Svc_Sp_NotValidAtThe", string.Join(", ", excludedFields)));
 
             progress?.Report((chunk + 1) * 100 / chunks.Count);
         }
@@ -4667,7 +4668,7 @@ public class SharePointService
         // Resolve target SharePoint IDs first so we can look up target column definitions
         // (needed to find the target lookup list GUID for Lookup/LookupMulti fields).
         var ids = await GetSharePointIdsAsync(driveId, itemId, ct)
-            ?? throw new Exception($"Could not resolve SharePoint IDs for {driveId}/{itemId}");
+            ?? throw new Exception(Loc.T("Svc_Sp_CouldNotResolveSharePoint", driveId, itemId));
 
         return await ApplyFileCustomFieldsCoreAsync(ids.siteUrl, ids.listId, ids.listItemId, fields, mappings, null, ct);
     }
@@ -4693,7 +4694,7 @@ public class SharePointService
         if (fields.Count == 0 && restamp == null) return null;
 
         var listItemId = await GetFileListItemIdAsync(siteUrl, serverRelativeUrl, ct)
-            ?? throw new Exception($"Could not resolve list item ID for {serverRelativeUrl}");
+            ?? throw new Exception(Loc.T("Svc_Sp_CouldNotResolveList", serverRelativeUrl));
 
         return await ApplyFileCustomFieldsCoreAsync(siteUrl, listId, listItemId.ToString(), fields, mappings, restamp, ct);
     }
@@ -4782,8 +4783,8 @@ public class SharePointService
                 // warning at all that one was dropped.
                 if (resolvedIds.Count < lookup.Entries.Length)
                     lookupErrors.Add(resolvedIds.Count == 0
-                        ? $"{targetName} (0 of {lookup.Entries.Length} values resolved)"
-                        : $"{targetName} ({lookup.Entries.Length - resolvedIds.Count} of {lookup.Entries.Length} values unresolved)");
+                        ? Loc.T("Svc_Sp_OfValuesResolved", targetName, lookup.Entries.Length)
+                        : Loc.T("Svc_Sp_OfValuesUnresolved", targetName, lookup.Entries.Length - resolvedIds.Count, lookup.Entries.Length));
                 if (resolvedIds.Count == 0) continue; // nothing resolved — skip field
                 // Single: "3", Multi: "3;#;#5;#" (SP lookup wire format with ID only)
                 var formatted = resolvedIds.Count == 1
@@ -4816,7 +4817,7 @@ public class SharePointService
             }
         }
 
-        if (formValues.Count == 0) return lookupErrors.Count > 0 ? $"Lookup unresolved: {string.Join(", ", lookupErrors)}" : null;
+        if (formValues.Count == 0) return lookupErrors.Count > 0 ? Loc.T("Svc_Sp_LookupUnresolved", string.Join(", ", lookupErrors)) : null;
 
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({listItemId})/ValidateUpdateListItem()";
 
@@ -4856,8 +4857,8 @@ public class SharePointService
                 droppedFields.Add(badColumn);
                 submittedFields.Remove(badColumn);
                 if (formValues.Count == 0)
-                    return $"Custom field errors: {string.Join(", ", droppedFields.Select(n => $"{n} (column does not exist on target)"))}"
-                        + (lookupErrors.Count > 0 ? $"; Lookup unresolved: {string.Join(", ", lookupErrors)}" : "");
+                    return Loc.T("Svc_Sp_CustomFieldErrors", string.Join(", ", droppedFields.Select(n => Loc.T("Svc_Sp_ColumnMissingOnTarget", n))))
+                        + (lookupErrors.Count > 0 ? Loc.T("Svc_Sp_LookupUnresolved2", string.Join(", ", lookupErrors)) : "");
                 continue;
             }
 
@@ -4871,8 +4872,8 @@ public class SharePointService
         // ValidateUpdateListItem returns an entry for every field in the list definition,
         // including read-only system fields (Created, Modified, etc.) that always report
         // HasException=true.  Only surface errors for fields we actually submitted.
-        var fieldErrors = new List<string>(lookupErrors.Select(n => $"{n} (lookup unresolved)"));
-        fieldErrors.AddRange(droppedFields.Select(n => $"{n} (column does not exist on target)"));
+        var fieldErrors = new List<string>(lookupErrors.Select(n => Loc.T("Svc_Sp_LookupUnresolved", n)));
+        fieldErrors.AddRange(droppedFields.Select(n => Loc.T("Svc_Sp_ColumnMissingOnTarget", n)));
         try
         {
             using var doc = JsonDocument.Parse(body);
@@ -4897,13 +4898,13 @@ public class SharePointService
                 foreach (var name in submittedFields)
                 {
                     if (!returnedFields.Contains(name))
-                        fieldErrors.Add($"{name} (not applicable to item's content type)");
+                        fieldErrors.Add(Loc.T("Svc_Sp_NotApplicableToItem", name));
                 }
             }
         }
         catch { /* ignore parse errors */ }
 
-        return fieldErrors.Count > 0 ? $"Custom field errors: {string.Join(", ", fieldErrors)}" : null;
+        return fieldErrors.Count > 0 ? Loc.T("Svc_Sp_CustomFieldErrors", string.Join(", ", fieldErrors)) : null;
     }
 
     private static string FormatFieldValueForValidate(object value)
@@ -5169,7 +5170,7 @@ public class SharePointService
         if (pageId == 0)
         {
             System.Diagnostics.Debug.WriteLine($"[GetPageMetadata] page '{fileName}' not found in SitePages list");
-            return (null, $"Page '{fileName}' not found in source Site Pages library");
+            return (null, Loc.T("Svc_Sp_PageNotFoundIn", fileName));
         }
 
         // Step 2: fetch full content by integer ID
@@ -5245,7 +5246,7 @@ public class SharePointService
         if (formValues.Count == 0) return null;
 
         var ids = await GetSharePointIdsAsync(targetDriveId, targetItemId)
-            ?? throw new Exception($"Could not resolve SharePoint IDs for {targetDriveId}/{targetItemId}");
+            ?? throw new Exception(Loc.T("Svc_Sp_CouldNotResolveSharePoint", targetDriveId, targetItemId));
         System.Diagnostics.Debug.WriteLine($"[ApplyPageMetadata] SP IDs resolved, posting ValidateUpdateListItem…");
 
         var url = $"{ids.siteUrl.TrimEnd('/')}/_api/web/lists('{ids.listId}')/items({ids.listItemId})/ValidateUpdateListItem()";
@@ -5273,7 +5274,7 @@ public class SharePointService
                 @"""[Ll]ist[Ii]d""\s*:\s*""[{]?[0-9a-fA-F\-]{36}[}]?""");
 
         var result = hasListIdRefs
-            ? "Some web parts reference list IDs from the source site and may need manual review."
+            ? Loc.T("Svc_Sp_SomeWebPartsReference")
             : null;
         System.Diagnostics.Debug.WriteLine($"[ApplyPageMetadata] DONE, result={(result ?? "OK")}");
         return result;
@@ -5342,7 +5343,7 @@ public class SharePointService
             if (!resp.IsSuccessStatusCode)
             {
                 if (throwOnError)
-                    throw new HttpRequestException($"Navigation read failed: HTTP {(int)resp.StatusCode}");
+                    throw new HttpRequestException(Loc.T("Svc_Sp_NavigationReadFailedHTTP", (int)resp.StatusCode));
                 return [];
             }
             var body = await resp.Content.ReadAsStringAsync();
@@ -5603,7 +5604,7 @@ public class SharePointService
                 // (or empty) list the caller then reported as a successful copy of 0 items.
                 var err = await resp.Content.ReadAsStringAsync(ct);
                 throw new HttpRequestException(
-                    $"Reading list items failed: HTTP {(int)resp.StatusCode} — {err[..Math.Min(err.Length, 300)]}");
+                    Loc.T("Svc_Sp_ReadingListItemsFailed", (int)resp.StatusCode, err[..Math.Min(err.Length, 300)]));
             }
             var body = await resp.Content.ReadAsStringAsync(ct);
             using var doc = JsonDocument.Parse(body);
@@ -5652,7 +5653,7 @@ public class SharePointService
                 // look absent and duplicate) — fail loudly instead.
                 var err = await resp.Content.ReadAsStringAsync(ct);
                 throw new HttpRequestException(
-                    $"Reading target list items failed: HTTP {(int)resp.StatusCode} — {err[..Math.Min(err.Length, 300)]}");
+                    Loc.T("Svc_Sp_ReadingTargetListItems", (int)resp.StatusCode, err[..Math.Min(err.Length, 300)]));
             }
             var body = await resp.Content.ReadAsStringAsync(ct);
             using var doc = JsonDocument.Parse(body);
@@ -5708,7 +5709,7 @@ public class SharePointService
             if (!resp.IsSuccessStatusCode)
             {
                 var errBody = await resp.Content.ReadAsStringAsync(ct);
-                throw new HttpRequestException($"Create item failed: {(int)resp.StatusCode} {resp.ReasonPhrase} — {errBody}");
+                throw new HttpRequestException(Loc.T("Svc_Sp_CreateItemFailed", (int)resp.StatusCode, resp.ReasonPhrase, errBody));
             }
             var respBody = await resp.Content.ReadAsStringAsync(ct);
             using var doc = JsonDocument.Parse(respBody);
@@ -5770,7 +5771,7 @@ public class SharePointService
 
         var body = await resp.Content.ReadAsStringAsync(ct);
         if (!resp.IsSuccessStatusCode)
-            return $"Field write failed ({(int)resp.StatusCode}): {body[..Math.Min(200, body.Length)]}";
+            return Loc.T("Svc_Sp_FieldWriteFailed", (int)resp.StatusCode, body[..Math.Min(200, body.Length)]);
 
         try
         {
@@ -5782,7 +5783,7 @@ public class SharePointService
                     .Select(v => v.TryGetProperty("FieldName", out var fn) ? fn.GetString() : "?")
                     .ToList();
                 if (errors.Count > 0)
-                    return $"Field errors on: {string.Join(", ", errors)}";
+                    return Loc.T("Svc_Sp_FieldErrorsOn", string.Join(", ", errors));
             }
         }
         catch { }
@@ -5818,7 +5819,7 @@ public class SharePointService
         if (!resp.IsSuccessStatusCode)
         {
             var errBody = await resp.Content.ReadAsStringAsync(ct);
-            throw new HttpRequestException($"Update item failed: {(int)resp.StatusCode} {resp.ReasonPhrase} — {errBody}");
+            throw new HttpRequestException(Loc.T("Svc_Sp_UpdateItemFailed", (int)resp.StatusCode, resp.ReasonPhrase, errBody));
         }
 
         return await ValidateUpdateItemFieldsAsync(siteUrl, listId, itemId, complexFields, createdDate, modifiedDate, ct);
@@ -5866,7 +5867,7 @@ public class SharePointService
                 // indistinguishable partial success.
                 var err = await resp.Content.ReadAsStringAsync(ct);
                 throw new HttpRequestException(
-                    $"Reading permission flags failed: HTTP {(int)resp.StatusCode} — {err[..Math.Min(err.Length, 300)]}");
+                    Loc.T("Svc_Sp_ReadingPermissionFlagsFailed", (int)resp.StatusCode, err[..Math.Min(err.Length, 300)]));
             }
             var body = await resp.Content.ReadAsStringAsync(ct);
             using var doc = JsonDocument.Parse(body);
@@ -5971,7 +5972,7 @@ public class SharePointService
         if (!resp.IsSuccessStatusCode)
         {
             var body = await resp.Content.ReadAsStringAsync(ct);
-            throw new HttpRequestException($"BreakPermissionInheritance failed: {(int)resp.StatusCode} — {body}");
+            throw new HttpRequestException(Loc.T("Svc_Sp_BreakPermissionInheritanceFailed", (int)resp.StatusCode, body));
         }
     }
 
@@ -5990,7 +5991,7 @@ public class SharePointService
         if (!resp.IsSuccessStatusCode)
         {
             var errBody = await resp.Content.ReadAsStringAsync(ct);
-            throw new HttpRequestException($"AddRoleAssignment failed: {(int)resp.StatusCode} — {errBody}");
+            throw new HttpRequestException(Loc.T("Svc_Sp_AddRoleAssignmentFailed", (int)resp.StatusCode, errBody));
         }
     }
 

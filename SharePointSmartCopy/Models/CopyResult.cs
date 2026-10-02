@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using SharePointSmartCopy.Localization;
+using System.ComponentModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -117,12 +118,12 @@ public partial class CopyResult : ObservableObject
 
     public string StatusDisplay => Status switch
     {
-        CopyStatus.Pending   => "⏳ Pending",
-        CopyStatus.Copying   => "⟳ Processing…",
-        CopyStatus.Success   => "✅ Success",
-        CopyStatus.Failed    => "❌ Failed",
-        CopyStatus.Skipped   => "⏭ Skipped",
-        CopyStatus.Cancelled => "⊘ Cancelled",
+        CopyStatus.Pending   => Loc.T("VM_StatusPending"),
+        CopyStatus.Copying   => Loc.T("VM_StatusProcessing"),
+        CopyStatus.Success   => Loc.T("VM_StatusSuccess"),
+        CopyStatus.Failed    => Loc.T("VM_StatusFailed"),
+        CopyStatus.Skipped   => Loc.T("VM_StatusSkipped"),
+        CopyStatus.Cancelled => Loc.T("VM_StatusCancelledSymbol"),
         _                    => string.Empty
     };
 
@@ -138,10 +139,10 @@ public partial class CopyResult : ObservableObject
 
     public string PermissionStatusDisplay => PermissionStatus switch
     {
-        CopyStatus.Success => "✅ Success",
-        CopyStatus.Failed  => "❌ Failed",
-        CopyStatus.Skipped => "⏭ Skipped",
-        _                  => "—"
+        CopyStatus.Success => Loc.T("VM_StatusSuccess"),
+        CopyStatus.Failed  => Loc.T("VM_StatusFailed"),
+        CopyStatus.Skipped => Loc.T("VM_StatusSkipped"),
+        _                  => Loc.T("VM_Dash")
     };
 
     public string PermissionStatusColor => PermissionStatus switch
@@ -157,9 +158,9 @@ public partial class CopyResult : ObservableObject
     // the same as a hard copy failure would overstate the severity.
     public string CustomFieldStatusDisplay => CustomFieldStatus switch
     {
-        CopyStatus.Success => "✅ Applied",
-        CopyStatus.Failed  => "⚠ Warning",
-        _                  => "—"
+        CopyStatus.Success => Loc.T("VM_StatusApplied"),
+        CopyStatus.Failed  => Loc.T("VM_StatusWarning"),
+        _                  => Loc.T("VM_Dash")
     };
 
     public string CustomFieldStatusColor => CustomFieldStatus switch

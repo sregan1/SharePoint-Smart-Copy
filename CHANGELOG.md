@@ -4,6 +4,14 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 3.6.0 — 2026-10-02
+
+### Added
+
+- **Localization in 30 languages** — the same 30 as the Smart Permissions web part (Arabic, Chinese Simplified/Traditional, Czech, Danish, Dutch, English, Finnish, French, German, Greek, Hebrew, Hindi, Hungarian, Indonesian, Italian, Japanese, Korean, Norwegian Bokmål, Polish, Portuguese Brazil/Portugal, Romanian, Russian, Spanish, Swedish, Thai, Turkish, Ukrainian, Vietnamese). The app follows the Windows display language by default; pick a specific language under Settings → Language (applies on next launch). Arabic and Hebrew switch the windows to right-to-left layout. Translations are machine-generated and pending native-speaker review.
+
+---
+
 ## 3.5.3 — 2026-08-28
 
 ### Fixed

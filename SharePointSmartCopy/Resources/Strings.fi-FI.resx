@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Ui_SharepointSmartCopy" xml:space="preserve"><value>SharePoint Smart Copy</value></data>
+  <data name="Ui_Source" xml:space="preserve"><value>Lähde</value></data>
+  <data name="Ui_Browse" xml:space="preserve"><value>Selaa</value></data>
+  <data name="Ui_Target" xml:space="preserve"><value>Kohde</value></data>
+  <data name="Ui_Options" xml:space="preserve"><value>Asetukset</value></data>
+  <data name="Ui_Copy" xml:space="preserve"><value>Kopioi</value></data>
+  <data name="Ui_Report" xml:space="preserve"><value>Raportti</value></data>
+  <data name="Ui_History" xml:space="preserve"><value>Historia</value></data>
+  <data name="Ui_Compare" xml:space="preserve"><value>Vertaa</value></data>
+  <data name="Ui_Settings" xml:space="preserve"><value>Asetukset</value></data>
+  <data name="Ui_ConnectToSourceSite" xml:space="preserve"><value>Yhdistä lähdesivustoon</value></data>
+  <data name="Ui_SourceSiteUrl" xml:space="preserve"><value>Lähdesivuston URL-osoite</value></data>
+  <data name="Ui_Connect" xml:space="preserve"><value>Yhdistä</value></data>
+  <data name="Ui_Disconnect" xml:space="preserve"><value>Katkaise yhteys</value></data>
+  <data name="Ui_Requirements" xml:space="preserve"><value>Vaatimukset</value></data>
+  <data name="Ui_WhatWouldYouLikeTo" xml:space="preserve"><value>Mitä haluat kopioida?</value></data>
+  <data name="Ui_FilesFolders" xml:space="preserve"><value>Tiedostot ja kansiot</value></data>
+  <data name="Ui_CopyIndividualFilesBetweenLibraries" xml:space="preserve"><value>Kopioi yksittäisiä tiedostoja kirjastojen välillä</value></data>
+  <data name="Ui_LibrariesLists" xml:space="preserve"><value>Kirjastot ja luettelot</value></data>
+  <data name="Ui_RecreateLibrariesListsWithStructure" xml:space="preserve"><value>Luo kirjastot ja luettelot uudelleen rakenteineen ja sarakkeineen</value></data>
+  <data name="Ui_EntireSite" xml:space="preserve"><value>Koko sivusto</value></data>
+  <data name="Ui_CopyAllLibrariesFromThe" xml:space="preserve"><value>Kopioi kaikki lähdesivuston kirjastot</value></data>
+  <data name="Ui_SitePages" xml:space="preserve"><value>Sivuston sivut</value></data>
+  <data name="Ui_CopyModernPagesWithWeb" xml:space="preserve"><value>Kopioi uudet sivut verkko-osineen</value></data>
+  <data name="Ui_Source2" xml:space="preserve"><value>Lähde: </value></data>
+  <data name="Ui_SelectAll" xml:space="preserve"><value>Valitse kaikki</value></data>
+  <data name="Ui_DeselectAll" xml:space="preserve"><value>Poista kaikki valinnat</value></data>
+  <data name="Ui_ConnectToTargetSite" xml:space="preserve"><value>Yhdistä kohdesivustoon</value></data>
+  <data name="Ui_TargetSiteUrl" xml:space="preserve"><value>Kohdesivuston URL-osoite</value></data>
+  <data name="Ui_ConnectToTarget" xml:space="preserve"><value>Yhdistä kohteeseen</value></data>
+  <data name="Ui_SelectDestinationFolder" xml:space="preserve"><value>Valitse kohdekansio</value></data>
+  <data name="Ui_TargetSite" xml:space="preserve"><value>Kohdesivusto</value></data>
+  <data name="Ui_Selected" xml:space="preserve"><value> Valittu: </value></data>
+  <data name="Ui_LibraryListCreation" xml:space="preserve"><value>Kirjaston / luettelon luonti</value></data>
+  <data name="Ui_Target2" xml:space="preserve"><value> Kohde: </value></data>
+  <data name="Ui_DestinationList" xml:space="preserve"><value>Kohdeluettelo</value></data>
+  <data name="Ui_CopyOptions" xml:space="preserve"><value>Kopiointiasetukset</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Kopioi kirjaston sisältö (tiedostot)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Kun asetus on pois päältä, vain sarakeskeema ja kirjaston asetukset luodaan uudelleen – tiedostoja ei kopioida.</value></data>
+  <data name="Ui_IfFileExists" xml:space="preserve"><value>Jos tiedosto on olemassa:</value></data>
+  <data name="Ui_Skip" xml:space="preserve"><value>Ohita</value></data>
+  <data name="Ui_Overwrite" xml:space="preserve"><value>Korvaa</value></data>
+  <data name="Ui_IfNewer" xml:space="preserve"><value>Jos uudempi</value></data>
+  <data name="Ui_IncrementalReCopyReplacesA" xml:space="preserve"><value>Inkrementaalinen uudelleenkopiointi: korvaa tiedoston vain, jos lähdettä on muokattu kohteen jälkeen. Muuttumattomat tiedostot raportoidaan tilassa ”Ajan tasalla”. Kun ”Kopioi käyttöoikeudet” on käytössä, käyttöoikeudet päivitetään silti ajan tasalla oleville tiedostoille. Ihanteellinen viimeiseen täydentävään kopiointiin käyttöönoton yhteydessä, kun käyttäjät jatkoivat työskentelyä lähteessä.</value></data>
+  <data name="Ui_CopyVersionHistory" xml:space="preserve"><value>Kopioi versiohistoria</value></data>
+  <data name="Ui_CopiesFileVersionHistoryVersions" xml:space="preserve"><value>Kopioi tiedoston versiohistorian. Versiot ladataan vanhin ensin, jotta historia muodostuu luonnollisesti.</value></data>
+  <data name="Ui_AllVersions" xml:space="preserve"><value>Kaikki versiot</value></data>
+  <data name="Ui_Latest" xml:space="preserve"><value>Viimeiset </value></data>
+  <data name="Ui_Versions" xml:space="preserve"><value> versiota</value></data>
+  <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Kopioi siirtymisrakenne (pikakäynnistys ja yläpalkki)</value></data>
+  <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Korvaa kohteen siirtymisrakenteen lähteen linkeillä. URL-osoitteet yhdistetään uudelleen kohdesivustoon.</value></data>
+  <data name="Ui_CopyPermissions" xml:space="preserve"><value>Kopioi käyttöoikeudet</value></data>
+  <data name="Ui_CopiesUniqueRoleAssignmentsFor" xml:space="preserve"><value>Kopioi yksilölliset roolimääritykset – tiedostoille Tiedostot-laajuudessa; kirjastoille, luetteloille, kansioille, tiedostoille ja kohteille Kirjasto- ja Sivusto-laajuuksissa. Toimii parhaiten saman vuokraajan sisäisissä kopioissa.</value></data>
+  <data name="Ui_PageOptions" xml:space="preserve"><value>Sivuasetukset</value></data>
+  <data name="Ui_IfPageExists" xml:space="preserve"><value>Jos sivu on olemassa:</value></data>
+  <data name="Ui_RemapWebPartUrlsTo" xml:space="preserve"><value>Yhdistä verkko-osien URL-osoitteet uudelleen kohdesivustoon</value></data>
+  <data name="Ui_ReplacesSourceSiteUrlsIn" xml:space="preserve"><value>Korvaa lähdesivuston URL-osoitteet verkko-osien JSON-tiedoissa. Tiettyihin luettelotunnuksiin viittaavat verkko-osat on ehkä tarkistettava käsin kopioinnin jälkeen.</value></data>
+  <data name="Ui_AdvancedOptions" xml:space="preserve"><value>Lisäasetukset</value></data>
+  <data name="Ui_Metadata" xml:space="preserve"><value>Metatiedot</value></data>
+  <data name="Ui_PreserveMetadata" xml:space="preserve"><value>Säilytä metatiedot</value></data>
+  <data name="Ui_PreservesCreatedByCreatedDate" xml:space="preserve"><value>Säilyttää jokaisen kopioidun kohteen Luonut-, Luontipäivä-, Muokannut- ja Muokkauspäivä-tiedot sekä kopioitujen kansioiden kansion värin (jos on). Kun asetus on pois päältä, kohteet näyttävät luoduilta sinun toimestasi tänään.</value></data>
+  <data name="Ui_ReApplyFolderMetadataEvery" xml:space="preserve"><value>Käytä kansioiden metatiedot uudelleen joka ajokerralla</value></data>
+  <data name="Ui_OnRepairsFolderCreatedModified" xml:space="preserve"><value>Käytössä: korjaa jokaisen valinnan kansion luonti-/muokkauspäivät, tekijät ja värin joka ajokerralla – tarpeen jo kopioidun kohteen kansioiden metatietojen korjaamiseen, mutta lisää kansiokohtaisen skannauksen, joka suoritetaan, vaikka kaikki tiedostot ohitettaisiin. Pois käytöstä: vain kansiot, jotka saavat uusia tiedostoja tässä ajossa, korjataan, mikä nopeuttaa toistuvia ajoja, joissa suurin osa ohitetaan. Koskee vain, kun Säilytä metatiedot on käytössä.</value></data>
+  <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Kopioi mukautettujen sarakkeiden arvot</value></data>
+  <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Kopioi seuraavien sarakityyppien arvot: Teksti, Luku, Valinta, Päivämäärä, Totuusarvo, Monivalinta, Henkilö ja Hallitut metatiedot. Hakusarakkeita ei tueta.</value></data>
+  <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Ota käyttöön ”Kopioi mukautettujen sarakkeiden arvot” määrittääksesi yhdistämiset.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Kaikkien mukautettujen sarakkeiden arvot kopioidaan. Yhdistämisillä voit hallita, mitkä sarakkeet luodaan kohteeseen.</value></data>
+  <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Mukautettujen sarakkeiden arvot kopioidaan aina luettelokohteille.</value></data>
+  <data name="Ui_CopyMode" xml:space="preserve"><value>Kopiointitila</value></data>
+  <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
+  <data name="Ui_Recommended" xml:space="preserve"><value>Suositeltu</value></data>
+  <data name="Ui_ExactVersionNumbersDatesAnd" xml:space="preserve"><value>Tarkat versionumerot, päivämäärät ja muokkaajat. Edellyttää sivustokokoelman järjestelmänvalvojaa kohteessa.</value></data>
+  <data name="Ui_EnhancedRest" xml:space="preserve"><value>Enhanced REST</value></data>
+  <data name="Ui_CorrectDatesAndEditorsPer" xml:space="preserve"><value>Oikeat päivämäärät ja muokkaajat versiota kohden, mutta versionumerot kaksinkertaistuvat (2, 4, 6…). Ei vaadi järjestelmänvalvojan oikeuksia.</value></data>
+  <data name="Ui_ParallelCopies" xml:space="preserve"><value>Rinnakkaiset kopiot</value></data>
+  <data name="Ui_HigherValuesCopyFasterBut" xml:space="preserve"><value>Suuremmat arvot kopioivat nopeammin, mutta niitä voidaan rajoittaa suurilla sivustoilla.</value></data>
+  <data name="Ui_CopyPreview" xml:space="preserve"><value>Kopioinnin esikatselu</value></data>
+  <data name="Ui_ItemsSelected" xml:space="preserve"><value>kohdetta valittu</value></data>
+  <data name="Ui_LibrariesListsToCopy" xml:space="preserve"><value>kopioitavaa kirjastoa ja luetteloa</value></data>
+  <data name="Ui_ListItemsToCopy" xml:space="preserve"><value>kopioitavaa luettelokohdetta</value></data>
+  <data name="Ui_From" xml:space="preserve"><value>Mistä: </value></data>
+  <data name="Ui_To" xml:space="preserve"><value>Mihin: </value></data>
+  <data name="Ui_DestinationList2" xml:space="preserve"><value>Kohdeluettelo: </value></data>
+  <data name="Ui_NothingSelectedYetGoBack" xml:space="preserve"><value>Mitään ei ole vielä valittu – palaa Selaa-näkymään ja valitse kopioitavat kirjastot tai luettelot.</value></data>
+  <data name="Ui_LibraryList" xml:space="preserve"><value>Kirjasto / luettelo</value></data>
+  <data name="Ui_DestinationName" xml:space="preserve"><value>Kohteen nimi</value></data>
+  <data name="Ui_NothingSelectedYetGoBack2" xml:space="preserve"><value>Mitään ei ole vielä valittu – palaa Selaa-näkymään ja valitse kopioitavat tiedostot tai kansiot.</value></data>
+  <data name="Ui_Type" xml:space="preserve"><value>Tyyppi</value></data>
+  <data name="Ui_SourcePath" xml:space="preserve"><value>Lähteen polku</value></data>
+  <data name="Ui_DestinationPath" xml:space="preserve"><value>Kohteen polku</value></data>
+  <data name="Ui_Of" xml:space="preserve"><value> / </value></data>
+  <data name="Ui_ItemsProcessed" xml:space="preserve"><value> kohdetta käsitelty</value></data>
+  <data name="Ui_Cancel" xml:space="preserve"><value>Peruuta</value></data>
+  <data name="Ui_CheckingFiles" xml:space="preserve"><value>Tarkistetaan tiedostoja… </value></data>
+  <data name="Ui_FilesPackagedForImport" xml:space="preserve"><value> tiedostoa paketoitu tuontia varten</value></data>
+  <data name="Ui_Activity" xml:space="preserve"><value>Toiminta</value></data>
+  <data name="Ui_FullActivityLogForThis" xml:space="preserve"><value>Tämän ajon täydellinen toimintaloki – valitse ja kopioi tämä polku avataksesi sen siirron jälkeen</value></data>
+  <data name="Ui_CopyCompleteClickNextTo" xml:space="preserve"><value> Kopiointi valmis! Näet koko raportin valitsemalla Seuraava.</value></data>
+  <data name="Ui_UpdatingFolderMetadata" xml:space="preserve"><value>Päivitetään kansioiden metatietoja…</value></data>
+  <data name="Ui_MetadataUpdatedTook" xml:space="preserve"><value> Metatiedot päivitetty – kesti </value></data>
+  <data name="Ui_MetadataUpdateCancelled" xml:space="preserve"><value> Metatietojen päivitys peruutettu</value></data>
+  <data name="Ui_CopyLog" xml:space="preserve"><value>Kopiointiloki</value></data>
+  <data name="Ui_All" xml:space="preserve"><value>Kaikki</value></data>
+  <data name="Ui_Success" xml:space="preserve"><value>Onnistui (</value></data>
+  <data name="Ui_Failed" xml:space="preserve"><value>Epäonnistui (</value></data>
+  <data name="Ui_Skipped" xml:space="preserve"><value>Ohitettu (</value></data>
+  <data name="Ui_Item" xml:space="preserve"><value>Kohde</value></data>
+  <data name="Ui_Status" xml:space="preserve"><value>Tila</value></data>
+  <data name="Ui_Versions2" xml:space="preserve"><value>Versiot</value></data>
+  <data name="Ui_Details" xml:space="preserve"><value>Tiedot</value></data>
+  <data name="Ui_PermissionsStatus" xml:space="preserve"><value>Käyttöoikeuksien tila</value></data>
+  <data name="Ui_PermissionsDetails" xml:space="preserve"><value>Käyttöoikeuksien tiedot</value></data>
+  <data name="Ui_CustomFields" xml:space="preserve"><value>Mukautetut kentät</value></data>
+  <data name="Ui_CustomFieldsDetails" xml:space="preserve"><value>Mukautettujen kenttien tiedot</value></data>
+  <data name="Ui_CopyReport" xml:space="preserve"><value>Kopioi raportti</value></data>
+  <data name="Ui_Succeeded" xml:space="preserve"><value>Onnistui</value></data>
+  <data name="Ui_Failed2" xml:space="preserve"><value>Epäonnistui</value></data>
+  <data name="Ui_Skipped2" xml:space="preserve"><value>Ohitettu</value></data>
+  <data name="Ui_MetadataWarnings" xml:space="preserve"><value>Metatietovaroitukset</value></data>
+  <data name="Ui_Duration" xml:space="preserve"><value>Kesto</value></data>
+  <data name="Ui_TotalSize" xml:space="preserve"><value>Kokonaiskoko</value></data>
+  <data name="Ui_Cancelled" xml:space="preserve"><value>Peruutettu</value></data>
+  <data name="Ui_ExportCsv" xml:space="preserve"><value>Vie CSV</value></data>
+  <data name="Ui_VerifyWithExcelReport" xml:space="preserve"><value>Vahvista Excel-raportilla</value></data>
+  <data name="Ui_DeepVerifyOfficeFiles" xml:space="preserve"><value>Syvävahvista Office-tiedostot</value></data>
+  <data name="Ui_DownloadsBothCopiesOfEach" xml:space="preserve"><value>Lataa kummankin poikkeavan Office-tiedoston molemmat kopiot ja vertaa niiden sisäistä sisältöä ohittaen metatietoosat, jotka SharePoint kirjoittaa uudelleen latauksen yhteydessä (asiakirjatunnus, mukautetut ominaisuudet jne.). Hitaampi – käytä, kun hajautus- tai päivämääräero on todistettava todelliseksi tai vaarattomaksi.</value></data>
+  <data name="Ui_TargetPath" xml:space="preserve"><value>Kohteen polku</value></data>
+  <data name="Ui_Back" xml:space="preserve"><value>← Takaisin</value></data>
+  <data name="Ui_StartNewCopy" xml:space="preserve"><value>Aloita uusi kopiointi</value></data>
+  <data name="Ui_ColumnMappings" xml:space="preserve"><value>Sarakeyhdistämiset</value></data>
+  <data name="Ui_SourceColumn" xml:space="preserve"><value>Lähdesarake</value></data>
+  <data name="Ui_NoMappableColumns" xml:space="preserve"><value>Ei yhdistettäviä sarakkeita</value></data>
+  <data name="Ui_AutoMatch" xml:space="preserve"><value>Automaattinen täsmäytys</value></data>
+  <data name="Ui_SaveMappings" xml:space="preserve"><value>Tallenna yhdistämiset</value></data>
+  <data name="Ui_CompareSourceAndTarget" xml:space="preserve"><value>Vertaa lähdettä ja kohdetta</value></data>
+  <data name="Ui_ConnectToAnySourceAnd" xml:space="preserve"><value>Yhdistä mihin tahansa lähde- ja kohdesijaintiin ja luo erotusraportti – riippumatta kopiointihistoriasta.</value></data>
+  <data name="Ui_CompareWithExcelReport" xml:space="preserve"><value>Vertaa Excel-raportilla</value></data>
+  <data name="Ui_Close" xml:space="preserve"><value>Sulje</value></data>
+  <data name="Ui_CopyHistory" xml:space="preserve"><value>Kopiointihistoria</value></data>
+  <data name="Ui_PreviousRuns" xml:space="preserve"><value>Aiemmat ajot</value></data>
+  <data name="Ui_Loading" xml:space="preserve"><value>Ladataan…</value></data>
+  <data name="Ui_SelectARunToView" xml:space="preserve"><value>Valitse ajo nähdäksesi tiedot</value></data>
+  <data name="Ui_FileName" xml:space="preserve"><value>Tiedostonimi</value></data>
+  <data name="Ui_Error" xml:space="preserve"><value>Virhe</value></data>
+  <data name="Ui_SelectARunOnThe" xml:space="preserve"><value>Valitse ajo vasemmalta nähdäksesi tiedostokohtaiset tulokset.</value></data>
+  <data name="Ui_DeleteRun" xml:space="preserve"><value>Poista ajo</value></data>
+  <data name="Ui_AzureAppRegistrations" xml:space="preserve"><value>Azure-sovellusrekisteröinnit</value></data>
+  <data name="Ui_Registrations" xml:space="preserve"><value>Rekisteröinnit</value></data>
+  <data name="Ui_Add" xml:space="preserve"><value>Lisää</value></data>
+  <data name="Ui_Remove" xml:space="preserve"><value>Poista</value></data>
+  <data name="Ui_EditSelectedRegistration" xml:space="preserve"><value>Muokkaa valittua rekisteröintiä</value></data>
+  <data name="Ui_Name" xml:space="preserve"><value>Nimi</value></data>
+  <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Asiakastunnus (sovellustunnus)</value></data>
+  <data name="Ui_TenantId" xml:space="preserve"><value>Vuokraajan tunnus</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Käytä arvoa ”common” usean vuokraajan käyttöön tai vuokraajasi GUID-tunnusta tai toimialuetta.</value></data>
+  <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Aloita raporttien oletustiedostonimet lähde- ja kohdesivuston nimillä</value></data>
+  <data name="Ui_SignOut" xml:space="preserve"><value>Kirjaudu ulos</value></data>
+  <data name="Ui_Theme" xml:space="preserve"><value>Teema:</value></data>
+  <data name="Ui_System" xml:space="preserve"><value>Järjestelmä</value></data>
+  <data name="Ui_Light" xml:space="preserve"><value>Vaalea</value></data>
+  <data name="Ui_Dark" xml:space="preserve"><value>Tumma</value></data>
+  <data name="Ui_Save" xml:space="preserve"><value>Tallenna</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>Kieli:</value></data>
+  <data name="Settings_LanguageSystem" xml:space="preserve"><value>Järjestelmän oletus</value></data>
+  <data name="Settings_LanguageRestart" xml:space="preserve"><value>Tulee voimaan, kun sovellus käynnistetään seuraavan kerran.</value></data>
+  <data name="VM_StatusPending" xml:space="preserve"><value>⏳ Odottaa</value></data>
+  <data name="VM_StatusProcessing" xml:space="preserve"><value>⟳ Käsitellään…</value></data>
+  <data name="VM_StatusFailed" xml:space="preserve"><value>❌ Epäonnistui</value></data>
+  <data name="VM_StatusSkipped" xml:space="preserve"><value>⏭ Ohitettu</value></data>
+  <data name="VM_StatusCancelledSymbol" xml:space="preserve"><value>⊘ Peruutettu</value></data>
+  <data name="VM_StatusSuccess" xml:space="preserve"><value>✅ Onnistui</value></data>
+  <data name="VM_Dash" xml:space="preserve"><value>—</value></data>
+  <data name="VM_StatusApplied" xml:space="preserve"><value>✅ Otettu käyttöön</value></data>
+  <data name="VM_StatusWarning" xml:space="preserve"><value>⚠ Varoitus</value></data>
+  <data name="VM_StatusCancelledBlocked" xml:space="preserve"><value>🚫 Peruutettu</value></data>
+  <data name="VM_DurationHMS" xml:space="preserve"><value>{0} t {1} min {2} s</value></data>
+  <data name="VM_DurationMS" xml:space="preserve"><value>{0} min {1} s</value></data>
+  <data name="VM_DurationS" xml:space="preserve"><value>{0} s</value></data>
+  <data name="VM_SummaryWithCancelled" xml:space="preserve"><value>✅ {0}   ❌ {1}   ⏭ {2}   🚫 {3}   ⏱ {4}{5}</value></data>
+  <data name="VM_Summary" xml:space="preserve"><value>✅ {0}   ❌ {1}   ⏭ {2}   ⏱ {3}{4}</value></data>
+  <data name="VM_Unnamed" xml:space="preserve"><value>(Nimetön)</value></data>
+  <data name="VM_SourceConnectedAs" xml:space="preserve"><value>✅ Yhdistetty käyttäjänä {0}</value></data>
+  <data name="VM_DemoCheckedOut" xml:space="preserve"><value>Tiedosto on lainattu lähteessä</value></data>
+  <data name="VM_DemoSizeLimit" xml:space="preserve"><value>Tiedosto ylittää 250 Gt:n latausrajan</value></data>
+  <data name="VM_ThrottleRetryAttempt" xml:space="preserve"><value>SharePoint rajoittaa pyyntöjä – yritetään uudelleen {0:N0} s kuluttua (yritys {1}/{2})…</value></data>
+  <data name="VM_ThrottleRetry" xml:space="preserve"><value>SharePoint rajoittaa pyyntöjä – yritetään uudelleen {0:N0} s kuluttua…</value></data>
+  <data name="VM_ParallelismReduced" xml:space="preserve"><value>Rinnakkaisuus vähennetty {0} säikeeseen (rajoitussuojaus)…</value></data>
+  <data name="VM_ParallelismRestored" xml:space="preserve"><value>Rinnakkaisuus palautettu {0} säikeeseen.</value></data>
+  <data name="VM_Connecting" xml:space="preserve"><value>Yhdistetään…</value></data>
+  <data name="VM_ErrorPrefix" xml:space="preserve"><value>❌ {0}</value></data>
+  <data name="VM_LoadingLibraries" xml:space="preserve"><value>Ladataan kirjastoja…</value></data>
+  <data name="VM_ErrorLoadingLibraries" xml:space="preserve"><value>Virhe kirjastojen latauksessa: {0}</value></data>
+  <data name="VM_LoadingSitePages" xml:space="preserve"><value>Ladataan sivuston sivuja…</value></data>
+  <data name="VM_NoSitePagesLibrary" xml:space="preserve"><value>Tältä sivustolta ei löytynyt Sivuston sivut -kirjastoa.</value></data>
+  <data name="VM_ErrorLoadingSitePages" xml:space="preserve"><value>Virhe sivuston sivujen latauksessa: {0}</value></data>
+  <data name="VM_ItemNumber" xml:space="preserve"><value>(Kohde {0})</value></data>
+  <data name="VM_ErrorLoadingFolder" xml:space="preserve"><value>Virhe kansion latauksessa: {0}</value></data>
+  <data name="VM_Connected" xml:space="preserve"><value>✅ Yhdistetty</value></data>
+  <data name="VM_CreateNewList" xml:space="preserve"><value>[ Luo uusi luettelo ]</value></data>
+  <data name="VM_ConnectedConsentNote" xml:space="preserve"><value>✅ Yhdistetty · Huomautus: metatietoihin tarvitaan lisäsuostumus – yhdistä uudelleen myöntääksesi sen</value></data>
+  <data name="VM_ConfigureMappingsCount" xml:space="preserve"><value>Määritä yhdistämiset ({0} saraketta)</value></data>
+  <data name="VM_ConfigureMappings" xml:space="preserve"><value>Määritä yhdistämiset</value></data>
+  <data name="VM_ConfigureMappingsUnmatched" xml:space="preserve"><value>Määritä yhdistämiset  ⚠ {0}/{1} täsmäämättä</value></data>
+  <data name="VM_ConfigureMappingsMapped" xml:space="preserve"><value>Määritä yhdistämiset ({0}/{1} yhdistetty)</value></data>
+  <data name="VM_OverwriteIfNewer" xml:space="preserve"><value>Jos uudempi</value></data>
+  <data name="VM_ModeMigrationApi" xml:space="preserve"><value>Migration API</value></data>
+  <data name="VM_ModeEnhancedRest" xml:space="preserve"><value>Enhanced REST</value></data>
+  <data name="VM_Off" xml:space="preserve"><value>Pois</value></data>
+  <data name="VM_All" xml:space="preserve"><value>Kaikki</value></data>
+  <data name="VM_MaxVersions" xml:space="preserve"><value>Enintään {0}</value></data>
+  <data name="VM_SumOverwrite" xml:space="preserve"><value>Korvaa: {0}</value></data>
+  <data name="VM_SumCopyMode" xml:space="preserve"><value>Kopiointitila: {0}</value></data>
+  <data name="VM_SumVersions" xml:space="preserve"><value>Versiot: {0}</value></data>
+  <data name="VM_SumParallel" xml:space="preserve"><value>Rinnakkaiset kopiot: {0}</value></data>
+  <data name="VM_Yes" xml:space="preserve"><value>Kyllä</value></data>
+  <data name="VM_No" xml:space="preserve"><value>Ei</value></data>
+  <data name="VM_SumPreserveMetadata" xml:space="preserve"><value>Säilytä metatiedot: {0}</value></data>
+  <data name="VM_EveryRun" xml:space="preserve"><value>Joka ajokerralla</value></data>
+  <data name="VM_NewFoldersOnly" xml:space="preserve"><value>Vain uudet kansiot</value></data>
+  <data name="VM_SumFolderRepair" xml:space="preserve"><value>Kansioiden metatietojen korjaus: {0}</value></data>
+  <data name="VM_SumPermissions" xml:space="preserve"><value>Käyttöoikeudet: {0}</value></data>
+  <data name="VM_SumCustomColumns" xml:space="preserve"><value>Mukautetut sarakkeet: {0}</value></data>
+  <data name="VM_MetadataFolderCount" xml:space="preserve"><value> {0:N0} / {1:N0} kansiota</value></data>
+  <data name="VM_ActivityLogPath" xml:space="preserve"><value>Toimintaloki: {0}</value></data>
+  <data name="VM_SettingsSummary" xml:space="preserve"><value>Asetukset: {0}</value></data>
+  <data name="VM_ReadingSourceMetadata" xml:space="preserve"><value>Luetaan lähteen metatietoja…</value></data>
+  <data name="VM_ReadColumnValuesFailed" xml:space="preserve"><value>⚠ Mukautettujen sarakkeiden arvojen lukeminen epäonnistui tälle kirjastolle: {0}</value></data>
+  <data name="VM_CreatingTargetColumns" xml:space="preserve"><value>Luodaan kohdesarakkeita…</value></data>
+  <data name="VM_CopyCancelled" xml:space="preserve"><value>Kopiointi peruutettu.</value></data>
+  <data name="VM_CopyError" xml:space="preserve"><value>Kopiointivirhe: {0}</value></data>
+  <data name="VM_ItemLabel" xml:space="preserve"><value>Kohde {0}</value></data>
+  <data name="VM_AlreadyExists" xml:space="preserve"><value>On jo olemassa</value></data>
+  <data name="VM_UpdatedFieldWarning" xml:space="preserve"><value>Päivitetty (kenttävaroitus: {0})</value></data>
+  <data name="VM_Updated" xml:space="preserve"><value>Päivitetty</value></data>
+  <data name="VM_FieldWarning" xml:space="preserve"><value>kenttävaroitus: {0}</value></data>
+  <data name="VM_ColumnCreated" xml:space="preserve"><value>Sarake luotu: {0}</value></data>
+  <data name="VM_ColumnsCreated" xml:space="preserve"><value>{0} saraketta luotu: {1}</value></data>
+  <data name="VM_ColumnsTitle" xml:space="preserve"><value>Sarakkeet → {0}</value></data>
+  <data name="VM_ColumnFailedTitle" xml:space="preserve"><value>Sarake epäonnistui → {0}</value></data>
+  <data name="VM_RoleAssignmentApplied1" xml:space="preserve"><value>1 roolimääritys otettu käyttöön</value></data>
+  <data name="VM_RoleAssignmentsApplied" xml:space="preserve"><value>{0} roolimääritystä otettu käyttöön</value></data>
+  <data name="VM_PermSkippedUnresolvable" xml:space="preserve"><value>; ohitettu {0} ratkaisematonta: {1}</value></data>
+  <data name="VM_PermissionsTitle" xml:space="preserve"><value>Käyttöoikeudet — {0}</value></data>
+  <data name="VM_ReadingSiteStructure" xml:space="preserve"><value>Luetaan sivuston kirjastorakennetta…</value></data>
+  <data name="VM_ReadingLibraryStructure" xml:space="preserve"><value>Luetaan kirjastorakennetta…</value></data>
+  <data name="VM_ColumnsCouldNotBeCreated" xml:space="preserve"><value>{0} saraketta ei voitu luoda: {1}</value></data>
+  <data name="VM_CopyingFilesInto" xml:space="preserve"><value>Kopioidaan tiedostoja kohteeseen ”{0}”…</value></data>
+  <data name="VM_LibraryRootIdMissing" xml:space="preserve"><value>Kirjasto luotiin, mutta juurikohteen tunnusta ei voitu noutaa; tiedostojen kopiointi ohitettu.</value></data>
+  <data name="VM_CopyingFilesIntoExisting" xml:space="preserve"><value>Kopioidaan tiedostoja olemassa olevaan kohteeseen ”{0}”…</value></data>
+  <data name="VM_FileCopySkippedRootId" xml:space="preserve"><value> (tiedostojen kopiointi ohitettu – juurikohteen tunnus ei ole saatavilla)</value></data>
+  <data name="VM_CopyingList" xml:space="preserve"><value>Kopioidaan luetteloa ”{0}”…</value></data>
+  <data name="VM_CopyingSitePages" xml:space="preserve"><value>Kopioidaan sivuston sivuja…</value></data>
+  <data name="VM_SitePagesWarning" xml:space="preserve"><value>Sivuston sivujen varoitus: {0}</value></data>
+  <data name="VM_CopyingNavigation" xml:space="preserve"><value>Kopioidaan siirtymisrakennetta…</value></data>
+  <data name="VM_Navigation" xml:space="preserve"><value>Siirtymisrakenne</value></data>
+  <data name="VM_ReadingCustomLists" xml:space="preserve"><value>Luetaan mukautettuja luetteloita…</value></data>
+  <data name="VM_ListCopyWarning" xml:space="preserve"><value>Luettelon kopioinnin varoitus: {0}</value></data>
+  <data name="VM_LibraryCopyError" xml:space="preserve"><value>Kirjaston kopiointivirhe: {0}</value></data>
+  <data name="VM_TargetColumnsUnavailable" xml:space="preserve"><value>Kohdesarakkeet eivät ole saatavilla: {0}</value></data>
+  <data name="VM_SourceColumnsUnavailable" xml:space="preserve"><value>Lähdesarakkeet eivät ole saatavilla: {0}</value></data>
+  <data name="VM_EtaRemaining" xml:space="preserve"><value> · noin {0} jäljellä</value></data>
+  <data name="VM_EtaCalculating" xml:space="preserve"><value> · Lasketaan…</value></data>
+  <data name="VM_EtaToPackage" xml:space="preserve"><value> · noin {0} pakkaukseen</value></data>
+  <data name="VM_FilterCsvTxt" xml:space="preserve"><value>CSV-tiedostot (*.csv)|*.csv|Tekstitiedostot (*.txt)|*.txt</value></data>
+  <data name="VM_CsvHeader" xml:space="preserve"><value>Tiedostonimi,Lähteen polku,Kohteen polku,Tila,Kopioidut versiot,Virhe,Käyttöoikeuksien tila,Käyttöoikeuksien tiedot</value></data>
+  <data name="VM_FilterXlsx" xml:space="preserve"><value>Excel-työkirja (*.xlsx)|*.xlsx</value></data>
+  <data name="VM_DeepVerification" xml:space="preserve"><value>Syvävahvistus</value></data>
+  <data name="VM_Verification" xml:space="preserve"><value>Vahvistus</value></data>
+  <data name="VM_DeepVerificationLow" xml:space="preserve"><value>syvävahvistus</value></data>
+  <data name="VM_VerificationLow" xml:space="preserve"><value>vahvistus</value></data>
+  <data name="VM_DeepVerifying" xml:space="preserve"><value>Syvävahvistetaan</value></data>
+  <data name="VM_Verifying" xml:space="preserve"><value>Vahvistetaan</value></data>
+  <data name="VM_VerifyScanProgress" xml:space="preserve"><value>{0}… löytyi {1:N0} lähdetiedostoa, {2:N0} kohdetiedostoa</value></data>
+  <data name="VM_VerifyRescanning" xml:space="preserve"><value>Skannataan lähde ja kohde uudelleen kohteelle {0}…</value></data>
+  <data name="VM_VerifyWriting" xml:space="preserve"><value>Kirjoitetaan {0}-työkirjaa…</value></data>
+  <data name="VM_VerifyComplete" xml:space="preserve"><value>✔ {0} valmis: {1:N0} täsmää, {2:N0} sisältöero, {3:N0} päivämääräero, {4:N0} vain lähteessä, {5:N0} vain kohteessa</value></data>
+  <data name="VM_VerifyUnverified" xml:space="preserve"><value>, {0:N0} vahvistamatta (ei vertailukelpoista signaalia)</value></data>
+  <data name="VM_VerifyReportWritten" xml:space="preserve"><value>{0}-raportti kirjoitettu: {1}</value></data>
+  <data name="VM_VerifyScanErrors" xml:space="preserve"><value>⚠ {0} juurta ei voitu skannata – katso Skannausvirheet-välilehti</value></data>
+  <data name="VM_VerifyCancelled" xml:space="preserve"><value>{0} peruutettu.</value></data>
+  <data name="VM_VerifyError" xml:space="preserve"><value>{0}-virhe: {1}</value></data>
+  <data name="VM_VerifyErrorWarn" xml:space="preserve"><value>⚠ {0}-virhe: {1}</value></data>
+  <data name="Dlg_ColLoadWarn" xml:space="preserve"><value>⚠ {0}</value></data>
+  <data name="Dlg_NoMappableColumns" xml:space="preserve"><value>ℹ Yhdistettäviä sarakkeita ei löytynyt. Tuetut tyypit: Teksti, Muistio, Luku, Totuusarvo, Päivämäärä, Valinta, Monivalinta, Henkilö, Hallitut metatiedot.</value></data>
+  <data name="Dlg_ColStatusCreateSkip" xml:space="preserve"><value>✅ {0} luodaan    ⚠ {1} ohitettu</value></data>
+  <data name="Dlg_ColStatusMapCreateSkip" xml:space="preserve"><value>✅ {0} yhdistetty    + {1} luodaan    ⚠ {2} ohitettu</value></data>
+  <data name="Dlg_ColStatusMapSkip" xml:space="preserve"><value>✅ {0} yhdistetty    ⚠ {1} ohitettu</value></data>
+  <data name="Dlg_ColHeaderLibrary" xml:space="preserve"><value>Valitse, mitkä sarakkeet luodaan uuteen kohdekirjastoon. Sarakkeita, joiden asetuksena on ”Ohita”, ei luoda.</value></data>
+  <data name="Dlg_ColHeaderFiles" xml:space="preserve"><value>Yhdistä lähdesarakkeet kohdesarakkeisiin tai valitse ”Luo kohteeseen” lisätäksesi puuttuvan sarakkeen kohdekirjastoon. Täsmäämättömät sarakkeet ohitetaan, ellet määritä kohdetta. Automaattinen täsmäytys täsmää sarakkeet automaattisesti nimen mukaan.</value></data>
+  <data name="Dlg_ColAction" xml:space="preserve"><value>Toiminto</value></data>
+  <data name="Dlg_CreateInTarget" xml:space="preserve"><value>Luo kohteeseen</value></data>
+  <data name="Dlg_PlusCreateInTarget" xml:space="preserve"><value>+ Luo kohteeseen</value></data>
+  <data name="Dlg_SkipThisColumn" xml:space="preserve"><value>── Ohita tämä sarake ──</value></data>
+  <data name="Dlg_ColTargetColumn" xml:space="preserve"><value>Kohdesarake</value></data>
+  <data name="Dlg_Connecting" xml:space="preserve"><value>Yhdistetään…</value></data>
+  <data name="Dlg_Connected" xml:space="preserve"><value>✅ Yhdistetty</value></data>
+  <data name="Dlg_FilterXlsx" xml:space="preserve"><value>Excel-työkirja (*.xlsx)|*.xlsx</value></data>
+  <data name="Dlg_Scanning" xml:space="preserve"><value>Skannataan…</value></data>
+  <data name="Dlg_DeepComparison" xml:space="preserve"><value>Syvävertailu</value></data>
+  <data name="Dlg_ScanningFound" xml:space="preserve"><value>Skannataan… löytyi {0} lähdetiedostoa, {1} kohdetiedostoa</value></data>
+  <data name="Dlg_WritingWorkbook" xml:space="preserve"><value>Kirjoitetaan työkirjaa…</value></data>
+  <data name="Dlg_RootsNotScanned" xml:space="preserve"><value>{0} juurta ei voitu skannata – katso työkirjan Skannausvirheet-välilehti.</value></data>
+  <data name="Dlg_OpFailed" xml:space="preserve"><value>{0} epäonnistui: {1}</value></data>
+  <data name="Dlg_Comparison" xml:space="preserve"><value>Vertailu</value></data>
+  <data name="Dlg_LoadingRuns" xml:space="preserve"><value>Ladataan aiempia ajoja…</value></data>
+  <data name="Dlg_NoRuns" xml:space="preserve"><value>Aiempia ajoja ei löytynyt.</value></data>
+  <data name="Dlg_SelectRun" xml:space="preserve"><value>Valitse ajo nähdäksesi tiedot</value></data>
+  <data name="Dlg_PredatesVerification" xml:space="preserve"><value>Tämä ajo on tehty ennen vahvistuksen tukea – suorita kopiointi uudelleen ottaaksesi sen käyttöön.</value></data>
+  <data name="Dlg_RunSummary" xml:space="preserve"><value>{0}  —  {1} tiedostoa  —  {2}</value></data>
+  <data name="Dlg_RunLoadFailed" xml:space="preserve"><value>Tämän ajon tietoja ei voitu ladata.</value></data>
+  <data name="Dlg_DeleteReportPrompt" xml:space="preserve"><value>Poistetaanko raportti ajalta {0}?</value></data>
+  <data name="Dlg_DeleteReportTitle" xml:space="preserve"><value>Poista raportti</value></data>
+  <data name="Dlg_FilterCsv" xml:space="preserve"><value>CSV-tiedostot (*.csv)|*.csv|Tekstitiedostot (*.txt)|*.txt</value></data>
+  <data name="Dlg_CsvHeader" xml:space="preserve"><value>Tiedostonimi,Lähteen polku,Kohteen polku,Tila,Kopioidut versiot,Virhe,Käyttöoikeuksien tila,Käyttöoikeuksien tiedot</value></data>
+  <data name="Dlg_DeepVerification" xml:space="preserve"><value>Syvävahvistus</value></data>
+  <data name="Dlg_Verification" xml:space="preserve"><value>Vahvistus</value></data>
+  <data name="Dlg_SettingsSaved" xml:space="preserve"><value>Asetukset tallennettu. Yhdistä uudelleen, jos olit jo kirjautuneena.</value></data>
+  <data name="Dlg_InnerError" xml:space="preserve"><value>Sisäinen: {0}</value></data>
+  <data name="Dlg_UnexpectedError" xml:space="preserve"><value>Odottamaton virhe:
+
+{0}</value></data>
+  <data name="Dlg_ErrorTitle" xml:space="preserve"><value>Virhe</value></data>
+  <data name="Dlg_ConnectFailed" xml:space="preserve"><value>❌ {0}</value></data>
+  <data name="Svc_Sheet_Overview" xml:space="preserve"><value>Yleiskatsaus</value></data>
+  <data name="Svc_Sheet_Source" xml:space="preserve"><value>Lähde</value></data>
+  <data name="Svc_Sheet_Target" xml:space="preserve"><value>Kohde</value></data>
+  <data name="Svc_Sheet_Comparison" xml:space="preserve"><value>Vertailu</value></data>
+  <data name="Svc_Sheet_ScanErrors" xml:space="preserve"><value>Skannausvirheet</value></data>
+  <data name="Svc_Rpt_Summary" xml:space="preserve"><value>Vahvistuksen yhteenveto</value></data>
+  <data name="Svc_Rpt_AllMatch" xml:space="preserve"><value>✓ KAIKKI TIEDOSTOT TÄSMÄÄVÄT</value></data>
+  <data name="Svc_Rpt_AllMatchDetail" xml:space="preserve"><value>{0:N0} tiedostoa täsmää – jokainen lähteen tiedosto löytyi kohteesta, ylimääräisiä ei ole.</value></data>
+  <data name="Svc_Rpt_NoDiff" xml:space="preserve"><value>✓ EROJA EI LÖYTYNYT</value></data>
+  <data name="Svc_Rpt_NoDiffDetail" xml:space="preserve"><value>{0:N0} tiedostoa täsmää, mutta {1:N0} tiedostolla ei ollut vertailukelpoista signaalia (hajautusta ja kokoa ei ole saatavilla), joten niitä ei voitu vahvistaa – katso Vertailu-välilehti.</value></data>
+  <data name="Svc_Rpt_ContentNoMatch" xml:space="preserve"><value>⚠ SISÄLTÖ EI TÄSMÄÄ</value></data>
+  <data name="Svc_Rpt_PartMatched" xml:space="preserve"><value>{0:N0} tiedostoa täsmää.</value></data>
+  <data name="Svc_Rpt_PartContent" xml:space="preserve"><value>{0:N0} sisältöeroa.</value></data>
+  <data name="Svc_Rpt_PartDate" xml:space="preserve"><value>{0:N0} päivämääräeroa.</value></data>
+  <data name="Svc_Rpt_PartOnlySrc" xml:space="preserve"><value>{0:N0} vain lähteessä.</value></data>
+  <data name="Svc_Rpt_PartOnlyTgt" xml:space="preserve"><value>{0:N0} vain kohteessa.</value></data>
+  <data name="Svc_Rpt_PartUnverified" xml:space="preserve"><value>{0:N0} ei voitu vahvistaa (ei vertailukelpoista signaalia).</value></data>
+  <data name="Svc_Rpt_PartScanErr" xml:space="preserve"><value>{0} sijaintia ei voitu skannata – katso Skannausvirheet-välilehti.</value></data>
+  <data name="Svc_Rpt_PartSee" xml:space="preserve"><value>Katso lisätiedot Vertailu-välilehdeltä.</value></data>
+  <data name="Svc_Rpt_FilesInSource" xml:space="preserve"><value>Tiedostot lähteessä</value></data>
+  <data name="Svc_Rpt_FilesInTarget" xml:space="preserve"><value>Tiedostot kohteessa</value></data>
+  <data name="Svc_Rpt_Matched" xml:space="preserve"><value>Täsmää (molemmissa)</value></data>
+  <data name="Svc_Rpt_ContentMismatch" xml:space="preserve"><value>Sisältöero</value></data>
+  <data name="Svc_Rpt_DateMismatch" xml:space="preserve"><value>Päivämääräero</value></data>
+  <data name="Svc_Rpt_OnlyInSource" xml:space="preserve"><value>Vain lähteessä</value></data>
+  <data name="Svc_Rpt_OnlyInTarget" xml:space="preserve"><value>Vain kohteessa</value></data>
+  <data name="Svc_Rpt_Unverified" xml:space="preserve"><value>Vahvistamatta (ei vertailukelpoista signaalia)</value></data>
+  <data name="Svc_Rpt_TotalSrc" xml:space="preserve"><value>Kokonaiskoko lähteessä</value></data>
+  <data name="Svc_Rpt_TotalTgt" xml:space="preserve"><value>Kokonaiskoko kohteessa</value></data>
+  <data name="Svc_Rpt_ColRelPath" xml:space="preserve"><value>Suhteellinen polku</value></data>
+  <data name="Svc_Rpt_ColName" xml:space="preserve"><value>Nimi</value></data>
+  <data name="Svc_Rpt_ColLastMod" xml:space="preserve"><value>Viimeksi muokattu (UTC)</value></data>
+  <data name="Svc_Rpt_ColStatus" xml:space="preserve"><value>Tila</value></data>
+  <data name="Svc_Rpt_ColSrcValue" xml:space="preserve"><value>Lähteen arvo</value></data>
+  <data name="Svc_Rpt_ColTgtValue" xml:space="preserve"><value>Kohteen arvo</value></data>
+  <data name="Svc_Rpt_ColNote" xml:space="preserve"><value>Huomautus</value></data>
+  <data name="Svc_Rpt_BySize" xml:space="preserve"><value>{0:N0} tavua (koon mukaan – hajautus ei ole saatavilla vähintään toisella puolella)</value></data>
+  <data name="Svc_Rpt_ScanErrRoot" xml:space="preserve"><value>Juuri, jota ei voitu skannata</value></data>
+  <data name="Svc_CmpStatus_Match" xml:space="preserve"><value>Match</value></data>
+  <data name="Svc_CmpStatus_ContentMismatch" xml:space="preserve"><value>ContentMismatch</value></data>
+  <data name="Svc_CmpStatus_DateMismatch" xml:space="preserve"><value>DateMismatch</value></data>
+  <data name="Svc_CmpStatus_OnlyInSource" xml:space="preserve"><value>OnlyInSource</value></data>
+  <data name="Svc_CmpStatus_OnlyInTarget" xml:space="preserve"><value>OnlyInTarget</value></data>
+  <data name="Svc_CmpStatus_Unverified" xml:space="preserve"><value>Unverified</value></data>
+  <data name="Svc_Ver_Throttled" xml:space="preserve"><value>⚠ Graph rajoitettu – odotetaan {0:0} s</value></data>
+  <data name="Svc_Ver_SrcScanErr" xml:space="preserve"><value>Lähde ”{0}”: {1}</value></data>
+  <data name="Svc_Ver_SrcScanLog" xml:space="preserve"><value>⚠ Lähteen juurta ”{0}” ei voitu skannata: {1}</value></data>
+  <data name="Svc_Ver_LibraryRoot" xml:space="preserve"><value>(kirjaston juuri)</value></data>
+  <data name="Svc_Ver_TgtNotFound" xml:space="preserve"><value>Kohde ”{0}”: ei löytynyt (se on voitu poistaa tai nimetä uudelleen kopioinnin jälkeen)</value></data>
+  <data name="Svc_Ver_TgtGone" xml:space="preserve"><value>⚠ Kohdetta ”{0}” ei enää ole</value></data>
+  <data name="Svc_Ver_TgtScanErr" xml:space="preserve"><value>Kohde ”{0}”: {1}</value></data>
+  <data name="Svc_Ver_TgtScanLog" xml:space="preserve"><value>⚠ Kohteen juurta ”{0}” ei voitu skannata: {1}</value></data>
+  <data name="Svc_Ver_OneNoteNote" xml:space="preserve"><value>OneNote kirjoittaa tämän tiedoston sisällön ja muokkauspäivän uudelleen palvelinpuolella kopioinnista riippumatta – hajautus tai päivämäärä ei voi vahvistaa tai kumota sisältöeroa tässä. Avaa muistikirja tarkistaaksesi käsin tarvittaessa.</value></data>
+  <data name="Svc_Ver_DeepNeeded" xml:space="preserve"><value>{0:N0} Office-tiedostoa tarvitsee syvävahvistuksen (hajautus- ja päivämääräsignaalit olivat ristiriidassa)...</value></data>
+  <data name="Svc_Ver_DeepProgress" xml:space="preserve"><value>Syvävahvistetaan Office-tiedostoja: {0:N0} / {1:N0}</value></data>
+  <data name="Svc_Ver_DeepDone" xml:space="preserve"><value>Syvävahvistus valmis: {0:N0} vertailtu</value></data>
+  <data name="Svc_Ver_DeepDoneMatched" xml:space="preserve"><value>, {0:N0} vahvistettu täsmääväksi</value></data>
+  <data name="Svc_Ver_DeepDoneMismatch" xml:space="preserve"><value>, {0:N0} sisältöeroa</value></data>
+  <data name="Svc_Ver_DeepDoneInconclusive" xml:space="preserve"><value>, {0:N0} ei voitu vertailla</value></data>
+  <data name="Svc_Ver_SizeCap" xml:space="preserve"><value>tiedosto ylittää syvävahvistuksen kokorajan {0:N0} Mt</value></data>
+  <data name="Svc_Ver_NotOoxml" xml:space="preserve"><value>ei kelvollinen OOXML-paketti (tunnisteella salattu tai vioittunut)</value></data>
+  <data name="Svc_Ver_DownloadFailed" xml:space="preserve"><value>lataus epäonnistui: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatile" xml:space="preserve"><value>Syvävahvistus: sisältöosat ovat identtiset – vain SharePointin uudelleen kirjoittamat metatiedot (asiakirjatunnus, mukautetut ominaisuudet jne.) eroavat.</value></data>
+  <data name="Svc_Ver_DeepDiffers" xml:space="preserve"><value>Syvävahvistus: sisältö eroaa kohteessa {0}</value></data>
+  <data name="Svc_Ver_DeepDiffersPlain" xml:space="preserve"><value>Syvävahvistus: sisältö eroaa.</value></data>
+  <data name="Svc_Ver_DeepNoRun" xml:space="preserve"><value>Syvävahvistusta ei voitu suorittaa – {0}. Tila perustuu vain päivämäärä-/hajautustarkistukseen.</value></data>
+  <data name="Svc_Ver_UnknownReason" xml:space="preserve"><value>tuntematon syy</value></data>
+  <data name="Svc_Perm_NoRoleDefs" xml:space="preserve"><value>Kohteen roolimääritykset eivät ole saatavilla – käyttöoikeuksia ei kopioitu (periytyminen ennallaan); yritä uudelleen suorittamalla uudelleen</value></data>
+  <data name="Svc_Perm_NoSource" xml:space="preserve"><value>Lähteen käyttöoikeuksia ei voitu lukea – käyttöoikeuksia ei kopioitu (periytyminen ennallaan); yritä uudelleen suorittamalla uudelleen</value></data>
+  <data name="Svc_Perm_BreakFailed" xml:space="preserve"><value>Periytymisen katkaisu epäonnistui: {0}</value></data>
+  <data name="Svc_Perm_NoRoleSuffix" xml:space="preserve"><value>{0} ({1}: roolia ei ole kohteessa)</value></data>
+  <data name="Svc_Perm_RoleError" xml:space="preserve"><value>{0} ({1}: {2})</value></data>
+  <data name="Svc_Perm_NoneApplied" xml:space="preserve"><value>Periytyminen katkaistu, mutta roolimäärityksiä ei otettu käyttöön: {0}</value></data>
+  <data name="Svc_Perm_NoPrincipals" xml:space="preserve"><value>Periytyminen katkaistu, mutta kohteessa ei voitu ratkaista yhtään päämiestä: {0}</value></data>
+  <data name="Svc_Auth_NotConfiguredClientId" xml:space="preserve"><value>Todennuspalvelua ei ole määritetty. Määritä asiakastunnus Asetuksissa.</value></data>
+  <data name="Svc_Auth_NotConfiguredSignIn" xml:space="preserve"><value>Todennuspalvelua ei ole määritetty. Kirjaudu ensin sisään.</value></data>
+  <data name="Svc_Lib_CreateLibHttp" xml:space="preserve"><value>Luo kirjasto ”{0}” HTTP {1}: {2}</value></data>
+  <data name="Svc_Lib_VersioningHttp" xml:space="preserve"><value>Määritä versiointi kohteelle ”{0}” HTTP {1}: {2}</value></data>
+  <data name="Svc_Lib_NoDriveId" xml:space="preserve"><value>Kirjasto ”{0}” luotiin, mutta sen asematunnusta ei löytynyt Graphista.</value></data>
+  <data name="Svc_Lib_CreateListHttp" xml:space="preserve"><value>Luo luettelo ”{0}” HTTP {1}: {2}</value></data>
+  <data name="Svc_Lib_ColumnRejected" xml:space="preserve"><value>SharePoint hylkäsi sarakkeen luonnin ({0}): {1}</value></data>
+  <data name="Svc_Lib_LookupNotCreated" xml:space="preserve"><value>Hakusaraketta ”{0}” ei luotu – haettua luetteloa ei löytynyt kohteesta. Kopioi ensin kyseinen luettelo ja suorita sitten uudelleen (tai lisää sarake käsin).</value></data>
+  <data name="Svc_Lib_NoTaxonomySchema" xml:space="preserve"><value>Taksonomiasarakkeelle ”{0}” ei tallennettu lähdeskeemaa</value></data>
+  <data name="Svc_Lib_CreateFieldXmlHttp" xml:space="preserve"><value>createfieldasxml ”{0}” HTTP {1}: {2}</value></data>
+  <data name="Svc_Lib_AlreadyExists" xml:space="preserve"><value>On jo olemassa – ohitettu</value></data>
+  <data name="Svc_Opc_OnlyInSource" xml:space="preserve"><value>vain lähteessä: {0}</value></data>
+  <data name="Svc_Opc_OnlyInTarget" xml:space="preserve"><value>vain kohteessa: {0}</value></data>
+  <data name="Svc_ParDown" xml:space="preserve"><value>↓ Rinnakkaisuus: {0}/{1} (rajoitettu)</value></data>
+  <data name="Svc_ParUp" xml:space="preserve"><value>⬆ Rinnakkaisuus: {0}/{1} (palautuu)</value></data>
+  <data name="Svc_ScanConcDown" xml:space="preserve"><value>↓ Skannauksen rinnakkaisuus: {0}/{1} (rajoitettu)</value></data>
+  <data name="Svc_ScanConcUp" xml:space="preserve"><value>⬆ Skannauksen rinnakkaisuus: {0}/{1} (palautuu)</value></data>
+  <data name="Svc_ScanningSource" xml:space="preserve"><value>Skannataan lähdettä kopioitavien tiedostojen löytämiseksi...</value></data>
+  <data name="Svc_NativeCopying" xml:space="preserve"><value>Kopioidaan erikoiskansio ”{0}” natiivisti (säilyttää muistikirja-/pakettiliitoksen)...</value></data>
+  <data name="Svc_SkippedExists" xml:space="preserve"><value>⏭ ”{0}” ohitettu – on jo kohteessa</value></data>
+  <data name="Svc_NativeDone" xml:space="preserve"><value>✓ Kansion ”{0}” natiivikopiointi valmis</value></data>
+  <data name="Svc_NativeFailedErr" xml:space="preserve"><value>⚠ Kansion ”{0}” natiivikopiointi epäonnistui: {1}</value></data>
+  <data name="Svc_ScanProgress" xml:space="preserve"><value>Skannataan lähdettä: {0:N0} tiedostoa löydetty toistaiseksi...</value></data>
+  <data name="Svc_EmptyFolderFailed" xml:space="preserve"><value>⚠ Tyhjän kansion ”{0}” luonti epäonnistui: {1}</value></data>
+  <data name="Svc_ScanComplete" xml:space="preserve"><value>Lähteen skannaus valmis: {0:N0} tiedostoa löytyi ajassa {1:0} s</value></data>
+  <data name="Svc_ScanThrottleInfo" xml:space="preserve"><value>({0} rajoitustapahtumaa, {1:0} s odotettu, {2:P0} rajoituksen lisäkuorma)</value></data>
+  <data name="Svc_ApplyingCustom" xml:space="preserve"><value>Otetaan mukautettujen sarakkeiden arvot käyttöön {0:N0} tiedostolle...</value></data>
+  <data name="Svc_CustomFieldsErr" xml:space="preserve"><value>Mukautetut kentät: {0}</value></data>
+  <data name="Svc_CustomFieldsPartial" xml:space="preserve"><value>⚠ Mukautettujen sarakkeiden arvoja ei voitu ottaa täysin käyttöön {0:N0} tiedostolle – katso lisätiedot Mukautetut kentät -sarakkeesta</value></data>
+  <data name="Svc_FolderMetaStopped" xml:space="preserve"><value>⚠ Kansioiden metatietojen läpikäynti pysähtyi ennenaikaisesti: {0}</value></data>
+  <data name="Svc_Cancelled" xml:space="preserve"><value>Peruutettu</value></data>
+  <data name="Svc_SpError" xml:space="preserve"><value>SharePoint-virhe ({0}): {1}</value></data>
+  <data name="Svc_NoTargetParent" xml:space="preserve"><value>Kohteen ylätason kansiota ei ole määritetty.</value></data>
+  <data name="Svc_NoTargetLibUrl" xml:space="preserve"><value>Sivua ei voi luoda: kohdekirjaston palvelinsuhteellista URL-osoitetta ei ole asetettu.</value></data>
+  <data name="Svc_PageSaveFailed" xml:space="preserve"><value>Sivu luotiin, mutta sen sisältöä ei voitu tallentaa: {0}</value></data>
+  <data name="Svc_PageReadFailed" xml:space="preserve"><value>Sivu luotiin, mutta sen lähdesisältöä ei voitu lukea: {0}</value></data>
+  <data name="Svc_PageNoContent" xml:space="preserve"><value>Sivu kopioitu ilman sisältöä (Kopioi sivut -asetus on pois päältä)</value></data>
+  <data name="Svc_TempVersionNotFound" xml:space="preserve"><value>Poistettavaa tilapäistä latausversiota ei voitu tunnistaa – historiaan voi jäädä ylimääräinen versio</value></data>
+  <data name="Svc_OneRole" xml:space="preserve"><value>1 roolimääritys otettu käyttöön</value></data>
+  <data name="Svc_RolesApplied" xml:space="preserve"><value>{0} roolimääritystä otettu käyttöön</value></data>
+  <data name="Svc_PermSkipped" xml:space="preserve"><value>; ohitettu {0} ratkaisematonta: {1}</value></data>
+  <data name="Svc_PermFailed" xml:space="preserve"><value>; {0} epäonnistui: {1}</value></data>
+  <data name="Svc_UnknownError" xml:space="preserve"><value>tuntematon virhe</value></data>
+  <data name="Svc_Mig_DownloadSInFlight" xml:space="preserve"><value>· ↓ {0} latausta käynnissä, yhteensä noin {1:N0} Mt; vanhin: {2}{3} {4} s</value></data>
+  <data name="Svc_Mig_CopyAllVersionsRequested" xml:space="preserve"><value>⚠ ”Kopioi kaikki versiot” pyydetty, mutta Migration API -tila voi kopioida enintään {0:N0} versiota tiedostoa kohden – asiakirjoista, joilla on pidempi historia, vanhimmat versiot katkaistaan</value></data>
+  <data name="Svc_Mig_MaxVersionsExceedsThe" xml:space="preserve"><value>⚠ Enimmäisversiomäärä ({0}) ylittää Migration API -tilan käsittelemän {1:N0} version tiedostokohtaisen enimmäismäärän – rajoitetaan arvoon {2:N0}</value></data>
+  <data name="Svc_Mig_TransferMemoryBudgetGB" xml:space="preserve"><value>Siirron muistibudjetti: {0:F1} Gt (rajoittaa samanaikaisia tiedostopuskureita)</value></data>
+  <data name="Svc_Mig_AnalysisSlotsThrottleBackoff" xml:space="preserve"><value>↓ Analyysi: {0}/{1} paikkaa (rajoituksen perääntyminen)</value></data>
+  <data name="Svc_Mig_AnalysisSlotsRecovering" xml:space="preserve"><value>⬆ Analyysi: {0}/{1} paikkaa (palautuu)</value></data>
+  <data name="Svc_Mig_DownloadsSlotsThrottleBackoff" xml:space="preserve"><value>↓ Lataukset: {0}/{1} paikkaa (rajoituksen perääntyminen)</value></data>
+  <data name="Svc_Mig_DownloadsSlotsRecovering" xml:space="preserve"><value>⬆ Lataukset: {0}/{1} paikkaa (palautuu)</value></data>
+  <data name="Svc_Mig_UploadsSlotsBackingOff" xml:space="preserve"><value>↓ Lähetykset: {0}/{1} paikkaa (perääntyminen – lähetys keskeytyi)</value></data>
+  <data name="Svc_Mig_UploadsSlotsRecovering" xml:space="preserve"><value>⬆ Lähetykset: {0}/{1} paikkaa (palautuu)</value></data>
+  <data name="Svc_Mig_CannotResolveListID" xml:space="preserve"><value>Kirjaston luettelotunnusta ei voi ratkaista polussa ”{0}”</value></data>
+  <data name="Svc_Mig_ProvisioningTargetSubfolder" xml:space="preserve"><value>Valmistellaan {0} kohdealikansiota{1}...</value></data>
+  <data name="Svc_Mig_TargetIsEmptySkipping" xml:space="preserve"><value>Kohde on tyhjä – olemassa olevien tiedostojen skannaus ohitetaan.</value></data>
+  <data name="Svc_Mig_ScanningTargetFolderFor" xml:space="preserve"><value>Skannataan {0} kohdekansiota{1} olemassa olevien tiedostojen varalta...</value></data>
+  <data name="Svc_Mig_ExistingFileScanFile" xml:space="preserve"><value>Olemassa olevien tiedostojen skannaus: {0:N0} tiedostoa on jo kohteessa</value></data>
+  <data name="Svc_Mig_GraphSawRESTOnly" xml:space="preserve"><value>(Graph näki {0:N0}, vain REST {1:N0}).</value></data>
+  <data name="Svc_Mig_CheckingModifiedDatesFor" xml:space="preserve"><value>Tarkistetaan muokkauspäivät {0:N0} olemassa olevalle tiedostolle...</value></data>
+  <data name="Svc_Mig_CheckingModifiedDates" xml:space="preserve"><value>Tarkistetaan muokkauspäiviä: {0:N0} / {1:N0}</value></data>
+  <data name="Svc_Mig_FileSHadNo" xml:space="preserve"><value>⚠ {0:N0} tiedostolla ei ollut vahvistettua muokkauspäivää uudelleenyritysten jälkeen – käsitellään kopiointia tarvitsevina</value></data>
+  <data name="Svc_Mig_OfAlreadyUpTo" xml:space="preserve"><value>{0:N0} / {1:N0} on jo ajan tasalla – ohitetaan niiden metatietojen nouto</value></data>
+  <data name="Svc_Mig_FetchingMetadataForFolders" xml:space="preserve"><value>Noudetaan metatietoja {0:N0} kansiolle...</value></data>
+  <data name="Svc_Mig_FetchingFolderMetadata" xml:space="preserve"><value>Noudetaan kansioiden metatietoja: {0:N0} / {1:N0}</value></data>
+  <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} kansiolla ei ollut skannauksesta identiteettiä (ei Graph-virhe) – ne näyttävät paikkamerkkipäivämäärän. Polku/polut: {1}</value></data>
+  <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} kansion Graph-metatietohaku epäonnistui – ne näyttävät paikkamerkkipäivämäärän. Esimerkki(t): {1}</value></data>
+  <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} kansiota ei voitu päivätä (Graph-haku epäonnistui uudelleenyritysten jälkeen) – ne näyttävät paikkamerkkipäivämäärän 1.1.2000 todellisen lähdepäivämääränsä sijaan</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} kansiolle ei ollut lähteessä saatavilla tekijän/muokkaajan sähköpostiosoitetta – näitä ei voi korjata, ja ne näyttävät tuovan tilin</value></data>
+  <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Korjataan kansioiden metatietoja (päivämäärät, tekijyys, väri) {0:N0}/{1:N0} kansiolle...</value></data>
+  <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: kohdekansion GUID-tunnusta ei voitu ratkaista</value></data>
+  <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Korjataan kansioiden metatietoja: {0:N0} / {1:N0}</value></data>
+  <data name="Svc_Mig_CouldNotCorrectMetadata" xml:space="preserve"><value>⚠ Metatietoja ei voitu korjata {0:N0} kansiolle. Esimerkki(t): {1}</value></data>
+  <data name="Svc_Mig_FolderMetadataVerifiedFor" xml:space="preserve"><value>✓ Kansioiden metatiedot vahvistettu {0:N0} kansiolle</value></data>
+  <data name="Svc_Mig_FolderColorCouldNot" xml:space="preserve"><value>ℹ Kansion väriä ei voitu ottaa käyttöön {0:N0} kansiolle – päivämäärät ja tekijyys korjattiin silti. Esimerkki(t): {1}</value></data>
+  <data name="Svc_Mig_CorrectingSpecialFolderS" xml:space="preserve"><value>Korjataan {0:N0} erikoiskansiota (esim. OneNote-muistikirjat)...</value></data>
+  <data name="Svc_Mig_CouldNotCorrectProgId" xml:space="preserve"><value>⚠ ProgId-tunnusta ei voitu korjata {0:N0} kansiolle. Esimerkki(t): {1}</value></data>
+  <data name="Svc_Mig_SpecialFolderAssociationVerified" xml:space="preserve"><value>✓ Erikoiskansion liitos vahvistettu {0:N0} kansiolle</value></data>
+  <data name="Svc_Mig_AnalyzingFilesForVersion" xml:space="preserve"><value>Analysoidaan {0:N0} tiedostoa versiotietoista eräajoa varten...</value></data>
+  <data name="Svc_Mig_AnalyzingFilesForBatching" xml:space="preserve"><value>Analysoidaan tiedostoja eräajoa varten: {0:N0} / {1:N0}</value></data>
+  <data name="Svc_Mig_FileSMissingMetadata" xml:space="preserve"><value>⚠ {0:N0} tiedostolta puuttuu metatietoja uudelleenyritysten jälkeen – versiomäärät voivat olla näille likimääräisiä</value></data>
+  <data name="Svc_Mig_SharePointAbortedTheBatch" xml:space="preserve"><value>↻ {0}SharePoint keskeytti erän {1} ”on jo olemassa” -ristiriidan{2} jälkeen – merkitään ne ohitetuiksi ja yritetään loput uudelleen kerran...</value></data>
+  <data name="Svc_Mig_SharePointAbortedTheBatch2" xml:space="preserve"><value>↻ {0}SharePoint keskeytti erän {1} nimiristiriidan{2} jälkeen – tyhjennetään ja yritetään erä uudelleen kerran...</value></data>
+  <data name="Svc_Mig_DeleteFailedTrace" xml:space="preserve"><value>⚠ {0}poisto epäonnistui [{1}] (jälki: {2}): {3}</value></data>
+  <data name="Svc_Mig_MoreStillBlockedConflicts" xml:space="preserve"><value>⚠ {0}…lisää edelleen estettyjä ristiriitoja (vaiennetaan)</value></data>
+  <data name="Svc_Mig_ClearedConflictingFileS" xml:space="preserve"><value>{0}tyhjennetty {1}/{2} ristiriitaista tiedostoa</value></data>
+  <data name="Svc_Mig_StillBlocked" xml:space="preserve"><value>, {0} edelleen estetty</value></data>
+  <data name="Svc_Mig_CouldNotRemoveThe" xml:space="preserve"><value>Olemassa olevaa tiedostoa ei voitu poistaa ennen uudelleenyritystä – yritä uudelleen suorittamalla uudelleen.</value></data>
+  <data name="Svc_Mig_RetrySkippedEveryConflicting" xml:space="preserve"><value>✗ {0}Uudelleenyritys ohitettu – kaikki ristiriitaiset tiedostot ovat edelleen estettyjä.</value></data>
+  <data name="Svc_Mig_CouldNotRemoveThe2" xml:space="preserve"><value>Olemassa olevaa tiedostoa ei voitu poistaa ennen korvaamista (uudelleenyritysten jälkeen) – ohitettu päällekkäisen version tuontivirheen välttämiseksi. Yritä uudelleen suorittamalla uudelleen.</value></data>
+  <data name="Svc_Mig_PreFlightToCopy" xml:space="preserve"><value>{0}Esitarkistus: {1} kopioitavaa, {2} on jo olemassa</value></data>
+  <data name="Svc_Mig_AllFilesAlreadyExist" xml:space="preserve"><value>{0}Kaikki tiedostot ovat jo olemassa – ei kopioitavaa</value></data>
+  <data name="Svc_Mig_ProvisioningAzureMigrationContainers" xml:space="preserve"><value>{0}Valmistellaan Azure-siirtosäilöjä...</value></data>
+  <data name="Svc_Mig_DownloadingFilesConcurrentVersion" xml:space="preserve"><value>{0}Ladataan {1:N0} tiedostoa ({2} samanaikaista, {3} versiovirtaa kutakin{4})...</value></data>
+  <data name="Svc_Mig_FileVersionIsGB" xml:space="preserve"><value>Tiedostoversio on {0:F1} Gt – suurempi kuin 2 Gt, jonka tämä tila voi puskuroida. Kopioi tämä tiedosto Enhanced REST -tilassa.</value></data>
+  <data name="Svc_Mig_DownloadFailed" xml:space="preserve"><value>Lataus epäonnistui: {0}</value></data>
+  <data name="Svc_Mig_UploadInterruptedRetryingIn" xml:space="preserve"><value>⚠ {0}{1} – lähetys keskeytyi, yritetään uudelleen {2} s kuluttua ({3}/{4})</value></data>
+  <data name="Svc_Mig_FilesPackaged" xml:space="preserve"><value>{0}{1:N0} / {2:N0} tiedostoa paketoitu</value></data>
+  <data name="Svc_Mig_UploadFailed" xml:space="preserve"><value>Lähetys epäonnistui ({0}): {1}</value></data>
+  <data name="Svc_Mig_UploadFailedAfterRetries" xml:space="preserve"><value>✗ {0}Lähetys epäonnistui uudelleenyritysten jälkeen: {1} — {2}</value></data>
+  <data name="Svc_Mig_PackageBuildFailed" xml:space="preserve"><value>Paketin rakentaminen epäonnistui: {0}</value></data>
+  <data name="Svc_Mig_CouldNotResolveTarget2" xml:space="preserve"><value>Kohdekirjaston juurikansion tunnusta ei voitu ratkaista – SharePointin rajoitus käytti kaikki uudelleenyritykset. Erää ei lähetetty; suorita uudelleen (mieluiten ruuhka-ajan ulkopuolella).</value></data>
+  <data name="Svc_Mig_CouldNotResolveTarget3" xml:space="preserve"><value>{0} kohdealikansion tunnusta ei voitu ratkaista – SharePointin rajoitus käytti kaikki uudelleenyritykset (esim. ”{1}”). Erää ei lähetetty; suorita uudelleen (mieluiten ruuhka-ajan ulkopuolella).</value></data>
+  <data name="Svc_Mig_BuildingAndUploadingSPMI" xml:space="preserve"><value>{0}Rakennetaan ja lähetetään SPMI-manifestia...</value></data>
+  <data name="Svc_Mig_FileSCopiedCurrent" xml:space="preserve"><value>⚠ {0}{1:N0} tiedostoa kopioitu vain nykyisellä versiolla (metatiedot eivät ole saatavilla rajoituksen aikana; häviötön yhden version tiedostoille)</value></data>
+  <data name="Svc_Mig_PackagedFileReadyTo" xml:space="preserve"><value>{0}Paketoitu {1:N0} tiedostoa{2} – valmis tuotavaksi</value></data>
+  <data name="Svc_Mig_SubmittedToSharePointWaiting" xml:space="preserve"><value>{0}Lähetetty SharePointiin – odotetaan tuontia...</value></data>
+  <data name="Svc_Mig_SharePointImportStarted" xml:space="preserve"><value>{0}SharePoint-tuonti alkoi</value></data>
+  <data name="Svc_Mig_SPImportingFiles" xml:space="preserve"><value>{0}SharePoint tuo: {1:N0} / {2:N0} tiedostoa</value></data>
+  <data name="Svc_Mig_UnknownError" xml:space="preserve"><value>Tuntematon virhe</value></data>
+  <data name="Svc_Mig_FatalError" xml:space="preserve"><value>⚠ {0}Vakava virhe: {1}</value></data>
+  <data name="Svc_Mig_ImportError" xml:space="preserve"><value>⚠ {0}tuontivirhe {1}: {2}</value></data>
+  <data name="Svc_Mig_MoreErrorsThisBatch" xml:space="preserve"><value>⚠ {0}…lisää virheitä tässä erässä (vaiennetaan; katso erän yhteenveto)</value></data>
+  <data name="Svc_Mig_ImportPollingEndedBefore" xml:space="preserve"><value>Tuonnin kysely päättyi ennen kuin SharePoint ilmoitti valmistumisesta – lopputulos on tuntematon; täsmäytä suorittamalla uudelleen Kopioi jos uudempi -tilassa</value></data>
+  <data name="Svc_Mig_ImportErrorSCould" xml:space="preserve"><value>⚠ {0}{1} tuontivirhettä ei voitu kohdistaa – vahvistetaan {2:N0} tiedostoa kohteessa...</value></data>
+  <data name="Svc_Mig_SharePointReportedImportErrors" xml:space="preserve"><value>SharePoint ilmoitti tuontivirheistä, eikä tätä tiedostoa löytynyt kohteesta sen jälkeen – yritä uudelleen suorittamalla uudelleen</value></data>
+  <data name="Svc_Mig_MigrationJobFatalError" xml:space="preserve"><value>Siirtotyön vakava virhe</value></data>
+  <data name="Svc_Mig_ImportFAILEDFatalAbort" xml:space="preserve"><value>✗ {0}Tuonti EPÄONNISTUI (vakava keskeytys) – {1}/{2} tuotu, {3} epäonnistui</value></data>
+  <data name="Svc_Mig_ErrorsReportedAttributed" xml:space="preserve"><value>({0} virhettä ilmoitettu, {1} kohdistettu)</value></data>
+  <data name="Svc_Mig_ImportFinishedWithErrors" xml:space="preserve"><value>⚠ {0}Tuonti päättyi virheisiin – {1}/{2} tuotu, {3} epäonnistui{4}</value></data>
+  <data name="Svc_Mig_ImportCompleteFileImported" xml:space="preserve"><value>{0}✓ Tuonti valmis – {1} tiedostoa{2} tuotu</value></data>
+  <data name="Svc_Mig_ImportFAILED" xml:space="preserve"><value>✗ {0}Tuonti EPÄONNISTUI – {1}</value></data>
+  <data name="Svc_Mig_ResumingFromMB" xml:space="preserve"><value>, jatketaan kohdasta {0:F0} Mt</value></data>
+  <data name="Svc_Mig_DownloadThrottledWaitingS" xml:space="preserve"><value>⚠ {0}{1} – lataus rajoitettu, odotetaan {2:F0} s ({3}/6{4})</value></data>
+  <data name="Svc_Mig_HasAVersionLarger" xml:space="preserve"><value>{0}: versio on suurempi kuin 2 Gt, jonka tämä tila voi puskuroida – kopioi se Enhanced REST -tilassa.</value></data>
+  <data name="Svc_Mig_ConnectionRetryingInS" xml:space="preserve"><value>⚠ {0}{1} – yhteys {2}, yritetään uudelleen {3} s kuluttua ({4}/3{5})</value></data>
+  <data name="Svc_Mig_TimedOut" xml:space="preserve"><value>aikakatkaistiin</value></data>
+  <data name="Svc_Mig_Reset" xml:space="preserve"><value>nollattiin</value></data>
+  <data name="Svc_Sp_CustomFieldErrors" xml:space="preserve"><value>Mukautettujen kenttien virheet: {0}</value></data>
+  <data name="Svc_Sp_ColumnMissingOnTarget" xml:space="preserve"><value>{0} (saraketta ei ole kohteessa)</value></data>
+  <data name="Svc_Sp_CouldNotParseValidateUpdateListItem" xml:space="preserve"><value>ValidateUpdateListItem-vastauksen ({0}) jäsentäminen epäonnistui —</value></data>
+  <data name="Svc_Sp_TheMigrationAPIRequires" xml:space="preserve"><value>Migration API edellyttää nimenomaista sivustokokoelman järjestelmänvalvojan jäsenyyttä kohteessa {0}.
+
+</value></data>
+  <data name="Svc_Sp_SPSeesYouAs" xml:space="preserve"><value>SharePoint näkee sinut näin: {0} ({1}), IsSiteAdmin={2}
+
+</value></data>
+  <data name="Svc_Sp_NoteGlobalAdminSharePoint" xml:space="preserve"><value>Huomautus: yleinen järjestelmänvalvoja / SharePoint-järjestelmänvalvoja ei täytä tätä luetteloa automaattisesti.
+</value></data>
+  <data name="Svc_Sp_CustomColumnSCould" xml:space="preserve"><value>⚠ {0} mukautettua saraketta ei voitu lukea, ja ne ohitettiin</value></data>
+  <data name="Svc_Sp_OfValuesResolved" xml:space="preserve"><value>{0} (0/{1} arvoa ratkaistu)</value></data>
+  <data name="Svc_Sp_LookupUnresolved" xml:space="preserve"><value>{0} (haku ratkaisematta)</value></data>
+  <data name="Svc_Sp_NotInitializedPleaseSign" xml:space="preserve"><value>Ei alustettu. Kirjaudu ensin sisään.</value></data>
+  <data name="Svc_Sp_CouldNotFindSite" xml:space="preserve"><value>Sivustoa ei löytynyt osoitteesta {0}</value></data>
+  <data name="Svc_Sp_EmptyResponseDownloadingFile" xml:space="preserve"><value>Tyhjä vastaus tiedostoa ladattaessa.</value></data>
+  <data name="Svc_Sp_EmptyResponseDownloadingVersion" xml:space="preserve"><value>Tyhjä vastaus versiosisältöä ladattaessa.</value></data>
+  <data name="Svc_Sp_CouldNotObtainA" xml:space="preserve"><value>CSOM-kutsulle ei saatu pyyntötiivistettä (request digest)</value></data>
+  <data name="Svc_Sp_UnknownCSOMError" xml:space="preserve"><value>tuntematon CSOM-virhe</value></data>
+  <data name="Svc_Sp_CSOMErrorCode" xml:space="preserve"><value>CSOM-virhe (koodi {0}): {1}</value></data>
+  <data name="Svc_Sp_NativeCopyFailedTo" xml:space="preserve"><value>Natiivikopioinnin aloitus epäonnistui: HTTP {0}: {1}</value></data>
+  <data name="Svc_Sp_NativeCopyStartedBut" xml:space="preserve"><value>Natiivikopiointi alkoi, mutta valmistumisen seurantaan ei palautettu valvonta-URL-osoitetta</value></data>
+  <data name="Svc_Sp_NativeCopyMonitorFailed" xml:space="preserve"><value>Natiivikopioinnin valvonta epäonnistui: HTTP {0}: {1} | valvonta-URL: {2}</value></data>
+  <data name="Svc_Sp_NativeCopyFailed" xml:space="preserve"><value>Natiivikopiointi epäonnistui: {0}</value></data>
+  <data name="Svc_Sp_NativeCopyTimedOut" xml:space="preserve"><value>Natiivikopiointi aikakatkaistiin valmistumista odotettaessa</value></data>
+  <data name="Svc_Sp_NativeCopyException" xml:space="preserve"><value>Natiivikopioinnin poikkeus: {0}</value></data>
+  <data name="Svc_Sp_CouldNotResolveFolder" xml:space="preserve"><value>Kansion luettelokohteen tunnusta ei voitu ratkaista: HTTP {0}: {1}</value></data>
+  <data name="Svc_Sp_CouldNotParseFolder" xml:space="preserve"><value>Kansion luettelokohteen tunnusta ei voitu jäsentää kohteesta ”{0}”: {1}</value></data>
+  <data name="Svc_Sp_AuthorNotAResolvable" xml:space="preserve"><value>Tekijä ({0} ei ole ratkaistavissa oleva tili tällä sivustolla)</value></data>
+  <data name="Svc_Sp_EditorNotAResolvable" xml:space="preserve"><value>Muokkaaja ({0} ei ole ratkaistavissa oleva tili tällä sivustolla)</value></data>
+  <data name="Svc_Sp_NothingToWriteSkipped" xml:space="preserve"><value>Ei kirjoitettavaa – ohitettu: {0}</value></data>
+  <data name="Svc_Sp_FolderColorNotApplied" xml:space="preserve"><value>kansion väriä ei otettu käyttöön – {0}</value></data>
+  <data name="Svc_Sp_PartiallyCorrectedSkipped" xml:space="preserve"><value>Korjattu osittain – ohitettu: {0}</value></data>
+  <data name="Svc_Sp_CouldNotParseCSOM" xml:space="preserve"><value>CSOM-vastauksen jäsentäminen epäonnistui: {0} | body: {1}</value></data>
+  <data name="Svc_Sp_AuthorStillExpected" xml:space="preserve"><value>Tekijä on edelleen ”{0}”, odotettiin ”{1}”</value></data>
+  <data name="Svc_Sp_EditorStillExpected" xml:space="preserve"><value>Muokkaaja on edelleen ”{0}”, odotettiin ”{1}”</value></data>
+  <data name="Svc_Sp_WriteReportedNoError" xml:space="preserve"><value>Kirjoitus ei ilmoittanut virheestä, mutta ei tallentunut – {0}</value></data>
+  <data name="Svc_Sp_SPIDsUnavailableItem" xml:space="preserve"><value>SharePoint-tunnukset eivät ole saatavilla – kohdetta ei löytynyt tai sharepointIds ei ole levinnyt</value></data>
+  <data name="Svc_Sp_FieldErrors" xml:space="preserve"><value>Kenttävirheet: {0}</value></data>
+  <data name="Svc_Sp_MetadataMayNotHave" xml:space="preserve"><value>metatietoja ei ehkä otettu käyttöön: {0}</value></data>
+  <data name="Svc_Sp_CannotDetermineLibraryPath" xml:space="preserve"><value>Aseman {0} kirjastopolkua ei voi määrittää.</value></data>
+  <data name="Svc_Sp_UnknownCSOMError2" xml:space="preserve"><value>Tuntematon CSOM-virhe</value></data>
+  <data name="Svc_Sp_FixGoToThe" xml:space="preserve"><value>Korjaus: siirry kohdesivustolle → Sivuston asetukset → Sivustokokoelman järjestelmänvalvojat → lisää tilisi.</value></data>
+  <data name="Svc_Sp_CouldNotFindJob" xml:space="preserve"><value>Työn tunnuksen GUID-arvoa ei löytynyt ProcessQuery-vastauksesta: {0}</value></data>
+  <data name="Svc_Sp_MigrationJobProgressPolling" xml:space="preserve"><value>Siirtotyön edistymisen kysely aikakatkaistiin 3 kertaa peräkkäin – tuonnin lopputulos on tuntematon</value></data>
+  <data name="Svc_Sp_ListingFolderFilesFailed" xml:space="preserve"><value>Kansion tiedostojen luettelointi epäonnistui: HTTP {0} kohteelle {1} —</value></data>
+  <data name="Svc_Sp_RecycleReturnedNoBin" xml:space="preserve"><value>roskakori ei palauttanut roskakorin tunnusta ({0})</value></data>
+  <data name="Svc_Sp_EmptyBody" xml:space="preserve"><value>(tyhjä body)</value></data>
+  <data name="Svc_Sp_LargeFileUploadFailed" xml:space="preserve"><value>Suuren tiedoston lähetys epäonnistui.</value></data>
+  <data name="Svc_Sp_SitePagesIDUnknownCannot" xml:space="preserve"><value>SitePages-tunnus on tuntematon – sisältöä ei voi tallentaa</value></data>
+  <data name="Svc_Sp_SitePagesIDUnknownCannot2" xml:space="preserve"><value>SitePages-tunnus on tuntematon – julkaisua ei voi tehdä</value></data>
+  <data name="Svc_Sp_NullIDFromExisting" xml:space="preserve"><value>Null-tunnus olemassa olevasta kansiosta.</value></data>
+  <data name="Svc_Sp_NullIDFromCreated" xml:space="preserve"><value>Null-tunnus luodusta kansiosta.</value></data>
+  <data name="Svc_Sp_NullIDAfterConcurrent" xml:space="preserve"><value>Null-tunnus kansion samanaikaisen luonnin jälkeen.</value></data>
+  <data name="Svc_Sp_BulkCustomFieldRead" xml:space="preserve"><value>Mukautettujen kenttien joukkolukeminen epäonnistui: HTTP {0} — {1}</value></data>
+  <data name="Svc_Sp_NotValidAtThe" xml:space="preserve"><value>(ei kelvollinen kohdetasolla): {0}</value></data>
+  <data name="Svc_Sp_CouldNotResolveSharePoint" xml:space="preserve"><value>SharePoint-tunnuksia kohteelle {0}/{1} ei voitu ratkaista</value></data>
+  <data name="Svc_Sp_CouldNotResolveList" xml:space="preserve"><value>Luettelokohteen tunnusta kohteelle {0} ei voitu ratkaista</value></data>
+  <data name="Svc_Sp_OfValuesUnresolved" xml:space="preserve"><value>{0} ({1}/{2} arvoa ratkaisematta)</value></data>
+  <data name="Svc_Sp_LookupUnresolved2" xml:space="preserve"><value>; haku ratkaisematta: {0}</value></data>
+  <data name="Svc_Sp_NotApplicableToItem" xml:space="preserve"><value>{0} (ei koske kohteen sisältötyyppiä)</value></data>
+  <data name="Svc_Sp_PageNotFoundIn" xml:space="preserve"><value>Sivua ”{0}” ei löytynyt lähteen Sivuston sivut -kirjastosta</value></data>
+  <data name="Svc_Sp_SomeWebPartsReference" xml:space="preserve"><value>Jotkin verkko-osat viittaavat lähdesivuston luettelotunnuksiin, ja ne on ehkä tarkistettava käsin.</value></data>
+  <data name="Svc_Sp_NavigationReadFailedHTTP" xml:space="preserve"><value>Siirtymisrakenteen luku epäonnistui: HTTP {0}</value></data>
+  <data name="Svc_Sp_ReadingListItemsFailed" xml:space="preserve"><value>Luettelokohteiden luku epäonnistui: HTTP {0} — {1}</value></data>
+  <data name="Svc_Sp_ReadingTargetListItems" xml:space="preserve"><value>Kohteen luettelokohteiden luku epäonnistui: HTTP {0} — {1}</value></data>
+  <data name="Svc_Sp_CreateItemFailed" xml:space="preserve"><value>Kohteen luonti epäonnistui: {0} {1} — {2}</value></data>
+  <data name="Svc_Sp_FieldWriteFailed" xml:space="preserve"><value>Kentän kirjoitus epäonnistui ({0}): {1}</value></data>
+  <data name="Svc_Sp_FieldErrorsOn" xml:space="preserve"><value>Kenttävirheet kohteessa: {0}</value></data>
+  <data name="Svc_Sp_UpdateItemFailed" xml:space="preserve"><value>Kohteen päivitys epäonnistui: {0} {1} — {2}</value></data>
+  <data name="Svc_Sp_ReadingPermissionFlagsFailed" xml:space="preserve"><value>Käyttöoikeuslippujen luku epäonnistui: HTTP {0} — {1}</value></data>
+  <data name="Svc_Sp_BreakPermissionInheritanceFailed" xml:space="preserve"><value>BreakPermissionInheritance epäonnistui: {0} — {1}</value></data>
+  <data name="Svc_Sp_AddRoleAssignmentFailed" xml:space="preserve"><value>AddRoleAssignment epäonnistui: {0} — {1}</value></data>
+  <data name="Ui2_AutoMinimize" xml:space="preserve"><value>Pienennä</value></data>
+  <data name="Ui2_AutoMaximizeRestore" xml:space="preserve"><value>Suurenna tai palauta</value></data>
+  <data name="Ui2_AutoClose" xml:space="preserve"><value>Sulje</value></data>
+  <data name="Ui2_AutoFilesFoldersMode" xml:space="preserve"><value>Tiedostot ja kansiot -tila</value></data>
+  <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Kirjastot ja luettelot -tila</value></data>
+  <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Koko sivusto -tila</value></data>
+  <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Sivuston sivut -tila</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Kopioi kirjaston sisältö (tiedostot)</value></data>
+  <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Kopioi versiohistoria</value></data>
+  <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Viimeiset N versiota</value></data>
+  <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Kopioi siirtymisrakenne</value></data>
+  <data name="Ui2_AutoCopyPermissions" xml:space="preserve"><value>Kopioi käyttöoikeudet</value></data>
+  <data name="Ui2_AutoRemapWebPartUrls" xml:space="preserve"><value>Yhdistä verkko-osien URL-osoitteet uudelleen kohdesivustoon</value></data>
+  <data name="Ui2_AutoPreserveMetadata" xml:space="preserve"><value>Säilytä metatiedot</value></data>
+  <data name="Ui2_AutoReapplyFolderMetadata" xml:space="preserve"><value>Käytä kansioiden metatiedot uudelleen joka ajokerralla</value></data>
+  <data name="Ui2_AutoCopyCustomColumns" xml:space="preserve"><value>Kopioi mukautettujen sarakkeiden arvot</value></data>
+  <data name="Ui2_AutoDeepVerifyOffice" xml:space="preserve"><value>Syvävahvista Office-tiedostot</value></data>
+  <data name="Ui2_EnterSourceSiteUrl" xml:space="preserve"><value>Anna sen SharePoint-sivustokokoelman URL-osoite, josta haluat kopioida.</value></data>
+  <data name="Ui2_SourceHintFiles" xml:space="preserve"><value>Laajenna kirjastot ja valitse kopioitavat tiedostot tai kansiot.</value></data>
+  <data name="Ui2_SourceHintLibraries" xml:space="preserve"><value>Valitse kirjastot ja luettelot, jotka haluat luoda uudelleen kohdesivustolle.</value></data>
+  <data name="Ui2_SourceHintPages" xml:space="preserve"><value>Valitse kopioitavat sivut. Valitse kaikki -toiminnolla kopioit koko Sivuston sivut -kirjaston.</value></data>
+  <data name="Ui2_SourceHintSite" xml:space="preserve"><value>Kaikki lähdesivuston kirjastot kopioidaan. Jatka yhdistämällä kohde.</value></data>
+  <data name="Ui2_EnterTargetSiteUrl" xml:space="preserve"><value>Anna kohdesivustokokoelman URL-osoite.</value></data>
+  <data name="Ui2_TargetHintSelectFolder" xml:space="preserve"><value>Valitse kohdekansio oikealla olevasta puusta. Tiedostot kopioidaan siihen kansioon.</value></data>
+  <data name="Ui2_TargetHintClickLibrary" xml:space="preserve"><value>Valitse kirjasto tai kansio napsauttamalla sitä kopioinnin kohteeksi.</value></data>
+  <data name="Ui2_TargetHintSitePages" xml:space="preserve"><value>Sivuston sivut -kirjasto on valittu kohteeksi automaattisesti. Sivuja voi kopioida vain Sivuston sivut -kirjastoon.</value></data>
+  <data name="Ui2_TargetHintRootNoFolder" xml:space="preserve"><value>Kirjastot ja luettelot luodaan kohdesivuston juureen. Kansion valintaa ei tarvita.</value></data>
+  <data name="Ui2_TargetHintRootDetail" xml:space="preserve"><value>Kirjastot ja luettelot luodaan kohdesivuston juureen säilyttäen sarakeskeema ja versiointiasetukset. Jos kirjasto tai luettelo on jo olemassa, siihen lisätään mahdolliset puuttuvat lähdesarakkeet.</value></data>
+  <data name="Ui2_TargetHintSelectList" xml:space="preserve"><value>Valitse kohdesivuston luettelo, johon valitut kohteet kopioidaan.</value></data>
+  <data name="Ui2_CustomColumnsAuto" xml:space="preserve"><value>Kaikkien mukautettujen sarakkeiden arvot kopioidaan automaattisesti.</value></data>
+  <data name="Ui2_FoldersEnumerated" xml:space="preserve"><value>Kansiot luetellaan rekursiivisesti kopioinnin aikana.</value></data>
+  <data name="Ui2_FilesItemsEnumerated" xml:space="preserve"><value>Kunkin kirjaston tiedostot ja kunkin luettelon kohteet luetellaan kopiointihetkellä.</value></data>
+  <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>Tallenna yksi tai useampi Azure AD -sovellusrekisteröinti. Tallenna-painiketta napsautettaessa valittuna oleva rekisteröinti tulee aktiiviseksi. Jokainen sovellus tarvitsee delegoidut käyttöoikeudet Sites.ReadWrite.All ja Files.ReadWrite.All järjestelmänvalvojan suostumuksella.</value></data>
+  <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Määritys: portal.azure.com → Azure Active Directory → Sovellusrekisteröinnit → Uusi rekisteröinti. Lisää mobiili-/työpöytäsovelluksen ohjaus-URI http://localhost. Lisää API-käyttöoikeuksissa delegoidut Graph-käyttöoikeudet Sites.ReadWrite.All + Files.ReadWrite.All ja myönnä sitten järjestelmänvalvojan suostumus.</value></data>
+  <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>Lähdekirjastossa ei ole tuetun tyyppisiä mukautettuja sarakkeita. Tuetut tyypit: Teksti, Muistio, Luku, Totuusarvo, Päivämäärä, Valinta, Monivalinta, Henkilö, Hallitut metatiedot. Hakusarakkeita ei tueta.</value></data>
+</root>

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using SharePointSmartCopy.Localization;
+using System.Text.Json.Serialization;
 
 namespace SharePointSmartCopy.Models;
 
@@ -27,10 +28,10 @@ public class SavedReportItem
     [JsonIgnore]
     public string StatusDisplay => Status switch
     {
-        CopyStatus.Success   => "✅ Success",
-        CopyStatus.Failed    => "❌ Failed",
-        CopyStatus.Skipped   => "⏭ Skipped",
-        CopyStatus.Cancelled => "🚫 Cancelled",
+        CopyStatus.Success   => Loc.T("VM_StatusSuccess"),
+        CopyStatus.Failed    => Loc.T("VM_StatusFailed"),
+        CopyStatus.Skipped   => Loc.T("VM_StatusSkipped"),
+        CopyStatus.Cancelled => Loc.T("VM_StatusCancelledBlocked"),
         _                    => Status.ToString()
     };
 
@@ -98,9 +99,9 @@ public class SavedReport
     {
         get
         {
-            if (Duration.TotalHours >= 1)   return $"{(int)Duration.TotalHours}h {Duration.Minutes}m {Duration.Seconds}s";
-            if (Duration.TotalMinutes >= 1) return $"{(int)Duration.TotalMinutes}m {Duration.Seconds}s";
-            return $"{Duration.Seconds}s";
+            if (Duration.TotalHours >= 1)   return Loc.T("VM_DurationHMS", (int)Duration.TotalHours, Duration.Minutes, Duration.Seconds);
+            if (Duration.TotalMinutes >= 1) return Loc.T("VM_DurationMS", (int)Duration.TotalMinutes, Duration.Seconds);
+            return Loc.T("VM_DurationS", Duration.Seconds);
         }
     }
 
@@ -109,8 +110,8 @@ public class SavedReport
 
     [JsonIgnore]
     public string Summary => CancelledCount > 0
-        ? $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   🚫 {CancelledCount}   ⏱ {DurationDisplay}{SizeSummarySuffix}"
-        : $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   ⏱ {DurationDisplay}{SizeSummarySuffix}";
+        ? Loc.T("VM_SummaryWithCancelled", SuccessCount, FailedCount, SkippedCount, CancelledCount, DurationDisplay, SizeSummarySuffix)
+        : Loc.T("VM_Summary", SuccessCount, FailedCount, SkippedCount, DurationDisplay, SizeSummarySuffix);
 
     private string SizeSummarySuffix => TotalSize > 0 ? $"   ·  {SizeDisplay}" : string.Empty;
 }
@@ -151,9 +152,9 @@ public class SavedReportSummary
     {
         get
         {
-            if (Duration.TotalHours >= 1)   return $"{(int)Duration.TotalHours}h {Duration.Minutes}m {Duration.Seconds}s";
-            if (Duration.TotalMinutes >= 1) return $"{(int)Duration.TotalMinutes}m {Duration.Seconds}s";
-            return $"{Duration.Seconds}s";
+            if (Duration.TotalHours >= 1)   return Loc.T("VM_DurationHMS", (int)Duration.TotalHours, Duration.Minutes, Duration.Seconds);
+            if (Duration.TotalMinutes >= 1) return Loc.T("VM_DurationMS", (int)Duration.TotalMinutes, Duration.Seconds);
+            return Loc.T("VM_DurationS", Duration.Seconds);
         }
     }
 
@@ -162,8 +163,8 @@ public class SavedReportSummary
 
     [JsonIgnore]
     public string Summary => CancelledCount > 0
-        ? $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   🚫 {CancelledCount}   ⏱ {DurationDisplay}{SizeSummarySuffix}"
-        : $"✅ {SuccessCount}   ❌ {FailedCount}   ⏭ {SkippedCount}   ⏱ {DurationDisplay}{SizeSummarySuffix}";
+        ? Loc.T("VM_SummaryWithCancelled", SuccessCount, FailedCount, SkippedCount, CancelledCount, DurationDisplay, SizeSummarySuffix)
+        : Loc.T("VM_Summary", SuccessCount, FailedCount, SkippedCount, DurationDisplay, SizeSummarySuffix);
 
     private string SizeSummarySuffix => TotalSize > 0 ? $"   ·  {SizeDisplay}" : string.Empty;
 }

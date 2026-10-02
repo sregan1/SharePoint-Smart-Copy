@@ -1,3 +1,4 @@
+using SharePointSmartCopy.Localization;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Text;
@@ -114,8 +115,8 @@ public partial class MainViewModel : ObservableObject
         // maxAttempts == 0: notification-only source (GraphThrottleNotifyHandler observes while
         // Kiota retries internally) — no meaningful attempt counter to show.
         var msg = maxAttempts > 0
-            ? $"SharePoint is throttling requests — retrying in {Math.Ceiling(delay.TotalSeconds):N0}s (attempt {attempt}/{maxAttempts})…"
-            : $"SharePoint is throttling requests — retrying in {Math.Ceiling(delay.TotalSeconds):N0}s…";
+            ? Loc.T("VM_ThrottleRetryAttempt", Math.Ceiling(delay.TotalSeconds), attempt, maxAttempts)
+            : Loc.T("VM_ThrottleRetry", Math.Ceiling(delay.TotalSeconds));
         var dispatcher = System.Windows.Application.Current?.Dispatcher;
         if (dispatcher == null) return;
         dispatcher.BeginInvoke(() => StatusMessage = msg);
@@ -132,8 +133,8 @@ public partial class MainViewModel : ObservableObject
         var dispatcher = System.Windows.Application.Current?.Dispatcher;
         if (dispatcher == null) return;
         var msg = newLimit < MaxParallelCopies
-            ? $"Parallelism reduced to {newLimit} thread{(newLimit == 1 ? "" : "s")} (throttle protection)…"
-            : $"Parallelism restored to {newLimit} thread{(newLimit == 1 ? "" : "s")}.";
+            ? Loc.T("VM_ParallelismReduced", newLimit)
+            : Loc.T("VM_ParallelismRestored", newLimit);
         dispatcher.BeginInvoke(() => StatusMessage = msg);
         _ = Task.Delay(TimeSpan.FromSeconds(5)).ContinueWith(_ =>
             dispatcher.BeginInvoke(() =>
@@ -159,7 +160,7 @@ public partial class MainViewModel : ObservableObject
         _connectSourceCts = new CancellationTokenSource();
         var ct = _connectSourceCts.Token;
 
-        SourceStatus       = "Connecting…";
+        SourceStatus       = Loc.T("VM_Connecting");
         SourceConnected    = false;
         IsBusy             = true;
         IsConnectingSource = true;
@@ -170,7 +171,7 @@ public partial class MainViewModel : ObservableObject
             SignedInUser = AuthService.UserName ?? string.Empty;
             SourceSiteId = await SpService.GetSiteIdAsync(SourceUrl.Trim());
             ct.ThrowIfCancellationRequested();
-            SourceStatus    = $"✅ Connected as {SignedInUser}";
+            SourceStatus    = Loc.T("VM_SourceConnectedAs", SignedInUser);
             SourceConnected = true;
             Settings.SourceUrl = SourceUrl.Trim();
             Settings.Save();
@@ -178,7 +179,7 @@ public partial class MainViewModel : ObservableObject
             _ = LoadLibrariesAsync();
         }
         catch (OperationCanceledException) { SourceStatus = string.Empty; }
-        catch (Exception ex)              { SourceStatus = $"❌ {ex.Message}"; }
+        catch (Exception ex)              { SourceStatus = Loc.T("VM_ErrorPrefix", ex.Message); }
         finally
         {
             IsBusy             = false;
@@ -210,7 +211,7 @@ public partial class MainViewModel : ObservableObject
     public async Task LoadLibrariesAsync()
     {
         IsBusy = true;
-        StatusMessage = "Loading libraries…";
+        StatusMessage = Loc.T("VM_LoadingLibraries");
         try
         {
             var libs = await SpService.GetLibrariesAsync(SourceSiteId, SourceUrl.Trim());
@@ -253,7 +254,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Error loading libraries: {ex.Message}";
+            StatusMessage = Loc.T("VM_ErrorLoadingLibraries", ex.Message);
         }
         finally
         {
@@ -266,14 +267,14 @@ public partial class MainViewModel : ObservableObject
     public async Task LoadPageLibraryAsync()
     {
         IsBusy = true;
-        StatusMessage = "Loading Site Pages…";
+        StatusMessage = Loc.T("VM_LoadingSitePages");
         string? errorMessage = null;
         try
         {
             var sitePagesNode = await SpService.GetSitePagesLibraryAsync(SourceSiteId, SourceUrl.Trim());
             if (sitePagesNode == null)
             {
-                errorMessage = "No Site Pages library found on this site.";
+                errorMessage = Loc.T("VM_NoSitePagesLibrary");
                 return;
             }
 
@@ -299,7 +300,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error loading Site Pages: {ex.Message}";
+            errorMessage = Loc.T("VM_ErrorLoadingSitePages", ex.Message);
         }
         finally
         {
@@ -325,7 +326,7 @@ public partial class MainViewModel : ObservableObject
                     foreach (var (id, title, _) in items)
                         node.Children.Add(new SharePointNode
                         {
-                            Name         = string.IsNullOrWhiteSpace(title) ? $"(Item {id})" : title,
+                            Name         = string.IsNullOrWhiteSpace(title) ? Loc.T("VM_ItemNumber", id) : title,
                             Id           = id,
                             Type         = NodeType.ListItem,
                             SourceListId = node.Id,
@@ -357,7 +358,7 @@ public partial class MainViewModel : ObservableObject
         catch (Exception ex)
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => node.Children.Clear());
-            StatusMessage = $"Error loading folder: {ex.Message}";
+            StatusMessage = Loc.T("VM_ErrorLoadingFolder", ex.Message);
         }
         finally { node.IsLoading = false; }
     }
@@ -421,7 +422,7 @@ public partial class MainViewModel : ObservableObject
         _connectTargetCts = new CancellationTokenSource();
         var ct = _connectTargetCts.Token;
 
-        TargetStatus       = "Connecting…";
+        TargetStatus       = Loc.T("VM_Connecting");
         TargetConnected    = false;
         IsBusy             = true;
         IsConnectingTarget = true;
@@ -437,7 +438,7 @@ public partial class MainViewModel : ObservableObject
                 foreach (var lib in libs)
                     TargetLibraries.Add(lib);
             });
-            TargetStatus    = "✅ Connected";
+            TargetStatus    = Loc.T("VM_Connected");
             TargetConnected = true;
             Settings.TargetUrl = TargetUrl.Trim();
             Settings.Save();
@@ -472,7 +473,7 @@ public partial class MainViewModel : ObservableObject
                     System.Windows.Application.Current.Dispatcher.Invoke(() =>
                     {
                         TargetCustomLists.Clear();
-                        TargetCustomLists.Add(new ListPickerItem(NewListSentinelId, "[ Create New List ]"));
+                        TargetCustomLists.Add(new ListPickerItem(NewListSentinelId, Loc.T("VM_CreateNewList")));
                         foreach (var (id, title, _) in lists)
                             TargetCustomLists.Add(new ListPickerItem(id, title));
                     });
@@ -483,11 +484,11 @@ public partial class MainViewModel : ObservableObject
             try { await AuthService.GetSharePointTokenAsync(TargetUrl.Trim(), cancellationToken: ct); }
             catch
             {
-                TargetStatus = "✅ Connected · Note: additional consent needed for metadata — reconnect to grant";
+                TargetStatus = Loc.T("VM_ConnectedConsentNote");
             }
         }
         catch (OperationCanceledException) { TargetStatus = string.Empty; }
-        catch (Exception ex)              { TargetStatus = $"❌ {ex.Message}"; }
+        catch (Exception ex)              { TargetStatus = Loc.T("VM_ErrorPrefix", ex.Message); }
         finally
         {
             IsBusy             = false;
@@ -682,13 +683,13 @@ public partial class MainViewModel : ObservableObject
         {
             var total = _sourceColumns.Count;
             if (ColumnMappings.Count == 0)
-                return total > 0 ? $"Configure mappings ({total} columns)" : "Configure mappings";
+                return total > 0 ? Loc.T("VM_ConfigureMappingsCount", total) : Loc.T("VM_ConfigureMappings");
 
             var unmatched = ColumnMappings.Count(m => m.Status == MappingStatus.Unmatched);
             var mapped    = ColumnMappings.Count - unmatched;
             return unmatched > 0
-                ? $"Configure mappings  ⚠ {unmatched} of {total} unmatched"
-                : $"Configure mappings ({mapped} of {total} mapped)";
+                ? Loc.T("VM_ConfigureMappingsUnmatched", unmatched, total)
+                : Loc.T("VM_ConfigureMappingsMapped", mapped, total);
         }
     }
 
@@ -1036,25 +1037,25 @@ public partial class MainViewModel : ObservableObject
     {
         var overwrite = OverwriteMode switch
         {
-            Models.OverwriteMode.IfNewer => "If Newer",
+            Models.OverwriteMode.IfNewer => Loc.T("VM_OverwriteIfNewer"),
             var m => m.ToString()
         };
         // Record the EFFECTIVE values, not the selected ones: Pages scope forces Enhanced REST
         // with versions off, and this summary's whole purpose is "what this run actually used".
         bool pagesOverride = IsPagesScope;
-        var copyMode = CopyMode == Models.CopyMode.MigrationApi && !pagesOverride ? "Migration API" : "Enhanced REST";
-        var versions = !CopyVersions || pagesOverride ? "Off" : CopyAllVersions ? "All" : $"Max {MaxVersions}";
+        var copyMode = CopyMode == Models.CopyMode.MigrationApi && !pagesOverride ? Loc.T("VM_ModeMigrationApi") : Loc.T("VM_ModeEnhancedRest");
+        var versions = !CopyVersions || pagesOverride ? Loc.T("VM_Off") : CopyAllVersions ? Loc.T("VM_All") : Loc.T("VM_MaxVersions", MaxVersions);
 
         return string.Join("  ·  ",
         [
-            $"Overwrite: {overwrite}",
-            $"Copy Mode: {copyMode}",
-            $"Versions: {versions}",
-            $"Parallel Copies: {MaxParallelCopies}",
-            $"Preserve Metadata: {(PreserveMetadata ? "Yes" : "No")}",
-            $"Folder Metadata Repair: {(PreserveMetadata && ReapplyFolderMetadataEveryRun ? "Every run" : "New folders only")}",
-            $"Permissions: {(CopyPermissions ? "Yes" : "No")}",
-            $"Custom Columns: {(EffectiveCopyCustomColumns ? "Yes" : "No")}"
+            Loc.T("VM_SumOverwrite", overwrite),
+            Loc.T("VM_SumCopyMode", copyMode),
+            Loc.T("VM_SumVersions", versions),
+            Loc.T("VM_SumParallel", MaxParallelCopies),
+            Loc.T("VM_SumPreserveMetadata", PreserveMetadata ? Loc.T("VM_Yes") : Loc.T("VM_No")),
+            Loc.T("VM_SumFolderRepair", PreserveMetadata && ReapplyFolderMetadataEveryRun ? Loc.T("VM_EveryRun") : Loc.T("VM_NewFoldersOnly")),
+            Loc.T("VM_SumPermissions", CopyPermissions ? Loc.T("VM_Yes") : Loc.T("VM_No")),
+            Loc.T("VM_SumCustomColumns", EffectiveCopyCustomColumns ? Loc.T("VM_Yes") : Loc.T("VM_No"))
         ]);
     }
 
@@ -1115,7 +1116,7 @@ public partial class MainViewModel : ObservableObject
     public bool IsReadyForReport      => IsCopyComplete && !IsUpdatingMetadata;
     public bool IsCancelable          => IsCopying || IsUpdatingMetadata || IsVerifying;
     public string MetadataFolderCountText => MetadataFolderTotal > 0
-        ? $" {MetadataFolderDone:N0} / {MetadataFolderTotal:N0} folders"
+        ? Loc.T("VM_MetadataFolderCount", MetadataFolderDone, MetadataFolderTotal)
         : string.Empty;
     public bool IsPreflightInProgress => IsCopying && PreflightTotal > 0 && PreflightChecked < PreflightTotal;
     public bool IsPackingInProgress   => IsCopying && PackedCount > 0 && CompletedCount < TotalCount;
@@ -1299,9 +1300,9 @@ public partial class MainViewModel : ObservableObject
         ActivityText = "";
         StartActivityLogFile();
         if (ActivityLogPath != null)
-            PushActivity($"Activity log: {ActivityLogPath}");
+            PushActivity(Loc.T("VM_ActivityLogPath", ActivityLogPath));
         RunSettingsSummary = BuildRunSettingsSummary();
-        PushActivity($"Settings: {RunSettingsSummary}");
+        PushActivity(Loc.T("VM_SettingsSummary", RunSettingsSummary));
         System.Windows.Threading.DispatcherTimer? metadataTimer = null;
         var onMetadataDone = new Progress<bool>(completed =>
         {
@@ -1350,7 +1351,7 @@ public partial class MainViewModel : ObservableObject
             var _permissionFlags = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
             if ((EffectiveCopyCustomColumns || CopyPermissions) && CopyJobs.Count > 0)
             {
-                StatusMessage = "Reading source metadata…";
+                StatusMessage = Loc.T("VM_ReadingSourceMetadata");
                 // Build bulk field cache for each source library. Keys are "{listId}:{itemId}"
                 // so caches from multiple libraries can be merged without collision.
                 if (EffectiveCopyCustomColumns)
@@ -1383,7 +1384,7 @@ public partial class MainViewModel : ObservableObject
                             // Surfaced rather than silently swallowed — a failed bulk read here used to
                             // leave the whole custom-field cache empty with no visible reason, so every
                             // file in the run silently copied with no custom column values at all.
-                            PushActivity($"⚠ Reading custom column values failed for this library: {ex.Message}");
+                            PushActivity(Loc.T("VM_ReadColumnValuesFailed", ex.Message));
                         }
                     }
                 }
@@ -1429,7 +1430,7 @@ public partial class MainViewModel : ObservableObject
             {
                 try
                 {
-                    StatusMessage = "Creating target columns…";
+                    StatusMessage = Loc.T("VM_CreatingTargetColumns");
                     var libraryNode = SelectedTargetFolder;
                     while (libraryNode.Parent != null)
                         libraryNode = libraryNode.Parent;
@@ -1480,8 +1481,8 @@ public partial class MainViewModel : ObservableObject
                 sourceMetaCache: _sourceMetaCache,
                 reapplyFolderMetadata: ReapplyFolderMetadataEveryRun);
         }
-        catch (OperationCanceledException) { StatusMessage = "Copy cancelled."; }
-        catch (Exception ex)              { StatusMessage = $"Copy error: {ex.Message}"; }
+        catch (OperationCanceledException) { StatusMessage = Loc.T("VM_CopyCancelled"); }
+        catch (Exception ex)              { StatusMessage = Loc.T("VM_CopyError", ex.Message); }
         finally
         {
             _copyEndTime   = DateTimeOffset.Now;
@@ -1581,7 +1582,7 @@ public partial class MainViewModel : ObservableObject
 
             var itemTitle = item.TryGetValue("Title", out var titleVal) ? titleVal?.ToString() : null;
             var itemId    = item.TryGetValue("Id",    out var iidVal)   ? iidVal?.ToString()   : "?";
-            var rowLabel  = itemTitle ?? $"Item {itemId}";
+            var rowLabel  = itemTitle ?? Loc.T("VM_ItemLabel", itemId);
 
             var itemResult = new CopyResult
             {
@@ -1631,7 +1632,7 @@ public partial class MainViewModel : ObservableObject
                     if (OverwriteMode == Models.OverwriteMode.Skip)
                     {
                         itemResult.Status       = CopyStatus.Skipped;
-                        itemResult.ErrorMessage = "Already exists";
+                        itemResult.ErrorMessage = Loc.T("VM_AlreadyExists");
                         continue;
                     }
                     if (OverwriteMode == Models.OverwriteMode.IfNewer)
@@ -1651,7 +1652,7 @@ public partial class MainViewModel : ObservableObject
                         fields, createdDate, modifiedDate,
                         _copyCts.Token);
                     itemResult.Status       = CopyStatus.Success;
-                    itemResult.ErrorMessage = updateFieldError != null ? $"Updated (field warning: {updateFieldError})" : "Updated";
+                    itemResult.ErrorMessage = updateFieldError != null ? Loc.T("VM_UpdatedFieldWarning", updateFieldError) : Loc.T("VM_Updated");
                 }
                 else
                 {
@@ -1661,7 +1662,7 @@ public partial class MainViewModel : ObservableObject
                         _copyCts.Token);
                     resolvedTargetItemId    = newItemId;
                     itemResult.Status       = CopyStatus.Success;
-                    itemResult.ErrorMessage = createFieldError != null ? $"field warning: {createFieldError}" : null;
+                    itemResult.ErrorMessage = createFieldError != null ? Loc.T("VM_FieldWarning", createFieldError) : null;
                 }
 
                 if (CopyPermissions && resolvedTargetItemId != null && hasUniquePerms)
@@ -1702,11 +1703,11 @@ public partial class MainViewModel : ObservableObject
         if (result.Created.Count > 0)
         {
             var detail = result.Created.Count == 1
-                ? $"Column created: {result.Created[0]}"
-                : $"{result.Created.Count} columns created: {string.Join(", ", result.Created)}";
+                ? Loc.T("VM_ColumnCreated", result.Created[0])
+                : Loc.T("VM_ColumnsCreated", result.Created.Count, string.Join(", ", result.Created));
             System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(new CopyResult
             {
-                FileName          = $"Columns → {listTitle}",
+                FileName          = Loc.T("VM_ColumnsTitle", listTitle),
                 SourcePath        = string.Empty,
                 TargetPath        = targetPath,
                 Status            = CopyStatus.Success,
@@ -1718,7 +1719,7 @@ public partial class MainViewModel : ObservableObject
         {
             System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(new CopyResult
             {
-                FileName          = $"Column failed → {listTitle}",
+                FileName          = Loc.T("VM_ColumnFailedTitle", listTitle),
                 SourcePath        = string.Empty,
                 TargetPath        = targetPath,
                 Status            = CopyStatus.Failed,
@@ -1742,10 +1743,10 @@ public partial class MainViewModel : ObservableObject
         else
         {
             detail = perm.Applied == 1
-                ? "1 role assignment applied"
-                : $"{perm.Applied} role assignments applied";
+                ? Loc.T("VM_RoleAssignmentApplied1")
+                : Loc.T("VM_RoleAssignmentsApplied", perm.Applied);
             if (perm.SkippedPrincipals.Count > 0)
-                detail += $"; skipped {perm.SkippedPrincipals.Count} unresolvable: {string.Join(", ", perm.SkippedPrincipals)}";
+                detail += Loc.T("VM_PermSkippedUnresolvable", perm.SkippedPrincipals.Count, string.Join(", ", perm.SkippedPrincipals));
             status = CopyStatus.Success;
         }
 
@@ -1771,7 +1772,7 @@ public partial class MainViewModel : ObservableObject
             // Site/library-level result — no file row to stamp; add as a structural entry.
             var r = new CopyResult
             {
-                FileName          = $"Permissions — {perm.ItemName}",
+                FileName          = Loc.T("VM_PermissionsTitle", perm.ItemName),
                 SourcePath        = string.Empty,
                 TargetPath        = targetPath,
                 Status            = status,
@@ -1867,13 +1868,13 @@ public partial class MainViewModel : ObservableObject
             var listDefinitions = new List<(LibraryDefinition Def, int BaseTemplate, SharePointNode? SourceNode)>();
             if (IsSiteScope)
             {
-                StatusMessage = "Reading site library structure…";
+                StatusMessage = Loc.T("VM_ReadingSiteStructure");
                 definitions   = await _libraryCopyService.ReadAllLibraryDefinitionsAsync(
                     SourceSiteId, SourceUrl.TrimEnd('/'));
             }
             else
             {
-                StatusMessage = "Reading library structure…";
+                StatusMessage = Loc.T("VM_ReadingLibraryStructure");
                 definitions   = [];
                 foreach (var lib in SourceLibraries)
                 {
@@ -1939,8 +1940,7 @@ public partial class MainViewModel : ObservableObject
                     libResult.Status = CopyStatus.Success;
                     if (_libraryCopyService.LastColumnCreationFailures.Count > 0)
                         libResult.ErrorMessage =
-                            $"{_libraryCopyService.LastColumnCreationFailures.Count} column(s) could not be created: "
-                            + string.Join("; ", _libraryCopyService.LastColumnCreationFailures.Take(3));
+                            Loc.T("VM_ColumnsCouldNotBeCreated", _libraryCopyService.LastColumnCreationFailures.Count, string.Join("; ", _libraryCopyService.LastColumnCreationFailures.Take(3)));
 
                     if (CopyPermissions)
                     {
@@ -1964,13 +1964,13 @@ public partial class MainViewModel : ObservableObject
 
                     if (CopyLibraryContent)
                     {
-                        StatusMessage = $"Copying files into '{def.Title}'…";
+                        StatusMessage = Loc.T("VM_CopyingFilesInto", def.Title);
 
                         // Build file jobs targeting the new library
                         var newLibRoot = await SpService.GetLibraryRootItemIdAsync(newDriveId);
                         if (newLibRoot == null)
                         {
-                            libResult.ErrorMessage = "Library created but root item ID could not be retrieved; file copy skipped.";
+                            libResult.ErrorMessage = Loc.T("VM_LibraryRootIdMissing");
                         }
                         else
                         {
@@ -2060,12 +2060,12 @@ public partial class MainViewModel : ObservableObject
 
                     if (CopyLibraryContent && !string.IsNullOrEmpty(alreadyEx.DriveId))
                     {
-                        StatusMessage = $"Copying files into existing '{def.Title}'…";
+                        StatusMessage = Loc.T("VM_CopyingFilesIntoExisting", def.Title);
 
                         var newLibRoot = await SpService.GetLibraryRootItemIdAsync(alreadyEx.DriveId);
                         if (newLibRoot == null)
                         {
-                            libResult.ErrorMessage += " (file copy skipped — root item ID unavailable)";
+                            libResult.ErrorMessage += Loc.T("VM_FileCopySkippedRootId");
                         }
                         else
                         {
@@ -2171,7 +2171,7 @@ public partial class MainViewModel : ObservableObject
 
                 try
                 {
-                    StatusMessage = $"Copying list '{def.Title}'…";
+                    StatusMessage = Loc.T("VM_CopyingList", def.Title);
                     string targetListId;
                     if ((isPartialSelection || isItemsOnly) && SelectedTargetList != null)
                     {
@@ -2266,7 +2266,7 @@ public partial class MainViewModel : ObservableObject
             if (IsSiteScope && CopyLibraryContent)
             {
                 _copyCts.Token.ThrowIfCancellationRequested();
-                StatusMessage = "Copying site pages…";
+                StatusMessage = Loc.T("VM_CopyingSitePages");
                 try
                 {
                     var srcSitePages = await SpService.GetSitePagesLibraryAsync(SourceSiteId, SourceUrl.TrimEnd('/'));
@@ -2373,7 +2373,7 @@ public partial class MainViewModel : ObservableObject
                 catch (OperationCanceledException) { throw; }
                 catch (Exception ex)
                 {
-                    StatusMessage = $"Site pages warning: {ex.Message}";
+                    StatusMessage = Loc.T("VM_SitePagesWarning", ex.Message);
                 }
                 StatusMessage = string.Empty;
             }
@@ -2382,10 +2382,10 @@ public partial class MainViewModel : ObservableObject
             if (IsSiteScope && CopyNavigation)
             {
                 _copyCts.Token.ThrowIfCancellationRequested();
-                StatusMessage = "Copying navigation…";
+                StatusMessage = Loc.T("VM_CopyingNavigation");
                 var navResult = new CopyResult
                 {
-                    FileName          = "Navigation",
+                    FileName          = Loc.T("VM_Navigation"),
                     SourcePath        = $"{SourceUrl.TrimEnd('/')}/navigation",
                     TargetPath        = $"{TargetUrl.TrimEnd('/')}/navigation",
                     Status            = CopyStatus.Copying,
@@ -2411,7 +2411,7 @@ public partial class MainViewModel : ObservableObject
             if (IsSiteScope)
             {
                 _copyCts.Token.ThrowIfCancellationRequested();
-                StatusMessage = "Reading custom lists…";
+                StatusMessage = Loc.T("VM_ReadingCustomLists");
                 try
                 {
                     var customLists = await SpService.GetCustomListsAsync(SourceUrl.TrimEnd('/'));
@@ -2433,7 +2433,7 @@ public partial class MainViewModel : ObservableObject
                         LibraryDefinition? definition = null;
                         try
                         {
-                            StatusMessage = $"Copying list '{listTitle}'…";
+                            StatusMessage = Loc.T("VM_CopyingList", listTitle);
                             definition   = await _libraryCopyService.ReadListDefinitionAsync(
                                 SourceUrl.TrimEnd('/'), srcListId, listTitle);
                             var targetListId = await _libraryCopyService.CreateCustomListAsync(
@@ -2495,12 +2495,12 @@ public partial class MainViewModel : ObservableObject
                     }
                 }
                 catch (OperationCanceledException) { throw; }
-                catch (Exception ex) { StatusMessage = $"List copy warning: {ex.Message}"; }
+                catch (Exception ex) { StatusMessage = Loc.T("VM_ListCopyWarning", ex.Message); }
                 StatusMessage = string.Empty;
             }
         }
-        catch (OperationCanceledException) { StatusMessage = "Copy cancelled."; }
-        catch (Exception ex)              { StatusMessage = $"Library copy error: {ex.Message}"; }
+        catch (OperationCanceledException) { StatusMessage = Loc.T("VM_CopyCancelled"); }
+        catch (Exception ex)              { StatusMessage = Loc.T("VM_LibraryCopyError", ex.Message); }
         finally
         {
             // Release the scheduling sentinel (see its declaration above) now that every
@@ -2567,7 +2567,7 @@ public partial class MainViewModel : ObservableObject
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[LoadColumns] target load failed: {ex.Message}");
-                ColumnLoadError = $"Target columns unavailable: {ex.Message}";
+                ColumnLoadError = Loc.T("VM_TargetColumnsUnavailable", ex.Message);
             }
         }
         else if (IsItemSelectionActive && SelectedTargetList != null)
@@ -2580,7 +2580,7 @@ public partial class MainViewModel : ObservableObject
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[LoadColumns] target load failed: {ex.Message}");
-                ColumnLoadError = $"Target columns unavailable: {ex.Message}";
+                ColumnLoadError = Loc.T("VM_TargetColumnsUnavailable", ex.Message);
             }
         }
         else if (IsLibraryScope && !IsItemSelectionActive)
@@ -2645,7 +2645,7 @@ public partial class MainViewModel : ObservableObject
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[LoadColumns] source load failed: {ex.Message}");
-            ColumnLoadError ??= $"Source columns unavailable: {ex.Message}";
+            ColumnLoadError ??= Loc.T("VM_SourceColumnsUnavailable", ex.Message);
         }
         finally
         {
@@ -2774,7 +2774,7 @@ public partial class MainViewModel : ObservableObject
             var rawPackRemaining = ComputeRemaining(packedUnits, totalUnits, now, _packStartTime.Value, _packStartDone, _packSamples);
             var smoothedPackRemaining = SmoothSeconds(rawPackRemaining, ref _packEtaSmoothedSeconds, ref _packEtaSmoothedTime, now);
             packRemaining = smoothedPackRemaining != null ? FormatDuration(TimeSpan.FromSeconds(smoothedPackRemaining.Value)) : null;
-            PackagedEstimatedTimeRemaining = packRemaining != null ? $" · ~{packRemaining} remaining" : " · Calculating…";
+            PackagedEstimatedTimeRemaining = packRemaining != null ? Loc.T("VM_EtaRemaining", packRemaining) : Loc.T("VM_EtaCalculating");
         }
         else
         {
@@ -2796,12 +2796,12 @@ public partial class MainViewModel : ObservableObject
             var rawRemaining = ComputeRemaining(doneUnits, totalUnits, now, _etaStartTime.Value, _etaStartDone, _etaSamples);
             var smoothedRemaining = SmoothSeconds(rawRemaining, ref _etaSmoothedSeconds, ref _etaSmoothedTime, now);
             var remaining = smoothedRemaining != null ? FormatDuration(TimeSpan.FromSeconds(smoothedRemaining.Value)) : null;
-            EstimatedTimeRemaining = remaining != null ? $" · ~{remaining} remaining" : " · Calculating…";
+            EstimatedTimeRemaining = remaining != null ? Loc.T("VM_EtaRemaining", remaining) : Loc.T("VM_EtaCalculating");
         }
         else if (done == 0 && packed > 0 && packed < total && _copyEndTime == null)
         {
             // Packaging phase — reuse the packaging ETA computed above with a clearer label.
-            EstimatedTimeRemaining = packRemaining != null ? $" · ~{packRemaining} to package" : " · Calculating…";
+            EstimatedTimeRemaining = packRemaining != null ? Loc.T("VM_EtaToPackage", packRemaining) : Loc.T("VM_EtaCalculating");
         }
         else
         {
@@ -2841,7 +2841,7 @@ public partial class MainViewModel : ObservableObject
             {
                 var remainingSecs = (total - done) * anchorElapsed / anchorDone;
                 MetadataEta = remainingSecs >= 2
-                    ? $" · ~{FormatDuration(TimeSpan.FromSeconds(remainingSecs))} remaining"
+                    ? Loc.T("VM_EtaRemaining", FormatDuration(TimeSpan.FromSeconds(remainingSecs)))
                     : string.Empty;
             }
         }
@@ -2877,14 +2877,14 @@ public partial class MainViewModel : ObservableObject
     {
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
-            Filter   = "CSV files (*.csv)|*.csv|Text files (*.txt)|*.txt",
+            Filter   = Loc.T("VM_FilterCsvTxt"),
             FileName = $"{SiteUrlHelper.ReportFilenamePrefix(SourceUrl, TargetUrl, Settings.PrefixReportFilenamesWithSiteNames)}CopyReport_Files_{DateTime.Now:yyyyMMdd_HHmmss}.csv"
         };
         if (dlg.ShowDialog() != true) return;
 
         static string Csv(string? s) => $"\"{(s ?? "").Replace("\"", "\"\"")}\"";
         var sb = new StringBuilder();
-        sb.AppendLine("File Name,Source Path,Target Path,Status,Versions Copied,Error,Permissions Status,Permissions Details");
+        sb.AppendLine(Loc.T("VM_CsvHeader"));
         foreach (var r in CopyResults.Where(r => !r.IsPermissionResult))
         {
             sb.AppendLine($"{Csv(r.FileName)},{Csv(r.SourcePath)},{Csv(r.TargetPath)}," +
@@ -2902,7 +2902,7 @@ public partial class MainViewModel : ObservableObject
     {
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
-            Filter   = "Excel Workbook (*.xlsx)|*.xlsx",
+            Filter   = Loc.T("VM_FilterXlsx"),
             // "DeepVerificationReport_" when the deep Office-file pass is on, so the file is
             // distinguishable from a standard verification at a glance. Live checkbox state.
             FileName = $"{SiteUrlHelper.ReportFilenamePrefix(SourceUrl, TargetUrl, Settings.PrefixReportFilenamesWithSiteNames)}{(DeepVerifyOfficeFiles ? "Deep" : "")}VerificationReport_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
@@ -2918,7 +2918,7 @@ public partial class MainViewModel : ObservableObject
         // Give it its own log file, same pattern as StartCopyAsync.
         StartActivityLogFile();
         if (ActivityLogPath != null)
-            PushActivity($"Activity log: {ActivityLogPath}");
+            PushActivity(Loc.T("VM_ActivityLogPath", ActivityLogPath));
         // StatusMessage previously only ever got updated by scan progress below — once the scan
         // finished and the deep-verify pass started, its own progress messages (which DO arrive here
         // via onActivity/PushActivity, appended to the scrolling log) never replaced the single
@@ -2930,9 +2930,9 @@ public partial class MainViewModel : ObservableObject
         // so every status/activity line below can label the run as "Deep verification" when the deep
         // Office-file pass is enabled, matching the checkbox the user ticked.
         bool deepVerify   = DeepVerifyOfficeFiles;
-        string verifyName = deepVerify ? "Deep verification" : "Verification";  // sentence-initial
-        string verifyLow  = deepVerify ? "deep verification" : "verification";  // mid-sentence
-        string verifyIng  = deepVerify ? "Deep verifying"    : "Verifying";
+        string verifyName = deepVerify ? Loc.T("VM_DeepVerification") : Loc.T("VM_Verification");  // sentence-initial
+        string verifyLow  = deepVerify ? Loc.T("VM_DeepVerificationLow") : Loc.T("VM_VerificationLow");  // mid-sentence
+        string verifyIng  = deepVerify ? Loc.T("VM_DeepVerifying") : Loc.T("VM_Verifying");
 
         var onActivity = new Progress<string>(msg =>
         {
@@ -2941,15 +2941,15 @@ public partial class MainViewModel : ObservableObject
                 StatusMessage = msg;
         });
         var onScanned  = new Progress<VerificationReportService.ScanProgress>(p =>
-            StatusMessage = $"{verifyIng}… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)");
+            StatusMessage = Loc.T("VM_VerifyScanProgress", verifyIng, p.SourceFilesFound, p.TargetFilesFound));
 
         try
         {
-            StatusMessage = $"Re-scanning source and target for {verifyLow}…";
+            StatusMessage = Loc.T("VM_VerifyRescanning", verifyLow);
             var roots  = VerificationRoot.FromCopyJobs(CopyJobs);
             var result = await _verificationReportService.RunAsync(
                 roots, MaxParallelCopies, onActivity, onScanned, _verifyCts.Token, deepVerify);
-            StatusMessage = $"Writing {verifyLow} workbook…";
+            StatusMessage = Loc.T("VM_VerifyWriting", verifyLow);
             // Off the UI thread: ClosedXML SaveAs is CPU-heavy on 100k+ row runs.
             await Task.Run(() => ExcelReportWriter.Write(dlg.FileName, result));
 
@@ -2959,19 +2959,19 @@ public partial class MainViewModel : ObservableObject
             int onlyInSource    = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInSource);
             int onlyInTarget    = result.Comparison.Count(r => r.Status == ComparisonStatus.OnlyInTarget);
             int unverified      = result.Comparison.Count(r => r.Status == ComparisonStatus.Unverified);
-            PushActivity($"✔ {verifyName} complete: {matched:N0} matched, {contentMismatch:N0} content mismatch, {dateMismatch:N0} date mismatch, {onlyInSource:N0} only in source, {onlyInTarget:N0} only in target"
-                + (unverified > 0 ? $", {unverified:N0} unverified (no comparable signal)" : ""));
-            PushActivity($"{verifyName} report written: {dlg.FileName}");
+            PushActivity(Loc.T("VM_VerifyComplete", verifyName, matched, contentMismatch, dateMismatch, onlyInSource, onlyInTarget)
+                + (unverified > 0 ? Loc.T("VM_VerifyUnverified", unverified) : ""));
+            PushActivity(Loc.T("VM_VerifyReportWritten", verifyName, dlg.FileName));
             if (result.ScanErrors.Count > 0)
-                PushActivity($"⚠ {result.ScanErrors.Count} root(s) could not be scanned — see the Scan Errors tab");
+                PushActivity(Loc.T("VM_VerifyScanErrors", result.ScanErrors.Count));
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
             StatusMessage = string.Empty;
         }
-        catch (OperationCanceledException) { StatusMessage = $"{verifyName} cancelled."; PushActivity($"{verifyName} cancelled."); }
+        catch (OperationCanceledException) { StatusMessage = Loc.T("VM_VerifyCancelled", verifyName); PushActivity(Loc.T("VM_VerifyCancelled", verifyName)); }
         catch (Exception ex)
         {
-            StatusMessage = $"{verifyName} error: {ex.Message}";
-            PushActivity($"⚠ {verifyName} error: {ex.Message}");
+            StatusMessage = Loc.T("VM_VerifyError", verifyName, ex.Message);
+            PushActivity(Loc.T("VM_VerifyErrorWarn", verifyName, ex.Message));
         }
         finally { IsVerifying = false; }
     }
@@ -3091,9 +3091,9 @@ public partial class MainViewModel : ObservableObject
 
     private static string FormatDuration(TimeSpan ts)
     {
-        if (ts.TotalHours >= 1)   return $"{(int)ts.TotalHours}h {ts.Minutes}m {ts.Seconds}s";
-        if (ts.TotalMinutes >= 1) return $"{(int)ts.TotalMinutes}m {ts.Seconds}s";
-        return $"{ts.Seconds}s";
+        if (ts.TotalHours >= 1)   return Loc.T("VM_DurationHMS", (int)ts.TotalHours, ts.Minutes, ts.Seconds);
+        if (ts.TotalMinutes >= 1) return Loc.T("VM_DurationMS", (int)ts.TotalMinutes, ts.Seconds);
+        return Loc.T("VM_DurationS", ts.Seconds);
     }
 
     private void SaveReport()

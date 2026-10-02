@@ -1,7 +1,7 @@
-<Window x:Class="SharePointSmartCopy.Dialogs.HistoryDialog"
+﻿<Window xmlns:loc="clr-namespace:SharePointSmartCopy.Localization" x:Class="SharePointSmartCopy.Dialogs.HistoryDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Copy History"
+        Title="{loc:Loc Ui_CopyHistory}"
         Width="980" Height="620"
         WindowStartupLocation="CenterOwner"
         Background="{DynamicResource WindowBgBrush}">
@@ -25,7 +25,7 @@
             <Image Grid.Column="0" Source="pack://application:,,,/Resources/logo.png"
                    Height="70" VerticalAlignment="Center"
                    RenderOptions.BitmapScalingMode="HighQuality"/>
-            <TextBlock Grid.Column="2" Text="Copy History" FontSize="18" FontWeight="SemiBold"
+            <TextBlock Grid.Column="2" Text="{loc:Loc Ui_CopyHistory}" FontSize="18" FontWeight="SemiBold"
                        Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center"/>
         </Grid>
 
@@ -45,13 +45,13 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Previous runs" FontWeight="SemiBold"
+                <TextBlock Grid.Row="0" Text="{loc:Loc Ui_PreviousRuns}" FontWeight="SemiBold"
                            FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
 
                 <StackPanel x:Name="ReportListLoading" Grid.Row="2" Orientation="Horizontal"
                             HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,16,0,0">
                     <ProgressBar IsIndeterminate="True" Width="60" Height="4" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                    <TextBlock Text="Loading…" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                    <TextBlock Text="{loc:Loc Ui_Loading}" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"/>
                 </StackPanel>
 
                 <ListBox Grid.Row="2" x:Name="ReportList" Visibility="Collapsed"
@@ -97,7 +97,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" x:Name="DetailHeader"
-                           Text="Select a run to view details"
+                           Text="{loc:Loc Ui_SelectARunToView}"
                            FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}"/>
 
                 <!-- Summary cards for selected report -->
@@ -108,7 +108,7 @@
                         <StackPanel>
                             <TextBlock x:Name="SuccessCard" Text="0" FontSize="22" FontWeight="Bold"
                                        Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Succeeded" Foreground="{DynamicResource SuccessBrush}" FontSize="11" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{loc:Loc Ui_Succeeded}" Foreground="{DynamicResource SuccessBrush}" FontSize="11" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                     <Border Style="{StaticResource SummaryCard}" Padding="16,8" Margin="0,0,8,0" MinWidth="90"
@@ -116,7 +116,7 @@
                         <StackPanel>
                             <TextBlock x:Name="FailedCard" Text="0" FontSize="22" FontWeight="Bold"
                                        Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Failed" Foreground="{DynamicResource DangerBrush}" FontSize="11" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{loc:Loc Ui_Failed2}" Foreground="{DynamicResource DangerBrush}" FontSize="11" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                     <Border Style="{StaticResource SummaryCard}" Padding="16,8" Margin="0" MinWidth="90"
@@ -124,7 +124,7 @@
                         <StackPanel>
                             <TextBlock x:Name="SkippedCard" Text="0" FontSize="22" FontWeight="Bold"
                                        Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Skipped" Foreground="{DynamicResource WarningTextBrush}" FontSize="11" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{loc:Loc Ui_Skipped2}" Foreground="{DynamicResource WarningTextBrush}" FontSize="11" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -139,8 +139,8 @@
                               AlternatingRowBackground="{DynamicResource SurfaceAltBrush}" BorderThickness="0"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="File Name"   Binding="{Binding FileName}"   Width="200"/>
-                            <DataGridTemplateColumn Header="Status" Width="110">
+                            <DataGridTextColumn Header="{loc:Loc Ui_FileName}"   Binding="{Binding FileName}"   Width="200"/>
+                            <DataGridTemplateColumn Header="{loc:Loc Ui_Status}" Width="110">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding StatusDisplay}" Margin="4,2"
@@ -149,14 +149,14 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Source Path" Binding="{Binding SourcePath}" Width="220"/>
-                            <DataGridTextColumn Header="Target Path" Binding="{Binding TargetPath}" Width="220"/>
-                            <DataGridTextColumn Header="Versions"    Binding="{Binding VersionsCopied}" Width="65"/>
-                            <DataGridTextColumn Header="Error"       Binding="{Binding ErrorMessage}"  Width="200"/>
+                            <DataGridTextColumn Header="{loc:Loc Ui_SourcePath}" Binding="{Binding SourcePath}" Width="220"/>
+                            <DataGridTextColumn Header="{loc:Loc Ui_TargetPath}" Binding="{Binding TargetPath}" Width="220"/>
+                            <DataGridTextColumn Header="{loc:Loc Ui_Versions2}"    Binding="{Binding VersionsCopied}" Width="65"/>
+                            <DataGridTextColumn Header="{loc:Loc Ui_Error}"       Binding="{Binding ErrorMessage}"  Width="200"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <TextBlock x:Name="EmptyHint" Style="{StaticResource GhostText}"
-                               Text="Select a run on the left to see its file-by-file results."/>
+                               Text="{loc:Loc Ui_SelectARunOnThe}"/>
                   </Grid>
                 </Border>
             </Grid>
@@ -176,7 +176,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" x:Name="DeleteButton" Content="Delete Run"
+                <Button Grid.Column="0" x:Name="DeleteButton" Content="{loc:Loc Ui_DeleteRun}"
                         Style="{StaticResource DangerBtn}"
                         IsEnabled="False" Click="DeleteButton_Click"/>
 
@@ -185,33 +185,33 @@
                      text length (that was the earlier bug: sharing a column with it either pushed
                      Cancel out of view, or truncating the text to protect Cancel cut the message off
                      instead — neither is acceptable, so they no longer share space at all). -->
-                <Button Grid.Column="1" x:Name="VerifyCancelButton" Content="Cancel" Style="{StaticResource DangerBtn}"
+                <Button Grid.Column="1" x:Name="VerifyCancelButton" Content="{loc:Loc Ui_Cancel}" Style="{StaticResource DangerBtn}"
                         Visibility="Collapsed" Margin="16,0,0,0" HorizontalAlignment="Left"
                         Click="VerifyCancelButton_Click"/>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <CheckBox x:Name="DeepVerifyCheckBox" VerticalAlignment="Center" FontSize="12"
                               Margin="0,0,14,0" Checked="DeepVerifyCheckBox_Changed" Unchecked="DeepVerifyCheckBox_Changed"
-                              AutomationProperties.Name="Deep verify Office files">
+                              AutomationProperties.Name="{loc:Loc Ui2_AutoDeepVerifyOffice}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="Deep verify Office files" VerticalAlignment="Center"/>
+                            <TextBlock Text="{loc:Loc Ui_DeepVerifyOfficeFiles}" VerticalAlignment="Center"/>
                             <TextBlock Style="{StaticResource ToolTipIcon}">
                                 <TextBlock.ToolTip>
                                     <ToolTip MaxWidth="280">
                                         <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                   Text="Downloads both copies of each mismatched Office file and compares their internal content, ignoring the metadata parts SharePoint rewrites on upload (Document ID, custom properties, etc.). Slower — use when a hash or date difference needs to be proven real or harmless."/>
+                                                   Text="{loc:Loc Ui_DownloadsBothCopiesOfEach}"/>
                                     </ToolTip>
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </StackPanel>
                     </CheckBox>
-                    <Button x:Name="ExportButton" Content="Export CSV"
+                    <Button x:Name="ExportButton" Content="{loc:Loc Ui_ExportCsv}"
                             Style="{StaticResource SecondaryBtn}"
                             IsEnabled="False" Margin="0,0,10,0" Click="ExportButton_Click"/>
-                    <Button x:Name="VerifyButton" Content="Verify with Excel Report"
+                    <Button x:Name="VerifyButton" Content="{loc:Loc Ui_VerifyWithExcelReport}"
                             Style="{StaticResource SecondaryBtn}"
                             IsEnabled="False" Margin="0,0,10,0" Click="VerifyButton_Click"/>
-                    <Button Content="Close" Style="{StaticResource SecondaryBtn}" Click="Close_Click"/>
+                    <Button Content="{loc:Loc Ui_Close}" Style="{StaticResource SecondaryBtn}" Click="Close_Click"/>
                 </StackPanel>
             </Grid>
 

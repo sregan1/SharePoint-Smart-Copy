@@ -1,8 +1,8 @@
-<Window x:Class="SharePointSmartCopy.Dialogs.ColumnMappingDialog"
+﻿<Window xmlns:loc="clr-namespace:SharePointSmartCopy.Localization" x:Class="SharePointSmartCopy.Dialogs.ColumnMappingDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:SharePointSmartCopy.Converters"
-        Title="Column Mappings"
+        Title="{loc:Loc Ui_ColumnMappings}"
         Width="720" Height="520"
         MinWidth="560" MinHeight="380"
         WindowStartupLocation="CenterOwner"
@@ -24,7 +24,7 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <TextBlock Grid.Row="0" Text="Column Mappings" FontSize="18" FontWeight="SemiBold"
+        <TextBlock Grid.Row="0" Text="{loc:Loc Ui_ColumnMappings}" FontSize="18" FontWeight="SemiBold"
                    Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,4"/>
         <TextBlock Grid.Row="1" TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,0,0,12"
                    Text="{Binding HeaderDescription}"/>
@@ -46,8 +46,8 @@
                             <ColumnDefinition Width="16"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Source Column" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"/>
-                        <TextBlock Grid.Column="1" Text="Type" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                        <TextBlock Grid.Column="0" Text="{loc:Loc Ui_SourceColumn}" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                        <TextBlock Grid.Column="1" Text="{loc:Loc Ui_Type}" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"/>
                         <TextBlock Grid.Column="3" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"
                                    Text="{Binding TargetColumnHeader}"/>
                     </Grid>
@@ -59,14 +59,10 @@
                     <Border Padding="32"
                             Visibility="{Binding HasNoMappings, Converter={StaticResource BoolToVis}}">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="No mappable columns" FontSize="14" FontWeight="SemiBold"
+                            <TextBlock Text="{loc:Loc Ui_NoMappableColumns}" FontSize="14" FontWeight="SemiBold"
                                        Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                             <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextPlaceholderBrush}"
-                                       HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="420">
-                                The source library has no custom columns of a supported type.
-                                Supported types: Text, Note, Number, Boolean, Date, Choice, Multi-choice, Person, Managed Metadata.
-                                Lookup columns are not supported.
-                            </TextBlock>
+                                       HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="420" Text="{loc:Loc Ui2_NoMappableColumnsDetail}"/>
                         </StackPanel>
                     </Border>
 
@@ -131,9 +127,9 @@
 
         <!-- Buttons -->
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
-            <Button Content="Auto-match" Style="{StaticResource SecondaryBtn}" Click="AutoMatch_Click" Margin="0,0,8,0"/>
-            <Button Content="Cancel" Style="{StaticResource SecondaryBtn}" Click="Cancel_Click" Margin="0,0,8,0"/>
-            <Button Content="Save mappings" Style="{StaticResource PrimaryBtn}" Click="Save_Click"/>
+            <Button Content="{loc:Loc Ui_AutoMatch}" Style="{StaticResource SecondaryBtn}" Click="AutoMatch_Click" Margin="0,0,8,0"/>
+            <Button Content="{loc:Loc Ui_Cancel}" Style="{StaticResource SecondaryBtn}" Click="Cancel_Click" Margin="0,0,8,0"/>
+            <Button Content="{loc:Loc Ui_SaveMappings}" Style="{StaticResource PrimaryBtn}" Click="Save_Click"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using SharePointSmartCopy.Localization;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -136,7 +137,7 @@ public partial class MainWindow : Window
         if (dlg.ShowDialog() == true)
         {
             VM.ApplySettings(dlg.Result);
-            ShowToast("Settings saved. Connect again if you were already signed in.");
+            ShowToast(Loc.T("Dlg_SettingsSaved"));
         }
     }
 

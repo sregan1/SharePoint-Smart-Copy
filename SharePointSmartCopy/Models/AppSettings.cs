@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using SharePointSmartCopy.Localization;
+using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -12,7 +13,7 @@ public partial class AzureRegistration : ObservableObject
     [ObservableProperty] private string _tenantId = string.Empty;
 
     [JsonIgnore]
-    public string DisplayName => string.IsNullOrWhiteSpace(Name) ? "(Unnamed)" : Name;
+    public string DisplayName => string.IsNullOrWhiteSpace(Name) ? Loc.T("VM_Unnamed") : Name;
 }
 
 public enum CopyMode { MigrationApi, EnhancedRest }
@@ -54,6 +55,8 @@ public class AppSettings
     public bool      CopyNavigation       { get; set; } = true;
     public bool      CopyPermissions      { get; set; } = false;
     public AppTheme  Theme                { get; set; } = AppTheme.System;
+    // UI language code (e.g. "de-DE"); empty = follow the Windows display language. Applied at next launch.
+    public string    Language             { get; set; } = string.Empty;
 
     // Deep verify: opt-in, off by default — see SharePointSmartCopy/Docs/DEEP-VERIFY-PLAN.md.
     // The checkbox in each Verify UI is seeded from this value and persists the user's last choice,

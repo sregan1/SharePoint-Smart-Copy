@@ -1,3 +1,4 @@
+using SharePointSmartCopy.Localization;
 using System.Collections.Concurrent;
 using System.IO;
 using SharePointSmartCopy.Models;
@@ -60,7 +61,7 @@ public sealed class VerificationReportService(SharePointService spService)
                     if (now - lastThrottleLog < TimeSpan.FromSeconds(5)) return;
                     lastThrottleLog = now;
                 }
-                activityLog.Report($"⚠ Graph throttled — waiting {delay.TotalSeconds:0}s"
+                activityLog.Report(Loc.T("Svc_Ver_Throttled", delay.TotalSeconds)
                     + (string.IsNullOrEmpty(reason) ? "" : $" [{reason}]"));
             };
             spService.Throttled += onThrottleLog;
@@ -168,8 +169,8 @@ public sealed class VerificationReportService(SharePointService spService)
             catch (OperationCanceledException) { throw; }
             catch (Exception ex)
             {
-                scanErrors.Add($"Source '{root.SourceName}': {ex.Message}");
-                activityLog?.Report($"⚠ Could not scan source root '{root.SourceName}': {ex.Message}");
+                scanErrors.Add(Loc.T("Svc_Ver_SrcScanErr", root.SourceName, ex.Message));
+                activityLog?.Report(Loc.T("Svc_Ver_SrcScanLog", root.SourceName, ex.Message));
             }
         }));
         return results.ToList();
@@ -189,7 +190,7 @@ public sealed class VerificationReportService(SharePointService spService)
         var results = new ConcurrentBag<ScannedFile>();
         await Task.WhenAll(roots.Select(async root =>
         {
-            var label = string.IsNullOrEmpty(root.NavigatePath) ? "(library root)" : root.NavigatePath;
+            var label = string.IsNullOrEmpty(root.NavigatePath) ? Loc.T("Svc_Ver_LibraryRoot") : root.NavigatePath;
             try
             {
                 // Navigate from the library root down to the actual copied item — TargetParentItemId
@@ -199,8 +200,8 @@ public sealed class VerificationReportService(SharePointService spService)
                     : await spService.ResolveItemIdByPathAsync(root.DriveId, root.ParentItemId, root.NavigatePath);
                 if (scanRootId == null)
                 {
-                    scanErrors.Add($"Target '{label}': not found (it may have been deleted or renamed since the copy)");
-                    activityLog?.Report($"⚠ Target '{label}' no longer exists");
+                    scanErrors.Add(Loc.T("Svc_Ver_TgtNotFound", label));
+                    activityLog?.Report(Loc.T("Svc_Ver_TgtGone", label));
                     return;
                 }
 
@@ -221,8 +222,8 @@ public sealed class VerificationReportService(SharePointService spService)
             catch (OperationCanceledException) { throw; }
             catch (Exception ex)
             {
-                scanErrors.Add($"Target '{label}': {ex.Message}");
-                activityLog?.Report($"⚠ Could not scan target root '{label}': {ex.Message}");
+                scanErrors.Add(Loc.T("Svc_Ver_TgtScanErr", label, ex.Message));
+                activityLog?.Report(Loc.T("Svc_Ver_TgtScanLog", label, ex.Message));
             }
         }));
         return results.ToList();
@@ -332,9 +333,7 @@ public sealed class VerificationReportService(SharePointService spService)
             if (row.Status == ComparisonStatus.Unverified && t != null &&
                 OneNoteExtensions.Contains(Path.GetExtension(s.RelativePath)))
             {
-                row.Note = "OneNote rewrites this file's content and Modified date server-side " +
-                           "independently of the copy — neither hash nor date can confirm or " +
-                           "refute a content difference here. Open the notebook to check manually if needed.";
+                row.Note = Loc.T("Svc_Ver_OneNoteNote");
             }
             rows.Add(row);
 
@@ -381,7 +380,7 @@ public sealed class VerificationReportService(SharePointService spService)
         const long SizeCapBytes = 250L * 1024 * 1024;
 
         activityLog?.Report(
-            $"{candidates.Count:N0} Office file(s) need deep verification (hash/date signals disagreed)...");
+            Loc.T("Svc_Ver_DeepNeeded", candidates.Count));
 
         int attempted = 0, resolvedToMatch = 0, mismatched = 0, inconclusive = 0;
 
@@ -396,7 +395,7 @@ public sealed class VerificationReportService(SharePointService spService)
                 if (now - lastReport < TimeSpan.FromSeconds(3) && done < total) return;
                 lastReport = now;
             }
-            activityLog.Report($"Deep-verifying Office files: {done:N0} / {total:N0}");
+            activityLog.Report(Loc.T("Svc_Ver_DeepProgress", done, total));
         }
 
         // The outer degree just needs to be high enough that AdaptiveParallelismController (not
@@ -425,10 +424,10 @@ public sealed class VerificationReportService(SharePointService spService)
             });
 
         activityLog?.Report(
-            $"Deep verify complete: {attempted:N0} compared" +
-            (resolvedToMatch > 0 ? $", {resolvedToMatch:N0} confirmed matched" : "") +
-            (mismatched      > 0 ? $", {mismatched:N0} content mismatch" : "") +
-            (inconclusive    > 0 ? $", {inconclusive:N0} could not be compared" : ""));
+            Loc.T("Svc_Ver_DeepDone", attempted) +
+            (resolvedToMatch > 0 ? Loc.T("Svc_Ver_DeepDoneMatched", resolvedToMatch) : "") +
+            (mismatched      > 0 ? Loc.T("Svc_Ver_DeepDoneMismatch", mismatched) : "") +
+            (inconclusive    > 0 ? Loc.T("Svc_Ver_DeepDoneInconclusive", inconclusive) : ""));
     }
 
     private async Task<(OpcCompareOutcome Outcome, string? SkipReason)> DeepVerifyOneAsync(
@@ -436,7 +435,7 @@ public sealed class VerificationReportService(SharePointService spService)
     {
         if ((candidate.Source.Size ?? 0) > sizeCapBytes || (candidate.Target.Size ?? 0) > sizeCapBytes)
             return (new OpcCompareOutcome(OpcCompareResult.NotComparable, []),
-                $"file exceeds the {sizeCapBytes / (1024 * 1024):N0} MB deep-verify size cap");
+                Loc.T("Svc_Ver_SizeCap", sizeCapBytes / (1024 * 1024)));
 
         try
         {
@@ -450,13 +449,13 @@ public sealed class VerificationReportService(SharePointService spService)
 
             var outcome = OpcDeepComparer.Compare(sourceMs, targetMs);
             return (outcome, outcome.Result == OpcCompareResult.NotComparable
-                ? "not a valid OOXML package (label-encrypted or corrupt)"
+                ? Loc.T("Svc_Ver_NotOoxml")
                 : null);
         }
         catch (OperationCanceledException) { throw; }
         catch (Exception ex)
         {
-            return (new OpcCompareOutcome(OpcCompareResult.NotComparable, []), $"download failed: {ex.Message}");
+            return (new OpcCompareOutcome(OpcCompareResult.NotComparable, []), Loc.T("Svc_Ver_DownloadFailed", ex.Message));
         }
     }
 
@@ -475,16 +474,16 @@ public sealed class VerificationReportService(SharePointService spService)
         {
             case OpcCompareResult.VolatileOnlyDifferences:
                 row.Status = ComparisonStatus.Match;
-                row.Note   = "Deep verify: content parts identical — only SharePoint-rewritten metadata (Document ID, custom properties, etc.) differs.";
+                row.Note   = Loc.T("Svc_Ver_DeepVolatile");
                 break;
             case OpcCompareResult.ContentMismatch:
                 row.Status = ComparisonStatus.ContentMismatch;
                 row.Note   = outcome.DifferingParts.Count > 0
-                    ? $"Deep verify: content differs in {string.Join(", ", outcome.DifferingParts)}"
-                    : "Deep verify: content differs.";
+                    ? Loc.T("Svc_Ver_DeepDiffers", string.Join(", ", outcome.DifferingParts))
+                    : Loc.T("Svc_Ver_DeepDiffersPlain");
                 break;
             case OpcCompareResult.NotComparable:
-                row.Note = $"Deep verify could not run — {skipReason ?? "unknown reason"}. Status reflects the date/hash check only.";
+                row.Note = Loc.T("Svc_Ver_DeepNoRun", skipReason ?? Loc.T("Svc_Ver_UnknownReason"));
                 break;
         }
     }

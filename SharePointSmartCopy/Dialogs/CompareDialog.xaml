@@ -1,9 +1,9 @@
-<Window x:Class="SharePointSmartCopy.Dialogs.CompareDialog"
+﻿<Window xmlns:loc="clr-namespace:SharePointSmartCopy.Localization" x:Class="SharePointSmartCopy.Dialogs.CompareDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:SharePointSmartCopy.Converters"
         xmlns:models="clr-namespace:SharePointSmartCopy.Models"
-        Title="Compare Source and Target"
+        Title="{loc:Loc Ui_CompareSourceAndTarget}"
         Width="1040" Height="720"
         MinWidth="820" MinHeight="560"
         WindowStartupLocation="CenterOwner"
@@ -39,10 +39,10 @@
 
         <!-- Header -->
         <StackPanel Grid.Row="0">
-            <TextBlock Text="Compare Source and Target" FontSize="18" FontWeight="SemiBold"
+            <TextBlock Text="{loc:Loc Ui_CompareSourceAndTarget}" FontSize="18" FontWeight="SemiBold"
                        Foreground="{DynamicResource TextPrimaryBrush}"/>
             <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}" Margin="0,4,0,0"
-                       Text="Connect to any source and target location and generate a difference report — independent of copy history."/>
+                       Text="{loc:Loc Ui_ConnectToAnySourceAnd}"/>
         </StackPanel>
 
         <!-- Main area: Source | Target -->
@@ -63,14 +63,14 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Source" Style="{StaticResource SectionHeader}"/>
+                <TextBlock Grid.Row="0" Text="{loc:Loc Ui_Source}" Style="{StaticResource SectionHeader}"/>
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,6,0,0">
                     <TextBox x:Name="SourceUrlBox" Width="260"
                              Text="{Binding SourceUrl, UpdateSourceTrigger=PropertyChanged}"
                              Tag="https://contoso.sharepoint.com/sites/source"
                              Style="{StaticResource WatermarkTextBox}"/>
-                    <Button x:Name="SourceConnectButton" Content="Connect" Style="{StaticResource PrimaryBtn}" Margin="8,0,0,0"
+                    <Button x:Name="SourceConnectButton" Content="{loc:Loc Ui_Connect}" Style="{StaticResource PrimaryBtn}" Margin="8,0,0,0"
                             Click="SourceConnect_Click"
                             IsEnabled="{Binding IsConnectingSource, Converter={StaticResource InvBool}}"/>
                 </StackPanel>
@@ -112,14 +112,14 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Target" Style="{StaticResource SectionHeader}"/>
+                <TextBlock Grid.Row="0" Text="{loc:Loc Ui_Target}" Style="{StaticResource SectionHeader}"/>
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,6,0,0">
                     <TextBox x:Name="TargetUrlBox" Width="260"
                              Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
                              Tag="https://contoso.sharepoint.com/sites/target"
                              Style="{StaticResource WatermarkTextBox}"/>
-                    <Button x:Name="TargetConnectButton" Content="Connect" Style="{StaticResource PrimaryBtn}" Margin="8,0,0,0"
+                    <Button x:Name="TargetConnectButton" Content="{loc:Loc Ui_Connect}" Style="{StaticResource PrimaryBtn}" Margin="8,0,0,0"
                             Click="TargetConnect_Click"
                             IsEnabled="{Binding IsConnectingTarget, Converter={StaticResource InvBool}}"/>
                 </StackPanel>
@@ -163,29 +163,29 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" x:Name="CompareCancelButton" Content="Cancel" Style="{StaticResource DangerBtn}"
+                <Button Grid.Column="0" x:Name="CompareCancelButton" Content="{loc:Loc Ui_Cancel}" Style="{StaticResource DangerBtn}"
                         Visibility="Collapsed" Click="CompareCancelButton_Click"/>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                     <CheckBox x:Name="DeepVerifyCheckBox" VerticalAlignment="Center" FontSize="12"
                               Margin="0,0,14,0" Checked="DeepVerifyCheckBox_Changed" Unchecked="DeepVerifyCheckBox_Changed"
-                              AutomationProperties.Name="Deep verify Office files">
+                              AutomationProperties.Name="{loc:Loc Ui2_AutoDeepVerifyOffice}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="Deep verify Office files" VerticalAlignment="Center"/>
+                            <TextBlock Text="{loc:Loc Ui_DeepVerifyOfficeFiles}" VerticalAlignment="Center"/>
                             <TextBlock Style="{StaticResource ToolTipIcon}">
                                 <TextBlock.ToolTip>
                                     <ToolTip MaxWidth="280">
                                         <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                   Text="Downloads both copies of each mismatched Office file and compares their internal content, ignoring the metadata parts SharePoint rewrites on upload (Document ID, custom properties, etc.). Slower — use when a hash or date difference needs to be proven real or harmless."/>
+                                                   Text="{loc:Loc Ui_DownloadsBothCopiesOfEach}"/>
                                     </ToolTip>
                                 </TextBlock.ToolTip>
                             </TextBlock>
                         </StackPanel>
                     </CheckBox>
-                    <Button x:Name="CompareButton" Content="Compare with Excel Report"
+                    <Button x:Name="CompareButton" Content="{loc:Loc Ui_CompareWithExcelReport}"
                             Style="{StaticResource PrimaryBtn}"
                             IsEnabled="False" Margin="0,0,10,0" Click="CompareButton_Click"/>
-                    <Button Content="Close" Style="{StaticResource SecondaryBtn}" Click="Close_Click"/>
+                    <Button Content="{loc:Loc Ui_Close}" Style="{StaticResource SecondaryBtn}" Click="Close_Click"/>
                 </StackPanel>
             </Grid>
 

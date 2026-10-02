@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Ui_SharepointSmartCopy" xml:space="preserve"><value>SharePoint Smart Copy</value></data>
+  <data name="Ui_Source" xml:space="preserve"><value>源</value></data>
+  <data name="Ui_Browse" xml:space="preserve"><value>浏览</value></data>
+  <data name="Ui_Target" xml:space="preserve"><value>目标</value></data>
+  <data name="Ui_Options" xml:space="preserve"><value>选项</value></data>
+  <data name="Ui_Copy" xml:space="preserve"><value>复制</value></data>
+  <data name="Ui_Report" xml:space="preserve"><value>报告</value></data>
+  <data name="Ui_History" xml:space="preserve"><value>历史记录</value></data>
+  <data name="Ui_Compare" xml:space="preserve"><value>比较</value></data>
+  <data name="Ui_Settings" xml:space="preserve"><value>设置</value></data>
+  <data name="Ui_ConnectToSourceSite" xml:space="preserve"><value>连接到源站点</value></data>
+  <data name="Ui_SourceSiteUrl" xml:space="preserve"><value>源站点 URL</value></data>
+  <data name="Ui_Connect" xml:space="preserve"><value>连接</value></data>
+  <data name="Ui_Disconnect" xml:space="preserve"><value>断开连接</value></data>
+  <data name="Ui_Requirements" xml:space="preserve"><value>要求</value></data>
+  <data name="Ui_WhatWouldYouLikeTo" xml:space="preserve"><value>您要复制什么内容?</value></data>
+  <data name="Ui_FilesFolders" xml:space="preserve"><value>文件和文件夹</value></data>
+  <data name="Ui_CopyIndividualFilesBetweenLibraries" xml:space="preserve"><value>在库之间复制单个文件</value></data>
+  <data name="Ui_LibrariesLists" xml:space="preserve"><value>库和列表</value></data>
+  <data name="Ui_RecreateLibrariesListsWithStructure" xml:space="preserve"><value>重新创建包含结构和列的库和列表</value></data>
+  <data name="Ui_EntireSite" xml:space="preserve"><value>整个站点</value></data>
+  <data name="Ui_CopyAllLibrariesFromThe" xml:space="preserve"><value>复制源站点中的所有库</value></data>
+  <data name="Ui_SitePages" xml:space="preserve"><value>站点页面</value></data>
+  <data name="Ui_CopyModernPagesWithWeb" xml:space="preserve"><value>复制包含 Web 部件的新式页面</value></data>
+  <data name="Ui_Source2" xml:space="preserve"><value>源: </value></data>
+  <data name="Ui_SelectAll" xml:space="preserve"><value>全选</value></data>
+  <data name="Ui_DeselectAll" xml:space="preserve"><value>取消全选</value></data>
+  <data name="Ui_ConnectToTargetSite" xml:space="preserve"><value>连接到目标站点</value></data>
+  <data name="Ui_TargetSiteUrl" xml:space="preserve"><value>目标站点 URL</value></data>
+  <data name="Ui_ConnectToTarget" xml:space="preserve"><value>连接到目标</value></data>
+  <data name="Ui_SelectDestinationFolder" xml:space="preserve"><value>选择目标文件夹</value></data>
+  <data name="Ui_TargetSite" xml:space="preserve"><value>目标站点</value></data>
+  <data name="Ui_Selected" xml:space="preserve"><value> 已选择: </value></data>
+  <data name="Ui_LibraryListCreation" xml:space="preserve"><value>库/列表创建</value></data>
+  <data name="Ui_Target2" xml:space="preserve"><value> 目标: </value></data>
+  <data name="Ui_DestinationList" xml:space="preserve"><value>目标列表</value></data>
+  <data name="Ui_CopyOptions" xml:space="preserve"><value>复制选项</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>复制库内容(文件)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>关闭时,仅重新创建列架构和库设置,不复制任何文件。</value></data>
+  <data name="Ui_IfFileExists" xml:space="preserve"><value>如果文件已存在:</value></data>
+  <data name="Ui_Skip" xml:space="preserve"><value>跳过</value></data>
+  <data name="Ui_Overwrite" xml:space="preserve"><value>覆盖</value></data>
+  <data name="Ui_IfNewer" xml:space="preserve"><value>如果较新</value></data>
+  <data name="Ui_IncrementalReCopyReplacesA" xml:space="preserve"><value>增量重新复制: 仅当源文件在目标文件之后被修改时才替换文件。未更改的文件将报告为“已是最新”。启用“复制权限”后,已是最新的文件仍会刷新权限。非常适合在用户仍在源中工作的情况下,于切换时进行最后的补充复制。</value></data>
+  <data name="Ui_CopyVersionHistory" xml:space="preserve"><value>复制版本历史记录</value></data>
+  <data name="Ui_CopiesFileVersionHistoryVersions" xml:space="preserve"><value>复制文件版本历史记录。版本按从旧到新的顺序上传,以自然地构建历史记录。</value></data>
+  <data name="Ui_AllVersions" xml:space="preserve"><value>所有版本</value></data>
+  <data name="Ui_Latest" xml:space="preserve"><value>最近 </value></data>
+  <data name="Ui_Versions" xml:space="preserve"><value> 个版本</value></data>
+  <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>复制导航(快速启动和顶部栏)</value></data>
+  <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>用源链接替换目标导航。URL 将重新映射到目标站点。</value></data>
+  <data name="Ui_CopyPermissions" xml:space="preserve"><value>复制权限</value></data>
+  <data name="Ui_CopiesUniqueRoleAssignmentsFor" xml:space="preserve"><value>复制唯一角色分配 - 在“文件”范围内针对文件;在“库”和“站点”范围内针对库、列表、文件夹、文件和项目。在同一租户内复制时效果最佳。</value></data>
+  <data name="Ui_PageOptions" xml:space="preserve"><value>页面选项</value></data>
+  <data name="Ui_IfPageExists" xml:space="preserve"><value>如果页面已存在:</value></data>
+  <data name="Ui_RemapWebPartUrlsTo" xml:space="preserve"><value>将 Web 部件 URL 重新映射到目标站点</value></data>
+  <data name="Ui_ReplacesSourceSiteUrlsIn" xml:space="preserve"><value>替换 Web 部件 JSON 中的源站点 URL。引用特定列表 ID 的 Web 部件在复制后可能仍需手动检查。</value></data>
+  <data name="Ui_AdvancedOptions" xml:space="preserve"><value>高级选项</value></data>
+  <data name="Ui_Metadata" xml:space="preserve"><value>元数据</value></data>
+  <data name="Ui_PreserveMetadata" xml:space="preserve"><value>保留元数据</value></data>
+  <data name="Ui_PreservesCreatedByCreatedDate" xml:space="preserve"><value>保留每个已复制项目的创建者、创建日期、修改者和修改日期,以及已复制文件夹的文件夹颜色(如有)。关闭时,项目将显示为由您今天创建。</value></data>
+  <data name="Ui_ReApplyFolderMetadataEvery" xml:space="preserve"><value>每次运行时重新应用文件夹元数据</value></data>
+  <data name="Ui_OnRepairsFolderCreatedModified" xml:space="preserve"><value>开启: 每次运行时修复所选内容中每个文件夹的创建/修改日期、作者和颜色 - 修复已复制目标上的文件夹元数据时需要此选项,但会增加按文件夹扫描的开销,即使所有文件都被跳过也会运行。关闭: 仅更正本次运行中接收新文件的文件夹,使重复的“大部分跳过”运行快得多。仅在开启“保留元数据”时适用。</value></data>
+  <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>复制自定义列值</value></data>
+  <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>复制文本、数字、选择、日期、布尔、多选、人员和托管元数据列的值。不支持查阅列。</value></data>
+  <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>启用“复制自定义列值”以配置映射。</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>将复制所有自定义列值。使用映射来控制在目标处创建哪些列。</value></data>
+  <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>列表项的自定义列值始终会被复制。</value></data>
+  <data name="Ui_CopyMode" xml:space="preserve"><value>复制模式</value></data>
+  <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
+  <data name="Ui_Recommended" xml:space="preserve"><value>推荐</value></data>
+  <data name="Ui_ExactVersionNumbersDatesAnd" xml:space="preserve"><value>精确的版本号、日期和编辑者。需要目标上的网站集管理员权限。</value></data>
+  <data name="Ui_EnhancedRest" xml:space="preserve"><value>Enhanced REST</value></data>
+  <data name="Ui_CorrectDatesAndEditorsPer" xml:space="preserve"><value>每个版本的日期和编辑者正确,但版本号会翻倍(2、4、6…)。无需管理员权限。</value></data>
+  <data name="Ui_ParallelCopies" xml:space="preserve"><value>并行复制数</value></data>
+  <data name="Ui_HigherValuesCopyFasterBut" xml:space="preserve"><value>值越高复制越快,但在大型站点上可能会被限制。</value></data>
+  <data name="Ui_CopyPreview" xml:space="preserve"><value>复制预览</value></data>
+  <data name="Ui_ItemsSelected" xml:space="preserve"><value>个项目已选择</value></data>
+  <data name="Ui_LibrariesListsToCopy" xml:space="preserve"><value>个要复制的库和列表</value></data>
+  <data name="Ui_ListItemsToCopy" xml:space="preserve"><value>个要复制的列表项</value></data>
+  <data name="Ui_From" xml:space="preserve"><value>从: </value></data>
+  <data name="Ui_To" xml:space="preserve"><value>到: </value></data>
+  <data name="Ui_DestinationList2" xml:space="preserve"><value>目标列表: </value></data>
+  <data name="Ui_NothingSelectedYetGoBack" xml:space="preserve"><value>尚未选择任何内容 - 请返回“浏览”并勾选要复制的库或列表。</value></data>
+  <data name="Ui_LibraryList" xml:space="preserve"><value>库/列表</value></data>
+  <data name="Ui_DestinationName" xml:space="preserve"><value>目标名称</value></data>
+  <data name="Ui_NothingSelectedYetGoBack2" xml:space="preserve"><value>尚未选择任何内容 - 请返回“浏览”并勾选要复制的文件或文件夹。</value></data>
+  <data name="Ui_Type" xml:space="preserve"><value>类型</value></data>
+  <data name="Ui_SourcePath" xml:space="preserve"><value>源路径</value></data>
+  <data name="Ui_DestinationPath" xml:space="preserve"><value>目标路径</value></data>
+  <data name="Ui_Of" xml:space="preserve"><value> / </value></data>
+  <data name="Ui_ItemsProcessed" xml:space="preserve"><value> 个项目已处理</value></data>
+  <data name="Ui_Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Ui_CheckingFiles" xml:space="preserve"><value>正在检查文件… </value></data>
+  <data name="Ui_FilesPackagedForImport" xml:space="preserve"><value> 个文件已打包待导入</value></data>
+  <data name="Ui_Activity" xml:space="preserve"><value>活动</value></data>
+  <data name="Ui_FullActivityLogForThis" xml:space="preserve"><value>本次运行的完整活动日志 - 选择并复制此路径,以便在迁移后打开</value></data>
+  <data name="Ui_CopyCompleteClickNextTo" xml:space="preserve"><value> 复制完成!单击“下一步”查看完整报告。</value></data>
+  <data name="Ui_UpdatingFolderMetadata" xml:space="preserve"><value>正在更新文件夹元数据…</value></data>
+  <data name="Ui_MetadataUpdatedTook" xml:space="preserve"><value> 元数据已更新 · 耗时 </value></data>
+  <data name="Ui_MetadataUpdateCancelled" xml:space="preserve"><value> 元数据更新已取消</value></data>
+  <data name="Ui_CopyLog" xml:space="preserve"><value>复制日志</value></data>
+  <data name="Ui_All" xml:space="preserve"><value>全部</value></data>
+  <data name="Ui_Success" xml:space="preserve"><value>成功 (</value></data>
+  <data name="Ui_Failed" xml:space="preserve"><value>失败 (</value></data>
+  <data name="Ui_Skipped" xml:space="preserve"><value>已跳过 (</value></data>
+  <data name="Ui_Item" xml:space="preserve"><value>项目</value></data>
+  <data name="Ui_Status" xml:space="preserve"><value>状态</value></data>
+  <data name="Ui_Versions2" xml:space="preserve"><value>版本</value></data>
+  <data name="Ui_Details" xml:space="preserve"><value>详细信息</value></data>
+  <data name="Ui_PermissionsStatus" xml:space="preserve"><value>权限状态</value></data>
+  <data name="Ui_PermissionsDetails" xml:space="preserve"><value>权限详细信息</value></data>
+  <data name="Ui_CustomFields" xml:space="preserve"><value>自定义字段</value></data>
+  <data name="Ui_CustomFieldsDetails" xml:space="preserve"><value>自定义字段详细信息</value></data>
+  <data name="Ui_CopyReport" xml:space="preserve"><value>复制报告</value></data>
+  <data name="Ui_Succeeded" xml:space="preserve"><value>成功</value></data>
+  <data name="Ui_Failed2" xml:space="preserve"><value>失败</value></data>
+  <data name="Ui_Skipped2" xml:space="preserve"><value>已跳过</value></data>
+  <data name="Ui_MetadataWarnings" xml:space="preserve"><value>元数据警告</value></data>
+  <data name="Ui_Duration" xml:space="preserve"><value>持续时间</value></data>
+  <data name="Ui_TotalSize" xml:space="preserve"><value>总大小</value></data>
+  <data name="Ui_Cancelled" xml:space="preserve"><value>已取消</value></data>
+  <data name="Ui_ExportCsv" xml:space="preserve"><value>导出 CSV</value></data>
+  <data name="Ui_VerifyWithExcelReport" xml:space="preserve"><value>使用 Excel 报告验证</value></data>
+  <data name="Ui_DeepVerifyOfficeFiles" xml:space="preserve"><value>深度验证 Office 文件</value></data>
+  <data name="Ui_DownloadsBothCopiesOfEach" xml:space="preserve"><value>下载每个不匹配的 Office 文件的两个副本并比较其内部内容,忽略 SharePoint 在上传时重写的元数据部分(文档 ID、自定义属性等)。速度较慢 - 当需要证明哈希或日期差异是真实的还是无害的时使用。</value></data>
+  <data name="Ui_TargetPath" xml:space="preserve"><value>目标路径</value></data>
+  <data name="Ui_Back" xml:space="preserve"><value>← 上一步</value></data>
+  <data name="Ui_StartNewCopy" xml:space="preserve"><value>开始新的复制</value></data>
+  <data name="Ui_ColumnMappings" xml:space="preserve"><value>列映射</value></data>
+  <data name="Ui_SourceColumn" xml:space="preserve"><value>源列</value></data>
+  <data name="Ui_NoMappableColumns" xml:space="preserve"><value>没有可映射的列</value></data>
+  <data name="Ui_AutoMatch" xml:space="preserve"><value>自动匹配</value></data>
+  <data name="Ui_SaveMappings" xml:space="preserve"><value>保存映射</value></data>
+  <data name="Ui_CompareSourceAndTarget" xml:space="preserve"><value>比较源和目标</value></data>
+  <data name="Ui_ConnectToAnySourceAnd" xml:space="preserve"><value>连接到任意源和目标位置并生成差异报告 - 与复制历史记录无关。</value></data>
+  <data name="Ui_CompareWithExcelReport" xml:space="preserve"><value>使用 Excel 报告比较</value></data>
+  <data name="Ui_Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="Ui_CopyHistory" xml:space="preserve"><value>复制历史记录</value></data>
+  <data name="Ui_PreviousRuns" xml:space="preserve"><value>以往的运行</value></data>
+  <data name="Ui_Loading" xml:space="preserve"><value>正在加载…</value></data>
+  <data name="Ui_SelectARunToView" xml:space="preserve"><value>选择一次运行以查看详细信息</value></data>
+  <data name="Ui_FileName" xml:space="preserve"><value>文件名</value></data>
+  <data name="Ui_Error" xml:space="preserve"><value>错误</value></data>
+  <data name="Ui_SelectARunOnThe" xml:space="preserve"><value>在左侧选择一次运行以查看其逐个文件的结果。</value></data>
+  <data name="Ui_DeleteRun" xml:space="preserve"><value>删除运行</value></data>
+  <data name="Ui_AzureAppRegistrations" xml:space="preserve"><value>Azure 应用注册</value></data>
+  <data name="Ui_Registrations" xml:space="preserve"><value>注册</value></data>
+  <data name="Ui_Add" xml:space="preserve"><value>添加</value></data>
+  <data name="Ui_Remove" xml:space="preserve"><value>删除</value></data>
+  <data name="Ui_EditSelectedRegistration" xml:space="preserve"><value>编辑所选注册</value></data>
+  <data name="Ui_Name" xml:space="preserve"><value>名称</value></data>
+  <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>客户端 ID(应用程序 ID)</value></data>
+  <data name="Ui_TenantId" xml:space="preserve"><value>租户 ID</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>多租户请使用“common”,或使用您的租户 GUID 或域。</value></data>
+  <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>在默认报告文件名前加上源站点和目标站点名称</value></data>
+  <data name="Ui_SignOut" xml:space="preserve"><value>注销</value></data>
+  <data name="Ui_Theme" xml:space="preserve"><value>主题:</value></data>
+  <data name="Ui_System" xml:space="preserve"><value>系统</value></data>
+  <data name="Ui_Light" xml:space="preserve"><value>浅色</value></data>
+  <data name="Ui_Dark" xml:space="preserve"><value>深色</value></data>
+  <data name="Ui_Save" xml:space="preserve"><value>保存</value></data>
+  <data name="Settings_Language" xml:space="preserve"><value>语言:</value></data>
+  <data name="Settings_LanguageSystem" xml:space="preserve"><value>系统默认</value></data>
+  <data name="Settings_LanguageRestart" xml:space="preserve"><value>将在应用下次启动时生效。</value></data>
+  <data name="VM_StatusPending" xml:space="preserve"><value>⏳ 待处理</value></data>
+  <data name="VM_StatusProcessing" xml:space="preserve"><value>⟳ 正在处理…</value></data>
+  <data name="VM_StatusFailed" xml:space="preserve"><value>❌ 失败</value></data>
+  <data name="VM_StatusSkipped" xml:space="preserve"><value>⏭ 已跳过</value></data>
+  <data name="VM_StatusCancelledSymbol" xml:space="preserve"><value>⊘ 已取消</value></data>
+  <data name="VM_StatusSuccess" xml:space="preserve"><value>✅ 成功</value></data>
+  <data name="VM_Dash" xml:space="preserve"><value>—</value></data>
+  <data name="VM_StatusApplied" xml:space="preserve"><value>✅ 已应用</value></data>
+  <data name="VM_StatusWarning" xml:space="preserve"><value>⚠ 警告</value></data>
+  <data name="VM_StatusCancelledBlocked" xml:space="preserve"><value>🚫 已取消</value></data>
+  <data name="VM_DurationHMS" xml:space="preserve"><value>{0}小时 {1}分 {2}秒</value></data>
+  <data name="VM_DurationMS" xml:space="preserve"><value>{0}分 {1}秒</value></data>
+  <data name="VM_DurationS" xml:space="preserve"><value>{0}秒</value></data>
+  <data name="VM_SummaryWithCancelled" xml:space="preserve"><value>✅ {0}   ❌ {1}   ⏭ {2}   🚫 {3}   ⏱ {4}{5}</value></data>
+  <data name="VM_Summary" xml:space="preserve"><value>✅ {0}   ❌ {1}   ⏭ {2}   ⏱ {3}{4}</value></data>
+  <data name="VM_Unnamed" xml:space="preserve"><value>(未命名)</value></data>
+  <data name="VM_SourceConnectedAs" xml:space="preserve"><value>✅ 已连接为 {0}</value></data>
+  <data name="VM_DemoCheckedOut" xml:space="preserve"><value>文件在源中已签出</value></data>
+  <data name="VM_DemoSizeLimit" xml:space="preserve"><value>文件超过 250 GB 上传限制</value></data>
+  <data name="VM_ThrottleRetryAttempt" xml:space="preserve"><value>SharePoint 正在限制请求 - {0:N0} 秒后重试(第 {1}/{2} 次尝试)…</value></data>
+  <data name="VM_ThrottleRetry" xml:space="preserve"><value>SharePoint 正在限制请求 - {0:N0} 秒后重试…</value></data>
+  <data name="VM_ParallelismReduced" xml:space="preserve"><value>并行度已降至 {0} 个线程(限制保护)…</value></data>
+  <data name="VM_ParallelismRestored" xml:space="preserve"><value>并行度已恢复为 {0} 个线程。</value></data>
+  <data name="VM_Connecting" xml:space="preserve"><value>正在连接…</value></data>
+  <data name="VM_ErrorPrefix" xml:space="preserve"><value>❌ {0}</value></data>
+  <data name="VM_LoadingLibraries" xml:space="preserve"><value>正在加载库…</value></data>
+  <data name="VM_ErrorLoadingLibraries" xml:space="preserve"><value>加载库时出错: {0}</value></data>
+  <data name="VM_LoadingSitePages" xml:space="preserve"><value>正在加载站点页面…</value></data>
+  <data name="VM_NoSitePagesLibrary" xml:space="preserve"><value>在此站点上未找到站点页面库。</value></data>
+  <data name="VM_ErrorLoadingSitePages" xml:space="preserve"><value>加载站点页面时出错: {0}</value></data>
+  <data name="VM_ItemNumber" xml:space="preserve"><value>(项目 {0})</value></data>
+  <data name="VM_ErrorLoadingFolder" xml:space="preserve"><value>加载文件夹时出错: {0}</value></data>
+  <data name="VM_Connected" xml:space="preserve"><value>✅ 已连接</value></data>
+  <data name="VM_CreateNewList" xml:space="preserve"><value>[ 创建新列表 ]</value></data>
+  <data name="VM_ConnectedConsentNote" xml:space="preserve"><value>✅ 已连接 · 注意: 元数据需要额外的同意 - 请重新连接以授予</value></data>
+  <data name="VM_ConfigureMappingsCount" xml:space="preserve"><value>配置映射({0} 列)</value></data>
+  <data name="VM_ConfigureMappings" xml:space="preserve"><value>配置映射</value></data>
+  <data name="VM_ConfigureMappingsUnmatched" xml:space="preserve"><value>配置映射  ⚠ {1} 中有 {0} 未匹配</value></data>
+  <data name="VM_ConfigureMappingsMapped" xml:space="preserve"><value>配置映射(已映射 {0}/{1})</value></data>
+  <data name="VM_OverwriteIfNewer" xml:space="preserve"><value>如果较新</value></data>
+  <data name="VM_ModeMigrationApi" xml:space="preserve"><value>Migration API</value></data>
+  <data name="VM_ModeEnhancedRest" xml:space="preserve"><value>Enhanced REST</value></data>
+  <data name="VM_Off" xml:space="preserve"><value>关闭</value></data>
+  <data name="VM_All" xml:space="preserve"><value>全部</value></data>
+  <data name="VM_MaxVersions" xml:space="preserve"><value>最多 {0}</value></data>
+  <data name="VM_SumOverwrite" xml:space="preserve"><value>覆盖: {0}</value></data>
+  <data name="VM_SumCopyMode" xml:space="preserve"><value>复制模式: {0}</value></data>
+  <data name="VM_SumVersions" xml:space="preserve"><value>版本: {0}</value></data>
+  <data name="VM_SumParallel" xml:space="preserve"><value>并行复制数: {0}</value></data>
+  <data name="VM_Yes" xml:space="preserve"><value>是</value></data>
+  <data name="VM_No" xml:space="preserve"><value>否</value></data>
+  <data name="VM_SumPreserveMetadata" xml:space="preserve"><value>保留元数据: {0}</value></data>
+  <data name="VM_EveryRun" xml:space="preserve"><value>每次运行</value></data>
+  <data name="VM_NewFoldersOnly" xml:space="preserve"><value>仅新文件夹</value></data>
+  <data name="VM_SumFolderRepair" xml:space="preserve"><value>文件夹元数据修复: {0}</value></data>
+  <data name="VM_SumPermissions" xml:space="preserve"><value>权限: {0}</value></data>
+  <data name="VM_SumCustomColumns" xml:space="preserve"><value>自定义列: {0}</value></data>
+  <data name="VM_MetadataFolderCount" xml:space="preserve"><value> {0:N0} / {1:N0} 个文件夹</value></data>
+  <data name="VM_ActivityLogPath" xml:space="preserve"><value>活动日志: {0}</value></data>
+  <data name="VM_SettingsSummary" xml:space="preserve"><value>设置: {0}</value></data>
+  <data name="VM_ReadingSourceMetadata" xml:space="preserve"><value>正在读取源元数据…</value></data>
+  <data name="VM_ReadColumnValuesFailed" xml:space="preserve"><value>⚠ 读取此库的自定义列值失败: {0}</value></data>
+  <data name="VM_CreatingTargetColumns" xml:space="preserve"><value>正在创建目标列…</value></data>
+  <data name="VM_CopyCancelled" xml:space="preserve"><value>复制已取消。</value></data>
+  <data name="VM_CopyError" xml:space="preserve"><value>复制错误: {0}</value></data>
+  <data name="VM_ItemLabel" xml:space="preserve"><value>项目 {0}</value></data>
+  <data name="VM_AlreadyExists" xml:space="preserve"><value>已存在</value></data>
+  <data name="VM_UpdatedFieldWarning" xml:space="preserve"><value>已更新(字段警告: {0})</value></data>
+  <data name="VM_Updated" xml:space="preserve"><value>已更新</value></data>
+  <data name="VM_FieldWarning" xml:space="preserve"><value>字段警告: {0}</value></data>
+  <data name="VM_ColumnCreated" xml:space="preserve"><value>已创建列: {0}</value></data>
+  <data name="VM_ColumnsCreated" xml:space="preserve"><value>已创建 {0} 列: {1}</value></data>
+  <data name="VM_ColumnsTitle" xml:space="preserve"><value>列 → {0}</value></data>
+  <data name="VM_ColumnFailedTitle" xml:space="preserve"><value>列失败 → {0}</value></data>
+  <data name="VM_RoleAssignmentApplied1" xml:space="preserve"><value>已应用 1 个角色分配</value></data>
+  <data name="VM_RoleAssignmentsApplied" xml:space="preserve"><value>已应用 {0} 个角色分配</value></data>
+  <data name="VM_PermSkippedUnresolvable" xml:space="preserve"><value>;已跳过 {0} 个无法解析的项: {1}</value></data>
+  <data name="VM_PermissionsTitle" xml:space="preserve"><value>权限 — {0}</value></data>
+  <data name="VM_ReadingSiteStructure" xml:space="preserve"><value>正在读取站点库结构…</value></data>
+  <data name="VM_ReadingLibraryStructure" xml:space="preserve"><value>正在读取库结构…</value></data>
+  <data name="VM_ColumnsCouldNotBeCreated" xml:space="preserve"><value>无法创建 {0} 列: {1}</value></data>
+  <data name="VM_CopyingFilesInto" xml:space="preserve"><value>正在将文件复制到“{0}”…</value></data>
+  <data name="VM_LibraryRootIdMissing" xml:space="preserve"><value>库已创建,但无法获取根项目 ID;已跳过文件复制。</value></data>
+  <data name="VM_CopyingFilesIntoExisting" xml:space="preserve"><value>正在将文件复制到现有的“{0}”…</value></data>
+  <data name="VM_FileCopySkippedRootId" xml:space="preserve"><value> (已跳过文件复制 - 根项目 ID 不可用)</value></data>
+  <data name="VM_CopyingList" xml:space="preserve"><value>正在复制列表“{0}”…</value></data>
+  <data name="VM_CopyingSitePages" xml:space="preserve"><value>正在复制站点页面…</value></data>
+  <data name="VM_SitePagesWarning" xml:space="preserve"><value>站点页面警告: {0}</value></data>
+  <data name="VM_CopyingNavigation" xml:space="preserve"><value>正在复制导航…</value></data>
+  <data name="VM_Navigation" xml:space="preserve"><value>导航</value></data>
+  <data name="VM_ReadingCustomLists" xml:space="preserve"><value>正在读取自定义列表…</value></data>
+  <data name="VM_ListCopyWarning" xml:space="preserve"><value>列表复制警告: {0}</value></data>
+  <data name="VM_LibraryCopyError" xml:space="preserve"><value>库复制错误: {0}</value></data>
+  <data name="VM_TargetColumnsUnavailable" xml:space="preserve"><value>目标列不可用: {0}</value></data>
+  <data name="VM_SourceColumnsUnavailable" xml:space="preserve"><value>源列不可用: {0}</value></data>
+  <data name="VM_EtaRemaining" xml:space="preserve"><value> · 剩余约 {0}</value></data>
+  <data name="VM_EtaCalculating" xml:space="preserve"><value> · 正在计算…</value></data>
+  <data name="VM_EtaToPackage" xml:space="preserve"><value> · 约 {0} 完成打包</value></data>
+  <data name="VM_FilterCsvTxt" xml:space="preserve"><value>CSV 文件 (*.csv)|*.csv|文本文件 (*.txt)|*.txt</value></data>
+  <data name="VM_CsvHeader" xml:space="preserve"><value>文件名,源路径,目标路径,状态,已复制版本,错误,权限状态,权限详细信息</value></data>
+  <data name="VM_FilterXlsx" xml:space="preserve"><value>Excel 工作簿 (*.xlsx)|*.xlsx</value></data>
+  <data name="VM_DeepVerification" xml:space="preserve"><value>深度验证</value></data>
+  <data name="VM_Verification" xml:space="preserve"><value>验证</value></data>
+  <data name="VM_DeepVerificationLow" xml:space="preserve"><value>深度验证</value></data>
+  <data name="VM_VerificationLow" xml:space="preserve"><value>验证</value></data>
+  <data name="VM_DeepVerifying" xml:space="preserve"><value>正在深度验证</value></data>
+  <data name="VM_Verifying" xml:space="preserve"><value>正在验证</value></data>
+  <data name="VM_VerifyScanProgress" xml:space="preserve"><value>{0}… 已找到 {1:N0} 个源文件、{2:N0} 个目标文件</value></data>
+  <data name="VM_VerifyRescanning" xml:space="preserve"><value>正在重新扫描源和目标以进行{0}…</value></data>
+  <data name="VM_VerifyWriting" xml:space="preserve"><value>正在写入{0}工作簿…</value></data>
+  <data name="VM_VerifyComplete" xml:space="preserve"><value>✔ {0}完成: {1:N0} 个匹配,{2:N0} 个内容不匹配,{3:N0} 个日期不匹配,{4:N0} 个仅在源中,{5:N0} 个仅在目标中</value></data>
+  <data name="VM_VerifyUnverified" xml:space="preserve"><value>,{0:N0} 个未验证(无可比较的信号)</value></data>
+  <data name="VM_VerifyReportWritten" xml:space="preserve"><value>{0}报告已写入: {1}</value></data>
+  <data name="VM_VerifyScanErrors" xml:space="preserve"><value>⚠ 有 {0} 个根位置无法扫描 - 请参阅“扫描错误”选项卡</value></data>
+  <data name="VM_VerifyCancelled" xml:space="preserve"><value>{0}已取消。</value></data>
+  <data name="VM_VerifyError" xml:space="preserve"><value>{0}错误: {1}</value></data>
+  <data name="VM_VerifyErrorWarn" xml:space="preserve"><value>⚠ {0}错误: {1}</value></data>
+  <data name="Dlg_ColLoadWarn" xml:space="preserve"><value>⚠ {0}</value></data>
+  <data name="Dlg_NoMappableColumns" xml:space="preserve"><value>ℹ 未找到可映射的列。支持的类型: 文本、备注、数字、布尔、日期、选择、多选、人员、托管元数据。</value></data>
+  <data name="Dlg_ColStatusCreateSkip" xml:space="preserve"><value>✅ {0} 将创建    ⚠ {1} 已跳过</value></data>
+  <data name="Dlg_ColStatusMapCreateSkip" xml:space="preserve"><value>✅ {0} 已映射    + {1} 将创建    ⚠ {2} 已跳过</value></data>
+  <data name="Dlg_ColStatusMapSkip" xml:space="preserve"><value>✅ {0} 已映射    ⚠ {1} 已跳过</value></data>
+  <data name="Dlg_ColHeaderLibrary" xml:space="preserve"><value>选择要在新目标库中创建的列。设置为“跳过”的列将不会被创建。</value></data>
+  <data name="Dlg_ColHeaderFiles" xml:space="preserve"><value>将源列映射到目标列,或选择“在目标中创建”以将缺失的列添加到目标库。除非您指定目标,否则未匹配的列将被跳过。使用“自动匹配”可按名称自动匹配列。</value></data>
+  <data name="Dlg_ColAction" xml:space="preserve"><value>操作</value></data>
+  <data name="Dlg_CreateInTarget" xml:space="preserve"><value>在目标中创建</value></data>
+  <data name="Dlg_PlusCreateInTarget" xml:space="preserve"><value>+ 在目标中创建</value></data>
+  <data name="Dlg_SkipThisColumn" xml:space="preserve"><value>── 跳过此列 ──</value></data>
+  <data name="Dlg_ColTargetColumn" xml:space="preserve"><value>目标列</value></data>
+  <data name="Dlg_Connecting" xml:space="preserve"><value>正在连接…</value></data>
+  <data name="Dlg_Connected" xml:space="preserve"><value>✅ 已连接</value></data>
+  <data name="Dlg_FilterXlsx" xml:space="preserve"><value>Excel 工作簿 (*.xlsx)|*.xlsx</value></data>
+  <data name="Dlg_Scanning" xml:space="preserve"><value>正在扫描…</value></data>
+  <data name="Dlg_DeepComparison" xml:space="preserve"><value>深度比较</value></data>
+  <data name="Dlg_ScanningFound" xml:space="preserve"><value>正在扫描… 已找到 {0} 个源文件、{1} 个目标文件</value></data>
+  <data name="Dlg_WritingWorkbook" xml:space="preserve"><value>正在写入工作簿…</value></data>
+  <data name="Dlg_RootsNotScanned" xml:space="preserve"><value>有 {0} 个根位置无法扫描 - 请参阅工作簿中的“扫描错误”选项卡。</value></data>
+  <data name="Dlg_OpFailed" xml:space="preserve"><value>{0}失败: {1}</value></data>
+  <data name="Dlg_Comparison" xml:space="preserve"><value>比较</value></data>
+  <data name="Dlg_LoadingRuns" xml:space="preserve"><value>正在加载以往的运行…</value></data>
+  <data name="Dlg_NoRuns" xml:space="preserve"><value>未找到以往的运行。</value></data>
+  <data name="Dlg_SelectRun" xml:space="preserve"><value>选择一次运行以查看详细信息</value></data>
+  <data name="Dlg_PredatesVerification" xml:space="preserve"><value>此运行早于验证支持 - 请重新运行复制以启用此功能。</value></data>
+  <data name="Dlg_RunSummary" xml:space="preserve"><value>{0}  —  {1} 个文件  —  {2}</value></data>
+  <data name="Dlg_RunLoadFailed" xml:space="preserve"><value>无法加载此运行的详细信息。</value></data>
+  <data name="Dlg_DeleteReportPrompt" xml:space="preserve"><value>是否删除 {0} 的报告?</value></data>
+  <data name="Dlg_DeleteReportTitle" xml:space="preserve"><value>删除报告</value></data>
+  <data name="Dlg_FilterCsv" xml:space="preserve"><value>CSV 文件 (*.csv)|*.csv|文本文件 (*.txt)|*.txt</value></data>
+  <data name="Dlg_CsvHeader" xml:space="preserve"><value>文件名,源路径,目标路径,状态,已复制版本,错误,权限状态,权限详细信息</value></data>
+  <data name="Dlg_DeepVerification" xml:space="preserve"><value>深度验证</value></data>
+  <data name="Dlg_Verification" xml:space="preserve"><value>验证</value></data>
+  <data name="Dlg_SettingsSaved" xml:space="preserve"><value>设置已保存。如果您已登录,请重新连接。</value></data>
+  <data name="Dlg_InnerError" xml:space="preserve"><value>内部错误: {0}</value></data>
+  <data name="Dlg_UnexpectedError" xml:space="preserve"><value>意外错误:
+
+{0}</value></data>
+  <data name="Dlg_ErrorTitle" xml:space="preserve"><value>错误</value></data>
+  <data name="Dlg_ConnectFailed" xml:space="preserve"><value>❌ {0}</value></data>
+  <data name="Svc_Sheet_Overview" xml:space="preserve"><value>概览</value></data>
+  <data name="Svc_Sheet_Source" xml:space="preserve"><value>源</value></data>
+  <data name="Svc_Sheet_Target" xml:space="preserve"><value>目标</value></data>
+  <data name="Svc_Sheet_Comparison" xml:space="preserve"><value>比较</value></data>
+  <data name="Svc_Sheet_ScanErrors" xml:space="preserve"><value>扫描错误</value></data>
+  <data name="Svc_Rpt_Summary" xml:space="preserve"><value>验证摘要</value></data>
+  <data name="Svc_Rpt_AllMatch" xml:space="preserve"><value>✓ 所有文件均匹配</value></data>
+  <data name="Svc_Rpt_AllMatchDetail" xml:space="preserve"><value>{0:N0} 个文件匹配 - 源中的每个文件都在目标中找到,且没有多余文件。</value></data>
+  <data name="Svc_Rpt_NoDiff" xml:space="preserve"><value>✓ 未发现差异</value></data>
+  <data name="Svc_Rpt_NoDiffDetail" xml:space="preserve"><value>{0:N0} 个文件匹配,但有 {1:N0} 个文件没有可比较的信号(哈希和大小均不可用),无法验证 - 请参阅“比较”选项卡。</value></data>
+  <data name="Svc_Rpt_ContentNoMatch" xml:space="preserve"><value>⚠ 内容不匹配</value></data>
+  <data name="Svc_Rpt_PartMatched" xml:space="preserve"><value>{0:N0} 个文件匹配。</value></data>
+  <data name="Svc_Rpt_PartContent" xml:space="preserve"><value>{0:N0} 个内容不匹配。</value></data>
+  <data name="Svc_Rpt_PartDate" xml:space="preserve"><value>{0:N0} 个日期不匹配。</value></data>
+  <data name="Svc_Rpt_PartOnlySrc" xml:space="preserve"><value>{0:N0} 个仅在源中。</value></data>
+  <data name="Svc_Rpt_PartOnlyTgt" xml:space="preserve"><value>{0:N0} 个仅在目标中。</value></data>
+  <data name="Svc_Rpt_PartUnverified" xml:space="preserve"><value>{0:N0} 个无法验证(无可比较的信号)。</value></data>
+  <data name="Svc_Rpt_PartScanErr" xml:space="preserve"><value>有 {0} 个位置无法扫描 - 请参阅“扫描错误”选项卡。</value></data>
+  <data name="Svc_Rpt_PartSee" xml:space="preserve"><value>有关详细信息,请参阅“比较”选项卡。</value></data>
+  <data name="Svc_Rpt_FilesInSource" xml:space="preserve"><value>源中的文件</value></data>
+  <data name="Svc_Rpt_FilesInTarget" xml:space="preserve"><value>目标中的文件</value></data>
+  <data name="Svc_Rpt_Matched" xml:space="preserve"><value>匹配(两者都有)</value></data>
+  <data name="Svc_Rpt_ContentMismatch" xml:space="preserve"><value>内容不匹配</value></data>
+  <data name="Svc_Rpt_DateMismatch" xml:space="preserve"><value>日期不匹配</value></data>
+  <data name="Svc_Rpt_OnlyInSource" xml:space="preserve"><value>仅在源中</value></data>
+  <data name="Svc_Rpt_OnlyInTarget" xml:space="preserve"><value>仅在目标中</value></data>
+  <data name="Svc_Rpt_Unverified" xml:space="preserve"><value>未验证(无可比较的信号)</value></data>
+  <data name="Svc_Rpt_TotalSrc" xml:space="preserve"><value>源中的总大小</value></data>
+  <data name="Svc_Rpt_TotalTgt" xml:space="preserve"><value>目标中的总大小</value></data>
+  <data name="Svc_Rpt_ColRelPath" xml:space="preserve"><value>相对路径</value></data>
+  <data name="Svc_Rpt_ColName" xml:space="preserve"><value>名称</value></data>
+  <data name="Svc_Rpt_ColLastMod" xml:space="preserve"><value>上次修改时间 (UTC)</value></data>
+  <data name="Svc_Rpt_ColStatus" xml:space="preserve"><value>状态</value></data>
+  <data name="Svc_Rpt_ColSrcValue" xml:space="preserve"><value>源值</value></data>
+  <data name="Svc_Rpt_ColTgtValue" xml:space="preserve"><value>目标值</value></data>
+  <data name="Svc_Rpt_ColNote" xml:space="preserve"><value>备注</value></data>
+  <data name="Svc_Rpt_BySize" xml:space="preserve"><value>{0:N0} 字节(按大小 - 至少一侧的哈希不可用)</value></data>
+  <data name="Svc_Rpt_ScanErrRoot" xml:space="preserve"><value>无法扫描的根位置</value></data>
+  <data name="Svc_CmpStatus_Match" xml:space="preserve"><value>匹配</value></data>
+  <data name="Svc_CmpStatus_ContentMismatch" xml:space="preserve"><value>内容不匹配</value></data>
+  <data name="Svc_CmpStatus_DateMismatch" xml:space="preserve"><value>日期不匹配</value></data>
+  <data name="Svc_CmpStatus_OnlyInSource" xml:space="preserve"><value>仅在源中</value></data>
+  <data name="Svc_CmpStatus_OnlyInTarget" xml:space="preserve"><value>仅在目标中</value></data>
+  <data name="Svc_CmpStatus_Unverified" xml:space="preserve"><value>未验证</value></data>
+  <data name="Svc_Ver_Throttled" xml:space="preserve"><value>⚠ Graph 已限制 - 等待 {0:0} 秒</value></data>
+  <data name="Svc_Ver_SrcScanErr" xml:space="preserve"><value>源“{0}”: {1}</value></data>
+  <data name="Svc_Ver_SrcScanLog" xml:space="preserve"><value>⚠ 无法扫描源根位置“{0}”: {1}</value></data>
+  <data name="Svc_Ver_LibraryRoot" xml:space="preserve"><value>(库根)</value></data>
+  <data name="Svc_Ver_TgtNotFound" xml:space="preserve"><value>目标“{0}”: 未找到(自复制以来可能已被删除或重命名)</value></data>
+  <data name="Svc_Ver_TgtGone" xml:space="preserve"><value>⚠ 目标“{0}”已不存在</value></data>
+  <data name="Svc_Ver_TgtScanErr" xml:space="preserve"><value>目标“{0}”: {1}</value></data>
+  <data name="Svc_Ver_TgtScanLog" xml:space="preserve"><value>⚠ 无法扫描目标根位置“{0}”: {1}</value></data>
+  <data name="Svc_Ver_OneNoteNote" xml:space="preserve"><value>OneNote 会在服务器端独立于复制重写此文件的内容和修改日期 - 哈希和日期均无法确认或否定此处的内容差异。如有需要,请打开笔记本手动检查。</value></data>
+  <data name="Svc_Ver_DeepNeeded" xml:space="preserve"><value>{0:N0} 个 Office 文件需要深度验证(哈希/日期信号不一致)...</value></data>
+  <data name="Svc_Ver_DeepProgress" xml:space="preserve"><value>正在深度验证 Office 文件: {0:N0} / {1:N0}</value></data>
+  <data name="Svc_Ver_DeepDone" xml:space="preserve"><value>深度验证完成: 已比较 {0:N0} 个</value></data>
+  <data name="Svc_Ver_DeepDoneMatched" xml:space="preserve"><value>,{0:N0} 个确认匹配</value></data>
+  <data name="Svc_Ver_DeepDoneMismatch" xml:space="preserve"><value>,{0:N0} 个内容不匹配</value></data>
+  <data name="Svc_Ver_DeepDoneInconclusive" xml:space="preserve"><value>,{0:N0} 个无法比较</value></data>
+  <data name="Svc_Ver_SizeCap" xml:space="preserve"><value>文件超过 {0:N0} MB 的深度验证大小上限</value></data>
+  <data name="Svc_Ver_NotOoxml" xml:space="preserve"><value>不是有效的 OOXML 包(已加密标签或已损坏)</value></data>
+  <data name="Svc_Ver_DownloadFailed" xml:space="preserve"><value>下载失败: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatile" xml:space="preserve"><value>深度验证: 内容部分完全相同 - 仅 SharePoint 重写的元数据(文档 ID、自定义属性等)存在差异。</value></data>
+  <data name="Svc_Ver_DeepDiffers" xml:space="preserve"><value>深度验证: {0} 中的内容存在差异</value></data>
+  <data name="Svc_Ver_DeepDiffersPlain" xml:space="preserve"><value>深度验证: 内容存在差异。</value></data>
+  <data name="Svc_Ver_DeepNoRun" xml:space="preserve"><value>深度验证无法运行 - {0}。状态仅反映日期/哈希检查。</value></data>
+  <data name="Svc_Ver_UnknownReason" xml:space="preserve"><value>未知原因</value></data>
+  <data name="Svc_Perm_NoRoleDefs" xml:space="preserve"><value>目标角色定义不可用 - 未复制权限(继承保持不变);请重新运行以重试</value></data>
+  <data name="Svc_Perm_NoSource" xml:space="preserve"><value>无法读取源权限 - 未复制权限(继承保持不变);请重新运行以重试</value></data>
+  <data name="Svc_Perm_BreakFailed" xml:space="preserve"><value>断开继承失败: {0}</value></data>
+  <data name="Svc_Perm_NoRoleSuffix" xml:space="preserve"><value>{0}({1}: 目标上没有此角色)</value></data>
+  <data name="Svc_Perm_RoleError" xml:space="preserve"><value>{0}({1}: {2})</value></data>
+  <data name="Svc_Perm_NoneApplied" xml:space="preserve"><value>已断开继承,但未应用任何角色分配: {0}</value></data>
+  <data name="Svc_Perm_NoPrincipals" xml:space="preserve"><value>已断开继承,但无法在目标上解析任何主体: {0}</value></data>
+  <data name="Svc_Auth_NotConfiguredClientId" xml:space="preserve"><value>身份验证服务未配置。请在“设置”中设置客户端 ID。</value></data>
+  <data name="Svc_Auth_NotConfiguredSignIn" xml:space="preserve"><value>身份验证服务未配置。请先登录。</value></data>
+  <data name="Svc_Lib_CreateLibHttp" xml:space="preserve"><value>创建库“{0}” HTTP {1}: {2}</value></data>
+  <data name="Svc_Lib_VersioningHttp" xml:space="preserve"><value>设置“{0}”的版本控制 HTTP {1}: {2}</value></data>
+  <data name="Svc_Lib_NoDriveId" xml:space="preserve"><value>已创建库“{0}”,但在 Graph 中找不到其驱动器 ID。</value></data>
+  <data name="Svc_Lib_CreateListHttp" xml:space="preserve"><value>创建列表“{0}” HTTP {1}: {2}</value></data>
+  <data name="Svc_Lib_ColumnRejected" xml:space="preserve"><value>SharePoint 拒绝了列创建({0}): {1}</value></data>
+  <data name="Svc_Lib_LookupNotCreated" xml:space="preserve"><value>未创建查阅列“{0}” - 在目标上未找到其查阅的列表。请先复制该列表,然后重新运行(或手动添加该列)。</value></data>
+  <data name="Svc_Lib_NoTaxonomySchema" xml:space="preserve"><value>未捕获分类列“{0}”的源架构</value></data>
+  <data name="Svc_Lib_CreateFieldXmlHttp" xml:space="preserve"><value>createfieldasxml“{0}” HTTP {1}: {2}</value></data>
+  <data name="Svc_Lib_AlreadyExists" xml:space="preserve"><value>已存在 - 已跳过</value></data>
+  <data name="Svc_Opc_OnlyInSource" xml:space="preserve"><value>仅在源中: {0}</value></data>
+  <data name="Svc_Opc_OnlyInTarget" xml:space="preserve"><value>仅在目标中: {0}</value></data>
+  <data name="Svc_ParDown" xml:space="preserve"><value>↓ 并行度: {0}/{1}(已限制)</value></data>
+  <data name="Svc_ParUp" xml:space="preserve"><value>⬆ 并行度: {0}/{1}(正在恢复)</value></data>
+  <data name="Svc_ScanConcDown" xml:space="preserve"><value>↓ 扫描并发数: {0}/{1}(已限制)</value></data>
+  <data name="Svc_ScanConcUp" xml:space="preserve"><value>⬆ 扫描并发数: {0}/{1}(正在恢复)</value></data>
+  <data name="Svc_ScanningSource" xml:space="preserve"><value>正在扫描源以查找要复制的文件...</value></data>
+  <data name="Svc_NativeCopying" xml:space="preserve"><value>正在以原生方式复制特殊文件夹“{0}”(保留笔记本/包关联)...</value></data>
+  <data name="Svc_SkippedExists" xml:space="preserve"><value>⏭ 已跳过“{0}” - 目标中已存在</value></data>
+  <data name="Svc_NativeDone" xml:space="preserve"><value>✓ “{0}”的原生复制已完成</value></data>
+  <data name="Svc_NativeFailedErr" xml:space="preserve"><value>⚠ “{0}”的原生复制失败: {1}</value></data>
+  <data name="Svc_ScanProgress" xml:space="preserve"><value>正在扫描源: 目前已找到 {0:N0} 个文件...</value></data>
+  <data name="Svc_EmptyFolderFailed" xml:space="preserve"><value>⚠ 创建空文件夹“{0}”失败: {1}</value></data>
+  <data name="Svc_ScanComplete" xml:space="preserve"><value>源扫描完成: 在 {1:0} 秒内找到 {0:N0} 个文件</value></data>
+  <data name="Svc_ScanThrottleInfo" xml:space="preserve"><value>({0} 次限制事件,等待 {1:0} 秒,限制开销 {2:P0})</value></data>
+  <data name="Svc_ApplyingCustom" xml:space="preserve"><value>正在将自定义列值应用于 {0:N0} 个文件...</value></data>
+  <data name="Svc_CustomFieldsErr" xml:space="preserve"><value>自定义字段: {0}</value></data>
+  <data name="Svc_CustomFieldsPartial" xml:space="preserve"><value>⚠ 无法为 {0:N0} 个文件完全应用自定义列值 - 有关详细信息,请参阅“自定义字段”列</value></data>
+  <data name="Svc_FolderMetaStopped" xml:space="preserve"><value>⚠ 文件夹元数据处理提前停止: {0}</value></data>
+  <data name="Svc_Cancelled" xml:space="preserve"><value>已取消</value></data>
+  <data name="Svc_SpError" xml:space="preserve"><value>SharePoint 错误 ({0}): {1}</value></data>
+  <data name="Svc_NoTargetParent" xml:space="preserve"><value>未指定目标父文件夹。</value></data>
+  <data name="Svc_NoTargetLibUrl" xml:space="preserve"><value>无法创建页面: 未设置目标库的服务器相对 URL。</value></data>
+  <data name="Svc_PageSaveFailed" xml:space="preserve"><value>页面已创建,但无法保存其内容: {0}</value></data>
+  <data name="Svc_PageReadFailed" xml:space="preserve"><value>页面已创建,但无法读取其源内容: {0}</value></data>
+  <data name="Svc_PageNoContent" xml:space="preserve"><value>页面已复制但不含内容(“复制页面”选项已关闭)</value></data>
+  <data name="Svc_TempVersionNotFound" xml:space="preserve"><value>无法识别要删除的临时上传版本 - 历史记录中可能仍保留一个额外的版本</value></data>
+  <data name="Svc_OneRole" xml:space="preserve"><value>已应用 1 个角色分配</value></data>
+  <data name="Svc_RolesApplied" xml:space="preserve"><value>已应用 {0} 个角色分配</value></data>
+  <data name="Svc_PermSkipped" xml:space="preserve"><value>;已跳过 {0} 个无法解析的项: {1}</value></data>
+  <data name="Svc_PermFailed" xml:space="preserve"><value>;{0} 个失败: {1}</value></data>
+  <data name="Svc_UnknownError" xml:space="preserve"><value>未知错误</value></data>
+  <data name="Svc_Mig_DownloadSInFlight" xml:space="preserve"><value>· ↓ {0} 个下载进行中,共约 {1:N0} MB;最早的: {2}{3} {4} 秒</value></data>
+  <data name="Svc_Mig_CopyAllVersionsRequested" xml:space="preserve"><value>⚠ 已请求“复制所有版本”,但 Migration API 模式每个文件最多只能复制 {0:N0} 个版本 - 历史记录更多的文档,其最旧的版本将被截断</value></data>
+  <data name="Svc_Mig_MaxVersionsExceedsThe" xml:space="preserve"><value>⚠ 最大版本数 ({0}) 超过 Migration API 模式可处理的每文件 {1:N0} 个版本上限 - 将限制为 {2:N0}</value></data>
+  <data name="Svc_Mig_TransferMemoryBudgetGB" xml:space="preserve"><value>传输内存预算: {0:F1} GB(限制并发文件缓冲区)</value></data>
+  <data name="Svc_Mig_AnalysisSlotsThrottleBackoff" xml:space="preserve"><value>↓ 分析: {0}/{1} 个槽位(限制退避)</value></data>
+  <data name="Svc_Mig_AnalysisSlotsRecovering" xml:space="preserve"><value>⬆ 分析: {0}/{1} 个槽位(正在恢复)</value></data>
+  <data name="Svc_Mig_DownloadsSlotsThrottleBackoff" xml:space="preserve"><value>↓ 下载: {0}/{1} 个槽位(限制退避)</value></data>
+  <data name="Svc_Mig_DownloadsSlotsRecovering" xml:space="preserve"><value>⬆ 下载: {0}/{1} 个槽位(正在恢复)</value></data>
+  <data name="Svc_Mig_UploadsSlotsBackingOff" xml:space="preserve"><value>↓ 上传: {0}/{1} 个槽位(正在退避 - 上传已中断)</value></data>
+  <data name="Svc_Mig_UploadsSlotsRecovering" xml:space="preserve"><value>⬆ 上传: {0}/{1} 个槽位(正在恢复)</value></data>
+  <data name="Svc_Mig_CannotResolveListID" xml:space="preserve"><value>无法解析位于“{0}”的库的列表 ID</value></data>
+  <data name="Svc_Mig_ProvisioningTargetSubfolder" xml:space="preserve"><value>正在预配 {0} 个目标子文件夹{1}...</value></data>
+  <data name="Svc_Mig_TargetIsEmptySkipping" xml:space="preserve"><value>目标为空 - 跳过现有文件扫描。</value></data>
+  <data name="Svc_Mig_ScanningTargetFolderFor" xml:space="preserve"><value>正在扫描 {0} 个目标文件夹{1}以查找现有文件...</value></data>
+  <data name="Svc_Mig_ExistingFileScanFile" xml:space="preserve"><value>现有文件扫描: 目标中已有 {0:N0} 个文件</value></data>
+  <data name="Svc_Mig_GraphSawRESTOnly" xml:space="preserve"><value>(Graph 发现 {0:N0} 个,仅 REST 发现 {1:N0} 个)。</value></data>
+  <data name="Svc_Mig_CheckingModifiedDatesFor" xml:space="preserve"><value>正在检查 {0:N0} 个现有文件的修改日期...</value></data>
+  <data name="Svc_Mig_CheckingModifiedDates" xml:space="preserve"><value>正在检查修改日期: {0:N0} / {1:N0}</value></data>
+  <data name="Svc_Mig_FileSHadNo" xml:space="preserve"><value>⚠ {0:N0} 个文件在重试后仍没有确认的修改日期 - 视为需要复制</value></data>
+  <data name="Svc_Mig_OfAlreadyUpTo" xml:space="preserve"><value>{1:N0} 个中有 {0:N0} 个已是最新 - 跳过这些文件的元数据获取</value></data>
+  <data name="Svc_Mig_FetchingMetadataForFolders" xml:space="preserve"><value>正在获取 {0:N0} 个文件夹的元数据...</value></data>
+  <data name="Svc_Mig_FetchingFolderMetadata" xml:space="preserve"><value>正在获取文件夹元数据: {0:N0} / {1:N0}</value></data>
+  <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} 个文件夹在扫描中没有标识(不是 Graph 故障) - 它们将显示占位符日期。路径: {1}</value></data>
+  <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} 个文件夹的 Graph 元数据查找失败 - 它们将显示占位符日期。示例: {1}</value></data>
+  <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} 个文件夹无法确定日期(Graph 查找在重试后失败) - 它们将显示 2000-01-01 占位符日期,而不是其真实的源日期</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} 个文件夹没有可用的源作者/修改者电子邮件 - 无法更正这些文件夹,它们将显示导入帐户</value></data>
+  <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>正在更正 {1:N0} 个文件夹中 {0:N0} 个的文件夹元数据(日期 + 作者 + 颜色)...</value></data>
+  <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: 无法解析目标文件夹 GUID</value></data>
+  <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>正在更正文件夹元数据: {0:N0} / {1:N0}</value></data>
+  <data name="Svc_Mig_CouldNotCorrectMetadata" xml:space="preserve"><value>⚠ 无法更正 {0:N0} 个文件夹的元数据。示例: {1}</value></data>
+  <data name="Svc_Mig_FolderMetadataVerifiedFor" xml:space="preserve"><value>✓ 已验证 {0:N0} 个文件夹的元数据</value></data>
+  <data name="Svc_Mig_FolderColorCouldNot" xml:space="preserve"><value>ℹ 无法将文件夹颜色应用于 {0:N0} 个文件夹 - 日期和作者仍已更正。示例: {1}</value></data>
+  <data name="Svc_Mig_CorrectingSpecialFolderS" xml:space="preserve"><value>正在更正 {0:N0} 个特殊文件夹(例如 OneNote 笔记本)...</value></data>
+  <data name="Svc_Mig_CouldNotCorrectProgId" xml:space="preserve"><value>⚠ 无法更正 {0:N0} 个文件夹的 ProgId。示例: {1}</value></data>
+  <data name="Svc_Mig_SpecialFolderAssociationVerified" xml:space="preserve"><value>✓ 已验证 {0:N0} 个文件夹的特殊文件夹关联</value></data>
+  <data name="Svc_Mig_AnalyzingFilesForVersion" xml:space="preserve"><value>正在分析 {0:N0} 个文件以进行版本感知的批处理...</value></data>
+  <data name="Svc_Mig_AnalyzingFilesForBatching" xml:space="preserve"><value>正在分析文件以进行批处理: {0:N0} / {1:N0}</value></data>
+  <data name="Svc_Mig_FileSMissingMetadata" xml:space="preserve"><value>⚠ {0:N0} 个文件在重试后仍缺少元数据 - 这些文件的版本计数可能不准确</value></data>
+  <data name="Svc_Mig_SharePointAbortedTheBatch" xml:space="preserve"><value>↻ {0}SharePoint 在遇到 {1} 个“已存在”冲突{2}后中止了批处理 - 将这些标记为已跳过,并对其余部分重试一次...</value></data>
+  <data name="Svc_Mig_SharePointAbortedTheBatch2" xml:space="preserve"><value>↻ {0}SharePoint 在遇到 {1} 个名称冲突{2}后中止了批处理 - 正在清除并重试该批处理一次...</value></data>
+  <data name="Svc_Mig_DeleteFailedTrace" xml:space="preserve"><value>⚠ {0}删除失败 [{1}](跟踪: {2}): {3}</value></data>
+  <data name="Svc_Mig_MoreStillBlockedConflicts" xml:space="preserve"><value>⚠ {0}…还有更多仍被阻止的冲突(不再显示)</value></data>
+  <data name="Svc_Mig_ClearedConflictingFileS" xml:space="preserve"><value>{0}已清除 {1}/{2} 个冲突文件</value></data>
+  <data name="Svc_Mig_StillBlocked" xml:space="preserve"><value>,{0} 个仍被阻止</value></data>
+  <data name="Svc_Mig_CouldNotRemoveThe" xml:space="preserve"><value>重试前无法删除现有文件 - 请重新运行以再次尝试。</value></data>
+  <data name="Svc_Mig_RetrySkippedEveryConflicting" xml:space="preserve"><value>✗ {0}已跳过重试 - 每个冲突文件仍被阻止。</value></data>
+  <data name="Svc_Mig_CouldNotRemoveThe2" xml:space="preserve"><value>覆盖前无法删除现有文件(重试后) - 为避免重复版本导入错误已跳过。请重新运行以重试。</value></data>
+  <data name="Svc_Mig_PreFlightToCopy" xml:space="preserve"><value>{0}预检: {1} 个待复制,{2} 个已存在</value></data>
+  <data name="Svc_Mig_AllFilesAlreadyExist" xml:space="preserve"><value>{0}所有文件均已存在 - 无需复制</value></data>
+  <data name="Svc_Mig_ProvisioningAzureMigrationContainers" xml:space="preserve"><value>{0}正在预配 Azure 迁移容器...</value></data>
+  <data name="Svc_Mig_DownloadingFilesConcurrentVersion" xml:space="preserve"><value>{0}正在下载 {1:N0} 个文件({2} 个并发,每个文件 {3} 个版本流{4})...</value></data>
+  <data name="Svc_Mig_FileVersionIsGB" xml:space="preserve"><value>文件版本为 {0:F1} GB - 超过此模式可缓冲的 2 GB。请使用 Enhanced REST 模式复制此文件。</value></data>
+  <data name="Svc_Mig_DownloadFailed" xml:space="preserve"><value>下载失败: {0}</value></data>
+  <data name="Svc_Mig_UploadInterruptedRetryingIn" xml:space="preserve"><value>⚠ {0}{1} - 上传已中断,{2} 秒后重试 ({3}/{4})</value></data>
+  <data name="Svc_Mig_FilesPackaged" xml:space="preserve"><value>{0}已打包 {1:N0} / {2:N0} 个文件</value></data>
+  <data name="Svc_Mig_UploadFailed" xml:space="preserve"><value>上传失败 ({0}): {1}</value></data>
+  <data name="Svc_Mig_UploadFailedAfterRetries" xml:space="preserve"><value>✗ {0}重试后上传失败: {1} — {2}</value></data>
+  <data name="Svc_Mig_PackageBuildFailed" xml:space="preserve"><value>包生成失败: {0}</value></data>
+  <data name="Svc_Mig_CouldNotResolveTarget2" xml:space="preserve"><value>无法解析目标库根文件夹 ID - SharePoint 限制已耗尽重试次数。批处理未提交;请重新运行(最好在非高峰时段)。</value></data>
+  <data name="Svc_Mig_CouldNotResolveTarget3" xml:space="preserve"><value>无法解析 {0} 个目标子文件夹 ID - SharePoint 限制已耗尽重试次数(例如“{1}”)。批处理未提交;请重新运行(最好在非高峰时段)。</value></data>
+  <data name="Svc_Mig_BuildingAndUploadingSPMI" xml:space="preserve"><value>{0}正在生成并上传 SPMI 清单...</value></data>
+  <data name="Svc_Mig_FileSCopiedCurrent" xml:space="preserve"><value>⚠ {0}{1:N0} 个文件仅复制了当前版本(限制期间元数据不可用;对单版本文件无损)</value></data>
+  <data name="Svc_Mig_PackagedFileReadyTo" xml:space="preserve"><value>{0}已打包 {1:N0} 个文件{2} - 可导入</value></data>
+  <data name="Svc_Mig_SubmittedToSharePointWaiting" xml:space="preserve"><value>{0}已提交到 SharePoint - 正在等待导入...</value></data>
+  <data name="Svc_Mig_SharePointImportStarted" xml:space="preserve"><value>{0}SharePoint 导入已开始</value></data>
+  <data name="Svc_Mig_SPImportingFiles" xml:space="preserve"><value>{0}SP 正在导入: {1:N0} / {2:N0} 个文件</value></data>
+  <data name="Svc_Mig_UnknownError" xml:space="preserve"><value>未知错误</value></data>
+  <data name="Svc_Mig_FatalError" xml:space="preserve"><value>⚠ {0}严重错误: {1}</value></data>
+  <data name="Svc_Mig_ImportError" xml:space="preserve"><value>⚠ {0}导入错误 {1}: {2}</value></data>
+  <data name="Svc_Mig_MoreErrorsThisBatch" xml:space="preserve"><value>⚠ {0}…此批处理中还有更多错误(不再显示;请参阅批处理摘要)</value></data>
+  <data name="Svc_Mig_ImportPollingEndedBefore" xml:space="preserve"><value>导入轮询在 SharePoint 报告完成之前结束 - 结果未知;请在“如果较新”模式下重新运行以进行核对</value></data>
+  <data name="Svc_Mig_ImportErrorSCould" xml:space="preserve"><value>⚠ {0}{1} 个导入错误无法归属 - 正在确认目标上的 {2:N0} 个文件...</value></data>
+  <data name="Svc_Mig_SharePointReportedImportErrors" xml:space="preserve"><value>SharePoint 报告了导入错误,且之后在目标上未找到此文件 - 请重新运行以重试</value></data>
+  <data name="Svc_Mig_MigrationJobFatalError" xml:space="preserve"><value>迁移作业严重错误</value></data>
+  <data name="Svc_Mig_ImportFAILEDFatalAbort" xml:space="preserve"><value>✗ {0}导入失败(严重中止) - 已导入 {1}/{2},失败 {3}</value></data>
+  <data name="Svc_Mig_ErrorsReportedAttributed" xml:space="preserve"><value>(报告 {0} 个错误,已归属 {1} 个)</value></data>
+  <data name="Svc_Mig_ImportFinishedWithErrors" xml:space="preserve"><value>⚠ {0}导入已完成但有错误 - 已导入 {1}/{2},失败 {3}{4}</value></data>
+  <data name="Svc_Mig_ImportCompleteFileImported" xml:space="preserve"><value>{0}✓ 导入完成 - 已导入 {1} 个文件{2}</value></data>
+  <data name="Svc_Mig_ImportFAILED" xml:space="preserve"><value>✗ {0}导入失败 - {1}</value></data>
+  <data name="Svc_Mig_ResumingFromMB" xml:space="preserve"><value>,从 {0:F0} MB 处继续</value></data>
+  <data name="Svc_Mig_DownloadThrottledWaitingS" xml:space="preserve"><value>⚠ {0}{1} - 下载被限制,等待 {2:F0} 秒 ({3}/6{4})</value></data>
+  <data name="Svc_Mig_HasAVersionLarger" xml:space="preserve"><value>{0} 的某个版本超过此模式可缓冲的 2 GB - 请使用 Enhanced REST 模式复制。</value></data>
+  <data name="Svc_Mig_ConnectionRetryingInS" xml:space="preserve"><value>⚠ {0}{1} - 连接{2},{3} 秒后重试 ({4}/3{5})</value></data>
+  <data name="Svc_Mig_TimedOut" xml:space="preserve"><value>超时</value></data>
+  <data name="Svc_Mig_Reset" xml:space="preserve"><value>被重置</value></data>
+  <data name="Svc_Sp_CustomFieldErrors" xml:space="preserve"><value>自定义字段错误: {0}</value></data>
+  <data name="Svc_Sp_ColumnMissingOnTarget" xml:space="preserve"><value>{0}(目标上不存在该列)</value></data>
+  <data name="Svc_Sp_CouldNotParseValidateUpdateListItem" xml:space="preserve"><value>无法解析 ValidateUpdateListItem 响应 ({0}) —</value></data>
+  <data name="Svc_Sp_TheMigrationAPIRequires" xml:space="preserve"><value>Migration API 要求您明确是 {0} 的网站集管理员。
+
+</value></data>
+  <data name="Svc_Sp_SPSeesYouAs" xml:space="preserve"><value>SP 将您识别为: {0} ({1}),IsSiteAdmin={2}
+
+</value></data>
+  <data name="Svc_Sp_NoteGlobalAdminSharePoint" xml:space="preserve"><value>注意: 全局管理员/SharePoint 管理员不会自动出现在此列表中。
+</value></data>
+  <data name="Svc_Sp_CustomColumnSCould" xml:space="preserve"><value>⚠ {0} 个自定义列无法读取,已跳过</value></data>
+  <data name="Svc_Sp_OfValuesResolved" xml:space="preserve"><value>{0}(已解析 0/{1} 个值)</value></data>
+  <data name="Svc_Sp_LookupUnresolved" xml:space="preserve"><value>{0}(查阅未解析)</value></data>
+  <data name="Svc_Sp_NotInitializedPleaseSign" xml:space="preserve"><value>未初始化。请先登录。</value></data>
+  <data name="Svc_Sp_CouldNotFindSite" xml:space="preserve"><value>在 {0} 找不到站点</value></data>
+  <data name="Svc_Sp_EmptyResponseDownloadingFile" xml:space="preserve"><value>下载文件时响应为空。</value></data>
+  <data name="Svc_Sp_EmptyResponseDownloadingVersion" xml:space="preserve"><value>下载版本内容时响应为空。</value></data>
+  <data name="Svc_Sp_CouldNotObtainA" xml:space="preserve"><value>无法获取 CSOM 调用的请求摘要</value></data>
+  <data name="Svc_Sp_UnknownCSOMError" xml:space="preserve"><value>未知的 CSOM 错误</value></data>
+  <data name="Svc_Sp_CSOMErrorCode" xml:space="preserve"><value>CSOM 错误(代码 {0}): {1}</value></data>
+  <data name="Svc_Sp_NativeCopyFailedTo" xml:space="preserve"><value>原生复制启动失败: HTTP {0}: {1}</value></data>
+  <data name="Svc_Sp_NativeCopyStartedBut" xml:space="preserve"><value>原生复制已启动,但未返回用于跟踪完成情况的监视 URL</value></data>
+  <data name="Svc_Sp_NativeCopyMonitorFailed" xml:space="preserve"><value>原生复制监视失败: HTTP {0}: {1} | 监视 URL: {2}</value></data>
+  <data name="Svc_Sp_NativeCopyFailed" xml:space="preserve"><value>原生复制失败: {0}</value></data>
+  <data name="Svc_Sp_NativeCopyTimedOut" xml:space="preserve"><value>等待原生复制完成时超时</value></data>
+  <data name="Svc_Sp_NativeCopyException" xml:space="preserve"><value>原生复制异常: {0}</value></data>
+  <data name="Svc_Sp_CouldNotResolveFolder" xml:space="preserve"><value>无法解析文件夹的列表项 ID: HTTP {0}: {1}</value></data>
+  <data name="Svc_Sp_CouldNotParseFolder" xml:space="preserve"><value>无法从“{0}”解析文件夹的列表项 ID: {1}</value></data>
+  <data name="Svc_Sp_AuthorNotAResolvable" xml:space="preserve"><value>作者({0} 不是此站点上可解析的帐户)</value></data>
+  <data name="Svc_Sp_EditorNotAResolvable" xml:space="preserve"><value>编辑者({0} 不是此站点上可解析的帐户)</value></data>
+  <data name="Svc_Sp_NothingToWriteSkipped" xml:space="preserve"><value>没有要写入的内容 - 已跳过: {0}</value></data>
+  <data name="Svc_Sp_FolderColorNotApplied" xml:space="preserve"><value>未应用文件夹颜色 — {0}</value></data>
+  <data name="Svc_Sp_PartiallyCorrectedSkipped" xml:space="preserve"><value>已部分更正 - 已跳过: {0}</value></data>
+  <data name="Svc_Sp_CouldNotParseCSOM" xml:space="preserve"><value>无法解析 CSOM 响应: {0} | 正文: {1}</value></data>
+  <data name="Svc_Sp_AuthorStillExpected" xml:space="preserve"><value>作者仍为“{0}”,应为“{1}”</value></data>
+  <data name="Svc_Sp_EditorStillExpected" xml:space="preserve"><value>编辑者仍为“{0}”,应为“{1}”</value></data>
+  <data name="Svc_Sp_WriteReportedNoError" xml:space="preserve"><value>写入未报告错误,但未持久保存 — {0}</value></data>
+  <data name="Svc_Sp_SPIDsUnavailableItem" xml:space="preserve"><value>SP ID 不可用 - 未找到项目或 sharepointIds 未传播</value></data>
+  <data name="Svc_Sp_FieldErrors" xml:space="preserve"><value>字段错误: {0}</value></data>
+  <data name="Svc_Sp_MetadataMayNotHave" xml:space="preserve"><value>元数据可能尚未应用: {0}</value></data>
+  <data name="Svc_Sp_CannotDetermineLibraryPath" xml:space="preserve"><value>无法确定驱动器 {0} 的库路径。</value></data>
+  <data name="Svc_Sp_UnknownCSOMError2" xml:space="preserve"><value>未知的 CSOM 错误</value></data>
+  <data name="Svc_Sp_FixGoToThe" xml:space="preserve"><value>解决方法: 转到目标站点 → 站点设置 → 网站集管理员 → 添加您的帐户。</value></data>
+  <data name="Svc_Sp_CouldNotFindJob" xml:space="preserve"><value>在 ProcessQuery 响应中找不到作业 ID GUID: {0}</value></data>
+  <data name="Svc_Sp_MigrationJobProgressPolling" xml:space="preserve"><value>迁移作业进度轮询连续 3 次超时 - 导入结果未知</value></data>
+  <data name="Svc_Sp_ListingFolderFilesFailed" xml:space="preserve"><value>列出文件夹文件失败: {1} 的 HTTP {0} —</value></data>
+  <data name="Svc_Sp_RecycleReturnedNoBin" xml:space="preserve"><value>回收未返回回收站 ID ({0})</value></data>
+  <data name="Svc_Sp_EmptyBody" xml:space="preserve"><value>(空正文)</value></data>
+  <data name="Svc_Sp_LargeFileUploadFailed" xml:space="preserve"><value>大文件上传失败。</value></data>
+  <data name="Svc_Sp_SitePagesIDUnknownCannot" xml:space="preserve"><value>SitePages ID 未知 - 无法保存内容</value></data>
+  <data name="Svc_Sp_SitePagesIDUnknownCannot2" xml:space="preserve"><value>SitePages ID 未知 - 无法发布</value></data>
+  <data name="Svc_Sp_NullIDFromExisting" xml:space="preserve"><value>现有文件夹返回的 ID 为空。</value></data>
+  <data name="Svc_Sp_NullIDFromCreated" xml:space="preserve"><value>已创建的文件夹返回的 ID 为空。</value></data>
+  <data name="Svc_Sp_NullIDAfterConcurrent" xml:space="preserve"><value>并发创建文件夹后返回的 ID 为空。</value></data>
+  <data name="Svc_Sp_BulkCustomFieldRead" xml:space="preserve"><value>批量读取自定义字段失败: HTTP {0} — {1}</value></data>
+  <data name="Svc_Sp_NotValidAtThe" xml:space="preserve"><value>(在项目级别无效): {0}</value></data>
+  <data name="Svc_Sp_CouldNotResolveSharePoint" xml:space="preserve"><value>无法解析 {0}/{1} 的 SharePoint ID</value></data>
+  <data name="Svc_Sp_CouldNotResolveList" xml:space="preserve"><value>无法解析 {0} 的列表项 ID</value></data>
+  <data name="Svc_Sp_OfValuesUnresolved" xml:space="preserve"><value>{0}({2} 个值中有 {1} 个未解析)</value></data>
+  <data name="Svc_Sp_LookupUnresolved2" xml:space="preserve"><value>;查阅未解析: {0}</value></data>
+  <data name="Svc_Sp_NotApplicableToItem" xml:space="preserve"><value>{0}(不适用于项目的内容类型)</value></data>
+  <data name="Svc_Sp_PageNotFoundIn" xml:space="preserve"><value>在源站点页面库中未找到页面“{0}”</value></data>
+  <data name="Svc_Sp_SomeWebPartsReference" xml:space="preserve"><value>某些 Web 部件引用了源站点的列表 ID,可能需要手动检查。</value></data>
+  <data name="Svc_Sp_NavigationReadFailedHTTP" xml:space="preserve"><value>读取导航失败: HTTP {0}</value></data>
+  <data name="Svc_Sp_ReadingListItemsFailed" xml:space="preserve"><value>读取列表项失败: HTTP {0} — {1}</value></data>
+  <data name="Svc_Sp_ReadingTargetListItems" xml:space="preserve"><value>读取目标列表项失败: HTTP {0} — {1}</value></data>
+  <data name="Svc_Sp_CreateItemFailed" xml:space="preserve"><value>创建项目失败: {0} {1} — {2}</value></data>
+  <data name="Svc_Sp_FieldWriteFailed" xml:space="preserve"><value>字段写入失败 ({0}): {1}</value></data>
+  <data name="Svc_Sp_FieldErrorsOn" xml:space="preserve"><value>以下字段出错: {0}</value></data>
+  <data name="Svc_Sp_UpdateItemFailed" xml:space="preserve"><value>更新项目失败: {0} {1} — {2}</value></data>
+  <data name="Svc_Sp_ReadingPermissionFlagsFailed" xml:space="preserve"><value>读取权限标志失败: HTTP {0} — {1}</value></data>
+  <data name="Svc_Sp_BreakPermissionInheritanceFailed" xml:space="preserve"><value>BreakPermissionInheritance 失败: {0} — {1}</value></data>
+  <data name="Svc_Sp_AddRoleAssignmentFailed" xml:space="preserve"><value>AddRoleAssignment 失败: {0} — {1}</value></data>
+  <data name="Ui2_AutoMinimize" xml:space="preserve"><value>最小化</value></data>
+  <data name="Ui2_AutoMaximizeRestore" xml:space="preserve"><value>最大化或还原</value></data>
+  <data name="Ui2_AutoClose" xml:space="preserve"><value>关闭</value></data>
+  <data name="Ui2_AutoFilesFoldersMode" xml:space="preserve"><value>文件和文件夹模式</value></data>
+  <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>库和列表模式</value></data>
+  <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>整个站点模式</value></data>
+  <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>站点页面模式</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>复制库内容(文件)</value></data>
+  <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>复制版本历史记录</value></data>
+  <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>最近 N 个版本</value></data>
+  <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>复制导航</value></data>
+  <data name="Ui2_AutoCopyPermissions" xml:space="preserve"><value>复制权限</value></data>
+  <data name="Ui2_AutoRemapWebPartUrls" xml:space="preserve"><value>将 Web 部件 URL 重新映射到目标站点</value></data>
+  <data name="Ui2_AutoPreserveMetadata" xml:space="preserve"><value>保留元数据</value></data>
+  <data name="Ui2_AutoReapplyFolderMetadata" xml:space="preserve"><value>每次运行时重新应用文件夹元数据</value></data>
+  <data name="Ui2_AutoCopyCustomColumns" xml:space="preserve"><value>复制自定义列值</value></data>
+  <data name="Ui2_AutoDeepVerifyOffice" xml:space="preserve"><value>深度验证 Office 文件</value></data>
+  <data name="Ui2_EnterSourceSiteUrl" xml:space="preserve"><value>输入要从中复制的 SharePoint 网站集的 URL。</value></data>
+  <data name="Ui2_SourceHintFiles" xml:space="preserve"><value>展开库并勾选要复制的文件或文件夹。</value></data>
+  <data name="Ui2_SourceHintLibraries" xml:space="preserve"><value>勾选要在目标站点重新创建的库和列表。</value></data>
+  <data name="Ui2_SourceHintPages" xml:space="preserve"><value>勾选要复制的页面。使用“全选”可复制整个站点页面库。</value></data>
+  <data name="Ui2_SourceHintSite" xml:space="preserve"><value>将复制源站点中的所有库。请连接目标以继续。</value></data>
+  <data name="Ui2_EnterTargetSiteUrl" xml:space="preserve"><value>输入目标网站集的 URL。</value></data>
+  <data name="Ui2_TargetHintSelectFolder" xml:space="preserve"><value>在右侧的树中选择目标文件夹。文件将被复制到该文件夹中。</value></data>
+  <data name="Ui2_TargetHintClickLibrary" xml:space="preserve"><value>单击库或文件夹以将其选为复制目标。</value></data>
+  <data name="Ui2_TargetHintSitePages" xml:space="preserve"><value>已自动选择站点页面库作为目标。页面只能复制到站点页面库中。</value></data>
+  <data name="Ui2_TargetHintRootNoFolder" xml:space="preserve"><value>库和列表将在目标站点的根目录下创建。无需选择文件夹。</value></data>
+  <data name="Ui2_TargetHintRootDetail" xml:space="preserve"><value>库和列表将在目标站点的根目录下创建,并保留列架构和版本控制设置。如果库或列表已存在,则会向其中添加缺失的源列。</value></data>
+  <data name="Ui2_TargetHintSelectList" xml:space="preserve"><value>在目标站点上选择要将所选项目复制到的列表。</value></data>
+  <data name="Ui2_CustomColumnsAuto" xml:space="preserve"><value>所有自定义列值都会自动复制。</value></data>
+  <data name="Ui2_FoldersEnumerated" xml:space="preserve"><value>文件夹将在复制期间递归枚举。</value></data>
+  <data name="Ui2_FilesItemsEnumerated" xml:space="preserve"><value>每个库中的文件和每个列表中的项目将在复制时枚举。</value></data>
+  <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>存储一个或多个 Azure AD 应用注册。单击“保存”时所选的注册将成为活动注册。每个应用都需要委托权限 Sites.ReadWrite.All 和 Files.ReadWrite.All,并需要管理员同意。</value></data>
+  <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>设置: portal.azure.com → Azure Active Directory → 应用注册 → 新注册。添加移动/桌面重定向 URI http://localhost。在 API 权限下,添加 Graph 委托权限: Sites.ReadWrite.All + Files.ReadWrite.All,然后授予管理员同意。</value></data>
+  <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>源库没有受支持类型的自定义列。支持的类型: 文本、备注、数字、布尔、日期、选择、多选、人员、托管元数据。不支持查阅列。</value></data>
+</root>

@@ -1,3 +1,4 @@
+using SharePointSmartCopy.Localization;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -97,7 +98,7 @@ public class LibraryCopyService(SharePointService spService)
                 // Exists but unresolvable (e.g. Style Library with no Graph drive)
                 throw new LibraryAlreadyExistsException(driveId: null, serverRelativeUrl: null, listId: null);
             }
-            throw new Exception($"Create library '{definition.Title}' HTTP {(int)createResp.StatusCode}: {createRespBody[..Math.Min(200, createRespBody.Length)]}");
+            throw new Exception(Loc.T("Svc_Lib_CreateLibHttp", definition.Title, (int)createResp.StatusCode, createRespBody[..Math.Min(200, createRespBody.Length)]));
         }
 
         using var createDoc = JsonDocument.Parse(createRespBody);
@@ -127,7 +128,7 @@ public class LibraryCopyService(SharePointService spService)
                 versionResp.StatusCode != System.Net.HttpStatusCode.NoContent)
             {
                 var errBody = await versionResp.Content.ReadAsStringAsync();
-                throw new Exception($"Set versioning on '{definition.Title}' HTTP {(int)versionResp.StatusCode}: {errBody[..Math.Min(200, errBody.Length)]}");
+                throw new Exception(Loc.T("Svc_Lib_VersioningHttp", definition.Title, (int)versionResp.StatusCode, errBody[..Math.Min(200, errBody.Length)]));
             }
         }
 
@@ -197,7 +198,7 @@ public class LibraryCopyService(SharePointService spService)
         }
 
         if (string.IsNullOrEmpty(newDriveId))
-            throw new Exception($"Created library '{definition.Title}' but could not find its drive ID in Graph.");
+            throw new Exception(Loc.T("Svc_Lib_NoDriveId", definition.Title));
 
         return (newDriveId, newServerRelUrl);
     }
@@ -249,7 +250,7 @@ public class LibraryCopyService(SharePointService spService)
                 var existingId = await spService.GetListIdByTitleAsync(targetSiteUrl, definition.Title);
                 throw new LibraryAlreadyExistsException(driveId: null, serverRelativeUrl: null, listId: existingId);
             }
-            throw new Exception($"Create list '{definition.Title}' HTTP {(int)createResp.StatusCode}: {createRespBody[..Math.Min(200, createRespBody.Length)]}");
+            throw new Exception(Loc.T("Svc_Lib_CreateListHttp", definition.Title, (int)createResp.StatusCode, createRespBody[..Math.Min(200, createRespBody.Length)]));
         }
         else
         {
@@ -338,7 +339,7 @@ public class LibraryCopyService(SharePointService spService)
         var createBody = await createResp.Content.ReadAsStringAsync();
         if (!createResp.IsSuccessStatusCode)
             throw new HttpRequestException(
-                $"SharePoint rejected column creation ({(int)createResp.StatusCode}): {createBody}");
+                Loc.T("Svc_Lib_ColumnRejected", (int)createResp.StatusCode, createBody));
 
         using (var doc = JsonDocument.Parse(createBody))
         {
@@ -384,7 +385,7 @@ public class LibraryCopyService(SharePointService spService)
         }
         if (string.IsNullOrEmpty(targetLookupListId))
             throw new Exception(
-                $"Lookup column '{col.DisplayName}' not created — its looked-up list was not found on the target. Copy that list first, then re-run (or add the column manually).");
+                Loc.T("Svc_Lib_LookupNotCreated", col.DisplayName));
 
         var el = new System.Xml.Linq.XElement("Field",
             new System.Xml.Linq.XAttribute("Type", col.FieldType == SupportedFieldType.LookupMulti ? "LookupMulti" : "Lookup"),
@@ -444,7 +445,7 @@ public class LibraryCopyService(SharePointService spService)
         else
         {
             if (string.IsNullOrEmpty(col.SchemaXml))
-                throw new Exception($"No source schema captured for taxonomy column '{col.DisplayName}'");
+                throw new Exception(Loc.T("Svc_Lib_NoTaxonomySchema", col.DisplayName));
 
             var el = System.Xml.Linq.XElement.Parse(col.SchemaXml);
             // Fresh field ID; source-instance attributes don't apply at the target.
@@ -480,7 +481,7 @@ public class LibraryCopyService(SharePointService spService)
 
         var body = await resp.Content.ReadAsStringAsync();
         if (!resp.IsSuccessStatusCode)
-            throw new Exception($"createfieldasxml '{col.DisplayName}' HTTP {(int)resp.StatusCode}: {body[..Math.Min(200, body.Length)]}");
+            throw new Exception(Loc.T("Svc_Lib_CreateFieldXmlHttp", col.DisplayName, (int)resp.StatusCode, body[..Math.Min(200, body.Length)]));
 
         var actualInternalName = col.InternalName;
         using (var doc = JsonDocument.Parse(body))
@@ -575,7 +576,7 @@ public class LibraryCopyService(SharePointService spService)
 
 internal sealed class LibraryAlreadyExistsException(
     string? driveId, string? serverRelativeUrl, string? listId)
-    : Exception("Already exists — skipped")
+    : Exception(Loc.T("Svc_Lib_AlreadyExists"))
 {
     public string? DriveId           { get; } = driveId;
     public string? ServerRelativeUrl { get; } = serverRelativeUrl;

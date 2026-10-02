@@ -1,3 +1,4 @@
+using SharePointSmartCopy.Localization;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -58,7 +59,7 @@ public partial class CompareDialog : Window
 
         _selectedSourceNode = null;
         UpdateCompareEnabled();
-        VM.SourceStatus = "Connecting…";
+        VM.SourceStatus = Loc.T("Dlg_Connecting");
         VM.IsConnectingSource = true;
         try
         {
@@ -66,11 +67,11 @@ public partial class CompareDialog : Window
             var libs = await _spService.GetLibrariesAsync(VM.SourceSiteId, url);
             VM.SourceLibraries.Clear();
             foreach (var lib in libs) VM.SourceLibraries.Add(lib);
-            VM.SourceStatus = "✅ Connected";
+            VM.SourceStatus = Loc.T("Dlg_Connected");
         }
         catch (Exception ex)
         {
-            VM.SourceStatus = $"❌ {ex.Message}";
+            VM.SourceStatus = Loc.T("Dlg_ConnectFailed", ex.Message);
         }
         finally
         {
@@ -85,7 +86,7 @@ public partial class CompareDialog : Window
 
         _selectedTargetNode = null;
         UpdateCompareEnabled();
-        VM.TargetStatus = "Connecting…";
+        VM.TargetStatus = Loc.T("Dlg_Connecting");
         VM.IsConnectingTarget = true;
         try
         {
@@ -93,11 +94,11 @@ public partial class CompareDialog : Window
             var libs = await _spService.GetLibrariesAsync(VM.TargetSiteId, url);
             VM.TargetLibraries.Clear();
             foreach (var lib in libs) VM.TargetLibraries.Add(lib);
-            VM.TargetStatus = "✅ Connected";
+            VM.TargetStatus = Loc.T("Dlg_Connected");
         }
         catch (Exception ex)
         {
-            VM.TargetStatus = $"❌ {ex.Message}";
+            VM.TargetStatus = Loc.T("Dlg_ConnectFailed", ex.Message);
         }
         finally
         {
@@ -161,7 +162,7 @@ public partial class CompareDialog : Window
         var settings = AppSettings.Load();
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
-            Filter   = "Excel Workbook (*.xlsx)|*.xlsx",
+            Filter   = Loc.T("Dlg_FilterXlsx"),
             FileName = $"{SiteUrlHelper.ReportFilenamePrefix(VM.SourceUrl, VM.TargetUrl, settings.PrefixReportFilenamesWithSiteNames)}{(DeepVerifyCheckBox.IsChecked == true ? "Deep" : "")}CompareReport_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
         };
         if (dlg.ShowDialog() != true) return;
@@ -179,12 +180,12 @@ public partial class CompareDialog : Window
         DeepVerifyCheckBox.IsEnabled  = false;
         CompareCancelButton.Visibility = Visibility.Visible;
         CompareStatus.Visibility       = Visibility.Visible;
-        CompareStatus.Text             = "Scanning…";
+        CompareStatus.Text             = Loc.T("Dlg_Scanning");
 
         // Live checkbox state, not a re-read of AppSettings — see HistoryDialog's identical field
         // comment for why this must come from the live UI at run time, not a settings snapshot.
         bool deepVerify   = DeepVerifyCheckBox.IsChecked == true;
-        string compareName = deepVerify ? "Deep comparison" : "Comparison";
+        string compareName = deepVerify ? Loc.T("Dlg_DeepComparison") : Loc.T("Dlg_Comparison");
 
         try
         {
@@ -201,13 +202,13 @@ public partial class CompareDialog : Window
 
             // Combine the persistent phase-status line with the most recent throttle/error notice —
             // identical pattern to HistoryDialog's VerifyButton_Click.
-            string baseText = "Scanning…";
+            string baseText = Loc.T("Dlg_Scanning");
             string noticeText = "";
             void UpdateStatus() =>
                 CompareStatus.Text = string.IsNullOrEmpty(noticeText) ? baseText : $"{baseText}  {noticeText}";
             var onScanned = new Progress<VerificationReportService.ScanProgress>(p =>
             {
-                baseText = $"Scanning… found {p.SourceFilesFound:N0} source file(s), {p.TargetFilesFound:N0} target file(s)";
+                baseText = Loc.T("Dlg_ScanningFound", p.SourceFilesFound.ToString("N0"), p.TargetFilesFound.ToString("N0"));
                 UpdateStatus();
             });
             var onNotice = new Progress<string>(msg =>
@@ -232,18 +233,18 @@ public partial class CompareDialog : Window
 
             var result = await _verificationReportService.RunAsync(
                 roots, settings.MaxParallelCopies, activityLog: onNotice, progress: onScanned, _compareCts.Token, deepVerify);
-            CompareStatus.Text = "Writing workbook…";
+            CompareStatus.Text = Loc.T("Dlg_WritingWorkbook");
             await Task.Run(() => ExcelReportWriter.Write(dlg.FileName, result));
             if (result.ScanErrors.Count > 0)
                 MessageBox.Show(
-                    $"{result.ScanErrors.Count} root(s) could not be scanned — see the Scan Errors tab in the workbook.",
+                    Loc.T("Dlg_RootsNotScanned", result.ScanErrors.Count),
                     compareName, MessageBoxButton.OK, MessageBoxImage.Warning);
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
         }
         catch (OperationCanceledException) { /* user cancelled — no message needed */ }
         catch (Exception ex)
         {
-            MessageBox.Show($"{compareName} failed: {ex.Message}", compareName, MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(Loc.T("Dlg_OpFailed", compareName, ex.Message), compareName, MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
         {

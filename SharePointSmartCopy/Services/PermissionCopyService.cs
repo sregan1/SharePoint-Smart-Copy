@@ -1,3 +1,4 @@
+using SharePointSmartCopy.Localization;
 using SharePointSmartCopy.Models;
 
 namespace SharePointSmartCopy.Services;
@@ -41,12 +42,12 @@ public class PermissionCopyService(SharePointService spService)
         // copying is recoverable; breaking without applying is destructive.
         if (_targetRoleDefs.Count == 0)
             return new PermissionCopyResult(itemDisplayName, 0, [],
-                "Target role definitions unavailable — permissions not copied (inheritance left unchanged); re-run to retry");
+                Loc.T("Svc_Perm_NoRoleDefs"));
 
         var assignments = await spService.GetRoleAssignmentsAsync(sourceSiteUrl, sourceApiPath, ct);
         if (assignments == null)
             return new PermissionCopyResult(itemDisplayName, 0, [],
-                "Could not read source permissions — permissions not copied (inheritance left unchanged); re-run to retry");
+                Loc.T("Svc_Perm_NoSource"));
 
         // "Limited Access" bindings are hierarchy plumbing SharePoint maintains itself and rejects
         // when granted directly — copying them only produced failed-role noise, and an object whose
@@ -74,7 +75,7 @@ public class PermissionCopyService(SharePointService spService)
             catch (OperationCanceledException) { throw; }
             catch (Exception ex)
             {
-                return new PermissionCopyResult(itemDisplayName, 0, [], $"Break inheritance failed: {ex.Message}");
+                return new PermissionCopyResult(itemDisplayName, 0, [], Loc.T("Svc_Perm_BreakFailed", ex.Message));
             }
         }
 
@@ -96,7 +97,7 @@ public class PermissionCopyService(SharePointService spService)
                 if (!_targetRoleDefs.TryGetValue(roleName, out var roleDefId))
                 {
                     // Role definition doesn't exist on target — record so the user sees it.
-                    failed.Add($"{assignment.Title} ({roleName}: no such role on target)");
+                    failed.Add(Loc.T("Svc_Perm_NoRoleSuffix", assignment.Title, roleName));
                     continue;
                 }
 
@@ -108,7 +109,7 @@ public class PermissionCopyService(SharePointService spService)
                 catch (OperationCanceledException) { throw; }
                 catch (Exception ex)
                 {
-                    failed.Add($"{assignment.Title} ({roleName}: {ex.Message})");
+                    failed.Add(Loc.T("Svc_Perm_RoleError", assignment.Title, roleName, ex.Message));
                 }
             }
         }
@@ -119,8 +120,8 @@ public class PermissionCopyService(SharePointService spService)
         string? error = null;
         if (!isRootWeb && applied == 0 && (failed.Count > 0 || skipped.Count > 0))
             error = failed.Count > 0
-                ? $"Inheritance broken but no role assignments applied: {string.Join("; ", failed.Take(3))}"
-                : $"Inheritance broken but no principals could be resolved on target: {string.Join("; ", skipped.Take(3))}";
+                ? Loc.T("Svc_Perm_NoneApplied", string.Join("; ", failed.Take(3)))
+                : Loc.T("Svc_Perm_NoPrincipals", string.Join("; ", skipped.Take(3)));
 
         return new PermissionCopyResult(itemDisplayName, applied, skipped, error, failed);
     }

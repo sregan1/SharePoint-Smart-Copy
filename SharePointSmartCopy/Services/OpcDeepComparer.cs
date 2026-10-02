@@ -1,3 +1,4 @@
+using SharePointSmartCopy.Localization;
 using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
@@ -186,8 +187,8 @@ public static class OpcDeepComparer
         var onlyInSource = setA.Except(setB).Take(3).ToList();
         var onlyInTarget = setB.Except(setA).Take(3).ToList();
         var parts = new List<string>();
-        if (onlyInSource.Count > 0) parts.Add($"only in source: {string.Join("; ", onlyInSource)}");
-        if (onlyInTarget.Count > 0) parts.Add($"only in target: {string.Join("; ", onlyInTarget)}");
+        if (onlyInSource.Count > 0) parts.Add(Loc.T("Svc_Opc_OnlyInSource", string.Join("; ", onlyInSource)));
+        if (onlyInTarget.Count > 0) parts.Add(Loc.T("Svc_Opc_OnlyInTarget", string.Join("; ", onlyInTarget)));
         detail = string.Join(" | ", parts);
         return false;
     }
