@@ -638,4 +638,10 @@
   <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>Almacene uno o varios registros de aplicaciones de Azure AD. El que esté seleccionado al hacer clic en Guardar pasa a ser el registro activo. Cada aplicación necesita los permisos delegados Sites.ReadWrite.All y Files.ReadWrite.All, con consentimiento de administrador.</value></data>
   <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Configuración: portal.azure.com → Azure Active Directory → Registros de aplicaciones → Nuevo registro. Agregue un URI de redirección de tipo Móvil/Escritorio con el valor http://localhost. En Permisos de API, agregue los permisos delegados de Graph Sites.ReadWrite.All + Files.ReadWrite.All y conceda el consentimiento de administrador.</value></data>
   <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>La biblioteca de origen no tiene columnas personalizadas de un tipo compatible. Tipos admitidos: Texto, Nota, Número, Booleano, Fecha, Elección, Elección múltiple, Persona, Metadatos administrados. Las columnas de búsqueda no son compatibles.</value></data>
+  <data name="Ui_ProgressItems" xml:space="preserve"><value>{0} de {1} elementos procesados</value></data>
+  <data name="Ui_ProgressChecking" xml:space="preserve"><value>Comprobando archivos… {0} de {1}</value></data>
+  <data name="Ui_ProgressPackaged" xml:space="preserve"><value>{0:N0} / {1:N0} archivos empaquetados para importar</value></data>
+  <data name="Ui_SuccessCount" xml:space="preserve"><value>Correctos ({0})</value></data>
+  <data name="Ui_FailedCount" xml:space="preserve"><value>Fallidos ({0})</value></data>
+  <data name="Ui_SkippedCount" xml:space="preserve"><value>Omitidos ({0})</value></data>
 </root>

@@ -103,6 +103,24 @@ public sealed class IdentityMapper
         return result;
     }
 
+    // 1-based line numbers (as shown in the editor) of lines that are neither blank, a comment, nor a
+    // readable "source,target" pair. ParseOverrides skips these silently — the dialog uses this to tell
+    // the user instead, so a typo can't quietly leave someone unmapped.
+    public static List<int> FindInvalidLines(string? text)
+    {
+        var bad = new List<int>();
+        if (string.IsNullOrEmpty(text)) return bad;
+        var lines = text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+        for (int i = 0; i < lines.Length; i++)
+        {
+            var line = lines[i].Trim();
+            if (line.Length == 0 || line.StartsWith('#')) continue;
+            var parts = line.Split([',', ';', '\t'], 2, StringSplitOptions.TrimEntries);
+            if (parts.Length != 2 || parts[0].Length == 0 || parts[1].Length == 0) bad.Add(i + 1);
+        }
+        return bad;
+    }
+
     public static IdentityMapper FromSettings(Models.IdentityMappingSettings? s)
         => s == null
             ? None

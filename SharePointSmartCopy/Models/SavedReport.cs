@@ -75,6 +75,9 @@ public class SavedReport
     // Still-Copying items swept up when the run was cancelled or the app closed mid-copy — never
     // actually attempted, so excluded from FailedCount (see CopyStatus.Cancelled).
     public int CancelledCount { get; set; }
+    // True for a run recovered from its crash journal (the app closed or crashed before the run finished):
+    // the counts cover only the items that had finished, and TotalCount is unknown. See RunJournal.
+    public bool Interrupted { get; set; }
     public int TotalCount { get; set; }
     public TimeSpan Duration { get; set; }
     // Sum of CopyResult.SourceSize across the run. 0 for runs where size wasn't known for any row
@@ -109,7 +112,8 @@ public class SavedReport
     public string SizeDisplay => TotalSize > 0 ? SizeFormatter.FormatBytes(TotalSize) : string.Empty;
 
     [JsonIgnore]
-    public string Summary => CancelledCount > 0
+    public string Summary => Interrupted ? Loc.T("VM_SummaryInterrupted", SuccessCount, FailedCount, SkippedCount, CancelledCount, DurationDisplay, SizeSummarySuffix) :
+        CancelledCount > 0
         ? Loc.T("VM_SummaryWithCancelled", SuccessCount, FailedCount, SkippedCount, CancelledCount, DurationDisplay, SizeSummarySuffix)
         : Loc.T("VM_Summary", SuccessCount, FailedCount, SkippedCount, DurationDisplay, SizeSummarySuffix);
 
@@ -135,6 +139,9 @@ public class SavedReportSummary
     public int FailedCount { get; set; }
     public int SkippedCount { get; set; }
     public int CancelledCount { get; set; }
+    // True for a run recovered from its crash journal (the app closed or crashed before the run finished):
+    // the counts cover only the items that had finished, and TotalCount is unknown. See RunJournal.
+    public bool Interrupted { get; set; }
     public int TotalCount { get; set; }
     public TimeSpan Duration { get; set; }
     public long TotalSize { get; set; }
@@ -162,7 +169,8 @@ public class SavedReportSummary
     public string SizeDisplay => TotalSize > 0 ? SizeFormatter.FormatBytes(TotalSize) : string.Empty;
 
     [JsonIgnore]
-    public string Summary => CancelledCount > 0
+    public string Summary => Interrupted ? Loc.T("VM_SummaryInterrupted", SuccessCount, FailedCount, SkippedCount, CancelledCount, DurationDisplay, SizeSummarySuffix) :
+        CancelledCount > 0
         ? Loc.T("VM_SummaryWithCancelled", SuccessCount, FailedCount, SkippedCount, CancelledCount, DurationDisplay, SizeSummarySuffix)
         : Loc.T("VM_Summary", SuccessCount, FailedCount, SkippedCount, DurationDisplay, SizeSummarySuffix);
 

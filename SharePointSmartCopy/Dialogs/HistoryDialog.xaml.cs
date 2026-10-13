@@ -14,15 +14,31 @@ public partial class HistoryDialog : Window
     private readonly VerificationReportService _verificationReportService;
     private CancellationTokenSource? _verifyCts;
 
-    public HistoryDialog(SharePointService spService)
+    // Multi-tenant: signs in and registers both sites (and the run's drives) before a verify — see
+    // MainViewModel.PrepareReportAccessAsync. Null = single tenant, nothing to prepare.
+    private readonly Func<SavedReportSummary, Task>? _prepareReport;
+
+    public HistoryDialog(SharePointService spService, Func<SavedReportSummary, Task>? prepareReport = null)
     {
         InitializeComponent();
+        _prepareReport = prepareReport;
         _verificationReportService = new VerificationReportService(spService);
         DetailHeader.Text = Loc.T("Dlg_LoadingRuns");
         // Seeds the checkbox from the user's last choice; the live IsChecked value (read in
         // VerifyButton_Click, not this settings snapshot) is what actually gates a given run.
         DeepVerifyCheckBox.IsChecked = AppSettings.Load().DeepVerifyOfficeFiles;
         _ = LoadReportsAsync();
+    }
+
+    // Set when the user clicks Resume: the caller (MainWindow) reads it after the dialog closes and
+    // restores that run into the wizard. The dialog itself doesn't touch the wizard.
+    public SavedReportSummary? ResumeReport { get; private set; }
+
+    private void ResumeButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (ReportList.SelectedItem is not SavedReportSummary report || report.Roots.Count == 0) return;
+        ResumeReport = report;
+        Close();
     }
 
     // Persisted immediately, same as MainViewModel's DeepVerifyOfficeFiles setter — this dialog
@@ -69,6 +85,11 @@ public partial class HistoryDialog : Window
         EmptyHint.Visibility    = hasSelection ? Visibility.Collapsed : Visibility.Visible;
 
         bool canVerify = hasSelection && report!.Roots.Count > 0;
+        // Resume / run again needs the run's saved selection, same as Verify.
+        ResumeButton.IsEnabled = canVerify;
+        ResumeButton.ToolTip = hasSelection && !canVerify
+            ? Loc.T("Dlg_ResumeNoSelection")
+            : Loc.T("Ui_ResumeRunHint");
         VerifyButton.IsEnabled = canVerify;
         VerifyButton.ToolTip = hasSelection && !canVerify
             ? Loc.T("Dlg_PredatesVerification")
@@ -185,6 +206,7 @@ public partial class HistoryDialog : Window
 
         try
         {
+            if (_prepareReport != null) await _prepareReport(report);
             var roots    = VerificationRoot.FromSavedReport(report.Roots);
             var settings = AppSettings.Load();
             var maxParallel = settings.MaxParallelCopies;

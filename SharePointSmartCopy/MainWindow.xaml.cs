@@ -26,6 +26,116 @@ public partial class MainWindow : Window
         DataContext = vm ?? new MainViewModel();
         ((System.Collections.ObjectModel.ObservableCollection<CopyResult>)VM.CopyResults)
             .CollectionChanged += ProgressList_CollectionChanged;
+        // Real launches only (demo mode passes its own view model).
+        if (vm == null) _ = RecoverInterruptedRunsAsync();
+
+        AttachViewModel();
+        Loaded += (_, _) => FocusStepInput();
+        // The ⓘ help icons are focusable now (Tab reaches them); show their text when they get focus.
+        AddHandler(GotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(HelpIcon_GotKeyboardFocus), true);
+        AddHandler(LostKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(HelpIcon_LostKeyboardFocus), true);
+    }
+
+    // ── View model hookup ─────────────────────────────────────────────────────
+
+    private MainViewModel? _attachedVm;
+
+    // Re-run whenever the window gets a NEW view model (Start New Copy replaces it).
+    private void AttachViewModel()
+    {
+        if (_attachedVm != null) _attachedVm.PropertyChanged -= Vm_PropertyChanged;
+        _attachedVm = VM;
+        // The view model never shows UI itself — this is how it asks "are you sure?".
+        VM.ConfirmAction = (title, message) =>
+            MessageBox.Show(this, message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No)
+                == MessageBoxResult.Yes;
+        VM.PropertyChanged += Vm_PropertyChanged;
+    }
+
+    private void Vm_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            // A long run finished while the user was elsewhere: flash the taskbar button.
+            case nameof(MainViewModel.IsReadyForReport) when VM.IsReadyForReport && !IsActive:
+                FlashTaskbar();
+                break;
+            case nameof(MainViewModel.CurrentStep):
+                FocusStepInput();
+                break;
+        }
+    }
+
+    // Puts the cursor where the user will type next: the URL box on the Source and Target steps.
+    private void FocusStepInput()
+    {
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Input, () =>
+        {
+            TextBox? box = VM.CurrentStep switch { 0 => SourceUrlBox, 2 => TargetUrlBox, _ => null };
+            if (box is { IsVisible: true, IsEnabled: true }) box.Focus();
+        });
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct FLASHWINFO
+    {
+        public uint cbSize;
+        public IntPtr hwnd;
+        public uint dwFlags;
+        public uint uCount;
+        public uint dwTimeout;
+    }
+
+    [DllImport("user32.dll")]
+    private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
+
+    private void FlashTaskbar()
+    {
+        var handle = new WindowInteropHelper(this).Handle;
+        if (handle == IntPtr.Zero) return;
+        // FLASHW_ALL | FLASHW_TIMERNOFG: flash caption and taskbar button until the window is brought forward.
+        var info = new FLASHWINFO
+        {
+            cbSize    = (uint)Marshal.SizeOf<FLASHWINFO>(),
+            hwnd      = handle,
+            dwFlags   = 0x00000003 | 0x0000000C,
+            uCount    = uint.MaxValue,
+            dwTimeout = 0,
+        };
+        FlashWindowEx(ref info);
+    }
+
+    private static void HelpIcon_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+    {
+        if (e.NewFocus is TextBlock { ToolTip: ToolTip tip } icon)
+        {
+            tip.PlacementTarget = icon;
+            tip.IsOpen = true;
+        }
+    }
+
+    private static void HelpIcon_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+    {
+        if (e.OldFocus is TextBlock { ToolTip: ToolTip tip })
+            tip.IsOpen = false;
+    }
+
+    private void OpenSettings_Click(object sender, RoutedEventArgs e) => SettingsButton_Click(sender, e);
+
+    // Clicking the Failed / Skipped tile on the report filters the list to those items.
+    private void FailedTile_Click(object sender, MouseButtonEventArgs e)
+        => VM.FileResultFilter = ResultFilterKind.Failed;
+
+    private void SkippedTile_Click(object sender, MouseButtonEventArgs e)
+        => VM.FileResultFilter = ResultFilterKind.Skipped;
+
+    // Drag handle under the live activity feed: make it taller or shorter.
+    private void ActivityResize_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+    {
+        var current = double.IsInfinity(ActivityFeedBorder.MaxHeight)
+            ? ActivityFeedBorder.ActualHeight
+            : ActivityFeedBorder.MaxHeight;
+        ActivityFeedBorder.MaxHeight = Math.Clamp(current + e.VerticalChange, 60, 600);
     }
 
     // ── Window caption buttons (custom chrome) ────────────────────────────────
@@ -110,6 +220,12 @@ public partial class MainWindow : Window
 
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
+        // One stray click on X used to end a multi-hour copy with no warning.
+        if (!VM.ConfirmCloseDuringRun())
+        {
+            e.Cancel = true;
+            return;
+        }
         base.OnClosing(e);
         VM.CancelAllOperations();
     }
@@ -125,11 +241,39 @@ public partial class MainWindow : Window
     private void CloseWindow_Click(object sender, RoutedEventArgs e)
         => Close();
 
-    private void HistoryButton_Click(object sender, RoutedEventArgs e)
-        => new HistoryDialog(VM.SpService) { Owner = this }.ShowDialog();
+    private async void HistoryButton_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new HistoryDialog(VM.SpService,
+            r => VM.PrepareReportAccessAsync(r.SourceUrl, r.TargetUrl, r.Roots)) { Owner = this };
+        dlg.ShowDialog();
+        if (dlg.ResumeReport is not { } report) return;
+
+        // async void: nothing may escape here or it would crash the app.
+        try
+        {
+            if (VM.IsCopying) { ShowToast(Loc.T("Dlg_ResumeBusy")); return; }
+            await VM.ResumeFromReportAsync(report);
+        }
+        catch (Exception ex)
+        {
+            ShowToast(Loc.T("Dlg_ResumeFailed", ex.Message));
+        }
+    }
+
+    // Turns any run whose journal was never completed (the app closed or crashed mid-copy) into an
+    // "Interrupted" History entry — see RunJournal.
+    private async Task RecoverInterruptedRunsAsync()
+    {
+        try
+        {
+            var recovered = await Task.Run(Services.RunJournal.RecoverInterrupted);
+            if (recovered > 0) ShowToast(Loc.T("Dlg_InterruptedRecovered", recovered));
+        }
+        catch { /* recovery is a convenience; never disturb startup */ }
+    }
 
     private void CompareButton_Click(object sender, RoutedEventArgs e)
-        => new CompareDialog(VM.SpService) { Owner = this }.ShowDialog();
+        => new CompareDialog(VM.SpService, (url, isSource) => VM.PrepareSiteAccessAsync(url, isSource)) { Owner = this }.ShowDialog();
 
     private void SettingsButton_Click(object sender, RoutedEventArgs e)
     {
@@ -257,6 +401,7 @@ public partial class MainWindow : Window
         DataContext = new MainViewModel(VM.AuthService, existingTargetAuthService: VM.TargetAuthService);
         ((System.Collections.ObjectModel.ObservableCollection<CopyResult>)VM.CopyResults)
             .CollectionChanged += ProgressList_CollectionChanged;
+        AttachViewModel();
     }
 
     // ── Mode tile click handlers ───────────────────────────────────────────────
@@ -291,17 +436,14 @@ public partial class MainWindow : Window
 
     // ── Step 4 Copy log column sorting ───────────────────────────────────────────
 
-    static readonly Dictionary<string, string> _headerSortMap = new(StringComparer.OrdinalIgnoreCase)
-    {
-        ["Item"]                = "FileName",
-        ["Status"]              = "Status",
-        ["Source"]              = "SourcePath",
-        ["Target"]              = "TargetPath",
-        ["Versions"]            = "VersionsCopied",
-        ["Details"]             = "ErrorMessage",
-        ["Permissions Status"]  = "PermissionStatus",
-        ["Permissions Details"] = "PermissionDetails",
-    };
+    // Sort member for each copy-log column, in the column order of the ListView's GridView. Matching on
+    // the header TEXT (the old approach) only worked in English — the headers are localized — and it
+    // never covered the custom-field columns.
+    static readonly string[] _columnSortMembers =
+    [
+        "FileName", "Status", "SourcePath", "TargetPath", "VersionsCopied", "ErrorMessage",
+        "PermissionStatus", "PermissionDetails", "CustomFieldStatus", "CustomFieldDetails",
+    ];
 
     private GridViewColumnHeader? _sortHeader;
     private SortAdorner?          _sortAdorner;
@@ -310,9 +452,12 @@ public partial class MainWindow : Window
     {
         if (e.OriginalSource is not GridViewColumnHeader header ||
             header.Role == GridViewColumnHeaderRole.Padding ||
-            header.Content is not string headerText ||
-            !_headerSortMap.TryGetValue(headerText, out var sortBy))
+            header.Column == null ||
+            ProgressList.View is not GridView gridView)
             return;
+        int columnIndex = gridView.Columns.IndexOf(header.Column);
+        if (columnIndex < 0 || columnIndex >= _columnSortMembers.Length) return;
+        var sortBy = _columnSortMembers[columnIndex];
 
         var dir = (_sortHeader == header && _sortAdorner?.Direction == ListSortDirection.Ascending)
             ? ListSortDirection.Descending

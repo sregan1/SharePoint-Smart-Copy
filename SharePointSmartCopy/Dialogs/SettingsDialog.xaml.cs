@@ -45,6 +45,10 @@ public partial class SettingsDialog : Window
         if (LanguageCombo.SelectedIndex < 0) LanguageCombo.SelectedIndex = 0;
         PrefixFilenamesCheckBox.IsChecked = current.PrefixReportFilenamesWithSiteNames;
 
+        // The target registration only matters in multi-tenant mode — don't offer it otherwise.
+        TargetRegistrationPanel.Visibility = current.ConnectionMode == ConnectionMode.MultiTenant
+            ? Visibility.Visible : Visibility.Collapsed;
+
         _sameAsSource = new AzureRegistration { Name = Localization.Loc.T("Ui_SameAsSource") };
         var targetIdx = current.TargetRegistrationIndex;
         RefreshTargetRegistrationCombo(targetIdx is { } i && i >= 0 && i < _registrations.Count ? _registrations[i] : null);
@@ -71,7 +75,7 @@ public partial class SettingsDialog : Window
 
     private void AddRegistration_Click(object sender, RoutedEventArgs e)
     {
-        var reg = new AzureRegistration { Name = "New Registration" };
+        var reg = new AzureRegistration { Name = Localization.Loc.T("Dlg_AddRegistrationDefaultName") };
         _registrations.Add(reg);
         RegistrationList.SelectedItem = reg;
     }
@@ -89,7 +93,7 @@ public partial class SettingsDialog : Window
     {
         if (_registrations.Count == 0)
         {
-            MessageBox.Show("Add at least one app registration.", "Validation",
+            MessageBox.Show(Localization.Loc.T("Dlg_AddAtLeastOneRegistration"), Localization.Loc.T("Dlg_ValidationTitle"),
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
@@ -99,7 +103,7 @@ public partial class SettingsDialog : Window
 
         if (string.IsNullOrWhiteSpace(active.ClientId))
         {
-            MessageBox.Show("Client ID is required for the selected registration.", "Validation",
+            MessageBox.Show(Localization.Loc.T("Dlg_ClientIdRequired"), Localization.Loc.T("Dlg_ValidationTitle"),
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
@@ -154,6 +158,28 @@ public partial class SettingsDialog : Window
         Close();
     }
 
+    private void ExportDiagnostics_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Microsoft.Win32.SaveFileDialog
+        {
+            Title    = Localization.Loc.T("Ui_ExportDiagnostics"),
+            FileName = $"SmartCopy-diagnostics-{DateTime.Now:yyyyMMdd-HHmmss}.zip",
+            Filter   = "Zip archive (*.zip)|*.zip",
+        };
+        if (dlg.ShowDialog(this) != true) return;
+        try
+        {
+            DiagnosticsLog.ExportDiagnostics(dlg.FileName, _original);
+            MessageBox.Show(Localization.Loc.T("Dlg_DiagnosticsSaved", dlg.FileName), Title,
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(Localization.Loc.T("Dlg_DiagnosticsFailed", ex.Message), Title,
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
     private async void SignOutButton_Click(object sender, RoutedEventArgs e)
     {
         // async void: an unhandled MSAL cache exception here would crash the app.
@@ -161,12 +187,12 @@ public partial class SettingsDialog : Window
         {
             await _authService.SignOutAsync();
             if (_targetAuthService != null) await _targetAuthService.SignOutAsync();
-            MessageBox.Show("Signed out. You will be prompted to sign in on the next connection.",
-                "Signed Out", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(Localization.Loc.T("Dlg_SignedOutBody"),
+                Localization.Loc.T("Dlg_SignedOutTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Sign out failed: {ex.Message}", "Signed Out",
+            MessageBox.Show(Localization.Loc.T("Dlg_SignOutFailed", ex.Message), Localization.Loc.T("Dlg_SignOutFailedTitle"),
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }

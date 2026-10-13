@@ -10,8 +10,36 @@ public class PermissionCopyService(SharePointService spService)
 
     // principal resolution caches for the duration of the copy session.
     // Concurrent — CopyObjectPermissionsAsync is called from parallel file-copy tasks.
-    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, int?> _userCache  = new(StringComparer.OrdinalIgnoreCase);
-    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, int?> _groupCache = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ResolutionCache _userCache  = new();
+    private readonly ResolutionCache _groupCache = new();
+
+    // Successful resolutions are kept for the whole session. A null (unresolved) result is kept only
+    // briefly: EnsureUserAsync / GetSiteGroupIdAsync return null both for a principal that genuinely
+    // isn't on the target AND for any transient failure (throttle, network). A permanent negative entry
+    // turned one hiccup into a dropped grant — and a broken-inheritance item — for every later item.
+    // The short TTL still spares repeat lookups for a genuinely missing principal.
+    private sealed class ResolutionCache
+    {
+        private static readonly TimeSpan NegativeTtl = TimeSpan.FromSeconds(90);
+        private readonly System.Collections.Concurrent.ConcurrentDictionary<string, (int? Id, DateTimeOffset Expires)> _map
+            = new(StringComparer.OrdinalIgnoreCase);
+
+        public bool TryGet(string key, out int? id)
+        {
+            if (_map.TryGetValue(key, out var e) && (e.Id != null || e.Expires > DateTimeOffset.UtcNow))
+            {
+                id = e.Id;
+                return true;
+            }
+            id = null;
+            return false;
+        }
+
+        public void Set(string key, int? id)
+            => _map[key] = (id, id != null ? DateTimeOffset.MaxValue : DateTimeOffset.UtcNow + NegativeTtl);
+
+        public void Clear() => _map.Clear();
+    }
 
     // Call once before copy loops start. Pre-loads target role definitions in one request.
     public async Task InitializeAsync(string targetSiteUrl, CancellationToken ct = default)
@@ -134,20 +162,20 @@ public class PermissionCopyService(SharePointService spService)
         {
             // Cross-tenant: a group's target name can differ — an override keyed by its title remaps it.
             var groupTitle = spService.Identity.MapPrincipal(string.Empty, assignment.Title);
-            if (_groupCache.TryGetValue(groupTitle, out var cached))
+            if (_groupCache.TryGet(groupTitle, out var cached))
                 return cached;
             var id = await spService.GetSiteGroupIdAsync(targetSiteUrl, groupTitle, ct);
-            _groupCache[groupTitle] = id;
+            _groupCache.Set(groupTitle, id);
             return id;
         }
 
         // PrincipalType 1 (user) or 4 (AAD security group) → resolve via ensureuser.
         // Cross-tenant: map the source login (domain swap / explicit override) to its target identity first.
         var loginKey = spService.Identity.MapPrincipal(assignment.LoginName, assignment.Title);
-        if (_userCache.TryGetValue(loginKey, out var cachedUser))
+        if (_userCache.TryGet(loginKey, out var cachedUser))
             return cachedUser;
         var userId = await spService.EnsureUserAsync(targetSiteUrl, loginKey, ct);
-        _userCache[loginKey] = userId;
+        _userCache.Set(loginKey, userId);
         return userId;
     }
 }

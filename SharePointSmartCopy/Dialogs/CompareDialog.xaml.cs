@@ -16,9 +16,14 @@ public partial class CompareDialog : Window
     private SharePointNode? _selectedSourceNode;
     private SharePointNode? _selectedTargetNode;
 
-    public CompareDialog(SharePointService spService)
+    // Multi-tenant: signs in and registers a site's host before it is used (MainViewModel.PrepareSiteAccessAsync).
+    // Null = single tenant, where nothing needs preparing.
+    private readonly Func<string, bool, Task>? _prepareSite;
+
+    public CompareDialog(SharePointService spService, Func<string, bool, Task>? prepareSite = null)
     {
         _spService = spService;
+        _prepareSite = prepareSite;
         InitializeComponent();
 
         _verificationReportService = new VerificationReportService(spService);
@@ -63,6 +68,7 @@ public partial class CompareDialog : Window
         VM.IsConnectingSource = true;
         try
         {
+            if (_prepareSite != null) await _prepareSite(url, true);
             VM.SourceSiteId = await _spService.GetSiteIdAsync(url);
             var libs = await _spService.GetLibrariesAsync(VM.SourceSiteId, url);
             VM.SourceLibraries.Clear();
@@ -90,6 +96,7 @@ public partial class CompareDialog : Window
         VM.IsConnectingTarget = true;
         try
         {
+            if (_prepareSite != null) await _prepareSite(url, false);
             VM.TargetSiteId = await _spService.GetSiteIdAsync(url);
             var libs = await _spService.GetLibrariesAsync(VM.TargetSiteId, url);
             VM.TargetLibraries.Clear();

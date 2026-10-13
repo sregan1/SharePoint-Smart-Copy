@@ -314,6 +314,8 @@ public class LibraryCopyService(SharePointService spService)
             SupportedFieldType.Choice      => 6,
             SupportedFieldType.Boolean     => 8,
             SupportedFieldType.Number      => 9,
+            SupportedFieldType.Currency    => 10,
+            SupportedFieldType.Hyperlink   => 11,
             SupportedFieldType.MultiChoice => 15,
             _ => 2,
         };

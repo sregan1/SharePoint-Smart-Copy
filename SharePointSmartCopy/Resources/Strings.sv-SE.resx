@@ -638,4 +638,10 @@
   <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>Lagra en eller flera Azure AD-appregistreringar. Den som är vald när du klickar på Spara blir den aktiva registreringen. Varje app behöver de delegerade behörigheterna Sites.ReadWrite.All och Files.ReadWrite.All med administratörsmedgivande.</value></data>
   <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Konfiguration: portal.azure.com → Azure Active Directory → Appregistreringar → Ny registrering. Lägg till en omdirigerings-URI för mobil/dator: http://localhost. Under API-behörigheter lägger du till de delegerade Graph-behörigheterna Sites.ReadWrite.All + Files.ReadWrite.All och ger sedan administratörsmedgivande.</value></data>
   <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>Källbiblioteket har inga anpassade kolumner av en typ som stöds. Typer som stöds: Text, Anteckning, Tal, Boolesk, Datum, Val, Flerval, Person, Hanterade metadata. Uppslagskolumner stöds inte.</value></data>
+  <data name="Ui_ProgressItems" xml:space="preserve"><value>{0} av {1} objekt bearbetade</value></data>
+  <data name="Ui_ProgressChecking" xml:space="preserve"><value>Kontrollerar filer… {0} av {1}</value></data>
+  <data name="Ui_ProgressPackaged" xml:space="preserve"><value>{0:N0} / {1:N0} filer paketerade för import</value></data>
+  <data name="Ui_SuccessCount" xml:space="preserve"><value>Lyckades ({0})</value></data>
+  <data name="Ui_FailedCount" xml:space="preserve"><value>Misslyckades ({0})</value></data>
+  <data name="Ui_SkippedCount" xml:space="preserve"><value>Överhoppade ({0})</value></data>
 </root>

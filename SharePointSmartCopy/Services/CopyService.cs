@@ -78,7 +78,36 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         }
     }
 
-    public async Task ExecuteAsync(
+    // The public entry point: every setting is named (see CopyRunOptions). Forwards to the
+    // implementation below, whose long positional signature is now private so a call site can't
+    // silently drop or transpose an argument.
+    public Task ExecuteAsync(
+        IList<CopyJob> jobs,
+        ObservableCollection<CopyResult> results,
+        CopyRunOptions options,
+        CancellationToken cancellationToken)
+        => ExecuteCoreImplAsync(
+            jobs, results,
+            options.OverwriteMode, options.CopyVersions, options.MaxParallel, options.MaxVersions, options.CopyMode,
+            cancellationToken,
+            onMetadataDone:        options.OnMetadataDone,
+            copyCustomColumns:     options.CopyCustomColumns,
+            columnMappings:        options.ColumnMappings,
+            bulkFieldCache:        options.BulkFieldCache,
+            copyPages:             options.CopyPages,
+            remapPageWebPartUrls:  options.RemapPageWebPartUrls,
+            preserveMetadata:      options.PreserveMetadata,
+            copyPermissions:       options.CopyPermissions,
+            permissionService:     options.PermissionService,
+            permissionFlags:       options.PermissionFlags,
+            preflightProgress:     options.PreflightProgress,
+            activityLog:           options.ActivityLog,
+            onFilePacked:          options.OnFilePacked,
+            onFolderProgress:      options.OnFolderProgress,
+            reapplyFolderMetadata: options.ReapplyFolderMetadata,
+            sourceMetaCache:       options.SourceMetaCache);
+
+    private async Task ExecuteCoreImplAsync(
         IList<CopyJob> jobs,
         ObservableCollection<CopyResult> results,
         OverwriteMode overwriteMode,
@@ -650,7 +679,11 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     try
                     {
                         var srcIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
-                        if (!srcIds.HasValue) return;
+                        if (!srcIds.HasValue)
+                        {
+                            MarkPermissionFailure(result, Loc.T("Svc_PermIdsNotResolved"));
+                            return;
+                        }
                         var flagKey = SharePointService.PermissionFlagKey(srcIds.Value.listId, srcIds.Value.listItemId);
                         if (!permissionFlags.TryGetValue(flagKey, out var hu) || !hu) return;
 
@@ -673,7 +706,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             AddPermissionRow(results, perm, result);
                     }
                     catch (OperationCanceledException) { throw; }
-                    catch { /* non-fatal */ }
+                    catch (Exception ex) { MarkPermissionFailure(result, Loc.T("Svc_PermException", ex.Message)); }
                 });
             }
 
@@ -876,7 +909,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 await ApplyFolderMetadataRecursiveAsync(job, maxParallel, gate, ct,
                     copyPermissions, permissionService, permissionResults,
                     done, total, folderProgress, dirtyFolderPaths, applyMetadata,
-                    jobFolders);
+                    jobFolders, activityLog);
             }
         }
         catch (OperationCanceledException) { completed = false; }
@@ -998,7 +1031,11 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 try
                 {
                     var srcIds = await spService.GetSharePointIdsAsync(job.SourceDriveId, job.SourceItemId);
-                    if (srcIds.HasValue)
+                    if (!srcIds.HasValue)
+                    {
+                        MarkPermissionFailure(result, Loc.T("Svc_PermIdsNotResolved"));
+                    }
+                    else
                     {
                         var hasUnique = permissionFlags != null &&
                             permissionFlags.TryGetValue(
@@ -1018,11 +1055,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 if ((perm.HasActivity) && permissionResults != null)
                                     AddPermissionRow(permissionResults, perm, result);
                             }
+                            else MarkPermissionFailure(result, Loc.T("Svc_PermIdsNotResolved"));
                         }
                     }
                 }
                 catch (OperationCanceledException) { throw; }
-                catch { /* non-fatal — permissions best-effort */ }
+                // The file itself copied, so this stays non-fatal — but record it on the row instead of
+                // reporting a clean Success for a file whose permissions were never applied.
+                catch (Exception ex) { MarkPermissionFailure(result, Loc.T("Svc_PermException", ex.Message)); }
             }
         }
         catch (OperationCanceledException)
@@ -1159,11 +1199,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         else
         {
             System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] downloading…");
-            using var stream = await spService.DownloadFileAsync(job.SourceDriveId, job.SourceItemId);
+            // Take the large-file slot BEFORE opening the download: opening it first left every file
+            // queued on the 2-slot gate holding an idle, unread connection that the server can drop
+            // before the file's turn comes (a failed copy with no retry on this path).
             bool isLargeFile = IsLargeForBuffering(job.SourceSize);
             if (isLargeFile) await _largeFileGate.WaitAsync(ct);
             try
             {
+                using var stream = await spService.DownloadFileAsync(job.SourceDriveId, job.SourceItemId, ct);
                 using var ms = CreateTransferBuffer(isLargeFile);
                 await stream.CopyToAsync(ms, ct);
                 ms.Position = 0;
@@ -1258,17 +1301,17 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
 
             bool isLast = version == versions[^1];
 
-            using var stream = isLast
-                ? await spService.DownloadFileAsync(job.SourceDriveId, job.SourceItemId)
-                : await spService.DownloadVersionAsync(job.SourceDriveId, job.SourceItemId, version.Id);
-
             // version.Size (this specific version's byte count) is the accurate figure; fall back to
             // the file's current size if a version didn't report one, same fallback order
             // MigrationJobService uses for the same decision.
+            // The gate is taken BEFORE the download is opened (see CopyCurrentVersion above).
             bool isLargeFile = IsLargeForBuffering(version.Size ?? job.SourceSize);
             if (isLargeFile) await _largeFileGate.WaitAsync(ct);
             try
             {
+                using var stream = isLast
+                    ? await spService.DownloadFileAsync(job.SourceDriveId, job.SourceItemId, ct)
+                    : await spService.DownloadVersionAsync(job.SourceDriveId, job.SourceItemId, version.Id, ct);
                 using var ms = CreateTransferBuffer(isLargeFile);
                 await stream.CopyToAsync(ms, ct);
                 ms.Position = 0;
@@ -1374,9 +1417,33 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         IProgress<(int done, int total)>? folderProgress = null,
         HashSet<string>? dirtyFolderPaths = null,
         bool applyMetadata = true,
-        List<(string driveId, string itemId, string relativePath)>? scannedFolders = null)
+        List<(string driveId, string itemId, string relativePath)>? scannedFolders = null,
+        IProgress<string>? activityLog = null)
     {
         var prefix = string.IsNullOrEmpty(job.TargetSubFolderPath) ? "" : job.TargetSubFolderPath + "/";
+
+        // Folders have no result row of their own, so a failed metadata write or permission copy used
+        // to vanish: the error strings were discarded and the exceptions swallowed, while the wizard
+        // reported "Folder metadata updated". Surface them in the activity log instead — the first few
+        // individually, then a count — so a library-wide problem is visible without flooding the feed.
+        int folderIssueCount = 0;
+        void ReportFolderIssue(string path, string what, string? detail)
+        {
+            if (detail == null) return;
+            int n = Interlocked.Increment(ref folderIssueCount);
+            if (n <= 5) activityLog?.Report(Loc.T("Svc_FolderIssue", path, what, detail));
+            else if (n == 6) activityLog?.Report(Loc.T("Svc_FolderIssueMore"));
+        }
+        void ReportFolderPermission(string path, PermissionCopyResult perm)
+        {
+            if (perm.Error != null) ReportFolderIssue(path, Loc.T("Svc_FolderIssuePermissions"), perm.Error);
+            else if (perm.SkippedPrincipals.Count > 0)
+                ReportFolderIssue(path, Loc.T("Svc_FolderIssuePermissions"),
+                    Loc.T("Svc_PermSkipped", perm.SkippedPrincipals.Count, string.Join(", ", perm.SkippedPrincipals)));
+            else if (perm.FailedRoles is { Count: > 0 })
+                ReportFolderIssue(path, Loc.T("Svc_FolderIssuePermissions"),
+                    Loc.T("Svc_PermFailed", perm.FailedRoles.Count, string.Join(", ", perm.FailedRoles.Take(3))));
+        }
 
         // Folder color is written via the path-based foldercoloring endpoint, so this pass needs the
         // target library's server-relative URL to build each folder's path. Resolved once per job
@@ -1418,11 +1485,18 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             {
                 // Folder, not a file — opt into the folder-color read (see GetFileMetadataAsync).
                 var rootMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId, includeFolderColor: true);
-                await StampColorIfAnyAsync(rootMeta, prefix + job.SourceName);
-                await spService.ApplyFileMetadataAsync(job.TargetDriveId, rootTargetId, job.TargetSiteId, rootMeta);
+                var rootPath = prefix + job.SourceName;
+                await StampColorIfAnyAsync(rootMeta, rootPath);
+                // Same ordering rule as the file path (see CopyCurrentVersionAsync): the Graph
+                // fileSystemInfo PATCH re-stamps the item as the migrating account, so it runs FIRST and
+                // the author/editor/date stamp runs last — the old Apply→Patch order left every folder's
+                // Modified By set to the copying account.
                 if (rootMeta.ModifiedDateTime.HasValue)
-                    await spService.PatchFileSystemDateAsync(job.TargetDriveId, rootTargetId,
-                        rootMeta.ModifiedDateTime.Value, rootMeta.CreatedDateTime);
+                    ReportFolderIssue(rootPath, Loc.T("Svc_FolderIssueDates"),
+                        await spService.PatchFileSystemDateAsync(job.TargetDriveId, rootTargetId,
+                            rootMeta.ModifiedDateTime.Value, rootMeta.CreatedDateTime));
+                ReportFolderIssue(rootPath, Loc.T("Svc_FolderIssueMetadata"),
+                    await spService.ApplyFileMetadataAsync(job.TargetDriveId, rootTargetId, job.TargetSiteId, rootMeta));
             }
 
             if (copyPermissions && permissionService != null && permissionResults != null)
@@ -1442,11 +1516,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             hasUniquePermissions: hasUnique,
                             job.SourceName, ct);
                         if (perm.HasActivity)
+                        {
                             AddPermissionRow(permissionResults, perm, null); // folder result — no matching file row
+                            ReportFolderPermission(prefix + job.SourceName, perm);
+                        }
                     }
                 }
                 catch (OperationCanceledException) { throw; }
-                catch { /* non-fatal */ }
+                catch (Exception ex) { ReportFolderIssue(prefix + job.SourceName, Loc.T("Svc_FolderIssuePermissions"), ex.Message); }
             }
 
             if (folderDone != null) Interlocked.Increment(ref folderDone[0]);
@@ -1505,10 +1582,13 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     // Folder, not a file — opt into the folder-color read (see GetFileMetadataAsync).
                     var meta = await spService.GetFileMetadataAsync(driveId, itemId, includeFolderColor: true);
                     await StampColorIfAnyAsync(meta, targetPath);
-                    await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetFolderId, job.TargetSiteId, meta);
+                    // PATCH first, author/editor/date stamp last — see the root-folder note above.
                     if (meta.ModifiedDateTime.HasValue)
-                        await spService.PatchFileSystemDateAsync(job.TargetDriveId, targetFolderId,
-                            meta.ModifiedDateTime.Value, meta.CreatedDateTime);
+                        ReportFolderIssue(targetPath, Loc.T("Svc_FolderIssueDates"),
+                            await spService.PatchFileSystemDateAsync(job.TargetDriveId, targetFolderId,
+                                meta.ModifiedDateTime.Value, meta.CreatedDateTime));
+                    ReportFolderIssue(targetPath, Loc.T("Svc_FolderIssueMetadata"),
+                        await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetFolderId, job.TargetSiteId, meta));
                 }
 
                 if (copyPermissions && permissionService != null && permissionResults != null)
@@ -1528,11 +1608,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 hasUniquePermissions: hasUnique,
                                 System.IO.Path.GetFileName(relativePath), innerCt);
                             if (perm.HasActivity)
+                            {
                                 AddPermissionRow(permissionResults, perm, null); // folder result — no matching file row
+                                ReportFolderPermission(targetPath, perm);
+                            }
                         }
                     }
                     catch (OperationCanceledException) { throw; }
-                    catch { /* non-fatal */ }
+                    catch (Exception ex) { ReportFolderIssue(targetPath, Loc.T("Svc_FolderIssuePermissions"), ex.Message); }
                 }
 
                 if (folderDone != null) Interlocked.Increment(ref folderDone[0]);
@@ -1581,6 +1664,15 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         SourcePath = job.SourceDisplayPath,
         TargetPath = job.TargetDisplayPath
     };
+
+    // Records that a file's permissions could NOT be copied (a lookup or call failed) on its own row.
+    // The file's content copy is unaffected, so its Status is left alone — only the Permissions
+    // column shows the failure, instead of the old silent skip that read as a clean Success.
+    private static void MarkPermissionFailure(CopyResult row, string detail)
+    {
+        row.PermissionStatus  = CopyStatus.Failed;
+        row.PermissionDetails = detail;
+    }
 
     // Stamps the permission outcome onto the caller's own row when it has one (every per-FILE call
     // site already holds its CopyResult in scope — no need to search for it). Pass null for

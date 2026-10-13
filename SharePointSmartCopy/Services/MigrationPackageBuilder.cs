@@ -27,7 +27,26 @@ public class MigrationPackageBuilder
         // Mutable so callers can free the blob bytes after upload — keeping every
         // encrypted version of every file in RAM for the whole batch causes OOM
         // on large libraries. Null after the blob is uploaded.
+        // In-memory form: [16-byte IV][ciphertext]. Used for every version below the spill threshold.
         public byte[]? EncryptedContent { get; set; }
+
+        // Streamed form, used instead of EncryptedContent for very large versions: the ciphertext
+        // (WITHOUT the IV) lives in a delete-on-close temp file, so a multi-GB version never has to be
+        // held in memory — nor fit in a byte[] (2 GB). The IV and the blob's MD5 (SPMI requires one for
+        // every content blob) are computed while encrypting and kept alongside.
+        public Stream? EncryptedStream { get; set; }
+        public byte[]? Iv { get; set; }
+        public byte[]? ContentMd5 { get; set; }
+
+        // Frees whichever form this version holds. Safe to call more than once. Disposing the temp-file
+        // stream deletes the file (FileOptions.DeleteOnClose).
+        public void ReleaseContent()
+        {
+            EncryptedContent = null;
+            var stream = EncryptedStream;
+            EncryptedStream = null;
+            try { stream?.Dispose(); } catch { /* best effort */ }
+        }
     }
 
     public record FileEntry(
@@ -90,8 +109,9 @@ public class MigrationPackageBuilder
     // manifest never references streams that were not uploaded.
     public void RemoveLastFile()
     {
-        if (_files.Count > 0)
-            _files.RemoveAt(_files.Count - 1);
+        if (_files.Count == 0) return;
+        foreach (var v in _files[^1].Versions) v.ReleaseContent();
+        _files.RemoveAt(_files.Count - 1);
     }
 
     // Adds a file with all its versions to the package.
@@ -102,7 +122,8 @@ public class MigrationPackageBuilder
         FileMetadata fileMetadata,
         List<(DriveItemVersion version, Stream content)> versionStreams,
         string? existingFileId = null,
-        Dictionary<string, string>? customFields = null)
+        Dictionary<string, string>? customFields = null,
+        CancellationToken cancellationToken = default)
     {
         var fileId = !string.IsNullOrEmpty(existingFileId)
             ? existingFileId.ToUpperInvariant()
@@ -113,13 +134,32 @@ public class MigrationPackageBuilder
         var listItemId = fileId;
         var entries    = new List<VersionEntry>();
 
+        try
+        {
         for (int i = 0; i < versionStreams.Count; i++)
         {
             var (version, content) = versionStreams[i];
             bool isLast = i == versionStreams.Count - 1;
 
-            var streamId              = Guid.NewGuid().ToString("D").ToUpperInvariant();
-            var (encrypted, origSize) = await EncryptStreamAsync(content, _encryptionKey);
+            var streamId = Guid.NewGuid().ToString("D").ToUpperInvariant();
+            byte[]? encrypted = null;
+            Stream? encryptedStream = null;
+            byte[]? iv = null, md5 = null;
+            long origSize;
+            if (content is FileStream)
+            {
+                // A spilled large version (see MigrationJobService): stream it through AES into a temp
+                // file instead of materializing plaintext + ciphertext as two giant arrays.
+                (encryptedStream, iv, md5, origSize) =
+                    await EncryptStreamToTempFileAsync(content, _encryptionKey, cancellationToken);
+                // Only the ciphertext is needed from here — free the plaintext spill file right away
+                // instead of holding it until the whole file's other versions are done.
+                await content.DisposeAsync();
+            }
+            else
+            {
+                (encrypted, origSize) = await EncryptStreamAsync(content, _encryptionKey);
+            }
             var rawId = version.Id ?? (i + 1).ToString();
             var label = rawId.Contains('.') ? rawId : rawId + ".0";
             var modified  = version.LastModifiedDateTime ?? fileMetadata.ModifiedDateTime ?? DateTimeOffset.UtcNow;
@@ -136,7 +176,14 @@ public class MigrationPackageBuilder
                 AuthorEmail:       author,
                 ModifiedByEmail:   editor,
                 Size:              origSize)
-            { EncryptedContent = encrypted });
+            { EncryptedContent = encrypted, EncryptedStream = encryptedStream, Iv = iv, ContentMd5 = md5 });
+        }
+        }
+        catch
+        {
+            // A later version failed — free the temp files already produced for earlier ones.
+            foreach (var e in entries) e.ReleaseContent();
+            throw;
         }
 
         // Pre-register all user emails so UserGroup.xml is fully populated before Manifest.xml is built
@@ -702,6 +749,105 @@ public class MigrationPackageBuilder
         // GetBuffer() returns the internal array without copying it; ToArray() would allocate a second
         // full-size copy of the plaintext, doubling peak memory per version (an OOM risk on large files).
         return (AesEncrypt(ms.GetBuffer(), (int)size, key), size);
+    }
+
+    // Streams plaintext through AES-256-CBC (PKCS7, random IV — identical parameters to AesEncrypt) into
+    // a delete-on-close temp file, computing the MD5 of the CIPHERTEXT as it is written. That is exactly
+    // what the in-memory path hashes (MD5 over the bytes after the 16-byte IV prefix), so SPMI validates
+    // the blob the same way. Peak memory is one 1 MB buffer however large the version is.
+    // The returned stream holds ciphertext only (no IV prefix), is positioned at 0, and owns the temp
+    // file — disposing it deletes the file.
+    private static async Task<(FileStream Stream, byte[] Iv, byte[] Md5, long PlainSize)> EncryptStreamToTempFileAsync(
+        Stream plaintext, byte[] key, CancellationToken ct)
+    {
+        using var aes = Aes.Create();
+        aes.Key = key;
+        aes.GenerateIV();
+        var iv = aes.IV;
+
+        var temp = new FileStream(
+            Path.Combine(Path.GetTempPath(), $"smartcopy-{Guid.NewGuid():N}.enc"),
+            FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 1 << 16,
+            FileOptions.DeleteOnClose | FileOptions.Asynchronous);
+        try
+        {
+            using var md5 = System.Security.Cryptography.IncrementalHash.CreateHash(System.Security.Cryptography.HashAlgorithmName.MD5);
+            var sink = new HashingWriteStream(temp, md5);
+            long plainSize = 0;
+            if (plaintext.CanSeek) plaintext.Position = 0;
+
+            using (var crypto = new CryptoStream(sink, aes.CreateEncryptor(), CryptoStreamMode.Write, leaveOpen: true))
+            {
+                var buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(1 << 20);
+                try
+                {
+                    int read;
+                    while ((read = await plaintext.ReadAsync(buffer.AsMemory(), ct)) > 0)
+                    {
+                        await crypto.WriteAsync(buffer.AsMemory(0, read), ct);
+                        plainSize += read;
+                    }
+                }
+                finally { System.Buffers.ArrayPool<byte>.Shared.Return(buffer); }
+                await crypto.FlushFinalBlockAsync(ct);
+            }
+            await temp.FlushAsync(ct);
+
+            // The file must hold exactly the ciphertext length AES-CBC/PKCS7 defines for this input —
+            // anything else means a short write, and SPMI would reject the blob.
+            // (Computed in long arithmetic: PKCS7 always pads to the NEXT multiple of 16, so a multiple
+            // of 16 still gains a full block. GetCiphertextLengthCbc takes an int — the very limit
+            // this path exists to lift.)
+            long expectedCipherLength = (plainSize / 16 + 1) * 16;
+            if (temp.Length != expectedCipherLength)
+                throw new CryptographicException("Streamed CBC encryption wrote an unexpected number of bytes.");
+
+            var hash = md5.GetHashAndReset();
+            temp.Position = 0;
+            return (temp, iv, hash, plainSize);
+        }
+        catch
+        {
+            temp.Dispose(); // deletes the partial file
+            throw;
+        }
+    }
+
+    // Write-only pass-through that feeds every byte to a hash on its way to the inner stream. Does NOT
+    // own the inner stream (the encrypted temp file is kept and uploaded from afterwards).
+    private sealed class HashingWriteStream(Stream inner, System.Security.Cryptography.IncrementalHash hash) : Stream
+    {
+        public override bool CanRead  => false;
+        public override bool CanSeek  => false;
+        public override bool CanWrite => true;
+        public override long Length   => throw new NotSupportedException();
+        public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+        public override void Flush() => inner.Flush();
+        public override Task FlushAsync(CancellationToken cancellationToken) => inner.FlushAsync(cancellationToken);
+        public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            hash.AppendData(buffer, offset, count);
+            inner.Write(buffer, offset, count);
+        }
+
+        public override void Write(ReadOnlySpan<byte> buffer)
+        {
+            hash.AppendData(buffer);
+            inner.Write(buffer);
+        }
+
+        public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            hash.AppendData(buffer.Span);
+            await inner.WriteAsync(buffer, cancellationToken);
+        }
+
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+            => WriteAsync(buffer.AsMemory(offset, count), cancellationToken).AsTask();
     }
 
     private byte[] EncryptXml(XDocument doc)

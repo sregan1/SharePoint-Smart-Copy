@@ -17,7 +17,9 @@ public static class ReportHistoryService
         Converters    = { new JsonStringEnumConverter() }
     };
 
-    public static void Save(SavedReport report)
+    // Returns true when the report reached disk — callers that are about to discard another copy of
+    // the same data (the crash journal) must only do so on true.
+    public static bool Save(SavedReport report)
     {
         try
         {
@@ -25,14 +27,19 @@ public static class ReportHistoryService
             File.WriteAllText(
                 Path.Combine(ReportsDir, $"report_{report.Id}.json"),
                 JsonSerializer.Serialize(report, _options));
+        }
+        catch { return false; }
 
+        try
+        {
             // Keep at most 50 reports; delete oldest by filename (which sorts chronologically)
             foreach (var old in Directory.GetFiles(ReportsDir, "report_*.json")
                                          .OrderByDescending(f => f)
                                          .Skip(50))
                 File.Delete(old);
         }
-        catch { /* non-critical */ }
+        catch { /* pruning is non-critical */ }
+        return true;
     }
 
     // Reads via a FileStream rather than File.ReadAllText: the latter decodes the whole file to a

@@ -638,4 +638,10 @@
   <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>存储一个或多个 Azure AD 应用注册。单击“保存”时所选的注册将成为活动注册。每个应用都需要委托权限 Sites.ReadWrite.All 和 Files.ReadWrite.All,并需要管理员同意。</value></data>
   <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>设置: portal.azure.com → Azure Active Directory → 应用注册 → 新注册。添加移动/桌面重定向 URI http://localhost。在 API 权限下,添加 Graph 委托权限: Sites.ReadWrite.All + Files.ReadWrite.All,然后授予管理员同意。</value></data>
   <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>源库没有受支持类型的自定义列。支持的类型: 文本、备注、数字、布尔、日期、选择、多选、人员、托管元数据。不支持查阅列。</value></data>
+  <data name="Ui_ProgressItems" xml:space="preserve"><value>{0} / {1} 个项目已处理</value></data>
+  <data name="Ui_ProgressChecking" xml:space="preserve"><value>正在检查文件… {0} / {1}</value></data>
+  <data name="Ui_ProgressPackaged" xml:space="preserve"><value>{0:N0} / {1:N0} 个文件已打包待导入</value></data>
+  <data name="Ui_SuccessCount" xml:space="preserve"><value>成功 ({0})</value></data>
+  <data name="Ui_FailedCount" xml:space="preserve"><value>失败 ({0})</value></data>
+  <data name="Ui_SkippedCount" xml:space="preserve"><value>已跳过 ({0})</value></data>
 </root>

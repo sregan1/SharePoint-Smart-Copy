@@ -638,4 +638,10 @@
   <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>Сохраните одну или несколько регистраций приложений Azure AD. Регистрация, выбранная при нажатии «Сохранить», становится активной. Каждому приложению нужны делегированные разрешения Sites.ReadWrite.All и Files.ReadWrite.All с согласием администратора.</value></data>
   <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Настройка: portal.azure.com → Azure Active Directory → Регистрация приложений → Новая регистрация. Добавьте URI перенаправления для мобильных и классических приложений: http://localhost. В разделе «Разрешения API» добавьте делегированные разрешения Graph: Sites.ReadWrite.All + Files.ReadWrite.All, затем предоставьте согласие администратора.</value></data>
   <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>В исходной библиотеке нет пользовательских столбцов поддерживаемого типа. Поддерживаемые типы: Текст, Примечание, Число, Логический, Дата, Выбор, Множественный выбор, Пользователь, Управляемые метаданные. Столбцы подстановки не поддерживаются.</value></data>
+  <data name="Ui_ProgressItems" xml:space="preserve"><value>{0} из {1} элементов обработано</value></data>
+  <data name="Ui_ProgressChecking" xml:space="preserve"><value>Проверка файлов… {0} из {1}</value></data>
+  <data name="Ui_ProgressPackaged" xml:space="preserve"><value>{0:N0} / {1:N0} файлов упаковано для импорта</value></data>
+  <data name="Ui_SuccessCount" xml:space="preserve"><value>Успешно ({0})</value></data>
+  <data name="Ui_FailedCount" xml:space="preserve"><value>Сбой ({0})</value></data>
+  <data name="Ui_SkippedCount" xml:space="preserve"><value>Пропущено ({0})</value></data>
 </root>

@@ -57,6 +57,10 @@ public sealed class TenantRouter
         return Default;
     }
 
+    // The sign-in registered for this host, or null if none (never guesses, never throws).
+    public AuthService? AuthForHostOrNull(string siteUrlOrHost)
+        => _hosts.TryGetValue(HostOf(siteUrlOrHost), out var auth) ? auth : null;
+
     public AuthService ForDrive(string driveId)
     {
         if (_drives.TryGetValue(driveId, out var auth)) return auth;

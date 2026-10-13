@@ -39,6 +39,9 @@ public class ColumnMapping
               or SupportedFieldType.Choice or SupportedFieldType.MultiChoice;
 
         if (IsTexty(source) && IsTexty(target)) return true;
+        // A currency amount is a number with a currency format.
+        if (source is SupportedFieldType.Number or SupportedFieldType.Currency &&
+            target is SupportedFieldType.Number or SupportedFieldType.Currency) return true;
         if (ColumnDefinition.IsUserType(source) && ColumnDefinition.IsUserType(target)) return true;
         if (ColumnDefinition.IsTaxonomyType(source) && ColumnDefinition.IsTaxonomyType(target)) return true;
         return false;

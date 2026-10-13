@@ -150,7 +150,7 @@
   <data name="Ui_Error" xml:space="preserve"><value>Error</value></data>
   <data name="Ui_SelectARunOnThe" xml:space="preserve"><value>Select a run on the left to see its file-by-file results.</value></data>
   <data name="Ui_DeleteRun" xml:space="preserve"><value>Delete Run</value></data>
-  <data name="Ui_AzureAppRegistrations" xml:space="preserve"><value>Azure App Registrations</value></data>
+  <data name="Ui_AzureAppRegistrations" xml:space="preserve"><value>App Registrations</value></data>
   <data name="Ui_Registrations" xml:space="preserve"><value>Registrations</value></data>
   <data name="Ui_Add" xml:space="preserve"><value>Add</value></data>
   <data name="Ui_Remove" xml:space="preserve"><value>Remove</value></data>
@@ -635,14 +635,37 @@
   <data name="Ui2_CustomColumnsAuto" xml:space="preserve"><value>All custom column values are copied automatically.</value></data>
   <data name="Ui2_FoldersEnumerated" xml:space="preserve"><value>Folders are recursively enumerated during the copy.</value></data>
   <data name="Ui2_FilesItemsEnumerated" xml:space="preserve"><value>Files in each library and items in each list are enumerated at copy time.</value></data>
-  <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>Store one or more Azure AD app registrations. The one selected when you click Save becomes the active registration. Each app needs delegated permissions Sites.ReadWrite.All and Files.ReadWrite.All, with admin consent.</value></data>
-  <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Setup: portal.azure.com → Azure Active Directory → App registrations → New registration. Add a Mobile/Desktop redirect URI of http://localhost. Under API permissions, add Graph delegated: Sites.ReadWrite.All + Files.ReadWrite.All, then grant admin consent.</value></data>
-  <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>The source library has no custom columns of a supported type. Supported types: Text, Note, Number, Boolean, Date, Choice, Multi-choice, Person, Managed Metadata. Lookup columns are not supported.</value></data>
+  <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>Store one or more Microsoft Entra ID app registrations. The one selected when you click Save is used to sign in. Each app needs delegated permissions Sites.ReadWrite.All and Files.ReadWrite.All, with admin consent.</value></data>
+  <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Setup: portal.azure.com → Microsoft Entra ID → App registrations → New registration. Add a Mobile/Desktop redirect URI of http://localhost. Under API permissions, add Graph delegated: Sites.ReadWrite.All + Files.ReadWrite.All, then grant admin consent.</value></data>
+  <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>The source library has no custom columns of a supported type. Supported types: Text, Note, Number, Currency, Boolean, Date, Choice, Multi-choice, Hyperlink, Person, Lookup, Managed Metadata (same tenant only). Image and Location columns are not supported.</value></data>
   <data name="Ui_SingleTenant" xml:space="preserve"><value>Single tenant</value></data>
   <data name="Ui_MultiTenant" xml:space="preserve"><value>Multi-tenant</value></data>
   <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Copy between two different Microsoft 365 tenants. You sign in separately to the source and to the target. Choose the target's app registration in Settings.</value></data>
   <data name="Ui_TargetRegistration" xml:space="preserve"><value>Target registration:</value></data>
   <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Multi-tenant mode: the app registration used to sign in to the target tenant. "Same as source" reuses the source registration, which must then be a multi-tenant app.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Resume / run again</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Reconnects and re-runs this selection with Copy if newer, so files that were already copied are skipped and only what is missing or changed is transferred.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>This run has no saved selection to resume (only file-selection runs record one).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>A copy is already running. Finish or cancel it first.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Could not resume: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} interrupted run(s) recovered. See History.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Resuming: {0} item(s) restored from the earlier run, with Copy if newer selected. Review the options, then click Next. (Custom column mappings are not restored.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>INTERRUPTED — the app closed before this run finished. Of the items that had finished: {0} succeeded, {1} failed, {2} skipped, {3} cancelled  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Export diagnostics…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Saves a zip with recent logs, system info and your settings with organization details removed — to attach to a bug report. It does not include copy reports or file names.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Diagnostics saved to {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Could not save diagnostics: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Content is identical (only SharePoint-managed parts differ), but the Modified date was not preserved.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Permissions not copied: could not resolve the item's SharePoint IDs.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Permissions not copied: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Folder "{0}": {1} not applied — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>More folders had problems like the above; later ones are not listed individually.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>permissions</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>dates</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>author / editor</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} kept — target already up to date)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>WARNING: reading metadata from the source ({0}) failed: {1}. Items from it may be copied WITHOUT their custom column values or unique permissions. Re-run once the problem clears (Overwrite or If newer re-applies them).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>WARNING: could not find the source list for a library, so its permissions will NOT be copied.</value></data>
   <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>The SharePoint host '{0}' is not associated with a connected tenant. Reconnect the source and target sites and try again.</value></data>
   <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Cross-tenant copy: managed-metadata (taxonomy) column values are not copied, and OneNote notebooks / document sets cannot be copied between tenants yet. Identities are mapped using your Identity mapping settings; anyone who cannot be resolved in the target is skipped.</value></data>
   <data name="Ui_IdentityMapping" xml:space="preserve"><value>Identity mapping</value></data>
@@ -655,4 +678,81 @@
   <data name="VM_SameTenantError" xml:space="preserve"><value>Source and target are on the same tenant. Switch to single-tenant mode for same-tenant copies.</value></data>
   <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Native folder copy (OneNote notebooks, document sets) is not supported across tenants yet.</value></data>
   <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Drive '{0}' is not associated with a connected tenant. Reconnect the source and target sites and try again.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>No app registration is set up yet. Open Settings and add your Azure app registration (its Application/Client ID) before connecting.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Sign-in was cancelled. Click Connect to try again.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>An administrator has not approved this app in this tenant yet. Ask a Global Administrator to grant admin consent for the app registration (see Setup in the User Guide).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>The app registration was not found in this tenant. Check the Client ID and Tenant ID in Settings.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>That tenant could not be found. Check the Tenant ID in Settings (use your domain, the tenant GUID, or 'common').</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>The app registration is missing the redirect address this app uses. In Azure, add the redirect URI http://localhost under 'Mobile and desktop applications'.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>The app registration is not set up for desktop sign-in. In Azure, turn on 'Allow public client flows' for the registration.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>This account is not allowed to use that app registration. Sign in with an account from the tenant that owns it, or choose a different registration in Settings.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint rejected the sign-in. Click Connect to sign in again.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>You do not have access to this site. Make sure your account can open it in a browser, and that the app was granted the Sites.ReadWrite.All permission.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>That site could not be found. Check the address — it should look like https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Details: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Connect to the source site to continue.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Select at least one item (tick a checkbox) to continue.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Connect to the target site to continue.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Choose a destination folder to continue.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Choose a destination list to continue.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Enter a name for the new list to continue.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Nothing is selected to copy.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Waiting for the copy to finish…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Source: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Target: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Your app registration changed, so you were signed out of both sites. Connect again to continue.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Stop the copy?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>A copy is in progress. Stopping it now leaves the remaining items uncopied (you can resume later from History). Stop the copy?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>A copy is still running. Closing the app will stop it and leave the remaining items uncopied (you can resume later from History). Close anyway?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Switch connection mode?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Switching between single-tenant and multi-tenant disconnects both sites, and you will need to connect again. Switch anyway?</value></data>
+  <data name="Ui_ProgressItems" xml:space="preserve"><value>{0} of {1} items processed</value></data>
+  <data name="Ui_ProgressChecking" xml:space="preserve"><value>Checking files… {0} of {1}</value></data>
+  <data name="Ui_ProgressPackaged" xml:space="preserve"><value>{0:N0} / {1:N0} files packaged for import</value></data>
+  <data name="Ui_SuccessCount" xml:space="preserve"><value>Success ({0})</value></data>
+  <data name="Ui_FailedCount" xml:space="preserve"><value>Failed ({0})</value></data>
+  <data name="Ui_SkippedCount" xml:space="preserve"><value>Skipped ({0})</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Connection:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Source app registration</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Target app registration</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Signs in to the target tenant with:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Change</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Open Settings</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• You must have read access to the source site collection.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Set up your Microsoft Entra ID app registration in Settings before connecting.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>File Options</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Library &amp; File Options</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Copying Files…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Copying Libraries…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Next</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Start Copy</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>View Report</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Enter the name of the new list to create</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>The destination list was chosen on the Target step. Go back to change it.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Set up an app registration first</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy signs in with an app registration that you create in your own Microsoft Entra ID (Azure) tenant. Open Settings, add your registration's Application (client) ID, then come back here to connect.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>More information</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Drag to make the activity feed taller or shorter</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Click to show only the failed items</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Click to show only the skipped items</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Column mapping</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Compare source &amp; target</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Open the Compare tool to check this copy against the source.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Open History</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>The selected registration is used for the source — and for both sides in single-tenant mode.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>New Registration</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Add at least one app registration.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validation</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Client ID is required for the selected registration.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Signed out. You will be prompted to sign in on the next connection.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Signed out</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Sign out failed: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Sign out</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} mapping(s) found.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} line(s) can't be read (line {1}). Each line must look like source,target.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>The source and target domains are the same, so the domain swap will change nothing.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Import CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Some override lines can't be read (line {0}). Each line must be "source,target". Fix or remove them — or start a line with # to make it a comment.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Could not save the identity mapping: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Could not read that file: {0}</value></data>
 </root>

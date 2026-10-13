@@ -638,4 +638,10 @@
   <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>Simpan satu atau beberapa pendaftaran aplikasi Azure AD. Pendaftaran yang dipilih saat Anda mengklik Simpan menjadi pendaftaran aktif. Setiap aplikasi memerlukan izin delegasi Sites.ReadWrite.All dan Files.ReadWrite.All, dengan persetujuan admin.</value></data>
   <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Penyiapan: portal.azure.com → Azure Active Directory → App registrations → New registration. Tambahkan redirect URI Mobile/Desktop http://localhost. Di API permissions, tambahkan Graph delegated: Sites.ReadWrite.All + Files.ReadWrite.All, lalu berikan persetujuan admin.</value></data>
   <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>Pustaka sumber tidak memiliki kolom kustom dengan jenis yang didukung. Jenis yang didukung: Text, Note, Number, Boolean, Date, Choice, Multi-choice, Person, Managed Metadata. Kolom Lookup tidak didukung.</value></data>
+  <data name="Ui_ProgressItems" xml:space="preserve"><value>{0} dari {1} item diproses</value></data>
+  <data name="Ui_ProgressChecking" xml:space="preserve"><value>Memeriksa file… {0} dari {1}</value></data>
+  <data name="Ui_ProgressPackaged" xml:space="preserve"><value>{0:N0} / {1:N0} file dikemas untuk impor</value></data>
+  <data name="Ui_SuccessCount" xml:space="preserve"><value>Berhasil ({0})</value></data>
+  <data name="Ui_FailedCount" xml:space="preserve"><value>Gagal ({0})</value></data>
+  <data name="Ui_SkippedCount" xml:space="preserve"><value>Dilewati ({0})</value></data>
 </root>

@@ -21,7 +21,7 @@
 
 ## 1. Overview
 
-SharePoint Smart Copy is a Windows desktop application that copies files and folders between SharePoint Online site collections, preserving full version history and metadata. Whether you are migrating content to a new site, archiving documents, or reorganising your SharePoint environment, a guided wizard handles version history, metadata preservation, and parallel transfers — no scripting or PowerShell required.
+SharePoint Smart Copy is a Windows desktop application that copies files and folders between SharePoint Online site collections, preserving full version history and metadata. Whether you are migrating content to a new site, archiving documents, or reorganizing your SharePoint environment, a guided wizard handles version history, metadata preservation, and parallel transfers — no scripting or PowerShell required.
 
 Two copy engines are available. **Migration API** mode uses SharePoint's server-side import pipeline to achieve exact version fidelity — the same version numbers, dates, and editors appear on the target as on the source. **Enhanced REST** mode calls the Graph API directly for each version, preserving dates and editors but producing version numbers that are 2× the source count due to a SharePoint REST constraint. Both modes authenticate through your existing Microsoft 365 credentials.
 
@@ -75,7 +75,7 @@ When Migration API mode is used for version history, the SharePoint API permissi
 
 ### Your Own App Registration
 
-You create and own the Azure AD app registration in your organization's tenant (see [Section 4](#4-setup--azure-app-registration)). Your IT department controls which permissions are granted, who may use the application, and can revoke access at any time through the Azure portal — with no involvement from any third party.
+You create and own the Microsoft Entra ID app registration in your organization's tenant (see [Section 4](#4-setup--azure-app-registration)). Your IT department controls which permissions are granted, who may use the application, and can revoke access at any time through the Azure portal — with no involvement from any third party.
 
 ### No External Servers or Telemetry
 
@@ -85,11 +85,11 @@ All data transfers occur directly between your computer and Microsoft's Graph AP
 
 The only data written to your local machine is:
 
-- **Application settings** (Azure AD registration IDs) — `%AppData%\SharePointSmartCopy\settings.json`
+- **Application settings** (Microsoft Entra ID registration IDs) — `%AppData%\SharePointSmartCopy\settings.json`
 - **Copy history reports** — `%AppData%\SharePointSmartCopy\Reports\` (filenames and status only, no file content)
 - **MSAL token cache** — managed by the Microsoft Authentication Library in the Windows Credential Manager
 
-> **Note:** No file content is ever written to disk by this application. All copy operations stream data directly from the source SharePoint site to the target.
+> **Note:** The application keeps no copy of your files. Content is streamed from the source SharePoint site to the target. In **Enhanced REST** mode, files of 100 MB or more (and files whose size is not known in advance) are held in a temporary file in your Windows temp folder while they transfer. That file is readable only by your Windows account and is deleted automatically as soon as the file's transfer ends. In **Migration API** mode, file content is encrypted before it is uploaded to the Azure storage container that SharePoint provides for the import.
 
 ---
 
@@ -147,7 +147,7 @@ On the **Overview** page of your new app registration, copy the **Application (c
 
 Launch SharePoint Smart Copy and click the **Settings** button (⚙) in the top-right corner of the application window.
 
-*Settings dialog — add and manage Azure AD app registrations*
+*Settings dialog — add and manage Microsoft Entra ID app registrations*
 
 1. Click **Add** to create a new registration entry.
 2. Enter a friendly **Name** for the registration, e.g. `Contoso Production`.
@@ -213,7 +213,7 @@ Configure how the copy operation should behave:
   - **Overwrite** — files with matching names are replaced unconditionally.
   - **If newer** — files are copied only when the source is more recently modified than the target. Files already up to date are recorded as Skipped.
 - **Copy versions** — when checked, SharePoint version history is copied alongside each file. Requires versioning to be enabled on the source library.
-- **Parallel copies** — controls how many files (or Migration API jobs) run simultaneously. The default of 4 is a good balance; raise to 8 or 16 on a fast connection for large batches.
+- **Parallel copies** — controls how many files (or Migration API jobs) run simultaneously. The default of 8 is a good balance; raise to 8 or 16 on a fast connection for large batches.
 - **Preserve metadata** — when checked, folder Created/Modified dates, Author/Editor, and custom folder color are copied to the target. The **Re-apply folder metadata every run** option underneath it (on by default) controls whether that repair runs for every folder on every run, or only for folders receiving new files this run — turning it off speeds up repeated incremental runs on large libraries where most files are already up to date.
 
 When **Copy versions** is enabled, two additional controls appear:
@@ -255,7 +255,7 @@ Click **Cancel** to stop the copy at any time. Files already transferred remain 
 
 ### Step 6 — Copy Report
 
-The report screen summarises the completed copy with four summary cards (a fifth, **Cancelled**, appears only if the run was stopped early):
+The report screen summarizes the completed copy with four summary cards (a fifth, **Cancelled**, appears only if the run was stopped early):
 
 *Step 6 — Copy report with summary cards and per-file results*
 
@@ -272,6 +272,29 @@ The full per-file results table is shown below the summary cards. Use the **filt
 - **← Back** — returns to Step 5 (progress screen) to review the run details, or navigate further back through the wizard
 - **Export CSV** — saves the complete report to a comma-separated file. The suggested filename is prefixed with the source and target site names (e.g. `Marketing-Archive-CopyReport_Files_....csv`); turn this off in **Settings** if you'd rather not have it
 - **Start New Copy** — begins another copy operation; your sign-in session is reused automatically
+- **Compare source & target** and **Open History** — open the Compare tool and the run history without leaving the report
+- **Failed / Skipped cards** — click a card to filter the list to just those items
+
+### Copying Between Two Tenants (Multi-tenant Mode) — Experimental
+
+On the first screen, choose **Multi-tenant** next to **Connection** when the source and the target are in **different** Microsoft 365 tenants. In the default **Single tenant** mode both sites share one sign-in, exactly as described above.
+
+> **Note:** Multi-tenant mode is new and has not yet been verified against a wide range of real tenant pairs. Try it on a small library first and check the result with a Verification Report.
+
+1. **Create an app registration in each tenant** (Section 4) and add both in **Settings**. Each tenant's administrator must grant consent for its own registration.
+2. On the first screen, choose the **Source app registration** and the **Target app registration**. You sign in to each site separately, with an account from that tenant. The title bar shows both accounts (*Source: … · Target: …*).
+3. Click **Identity mapping…** to say how people and groups in the source correspond to accounts in the target:
+   - **Source / Target email domain** — an address such as `jane@contoso.com` is written to the target as `jane@fabrikam.com`. Guest accounts (`…#EXT#…`) are not rewritten.
+   - **Overrides** — one `source,target` pair per line, for people whose names differ and for group names. A line starting with `#` is a comment. **Import CSV…** adds a file of pairs. The dialog shows how many pairs it understood and which lines it could not read.
+4. Authors, editors, person columns and permissions are written using that mapping. Anyone who cannot be found in the target is skipped and listed in the report.
+
+What differs from a same-tenant copy:
+
+- **Managed-metadata (taxonomy) columns and their values are not copied** — term IDs only exist in the tenant that owns the term store.
+- **OneNote notebooks and document sets cannot be copied** between tenants yet; they are reported as failed with an explanation.
+- **Entra groups do not carry over** unless you map them with an override.
+- The source and target must be on **different SharePoint hosts**. For two sites in the same tenant, use Single tenant mode.
+- Switching between Single tenant and Multi-tenant disconnects both sites (you are asked first).
 
 ---
 
@@ -342,9 +365,12 @@ The left panel lists previous runs in reverse chronological order. Each entry sh
 With a run selected, the right panel shows the summary cards and the complete per-file results table for that run. Available actions:
 
 - **Export CSV** — saves the selected run's per-file report to a comma-separated file, with the same source/target site name filename prefix as Step 6 (see Settings to turn it off)
+- **Resume / run again** — reconnects and re-runs the selected run's selection with **Copy if newer**, so files that were already copied are skipped and only what is missing or changed is transferred. Available for runs that copied a file selection. Custom column mappings are not restored; set them again on the Options step if you used them.
 - **Verify** — runs an independent Verification Report for the selected run (see below)
 - **Delete Run** — permanently removes the selected run from the history
 - **Close** — returns to the main application window
+
+A run that was cut short — the app was closed, crashed or lost power mid-copy — is recovered the next time you start the app and appears here marked **INTERRUPTED**, with the items that had finished. Use **Resume / run again** to carry on.
 
 > **Note:** History is capped at 50 entries. When the limit is reached, the oldest entries are automatically pruned. All history is stored locally in `%AppData%\SharePointSmartCopy\Reports\` — it is never uploaded or shared.
 
@@ -400,7 +426,7 @@ Connect a **Source** and a **Target** independently, the same way you would in t
 
 ### Migration API — Permission Denied
 
-- Ensure `AllSites.FullControl` delegated permission is added to the Azure AD app registration and admin consent has been granted.
+- Ensure `AllSites.FullControl` delegated permission is added to the Microsoft Entra ID app registration and admin consent has been granted.
 - Ensure the signed-in account is listed in **Site Settings** → **Site Collection Administrators** on the target site. Tenant-level SharePoint Admin or Global Admin roles are not sufficient on their own.
 - If you cannot obtain these permissions, switch to **Enhanced REST** mode — it does not require admin rights.
 
@@ -430,6 +456,14 @@ Connect a **Source** and a **Target** independently, the same way you would in t
 ### Token expired or re-authentication required
 
 Access tokens are valid for approximately one hour. If the application has been idle, click **Connect** on Step 1 — MSAL will attempt a silent token refresh. If silent refresh fails, your browser will open for re-authentication. Previous selections and settings are preserved.
+
+### The connection error tells me to open Settings
+
+Connection problems that come from the app registration (no Client ID yet, the wrong Tenant ID, a missing redirect address, consent not granted) are explained in plain language under the **Connect** button, with an **Open Settings** button when the fix is there. The technical detail is kept in brackets at the end of the message — include it if you ask for help.
+
+### Sending diagnostics to support
+
+In **Settings**, click **Export diagnostics…** to save a zip with recent logs, basic system information and your settings with organization details removed. It does not include copy reports, file names or site URLs.
 
 ### Settings not persisted
 

@@ -21,6 +21,12 @@
                       UseAeroCaptionButtons="False"/>
     </WindowChrome.WindowChrome>
 
+    <!-- Progress on the taskbar icon: copies run for hours, usually behind other windows. -->
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo ProgressState="{Binding TaskbarProgressState}"
+                         ProgressValue="{Binding TaskbarProgressValue}"/>
+    </Window.TaskbarItemInfo>
+
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
         <conv:BoolToVisibilityConverter x:Key="InvBoolToVis" Invert="True"/>
@@ -291,7 +297,7 @@
                           PreviewMouseLeftButtonDown="SourceCheckBox_PreviewClick"
                           VerticalAlignment="Center" Margin="0,0,4,0"/>
                 <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
-                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0"/>
+                           Foreground="{DynamicResource AccentTextBrush}" Margin="0,0,6,0"/>
                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
                 <TextBlock Text="{Binding SizeDisplay}" Foreground="{DynamicResource TextTertiaryBrush}" FontSize="11"
                            VerticalAlignment="Center" Margin="8,0,0,0"/>
@@ -305,7 +311,7 @@
                                   ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal" Margin="2,2">
                 <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
-                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0"/>
+                           Foreground="{DynamicResource AccentTextBrush}" Margin="0,0,6,0"/>
                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
                 <ProgressBar IsIndeterminate="True" Width="60" Height="4" Margin="8,0,0,0"
                              Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"/>
@@ -356,12 +362,12 @@
                                    Foreground="White" VerticalAlignment="Center"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding SignedInUser}" Foreground="White" FontSize="12"
+                        <!-- Single tenant: the account. Multi-tenant: "Source: a@x · Target: b@y". -->
+                        <TextBlock Text="{Binding HeaderAccountsText}" Foreground="White" FontSize="12"
                                    VerticalAlignment="Center" Margin="0,0,12,0"
-                                   Visibility="{Binding SignedInUser, Converter={StaticResource NotNullToVis}}"/>
-                        <TextBlock Foreground="White" FontSize="12" VerticalAlignment="Center" Margin="0,0,12,0"
-                                   Text="{Binding TargetSignedInUser, StringFormat='→ {0}'}"
-                                   Visibility="{Binding TargetSignedInUser, Converter={StaticResource NotNullToVis}}"/>
+                                   TextTrimming="CharacterEllipsis" MaxWidth="440"
+                                   ToolTip="{Binding HeaderAccountsText}"
+                                   Visibility="{Binding HeaderAccountsText, Converter={StaticResource NotNullToVis}}"/>
                         <Button Style="{StaticResource AppBarBtn}" Margin="0,0,8,0" Click="HistoryButton_Click"
                                 WindowChrome.IsHitTestVisibleInChrome="True">
                             <StackPanel Orientation="Horizontal">
@@ -450,9 +456,29 @@
             <StackPanel Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=0}"
                         MaxWidth="560" HorizontalAlignment="Center" Margin="0,32,0,0">
 
+                <!-- First run: nothing can connect until an app registration exists. -->
+                <Border Style="{StaticResource InfoBanner}" Padding="14,10" Margin="0,0,0,16"
+                        Visibility="{Binding IsNotConfigured, Converter={StaticResource BoolToVis}}">
+                    <StackPanel>
+                        <TextBlock Text="{loc:Loc Ui_FirstRunTitle}" FontWeight="SemiBold" FontSize="13"/>
+                        <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,8"
+                                   Foreground="{DynamicResource TextSecondaryBrush}" Text="{loc:Loc Ui_FirstRunBody}"/>
+                        <Button Content="{loc:Loc Ui_OpenSettings}" Style="{StaticResource PrimaryBtn}"
+                                HorizontalAlignment="Left" Click="OpenSettings_Click"/>
+                    </StackPanel>
+                </Border>
+                <!-- Persistent notice (e.g. the registration changed and both sites were disconnected). -->
+                <Border Style="{StaticResource WarningBanner}" Margin="0,0,0,16"
+                        Visibility="{Binding ConnectionNotice, Converter={StaticResource NotNullToVis}}">
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding ConnectionNotice}"/>
+                </Border>
+
                 <!-- Connection mode. Single tenant = one shared sign-in (original behavior);
                      Multi-tenant = source and target each sign in with their own registration. -->
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <TextBlock Text="{loc:Loc Ui_ConnectionLabel}" FontSize="12" FontWeight="SemiBold"
+                               VerticalAlignment="Center" Margin="0,0,10,0"
+                               Foreground="{DynamicResource TextSecondaryBrush}"/>
                     <RadioButton Style="{StaticResource FilterChip}" GroupName="ConnectionMode"
                                  Content="{loc:Loc Ui_SingleTenant}"
                                  IsChecked="{Binding IsSingleTenant, Mode=TwoWay}"
@@ -466,6 +492,26 @@
                     <TextBlock TextWrapping="Wrap" FontSize="12"
                                Foreground="{DynamicResource TextTertiaryBrush}"
                                Text="{loc:Loc Ui_MultiTenantHint}"/>
+                    <!-- Which app registration each side signs in with: chosen here, where it matters. -->
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{loc:Loc Ui_SourceRegistration}" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox ItemsSource="{Binding RegistrationNames}"
+                                      SelectedIndex="{Binding SourceRegistrationIndex, Mode=TwoWay}"
+                                      IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="{loc:Loc Ui_TargetRegistrationLabel}" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox ItemsSource="{Binding TargetRegistrationChoices}"
+                                      SelectedIndex="{Binding TargetRegistrationChoiceIndex, Mode=TwoWay}"
+                                      IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        </StackPanel>
+                    </Grid>
                     <Button Content="{loc:Loc Ui_IdentityMappingButton}" Style="{StaticResource LinkBtn}"
                             Click="IdentityMapping_Click" HorizontalAlignment="Left" Margin="0,6,0,0" Padding="0"
                             FontSize="12"/>
@@ -481,42 +527,61 @@
                         <ColumnDefinition Width="8"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding SourceUrl, UpdateSourceTrigger=PropertyChanged}"
+                    <!-- URLs are always left-to-right, even in right-to-left languages. Enter connects. -->
+                    <TextBox x:Name="SourceUrlBox" Grid.Column="0" FlowDirection="LeftToRight"
+                             Text="{Binding SourceUrl, UpdateSourceTrigger=PropertyChanged}"
                              Tag="https://contoso.sharepoint.com/sites/source"
-                             Style="{StaticResource WatermarkTextBox}"/>
+                             Style="{StaticResource WatermarkTextBox}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Return" Command="{Binding ConnectSourceCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
                     <Grid Grid.Column="2">
                         <Button Content="{loc:Loc Ui_Connect}" Style="{StaticResource PrimaryBtn}"
                                 Command="{Binding ConnectSourceCommand}"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"
                                 Visibility="{Binding IsConnectingSource, Converter={StaticResource InvBoolToVis}}"/>
-                        <Button Content="{loc:Loc Ui_Disconnect}" Style="{StaticResource DangerBtn}"
+                        <Button Content="{loc:Loc Ui_Cancel}" Style="{StaticResource DangerBtn}"
                                 Command="{Binding CancelConnectSourceCommand}"
                                 Visibility="{Binding IsConnectingSource, Converter={StaticResource BoolToVis}}"/>
                     </Grid>
                 </Grid>
 
-                <StackPanel Orientation="Horizontal" Margin="0,12,0,0"
+                <StackPanel Margin="0,12,0,0"
                             Visibility="{Binding SourceStatus, Converter={StaticResource NotNullToVis}}">
-                    <TextBlock Text="{Binding SourceStatus}" FontSize="13" VerticalAlignment="Center"/>
-                    <TextBlock Text=" · " Foreground="{DynamicResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
-                               Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
-                    <Button Content="{loc:Loc Ui_Disconnect}" Style="{StaticResource LinkBtn}"
-                            Command="{Binding DisconnectSourceCommand}"
-                            Foreground="{DynamicResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
-                            Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
+                    <!-- Normal status ("Connecting…", "Connected as …") — wraps instead of being clipped. -->
+                    <WrapPanel Visibility="{Binding SourceHasError, Converter={StaticResource InvBoolToVis}}">
+                        <TextBlock Text="{Binding SourceStatus}" FontSize="13" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                        <TextBlock Text=" · " Foreground="{DynamicResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
+                                   Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
+                        <Button Content="{loc:Loc Ui_Disconnect}" Style="{StaticResource LinkBtn}"
+                                Command="{Binding DisconnectSourceCommand}"
+                                Foreground="{DynamicResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
+                                Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
+                    </WrapPanel>
+                    <!-- A failed connect: plain-language advice, fully visible, with a way to fix it. -->
+                    <Border Style="{StaticResource WarningBanner}"
+                            Visibility="{Binding SourceHasError, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding SourceStatus}" TextWrapping="Wrap" FontSize="12"/>
+                            <Button Content="{loc:Loc Ui_OpenSettings}" Style="{StaticResource LinkBtn}"
+                                    Click="OpenSettings_Click" HorizontalAlignment="Left" Margin="0,6,0,0" Padding="0" FontSize="12"
+                                    Visibility="{Binding SourceNeedsSettings, Converter={StaticResource BoolToVis}}"/>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
                 <Border Style="{StaticResource InfoBanner}" Padding="14,10" Margin="0,20,0,0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                             <TextBlock Text="&#xEA80;" Style="{StaticResource GlyphIcon}"
-                                       Foreground="{DynamicResource AccentBrush}" FontSize="13" Margin="0,0,6,0"/>
+                                       Foreground="{DynamicResource AccentTextBrush}" FontSize="13" Margin="0,0,6,0"/>
                             <TextBlock Text="{loc:Loc Ui_Requirements}" FontWeight="SemiBold" FontSize="13"/>
                         </StackPanel>
                         <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" LineHeight="20">
-                            <Run>• You must have read access to the source site collection.</Run>
+                            <Run Text="{loc:Loc Ui_ReqSourceRead}"/>
                             <LineBreak/>
-                            <Run>• Configure your Azure AD app ID in Settings before connecting.</Run>
+                            <Run Text="{loc:Loc Ui_ReqRegistration}"/>
                         </TextBlock>
                     </StackPanel>
                 </Border>
@@ -653,30 +718,58 @@
                     <TextBlock Text="{loc:Loc Ui_ConnectToTargetSite}" Style="{StaticResource SectionHeader}"/>
                     <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Ui2_EnterTargetSiteUrl}"/>
 
-                    <TextBlock Text="{loc:Loc Ui_TargetSiteUrl}" Style="{StaticResource FieldLabel}" Margin="0,22,0,4"/>
-                    <TextBox Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
+                    <!-- Multi-tenant: say which app registration the second sign-in will use. -->
+                    <WrapPanel Margin="0,16,0,0" Visibility="{Binding IsMultiTenant, Converter={StaticResource BoolToVis}}">
+                        <TextBlock FontSize="12" VerticalAlignment="Center" TextWrapping="Wrap"
+                                   Foreground="{DynamicResource TextTertiaryBrush}">
+                            <Run Text="{loc:Loc Ui_TargetSignsInWith}"/>
+                            <Run Text="{Binding TargetRegistrationName, Mode=OneWay}" FontWeight="SemiBold"
+                                 Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        </TextBlock>
+                        <Button Content="{loc:Loc Ui_Change}" Style="{StaticResource LinkBtn}"
+                                Click="OpenSettings_Click" Margin="8,0,0,0" Padding="0" FontSize="12" VerticalAlignment="Center"/>
+                    </WrapPanel>
+
+                    <TextBlock Text="{loc:Loc Ui_TargetSiteUrl}" Style="{StaticResource FieldLabel}" Margin="0,6,0,4"/>
+                    <TextBox x:Name="TargetUrlBox" FlowDirection="LeftToRight"
+                             Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
                              Tag="https://contoso.sharepoint.com/sites/target"
                              Style="{StaticResource WatermarkTextBox}"
-                             Margin="0,0,0,8"/>
+                             Margin="0,0,0,8">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Return" Command="{Binding ConnectTargetCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="{loc:Loc Ui_ConnectToTarget}" Style="{StaticResource PrimaryBtn}"
                                 Command="{Binding ConnectTargetCommand}"
                                 IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"
                                 Visibility="{Binding IsConnectingTarget, Converter={StaticResource InvBoolToVis}}"/>
-                        <Button Content="{loc:Loc Ui_Disconnect}" Style="{StaticResource DangerBtn}"
+                        <Button Content="{loc:Loc Ui_Cancel}" Style="{StaticResource DangerBtn}"
                                 Command="{Binding CancelConnectTargetCommand}"
                                 Visibility="{Binding IsConnectingTarget, Converter={StaticResource BoolToVis}}"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0"
+                    <StackPanel Margin="0,8,0,0"
                                 Visibility="{Binding TargetStatus, Converter={StaticResource NotNullToVis}}">
-                        <TextBlock Text="{Binding TargetStatus}" FontSize="13" VerticalAlignment="Center"/>
-                        <TextBlock Text=" · " Foreground="{DynamicResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
-                                   Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
-                        <Button Content="{loc:Loc Ui_Disconnect}" Style="{StaticResource LinkBtn}"
-                                Command="{Binding DisconnectTargetCommand}"
-                                Foreground="{DynamicResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
-                                Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
+                        <WrapPanel Visibility="{Binding TargetHasError, Converter={StaticResource InvBoolToVis}}">
+                            <TextBlock Text="{Binding TargetStatus}" FontSize="13" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                            <TextBlock Text=" · " Foreground="{DynamicResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
+                                       Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
+                            <Button Content="{loc:Loc Ui_Disconnect}" Style="{StaticResource LinkBtn}"
+                                    Command="{Binding DisconnectTargetCommand}"
+                                    Foreground="{DynamicResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
+                                    Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}"/>
+                        </WrapPanel>
+                        <Border Style="{StaticResource WarningBanner}"
+                                Visibility="{Binding TargetHasError, Converter={StaticResource BoolToVis}}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding TargetStatus}" TextWrapping="Wrap" FontSize="12"/>
+                                <Button Content="{loc:Loc Ui_OpenSettings}" Style="{StaticResource LinkBtn}"
+                                        Click="OpenSettings_Click" HorizontalAlignment="Left" Margin="0,6,0,0" Padding="0" FontSize="12"
+                                        Visibility="{Binding TargetNeedsSettings, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
 
                     <ProgressBar IsIndeterminate="True" Height="4" Margin="0,12,0,0"
@@ -745,9 +838,9 @@
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
                                     <TextBlock Text="&#xE946;" Style="{StaticResource GlyphIcon}"
-                                               Foreground="{DynamicResource AccentBrush}" FontSize="13" Margin="0,0,6,0"/>
+                                               Foreground="{DynamicResource AccentTextBrush}" FontSize="13" Margin="0,0,6,0"/>
                                     <TextBlock Text="{loc:Loc Ui_LibraryListCreation}" FontSize="13" FontWeight="SemiBold"
-                                               Foreground="{DynamicResource AccentBrush}"/>
+                                               Foreground="{DynamicResource AccentTextBrush}"/>
                                 </StackPanel>
                                 <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Text="{loc:Loc Ui2_TargetHintRootDetail}"/>
                             </StackPanel>
@@ -770,7 +863,7 @@
                                       DisplayMemberPath="Title"
                                       Margin="0,0,0,6"/>
                             <TextBox Style="{StaticResource WatermarkTextBox}"
-                                     Tag="Enter the name of the new list to create"
+                                     Tag="{loc:Loc Ui_NewListNameHint}"
                                      Text="{Binding NewListName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Margin="0,0,0,6"
                                      Visibility="{Binding IsCreatingNewList, Converter={StaticResource BoolToVis}}"/>
@@ -784,9 +877,9 @@
             <!-- ── Step 3: Options + Review ───────────────────────────────── -->
             <Grid Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=3}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="380"/>
+                    <ColumnDefinition Width="2*" MinWidth="380" MaxWidth="560"/>
                     <ColumnDefinition Width="16"/>
-                    <ColumnDefinition Width="*" MinWidth="320"/>
+                    <ColumnDefinition Width="3*" MinWidth="320"/>
                 </Grid.ColumnDefinitions>
 
                 <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
@@ -802,10 +895,10 @@
                                 <TextBlock>
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock" BasedOn="{StaticResource CardHeader}">
-                                            <Setter Property="Text" Value="File Options"/>
+                                            <Setter Property="Text" Value="{loc:Loc Ui_FileOptions}"/>
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsLibraryOrSiteScope}" Value="True">
-                                                    <Setter Property="Text" Value="Library &amp; File Options"/>
+                                                    <Setter Property="Text" Value="{loc:Loc Ui_LibraryFileOptions}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -817,8 +910,8 @@
                             <CheckBox IsChecked="{Binding CopyLibraryContent}" Margin="0,0,0,8" FontSize="13"
                                       Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}"
                                       AutomationProperties.Name="{loc:Loc Ui2_AutoCopyLibraryContent}">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="{loc:Loc Ui_CopyLibraryContentFiles}" VerticalAlignment="Center"/>
+                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyLibraryContentFiles}" VerticalAlignment="Center"/>
                                     <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
@@ -827,21 +920,21 @@
                                             </ToolTip>
                                         </TextBlock.ToolTip>
                                     </TextBlock>
-                                </StackPanel>
+                                </WrapPanel>
                             </CheckBox>
 
                             <!-- Shared file copy options (Files scope, or Library/Site with content enabled) -->
                             <StackPanel Visibility="{Binding ShowFileCopyOptions, Converter={StaticResource BoolToVis}}">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                    <TextBlock Text="{loc:Loc Ui_IfFileExists}" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <WrapPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_IfFileExists}" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                     <RadioButton GroupName="OverwriteMode" FontSize="12" Content="{loc:Loc Ui_Skip}" VerticalAlignment="Center"
                                                  IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=Skip}"/>
                                     <RadioButton GroupName="OverwriteMode" FontSize="12" Content="{loc:Loc Ui_Overwrite}" Margin="10,0,0,0" VerticalAlignment="Center"
                                                  IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=Overwrite}"/>
                                     <RadioButton GroupName="OverwriteMode" FontSize="12" Margin="10,0,0,0" VerticalAlignment="Center"
                                                  IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=IfNewer}">
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                            <TextBlock Text="{loc:Loc Ui_IfNewer}" FontSize="12" VerticalAlignment="Center"/>
+                                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_IfNewer}" FontSize="12" VerticalAlignment="Center"/>
                                             <TextBlock Style="{StaticResource ToolTipIcon}">
                                                 <TextBlock.ToolTip>
                                                     <ToolTip MaxWidth="280">
@@ -850,13 +943,13 @@
                                                     </ToolTip>
                                                 </TextBlock.ToolTip>
                                             </TextBlock>
-                                        </StackPanel>
+                                        </WrapPanel>
                                     </RadioButton>
-                                </StackPanel>
+                                </WrapPanel>
                                 <CheckBox IsChecked="{Binding CopyVersions}" Margin="0,0,0,8" FontSize="13"
                                           AutomationProperties.Name="{loc:Loc Ui2_AutoCopyVersionHistory}">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="{loc:Loc Ui_CopyVersionHistory}" VerticalAlignment="Center"/>
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyVersionHistory}" VerticalAlignment="Center"/>
                                         <TextBlock Style="{StaticResource ToolTipIcon}">
                                             <TextBlock.ToolTip>
                                                 <ToolTip MaxWidth="280">
@@ -865,7 +958,7 @@
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
-                                    </StackPanel>
+                                    </WrapPanel>
                                 </CheckBox>
                                 <StackPanel Orientation="Horizontal"
                                             Visibility="{Binding CopyVersions, Converter={StaticResource BoolToVis}}"
@@ -889,8 +982,8 @@
                                 <CheckBox IsChecked="{Binding CopyNavigation}" Margin="0,0,0,8" FontSize="13"
                                           Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}"
                                           AutomationProperties.Name="{loc:Loc Ui2_AutoCopyNavigation}">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="{loc:Loc Ui_CopyNavigationQuickLaunchTop}" VerticalAlignment="Center"/>
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyNavigationQuickLaunchTop}" VerticalAlignment="Center"/>
                                         <TextBlock Style="{StaticResource ToolTipIcon}">
                                             <TextBlock.ToolTip>
                                                 <ToolTip MaxWidth="280">
@@ -899,13 +992,13 @@
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
-                                    </StackPanel>
+                                    </WrapPanel>
                                 </CheckBox>
                                 <!-- ── Permissions ─── -->
                                 <CheckBox IsChecked="{Binding CopyPermissions, Mode=TwoWay}" Margin="0,0,0,0" FontSize="13"
                                           AutomationProperties.Name="{loc:Loc Ui2_AutoCopyPermissions}">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="{loc:Loc Ui_CopyPermissions}" VerticalAlignment="Center"/>
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyPermissions}" VerticalAlignment="Center"/>
                                         <TextBlock Style="{StaticResource ToolTipIcon}">
                                             <TextBlock.ToolTip>
                                                 <ToolTip MaxWidth="280">
@@ -914,7 +1007,7 @@
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
-                                    </StackPanel>
+                                    </WrapPanel>
                                 </CheckBox>
                             </StackPanel>
                         </StackPanel>
@@ -928,19 +1021,19 @@
                                 <TextBlock Text="&#xE8A1;" Style="{StaticResource CardHeaderGlyph}"/>
                                 <TextBlock Text="{loc:Loc Ui_PageOptions}" Style="{StaticResource CardHeader}"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                <TextBlock Text="{loc:Loc Ui_IfPageExists}" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <WrapPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_IfPageExists}" FontSize="12" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                 <RadioButton GroupName="PageOverwriteMode" FontSize="12" Content="{loc:Loc Ui_Skip}" VerticalAlignment="Center"
                                              IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=Skip}"/>
                                 <RadioButton GroupName="PageOverwriteMode" FontSize="12" Content="{loc:Loc Ui_Overwrite}" Margin="10,0,0,0" VerticalAlignment="Center"
                                              IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=Overwrite}"/>
                                 <RadioButton GroupName="PageOverwriteMode" FontSize="12" Content="{loc:Loc Ui_IfNewer}" Margin="10,0,0,0" VerticalAlignment="Center"
                                              IsChecked="{Binding OverwriteMode, Converter={StaticResource EqToBool}, ConverterParameter=IfNewer}"/>
-                            </StackPanel>
+                            </WrapPanel>
                             <CheckBox IsChecked="{Binding RemapPageWebPartUrls}" Margin="0,0,0,0" FontSize="13"
                                       AutomationProperties.Name="{loc:Loc Ui2_AutoRemapWebPartUrls}">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="{loc:Loc Ui_RemapWebPartUrlsTo}" VerticalAlignment="Center"/>
+                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_RemapWebPartUrlsTo}" VerticalAlignment="Center"/>
                                     <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
@@ -949,8 +1042,44 @@
                                             </ToolTip>
                                         </TextBlock.ToolTip>
                                     </TextBlock>
-                                </StackPanel>
+                                </WrapPanel>
                             </CheckBox>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Column mapping, surfaced here: it used to be reachable only inside the collapsed
+                         "Advanced options" below, where most people never looked. Shown only when it applies. -->
+                    <Border Margin="0,8,0,0">
+                        <Border.Style>
+                            <Style TargetType="Border" BasedOn="{StaticResource Card}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsFilesScope}" Value="True"/>
+                                            <Condition Binding="{Binding CopyCustomColumns}" Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </MultiDataTrigger>
+                                    <DataTrigger Binding="{Binding ShowLibraryFullCopyMapping}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsPagesScope}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsItemSelectionActive}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel>
+                            <TextBlock Text="{loc:Loc Ui_ColumnMappingLabel}" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+                            <Button HorizontalAlignment="Left" Style="{StaticResource SecondaryBtn}"
+                                    Click="ConfigureMappings_Click"
+                                    Content="{Binding MappingButtonLabel}"
+                                    IsEnabled="{Binding IsColumnsReady}"/>
                         </StackPanel>
                     </Border>
 
@@ -967,8 +1096,8 @@
 
                             <CheckBox IsChecked="{Binding PreserveMetadata}" Margin="0,0,0,8" FontSize="12"
                                       AutomationProperties.Name="{loc:Loc Ui2_AutoPreserveMetadata}">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="{loc:Loc Ui_PreserveMetadata}" VerticalAlignment="Center"/>
+                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_PreserveMetadata}" VerticalAlignment="Center"/>
                                     <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
@@ -977,7 +1106,7 @@
                                             </ToolTip>
                                         </TextBlock.ToolTip>
                                     </TextBlock>
-                                </StackPanel>
+                                </WrapPanel>
                             </CheckBox>
 
                             <!-- Only meaningful while Preserve metadata is on; disabled otherwise so its
@@ -985,8 +1114,8 @@
                             <CheckBox IsChecked="{Binding ReapplyFolderMetadataEveryRun}" Margin="0,0,0,8" FontSize="12"
                                       IsEnabled="{Binding PreserveMetadata}"
                                       AutomationProperties.Name="{loc:Loc Ui2_AutoReapplyFolderMetadata}">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="{loc:Loc Ui_ReApplyFolderMetadataEvery}" VerticalAlignment="Center"/>
+                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_ReApplyFolderMetadataEvery}" VerticalAlignment="Center"/>
                                     <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
@@ -995,7 +1124,7 @@
                                             </ToolTip>
                                         </TextBlock.ToolTip>
                                     </TextBlock>
-                                </StackPanel>
+                                </WrapPanel>
                             </CheckBox>
 
                             <!-- Files scope: opt-in checkbox + mapping button -->
@@ -1003,8 +1132,8 @@
                                 <CheckBox IsChecked="{Binding CopyCustomColumns}" Margin="0,0,0,4" FontSize="12"
                                           AutomationProperties.Name="{loc:Loc Ui2_AutoCopyCustomColumns}"
                                           x:Name="CopyCustomColumnsCheckBox" Checked="CopyCustomColumns_Changed" Unchecked="CopyCustomColumns_Changed">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="{loc:Loc Ui_CopyCustomColumnValues}" VerticalAlignment="Center"/>
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyCustomColumnValues}" VerticalAlignment="Center"/>
                                         <TextBlock Style="{StaticResource ToolTipIcon}">
                                             <TextBlock.ToolTip>
                                                 <ToolTip MaxWidth="280">
@@ -1013,7 +1142,7 @@
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
-                                    </StackPanel>
+                                    </WrapPanel>
                                 </CheckBox>
                                 <Button Margin="20,8,0,0" HorizontalAlignment="Left"
                                         Style="{StaticResource SecondaryBtn}"
@@ -1073,8 +1202,8 @@
                                            Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
                                 <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,6"
                                              IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=MigrationApi}">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="{loc:Loc Ui_MigrationApi}" VerticalAlignment="Center"/>
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_MigrationApi}" VerticalAlignment="Center"/>
                                         <Border Background="{DynamicResource AccentBrush}" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
                                             <TextBlock Text="{loc:Loc Ui_Recommended}" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
                                         </Border>
@@ -1085,12 +1214,12 @@
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
-                                    </StackPanel>
+                                    </WrapPanel>
                                 </RadioButton>
                                 <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,12"
                                              IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=EnhancedRest}">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="{loc:Loc Ui_EnhancedRest}" VerticalAlignment="Center"/>
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_EnhancedRest}" VerticalAlignment="Center"/>
                                         <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
                                             <TextBlock.ToolTip>
                                                 <ToolTip>
@@ -1098,7 +1227,7 @@
                                                 </ToolTip>
                                             </TextBlock.ToolTip>
                                         </TextBlock>
-                                    </StackPanel>
+                                    </WrapPanel>
                                 </RadioButton>
                                 <Separator Margin="0,0,0,10" Background="{DynamicResource BorderLightBrush}"/>
                                 <TextBlock Text="{loc:Loc Ui_ParallelCopies}" FontSize="12" FontWeight="SemiBold"
@@ -1187,7 +1316,7 @@
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
-                                                               FontSize="13" Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0"/>
+                                                               FontSize="13" Foreground="{DynamicResource AccentTextBrush}" Margin="0,0,6,0"/>
                                                     <TextBlock Text="{Binding Name}" FontSize="12" VerticalAlignment="Center"/>
                                                 </StackPanel>
                                             </DataTemplate>
@@ -1214,7 +1343,7 @@
                                                                     <Setter Property="Cursor" Value="Arrow"/>
                                                                     <Setter Property="BorderThickness" Value="0"/>
                                                                     <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
-                                                                    <Setter Property="ToolTip" Value="The destination list was chosen on the Target step. Go back to change it."/>
+                                                                    <Setter Property="ToolTip" Value="{loc:Loc Ui_DestinationListLockedHint}"/>
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -1245,7 +1374,7 @@
                                             <DataTemplate>
                                                 <TextBlock HorizontalAlignment="Center"
                                                            FontFamily="{StaticResource GlyphFont}" FontSize="14"
-                                                           Foreground="{DynamicResource AccentBrush}">
+                                                           Foreground="{DynamicResource AccentTextBrush}">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
                                                             <Setter Property="Text" Value="&#xE7C3;"/>
@@ -1299,10 +1428,10 @@
                     <TextBlock>
                         <TextBlock.Style>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource SectionHeader}">
-                                <Setter Property="Text" Value="Copying Files…"/>
+                                <Setter Property="Text" Value="{loc:Loc Ui_CopyingFiles}"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsLibraryOrSiteScope}" Value="True">
-                                        <Setter Property="Text" Value="Copying Libraries…"/>
+                                        <Setter Property="Text" Value="{loc:Loc Ui_CopyingLibraries}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -1316,10 +1445,14 @@
                     <StackPanel>
                         <Grid Margin="0,0,0,8">
                             <TextBlock FontSize="13">
-                                <Run Text="{Binding CompletedCount}"/>
-                                <Run Text="{loc:Loc Ui_Of}"/>
-                                <Run Text="{Binding TotalCount}"/>
-                                <Run Text="{loc:Loc Ui_ItemsProcessed}"/>
+                                <Run>
+                                    <Run.Text>
+                                        <MultiBinding Mode="OneWay" StringFormat="{loc:Loc Ui_ProgressItems}">
+                                            <Binding Path="CompletedCount"/>
+                                            <Binding Path="TotalCount"/>
+                                        </MultiBinding>
+                                    </Run.Text>
+                                </Run>
                                 <Run Text="{Binding SizeProgressDisplay, Mode=OneWay}" Foreground="{DynamicResource TextTertiaryBrush}"/>
                                 <Run Text="{Binding EstimatedTimeRemaining}" Foreground="{DynamicResource TextTertiaryBrush}"/>
                             </TextBlock>
@@ -1344,10 +1477,14 @@
                                          VerticalAlignment="Center" Margin="0,0,8,0"/>
                             <TextBlock FontSize="13" Foreground="{DynamicResource TextTertiaryBrush}"
                                        VerticalAlignment="Center">
-                                <Run Text="{loc:Loc Ui_CheckingFiles}"/>
-                                <Run Text="{Binding PreflightChecked}"/>
-                                <Run Text="{loc:Loc Ui_Of}"/>
-                                <Run Text="{Binding PreflightTotal}"/>
+                                <Run>
+                                    <Run.Text>
+                                        <MultiBinding Mode="OneWay" StringFormat="{loc:Loc Ui_ProgressChecking}">
+                                            <Binding Path="PreflightChecked"/>
+                                            <Binding Path="PreflightTotal"/>
+                                        </MultiBinding>
+                                    </Run.Text>
+                                </Run>
                             </TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
@@ -1356,15 +1493,19 @@
                                          VerticalAlignment="Center" Margin="0,0,8,0"/>
                             <TextBlock FontSize="13" Foreground="{DynamicResource TextTertiaryBrush}"
                                        VerticalAlignment="Center">
-                                <Run Text="{Binding PackedCount, StringFormat={}{0:N0}}"/>
-                                <Run Text=" / "/>
-                                <Run Text="{Binding TotalCount, StringFormat={}{0:N0}}"/>
-                                <Run Text="{loc:Loc Ui_FilesPackagedForImport}"/>
+                                <Run>
+                                    <Run.Text>
+                                        <MultiBinding Mode="OneWay" StringFormat="{loc:Loc Ui_ProgressPackaged}">
+                                            <Binding Path="PackedCount"/>
+                                            <Binding Path="TotalCount"/>
+                                        </MultiBinding>
+                                    </Run.Text>
+                                </Run>
                                 <Run Text="{Binding PackagedEstimatedTimeRemaining}"/>
                             </TextBlock>
                         </StackPanel>
                         <!-- Live activity feed -->
-                        <Border Margin="0,8,0,0" MaxHeight="90"
+                        <Border x:Name="ActivityFeedBorder" Margin="0,8,0,0" MaxHeight="90"
                                 BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1"
                                 CornerRadius="4" Padding="8,6"
                                 Visibility="{Binding IsCopying, Converter={StaticResource BoolToVis}}">
@@ -1385,6 +1526,19 @@
                                          FocusVisualStyle="{x:Null}"/>
                             </DockPanel>
                         </Border>
+                        <!-- Drag to make the activity feed taller or shorter. -->
+                        <Thumb x:Name="ActivityResizeHandle" Height="5" Margin="0,2,0,0" Cursor="SizeNS"
+                               Background="{DynamicResource BorderLightBrush}"
+                               ToolTip="{loc:Loc Ui_ResizeActivity}"
+                               DragDelta="ActivityResize_DragDelta"
+                               Visibility="{Binding IsCopying, Converter={StaticResource BoolToVis}}">
+                            <Thumb.Template>
+                                <ControlTemplate TargetType="Thumb">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="2" Height="3"
+                                            HorizontalAlignment="Center" Width="48"/>
+                                </ControlTemplate>
+                            </Thumb.Template>
+                        </Thumb>
                         <!-- Full activity log saved to disk (selectable path; survives after the run). -->
                         <TextBox Text="{Binding ActivityLogPath, Mode=OneWay}"
                                  Visibility="{Binding ActivityLogPath, Converter={StaticResource NotNullToVis}}"
@@ -1393,11 +1547,15 @@
                                  Foreground="{DynamicResource TextTertiaryBrush}" TextWrapping="Wrap"
                                  FocusVisualStyle="{x:Null}"
                                  ToolTip="{loc:Loc Ui_FullActivityLogForThis}"/>
-                        <TextBlock Margin="0,8,0,0" FontSize="13" Foreground="{DynamicResource SuccessBrush}"
-                                   Visibility="{Binding IsReadyForReport, Converter={StaticResource BoolToVis}}">
-                            <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;"/>
-                            <Run Text="{loc:Loc Ui_CopyCompleteClickNextTo}"/>
-                        </TextBlock>
+                        <WrapPanel Margin="0,8,0,0" Visibility="{Binding IsReadyForReport, Converter={StaticResource BoolToVis}}">
+                            <TextBlock FontSize="13" Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Center"
+                                       TextWrapping="Wrap">
+                                <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;"/>
+                                <Run Text="{loc:Loc Ui_CopyCompleteClickNextTo}"/>
+                            </TextBlock>
+                            <Button Content="{loc:Loc Ui_ViewReport}" Style="{StaticResource PrimaryBtn}"
+                                    Command="{Binding NextCommand}" Margin="12,0,0,0"/>
+                        </WrapPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
                                     Visibility="{Binding IsMetadataInProgress, Converter={StaticResource BoolToVis}}">
                             <ProgressBar IsIndeterminate="True" Width="80" Height="4"
@@ -1436,21 +1594,15 @@
                                      />
                         <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4"
                                      IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Success}">
-                            <TextBlock>
-                                <Run Text="{loc:Loc Ui_Success}"/><Run Text="{Binding SuccessCount, Mode=OneWay}"/><Run Text=")"/>
-                            </TextBlock>
+                            <TextBlock Text="{Binding SuccessCount, Mode=OneWay, StringFormat={loc:Loc Ui_SuccessCount}}"/>
                         </RadioButton>
                         <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4"
                                      IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Failed}">
-                            <TextBlock>
-                                <Run Text="{loc:Loc Ui_Failed}"/><Run Text="{Binding FailedCount, Mode=OneWay}"/><Run Text=")"/>
-                            </TextBlock>
+                            <TextBlock Text="{Binding FailedCount, Mode=OneWay, StringFormat={loc:Loc Ui_FailedCount}}"/>
                         </RadioButton>
                         <RadioButton Style="{StaticResource FilterChip}" GroupName="LogFilter4" Margin="0"
                                      IsChecked="{Binding ResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Skipped}">
-                            <TextBlock>
-                                <Run Text="{loc:Loc Ui_Skipped}"/><Run Text="{Binding SkippedCount, Mode=OneWay}"/><Run Text=")"/>
-                            </TextBlock>
+                            <TextBlock Text="{Binding SkippedCount, Mode=OneWay, StringFormat={loc:Loc Ui_SkippedCount}}"/>
                         </RadioButton>
                     </StackPanel>
                 </Grid>
@@ -1536,8 +1688,9 @@
 
                 <TextBlock Grid.Row="0" Text="{loc:Loc Ui_CopyReport}" Style="{StaticResource SectionHeader}"/>
 
-                <UniformGrid Grid.Row="1" Columns="5" Margin="0,0,0,12"
-                             HorizontalAlignment="Left" MaxWidth="1125">
+                <!-- A wrapping row: the old fixed 5-column grid left one tile alone on a second row
+                     whenever the optional tiles (size, cancelled) made it 6 or 7. -->
+                <WrapPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,4" HorizontalAlignment="Left">
                     <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource SuccessBgBrush}" BorderBrush="{DynamicResource SuccessBrush}">
                         <StackPanel>
                             <TextBlock Text="{Binding SuccessCount}" FontSize="28" FontWeight="Bold"
@@ -1545,14 +1698,16 @@
                             <TextBlock Text="{loc:Loc Ui_Succeeded}" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource DangerBgBrush}" BorderBrush="{DynamicResource DangerBrush}">
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource DangerBgBrush}" BorderBrush="{DynamicResource DangerBrush}"
+                            Cursor="Hand" MouseLeftButtonUp="FailedTile_Click" ToolTip="{loc:Loc Ui_ClickToFilterFailed}">
                         <StackPanel>
                             <TextBlock Text="{Binding FailedCount}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center"/>
                             <TextBlock Text="{loc:Loc Ui_Failed2}" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WarningBgBrush}" BorderBrush="{DynamicResource WarningBrush}">
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WarningBgBrush}" BorderBrush="{DynamicResource WarningBrush}"
+                            Cursor="Hand" MouseLeftButtonUp="SkippedTile_Click" ToolTip="{loc:Loc Ui_ClickToFilterSkipped}">
                         <StackPanel>
                             <TextBlock Text="{Binding SkippedCount}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center"/>
@@ -1566,7 +1721,7 @@
                             <TextBlock Text="{loc:Loc Ui_MetadataWarnings}" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WindowBgBrush}" BorderBrush="{DynamicResource BorderLightBrush}" Margin="0">
+                    <Border Style="{StaticResource SummaryCard}" Margin="0,0,12,8" Background="{DynamicResource WindowBgBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
                         <StackPanel>
                             <TextBlock Text="{Binding CopyDuration}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
@@ -1594,7 +1749,7 @@
                             <TextBlock Text="{loc:Loc Ui_Cancelled}" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
                         </StackPanel>
                     </Border>
-                </UniformGrid>
+                </WrapPanel>
 
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
@@ -1604,34 +1759,21 @@
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Margin="0,8,0,8">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
-                            <Button Style="{StaticResource SecondaryBtn}" Command="{Binding ExportFilesReportCommand}">
+                        <WrapPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Command="{Binding ExportFilesReportCommand}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xE896;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
                                     <TextBlock Text="{loc:Loc Ui_ExportCsv}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
-                            <Button Style="{StaticResource SecondaryBtn}" Margin="8,0,0,0"
-                                    Command="{Binding ExportVerificationReportCommand}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="&#xE896;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
-                                    <TextBlock Text="{loc:Loc Ui_VerifyWithExcelReport}" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Button>
-                            <Button Style="{StaticResource DangerBtn}" Margin="8,0,0,0"
-                                    Command="{Binding CancelVerificationCommand}"
-                                    Visibility="{Binding IsVerifying, Converter={StaticResource BoolToVis}}">
-                                <TextBlock Text="{loc:Loc Ui_Cancel}"/>
-                            </Button>
-                            <CheckBox IsChecked="{Binding DeepVerifyOfficeFiles}" Margin="14,0,0,0" FontSize="12"
+                            <CheckBox IsChecked="{Binding DeepVerifyOfficeFiles}" Margin="6,0,14,6" FontSize="12"
                                       VerticalAlignment="Center" IsEnabled="{Binding IsVerifying, Converter={StaticResource InvBool}}"
                                       AutomationProperties.Name="{loc:Loc Ui2_AutoDeepVerifyOffice}">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="{loc:Loc Ui_DeepVerifyOfficeFiles}" VerticalAlignment="Center"/>
+                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_DeepVerifyOfficeFiles}" VerticalAlignment="Center"/>
                                     <TextBlock Style="{StaticResource ToolTipIcon}">
                                         <TextBlock.ToolTip>
                                             <ToolTip MaxWidth="280">
@@ -1640,29 +1782,49 @@
                                             </ToolTip>
                                         </TextBlock.ToolTip>
                                     </TextBlock>
-                                </StackPanel>
+                                </WrapPanel>
                             </CheckBox>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6"
+                                    Command="{Binding ExportVerificationReportCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE896;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{loc:Loc Ui_VerifyWithExcelReport}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource DangerBtn}" Margin="0,0,8,6"
+                                    Command="{Binding CancelVerificationCommand}"
+                                    Visibility="{Binding IsVerifying, Converter={StaticResource BoolToVis}}">
+                                <TextBlock Text="{loc:Loc Ui_Cancel}"/>
+                            </Button>
+                            <!-- Power features, surfaced where they are needed instead of only in the app bar. -->
+                            <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Click="CompareButton_Click"
+                                    ToolTip="{loc:Loc Ui_CompareSourceTargetHint}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE895;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{loc:Loc Ui_CompareSourceTarget}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Click="HistoryButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE81C;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
+                                    <TextBlock Text="{loc:Loc Ui_OpenInHistory}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="12,0,0,0">
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter" Content="{loc:Loc Ui_All}"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=All}"/>
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Success}">
-                                <TextBlock>
-                                    <Run Text="{loc:Loc Ui_Success}"/><Run Text="{Binding FileSuccessCount, Mode=OneWay}"/><Run Text=")"/>
-                                </TextBlock>
+                                <TextBlock Text="{Binding FileSuccessCount, Mode=OneWay, StringFormat={loc:Loc Ui_SuccessCount}}"/>
                             </RadioButton>
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Failed}">
-                                <TextBlock>
-                                    <Run Text="{loc:Loc Ui_Failed}"/><Run Text="{Binding FileFailedCount, Mode=OneWay}"/><Run Text=")"/>
-                                </TextBlock>
+                                <TextBlock Text="{Binding FileFailedCount, Mode=OneWay, StringFormat={loc:Loc Ui_FailedCount}}"/>
                             </RadioButton>
                             <RadioButton Style="{StaticResource FilterChip}" GroupName="FileFilter" Margin="0"
                                          IsChecked="{Binding FileResultFilter, Converter={StaticResource EqToBool}, ConverterParameter=Skipped}">
-                                <TextBlock>
-                                    <Run Text="{loc:Loc Ui_Skipped}"/><Run Text="{Binding FileSkippedCount, Mode=OneWay}"/><Run Text=")"/>
-                                </TextBlock>
+                                <TextBlock Text="{Binding FileSkippedCount, Mode=OneWay, StringFormat={loc:Loc Ui_SkippedCount}}"/>
                             </RadioButton>
                         </StackPanel>
                     </Grid>
@@ -1754,7 +1916,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Button Content="{loc:Loc Ui_Back}" Style="{StaticResource SecondaryBtn}"
                             Command="{Binding BackCommand}"
-                            AutomationProperties.Name="BackBtn"
+                            AutomationProperties.AutomationId="BackBtn"
                             Visibility="{Binding CurrentStep, Converter={StaticResource NeqToVis}, ConverterParameter=0}"/>
                     <Button Style="{StaticResource SecondaryBtn}"
                             Margin="8,0,0,0"
@@ -1767,33 +1929,58 @@
                     </Button>
                 </StackPanel>
 
-                <Button Style="{StaticResource PrimaryBtn}" HorizontalAlignment="Right" VerticalAlignment="Center"
-                        Command="{Binding NextCommand}"
-                        AutomationProperties.Name="NextBtn"
-                        Visibility="{Binding CurrentStep, Converter={StaticResource NeqToVis}, ConverterParameter=5}">
-                    <Button.Content>
-                        <TextBlock>
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Text" Value="Next →"/>
-                                    <Style.Triggers>
-                                        <!-- Show "Start Copy" on Step 3 only when no copy has run yet -->
-                                        <MultiDataTrigger>
-                                            <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding CurrentStep}" Value="3"/>
-                                                <Condition Binding="{Binding IsCopyComplete}" Value="False"/>
-                                            </MultiDataTrigger.Conditions>
-                                            <Setter Property="Text" Value="▶ Start Copy"/>
-                                        </MultiDataTrigger>
-                                        <DataTrigger Binding="{Binding CurrentStep}" Value="4">
-                                            <Setter Property="Text" Value="View Report →"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Button.Content>
-                </Button>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Visibility="{Binding CurrentStep, Converter={StaticResource NeqToVis}, ConverterParameter=5}">
+                    <!-- Why Next is greyed out (empty, and therefore hidden, when it is enabled). -->
+                    <TextBlock Text="{Binding NextBlockedReason}" FontSize="12" VerticalAlignment="Center"
+                               Margin="0,0,14,0" TextWrapping="Wrap" MaxWidth="360"
+                               Foreground="{DynamicResource TextTertiaryBrush}"
+                               Visibility="{Binding NextBlockedReason, Converter={StaticResource NotNullToVis}}"/>
+                    <!-- No AutomationProperties.Name here: it replaced the visible text, so screen readers
+                         announced "NextBtn". The label itself is the accessible name. -->
+                    <Button Style="{StaticResource PrimaryBtn}"
+                            Command="{Binding NextCommand}"
+                            AutomationProperties.AutomationId="NextBtn">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{loc:Loc Ui_Next}"/>
+                                        <Style.Triggers>
+                                            <!-- "Start Copy" on step 3 only when no copy has run yet -->
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding CurrentStep}" Value="3"/>
+                                                    <Condition Binding="{Binding IsCopyComplete}" Value="False"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Text" Value="{loc:Loc Ui_StartCopy}"/>
+                                            </MultiDataTrigger>
+                                            <DataTrigger Binding="{Binding CurrentStep}" Value="4">
+                                                <Setter Property="Text" Value="{loc:Loc Ui_ViewReport}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <!-- A glyph, not "→": text arrows don't flip for right-to-left languages. -->
+                            <TextBlock Text="&#xE76C;" FontSize="12" Margin="8,1,0,0"
+                                       RenderTransformOrigin="0.5,0.5">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource GlyphIcon}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding FlowDirection, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                         Value="RightToLeft">
+                                                <Setter Property="RenderTransform">
+                                                    <Setter.Value><ScaleTransform ScaleX="-1"/></Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
 
             </Grid>
         </Border>

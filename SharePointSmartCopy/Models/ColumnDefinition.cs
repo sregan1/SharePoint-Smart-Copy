@@ -1,6 +1,6 @@
 namespace SharePointSmartCopy.Models;
 
-public enum SupportedFieldType { Text, Note, Number, Boolean, DateTime, Choice, MultiChoice, User, UserMulti, Taxonomy, TaxonomyMulti, Lookup, LookupMulti }
+public enum SupportedFieldType { Text, Note, Number, Boolean, DateTime, Choice, MultiChoice, User, UserMulti, Taxonomy, TaxonomyMulti, Lookup, LookupMulti, Hyperlink, Currency }
 
 // Typed field values let the write side format per destination: ValidateUpdateListItem
 // (REST mode) and the SPMI manifest (Migration API mode) need different encodings.
@@ -10,6 +10,11 @@ public sealed record PersonFieldValue(string[] Logins);
 
 // Term references. Within-tenant the term store is shared, so TermGuids are valid as-is.
 public sealed record TaxonomyFieldValue((string Label, string TermGuid)[] Terms);
+
+// Hyperlink / Picture-as-URL column: the address plus its display text. Written through
+// ValidateUpdateListItem as "url, description" — the URL is copied as-is (links that point back into
+// the SOURCE site are not rewritten).
+public sealed record HyperlinkFieldValue(string Url, string? Description);
 
 // Lookup values carry the source item ID (ignored at write time) and the display value,
 // which is used to resolve the matching item in the target lookup list.

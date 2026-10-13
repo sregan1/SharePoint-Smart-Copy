@@ -2,9 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{loc:Loc Ui_AzureAppRegistrations}"
-        Width="800" Height="600"
+        Width="820" Height="660" MinWidth="740" MinHeight="580"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize"
+        ResizeMode="CanResizeWithGrip"
+        FocusManager.FocusedElement="{Binding ElementName=RegistrationList}"
         Background="{DynamicResource WindowBgBrush}">
 
     <Window.Resources>
@@ -59,7 +60,12 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="{loc:Loc Ui_Registrations}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="{loc:Loc Ui_Registrations}" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    <!-- The selected row is what Save makes active — previously nothing said so. -->
+                    <TextBlock Text="{loc:Loc Ui_RegistrationListCaption}" TextWrapping="Wrap" FontSize="11" Margin="0,2,0,0"
+                               Foreground="{DynamicResource TextTertiaryBrush}"/>
+                </StackPanel>
 
                 <ListBox Grid.Row="2" x:Name="RegistrationList"
                          BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" Background="{DynamicResource SurfaceBrush}"
@@ -79,7 +85,7 @@
                                             <Setter Property="Text" Value="{Binding Name}"/>
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Name}" Value="">
-                                                    <Setter Property="Text" Value="(Unnamed)"/>
+                                                    <Setter Property="Text" Value="{loc:Loc VM_Unnamed}"/>
                                                     <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -141,19 +147,19 @@
 
                 <StackPanel Grid.Row="4">
                     <TextBlock Text="{loc:Loc Ui_ClientIdApplicationId}" Style="{StaticResource FieldLabel}"/>
-                    <TextBox Text="{Binding ClientId, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox FlowDirection="LeftToRight" Text="{Binding ClientId, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="6">
                     <TextBlock Text="{loc:Loc Ui_TenantId}" Style="{StaticResource FieldLabel}"/>
-                    <TextBox Text="{Binding TenantId, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox FlowDirection="LeftToRight" Text="{Binding TenantId, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="{loc:Loc Ui_UseCommonForMultiTenant}"
                                Foreground="{DynamicResource TextTertiaryBrush}" FontSize="11" Margin="0,4,0,0"/>
                 </StackPanel>
 
                 <!-- Setup instructions -->
                 <Border Grid.Row="8" Style="{StaticResource InfoBanner}" Padding="10,7">
-                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#004578" Text="{loc:Loc Ui2_AppRegsSetup}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" Text="{loc:Loc Ui2_AppRegsSetup}"/>
                 </Border>
             </Grid>
         </Grid>
@@ -165,7 +171,7 @@
                       FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
             <!-- Multi-tenant mode: the registration the target side signs in with. The source side uses the
                  registration selected in the list above. -->
-            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+            <StackPanel x:Name="TargetRegistrationPanel" Orientation="Horizontal" Margin="0,8,0,0">
                 <TextBlock Text="{loc:Loc Ui_TargetRegistration}" VerticalAlignment="Center" FontSize="12"
                            Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,8,0"/>
                 <ComboBox x:Name="TargetRegistrationCombo" Width="240" VerticalAlignment="Center" FontSize="12"
@@ -178,31 +184,39 @@
         <!-- Footer buttons -->
         <Grid Grid.Row="6">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" Orientation="Horizontal">
+            <WrapPanel Grid.Column="0" Orientation="Horizontal">
                 <Button Content="{loc:Loc Ui_SignOut}" Click="SignOutButton_Click"
-                        Style="{StaticResource SecondaryBtn}" Margin="0,0,16,0"/>
-                <TextBlock Text="{loc:Loc Ui_Theme}" VerticalAlignment="Center" FontSize="12"
-                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,6,0"/>
-                <ComboBox x:Name="ThemeCombo" Width="110" VerticalAlignment="Center" FontSize="12">
-                    <ComboBoxItem Content="{loc:Loc Ui_System}"/>
-                    <ComboBoxItem Content="{loc:Loc Ui_Light}"/>
-                    <ComboBoxItem Content="{loc:Loc Ui_Dark}"/>
-                </ComboBox>
-                <TextBlock Text="{loc:Loc Settings_Language}" VerticalAlignment="Center" FontSize="12"
-                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="16,0,6,0"/>
-                <ComboBox x:Name="LanguageCombo" Width="170" VerticalAlignment="Center" FontSize="12"
-                          DisplayMemberPath="NativeName" SelectedValuePath="Code"
-                          ToolTip="{loc:Loc Settings_LanguageRestart}"/>
-            </StackPanel>
+                        Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6"/>
+                <Button Content="{loc:Loc Ui_ExportDiagnostics}" Click="ExportDiagnostics_Click"
+                        ToolTip="{loc:Loc Ui_ExportDiagnosticsHint}"
+                        Style="{StaticResource SecondaryBtn}" Margin="0,0,16,6"/>
+                <!-- Label + box stay together when the row wraps. -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,16,6">
+                    <TextBlock Text="{loc:Loc Ui_Theme}" VerticalAlignment="Center" FontSize="12"
+                               Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,6,0"/>
+                    <ComboBox x:Name="ThemeCombo" Width="110" VerticalAlignment="Center" FontSize="12">
+                        <ComboBoxItem Content="{loc:Loc Ui_System}"/>
+                        <ComboBoxItem Content="{loc:Loc Ui_Light}"/>
+                        <ComboBoxItem Content="{loc:Loc Ui_Dark}"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                    <TextBlock Text="{loc:Loc Settings_Language}" VerticalAlignment="Center" FontSize="12"
+                               Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,6,0"/>
+                    <ComboBox x:Name="LanguageCombo" Width="170" VerticalAlignment="Center" FontSize="12"
+                              DisplayMemberPath="NativeName" SelectedValuePath="Code"
+                              ToolTip="{loc:Loc Settings_LanguageRestart}"/>
+                </StackPanel>
+            </WrapPanel>
 
-            <StackPanel Grid.Column="2" Orientation="Horizontal">
-                <Button Content="{loc:Loc Ui_Cancel}" Style="{StaticResource SecondaryBtn}" Margin="0,0,12,0" Click="Cancel_Click"/>
-                <Button Content="{loc:Loc Ui_Save}" Style="{StaticResource PrimaryBtn}" Click="Save_Click"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" Margin="12,0,0,0">
+                <Button Content="{loc:Loc Ui_Cancel}" Style="{StaticResource SecondaryBtn}" Margin="0,0,12,0"
+                        IsCancel="True" Click="Cancel_Click"/>
+                <Button Content="{loc:Loc Ui_Save}" Style="{StaticResource PrimaryBtn}" IsDefault="True" Click="Save_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

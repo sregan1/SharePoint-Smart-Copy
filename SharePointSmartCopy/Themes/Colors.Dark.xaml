@@ -7,6 +7,8 @@
          backgrounds under white text (each brush serves both roles). -->
 
     <SolidColorBrush x:Key="AccentBrush"           Color="#0078D4"/>
+    <!-- AccentBrush as TEXT on dark surfaces is only ~3:1; this lighter blue reaches 4.5:1+ (links, glyphs). -->
+    <SolidColorBrush x:Key="AccentTextBrush"       Color="#60CDFF"/>
     <SolidColorBrush x:Key="AccentLightBrush"      Color="#234C66"/>
     <SolidColorBrush x:Key="SuccessBrush"          Color="#4CAF50"/>
     <SolidColorBrush x:Key="SuccessBgBrush"        Color="#233A28"/>

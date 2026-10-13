@@ -473,6 +473,14 @@ public sealed class VerificationReportService(SharePointService spService)
         switch (outcome.Result)
         {
             case OpcCompareResult.VolatileOnlyDifferences:
+                if (row.Status == ComparisonStatus.DateMismatch)
+                {
+                    // The CONTENT is identical, but the cheap tier found the preserved Modified date
+                    // wrong — a real metadata failure that content equality says nothing about.
+                    // Promoting this to Match hid exactly that, so keep the status and say why.
+                    row.Note = Loc.T("Svc_Ver_DeepVolatileDateKept");
+                    break;
+                }
                 row.Status = ComparisonStatus.Match;
                 row.Note   = Loc.T("Svc_Ver_DeepVolatile");
                 break;
@@ -510,6 +518,12 @@ public sealed class VerificationReportService(SharePointService spService)
             // Unverified rather than a false-alarm DateMismatch.
             if (OneNoteExtensions.Contains(Path.GetExtension(s.RelativePath)))
                 return ComparisonStatus.Unverified;
+
+            // Sizes legitimately differ for re-serialized Office files, so size can't confirm a match —
+            // but an EMPTY target for a non-empty source is never a re-serialization. Without this a
+            // truncated / 0-byte target with a correctly stamped date passed as Match.
+            if (s.Size is > 0 && t.Size == 0)
+                return ComparisonStatus.ContentMismatch;
 
             // Otherwise modified date is the signal, since the app is already responsible for
             // preserving it onto the target. A missing date on either side is Unverified — the

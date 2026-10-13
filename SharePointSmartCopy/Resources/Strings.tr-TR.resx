@@ -638,4 +638,10 @@
   <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>Bir veya daha fazla Azure AD uygulama kaydı saklayın. Kaydet'e tıkladığınızda seçili olan etkin kayıt olur. Her uygulama için yönetici onayıyla birlikte Sites.ReadWrite.All ve Files.ReadWrite.All temsilci izinleri gerekir.</value></data>
   <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Kurulum: portal.azure.com → Azure Active Directory → Uygulama kayıtları → Yeni kayıt. Bir Mobil/Masaüstü yeniden yönlendirme URI'si olarak http://localhost ekleyin. API izinleri altında Graph temsilci izinleri Sites.ReadWrite.All + Files.ReadWrite.All ekleyin, ardından yönetici onayı verin.</value></data>
   <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>Kaynak kitaplıkta desteklenen türde özel sütun yok. Desteklenen türler: Metin, Not, Sayı, Boole, Tarih, Seçim, Çoklu seçim, Kişi, Yönetilen Meta Veri. Arama sütunları desteklenmez.</value></data>
+  <data name="Ui_ProgressItems" xml:space="preserve"><value>{0} / {1} öğe işlendi</value></data>
+  <data name="Ui_ProgressChecking" xml:space="preserve"><value>Dosyalar denetleniyor… {0} / {1}</value></data>
+  <data name="Ui_ProgressPackaged" xml:space="preserve"><value>{0:N0} / {1:N0} dosya içe aktarma için paketlendi</value></data>
+  <data name="Ui_SuccessCount" xml:space="preserve"><value>Başarılı ({0})</value></data>
+  <data name="Ui_FailedCount" xml:space="preserve"><value>Başarısız ({0})</value></data>
+  <data name="Ui_SkippedCount" xml:space="preserve"><value>Atlandı ({0})</value></data>
 </root>

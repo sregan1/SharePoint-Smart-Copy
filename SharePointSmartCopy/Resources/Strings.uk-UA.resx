@@ -638,4 +638,10 @@
   <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>Збережіть одну або кілька реєстрацій застосунків Azure AD. Реєстрація, вибрана під час натискання «Зберегти», стає активною. Кожному застосунку потрібні делеговані дозволи Sites.ReadWrite.All і Files.ReadWrite.All зі згодою адміністратора.</value></data>
   <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Налаштування: portal.azure.com → Azure Active Directory → App registrations → New registration. Додайте URI переспрямування типу Mobile/Desktop: http://localhost. У розділі API permissions додайте делеговані дозволи Graph: Sites.ReadWrite.All + Files.ReadWrite.All, потім надайте згоду адміністратора.</value></data>
   <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>У бібліотеці-джерелі немає настроюваних стовпців підтримуваного типу. Підтримувані типи: Текст, Примітка, Число, Логічний, Дата, Вибір, Множинний вибір, Особа, Керовані метадані. Стовпці підстановки не підтримуються.</value></data>
+  <data name="Ui_ProgressItems" xml:space="preserve"><value>{0} з {1} елементів оброблено</value></data>
+  <data name="Ui_ProgressChecking" xml:space="preserve"><value>Перевірка файлів… {0} з {1}</value></data>
+  <data name="Ui_ProgressPackaged" xml:space="preserve"><value>{0:N0} / {1:N0} файлів упаковано для імпорту</value></data>
+  <data name="Ui_SuccessCount" xml:space="preserve"><value>Успішно ({0})</value></data>
+  <data name="Ui_FailedCount" xml:space="preserve"><value>Помилка ({0})</value></data>
+  <data name="Ui_SkippedCount" xml:space="preserve"><value>Пропущено ({0})</value></data>
 </root>

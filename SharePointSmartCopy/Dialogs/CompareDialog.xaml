@@ -20,7 +20,7 @@
                                   ItemsSource="{Binding Children}">
             <StackPanel Orientation="Horizontal" Margin="2,2">
                 <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
-                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,6,0"/>
+                           Foreground="{DynamicResource AccentTextBrush}" Margin="0,0,6,0"/>
                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="13"/>
                 <ProgressBar IsIndeterminate="True" Width="60" Height="4" Margin="8,0,0,0"
                              Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"/>
@@ -185,7 +185,7 @@
                     <Button x:Name="CompareButton" Content="{loc:Loc Ui_CompareWithExcelReport}"
                             Style="{StaticResource PrimaryBtn}"
                             IsEnabled="False" Margin="0,0,10,0" Click="CompareButton_Click"/>
-                    <Button Content="{loc:Loc Ui_Close}" Style="{StaticResource SecondaryBtn}" Click="Close_Click"/>
+                    <Button Content="{loc:Loc Ui_Close}" Style="{StaticResource SecondaryBtn}" IsCancel="True" Click="Close_Click"/>
                 </StackPanel>
             </Grid>
 

@@ -2,9 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{loc:Loc Ui_IdentityMapping}"
-        Width="600" Height="520"
+        Width="620" Height="560" MinWidth="500" MinHeight="460"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize"
+        ResizeMode="CanResizeWithGrip"
+        FocusManager.FocusedElement="{Binding ElementName=SourceDomainBox}"
         Background="{DynamicResource WindowBgBrush}">
 
     <Grid Margin="20" TextElement.Foreground="{DynamicResource TextPrimaryBrush}">
@@ -12,6 +13,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="16"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -31,11 +33,13 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
                 <TextBlock Text="{loc:Loc Ui_SourceEmailDomain}" Style="{StaticResource FieldLabel}"/>
-                <TextBox x:Name="SourceDomainBox" Tag="contoso.com" Style="{StaticResource WatermarkTextBox}"/>
+                <TextBox x:Name="SourceDomainBox" FlowDirection="LeftToRight" Tag="contoso.com"
+                         Style="{StaticResource WatermarkTextBox}" TextChanged="Input_Changed"/>
             </StackPanel>
             <StackPanel Grid.Column="2">
                 <TextBlock Text="{loc:Loc Ui_TargetEmailDomain}" Style="{StaticResource FieldLabel}"/>
-                <TextBox x:Name="TargetDomainBox" Tag="fabrikam.com" Style="{StaticResource WatermarkTextBox}"/>
+                <TextBox x:Name="TargetDomainBox" FlowDirection="LeftToRight" Tag="fabrikam.com"
+                         Style="{StaticResource WatermarkTextBox}" TextChanged="Input_Changed"/>
             </StackPanel>
         </Grid>
 
@@ -44,15 +48,32 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="{loc:Loc Ui_IdentityOverrides}" Style="{StaticResource FieldLabel}"/>
-            <TextBox Grid.Row="1" x:Name="OverridesBox" AcceptsReturn="True" AcceptsTab="False"
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{loc:Loc Ui_IdentityOverrides}" Style="{StaticResource FieldLabel}"
+                           TextWrapping="Wrap" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Content="{loc:Loc Ui_IdentityImportCsv}" Style="{StaticResource LinkBtn}"
+                        Click="ImportCsv_Click" Margin="12,0,0,0" VerticalAlignment="Center"/>
+            </Grid>
+            <!-- Mappings are email addresses and group names: always left-to-right, even in RTL languages. -->
+            <TextBox Grid.Row="1" x:Name="OverridesBox" FlowDirection="LeftToRight"
+                     AcceptsReturn="True" AcceptsTab="False"
                      TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                     FontFamily="Consolas" FontSize="12" VerticalContentAlignment="Top" Padding="6"/>
+                     FontFamily="Consolas" FontSize="12" VerticalContentAlignment="Top" Padding="6"
+                     TextChanged="Input_Changed"/>
         </Grid>
 
-        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="{loc:Loc Ui_Cancel}" Style="{StaticResource SecondaryBtn}" Margin="0,0,12,0" Click="Cancel_Click"/>
-            <Button Content="{loc:Loc Ui_Save}" Style="{StaticResource PrimaryBtn}" Click="Save_Click"/>
+        <!-- Live feedback: how many mappings were understood, and which lines were not. -->
+        <TextBlock Grid.Row="3" x:Name="SummaryText" TextWrapping="Wrap" FontSize="12" Margin="0,8,0,0"
+                   Foreground="{DynamicResource TextTertiaryBrush}"/>
+
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="{loc:Loc Ui_Cancel}" Style="{StaticResource SecondaryBtn}" Margin="0,0,12,0"
+                    IsCancel="True" Click="Cancel_Click"/>
+            <Button Content="{loc:Loc Ui_Save}" Style="{StaticResource PrimaryBtn}" IsDefault="True" Click="Save_Click"/>
         </StackPanel>
     </Grid>
 </Window>

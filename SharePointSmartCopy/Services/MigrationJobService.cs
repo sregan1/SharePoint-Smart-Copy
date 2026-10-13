@@ -27,6 +27,19 @@ public class MigrationJobService(SharePointService spService)
     // independent of maxParallel, so oversized files can't stack up multiple full in-memory copies
     // at once anywhere in the pipeline. Small files are unaffected — they never touch this gate.
     private const int MaxConcurrentLargeFiles = 2;
+    // A single version at or above LargeFileThresholdBytes is NOT held in memory: it is downloaded into
+    // a delete-on-close temp file, streamed through AES into a second temp file (with its MD5 computed
+    // on the way) and uploaded from that file. That removes the old 2 GB-per-version ceiling (a byte[]
+    // / MemoryStream cannot exceed int.MaxValue) and the raw+encrypted double copy in RAM. Versions below
+    // the threshold take the original all-in-memory path, unchanged. The memory budget charges such a
+    // version only for its transfer buffers (this constant), not its size.
+    private const long SpilledVersionChargeBytes = 32L * 1024 * 1024;
+
+    private static FileStream CreateSpillFile() => new(
+        Path.Combine(Path.GetTempPath(), $"smartcopy-{Guid.NewGuid():N}.dl"),
+        FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 1 << 16,
+        // DeleteOnClose: removed when the stream is disposed — and by the OS if the process dies.
+        FileOptions.DeleteOnClose | FileOptions.Asynchronous | FileOptions.SequentialScan);
     // Initial concurrent-upload width for the adaptive upload gate. Deliberately well below the
     // point the upload path starts resetting connections (~12 concurrent mid-size PUTs, observed
     // 2026-07-19) — the gate then probes UPWARD from here under clean running and halves on any
@@ -1066,7 +1079,7 @@ public class MigrationJobService(SharePointService spService)
 
                     var stillBlocked = new HashSet<CopyResult>();
                     var blockedLock  = new object();
-                    int clearedCount = 0, blockedCount = 0;
+                    int clearedCount = 0, blockedCount = 0, keptCount = 0;
                     await Parallel.ForEachAsync(conflicts,
                         new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
                         async (conflict, ct) =>
@@ -1082,6 +1095,18 @@ public class MigrationJobService(SharePointService spService)
                         bool ok;
                         try
                         {
+                            // If-newer: a conflict only proves a target EXISTS, not that the source is
+                            // newer — the pre-flight listing can miss a file (a leftover row from an
+                            // earlier aborted import, or listing lag), in which case its date check never
+                            // ran. Check now; never purge a target that is already as new as the source.
+                            if (overwriteMode == OverwriteMode.IfNewer && await TargetIsUpToDateAsync(job, subPath))
+                            {
+                                result.Status       = CopyStatus.Skipped;
+                                result.ErrorMessage = CopyResult.UpToDate;
+                                Interlocked.Increment(ref keptCount);
+                                return;
+                            }
+
                             ok = await spService.PermanentlyDeleteFileAsync(
                                 targetSiteUrl, fileServerRelUrl, r => failReason = r, t => deleteTrace = t);
                             if (ok)
@@ -1129,6 +1154,7 @@ public class MigrationJobService(SharePointService spService)
                             activityLog?.Report("  " + Loc.T("Svc_Mig_MoreStillBlockedConflicts", rpfx));
                     });
                     activityLog?.Report("  " + Loc.T("Svc_Mig_ClearedConflictingFileS", rpfx, clearedCount, conflicts.Count) +
+                        (keptCount > 0 ? Loc.T("Svc_Mig_KeptUpToDate", keptCount) : "") +
                         (blockedCount > 0 ? Loc.T("Svc_Mig_StillBlocked", blockedCount) : ""));
 
                     foreach (var (_, result) in prepared.FileTasks)
@@ -1418,6 +1444,13 @@ public class MigrationJobService(SharePointService spService)
             // Fast path: if every target folder is empty the check is trivially a no-op — all files
             // are new, so skip the per-file parallel scan and advance the preflight counter in bulk.
             var existingFileIds = new System.Collections.Concurrent.ConcurrentDictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+            // Real (user-visible) target files that Overwrite / If-newer will replace. They are NOT
+            // deleted here: deleting before the source was downloaded meant any later download,
+            // size-limit, packaging or upload failure (or a cancel) left the file gone from BOTH
+            // sides, and the delete is permanent (recycle bin purged too). The delete is deferred
+            // until every blob for the file is uploaded — see "Deferred overwrite deletes" below.
+            // (Zombie-blob purges stay immediate: those aren't real content and must go before import.)
+            var deferredDeletes = new System.Collections.Concurrent.ConcurrentBag<(CopyResult result, string url)>();
             if (existingByFolder.Values.All(v => v.Count == 0))
             {
                 if (preflightCounter != null)
@@ -1467,10 +1500,11 @@ public class MigrationJobService(SharePointService spService)
                         bool deleteOk = true;
                         if (existingByFolder[subPath].ContainsKey(job.SourceName))
                         {
-                            // Real file: delete first so SPMI does a fresh INSERT.
+                            // Real file: must be deleted before import so SPMI does a fresh INSERT.
                             // SPMI UPDATE (with existing GUID) appends imported versions to the
                             // existing version history instead of replacing it, causing duplication.
-                            deleteOk = await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                            // The delete itself is deferred until the source content is safely uploaded.
+                            deferredDeletes.Add((result, fileServerRelUrl));
                         }
                         else if (existingByFolder[subPath].Count > 0 &&
                                  await spService.GetFileUniqueIdAsync(targetSiteUrl, fileServerRelUrl) != null)
@@ -1509,9 +1543,8 @@ public class MigrationJobService(SharePointService spService)
                             else
                             {
                                 // Source is newer — delete so SPMI does a fresh INSERT
-                                // (same reasoning as overwrite mode).
-                                if (!await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl))
-                                    failDeleteConflict();
+                                // (same reasoning as overwrite mode, including the deferral).
+                                deferredDeletes.Add((result, fileServerRelUrl));
                             }
                         }
                         else if (existingByFolder[subPath].Count > 0 &&
@@ -1665,23 +1698,15 @@ public class MigrationJobService(SharePointService spService)
                                 Interlocked.Increment(ref currentOnlyMisses);
                             }
 
-                            // This path buffers each version fully in memory (MemoryStream is capped at
-                            // int.MaxValue bytes) — a version above 2 GiB cannot be packaged. Fail fast
-                            // with an honest message instead of downloading it 3 times and surfacing
-                            // "Stream was too long" as a connection problem.
+                            // A version at or above LargeFileThresholdBytes streams through temp files
+                            // (see CreateSpillFile), so there is no longer a 2 GiB ceiling here. A version
+                            // whose size is NOT known up front still downloads into a MemoryStream and,
+                            // past int.MaxValue, fails with the "version larger than 2 GB" message below.
                             // knownFileBytes falls back to the scan-captured size for cache-miss files —
-                            // with the old 0 fallback a throttled run's misses bypassed BOTH this guard
-                            // and the large-file gate below, so 16 multi-GB files buffered concurrently
+                            // with the old 0 fallback a throttled run's misses bypassed the large-file
+                            // gate below, so 16 multi-GB files buffered concurrently
                             // (2026-07-18: 44 GB heap, connection-reset storms, mass failures).
                             long knownFileBytes = cachedMeta?.Size ?? job.SourceSize ?? 0;
-                            long largestVersionBytes = Math.Max(knownFileBytes,
-                                cachedVersions?.Max(v => v.Size ?? 0) ?? 0);
-                            if (largestVersionBytes > int.MaxValue)
-                            {
-                                result.Status       = CopyStatus.Failed;
-                                result.ErrorMessage = Loc.T("Svc_Mig_FileVersionIsGB", largestVersionBytes / (1024.0 * 1024 * 1024));
-                                return;
-                            }
 
                             // Oversized files (multi-GB genomics/microscopy files etc.) get an extra gate on
                             // top of the normal download slot: each one holds its full content in memory
@@ -1714,9 +1739,22 @@ public class MigrationJobService(SharePointService spService)
                             long budgetCharge = 0;
                             if (memoryBudget != null)
                             {
-                                long payloadBytes = Math.Max(knownFileBytes, totalVersionBytes);
-                                if (payloadBytes <= 0) payloadBytes = LargeFileThresholdBytes;
-                                budgetCharge = memoryBudget.ClampCharge(2 * payloadBytes);
+                                // Versions that stream through temp files cost only transfer buffers;
+                                // everything else is held in memory (raw + encrypted copy → 2×).
+                                long inMemoryBytes = 0;
+                                int  spilledVersions = 0;
+                                if (cachedVersions != null)
+                                    foreach (var v in cachedVersions)
+                                    {
+                                        long versionBytes = v.Size ?? knownFileBytes;
+                                        if (versionBytes >= LargeFileThresholdBytes) spilledVersions++;
+                                        else inMemoryBytes += versionBytes;
+                                    }
+                                // Size genuinely unknown → downloaded into memory; charge the conservative nominal.
+                                if (sizeUnknown) inMemoryBytes = Math.Max(inMemoryBytes, LargeFileThresholdBytes);
+                                long charge = 2 * inMemoryBytes + spilledVersions * SpilledVersionChargeBytes;
+                                if (charge <= 0) charge = 2 * LargeFileThresholdBytes;
+                                budgetCharge = memoryBudget.ClampCharge(charge);
                                 await memoryBudget.WaitAsync(budgetCharge, ct);
                             }
 
@@ -1788,6 +1826,9 @@ public class MigrationJobService(SharePointService spService)
             // GUID → CopyResult, built as files are added, so per-item SP import errors can be
             // attributed back to the exact file. Written only in this sequential consumer loop.
             var listItemMap = new Dictionary<string, CopyResult>(StringComparer.OrdinalIgnoreCase);
+            // CopyResult → its manifest entry, so a deferred target delete that fails can exclude
+            // exactly that file from the manifest. Written only in the sequential consumer loop.
+            var entryByResult = new Dictionary<CopyResult, MigrationPackageBuilder.FileEntry>();
 
             try
             {
@@ -1807,7 +1848,7 @@ public class MigrationJobService(SharePointService spService)
                         .ToList();
 
                     await builder.AddFileAsync(data.Job.SourceName, data.FolderRelPath, data.Metadata,
-                        versionStreams, data.ExistingFileId, data.CustomFields);
+                        versionStreams, data.ExistingFileId, data.CustomFields, batchCt);
 
                     // Hand this file's blob upload off to run concurrently with other files' uploads.
                     var entry      = builder.Files[^1];
@@ -1817,6 +1858,7 @@ public class MigrationJobService(SharePointService spService)
                     // errors the ListItemId, stream errors the StreamId). Keying only ListItemId left
                     // [File]-level errors unattributed (observed 2026-07-01: 3 MD5 errors reported, 1
                     // attributed — 2 failed files shown as Success in the grid).
+                    entryByResult[dataResult]     = entry;
                     listItemMap[entry.ListItemId] = dataResult;
                     listItemMap[entry.FileId]     = dataResult;
                     foreach (var v in entry.Versions)
@@ -1839,9 +1881,14 @@ public class MigrationJobService(SharePointService spService)
                             // its current adaptive limit.
                             foreach (var version in entry.Versions)
                             {
-                                var content = version.EncryptedContent
-                                    ?? throw new InvalidOperationException("Encrypted content already released.");
-                                var ivB64 = Convert.ToBase64String(content[..16]);
+                                // Either the in-memory form ([IV][ciphertext] in one array) or, for a very
+                                // large version, a temp-file stream of ciphertext whose IV and MD5 were
+                                // computed while it was encrypted (see MigrationPackageBuilder).
+                                var content    = version.EncryptedContent;
+                                var fileSource = version.EncryptedStream;
+                                if (content == null && fileSource == null)
+                                    throw new InvalidOperationException("Encrypted content already released.");
+                                var ivB64 = Convert.ToBase64String(content != null ? content[..16] : version.Iv!);
                                 // SPMI requires an MD5 for every content blob ("Missing MD5 property in
                                 // Manifest and Azure Blob" otherwise). Small blobs get one implicitly:
                                 // a single-request upload has Azure compute/store Content-MD5 itself. Blobs
@@ -1850,7 +1897,9 @@ public class MigrationJobService(SharePointService spService)
                                 // (observed 2026-07-01: all >2 GB files in a batch rejected). Compute it
                                 // ourselves over exactly the uploaded bytes (ciphertext after the 16-byte
                                 // IV prefix — SP validates the stored blob, which is encrypted).
-                                var md5 = System.Security.Cryptography.MD5.HashData(content.AsSpan(16));
+                                var md5 = content != null
+                                    ? System.Security.Cryptography.MD5.HashData(content.AsSpan(16))
+                                    : version.ContentMd5!;
                                 var opts  = new BlobUploadOptions
                                 {
                                     Metadata    = new Dictionary<string, string> { ["IV"] = ivB64 },
@@ -1874,8 +1923,13 @@ public class MigrationJobService(SharePointService spService)
                                 {
                                     try
                                     {
-                                        using var ms = new MemoryStream(content, 16, content.Length - 16);
-                                        await blob.UploadAsync(ms, opts, cancellationToken);
+                                        // A fresh MemoryStream per attempt (UploadAsync consumes it); the
+                                        // temp-file stream is simply rewound to the start.
+                                        Stream upload;
+                                        if (content != null) upload = new MemoryStream(content, 16, content.Length - 16);
+                                        else { fileSource!.Position = 0; upload = fileSource; }
+                                        try { await blob.UploadAsync(upload, opts, cancellationToken); }
+                                        finally { if (content != null) upload.Dispose(); }
                                         await blob.CreateSnapshotAsync(cancellationToken: cancellationToken);
                                         break;
                                     }
@@ -1900,7 +1954,7 @@ public class MigrationJobService(SharePointService spService)
                                         await Task.Delay(TimeSpan.FromSeconds(waitsecs), cancellationToken);
                                     }
                                 }
-                                version.EncryptedContent = null;
+                                version.ReleaseContent();
                             }
                             dataResult.VersionsCopied = versCount;
                             onFilePacked?.Report(data.Job.SourceSize ?? 0);
@@ -1924,6 +1978,9 @@ public class MigrationJobService(SharePointService spService)
                         }
                         finally
                         {
+                            // Uploaded or failed: either way none of this file's blobs are needed any more.
+                            // Frees the in-memory arrays AND deletes any temp files still held for failures.
+                            foreach (var v in entry.Versions) v.ReleaseContent();
                             if (uploadController != null) uploadController.Release();
                             else localUploadGate!.Release();
                             // End of this file's in-memory life (uploaded or failed, encrypted
@@ -2067,8 +2124,24 @@ public class MigrationJobService(SharePointService spService)
                     });
             }
 
-            // IfNewer behaves like overwrite from SPMI's perspective: stale targets were
-            // already deleted in step 2b, so surviving imports must be allowed to replace.
+            // Deferred overwrite deletes. Every source download, encryption and blob upload for this
+            // batch has succeeded by now, and every step that can still throw before the import
+            // (target folder GUID resolution above) has passed — so this is the latest point at which
+            // the delete can still drop a file from the manifest if it fails. Only files that are
+            // still on track to import lose their target; a file that already Failed (download,
+            // size limit, packaging, upload) or was Cancelled keeps its existing target untouched.
+            foreach (var (result, url) in deferredDeletes)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                if (result.Status != CopyStatus.Copying) continue;
+                if (await spService.PermanentlyDeleteFileAsync(targetSiteUrl, url)) continue;
+                result.Status       = CopyStatus.Failed;
+                result.ErrorMessage = Loc.T("Svc_Mig_CouldNotRemoveThe2");
+                if (entryByResult.TryGetValue(result, out var failedEntry)) failedEntry.Failed = true;
+            }
+
+            // IfNewer behaves like overwrite from SPMI's perspective: stale targets are deleted just
+            // above, so surviving imports must be allowed to replace.
             var spmiOverwrite = overwriteMode != OverwriteMode.Skip;
             System.Diagnostics.Debug.WriteLine(
                 $"[Migration] manifest params: siteId={siteId} webId={webId} listId={listId}" +
@@ -2140,6 +2213,11 @@ public class MigrationJobService(SharePointService spService)
 
         var pfx       = string.IsNullOrEmpty(batch.BatchLabel) ? "" : $"[{batch.BatchLabel}] ";
         var fileTasks = batch.FileTasks;
+        // The rows actually being imported. A row that failed BEFORE submission (download, size limit,
+        // packaging, upload, delete conflict) is not in this import, so SharePoint's error count can't
+        // include it — it must not be counted when checking for unattributed import errors below.
+        var submitted = fileTasks.Where(t => t.result.Status == CopyStatus.Copying)
+                                 .Select(t => t.result).ToHashSet();
         try
         {
             var metadataClient = new BlobContainerClient(new Uri(batch.MetadataUri));
@@ -2240,7 +2318,10 @@ public class MigrationJobService(SharePointService spService)
             // confirm each still-in-flight file actually landed on the target. A lookup failure here
             // marks the file Failed (re-runnable), which is the safe direction; fabricated Success
             // is not.
-            int attributedFailed = fileTasks.Count(t => t.result.Status == CopyStatus.Failed);
+            // Only failures among the SUBMITTED rows count as attributed: counting every Failed row let
+            // five pre-submission download failures mask three real, unattributed import failures
+            // (3 > 5 is false → existence check skipped → the three promoted to Success below).
+            int attributedFailed = fileTasks.Count(t => submitted.Contains(t.result) && t.result.Status == CopyStatus.Failed);
             int reportedErrors   = Math.Max(liveErrorCount, totalErrorsReported);
             if (!fatal && reportedErrors > attributedFailed)
             {
@@ -2338,6 +2419,21 @@ public class MigrationJobService(SharePointService spService)
         }
     }
 
+    // True when the target copy of this job's file is at least as new as the source (same tolerance
+    // as the If-newer pre-flight). A target Graph can't see (zombie row) or a missing date is NOT
+    // up to date — it has to be cleared for the import to succeed. A lookup that throws propagates:
+    // the retry then leaves the file blocked instead of purging a target it couldn't compare.
+    private async Task<bool> TargetIsUpToDateAsync(CopyJob job, string subPath)
+    {
+        var relative = string.IsNullOrEmpty(subPath) ? job.SourceName : $"{subPath}/{job.SourceName}";
+        var targetItemId = await spService.ResolveItemIdByPathAsync(job.TargetDriveId, job.TargetParentItemId, relative);
+        if (targetItemId == null) return false;
+        var target = await spService.GetFileMetadataAsync(job.TargetDriveId, targetItemId);
+        var sourceModified = job.SourceModified
+            ?? (await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId)).ModifiedDateTime;
+        return sourceModified is { } s && target.ModifiedDateTime is { } t && TimestampComparer.IsUpToDate(s, t);
+    }
+
     private sealed record DownloadedFile(
         CopyJob Job,
         CopyResult Result,
@@ -2345,7 +2441,7 @@ public class MigrationJobService(SharePointService spService)
         string? ExistingFileId,
         FileMetadata Metadata,
         List<Microsoft.Graph.Models.DriveItemVersion> Versions,
-        MemoryStream?[] Slots,
+        Stream?[] Slots,
         Dictionary<string, string>? CustomFields)
     {
         // True when this file still owns a largeFileGate slot. The producer transfers ownership
@@ -2412,7 +2508,7 @@ public class MigrationJobService(SharePointService spService)
 
         // Download all version content concurrently, buffering each stream immediately so the
         // HTTP connection is consumed before it can go stale. Index-keyed array preserves order.
-        var slots = new MemoryStream?[versions.Count];
+        var slots = new Stream?[versions.Count];
         long dlId = RegisterDownload(job.SourceName, metadata.Size ?? job.SourceSize ?? 0);
         try
         {
@@ -2433,9 +2529,16 @@ public class MigrationJobService(SharePointService spService)
                 // grow by doubling allocates ~2× the file size in cumulative LOH churn per version,
                 // which at multi-GB scale is real GC pressure on top of an already-bounded budget.
                 long expectedBytes = version.Size ?? metadata.Size ?? 0;
-                var ms = expectedBytes > 0 && expectedBytes <= int.MaxValue
-                    ? new MemoryStream((int)expectedBytes)
-                    : new MemoryStream();
+                // A very large version streams into a temp file instead of a MemoryStream (see
+                // CreateSpillFile). Everything below treats both as a seekable Stream: Length is still
+                // "bytes that survived the previous attempt", so Range-resume works the same way.
+                Stream ms = expectedBytes >= LargeFileThresholdBytes
+                    ? CreateSpillFile()
+                    : expectedBytes > 0 && expectedBytes <= int.MaxValue
+                        ? new MemoryStream((int)expectedBytes)
+                        : new MemoryStream();
+                try
+                {
                 for (int attempt = 0; ; attempt++)
                 {
                     // RESUME, don't restart: a reset partway through a multi-GB scan used to discard
@@ -2500,6 +2603,13 @@ public class MigrationJobService(SharePointService spService)
                         activityLog?.Report(Loc.T("Svc_Mig_ConnectionRetryingInS", pfxLabel, job.SourceName, (ex is OperationCanceledException ? Loc.T("Svc_Mig_TimedOut") : Loc.T("Svc_Mig_Reset")), waitsecs, attempt + 1, resumeNote));
                         await Task.Delay(TimeSpan.FromSeconds(waitsecs), ct);
                     }
+                }
+                }
+                finally
+                {
+                    // A buffer that never reached `slots` (the download failed or was cancelled) would
+                    // otherwise linger — for a spill file, until a finalizer ran.
+                    if (slots[idx] == null) ms.Dispose();
                 }
             });
         }

@@ -638,4 +638,10 @@
   <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>1 つ以上の Azure AD アプリの登録を保存します。[保存] をクリックしたときに選択されている登録が、アクティブな登録になります。各アプリには、委任されたアクセス許可 Sites.ReadWrite.All と Files.ReadWrite.All が必要で、管理者の同意が必要です。</value></data>
   <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>セットアップ: portal.azure.com → Azure Active Directory → アプリの登録 → 新規登録。モバイル/デスクトップのリダイレクト URI として http://localhost を追加します。[API のアクセス許可] で、Graph の委任されたアクセス許可 Sites.ReadWrite.All + Files.ReadWrite.All を追加し、管理者の同意を付与します。</value></data>
   <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>コピー元ライブラリには、サポートされている種類のカスタム列がありません。サポートされる種類: テキスト、複数行テキスト、数値、ブール値、日付、選択肢、複数選択肢、ユーザー、マネージド メタデータ。参照列はサポートされていません。</value></data>
+  <data name="Ui_ProgressItems" xml:space="preserve"><value>{0} / {1} 個のアイテムを処理済み</value></data>
+  <data name="Ui_ProgressChecking" xml:space="preserve"><value>ファイルを確認中… {0} / {1}</value></data>
+  <data name="Ui_ProgressPackaged" xml:space="preserve"><value>{0:N0} / {1:N0} 個のファイルをインポート用にパッケージ化済み</value></data>
+  <data name="Ui_SuccessCount" xml:space="preserve"><value>成功 ({0})</value></data>
+  <data name="Ui_FailedCount" xml:space="preserve"><value>失敗 ({0})</value></data>
+  <data name="Ui_SkippedCount" xml:space="preserve"><value>スキップ ({0})</value></data>
 </root>
