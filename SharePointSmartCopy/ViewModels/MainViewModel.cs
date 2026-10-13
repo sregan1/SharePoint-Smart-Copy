@@ -14,6 +14,9 @@ namespace SharePointSmartCopy.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
     public readonly AuthService AuthService;
+    // Same instance as AuthService in single-tenant mode; a separate sign-in in multi-tenant mode.
+    public AuthService TargetAuthService { get; private set; }
+    public readonly TenantRouter Router;
     public readonly SharePointService SpService;
     private readonly CopyService _copyService;
     private readonly LibraryCopyService _libraryCopyService;
@@ -37,10 +40,12 @@ public partial class MainViewModel : ObservableObject
     // Tracked so ConfigureMappings_Click can await completion before opening dialog
     internal Task? _columnLoadTask;
 
-    public MainViewModel(AuthService? existingAuthService = null, AppSettings? settings = null)
+    public MainViewModel(AuthService? existingAuthService = null, AppSettings? settings = null, AuthService? existingTargetAuthService = null)
     {
         AuthService          = existingAuthService ?? new AuthService();
-        SpService            = new SharePointService(AuthService);
+        TargetAuthService    = AuthService;
+        Router               = new TenantRouter(AuthService);
+        SpService            = new SharePointService(AuthService, Router);
         SpService.Throttled += OnThrottled;
         var migrationJobService = new MigrationJobService(SpService);
         _copyService                    = new CopyService(SpService, migrationJobService);
@@ -55,6 +60,7 @@ public partial class MainViewModel : ObservableObject
         {
             if (existingAuthService == null)
                 AuthService.Configure(Settings);
+            ConfigureTenancy(existingTargetAuthService);
             SpService.Initialize();
         }
 
@@ -96,8 +102,78 @@ public partial class MainViewModel : ObservableObject
     {
         Settings = s;
         AuthService.Configure(s);
+        // Reconfiguring drops both sign-ins and the router's host registrations, so a multi-tenant
+        // session must reconnect — otherwise both sides stay marked connected while requests are
+        // routed to the wrong tenant.
+        if (IsMultiTenant)
+        {
+            DisconnectSource();
+            DisconnectTarget();
+            TargetSignedInUser = string.Empty;
+        }
+        ConfigureTenancy();
         SpService.Initialize();
     }
+
+    // Single tenant: the target shares the source's sign-in (TargetAuthService == AuthService) and the
+    // router stays empty, so nothing about the original behavior changes. Multi-tenant: the target gets
+    // its own AuthService configured from the target registration; the router learns which host belongs
+    // to which side when each side connects.
+    private void ConfigureTenancy(AuthService? existingTarget = null)
+    {
+        Router.Clear();
+        if (Settings.ConnectionMode == ConnectionMode.MultiTenant)
+        {
+            if (existingTarget != null)
+            {
+                TargetAuthService = existingTarget;
+            }
+            else
+            {
+                if (ReferenceEquals(TargetAuthService, AuthService)) TargetAuthService = new AuthService();
+                if (Settings.TargetRegistration is { } reg) TargetAuthService.Configure(reg);
+            }
+        }
+        else
+        {
+            TargetAuthService = AuthService;
+        }
+        ApplyIdentityMapping();
+    }
+
+    // Identity translation only applies to cross-tenant copies; single-tenant always gets the no-op mapper.
+    public void ApplyIdentityMapping()
+        => SpService.Identity = IsMultiTenant
+            ? IdentityMapper.FromSettings(Settings.IdentityMapping)
+            : IdentityMapper.None;
+
+    // Bound to the Single tenant / Multi-tenant tabs on the Source step. Switching resets both
+    // connections, because routing is built per mode and hosts must be re-registered on connect.
+    public bool IsMultiTenant
+    {
+        get => Settings.ConnectionMode == ConnectionMode.MultiTenant;
+        set
+        {
+            if (value == IsMultiTenant) return;
+            Settings.ConnectionMode = value ? ConnectionMode.MultiTenant : ConnectionMode.SingleTenant;
+            try { Settings.Save(); } catch { /* the mode still applies for this session */ }
+            DisconnectSource();
+            DisconnectTarget();
+            TargetSignedInUser = string.Empty;
+            ConfigureTenancy();
+            OnPropertyChanged(nameof(IsMultiTenant));
+            OnPropertyChanged(nameof(IsSingleTenant));
+        }
+    }
+
+    public bool IsSingleTenant
+    {
+        get => !IsMultiTenant;
+        set => IsMultiTenant = !value;
+    }
+
+    // Signed-in account on the target side (multi-tenant only; empty otherwise).
+    [ObservableProperty] private string _targetSignedInUser = string.Empty;
 
     // ── Step navigation ───────────────────────────────────────────────────────
     // Steps: 0=Source  1=Browse  2=Target  3=Options  4=Copying  5=Report
@@ -169,6 +245,16 @@ public partial class MainViewModel : ObservableObject
             await AuthService.GetAccessTokenAsync(forceInteractive: !AuthService.IsAuthenticated, cancellationToken: ct);
             ct.ThrowIfCancellationRequested();
             SignedInUser = AuthService.UserName ?? string.Empty;
+            if (IsMultiTenant)
+            {
+                // Mirror of the check in ConnectTargetAsync: routing is by host, so registering the
+                // source on the target's host would silently re-route the target to the source sign-in.
+                if (TargetConnected && Uri.TryCreate(SourceUrl.Trim(), UriKind.Absolute, out var srcUri)
+                    && Uri.TryCreate(TargetUrl.Trim(), UriKind.Absolute, out var tgtUri)
+                    && srcUri.Host.Equals(tgtUri.Host, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException(Loc.T("VM_SameTenantError"));
+                Router.RegisterHost(SourceUrl.Trim(), AuthService);
+            }
             SourceSiteId = await SpService.GetSiteIdAsync(SourceUrl.Trim());
             ct.ThrowIfCancellationRequested();
             SourceStatus    = Loc.T("VM_SourceConnectedAs", SignedInUser);
@@ -428,6 +514,20 @@ public partial class MainViewModel : ObservableObject
         IsConnectingTarget = true;
         try
         {
+            if (IsMultiTenant)
+            {
+                // Routing is by SharePoint host, so both sides on one host cannot use different sign-ins.
+                if (Uri.TryCreate(SourceUrl.Trim(), UriKind.Absolute, out var srcUri)
+                    && Uri.TryCreate(TargetUrl.Trim(), UriKind.Absolute, out var tgtUri)
+                    && srcUri.Host.Equals(tgtUri.Host, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException(Loc.T("VM_SameTenantError"));
+
+                await TargetAuthService.GetAccessTokenAsync(forceInteractive: !TargetAuthService.IsAuthenticated, cancellationToken: ct);
+                ct.ThrowIfCancellationRequested();
+                TargetSignedInUser = TargetAuthService.UserName ?? string.Empty;
+                Router.RegisterHost(TargetUrl.Trim(), TargetAuthService);
+            }
+
             TargetSiteId = await SpService.GetSiteIdAsync(TargetUrl.Trim());
             ct.ThrowIfCancellationRequested();
             var libs = await SpService.GetLibrariesAsync(TargetSiteId, TargetUrl.Trim());
@@ -481,7 +581,7 @@ public partial class MainViewModel : ObservableObject
                 catch { /* non-critical — list picker just stays empty */ }
             }
 
-            try { await AuthService.GetSharePointTokenAsync(TargetUrl.Trim(), cancellationToken: ct); }
+            try { await TargetAuthService.GetSharePointTokenAsync(TargetUrl.Trim(), cancellationToken: ct); }
             catch
             {
                 TargetStatus = Loc.T("VM_ConnectedConsentNote");
@@ -1303,6 +1403,8 @@ public partial class MainViewModel : ObservableObject
             PushActivity(Loc.T("VM_ActivityLogPath", ActivityLogPath));
         RunSettingsSummary = BuildRunSettingsSummary();
         PushActivity(Loc.T("VM_SettingsSummary", RunSettingsSummary));
+        // Once per run (CopyService.ExecuteAsync runs once per library in Library/Site scopes).
+        if (IsMultiTenant) PushActivity(Loc.T("Svc_CrossTenantNotes"));
         System.Windows.Threading.DispatcherTimer? metadataTimer = null;
         var onMetadataDone = new Progress<bool>(completed =>
         {

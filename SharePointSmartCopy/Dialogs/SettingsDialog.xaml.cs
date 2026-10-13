@@ -9,15 +9,18 @@ namespace SharePointSmartCopy.Dialogs;
 public partial class SettingsDialog : Window
 {
     private readonly AuthService _authService;
+    private readonly AuthService? _targetAuthService;
     private readonly AppSettings _original;
     private readonly ObservableCollection<AzureRegistration> _registrations = [];
 
     public AppSettings Result { get; private set; }
 
-    public SettingsDialog(AppSettings current, AuthService authService)
+    public SettingsDialog(AppSettings current, AuthService authService, AuthService? targetAuthService = null)
     {
         InitializeComponent();
         _authService = authService;
+        // Same instance as authService in single-tenant mode — only sign out a distinct target once.
+        _targetAuthService = ReferenceEquals(targetAuthService, authService) ? null : targetAuthService;
         _original    = current;
         Result       = current;
 
@@ -41,7 +44,25 @@ public partial class SettingsDialog : Window
         LanguageCombo.SelectedValue = current.Language ?? string.Empty;
         if (LanguageCombo.SelectedIndex < 0) LanguageCombo.SelectedIndex = 0;
         PrefixFilenamesCheckBox.IsChecked = current.PrefixReportFilenamesWithSiteNames;
+
+        _sameAsSource = new AzureRegistration { Name = Localization.Loc.T("Ui_SameAsSource") };
+        var targetIdx = current.TargetRegistrationIndex;
+        RefreshTargetRegistrationCombo(targetIdx is { } i && i >= 0 && i < _registrations.Count ? _registrations[i] : null);
     }
+
+    // First entry means "no separate target registration" (the target falls back to the source one).
+    private readonly AzureRegistration _sameAsSource;
+
+    private void RefreshTargetRegistrationCombo(AzureRegistration? select)
+    {
+        select ??= TargetRegistrationCombo.SelectedItem as AzureRegistration;
+        TargetRegistrationCombo.ItemsSource = new[] { _sameAsSource }.Concat(_registrations).ToList();
+        TargetRegistrationCombo.SelectedItem = select != null && _registrations.Contains(select) ? select : _sameAsSource;
+    }
+
+    // Registration names are editable and entries can be added or removed, so rebuild the list on open.
+    private void TargetRegistrationCombo_DropDownOpened(object? sender, EventArgs e)
+        => RefreshTargetRegistrationCombo(null);
 
     private void RegistrationList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -83,12 +104,18 @@ public partial class SettingsDialog : Window
             return;
         }
 
+        var targetReg = TargetRegistrationCombo.SelectedItem as AzureRegistration;
+        var targetIdx = targetReg == null || ReferenceEquals(targetReg, _sameAsSource) ? -1 : _registrations.IndexOf(targetReg);
+
         // Carry every persisted setting over — only registrations and theme are
         // edited here; dropping the rest would silently reset the user's options.
         Result = new AppSettings
         {
             Registrations           = _registrations.ToList(),
             ActiveRegistrationIndex = activeIdx,
+            ConnectionMode          = _original.ConnectionMode,
+            TargetRegistrationIndex = targetIdx >= 0 ? targetIdx : null,
+            IdentityMapping         = _original.IdentityMapping,
             SourceUrl               = _original.SourceUrl,
             TargetUrl               = _original.TargetUrl,
             PreferredCopyMode       = _original.PreferredCopyMode,
@@ -133,6 +160,7 @@ public partial class SettingsDialog : Window
         try
         {
             await _authService.SignOutAsync();
+            if (_targetAuthService != null) await _targetAuthService.SignOutAsync();
             MessageBox.Show("Signed out. You will be prompted to sign in on the next connection.",
                 "Signed Out", MessageBoxButton.OK, MessageBoxImage.Information);
         }

@@ -359,6 +359,9 @@
                         <TextBlock Text="{Binding SignedInUser}" Foreground="White" FontSize="12"
                                    VerticalAlignment="Center" Margin="0,0,12,0"
                                    Visibility="{Binding SignedInUser, Converter={StaticResource NotNullToVis}}"/>
+                        <TextBlock Foreground="White" FontSize="12" VerticalAlignment="Center" Margin="0,0,12,0"
+                                   Text="{Binding TargetSignedInUser, StringFormat='→ {0}'}"
+                                   Visibility="{Binding TargetSignedInUser, Converter={StaticResource NotNullToVis}}"/>
                         <Button Style="{StaticResource AppBarBtn}" Margin="0,0,8,0" Click="HistoryButton_Click"
                                 WindowChrome.IsHitTestVisibleInChrome="True">
                             <StackPanel Orientation="Horizontal">
@@ -446,6 +449,27 @@
             <!-- ── Step 0: Source URL ─────────────────────────────────────── -->
             <StackPanel Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=0}"
                         MaxWidth="560" HorizontalAlignment="Center" Margin="0,32,0,0">
+
+                <!-- Connection mode. Single tenant = one shared sign-in (original behavior);
+                     Multi-tenant = source and target each sign in with their own registration. -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                    <RadioButton Style="{StaticResource FilterChip}" GroupName="ConnectionMode"
+                                 Content="{loc:Loc Ui_SingleTenant}"
+                                 IsChecked="{Binding IsSingleTenant, Mode=TwoWay}"
+                                 IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                    <RadioButton Style="{StaticResource FilterChip}" GroupName="ConnectionMode"
+                                 Content="{loc:Loc Ui_MultiTenant}"
+                                 IsChecked="{Binding IsMultiTenant, Mode=TwoWay}"
+                                 IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                </StackPanel>
+                <StackPanel Margin="0,0,0,16" Visibility="{Binding IsMultiTenant, Converter={StaticResource BoolToVis}}">
+                    <TextBlock TextWrapping="Wrap" FontSize="12"
+                               Foreground="{DynamicResource TextTertiaryBrush}"
+                               Text="{loc:Loc Ui_MultiTenantHint}"/>
+                    <Button Content="{loc:Loc Ui_IdentityMappingButton}" Style="{StaticResource LinkBtn}"
+                            Click="IdentityMapping_Click" HorizontalAlignment="Left" Margin="0,6,0,0" Padding="0"
+                            FontSize="12"/>
+                </StackPanel>
 
                 <TextBlock Text="{loc:Loc Ui_ConnectToSourceSite}" Style="{StaticResource SectionHeader}"/>
                 <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Ui2_EnterSourceSiteUrl}"/>

@@ -132,15 +132,18 @@ public class PermissionCopyService(SharePointService spService)
         // PrincipalType 8 = SharePoint group → resolve by title
         if (assignment.PrincipalType == 8)
         {
-            if (_groupCache.TryGetValue(assignment.Title, out var cached))
+            // Cross-tenant: a group's target name can differ — an override keyed by its title remaps it.
+            var groupTitle = spService.Identity.MapPrincipal(string.Empty, assignment.Title);
+            if (_groupCache.TryGetValue(groupTitle, out var cached))
                 return cached;
-            var id = await spService.GetSiteGroupIdAsync(targetSiteUrl, assignment.Title, ct);
-            _groupCache[assignment.Title] = id;
+            var id = await spService.GetSiteGroupIdAsync(targetSiteUrl, groupTitle, ct);
+            _groupCache[groupTitle] = id;
             return id;
         }
 
-        // PrincipalType 1 (user) or 4 (AAD security group) → resolve via ensureuser
-        var loginKey = string.IsNullOrEmpty(assignment.LoginName) ? assignment.Title : assignment.LoginName;
+        // PrincipalType 1 (user) or 4 (AAD security group) → resolve via ensureuser.
+        // Cross-tenant: map the source login (domain swap / explicit override) to its target identity first.
+        var loginKey = spService.Identity.MapPrincipal(assignment.LoginName, assignment.Title);
         if (_userCache.TryGetValue(loginKey, out var cachedUser))
             return cachedUser;
         var userId = await spService.EnsureUserAsync(targetSiteUrl, loginKey, ct);

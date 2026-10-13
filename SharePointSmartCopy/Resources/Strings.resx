@@ -638,4 +638,21 @@
   <data name="Ui2_AppRegsIntro" xml:space="preserve"><value>Store one or more Azure AD app registrations. The one selected when you click Save becomes the active registration. Each app needs delegated permissions Sites.ReadWrite.All and Files.ReadWrite.All, with admin consent.</value></data>
   <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Setup: portal.azure.com → Azure Active Directory → App registrations → New registration. Add a Mobile/Desktop redirect URI of http://localhost. Under API permissions, add Graph delegated: Sites.ReadWrite.All + Files.ReadWrite.All, then grant admin consent.</value></data>
   <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>The source library has no custom columns of a supported type. Supported types: Text, Note, Number, Boolean, Date, Choice, Multi-choice, Person, Managed Metadata. Lookup columns are not supported.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Single tenant</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Multi-tenant</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Copy between two different Microsoft 365 tenants. You sign in separately to the source and to the target. Choose the target's app registration in Settings.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Target registration:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Multi-tenant mode: the app registration used to sign in to the target tenant. "Same as source" reuses the source registration, which must then be a multi-tenant app.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>The SharePoint host '{0}' is not associated with a connected tenant. Reconnect the source and target sites and try again.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Cross-tenant copy: managed-metadata (taxonomy) column values are not copied, and OneNote notebooks / document sets cannot be copied between tenants yet. Identities are mapped using your Identity mapping settings; anyone who cannot be resolved in the target is skipped.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Identity mapping</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Identity mapping…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>People and groups are different accounts in each tenant. Map source identities to their target equivalents so authors, editors, person columns and permissions land on the right accounts. Anyone who cannot be resolved in the target is skipped and reported.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Source email domain</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Target email domain</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Overrides — one "source,target" pair per line (users or group names; # starts a comment)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Same as source</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Source and target are on the same tenant. Switch to single-tenant mode for same-tenant copies.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Native folder copy (OneNote notebooks, document sets) is not supported across tenants yet.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Drive '{0}' is not associated with a connected tenant. Reconnect the source and target sites and try again.</value></data>
 </root>

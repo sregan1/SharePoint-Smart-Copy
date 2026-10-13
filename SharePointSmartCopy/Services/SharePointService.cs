@@ -71,9 +71,19 @@ public class SharePointService
     // 3 permits → at most 60 concurrent Graph ops from batch calls at any instant.
     private readonly System.Threading.SemaphoreSlim _batchGate = new(3, 3);
 
-    public SharePointService(AuthService authService)
+    // Picks the tenant (AuthService) per request. With nothing registered it always returns
+    // _authService, so single-tenant behavior is unchanged. See TenantRouter.
+    private readonly TenantRouter _router;
+    public TenantRouter Router => _router;
+
+    // Cross-tenant identity translation applied wherever an identity is written to the target.
+    // Inactive (returns inputs untouched) unless the view model installs a configured mapper.
+    public IdentityMapper Identity { get; set; } = IdentityMapper.None;
+
+    public SharePointService(AuthService authService, TenantRouter? router = null)
     {
         _authService = authService;
+        _router = router ?? new TenantRouter(authService);
         // Decorate the raw HTTP client (content downloads + SharePoint REST) — see MigrationUserAgent.
         // Pipe-delimited value isn't a valid structured UA, so add it without validation.
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", MigrationUserAgent);
@@ -107,7 +117,7 @@ public class SharePointService
     }
 
     public Task<string> GetSharePointTokenAsync(string siteUrl, string scope = "Sites.ReadWrite.All")
-        => _authService.GetSharePointTokenAsync(siteUrl, scope);
+        => _router.ForSiteUrl(siteUrl).GetSharePointTokenAsync(siteUrl, scope);
 
     // Returns the root item ID for a drive (needed to target uploads to a library root).
     public async Task<string?> GetLibraryRootItemIdAsync(string driveId)
@@ -152,7 +162,7 @@ public class SharePointService
 
     public void Initialize()
     {
-        var provider = new BaseBearerTokenAuthenticationProvider(new TokenProvider(_authService));
+        var provider = new BaseBearerTokenAuthenticationProvider(new TokenProvider(_router));
         var handlers = KiotaClientFactory.CreateDefaultHandlers();
         // CreateDefaultHandlers() order: [0]=UriReplacementHandler [1]=RetryHandler [2]=RedirectHandler ...
         // Replace the RetryHandler (index 1) with one configured for large migrations.
@@ -277,6 +287,7 @@ public class SharePointService
         foreach (var d in allDrives)
         {
             if (d.Id == null || d.Name == null) continue;
+            _router.RegisterDriveForSite(d.Id, siteUrl);
 
             string? serverRelUrl = null;
             if (d.WebUrl != null)
@@ -948,7 +959,7 @@ public class SharePointService
     public async Task<RangedContent> DownloadContentRangeAsync(
         string driveId, string itemId, string? versionId, long rangeStart, CancellationToken ct)
     {
-        var token = await _authService.GetAccessTokenAsync(cancellationToken: ct);
+        var token = await _router.ForDrive(driveId).GetAccessTokenAsync(cancellationToken: ct);
         var url = versionId == null
             ? $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}/content"
             : $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}/versions/{versionId}/content";
@@ -1147,6 +1158,7 @@ public class SharePointService
                     {
                         var batch = new BatchRequestContentCollection(Graph);
                         var ids = new string?[chunk.Length];
+                        var chunkAuth = _router.ForDrive(chunk[0].driveId); // resolved outside the try below so a routing error is loud
                         for (int i = 0; i < chunk.Length; i++)
                         {
                             var (driveId, itemId) = chunk[i];
@@ -1156,7 +1168,7 @@ public class SharePointService
                         }
 
                         BatchResponseContentCollection response;
-                        try { response = await Graph.Batch.PostAsync(batch, c); }
+                        try { using (_router.Scope(chunkAuth)) response = await Graph.Batch.PostAsync(batch, c); }
                         catch (OperationCanceledException) { throw; }
                         catch { return; } // whole batch call failed — retry rounds below cover these items
 
@@ -1262,6 +1274,7 @@ public class SharePointService
                     {
                         var batch = new BatchRequestContentCollection(Graph);
                         var ids = new string?[chunk.Length];
+                        var chunkAuth = _router.ForDrive(chunk[0].driveId); // resolved outside the try below so a routing error is loud
                         for (int i = 0; i < chunk.Length; i++)
                         {
                             var (driveId, itemId) = chunk[i];
@@ -1271,7 +1284,7 @@ public class SharePointService
                         }
 
                         BatchResponseContentCollection response;
-                        try { response = await Graph.Batch.PostAsync(batch, c); }
+                        try { using (_router.Scope(chunkAuth)) response = await Graph.Batch.PostAsync(batch, c); }
                         catch (OperationCanceledException) { throw; }
                         catch { return; } // whole batch call failed — retry rounds below cover these items
 
@@ -1478,7 +1491,9 @@ public class SharePointService
             versIds[i] = batch.AddBatchRequestStep(versReq);
         }
 
-        var response = await Graph.Batch.PostAsync(batch, ct);
+        BatchResponseContentCollection response;
+        using (_router.Scope(_router.ForDrive(chunk[0].driveId)))
+            response = await Graph.Batch.PostAsync(batch, ct);
 
         // Max Retry-After across this chunk's throttled sub-responses — raised once (below) via the
         // Throttled event so subscribed adaptive gates step down and hold their quiet window, making
@@ -2055,6 +2070,13 @@ public class SharePointService
     {
         try
         {
+            var sourceAuth = _router.ForDrive(sourceDriveId);
+            // The Graph /copy endpoint only works inside one tenant. Cross-tenant needs a
+            // download + re-upload fallback (planned); until then fail clearly instead of with an
+            // opaque Graph 4xx.
+            if (!ReferenceEquals(sourceAuth, _router.ForDrive(targetDriveId)))
+                return Loc.T("Svc_Sp_NativeCopyCrossTenant");
+
             var copyBody = JsonSerializer.Serialize(new
             {
                 parentReference = new { driveId = targetDriveId, id = targetParentItemId },
@@ -2066,7 +2088,9 @@ public class SharePointService
             };
             var batch = new BatchRequestContentCollection(Graph);
             var stepId = batch.AddBatchRequestStep(req);
-            var batchResponse = await Graph.Batch.PostAsync(batch, ct);
+            BatchResponseContentCollection batchResponse;
+            using (_router.Scope(sourceAuth))
+                batchResponse = await Graph.Batch.PostAsync(batch, ct);
             using var http = await batchResponse.GetResponseByIdAsync(stepId);
 
             if (http.StatusCode != System.Net.HttpStatusCode.Accepted)
@@ -2094,8 +2118,8 @@ public class SharePointService
             string? token = hasEmbeddedAuth
                 ? null
                 : monitorHost.Equals("graph.microsoft.com", StringComparison.OrdinalIgnoreCase)
-                    ? await _authService.GetAccessTokenAsync(cancellationToken: ct)
-                    : await _authService.GetSharePointTokenAsync($"https://{monitorHost}", cancellationToken: ct);
+                    ? await sourceAuth.GetAccessTokenAsync(cancellationToken: ct)
+                    : await sourceAuth.GetSharePointTokenAsync($"https://{monitorHost}", cancellationToken: ct);
             for (int attempt = 0; attempt < 120; attempt++) // up to ~10 minutes for a large notebook
             {
                 await Task.Delay(TimeSpan.FromSeconds(attempt < 10 ? 2 : 5), ct);
@@ -2212,6 +2236,11 @@ public class SharePointService
         string? colorTag = null, string? colorHex = null,
         string? folderServerRelativeUrl = null)
     {
+        // Cross-tenant: stamp the target-tenant equivalent of the source author/editor. A no-op unless
+        // identity mapping is configured (idempotent, so the later BuildDateAndPersonFormValuesAsync is safe).
+        createdByEmail  = Identity.MapEmail(createdByEmail);
+        modifiedByEmail = Identity.MapEmail(modifiedByEmail);
+
         if (createdDateTime == null && modifiedDateTime == null &&
             string.IsNullOrEmpty(createdByEmail) && string.IsNullOrEmpty(modifiedByEmail) &&
             string.IsNullOrEmpty(colorTag) && string.IsNullOrEmpty(colorHex))
@@ -2766,6 +2795,8 @@ public class SharePointService
         string? createdByEmail, string? modifiedByEmail)
     {
         var values = new List<(string, string)>();
+        createdByEmail  = Identity.MapEmail(createdByEmail);
+        modifiedByEmail = Identity.MapEmail(modifiedByEmail);
         if (modified.HasValue)
             values.Add(("Modified", await FormatAsSiteLocalDateStringAsync(siteUrl, modified.Value)));
         if (created.HasValue)
@@ -3041,7 +3072,7 @@ public class SharePointService
     // Returns the signed-in user's display name, email, and IsSiteAdmin flag for siteUrl.
     public async Task<(string title, string email, bool isSiteAdmin)> GetCurrentUserInfoAsync(string siteUrl)
     {
-        var token = await _authService.GetSharePointTokenAsync(siteUrl, "AllSites.FullControl");
+        var token = await _router.ForSiteUrl(siteUrl).GetSharePointTokenAsync(siteUrl, "AllSites.FullControl");
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/currentuser?$select=Title,Email,LoginName,IsSiteAdmin";
         using var req = new HttpRequestMessage(HttpMethod.Get, url);
         req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -3268,7 +3299,7 @@ public class SharePointService
             var url = $"{siteUrl.TrimEnd('/')}/_api/site/GetMigrationJobProgress(jobId=guid'{jobId}',nextToken={nextToken})";
             using var req = new HttpRequestMessage(HttpMethod.Get, url);
             req.Headers.Authorization = new AuthenticationHeaderValue("Bearer",
-                await _authService.GetSharePointTokenAsync(siteUrl, "AllSites.FullControl", cancellationToken));
+                await _router.ForSiteUrl(siteUrl).GetSharePointTokenAsync(siteUrl, "AllSites.FullControl", cancellationToken));
             req.Headers.Accept.ParseAdd("application/json;odata=nometadata");
 
             HttpResponseMessage response;
@@ -4143,7 +4174,8 @@ public class SharePointService
         CancellationToken cancellationToken = default)
     {
         const int maxThrottleRetries = 8;
-        var token = await _authService.GetSharePointTokenAsync(siteUrl, spScope, cancellationToken);
+        var siteAuth = _router.ForSiteUrl(siteUrl);
+        var token = await siteAuth.GetSharePointTokenAsync(siteUrl, spScope, cancellationToken);
         HttpResponseMessage response;
         bool refreshedToken = false;
 
@@ -4155,7 +4187,7 @@ public class SharePointService
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized && !refreshedToken)
             {
                 response.Dispose();
-                token = await _authService.GetSharePointTokenAsync(siteUrl, spScope, cancellationToken, forceRefresh: true);
+                token = await siteAuth.GetSharePointTokenAsync(siteUrl, spScope, cancellationToken, forceRefresh: true);
                 refreshedToken = true;
                 continue;
             }
@@ -4795,6 +4827,8 @@ public class SharePointService
                 continue;
             }
 
+            if (SkipsTaxonomyValue(value)) continue;
+
             var formattedValue = FormatFieldValueForValidate(value);
             formValues.Add((targetName, formattedValue));
             submittedFields.Add(targetName);
@@ -4907,11 +4941,17 @@ public class SharePointService
         return fieldErrors.Count > 0 ? Loc.T("Svc_Sp_CustomFieldErrors", string.Join(", ", fieldErrors)) : null;
     }
 
-    private static string FormatFieldValueForValidate(object value)
+    // Managed-metadata values carry the SOURCE term store's term GUIDs, which don't exist in another
+    // tenant's term store — writing them fails the field. In a cross-tenant copy they are skipped (the
+    // copy reports this once per run; see CopyService) rather than failing every item.
+    private bool SkipsTaxonomyValue(object? value) => value is TaxonomyFieldValue && _router.IsMultiTenant;
+
+    private string FormatFieldValueForValidate(object value)
     {
         // ValidateUpdateListItem person format: JSON array of claims keys.
+        // Cross-tenant: the logins were read from the source, so map them to target identities here.
         if (value is PersonFieldValue person)
-            return JsonSerializer.Serialize(person.Logins.Select(l => new { Key = l }));
+            return JsonSerializer.Serialize(person.Logins.Select(l => new { Key = Identity.MapLogin(l) }));
 
         // ValidateUpdateListItem taxonomy format: "Label|guid" (";"-joined for multi).
         // SharePoint resolves WssId and the hidden note field server-side.
@@ -4967,6 +5007,7 @@ public class SharePointService
 
             var driveId = drive?.Id;
             if (string.IsNullOrEmpty(driveId)) return null;
+            _router.RegisterDriveForSite(driveId, siteUrl);
 
             string? serverRelUrl = null;
             if (drive?.WebUrl != null)
@@ -5025,6 +5066,7 @@ public class SharePointService
 
             var driveId = drive?.Id;
             if (string.IsNullOrEmpty(driveId)) return null;
+            _router.RegisterDriveForSite(driveId, siteUrl);
 
             // Step 3: get the root item so we have a Graph item ID for tree expansion
             var root = await Graph.Drives[driveId].Root.GetAsync(cfg =>
@@ -5751,6 +5793,7 @@ public class SharePointService
         CancellationToken ct = default)
     {
         var formValues = complexFields
+            .Where(f => !SkipsTaxonomyValue(f.Value))
             .Select(f => (object)new { FieldName = f.Name, FieldValue = FormatFieldValueForValidate(f.Value) })
             .ToList();
         if (createdDate  != null) formValues.Add(new { FieldName = "Created",  FieldValue = createdDate });
@@ -6084,8 +6127,8 @@ public class SharePointService
 
     private sealed class TokenProvider : IAccessTokenProvider
     {
-        private readonly AuthService _auth;
-        public TokenProvider(AuthService auth) => _auth = auth;
+        private readonly TenantRouter _router;
+        public TokenProvider(TenantRouter router) => _router = router;
 
         public AllowedHostsValidator AllowedHostsValidator { get; } =
             new AllowedHostsValidator(["graph.microsoft.com"]);
@@ -6094,6 +6137,6 @@ public class SharePointService
             Uri uri,
             Dictionary<string, object>? additionalAuthenticationContext = null,
             CancellationToken cancellationToken = default)
-            => await _auth.GetAccessTokenAsync(cancellationToken: cancellationToken);
+            => await _router.ForGraphUri(uri).GetAccessTokenAsync(cancellationToken: cancellationToken);
     }
 }

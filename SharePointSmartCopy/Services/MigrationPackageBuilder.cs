@@ -66,9 +66,14 @@ public class MigrationPackageBuilder
     private readonly Dictionary<string, int> _userIdMap = new(StringComparer.OrdinalIgnoreCase);
     private int _nextUserId = 2;
 
-    public MigrationPackageBuilder(byte[] encryptionKey)
+    // Cross-tenant identity translation for every user written into the package (UserGroup.xml, the
+    // Author/Editor claims on each file). Inactive by default, so single-tenant packages are unchanged.
+    private readonly IdentityMapper _identity;
+
+    public MigrationPackageBuilder(byte[] encryptionKey, IdentityMapper? identity = null)
     {
         _encryptionKey = encryptionKey;
+        _identity      = identity ?? IdentityMapper.None;
     }
 
     public IReadOnlyList<FileEntry> Files => _files;
@@ -155,6 +160,7 @@ public class MigrationPackageBuilder
 
     private int GetUserId(string? email)
     {
+        email = _identity.MapEmail(email);
         if (string.IsNullOrEmpty(email)) return 1;
         if (!_userIdMap.TryGetValue(email, out var id))
             _userIdMap[email] = id = _nextUserId++;
@@ -762,8 +768,8 @@ public class MigrationPackageBuilder
     private static string FormatDate(DateTimeOffset dt) =>
         dt.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
 
-    private static string Claims(string? email) =>
-        string.IsNullOrEmpty(email) ? "" : $"i:0#.f|membership|{email}";
+    private string Claims(string? email) =>
+        string.IsNullOrEmpty(email) ? "" : $"i:0#.f|membership|{_identity.MapEmail(email)}";
 
     private static XElement Field(string name, string value) =>
         new XElement("Field",

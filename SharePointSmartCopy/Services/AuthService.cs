@@ -36,6 +36,18 @@ public class AuthService
         return false;
     }
 
+    // The account that completed interactive sign-in. Silent acquisition is pinned to it so a second
+    // account in the MSAL cache can never be picked by accident (matters once two tenants sign in).
+    private string? _pinnedAccountId;
+
+    private async Task<IAccount?> GetPinnedAccountAsync()
+    {
+        var accounts = (await _app!.GetAccountsAsync()).ToList();
+        if (_pinnedAccountId != null)
+            return accounts.FirstOrDefault(a => a.HomeAccountId.Identifier == _pinnedAccountId);
+        return accounts.FirstOrDefault();
+    }
+
     private readonly string[] _scopes =
     [
         "Sites.ReadWrite.All",
@@ -58,6 +70,7 @@ public class AuthService
             .WithRedirectUri("http://localhost")
             .Build();
         _authResult = null;
+        _pinnedAccountId = null;
         _tokenCache.Clear();
     }
 
@@ -79,8 +92,7 @@ public class AuthService
                 if (TryGetCachedToken(cacheKey, out var cachedToken))
                     return cachedToken;
 
-                var accounts = await _app.GetAccountsAsync();
-                var account = accounts.FirstOrDefault();
+                var account = await GetPinnedAccountAsync();
                 if (account != null)
                 {
                     try
@@ -96,6 +108,7 @@ public class AuthService
             _authResult = await _app.AcquireTokenInteractive(_scopes)
                 .WithPrompt(Prompt.SelectAccount)
                 .ExecuteAsync(cancellationToken);
+            _pinnedAccountId = _authResult.Account?.HomeAccountId?.Identifier;
             _tokenCache[cacheKey] = _authResult;
             return _authResult.AccessToken;
         }
@@ -125,8 +138,7 @@ public class AuthService
             if (!forceRefresh && TryGetCachedToken(cacheKey, out var cachedToken))
                 return cachedToken;
 
-            var accounts = await _app.GetAccountsAsync();
-            var account  = accounts.FirstOrDefault();
+            var account = await GetPinnedAccountAsync();
             if (account != null)
             {
                 try
@@ -143,6 +155,9 @@ public class AuthService
             var authResult = await _app.AcquireTokenInteractive(scopes)
                 .WithPrompt(Prompt.SelectAccount)
                 .ExecuteAsync(cancellationToken);
+            // Re-pin to whoever just signed in (same as the Graph path) so a stale or removed pinned
+            // account can't make every later refresh fall back to an interactive prompt.
+            _pinnedAccountId = authResult.Account?.HomeAccountId?.Identifier ?? _pinnedAccountId;
             _tokenCache[cacheKey] = authResult;
             return authResult.AccessToken;
         }
@@ -155,6 +170,7 @@ public class AuthService
         foreach (var account in await _app.GetAccountsAsync())
             await _app.RemoveAsync(account);
         _authResult = null;
+        _pinnedAccountId = null;
         _tokenCache.Clear();
     }
 

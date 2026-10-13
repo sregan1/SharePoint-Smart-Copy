@@ -159,9 +159,21 @@
         </Grid>
 
         <!-- General options -->
-        <CheckBox Grid.Row="4" x:Name="PrefixFilenamesCheckBox"
-                  Content="{loc:Loc Ui_PrefixDefaultReportFilenamesWith}"
-                  FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+        <StackPanel Grid.Row="4">
+            <CheckBox x:Name="PrefixFilenamesCheckBox"
+                      Content="{loc:Loc Ui_PrefixDefaultReportFilenamesWith}"
+                      FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
+            <!-- Multi-tenant mode: the registration the target side signs in with. The source side uses the
+                 registration selected in the list above. -->
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="{loc:Loc Ui_TargetRegistration}" VerticalAlignment="Center" FontSize="12"
+                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,8,0"/>
+                <ComboBox x:Name="TargetRegistrationCombo" Width="240" VerticalAlignment="Center" FontSize="12"
+                          DisplayMemberPath="DisplayName"
+                          DropDownOpened="TargetRegistrationCombo_DropDownOpened"
+                          ToolTip="{loc:Loc Ui_TargetRegistrationHint}"/>
+            </StackPanel>
+        </StackPanel>
 
         <!-- Footer buttons -->
         <Grid Grid.Row="6">

@@ -1586,7 +1586,7 @@ public class MigrationJobService(SharePointService spService)
             blobOptions.Retry.Delay          = TimeSpan.FromSeconds(2);
             blobOptions.Retry.MaxDelay       = TimeSpan.FromSeconds(30);
             var dataClient = new BlobContainerClient(new Uri(dataUri), blobOptions);
-            var builder    = new MigrationPackageBuilder(encryptionKey);
+            var builder    = new MigrationPackageBuilder(encryptionKey, spService.Identity);
 
             // parallelFileDownloads: how many files can queue simultaneously against the global
             // downloadController gate within one SPMI batch's Parallel.ForEachAsync.

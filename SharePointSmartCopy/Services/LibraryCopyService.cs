@@ -289,6 +289,12 @@ public class LibraryCopyService(SharePointService spService)
             return;
         }
 
+        // Cross-tenant: a managed-metadata column is bound to the SOURCE term store's SspId/TermSetId,
+        // which don't exist in another tenant — creating it would leave a broken column. Skipped, and
+        // its values are skipped too (see SharePointService.SkipsTaxonomyValue).
+        if (ColumnDefinition.IsTaxonomyType(col.FieldType) && spService.Router.IsMultiTenant)
+            return;
+
         // User, taxonomy, and choice columns with options need schema XML.
         // The plain JSON /fields endpoint rejects typed properties (Choices, __metadata)
         // regardless of the odata=nometadata accept header.

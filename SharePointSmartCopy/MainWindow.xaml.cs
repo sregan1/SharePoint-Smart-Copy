@@ -133,7 +133,7 @@ public partial class MainWindow : Window
 
     private void SettingsButton_Click(object sender, RoutedEventArgs e)
     {
-        var dlg = new SettingsDialog(VM.Settings, VM.AuthService) { Owner = this };
+        var dlg = new SettingsDialog(VM.Settings, VM.AuthService, VM.TargetAuthService) { Owner = this };
         if (dlg.ShowDialog() == true)
         {
             VM.ApplySettings(dlg.Result);
@@ -245,9 +245,16 @@ public partial class MainWindow : Window
         }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
+    private void IdentityMapping_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new IdentityMappingDialog(VM.Settings) { Owner = this };
+        if (dlg.ShowDialog() == true)
+            VM.ApplyIdentityMapping();
+    }
+
     private void StartNewCopy_Click(object sender, RoutedEventArgs e)
     {
-        DataContext = new MainViewModel(VM.AuthService);
+        DataContext = new MainViewModel(VM.AuthService, existingTargetAuthService: VM.TargetAuthService);
         ((System.Collections.ObjectModel.ObservableCollection<CopyResult>)VM.CopyResults)
             .CollectionChanged += ProgressList_CollectionChanged;
     }

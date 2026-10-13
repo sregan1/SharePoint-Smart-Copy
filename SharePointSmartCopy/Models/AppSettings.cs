@@ -25,10 +25,30 @@ public enum OverwriteMode { Skip, Overwrite, IfNewer }
 
 public enum AppTheme { System, Light, Dark }
 
+// SingleTenant: source and target share one sign-in (the original behavior).
+// MultiTenant: source and target each sign in with their own app registration and account.
+public enum ConnectionMode { SingleTenant, MultiTenant }
+
+// Cross-tenant identity mapping (multi-tenant mode only). See IdentityMapper.
+public class IdentityMappingSettings
+{
+    // user@SourceDomain is written to the target as user@TargetDomain unless an override says otherwise.
+    public string SourceDomain { get; set; } = string.Empty;
+    public string TargetDomain { get; set; } = string.Empty;
+    // One "source,target" pair per line. Overrides win over the domain swap and are the only way to
+    // remap groups (e.g. an Entra group's name) and users whose names differ between tenants.
+    public string Overrides    { get; set; } = string.Empty;
+}
+
 public class AppSettings
 {
     public List<AzureRegistration> Registrations { get; set; } = [];
     public int ActiveRegistrationIndex { get; set; } = 0;
+    public ConnectionMode ConnectionMode { get; set; } = ConnectionMode.SingleTenant;
+    // Multi-tenant only. The source side uses ActiveRegistrationIndex; the target side uses this.
+    // Null (or out of range) means the target falls back to the active registration.
+    public int? TargetRegistrationIndex { get; set; }
+    public IdentityMappingSettings IdentityMapping { get; set; } = new();
     public string SourceUrl { get; set; } = string.Empty;
     public string TargetUrl { get; set; } = string.Empty;
     public CopyMode PreferredCopyMode    { get; set; } = CopyMode.MigrationApi;
@@ -123,6 +143,11 @@ public class AppSettings
         && ActiveRegistrationIndex < Registrations.Count
             ? Registrations[ActiveRegistrationIndex]
             : null;
+
+    public AzureRegistration? TargetRegistration =>
+        TargetRegistrationIndex is { } i && i >= 0 && i < Registrations.Count
+            ? Registrations[i]
+            : ActiveRegistration;
 
     public bool IsConfigured => !string.IsNullOrWhiteSpace(ActiveRegistration?.ClientId);
 }
