@@ -244,7 +244,8 @@ public partial class MainWindow : Window
     private async void HistoryButton_Click(object sender, RoutedEventArgs e)
     {
         var dlg = new HistoryDialog(VM.SpService,
-            r => VM.PrepareReportAccessAsync(r.SourceUrl, r.TargetUrl, r.Roots)) { Owner = this };
+            r => VM.PrepareReportAccessAsync(r.SourceUrl, r.TargetUrl, r.Roots),
+            (owner, users) => OpenIdentityMapping(owner, users)) { Owner = this };
         dlg.ShowDialog();
         if (dlg.ResumeReport is not { } report) return;
 
@@ -389,11 +390,27 @@ public partial class MainWindow : Window
         }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
-    private void IdentityMapping_Click(object sender, RoutedEventArgs e)
+    private void IdentityMapping_Click(object sender, RoutedEventArgs e) => OpenIdentityMapping(this, null);
+
+    // "Map these users…" on the report: the people the last run could not find, ready to be mapped.
+    private void MapUnresolved_Click(object sender, RoutedEventArgs e) => OpenIdentityMapping(this, VM.UnresolvedUsers);
+
+    // One entry point for every way into the mapping table (Source step, Target step, report, History).
+    // prefill = people to add as rows; owner = whichever window it was opened from.
+    private void OpenIdentityMapping(Window owner, IReadOnlyList<UnresolvedUser>? prefill)
     {
-        var dlg = new IdentityMappingDialog(VM.Settings) { Owner = this };
-        if (dlg.ShowDialog() == true)
-            VM.ApplyIdentityMapping();
+        var dlg = new IdentityMappingDialog(VM.Settings, prefill,
+            // "Check in target" works once there is a target URL (multi-tenant mode).
+            VM.CanCheckTargetUsers ? (email => VM.CheckTargetUserAsync(email)) : null) { Owner = owner };
+        if (dlg.ShowDialog() != true) return;
+
+        VM.ApplyIdentityMapping();
+        // Coming from a run: say plainly what saving does NOT do. Copy-if-newer skips files that are up to
+        // date, so their authors are not re-stamped — only a re-run with Overwrite (or new files) picks the
+        // mapping up. A toast is too brief for that.
+        if (prefill is { Count: > 0 })
+            MessageBox.Show(owner, Loc.T("Dlg_MappingSavedRerun"), Loc.T("Ui_IdentityMapping"),
+                MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private void StartNewCopy_Click(object sender, RoutedEventArgs e)

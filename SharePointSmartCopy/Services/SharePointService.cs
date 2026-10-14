@@ -80,6 +80,13 @@ public partial class SharePointService
     // Inactive (returns inputs untouched) unless the view model installs a configured mapper.
     public IdentityMapper Identity { get; set; } = IdentityMapper.None;
 
+    // People a cross-tenant run could not find in the target. Cleared at the start of each run.
+    public UnresolvedIdentityLog Unresolved { get; } = new();
+
+    // True while source and target are different tenants (hosts registered with the router). Gates
+    // everything that only makes sense across tenants — user pre-checks and unresolved-user capture.
+    internal bool IsCrossTenant => _router.IsMultiTenant;
+
     public SharePointService(AuthService authService, TenantRouter? router = null)
     {
         _authService = authService;

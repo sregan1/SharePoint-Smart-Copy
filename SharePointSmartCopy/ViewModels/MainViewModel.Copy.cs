@@ -594,6 +594,7 @@ public partial class MainViewModel : ObservableObject
         if (ActivityLogPath != null)
             PushActivity(Loc.T("VM_ActivityLogPath", ActivityLogPath));
         BeginRunJournal();
+        SpService.Unresolved.Clear();   // people the target can't find are collected per run
         RunSettingsSummary = BuildRunSettingsSummary();
         PushActivity(Loc.T("VM_SettingsSummary", RunSettingsSummary));
         // Once per run (CopyService.ExecuteAsync runs once per library in Library/Site scopes).

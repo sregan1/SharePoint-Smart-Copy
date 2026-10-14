@@ -903,6 +903,10 @@ public class MigrationJobService(SharePointService spService)
                 if (cacheMisses > 0)
                     activityLog?.Report(Loc.T("Svc_Mig_FileSMissingMetadata", cacheMisses));
 
+                // Cross-tenant: the package names every author and editor, but the import never says who among
+                // them does not exist in the target. Check them now so the report can list them.
+                await CheckPackageUsersAsync(metaCache, targetSiteUrl, activityLog, cancellationToken);
+
                 int VersionsOf((CopyJob job, CopyResult result) t)
                 {
                     if (!metaCache.TryGetValue(t.job.SourceItemId, out var c)) return 1;
@@ -2417,6 +2421,46 @@ public class MigrationJobService(SharePointService spService)
             }
             return new List<(CopyJob job, CopyResult result)>();
         }
+    }
+
+    // Cross-tenant only. Finds the distinct people named as author/editor across the files (and their
+    // versions) in this library, maps them, and records the ones the target tenant cannot resolve. Checked
+    // once per account per run (see UnresolvedIdentityLog.TryMarkChecked), a few at a time.
+    private async Task CheckPackageUsersAsync(
+        IReadOnlyDictionary<string, (FileMetadata Metadata, List<Microsoft.Graph.Models.DriveItemVersion>? Versions)> metaCache,
+        string targetSiteUrl, IProgress<string>? activityLog, CancellationToken ct)
+    {
+        if (!spService.IsCrossTenant) return;
+
+        // source email → how many files/versions name them
+        var occurrences = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        void Count(string? email)
+        {
+            if (string.IsNullOrWhiteSpace(email)) return;
+            occurrences[email.Trim()] = occurrences.GetValueOrDefault(email.Trim()) + 1;
+        }
+        foreach (var (metadata, versions) in metaCache.Values)
+        {
+            Count(metadata.CreatedByEmail);
+            Count(metadata.ModifiedByEmail);
+            if (versions != null)
+                foreach (var v in versions) Count(SharePointService.GetIdentityEmail(v.LastModifiedBy?.User));
+        }
+
+        var toCheck = occurrences.Keys.Where(spService.Unresolved.TryMarkChecked).ToList();
+        int missing = 0;
+        await Parallel.ForEachAsync(toCheck,
+            new ParallelOptions { MaxDegreeOfParallelism = 4, CancellationToken = ct },
+            async (source, token) =>
+            {
+                var mapped = spService.Identity.MapEmail(source) ?? source;
+                if (await spService.TargetUserExistsAsync(targetSiteUrl, mapped, token)) return;
+                spService.Unresolved.Record(source, mapped, "author", occurrences[source]);
+                Interlocked.Increment(ref missing);
+            });
+
+        if (missing > 0)
+            activityLog?.Report(Loc.T("Svc_Mig_PeopleNotInTarget", missing));
     }
 
     // True when the target copy of this job's file is at least as new as the source (same tolerance

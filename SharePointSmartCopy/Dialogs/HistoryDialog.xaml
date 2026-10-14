@@ -209,6 +209,10 @@
                     <Button x:Name="ExportButton" Content="{loc:Loc Ui_ExportCsv}"
                             Style="{StaticResource SecondaryBtn}"
                             IsEnabled="False" Margin="0,0,10,0" Click="ExportButton_Click"/>
+                    <Button x:Name="MapUsersButton" Content="{loc:Loc Ui_MapUnresolvedUsers}"
+                            ToolTip="{loc:Loc Ui_MapUnresolvedUsersHint}"
+                            Style="{StaticResource SecondaryBtn}" Visibility="Collapsed"
+                            IsEnabled="False" Margin="0,0,10,0" Click="MapUsersButton_Click"/>
                     <Button x:Name="ResumeButton" Content="{loc:Loc Ui_ResumeRun}"
                             ToolTip="{loc:Loc Ui_ResumeRunHint}"
                             Style="{StaticResource SecondaryBtn}"

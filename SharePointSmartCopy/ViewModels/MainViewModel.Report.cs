@@ -63,7 +63,7 @@ public partial class MainViewModel : ObservableObject
         StartActivityLogFile();
         if (ActivityLogPath != null)
             PushActivity(Loc.T("VM_ActivityLogPath", ActivityLogPath));
-        BeginRunJournal();
+        // (No crash journal here: a verification is not a copy run — it has no results of its own to recover.)
         // StatusMessage previously only ever got updated by scan progress below — once the scan
         // finished and the deep-verify pass started, its own progress messages (which DO arrive here
         // via onActivity/PushActivity, appended to the scrolling log) never replaced the single
@@ -345,6 +345,8 @@ public partial class MainViewModel : ObservableObject
                 CopyMode     = CopyMode,
                 Items        = CopyResults.Select(ToSavedItem).ToList(),
                 Roots        = BuildSavedRoots(),
+                // Kept with the run so History can offer "Map unresolved users" later, not just this screen.
+                UnresolvedUsers = [.. SpService.Unresolved.Snapshot()],
             };
             // The full report supersedes the journal — but only once it is really on disk.
             if (ReportHistoryService.Save(report)) EndRunJournal(complete: true);

@@ -117,6 +117,12 @@ public class PermissionCopyService(SharePointService spService)
             if (principalId == null)
             {
                 skipped.Add(string.IsNullOrEmpty(assignment.LoginName) ? assignment.Title : assignment.LoginName);
+                // Cross-tenant: remember WHO could not be found so the report can offer to map them.
+                if (spService.IsCrossTenant)
+                    spService.Unresolved.Record(
+                        IdentityMapper.DisplayIdentity(assignment.LoginName, assignment.Title),
+                        IdentityMapper.DisplayIdentity(spService.Identity.MapPrincipal(assignment.LoginName, assignment.Title), assignment.Title),
+                        "permission");
                 continue;
             }
 

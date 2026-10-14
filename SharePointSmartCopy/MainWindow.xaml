@@ -348,6 +348,10 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0" Margin="16,0,8,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Width="36" Height="36" CornerRadius="6" Background="White" Padding="3"
                                 VerticalAlignment="Center" Margin="0,0,10,0">
@@ -361,13 +365,10 @@
                         <TextBlock Text="{loc:Loc Ui_SharepointSmartCopy}" FontSize="16" FontWeight="SemiBold"
                                    Foreground="White" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <!-- Single tenant: the account. Multi-tenant: "Source: a@x · Target: b@y". -->
-                        <TextBlock Text="{Binding HeaderAccountsText}" Foreground="White" FontSize="12"
-                                   VerticalAlignment="Center" Margin="0,0,12,0"
-                                   TextTrimming="CharacterEllipsis" MaxWidth="440"
-                                   ToolTip="{Binding HeaderAccountsText}"
-                                   Visibility="{Binding HeaderAccountsText, Converter={StaticResource NotNullToVis}}"/>
+                    <!-- A DockPanel (not a StackPanel) so the account text gets only the space the buttons leave
+                         and trims there, instead of running under the app name on a narrow window. -->
+                    <DockPanel Grid.Column="1" LastChildFill="True" VerticalAlignment="Center" Margin="12,0,0,0">
+                      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                         <Button Style="{StaticResource AppBarBtn}" Margin="0,0,8,0" Click="HistoryButton_Click"
                                 WindowChrome.IsHitTestVisibleInChrome="True">
                             <StackPanel Orientation="Horizontal">
@@ -389,7 +390,14 @@
                                 <TextBlock Text="{loc:Loc Ui_Settings}" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                    </StackPanel>
+                      </StackPanel>
+                      <!-- Single tenant: the account. Multi-tenant: "Source: a@x · Target: b@y". -->
+                      <TextBlock Text="{Binding HeaderAccountsText}" Foreground="White" FontSize="12"
+                                 VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,12,0"
+                                 TextTrimming="CharacterEllipsis"
+                                 ToolTip="{Binding HeaderAccountsText}"
+                                 Visibility="{Binding HeaderAccountsText, Converter={StaticResource NotNullToVis}}"/>
+                    </DockPanel>
                 </Grid>
 
                 <!-- Window caption buttons -->
@@ -728,6 +736,8 @@
                         </TextBlock>
                         <Button Content="{loc:Loc Ui_Change}" Style="{StaticResource LinkBtn}"
                                 Click="OpenSettings_Click" Margin="8,0,0,0" Padding="0" FontSize="12" VerticalAlignment="Center"/>
+                        <Button Content="{loc:Loc Ui_IdentityMappingButton}" Style="{StaticResource LinkBtn}"
+                                Click="IdentityMapping_Click" Margin="16,0,0,0" Padding="0" FontSize="12" VerticalAlignment="Center"/>
                     </WrapPanel>
 
                     <TextBlock Text="{loc:Loc Ui_TargetSiteUrl}" Style="{StaticResource FieldLabel}" Margin="0,6,0,4"/>
@@ -1683,6 +1693,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -1751,7 +1762,23 @@
                     </Border>
                 </WrapPanel>
 
-                <Grid Grid.Row="2">
+                <!-- Cross-tenant: people the target could not find. Offers to map them (and be honest about
+                     what a re-run does and does not fix — see Dlg_MappingSavedRerun). -->
+                <Border Grid.Row="2" Style="{StaticResource WarningBanner}" Margin="0,4,0,8"
+                        Visibility="{Binding ShowUnresolvedBanner, Converter={StaticResource BoolToVis}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" TextWrapping="Wrap" FontSize="12"
+                                   Text="{Binding UnresolvedUserCount, Mode=OneWay, StringFormat={loc:Loc Ui_UnresolvedBanner}}"/>
+                        <Button Grid.Column="1" Content="{loc:Loc Ui_MapTheseUsers}" Style="{StaticResource PrimaryBtn}"
+                                Margin="12,0,0,0" Click="MapUnresolved_Click"/>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="3">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>

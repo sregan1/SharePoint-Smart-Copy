@@ -184,8 +184,10 @@ public static class DiagnosticsLog
         {
             map["SourceDomain"] = string.IsNullOrEmpty(settings.IdentityMapping.SourceDomain) ? "" : "(redacted)";
             map["TargetDomain"] = string.IsNullOrEmpty(settings.IdentityMapping.TargetDomain) ? "" : "(redacted)";
-            map["Overrides"]    = string.IsNullOrEmpty(settings.IdentityMapping.Overrides)
-                ? "" : $"({settings.IdentityMapping.Overrides.Split('\n').Length} line(s) redacted)";
+            // Pairs are people's addresses: only the count is kept.
+            map.Remove("Pairs");
+            map["Pairs"] = $"({settings.IdentityMapping.Pairs.Count} pair(s) redacted)";
+            map.Remove("Overrides");
         }
         return root.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
     }

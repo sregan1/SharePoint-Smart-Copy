@@ -205,6 +205,33 @@ public partial class MainViewModel
         }
     }
 
+    // ── Mapping help: check a target user, and the people a run could not find ──
+
+    // Can the mapping dialog look users up in the target right now? Needs multi-tenant mode and a target URL.
+    public bool CanCheckTargetUsers => IsMultiTenant && !string.IsNullOrWhiteSpace(TargetUrl);
+
+    // Is this person (email) present in the TARGET tenant? true / false, or null if it could not be checked
+    // (no target URL, sign-in failed, ...). Looking a user up with ensureuser also adds them to the target
+    // site's user list — which the copy itself does before it can stamp or grant them.
+    public async Task<bool?> CheckTargetUserAsync(string email, CancellationToken ct = default)
+    {
+        if (!CanCheckTargetUsers || string.IsNullOrWhiteSpace(email)) return null;
+        try
+        {
+            await PrepareSiteAccessAsync(TargetUrl, isSource: false, ct);
+            return await SpService.EnsureUserAsync(TargetUrl.Trim(), email.Trim(), ct) != null;
+        }
+        catch (OperationCanceledException) { throw; }
+        catch { return null; }
+    }
+
+    // People the last cross-tenant run could not find in the target (most-affecting first).
+    public IReadOnlyList<UnresolvedUser> UnresolvedUsers => SpService.Unresolved.Snapshot();
+
+    // The report banner: only after a cross-tenant run that left someone unresolved.
+    public bool ShowUnresolvedBanner => IsMultiTenant && IsReadyForReport && SpService.Unresolved.DistinctCount > 0;
+    public int UnresolvedUserCount => SpService.Unresolved.DistinctCount;
+
     // ── Taskbar progress ──────────────────────────────────────────────────────
     // Long runs happen behind other windows: show progress on the taskbar icon, and leave it red after
     // a run that had failures until the user opens the report.
@@ -222,6 +249,10 @@ public partial class MainViewModel
         OnPropertyChanged(nameof(TaskbarProgressState));
         OnPropertyChanged(nameof(TaskbarProgressValue));
         OnPropertyChanged(nameof(IsRunInProgress));
+        // Same trigger points (run started / finished / progress tick) also decide the report banner.
+        OnPropertyChanged(nameof(ShowUnresolvedBanner));
+        OnPropertyChanged(nameof(UnresolvedUserCount));
+        OnPropertyChanged(nameof(CanCheckTargetUsers));
     }
 
     partial void OnCurrentStepChanged(int value) => RefreshTaskbar();

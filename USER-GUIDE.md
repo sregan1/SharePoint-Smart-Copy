@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 3.6.0  ·  October 2026**
+**Version 4.0.0  ·  October 2026**
 
 ---
 
@@ -32,7 +32,7 @@ Two copy engines are available. **Migration API** mode uses SharePoint's server-
 - **Migration API mode** — exact version numbers, exact dates, exact editors (requires Site Collection Admin on target)
 - **Enhanced REST mode** — correct dates and editors per version; no admin rights required
 - **Copy-if-newer** incremental mode — only copies files that are newer on the source, skipping files already up to date
-- **Person/User, Managed Metadata, and Lookup columns** copied alongside content in both copy modes — no manual field re-entry
+- **Person/User, Managed Metadata, Lookup, Hyperlink, and Currency columns** copied alongside content in both copy modes — no manual field re-entry
 - Custom column mapping dialog — map source columns to matching target columns or create missing ones
 - **Custom Fields status column** flags any column value that couldn't be written (e.g. a target column that looks identical but doesn't actually match by internal name), so a partial metadata mismatch is never mistaken for a fully clean copy
 - Automatic HTTP 429 throttle handling — large jobs complete without interruption
@@ -43,7 +43,9 @@ Two copy engines are available. **Migration API** mode uses SharePoint's server-
 - **OneNote notebooks** copy correctly as a single native operation, preserving their special notebook association instead of being rebuilt as a plain folder of files
 - **Verification Report** — independently re-scans source and target after a run and produces an Excel workbook confirming what actually matches
 - **Compare** — generate the same kind of difference report for any source and target you connect to, without needing a prior copy or a saved history entry
-- Full copy history stored locally — browse, re-export, or delete previous runs
+- **Copy between two tenants (beta)** — Multi-tenant mode signs in to source and target separately, with a user mapping table and **Check in target**; the report lists people the target couldn't find so you can map them (see Section 5)
+- **Resume / run again** and **crash recovery** — a run cut short is recovered as an Interrupted History entry and can be resumed
+- Full copy history stored locally — browse, re-export, resume, or delete previous runs
 - System sleep is blocked automatically for the duration of a copy, metadata update, or verification
 - ← Back navigation available on every step, including the final report screen
 - Light, Dark, and System-follows-Windows themes
@@ -275,18 +277,28 @@ The full per-file results table is shown below the summary cards. Use the **filt
 - **Compare source & target** and **Open History** — open the Compare tool and the run history without leaving the report
 - **Failed / Skipped cards** — click a card to filter the list to just those items
 
-### Copying Between Two Tenants (Multi-tenant Mode) — Experimental
+### Copying Between Two Tenants (Multi-tenant Mode) — Beta
 
 On the first screen, choose **Multi-tenant** next to **Connection** when the source and the target are in **different** Microsoft 365 tenants. In the default **Single tenant** mode both sites share one sign-in, exactly as described above.
 
-> **Note:** Multi-tenant mode is new and has not yet been verified against a wide range of real tenant pairs. Try it on a small library first and check the result with a Verification Report.
+> **Note:** Multi-tenant mode is in beta. It has been tested against two tenant pairs, but other setups (guest accounts, conditional access, very large libraries) may behave differently. Try it on a small library first and check the result with a Verification Report, and please report anything unexpected on GitHub.
 
 1. **Create an app registration in each tenant** (Section 4) and add both in **Settings**. Each tenant's administrator must grant consent for its own registration.
 2. On the first screen, choose the **Source app registration** and the **Target app registration**. You sign in to each site separately, with an account from that tenant. The title bar shows both accounts (*Source: … · Target: …*).
-3. Click **Identity mapping…** to say how people and groups in the source correspond to accounts in the target:
-   - **Source / Target email domain** — an address such as `jane@contoso.com` is written to the target as `jane@fabrikam.com`. Guest accounts (`…#EXT#…`) are not rewritten.
-   - **Overrides** — one `source,target` pair per line, for people whose names differ and for group names. A line starting with `#` is a comment. **Import CSV…** adds a file of pairs. The dialog shows how many pairs it understood and which lines it could not read.
-4. Authors, editors, person columns and permissions are written using that mapping. Anyone who cannot be found in the target is skipped and listed in the report.
+
+   ![The first screen in Multi-tenant mode, with a separate app registration for each side](SharePointSmartCopy/Docs/screenshots/10_multitenant_source.png)
+3. Click **Identity mapping…** (on the first screen or the Target screen) to say who is who in the two tenants:
+   - **Source / Target email domain** — a shortcut: an address such as `jane@contoso.com` is written to the target as `jane@fabrikam.com`. Guest accounts (`…#EXT#…`) are not rewritten.
+   - **The table** — one row per person or group: the source user on the left, the matching target user on the right (users by email address, groups by name). A row always wins over the domain swap. Use **Add** and **Remove**, **Import CSV…** / **Export CSV…**, and **Fill targets from domain swap** to propose a target for rows you have left empty. Rows with a problem (a blank cell, a duplicate source, source equal to target) are highlighted and must be fixed before you can save.
+   - **Check in target** looks each target email up in the target tenant and shows **✓ Found** or **✗ Not found** next to it. It needs the target site's URL (enter it on the Target screen first). Looking a user up also adds them to the target site's user list, which the copy does anyway before it can make them an author or give them access.
+
+   ![The identity mapping table with Check in target results](SharePointSmartCopy/Docs/screenshots/11_identity_mapping.png)
+4. Authors, editors, person columns and permissions are written using that mapping. Anyone who cannot be found in the target is left out — not given access, not set as author or editor, dropped from person columns — and recorded.
+5. When a run finishes and anyone could not be found, the report shows a banner with **Map these users…**, which opens the table already filled in with those people (with a suggested target from the domain swap where possible). **History → Map unresolved users…** does the same for an earlier run. Saving a mapping applies to the **next** run: Copy if newer skips files that are already up to date, so the authors on files that were already copied do not change. Run again with **Overwrite** to re-stamp them. Permissions are refreshed on skipped files either way.
+
+   ![The report banner listing people the target could not find](SharePointSmartCopy/Docs/screenshots/13_unresolved_report.png)
+
+   ![The mapping table opened with those people already added](SharePointSmartCopy/Docs/screenshots/12_identity_prefill.png)
 
 What differs from a same-tenant copy:
 

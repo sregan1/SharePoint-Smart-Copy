@@ -317,10 +317,15 @@ public partial class SharePointService
         string? createdDate, string? modifiedDate,
         CancellationToken ct = default)
     {
-        var formValues = complexFields
-            .Where(f => !SkipsTaxonomyValue(f.Value))
-            .Select(f => (object)new { FieldName = f.Name, FieldValue = FormatFieldValueForValidate(f.Value) })
-            .ToList();
+        var formValues = new List<object>();
+        foreach (var f in complexFields)
+        {
+            if (SkipsTaxonomyValue(f.Value)) continue;
+            // Cross-tenant: leave out (and record) people who do not exist in the target.
+            var checkedValue = await DropUnresolvedPeopleAsync(siteUrl, f.Value, ct);
+            if (checkedValue == null) continue;
+            formValues.Add(new { FieldName = f.Name, FieldValue = FormatFieldValueForValidate(checkedValue) });
+        }
         // Created/Modified arrive as the raw REST ISO strings ("…T…Z"). That is the exact format this file
         // documents ValidateUpdateListItem failing to parse (or reading as site-local), so convert them
         // the same way the file/folder paths do (see BuildDateAndPersonFormValuesAsync).

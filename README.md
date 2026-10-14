@@ -18,6 +18,8 @@ A free and open source Windows desktop application for copying files, libraries,
 | **Options — with version history enabled** | **Report — per-file results and CSV export** |
 | ![Progress during an active copy](SharePointSmartCopy/Docs/screenshots/05_copying.png) | ![Copy history dialog](SharePointSmartCopy/Docs/screenshots/08_history_detail.png) |
 | **Progress — real-time file status** | **History — browse previous runs** |
+| ![Multi-tenant mode on the first screen](SharePointSmartCopy/Docs/screenshots/10_multitenant_source.png) | ![Identity mapping table with Check in target](SharePointSmartCopy/Docs/screenshots/11_identity_mapping.png) |
+| **Multi-tenant — separate sign-in for source and target** | **Identity mapping — who is who in the other tenant** |
 
 ---
 
@@ -44,7 +46,7 @@ Choose from four copy scopes in a step-by-step wizard:
 | **Pages** | Modern SharePoint pages (.aspx), with optional web part URL remapping |
 
 **All scopes:**
-- Custom column values copied in both **Migration API** and **Enhanced REST** modes — including **Person/User**, **Managed Metadata**, and **Lookup** columns
+- Custom column values copied in both **Migration API** and **Enhanced REST** modes — including **Person/User**, **Managed Metadata**, **Lookup**, **Hyperlink**, and **Currency** columns
 - Custom column mapping dialog — map source columns to target columns, or create missing columns in the target
 - Overwrite / skip / **copy-if-newer** incremental mode
 - **Adaptive throttle handling** — each Graph-heavy phase backs off and re-probes independently, so large jobs complete without manual intervention or stalling on shared throttle state
@@ -57,6 +59,9 @@ Choose from four copy scopes in a step-by-step wizard:
 - History opens instantly regardless of run size — a saved run's full per-file results load only when you open, export, or verify that run, not for every entry in the list
 - **Cancelled status** — items still in progress when a run is stopped or the app closes mid-copy are reported as Cancelled rather than Failed, so an interrupted run's summary doesn't look like a mass failure
 - **Large-file transfer reliability** — a self-tuning upload-concurrency gate and a global in-memory byte budget keep libraries containing many very large (multi-GB) files copying without exhausting memory or saturating the upload path
+- **Copy between tenants (beta)** — a Single tenant / Multi-tenant switch signs in to the source and target with separate app registrations. A **user mapping table** says which source user is which target user (with an email-domain shortcut and **Check in target**), and after a run the report lists anyone the target couldn't find so you can map them
+- **Crash recovery and Resume** — a run interrupted by a crash or power loss is recovered as an **Interrupted** History entry, and **Resume / run again** re-runs its selection so only what's missing or changed is transferred
+- **Export diagnostics** (Settings) — a redacted zip of logs and system info for bug reports
 - **Total Size** shown alongside item counts on the preview, in-progress, and report screens, in the Excel verification report, and in History — including bytes from copied version history, not just each file's current version
 
 **Files scope:**

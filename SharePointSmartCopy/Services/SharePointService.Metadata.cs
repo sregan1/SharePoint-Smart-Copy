@@ -577,6 +577,8 @@ public partial class SharePointService
     {
         // Cross-tenant: stamp the target-tenant equivalent of the source author/editor. A no-op unless
         // identity mapping is configured (idempotent, so the later BuildDateAndPersonFormValuesAsync is safe).
+        var sourceCreatedBy  = createdByEmail;
+        var sourceModifiedBy = modifiedByEmail;
         createdByEmail  = Identity.MapEmail(createdByEmail);
         modifiedByEmail = Identity.MapEmail(modifiedByEmail);
 
@@ -670,6 +672,7 @@ public partial class SharePointService
             {
                 skipped.Add(Loc.T("Svc_Sp_AuthorNotAResolvable", createdByEmail));
                 resolvedCreatedBy = null;
+                if (IsCrossTenant) Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
             }
         }
         if (!string.IsNullOrEmpty(modifiedByEmail))
@@ -686,6 +689,7 @@ public partial class SharePointService
                 {
                     skipped.Add(Loc.T("Svc_Sp_EditorNotAResolvable", modifiedByEmail));
                     resolvedModifiedBy = null;
+                    if (IsCrossTenant) Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
                 }
             }
         }
@@ -1134,8 +1138,27 @@ public partial class SharePointService
         string? createdByEmail, string? modifiedByEmail)
     {
         var values = new List<(string, string)>();
+        var sourceCreatedBy  = createdByEmail;
+        var sourceModifiedBy = modifiedByEmail;
         createdByEmail  = Identity.MapEmail(createdByEmail);
         modifiedByEmail = Identity.MapEmail(modifiedByEmail);
+
+        // Cross-tenant: an author/editor who does not exist in the target makes ValidateUpdateListItem reject
+        // the person field — and its all-or-nothing commit then takes the DATES with it. Confirm each person
+        // first; a missing one is recorded for the report and left out, so the dates still land.
+        if (IsCrossTenant)
+        {
+            if (!string.IsNullOrEmpty(createdByEmail) && !await TargetUserExistsAsync(siteUrl, createdByEmail))
+            {
+                Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
+                createdByEmail = null;
+            }
+            if (!string.IsNullOrEmpty(modifiedByEmail) && !await TargetUserExistsAsync(siteUrl, modifiedByEmail))
+            {
+                Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
+                modifiedByEmail = null;
+            }
+        }
         if (modified.HasValue)
             values.Add(("Modified", await FormatAsSiteLocalDateStringAsync(siteUrl, modified.Value)));
         if (created.HasValue)

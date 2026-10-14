@@ -639,7 +639,7 @@
   <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Setup: portal.azure.com → Microsoft Entra ID → App registrations → New registration. Add a Mobile/Desktop redirect URI of http://localhost. Under API permissions, add Graph delegated: Sites.ReadWrite.All + Files.ReadWrite.All, then grant admin consent.</value></data>
   <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>The source library has no custom columns of a supported type. Supported types: Text, Note, Number, Currency, Boolean, Date, Choice, Multi-choice, Hyperlink, Person, Lookup, Managed Metadata (same tenant only). Image and Location columns are not supported.</value></data>
   <data name="Ui_SingleTenant" xml:space="preserve"><value>Single tenant</value></data>
-  <data name="Ui_MultiTenant" xml:space="preserve"><value>Multi-tenant</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Multi-tenant (beta)</value></data>
   <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Copy between two different Microsoft 365 tenants. You sign in separately to the source and to the target. Choose the target's app registration in Settings.</value></data>
   <data name="Ui_TargetRegistration" xml:space="preserve"><value>Target registration:</value></data>
   <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Multi-tenant mode: the app registration used to sign in to the target tenant. "Same as source" reuses the source registration, which must then be a multi-tenant app.</value></data>
@@ -670,7 +670,7 @@
   <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Cross-tenant copy: managed-metadata (taxonomy) column values are not copied, and OneNote notebooks / document sets cannot be copied between tenants yet. Identities are mapped using your Identity mapping settings; anyone who cannot be resolved in the target is skipped.</value></data>
   <data name="Ui_IdentityMapping" xml:space="preserve"><value>Identity mapping</value></data>
   <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Identity mapping…</value></data>
-  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>People and groups are different accounts in each tenant. Map source identities to their target equivalents so authors, editors, person columns and permissions land on the right accounts. Anyone who cannot be resolved in the target is skipped and reported.</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>List each person (or group) in the source tenant and who they are in the target tenant — the two are different accounts. Authors, editors, person columns and permissions are written using this table. Anyone not listed is matched by the domain swap if you set one; anyone who still can't be found in the target is skipped and reported.</value></data>
   <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Source email domain</value></data>
   <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Target email domain</value></data>
   <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Overrides — one "source,target" pair per line (users or group names; # starts a comment)</value></data>
@@ -755,4 +755,42 @@
   <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Some override lines can't be read (line {0}). Each line must be "source,target". Fix or remove them — or start a line with # to make it a comment.</value></data>
   <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Could not save the identity mapping: {0}</value></data>
   <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Could not read that file: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Cross-tenant: {0} author/editor account(s) in this library were not found in the target tenant and will be left as the copying account. After the run, use "Map these users" on the report to fix them.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Enter the source user or group.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Enter who this is in the target tenant — or remove the row.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Source and target are the same.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>This source appears more than once.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Source (this tenant)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Target (other tenant)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Type</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>In target?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Needed for</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>User</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Group</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Not checked</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Checking…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Found</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Not found</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Add</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Remove</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Fill targets from domain swap</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>For rows with no target yet, fills in the address the domain swap would produce.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Check in target</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Looks each target user up in the target tenant. This also adds them to the target site's user list, which the copy does anyway before it can set them as author or grant them access.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Connect to a multi-tenant target first: enter the target site URL on the Target step, then reopen this dialog.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Export CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>These people were needed by the copy but could not be found in the target tenant. For each one, enter who they are in the target — or remove the row to leave them unmapped.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} mapping(s).</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} row(s) need attention.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Checked: {0} found, {1} not found{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} could not be checked</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Checking {0} of {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Nothing to check: no row has a target email address.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Some rows need attention (highlighted). Fix or remove them, then save.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Mapping saved. To apply it to files that were already copied, run again with Overwrite — Copy if newer skips files that are up to date, so their authors are not changed. Permissions are refreshed either way.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>{0} person(s) from the source could not be found in the target tenant, so they were left out: not given access, not set as author or editor, or dropped from person columns.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Map these users…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Map unresolved users…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Opens the identity mapping with the people this run could not find in the target.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>This run had no unresolved users.</value></data>
 </root>

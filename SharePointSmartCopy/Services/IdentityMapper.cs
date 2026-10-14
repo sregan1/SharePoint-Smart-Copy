@@ -1,3 +1,5 @@
+using SharePointSmartCopy.Localization;
+
 namespace SharePointSmartCopy.Services;
 
 // Translates source-tenant identities (emails / claims logins / group names) to their target-tenant
@@ -124,7 +126,96 @@ public sealed class IdentityMapper
     public static IdentityMapper FromSettings(Models.IdentityMappingSettings? s)
         => s == null
             ? None
-            : new IdentityMapper(s.SourceDomain, s.TargetDomain, ParseOverrides(s.Overrides));
+            : new IdentityMapper(s.SourceDomain, s.TargetDomain,
+                s.Pairs.Select(p => new KeyValuePair<string, string>(p.Source, p.Target))
+                    // A settings object built in code (not loaded) may still carry the legacy text.
+                    .Concat(ParseOverrides(s.Overrides)));
+
+    // How a source principal is shown to the user and keyed in the mapping table: a user is their email
+    // (stripped of the claims prefix), a group is its name.
+    public static string DisplayIdentity(string? login, string? title)
+    {
+        if (!string.IsNullOrEmpty(login))
+        {
+            if (login.StartsWith(ClaimsPrefix, StringComparison.OrdinalIgnoreCase)) return login[ClaimsPrefix.Length..];
+            if (login.Contains('@') && !login.Contains('|')) return login;
+        }
+        return !string.IsNullOrEmpty(title) ? title : login ?? string.Empty;
+    }
+
+    // ── Pair editing helpers (used by the mapping table) ─────────────────────
+
+    // Parses a CSV/text file of "source,target" pairs: quoted fields ("Doe, Jane"), comma / semicolon / tab
+    // separators, an optional header row, and # comment lines. A line with no second field is returned with a
+    // BLANK target, so the table shows it (with an error) instead of silently dropping it.
+    public static List<(string Source, string Target)> ParseCsvPairs(string? text)
+    {
+        var result = new List<(string, string)>();
+        if (string.IsNullOrWhiteSpace(text)) return result;
+        char sep = text.Contains('\t') ? '\t' : (!text.Contains(',') && text.Contains(';')) ? ';' : ',';
+        bool first = true;
+        foreach (var raw in text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n'))
+        {
+            var line = raw.Trim();
+            if (line.Length == 0 || line.StartsWith('#')) continue;
+            var cells = SplitCsvLine(line, sep);
+            var a = cells.Count > 0 ? cells[0].Trim() : string.Empty;
+            var b = cells.Count > 1 ? cells[1].Trim() : string.Empty;
+            bool isHeader = first && a.Equals("source", StringComparison.OrdinalIgnoreCase)
+                                  && b.StartsWith("target", StringComparison.OrdinalIgnoreCase);
+            first = false;
+            if (isHeader || (a.Length == 0 && b.Length == 0)) continue;
+            result.Add((a, b));
+        }
+        return result;
+    }
+
+    private static List<string> SplitCsvLine(string line, char sep)
+    {
+        var cells = new List<string>();
+        var sb = new System.Text.StringBuilder();
+        bool quoted = false;
+        for (int i = 0; i < line.Length; i++)
+        {
+            char c = line[i];
+            if (quoted)
+            {
+                if (c == '"' && i + 1 < line.Length && line[i + 1] == '"') { sb.Append('"'); i++; }
+                else if (c == '"') quoted = false;
+                else sb.Append(c);
+            }
+            else if (c == '"') quoted = true;
+            else if (c == sep) { cells.Add(sb.ToString()); sb.Clear(); }
+            else sb.Append(c);
+        }
+        cells.Add(sb.ToString());
+        return cells;
+    }
+
+    // Quotes a value for CSV output only when it needs it.
+    public static string CsvQuote(string value) =>
+        value.IndexOfAny([',', ';', '"', '\t', '\n', '\r']) >= 0
+            ? "\"" + value.Replace("\"", "\"\"") + "\""
+            : value;
+
+    // Row-by-row problems in an edited table, by row index. A row with both cells blank is ignored (not an
+    // error). Messages are localized; an empty result means every row is usable.
+    public static Dictionary<int, string> ValidatePairs(IReadOnlyList<(string Source, string Target)> rows)
+    {
+        var problems = new Dictionary<int, string>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        for (int i = 0; i < rows.Count; i++)
+        {
+            var source = rows[i].Source.Trim();
+            var target = rows[i].Target.Trim();
+            if (source.Length == 0 && target.Length == 0) continue;
+            if (source.Length == 0)      problems[i] = Loc.T("Err_IdentityBlankSource");
+            else if (target.Length == 0) problems[i] = Loc.T("Err_IdentityBlankTarget");
+            else if (source.Equals(target, StringComparison.OrdinalIgnoreCase)) problems[i] = Loc.T("Err_IdentitySame");
+            else if (!seen.Add(source))  problems[i] = Loc.T("Err_IdentityDuplicate");
+        }
+        return problems;
+    }
 
     // "@contoso.com" and "contoso.com" both mean contoso.com.
     private static string NormalizeDomain(string? domain)

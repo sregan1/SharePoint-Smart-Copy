@@ -25,6 +25,10 @@ public partial class MainViewModel : ObservableObject
         FileResultFilter = ResultFilterKind.All;
         _copyStartTime = DateTimeOffset.Now;
         _copyEndTime   = null;
+        // Library / site runs get the same crash journal as a file copy (SaveReport completes it), and the
+        // same fresh "people the target can't find" log.
+        BeginRunJournal();
+        SpService.Unresolved.Clear();
 
         _copyCts?.Dispose();
         _copyCts = new CancellationTokenSource();

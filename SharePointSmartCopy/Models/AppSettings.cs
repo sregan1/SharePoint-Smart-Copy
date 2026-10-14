@@ -29,15 +29,46 @@ public enum AppTheme { System, Light, Dark }
 // MultiTenant: source and target each sign in with their own app registration and account.
 public enum ConnectionMode { SingleTenant, MultiTenant }
 
+// One "this source identity is that target identity" mapping. Source is a user's email (or a group's
+// name); Target is the matching email or group name in the other tenant.
+public class IdentityPair
+{
+    public string Source { get; set; } = string.Empty;
+    public string Target { get; set; } = string.Empty;
+}
+
 // Cross-tenant identity mapping (multi-tenant mode only). See IdentityMapper.
 public class IdentityMappingSettings
 {
-    // user@SourceDomain is written to the target as user@TargetDomain unless an override says otherwise.
+    // user@SourceDomain is written to the target as user@TargetDomain unless a pair says otherwise.
     public string SourceDomain { get; set; } = string.Empty;
     public string TargetDomain { get; set; } = string.Empty;
-    // One "source,target" pair per line. Overrides win over the domain swap and are the only way to
-    // remap groups (e.g. an Entra group's name) and users whose names differ between tenants.
-    public string Overrides    { get; set; } = string.Empty;
+
+    // Explicit pairs. They win over the domain swap and are the only way to remap groups (e.g. an Entra
+    // group's name) and users whose names differ between tenants.
+    public List<IdentityPair> Pairs { get; set; } = [];
+
+    // LEGACY: an earlier build kept the pairs as "source,target" text lines. It is only ever READ — once,
+    // by MigrateLegacyOverrides — and then cleared, so it is no longer written back (null is omitted).
+    public string? Overrides { get; set; }
+
+    // Converts the legacy text into Pairs (if there are no Pairs yet) and clears it. Idempotent.
+    public void MigrateLegacyOverrides()
+    {
+        if (string.IsNullOrWhiteSpace(Overrides)) { Overrides = null; return; }
+        if (Pairs.Count == 0)
+        {
+            foreach (var raw in Overrides.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries))
+            {
+                var line = raw.Trim();
+                if (line.Length == 0 || line.StartsWith('#')) continue;
+                var parts = line.Split([',', ';', '\t'], 2, StringSplitOptions.TrimEntries);
+                if (parts.Length == 2 && parts[0].Length > 0 && parts[1].Length > 0)
+                    Pairs.Add(new IdentityPair { Source = parts[0], Target = parts[1] });
+            }
+        }
+        Overrides = null;
+    }
 }
 
 public class AppSettings
@@ -114,6 +145,9 @@ public class AppSettings
                 settings.OverwriteMode ??= settings.OverwriteFiles
                     ? Models.OverwriteMode.Overwrite
                     : Models.OverwriteMode.Skip;
+                // Older builds stored identity pairs as text — convert them to the structured form.
+                settings.IdentityMapping ??= new IdentityMappingSettings();
+                settings.IdentityMapping.MigrateLegacyOverrides();
                 return settings;
             }
         }

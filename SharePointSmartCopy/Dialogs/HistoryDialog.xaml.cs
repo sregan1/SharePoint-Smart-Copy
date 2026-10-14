@@ -18,10 +18,18 @@ public partial class HistoryDialog : Window
     // MainViewModel.PrepareReportAccessAsync. Null = single tenant, nothing to prepare.
     private readonly Func<SavedReportSummary, Task>? _prepareReport;
 
-    public HistoryDialog(SharePointService spService, Func<SavedReportSummary, Task>? prepareReport = null)
+    // Opens the identity mapping with a run's unresolved users (owner = this dialog). Null = no cross-tenant UI.
+    private readonly Action<Window, IReadOnlyList<UnresolvedUser>>? _mapUnresolved;
+
+    public HistoryDialog(
+        SharePointService spService,
+        Func<SavedReportSummary, Task>? prepareReport = null,
+        Action<Window, IReadOnlyList<UnresolvedUser>>? mapUnresolved = null)
     {
         InitializeComponent();
         _prepareReport = prepareReport;
+        _mapUnresolved = mapUnresolved;
+        if (mapUnresolved != null) MapUsersButton.Visibility = Visibility.Visible;
         _verificationReportService = new VerificationReportService(spService);
         DetailHeader.Text = Loc.T("Dlg_LoadingRuns");
         // Seeds the checkbox from the user's last choice; the live IsChecked value (read in
@@ -33,6 +41,17 @@ public partial class HistoryDialog : Window
     // Set when the user clicks Resume: the caller (MainWindow) reads it after the dialog closes and
     // restores that run into the wizard. The dialog itself doesn't touch the wizard.
     public SavedReportSummary? ResumeReport { get; private set; }
+
+    private void MapUsersButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (ReportList.SelectedItem is not SavedReportSummary report || _mapUnresolved == null) return;
+        if (report.UnresolvedUsers.Count == 0)
+        {
+            MessageBox.Show(this, Loc.T("Dlg_NoUnresolvedUsers"), Title, MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+        _mapUnresolved(this, report.UnresolvedUsers);
+    }
 
     private void ResumeButton_Click(object sender, RoutedEventArgs e)
     {
@@ -85,6 +104,8 @@ public partial class HistoryDialog : Window
         EmptyHint.Visibility    = hasSelection ? Visibility.Collapsed : Visibility.Visible;
 
         bool canVerify = hasSelection && report!.Roots.Count > 0;
+        // Only a cross-tenant run that left someone unresolved has anyone to map.
+        MapUsersButton.IsEnabled = hasSelection && report!.UnresolvedUsers.Count > 0;
         // Resume / run again needs the run's saved selection, same as Verify.
         ResumeButton.IsEnabled = canVerify;
         ResumeButton.ToolTip = hasSelection && !canVerify

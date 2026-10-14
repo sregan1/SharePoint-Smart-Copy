@@ -78,6 +78,8 @@ public class SavedReport
     // True for a run recovered from its crash journal (the app closed or crashed before the run finished):
     // the counts cover only the items that had finished, and TotalCount is unknown. See RunJournal.
     public bool Interrupted { get; set; }
+    // People the target could not find in a cross-tenant run (empty otherwise) — see UnresolvedIdentityLog.
+    public List<UnresolvedUser> UnresolvedUsers { get; set; } = [];
     public int TotalCount { get; set; }
     public TimeSpan Duration { get; set; }
     // Sum of CopyResult.SourceSize across the run. 0 for runs where size wasn't known for any row
@@ -142,6 +144,8 @@ public class SavedReportSummary
     // True for a run recovered from its crash journal (the app closed or crashed before the run finished):
     // the counts cover only the items that had finished, and TotalCount is unknown. See RunJournal.
     public bool Interrupted { get; set; }
+    // People the target could not find in a cross-tenant run (empty otherwise) — see UnresolvedIdentityLog.
+    public List<UnresolvedUser> UnresolvedUsers { get; set; } = [];
     public int TotalCount { get; set; }
     public TimeSpan Duration { get; set; }
     public long TotalSize { get; set; }

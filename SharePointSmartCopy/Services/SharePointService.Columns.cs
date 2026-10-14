@@ -633,7 +633,11 @@ public partial class SharePointService
 
             if (SkipsTaxonomyValue(value)) continue;
 
-            var formattedValue = FormatFieldValueForValidate(value);
+            // Cross-tenant: leave out (and record) people who do not exist in the target.
+            var checkedValue = await DropUnresolvedPeopleAsync(siteUrl, value, ct);
+            if (checkedValue == null) continue;
+
+            var formattedValue = FormatFieldValueForValidate(checkedValue);
             formValues.Add((targetName, formattedValue));
             submittedFields.Add(targetName);
         }

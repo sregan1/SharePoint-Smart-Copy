@@ -160,6 +160,45 @@ public partial class SharePointService
         catch { return null; }
     }
 
+    // "Not found" results, remembered briefly. EnsureUserAsync deliberately never caches a failure (it could
+    // be a throttle), but across thousands of files the same unmapped author would cost one failing round
+    // trip per file. A short memory collapses that; it is short so a transient failure heals quickly.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, DateTimeOffset> _missingUsersUntil
+        = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly TimeSpan MissingUserMemory = TimeSpan.FromSeconds(30);
+
+    // Does this account (email or claims login) exist in the TARGET tenant? Resolving it also registers it
+    // on the target site's user list, which the copy needs anyway before it can stamp or grant it.
+    internal async Task<bool> TargetUserExistsAsync(string siteUrl, string login, CancellationToken ct = default)
+    {
+        var key = $"{siteUrl}|{login}";
+        if (_missingUsersUntil.TryGetValue(key, out var until) && until > DateTimeOffset.UtcNow) return false;
+        if (await EnsureUserAsync(siteUrl, login, ct) != null)
+        {
+            _missingUsersUntil.TryRemove(key, out _);
+            return true;
+        }
+        _missingUsersUntil[key] = DateTimeOffset.UtcNow + MissingUserMemory;
+        return false;
+    }
+
+    // Cross-tenant: a person column naming someone who does not exist in the target makes the whole
+    // ValidateUpdateListItem call fail (the commit is all-or-nothing), taking every other field and the dates
+    // down with it. Check each person first: the missing ones are recorded for the report and left out, and
+    // everything else still lands. Returns null when nobody is left. Same-tenant: returns the value untouched.
+    private async Task<object?> DropUnresolvedPeopleAsync(string siteUrl, object value, CancellationToken ct)
+    {
+        if (!IsCrossTenant || value is not PersonFieldValue person) return value;
+        var keep = new List<string>();
+        foreach (var login in person.Logins)
+        {
+            var mapped = Identity.MapLogin(login);
+            if (await TargetUserExistsAsync(siteUrl, mapped, ct)) keep.Add(login);
+            else Unresolved.Record(IdentityMapper.DisplayIdentity(login, null), IdentityMapper.DisplayIdentity(mapped, null), "person column");
+        }
+        return keep.Count == 0 ? null : new PersonFieldValue([.. keep]);
+    }
+
     public async Task<int?> GetSiteGroupIdAsync(
         string siteUrl, string groupTitle, CancellationToken ct = default)
     {
