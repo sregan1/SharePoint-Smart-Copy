@@ -58,7 +58,7 @@ jobs:
           }
           $notes | Out-File -FilePath release_notes.md -Encoding utf8
 
-      - name: Create or replace GitHub release
+      - name: Create GitHub release (if new)
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -68,11 +68,16 @@ jobs:
           $zip     = "SharePointSmartCopy-$tag.zip"
           $exe     = "SharePointSmartCopy-$tag.exe"
 
+          # Never replace an existing release: deleting it resets its download counts.
+          # To republish, delete the release manually or bump the version.
+          gh release view $tag 2>$null | Out-Null
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "Release $tag already exists; skipping."
+            exit 0
+          }
+
           Compress-Archive -Path publish\* -DestinationPath $zip
           Copy-Item publish\SharePointSmartCopy.exe $exe
-
-          # Replace existing release for this version (idempotent on re-push)
-          gh release delete $tag --yes --cleanup-tag 2>$null
 
           gh release create $tag $zip $exe `
             --title "SharePoint Smart Copy $tag" `

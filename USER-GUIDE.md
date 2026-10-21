@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 4.0.0  ·  October 2026**
+**Version 4.0.1  ·  October 2026**
 
 ---
 
@@ -452,6 +452,24 @@ Connect a **Source** and a **Target** independently, the same way you would in t
 - **Throttling (429 Too Many Requests)** — the Microsoft Graph API rate-limits heavy usage. The application retries automatically, but very large batches may take longer.
 - **"SharePoint aborted the batch after N name conflicts" in the activity log (Migration API mode)** — this is expected automatic recovery, not a failure. SharePoint's Migration API cancels an entire import batch once enough files at the destination already exist, which would otherwise discard every other valid file in that batch. With **Skip existing** selected, the app marks the conflicting files Skipped (matching what Skip means) and resubmits the rest once. With **Overwrite** or **If newer**, the app clears the conflicting targets and resubmits the whole batch once. If a retry still fails, the affected files are reported individually in the final results — re-running the copy again typically clears them, since a fresh pre-flight scan re-detects the current state of the target.
 - **A file shows "⚠ Warning" in the Custom Fields column** — the file itself copied successfully; only one or more custom column values could not be written. Check the Custom Fields Details column for the reason. The most common cause is a target column that looks identical to its source counterpart (same display name and values elsewhere) but doesn't actually share the same internal name — SharePoint auto-suffixes a column's internal name at creation time if it collides with another field, so "Notes" on the source and "Notes" on the target can silently be different fields underneath. Open the Column Mapping dialog and confirm the source column is mapped to the target's real internal name (visible in **Library Settings** → click the column → the `Field=` value in the URL), rather than relying on the display name to match automatically.
+
+### Lookup columns — how they copy and where they can't
+
+A Lookup column stores a pointer to an item in another list, and item IDs differ between source and target. So the copy matches each value by its **display text** (the column's "show field", usually Title) against the items in the target column's bound list, and writes the matching target item's ID. This works in both copy modes and between tenants.
+
+For a value to come across:
+
+- The target must have a **Lookup column** of that name, bound to a list that has an item with the same display text. When a library, list or site is copied, the column is recreated and bound to the target list with the **same title** as the source's lookup list. In **Files** scope, "Create in target" does the same.
+- The lookup list's **items must already be at the target.** In Site scope this is done for you: every library and list is created first, columns that couldn't bind yet are added once all lists exist, custom-list items are copied (lists that others look up come first), and library files are copied last.
+
+**Known limitations** — these are not bugs to report; they are not supported today:
+
+- **Duplicate display text** — if two target items have the same display text (two items titled "Q1"), every value resolves to the one with the lowest ID. Matching is by text, not by the original item.
+- **Lookups to a different site** — a column that looks up a list on another site is not recreated (the target list can't be found by title on the target site), and its values are skipped.
+- **Lookups to a document library's files** — libraries are copied after custom lists, so a lookup that points at a library's items finds nothing to match on the first run. Run the copy again after the library has been copied.
+- **Library scope with a mix of libraries and lists** — only **Site** scope creates all lists and libraries up front. In Library scope, libraries are copied before the lists you selected, so a library column that looks up one of those lists may need a second run after the lists have been copied. Among the selected lists themselves, ones that others look up are copied first.
+- **A same-named column that isn't a Lookup** — if the target already has a column with that name but a different type (for example Text), the values are not written and the Custom Fields Details column says so. Rename or remove it and copy again.
+- **Items missing at the target** — a value whose display text matches nothing is reported as "unresolved"; the file or item itself still copies.
 
 ### Version history not copying
 

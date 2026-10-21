@@ -317,21 +317,53 @@ public partial class SharePointService
         string? createdDate, string? modifiedDate,
         CancellationToken ct = default)
     {
-        var formValues = new List<object>();
+        var formValues      = new List<object>();
+        var submittedFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var lookupErrors    = new List<string>();
+
+        // Target column defs (cached) supply each lookup column's bound list for ID resolution.
+        Dictionary<string, SpColumnDef>? targetColsByName = null;
+        if (complexFields.Any(f => f.Value is LookupFieldValue))
+        {
+            List<SpColumnDef> targetCols;
+            try { targetCols = await GetLibraryColumnsAsync(siteUrl, listId); }
+            catch { targetCols = []; }
+            targetColsByName = targetCols.ToDictionary(c => c.InternalName, StringComparer.OrdinalIgnoreCase);
+        }
+
         foreach (var f in complexFields)
         {
+            // Lookups must be submitted as TARGET item IDs, not display text.
+            if (f.Value is LookupFieldValue lookup)
+            {
+                SpColumnDef? tgtCol = null;
+                if (targetColsByName == null || !targetColsByName.TryGetValue(f.Name, out tgtCol) ||
+                    string.IsNullOrEmpty(tgtCol.LookupListId))
+                {
+                    lookupErrors.Add(DescribeUnusableLookupTarget(f.Name, tgtCol));
+                    continue;
+                }
+                var formatted = await ResolveLookupFormValueAsync(siteUrl, tgtCol, lookup, f.Name, lookupErrors, ct);
+                if (formatted == null) continue;
+                formValues.Add(new { FieldName = f.Name, FieldValue = formatted });
+                submittedFields.Add(f.Name);
+                continue;
+            }
+
             if (SkipsTaxonomyValue(f.Value)) continue;
             // Cross-tenant: leave out (and record) people who do not exist in the target.
             var checkedValue = await DropUnresolvedPeopleAsync(siteUrl, f.Value, ct);
             if (checkedValue == null) continue;
             formValues.Add(new { FieldName = f.Name, FieldValue = FormatFieldValueForValidate(checkedValue) });
+            submittedFields.Add(f.Name);
         }
+        var lookupWarning = lookupErrors.Count > 0 ? string.Join(", ", lookupErrors) : null;
         // Created/Modified arrive as the raw REST ISO strings ("…T…Z"). That is the exact format this file
         // documents ValidateUpdateListItem failing to parse (or reading as site-local), so convert them
         // the same way the file/folder paths do (see BuildDateAndPersonFormValuesAsync).
-        if (createdDate  != null) formValues.Add(new { FieldName = "Created",  FieldValue = await ToSiteLocalFormDateAsync(siteUrl, createdDate) });
-        if (modifiedDate != null) formValues.Add(new { FieldName = "Modified", FieldValue = await ToSiteLocalFormDateAsync(siteUrl, modifiedDate) });
-        if (formValues.Count == 0) return null;
+        if (createdDate  != null) { formValues.Add(new { FieldName = "Created",  FieldValue = await ToSiteLocalFormDateAsync(siteUrl, createdDate) });  submittedFields.Add("Created"); }
+        if (modifiedDate != null) { formValues.Add(new { FieldName = "Modified", FieldValue = await ToSiteLocalFormDateAsync(siteUrl, modifiedDate) }); submittedFields.Add("Modified"); }
+        if (formValues.Count == 0) return lookupWarning;
 
         var payload = JsonSerializer.Serialize(new { formValues, bNewDocumentUpdate = true });
         var url     = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({itemId})/ValidateUpdateListItem()";
@@ -349,6 +381,9 @@ public partial class SharePointService
         if (!resp.IsSuccessStatusCode)
             return Loc.T("Svc_Sp_FieldWriteFailed", (int)resp.StatusCode, body[..Math.Min(200, body.Length)]);
 
+        // ValidateUpdateListItem reports an entry for every field in the list, including read-only
+        // system fields that always carry HasException=true — only surface fields we submitted.
+        string? fieldErrors = null;
         try
         {
             using var doc = JsonDocument.Parse(body);
@@ -356,14 +391,22 @@ public partial class SharePointService
             {
                 var errors = vals.EnumerateArray()
                     .Where(v => v.TryGetProperty("HasException", out var ex) && ex.GetBoolean())
-                    .Select(v => v.TryGetProperty("FieldName", out var fn) ? fn.GetString() : "?")
+                    .Select(v => v.TryGetProperty("FieldName", out var fn) ? fn.GetString() ?? "?" : "?")
+                    .Where(n => submittedFields.Contains(n))
                     .ToList();
                 if (errors.Count > 0)
-                    return Loc.T("Svc_Sp_FieldErrorsOn", string.Join(", ", errors));
+                    fieldErrors = Loc.T("Svc_Sp_FieldErrorsOn", string.Join(", ", errors));
             }
         }
         catch { }
-        return null;
+
+        return (fieldErrors, lookupWarning) switch
+        {
+            (null, null)   => null,
+            (null, var lw) => lw,
+            (var fe, null) => fe,
+            var (fe, lw)   => $"{fe} {lw}",
+        };
     }
 
     // Updates an existing list item's fields via MERGE/PATCH and optionally back-fills Created/Modified.

@@ -595,6 +595,7 @@ public partial class MainViewModel : ObservableObject
             PushActivity(Loc.T("VM_ActivityLogPath", ActivityLogPath));
         BeginRunJournal();
         SpService.Unresolved.Clear();   // people the target can't find are collected per run
+        SpService.ClearLookupCache();   // lookup values resolve against the target as it is NOW
         RunSettingsSummary = BuildRunSettingsSummary();
         PushActivity(Loc.T("VM_SettingsSummary", RunSettingsSummary));
         // Once per run (CopyService.ExecuteAsync runs once per library in Library/Site scopes).
@@ -739,7 +740,7 @@ public partial class MainViewModel : ObservableObject
                     var targetListId = await SpService.GetListIdByServerRelativeUrlAsync(
                         TargetUrl.TrimEnd('/'), targetServerRelUrl);
                     var created = await _libraryCopyService.AddMissingColumnsAsync(
-                        TargetUrl.TrimEnd('/'), targetListId, columnsToCreate);
+                        TargetUrl.TrimEnd('/'), targetListId, columnsToCreate, SourceUrl.TrimEnd('/'));
                     AddColumnCreationResult(libraryNode.Name, $"{TargetUrl.TrimEnd('/')}/{libraryNode.Name}", created);
                 }
                 catch { /* non-fatal — affected column values fall back to per-field errors */ }

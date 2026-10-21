@@ -15,6 +15,142 @@ namespace SharePointSmartCopy.ViewModels;
 // Partial class MainViewModel: LibraryCopy.
 public partial class MainViewModel : ObservableObject
 {
+    // A custom list read from the source site; Def is null (and ReadError set) when reading it failed.
+    private sealed record SiteListInfo(string Id, string Title, int BaseTemplate, LibraryDefinition? Def, string? ReadError);
+
+    // Orders lists so each one comes after every list its Lookup columns point at (depth-first
+    // over source list GUIDs, taken from each definition's SourceListId). A cycle just stops
+    // recursing — those lists keep their given order. Entries with no definition go last.
+    private static List<T> OrderByLookupDependency<T>(List<T> items, Func<T, LibraryDefinition?> defOf)
+    {
+        static string Norm(string? id) => (id ?? string.Empty).Trim('{', '}').ToLowerInvariant();
+
+        var byId = new Dictionary<string, T>();
+        foreach (var l in items.Where(l => defOf(l) != null))
+            byId.TryAdd(Norm(defOf(l)!.SourceListId), l);
+
+        var ordered = new List<T>();
+        var visited = new HashSet<string>();
+        void Visit(T l)
+        {
+            if (!visited.Add(Norm(defOf(l)!.SourceListId))) return;
+            foreach (var col in defOf(l)!.Columns.Where(c => SpColumnDef.IsLookupType(c.FieldType) && !string.IsNullOrEmpty(c.LookupListId)))
+                if (byId.TryGetValue(Norm(col.LookupListId), out var dep))
+                    Visit(dep);
+            ordered.Add(l);
+        }
+
+        foreach (var l in items.Where(l => defOf(l) != null)) Visit(l);
+        ordered.AddRange(items.Where(l => defOf(l) == null));
+        return ordered;
+    }
+
+    // Site scope: copy custom lists (Tasks, Calendars, Announcements, etc.). Shells were already
+    // created by the structure pass (preLists); a list missing from it is created here, which also
+    // surfaces the real error / already-exists case for it.
+    private async Task CopySiteCustomListsAsync(
+        List<SiteListInfo> siteLists,
+        Dictionary<string, string> preLists,
+        Dictionary<string, List<string>> preColumnFailures)
+    {
+        _copyCts!.Token.ThrowIfCancellationRequested();
+        try
+        {
+            foreach (var info in siteLists)
+            {
+                _copyCts.Token.ThrowIfCancellationRequested();
+                var (srcListId, listTitle, baseTemplate, definition, readError) = info;
+
+                var listResult = new CopyResult
+                {
+                    FileName          = listTitle,
+                    SourcePath        = $"{SourceUrl.TrimEnd('/')}/{listTitle}",
+                    TargetPath        = $"{TargetUrl.TrimEnd('/')}/{listTitle}",
+                    Status            = CopyStatus.Copying,
+                    IsLibraryCreation = true,
+                };
+                System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(listResult));
+
+                if (definition == null)
+                {
+                    listResult.Status       = CopyStatus.Failed;
+                    listResult.ErrorMessage = readError;
+                    continue;
+                }
+
+                try
+                {
+                    StatusMessage = Loc.T("VM_CopyingList", listTitle);
+                    var hasShell     = preLists.TryGetValue(listTitle, out var shellListId);
+                    var targetListId = hasShell
+                        ? shellListId!
+                        : await _libraryCopyService.CreateCustomListAsync(
+                            TargetUrl.TrimEnd('/'), TargetSiteId, definition, baseTemplate);
+                    var colFailures = hasShell ? preColumnFailures[listTitle] : _libraryCopyService.LastColumnCreationFailures;
+                    if (colFailures.Count > 0)
+                        listResult.ErrorMessage =
+                            Loc.T("VM_ColumnsCouldNotBeCreated", colFailures.Count, string.Join("; ", colFailures.Take(3)));
+
+                    if (CopyPermissions)
+                    {
+                        try
+                        {
+                            var srcHasUnique = await SpService.GetHasUniqueRoleAssignmentsAsync(
+                                SourceUrl.TrimEnd('/'), $"web/lists('{srcListId}')", _copyCts.Token);
+                            var perm = await _permissionCopyService.CopyObjectPermissionsAsync(
+                                SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'),
+                                $"web/lists('{srcListId}')",
+                                $"web/lists('{targetListId}')",
+                                hasUniquePermissions: srcHasUnique,
+                                listTitle, _copyCts.Token);
+                            if (perm.HasActivity)
+                                AddPermissionResult(perm, $"{TargetUrl.TrimEnd('/')}/{listTitle}");
+                        }
+                        catch (OperationCanceledException) { throw; }
+                        catch { }
+                    }
+
+                    if (CopyLibraryContent)
+                        await CopyListItemsAsync(targetListId, definition, [], false, listResult);
+
+                    if (listResult.Status != CopyStatus.Failed)
+                        listResult.Status = CopyStatus.Success;
+                }
+                catch (OperationCanceledException) { throw; }
+                catch (LibraryAlreadyExistsException alreadyEx)
+                {
+                    listResult.Status       = CopyStatus.Skipped;
+                    listResult.ErrorMessage = alreadyEx.Message;
+
+                    if (!string.IsNullOrEmpty(alreadyEx.ListId) && definition.Columns.Count > 0)
+                    {
+                        try
+                        {
+                            var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
+                                TargetUrl.TrimEnd('/'), alreadyEx.ListId, definition.Columns, definition.SourceSiteUrl);
+                            AddColumnCreationResult(listTitle, $"{TargetUrl.TrimEnd('/')}/{listTitle}", createdCols);
+                        }
+                        catch { }
+                    }
+
+                    if (CopyLibraryContent && !string.IsNullOrEmpty(alreadyEx.ListId))
+                        await CopyListItemsAsync(alreadyEx.ListId, definition, [], false, listResult);
+
+                    if (listResult.Status != CopyStatus.Failed)
+                        listResult.Status = CopyStatus.Skipped;
+                }
+                catch (Exception ex)
+                {
+                    listResult.Status       = CopyStatus.Failed;
+                    listResult.ErrorMessage = ex.Message;
+                }
+            }
+        }
+        catch (OperationCanceledException) { throw; }
+        catch (Exception ex) { StatusMessage = Loc.T("VM_ListCopyWarning", ex.Message); }
+        StatusMessage = string.Empty;
+    }
+
     private async Task StartLibraryCopyAsync()
     {
         IsCopying      = true;
@@ -29,6 +165,7 @@ public partial class MainViewModel : ObservableObject
         // same fresh "people the target can't find" log.
         BeginRunJournal();
         SpService.Unresolved.Clear();
+        SpService.ClearLookupCache();   // lookup values resolve against the target as it is NOW
 
         _copyCts?.Dispose();
         _copyCts = new CancellationTokenSource();
@@ -154,6 +291,93 @@ public partial class MainViewModel : ObservableObject
 
             StatusMessage = string.Empty;
 
+            // Site scope, in dependency order so a Lookup column can bind and its values resolve:
+            //   1. structure: create EVERY library and custom list (no content yet)
+            //   2. fix-up: re-add columns that couldn't be created in step 1 (a Lookup column needs
+            //      its target list to exist, and lists are created in source order)
+            //   3. custom-list items, ordered so a list is copied after the lists it looks up
+            //   4. library files (below) — their lookup values resolve against the copied items
+            // Values are matched by display text against the target list's items, so the referenced
+            // items must already be there when each value is written.
+            var preLibs           = new Dictionary<string, (string newDriveId, string newServerRelativeUrl)>(StringComparer.OrdinalIgnoreCase);
+            var preLists          = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var preColumnFailures = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+            var siteLists         = new List<SiteListInfo>();
+            if (IsSiteScope)
+            {
+                _copyCts.Token.ThrowIfCancellationRequested();
+                try
+                {
+                    StatusMessage = Loc.T("VM_ReadingCustomLists");
+                    foreach (var (srcListId, listTitle, baseTemplate) in await SpService.GetCustomListsAsync(SourceUrl.TrimEnd('/')))
+                    {
+                        _copyCts.Token.ThrowIfCancellationRequested();
+                        try
+                        {
+                            var def = await _libraryCopyService.ReadListDefinitionAsync(
+                                SourceUrl.TrimEnd('/'), srcListId, listTitle);
+                            siteLists.Add(new SiteListInfo(srcListId, listTitle, baseTemplate, def, null));
+                        }
+                        catch (OperationCanceledException) { throw; }
+                        catch (Exception ex) { siteLists.Add(new SiteListInfo(srcListId, listTitle, baseTemplate, null, ex.Message)); }
+                    }
+                    siteLists = OrderByLookupDependency(siteLists, l => l.Def);
+
+                    StatusMessage = Loc.T("VM_CreatingTargetColumns");
+                    foreach (var def in definitions)
+                    {
+                        _copyCts.Token.ThrowIfCancellationRequested();
+                        try
+                        {
+                            preLibs[def.Title] = await _libraryCopyService.CreateLibraryAsync(
+                                TargetUrl.TrimEnd('/'), TargetSiteId, def, ColumnMappings);
+                            preColumnFailures[def.Title] = [.. _libraryCopyService.LastColumnCreationFailures];
+                        }
+                        catch (OperationCanceledException) { throw; }
+                        catch { /* the library's own pass below retries and reports (incl. already-exists) */ }
+                    }
+                    foreach (var sl in siteLists.Where(l => l.Def != null))
+                    {
+                        _copyCts.Token.ThrowIfCancellationRequested();
+                        try
+                        {
+                            preLists[sl.Title] = await _libraryCopyService.CreateCustomListAsync(
+                                TargetUrl.TrimEnd('/'), TargetSiteId, sl.Def!, sl.BaseTemplate);
+                            preColumnFailures[sl.Title] = [.. _libraryCopyService.LastColumnCreationFailures];
+                        }
+                        catch (OperationCanceledException) { throw; }
+                        catch { /* the list's own pass below retries and reports (incl. already-exists) */ }
+                    }
+
+                    // Fix-up: any column still missing (typically a Lookup whose list didn't exist yet).
+                    // AddMissingColumnsAsync skips columns that exist, so this is a no-op otherwise.
+                    var shellDefs = definitions.Where(d => preLibs.ContainsKey(d.Title))
+                        .Select(d => (d.Title, Def: d, ListId: (string?)null, RelUrl: (string?)preLibs[d.Title].newServerRelativeUrl))
+                        .Concat(siteLists.Where(l => l.Def != null && preLists.ContainsKey(l.Title))
+                            .Select(l => (l.Title, Def: l.Def!, ListId: (string?)preLists[l.Title], RelUrl: (string?)null)));
+                    foreach (var (title, d, knownListId, relUrl) in shellDefs.ToList())
+                    {
+                        if (!preColumnFailures.TryGetValue(title, out var failed) || failed.Count == 0) continue;
+                        _copyCts.Token.ThrowIfCancellationRequested();
+                        try
+                        {
+                            var listId = knownListId
+                                ?? await SpService.GetListIdByServerRelativeUrlAsync(TargetUrl.TrimEnd('/'), relUrl!);
+                            var fix = await _libraryCopyService.AddMissingColumnsAsync(
+                                TargetUrl.TrimEnd('/'), listId, d.Columns, d.SourceSiteUrl);
+                            preColumnFailures[title] = fix.Failed;
+                        }
+                        catch (OperationCanceledException) { throw; }
+                        catch { /* keep the original failure list */ }
+                    }
+                }
+                catch (OperationCanceledException) { throw; }
+                catch (Exception ex) { StatusMessage = Loc.T("VM_ListCopyWarning", ex.Message); }
+                StatusMessage = string.Empty;
+
+                await CopySiteCustomListsAsync(siteLists, preLists, preColumnFailures);
+            }
+
             foreach (var def in definitions)
             {
                 _copyCts.Token.ThrowIfCancellationRequested();
@@ -171,12 +395,18 @@ public partial class MainViewModel : ObservableObject
 
                 try
                 {
-                    var (newDriveId, newServerRelUrl) = await _libraryCopyService.CreateLibraryAsync(
-                        TargetUrl.TrimEnd('/'), TargetSiteId, def, ColumnMappings);
+                    // Site scope already created every library/list shell up front (see the structure
+                    // pass above) so lookup columns could bind to lists that exist.
+                    var hasShell = preLibs.TryGetValue(def.Title, out var shell);
+                    var (newDriveId, newServerRelUrl) = hasShell
+                        ? shell
+                        : await _libraryCopyService.CreateLibraryAsync(
+                            TargetUrl.TrimEnd('/'), TargetSiteId, def, ColumnMappings);
                     libResult.Status = CopyStatus.Success;
-                    if (_libraryCopyService.LastColumnCreationFailures.Count > 0)
+                    var colFailures = hasShell ? preColumnFailures[def.Title] : _libraryCopyService.LastColumnCreationFailures;
+                    if (colFailures.Count > 0)
                         libResult.ErrorMessage =
-                            Loc.T("VM_ColumnsCouldNotBeCreated", _libraryCopyService.LastColumnCreationFailures.Count, string.Join("; ", _libraryCopyService.LastColumnCreationFailures.Take(3)));
+                            Loc.T("VM_ColumnsCouldNotBeCreated", colFailures.Count, string.Join("; ", colFailures.Take(3)));
 
                     if (CopyPermissions)
                     {
@@ -392,7 +622,8 @@ public partial class MainViewModel : ObservableObject
             }
 
             // For Library scope: copy any selected custom lists (Tasks, Calendars, etc.).
-            foreach (var (def, baseTemplate, sourceNode) in listDefinitions)
+            // Lists that others look up are copied first, so the referencing lists' lookup values resolve.
+            foreach (var (def, baseTemplate, sourceNode) in OrderByLookupDependency(listDefinitions, x => x.Def))
             {
                 _copyCts.Token.ThrowIfCancellationRequested();
 
@@ -657,98 +888,6 @@ public partial class MainViewModel : ObservableObject
                     navResult.Status       = CopyStatus.Failed;
                     navResult.ErrorMessage = ex.Message;
                 }
-                StatusMessage = string.Empty;
-            }
-
-            // For Site scope: copy custom lists (Tasks, Calendars, Announcements, etc.).
-            if (IsSiteScope)
-            {
-                _copyCts.Token.ThrowIfCancellationRequested();
-                StatusMessage = Loc.T("VM_ReadingCustomLists");
-                try
-                {
-                    var customLists = await SpService.GetCustomListsAsync(SourceUrl.TrimEnd('/'));
-
-                    foreach (var (srcListId, listTitle, baseTemplate) in customLists)
-                    {
-                        _copyCts.Token.ThrowIfCancellationRequested();
-
-                        var listResult = new CopyResult
-                        {
-                            FileName          = listTitle,
-                            SourcePath        = $"{SourceUrl.TrimEnd('/')}/{listTitle}",
-                            TargetPath        = $"{TargetUrl.TrimEnd('/')}/{listTitle}",
-                            Status            = CopyStatus.Copying,
-                            IsLibraryCreation = true,
-                        };
-                        System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(listResult));
-
-                        LibraryDefinition? definition = null;
-                        try
-                        {
-                            StatusMessage = Loc.T("VM_CopyingList", listTitle);
-                            definition   = await _libraryCopyService.ReadListDefinitionAsync(
-                                SourceUrl.TrimEnd('/'), srcListId, listTitle);
-                            var targetListId = await _libraryCopyService.CreateCustomListAsync(
-                                TargetUrl.TrimEnd('/'), TargetSiteId, definition, baseTemplate);
-
-                            if (CopyPermissions)
-                            {
-                                try
-                                {
-                                    var srcHasUnique = await SpService.GetHasUniqueRoleAssignmentsAsync(
-                                        SourceUrl.TrimEnd('/'), $"web/lists('{srcListId}')", _copyCts.Token);
-                                    var perm = await _permissionCopyService.CopyObjectPermissionsAsync(
-                                        SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'),
-                                        $"web/lists('{srcListId}')",
-                                        $"web/lists('{targetListId}')",
-                                        hasUniquePermissions: srcHasUnique,
-                                        listTitle, _copyCts.Token);
-                                    if (perm.HasActivity)
-                                        AddPermissionResult(perm, $"{TargetUrl.TrimEnd('/')}/{listTitle}");
-                                }
-                                catch (OperationCanceledException) { throw; }
-                                catch { }
-                            }
-
-                            if (CopyLibraryContent)
-                                await CopyListItemsAsync(targetListId, definition, [], false, listResult);
-
-                            if (listResult.Status != CopyStatus.Failed)
-                                listResult.Status = CopyStatus.Success;
-                        }
-                        catch (OperationCanceledException) { throw; }
-                        catch (LibraryAlreadyExistsException alreadyEx)
-                        {
-                            listResult.Status       = CopyStatus.Skipped;
-                            listResult.ErrorMessage = alreadyEx.Message;
-
-                            if (!string.IsNullOrEmpty(alreadyEx.ListId) && definition?.Columns.Count > 0)
-                            {
-                                try
-                                {
-                                    var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
-                                        TargetUrl.TrimEnd('/'), alreadyEx.ListId, definition.Columns, definition.SourceSiteUrl);
-                                    AddColumnCreationResult(listTitle, $"{TargetUrl.TrimEnd('/')}/{listTitle}", createdCols);
-                                }
-                                catch { }
-                            }
-
-                            if (CopyLibraryContent && !string.IsNullOrEmpty(alreadyEx.ListId) && definition != null)
-                                await CopyListItemsAsync(alreadyEx.ListId, definition, [], false, listResult);
-
-                            if (listResult.Status != CopyStatus.Failed)
-                                listResult.Status = CopyStatus.Skipped;
-                        }
-                        catch (Exception ex)
-                        {
-                            listResult.Status       = CopyStatus.Failed;
-                            listResult.ErrorMessage = ex.Message;
-                        }
-                    }
-                }
-                catch (OperationCanceledException) { throw; }
-                catch (Exception ex) { StatusMessage = Loc.T("VM_ListCopyWarning", ex.Message); }
                 StatusMessage = string.Empty;
             }
         }

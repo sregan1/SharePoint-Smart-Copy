@@ -4,6 +4,29 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 4.0.1 — 2026-10-21
+
+### Fixed
+
+- **Lookup values on copied list items now resolve** — custom-list item copy sent the lookup's display text, which `ValidateUpdateListItem` doesn't accept (it needs the target item's ID), so lookup values on list items failed or came out blank. They are now resolved to target item IDs the same way file columns are, and unresolved or partly-resolved values are reported on the item. The same write also stopped reporting read-only system fields as field errors.
+- **"Create in target" for a missing Lookup column now works in Files scope** — the source site wasn't passed along, so the matching target list couldn't be found and the column was never created.
+- **Site scope copies lists before files, and creates every list and library first** — a library's Lookup column that pointed at a custom list (or a list that pointed at a later list) couldn't be created because that list didn't exist yet, and its values had nothing to resolve against. Site scope now creates all libraries and lists, re-adds any column that couldn't bind the first time, copies custom-list items in lookup-dependency order, and only then copies library files. Lookups that point at a *document library's* files still depend on copy order, since libraries are copied last.
+- **A lookup value is no longer remembered as "not found" across runs** — the lookup cache lived for the whole app session and also kept "no such value" forever, so after copying a lookup list's items and re-running, files kept failing until the app was restarted. The cache is now cleared at the start of every run, and a miss is remembered for only 90 seconds.
+- **Lookups with duplicate display text resolve consistently** — the query had no ordering, so which of two same-titled items won was arbitrary; it is now always the lowest ID.
+- **A clearer message when the target column isn't a Lookup** — a same-named Text (or other) column already at the target used to report only "lookup unresolved"; it now names the target column's type and says to rename or remove it. The message is translated in all 30 languages.
+- **Library scope copies lookup lists first** — selected custom lists are now copied in lookup-dependency order, as Site scope already does.
+
+### Known limitations (lookups)
+
+Documented in the User Guide under *Troubleshooting → Lookup columns*; deliberately not addressed:
+
+- Lookups to a list on a **different site** are not recreated and their values are skipped.
+- Lookups to a **document library's** files depend on copy order (libraries are copied last).
+- **Duplicate display text** can't be told apart — matching is by text, not by original item identity (that would need a source-to-target item-ID map).
+- In **Library scope**, libraries are still copied before the selected lists, so a library column that looks up one of those lists may need a second run; only Site scope creates everything up front.
+
+---
+
 ## 4.0.0 — 2026-10-13
 
 ### Added

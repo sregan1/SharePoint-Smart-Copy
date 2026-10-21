@@ -72,8 +72,23 @@ public partial class SharePointService
     // Keyed by listId. Concurrent — read/written from parallel copy tasks.
     private readonly System.Collections.Concurrent.ConcurrentDictionary<string, List<SpColumnDef>> _columnCache = new();
 
-    // Keyed by "{listId}|{showField}|{displayValue}" — caches resolved target lookup item IDs.
-    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, int?> _lookupValueCache = new();
+    // Keyed by "{listId}|{showField}|{displayValue}" — caches resolved target lookup item IDs (hits only).
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, int> _lookupValueCache = new();
+
+    // Same key — remembers a genuine "no such value" for a short time only. A miss is NOT permanent:
+    // the user may copy the lookup list's items and re-run (or, within one Site-scope run, the list
+    // may be copied after the value was first asked for), and a forever-cached miss would blank that
+    // value on every file that references it. Expiry bounds the repeated queries without that risk.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, DateTime> _lookupMissCache = new();
+    private static readonly TimeSpan LookupMissTtl = TimeSpan.FromSeconds(90);
+
+    // Called at the start of every copy run so a value resolved (or missed) in an earlier run — against
+    // a target list that has since changed — is never reused.
+    public void ClearLookupCache()
+    {
+        _lookupValueCache.Clear();
+        _lookupMissCache.Clear();
+    }
 
     // Returns the custom (non-built-in) columns for a library.
     public async Task<List<SpColumnDef>> GetLibraryColumnsAsync(string siteUrl, string listId, bool skipCache = false)
@@ -449,7 +464,8 @@ public partial class SharePointService
 
     // Finds the ID of an item in a lookup list by its display value.
     // ShowField values "LinkTitle"/"LinkTitleNoMenu" are queried as "Title".
-    // Returns null when the display value cannot be matched; result is cached per run.
+    // Returns null when the display value cannot be matched. Several target items can share a display
+    // value; the lowest ID wins (ordered, so the choice is stable rather than arbitrary).
     private async Task<int?> ResolveLookupValueAsync(
         string siteUrl, string lookupListId, string showField, string displayValue,
         CancellationToken ct = default)
@@ -457,10 +473,12 @@ public partial class SharePointService
         var queryField = showField is "LinkTitle" or "LinkTitleNoMenu" ? "Title" : showField;
         var cacheKey   = $"{lookupListId}|{queryField}|{displayValue}";
         if (_lookupValueCache.TryGetValue(cacheKey, out var cached)) return cached;
+        if (_lookupMissCache.TryGetValue(cacheKey, out var missedAt) && DateTime.UtcNow - missedAt < LookupMissTtl)
+            return null;
 
         var escaped = Uri.EscapeDataString(displayValue.Replace("'", "''"));
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{lookupListId}')/items" +
-                  $"?$select=ID&$filter={Uri.EscapeDataString(queryField)} eq '{escaped}'&$top=1";
+                  $"?$select=ID&$filter={Uri.EscapeDataString(queryField)} eq '{escaped}'&$orderby=ID&$top=1";
 
         using var response = await SendSharePointRequestAsync(token =>
         {
@@ -481,14 +499,50 @@ public partial class SharePointService
             {
                 result = id.GetInt32();
             }
-            // Cache only on a SUCCESSFUL request — whether it found a match (result != null) or
-            // genuinely found none (result == null, a trustworthy "no such value" since the query
-            // itself succeeded). A failed request (429/500/etc., post-retry) is NOT cached: it could
-            // be transient rather than "this value doesn't exist", and caching it would permanently
-            // blank that lookup value for every remaining file in the session that references it.
-            _lookupValueCache[cacheKey] = result;
+            // Cache only on a SUCCESSFUL request. A match is cached for the run; a genuine miss
+            // (the query succeeded but found nothing) is remembered briefly (see _lookupMissCache). A
+            // failed request (429/500/etc., post-retry) is NOT cached at all: it could be transient
+            // rather than "this value doesn't exist", and caching it would blank that lookup value for
+            // every remaining file that references it.
+            if (result.HasValue) _lookupValueCache[cacheKey] = result.Value;
+            else                 _lookupMissCache[cacheKey]  = DateTime.UtcNow;
         }
         return result;
+    }
+
+    // Message for a lookup field that can't be written because the TARGET column is missing, isn't a
+    // Lookup column at all (e.g. a same-named Text column already there), or has no bound list.
+    private static string DescribeUnusableLookupTarget(string targetName, SpColumnDef? tgtCol) =>
+        tgtCol != null && !SpColumnDef.IsLookupType(tgtCol.FieldType)
+            ? Loc.T("Svc_Sp_TargetNotLookup", targetName, tgtCol.FieldType)
+            : Loc.T("Svc_Sp_LookupUnresolved", targetName);
+
+    // Resolves a source lookup value to the ValidateUpdateListItem wire format against the TARGET
+    // column's bound list: single "3", multi "3;#;#5;#" (IDs only — display text is not accepted).
+    // Returns null when nothing resolved. Total and PARTIAL failures (e.g. 3 of 4 entries of a
+    // multi-value lookup) are appended to lookupErrors; previously a partial resolution submitted
+    // only the resolved entries with no warning that one was dropped.
+    private async Task<string?> ResolveLookupFormValueAsync(
+        string siteUrl, SpColumnDef tgtCol, LookupFieldValue lookup, string targetName,
+        List<string> lookupErrors, CancellationToken ct)
+    {
+        var showField   = string.IsNullOrEmpty(tgtCol.LookupShowField) ? "Title" : tgtCol.LookupShowField;
+        var resolvedIds = new List<int>();
+        foreach (var (_, display) in lookup.Entries)
+        {
+            var targetId = await ResolveLookupValueAsync(siteUrl, tgtCol.LookupListId!, showField, display, ct);
+            if (targetId.HasValue) resolvedIds.Add(targetId.Value);
+        }
+
+        if (resolvedIds.Count < lookup.Entries.Length)
+            lookupErrors.Add(resolvedIds.Count == 0
+                ? Loc.T("Svc_Sp_OfValuesResolved", targetName, lookup.Entries.Length)
+                : Loc.T("Svc_Sp_OfValuesUnresolved", targetName, lookup.Entries.Length - resolvedIds.Count, lookup.Entries.Length));
+        if (resolvedIds.Count == 0) return null;
+
+        return resolvedIds.Count == 1
+            ? resolvedIds[0].ToString()
+            : string.Join(";#;#", resolvedIds.Select(id => id.ToString())) + ";#";
     }
 
     // Applies custom field values to a list item via ValidateUpdateListItem.
@@ -598,34 +652,16 @@ public partial class SharePointService
             // Lookup fields: resolve each display value to a target item ID.
             if (value is LookupFieldValue lookup)
             {
-                if (!targetColsByName.TryGetValue(targetName, out var tgtCol) ||
+                SpColumnDef? tgtCol = null;
+                if (!targetColsByName.TryGetValue(targetName, out tgtCol) ||
                     string.IsNullOrEmpty(tgtCol.LookupListId))
                 {
-                    lookupErrors.Add(targetName);
+                    lookupErrors.Add(DescribeUnusableLookupTarget(targetName, tgtCol));
                     continue;
                 }
 
-                var showField  = string.IsNullOrEmpty(tgtCol.LookupShowField) ? "Title" : tgtCol.LookupShowField;
-                var resolvedIds = new List<int>();
-                foreach (var (_, display) in lookup.Entries)
-                {
-                    var targetId = await ResolveLookupValueAsync(siteUrl, tgtCol.LookupListId, showField, display, ct);
-                    if (targetId.HasValue) resolvedIds.Add(targetId.Value);
-                }
-
-                // Surface both total and PARTIAL resolution failures — previously silent: a fully
-                // unresolved field skipped with no entry in lookupErrors, and a partially-resolved
-                // multi-value lookup (e.g. 3 of 4 entries) submitted only the resolved ones with no
-                // warning at all that one was dropped.
-                if (resolvedIds.Count < lookup.Entries.Length)
-                    lookupErrors.Add(resolvedIds.Count == 0
-                        ? Loc.T("Svc_Sp_OfValuesResolved", targetName, lookup.Entries.Length)
-                        : Loc.T("Svc_Sp_OfValuesUnresolved", targetName, lookup.Entries.Length - resolvedIds.Count, lookup.Entries.Length));
-                if (resolvedIds.Count == 0) continue; // nothing resolved — skip field
-                // Single: "3", Multi: "3;#;#5;#" (SP lookup wire format with ID only)
-                var formatted = resolvedIds.Count == 1
-                    ? resolvedIds[0].ToString()
-                    : string.Join(";#;#", resolvedIds.Select(id => id.ToString())) + ";#";
+                var formatted = await ResolveLookupFormValueAsync(siteUrl, tgtCol, lookup, targetName, lookupErrors, ct);
+                if (formatted == null) continue; // nothing resolved — skip field
                 formValues.Add((targetName, formatted));
                 submittedFields.Add(targetName);
                 continue;
@@ -659,7 +695,7 @@ public partial class SharePointService
             }
         }
 
-        if (formValues.Count == 0) return lookupErrors.Count > 0 ? Loc.T("Svc_Sp_LookupUnresolved", string.Join(", ", lookupErrors)) : null;
+        if (formValues.Count == 0) return lookupErrors.Count > 0 ? string.Join(", ", lookupErrors) : null;
 
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({listItemId})/ValidateUpdateListItem()";
 
@@ -714,7 +750,7 @@ public partial class SharePointService
         // ValidateUpdateListItem returns an entry for every field in the list definition,
         // including read-only system fields (Created, Modified, etc.) that always report
         // HasException=true.  Only surface errors for fields we actually submitted.
-        var fieldErrors = new List<string>(lookupErrors.Select(n => Loc.T("Svc_Sp_LookupUnresolved", n)));
+        var fieldErrors = new List<string>(lookupErrors);
         fieldErrors.AddRange(droppedFields.Select(n => Loc.T("Svc_Sp_ColumnMissingOnTarget", n)));
         try
         {
@@ -770,10 +806,8 @@ public partial class SharePointService
         if (value is HyperlinkFieldValue link)
             return $"{link.Url}, {(string.IsNullOrWhiteSpace(link.Description) ? link.Url : link.Description)}";
 
-        // ValidateUpdateListItem resolves lookup display text server-side (same as quick edit).
-        // Unresolvable values surface as per-field errors rather than failing the item create.
-        if (value is LookupFieldValue lookup)
-            return string.Join(";#", lookup.Entries.Select(e => e.DisplayValue));
+        // Lookups never reach here: callers resolve them to target item IDs first
+        // (ResolveLookupFormValueAsync) — ValidateUpdateListItem doesn't accept display text.
 
         if (value is bool b)
             return b ? "1" : "0";
