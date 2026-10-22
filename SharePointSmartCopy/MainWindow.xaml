@@ -868,16 +868,33 @@
                         <StackPanel Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}"
                                     Margin="0,16,0,0">
                             <TextBlock Text="{loc:Loc Ui_DestinationList}" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,6"/>
-                            <ComboBox ItemsSource="{Binding TargetCustomLists}"
-                                      SelectedItem="{Binding SelectedTargetList}"
-                                      DisplayMemberPath="Title"
-                                      Margin="0,0,0,6"/>
-                            <TextBox Style="{StaticResource WatermarkTextBox}"
-                                     Tag="{loc:Loc Ui_NewListNameHint}"
-                                     Text="{Binding NewListName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Margin="0,0,0,6"
-                                     Visibility="{Binding IsCreatingNewList, Converter={StaticResource BoolToVis}}"/>
-                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}" Text="{loc:Loc Ui2_TargetHintSelectList}"/>
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"
+                                       Margin="0,0,0,8" Text="{loc:Loc Ui2_TargetHintSelectList}"/>
+                            <!-- One destination per source list that has items selected. -->
+                            <ItemsControl ItemsSource="{Binding ItemDestinationNodes}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource InfoBanner}" Padding="10,8" Margin="0,0,0,8">
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                                    <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
+                                                               FontSize="13" Foreground="{DynamicResource AccentTextBrush}" Margin="0,0,6,0"/>
+                                                    <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="SemiBold"
+                                                               TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                                <ComboBox ItemsSource="{Binding DataContext.TargetCustomLists, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                          SelectedItem="{Binding DestinationList}"
+                                                          DisplayMemberPath="Title"
+                                                          Margin="0,0,0,6"/>
+                                                <TextBox Style="{StaticResource WatermarkTextBox}"
+                                                         Tag="{loc:Loc Ui_NewListNameHint}"
+                                                         Text="{Binding NewDestinationName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         Visibility="{Binding IsCreatingNewDestination, Converter={StaticResource BoolToVis}}"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
@@ -1296,13 +1313,6 @@
                             <TextBlock FontSize="12" TextWrapping="Wrap">
                                 <Run Text="{loc:Loc Ui_To}" FontWeight="SemiBold"/>
                                 <Run Text="{Binding TargetUrl}"/>
-                            </TextBlock>
-                        </Border>
-                        <Border Style="{StaticResource SuccessBanner}" Padding="10,6" Margin="0,4,0,0"
-                                Visibility="{Binding IsItemSelectionActive, Converter={StaticResource BoolToVis}}">
-                            <TextBlock FontSize="12" TextWrapping="Wrap">
-                                <Run Text="{loc:Loc Ui_DestinationList2}" FontWeight="SemiBold"/>
-                                <Run Text="{Binding EffectiveDestinationListName, Mode=OneWay}"/>
                             </TextBlock>
                         </Border>
                         <TextBlock Margin="0,4,0,0" FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}" TextWrapping="Wrap"

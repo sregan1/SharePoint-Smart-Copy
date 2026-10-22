@@ -120,39 +120,42 @@ public partial class SharePointService
         var colsByName = cols.ToDictionary(c => c.InternalName, StringComparer.OrdinalIgnoreCase);
 
         // User fields are lookups: $expand them and read {name}/Name (claims login).
-        // Lookup fields must ALSO be $expand-ed ({name}/LookupId + LookupValue, same as
-        // BulkReadCustomFieldsAsync) — selecting a lookup by bare internal name is a 400,
-        // which used to abort the read and silently "copy" zero items.
-        var selectParts = new List<string> { "Id", "Title", "Created", "Modified" };
-        var expandParts = new List<string>();
-        foreach (var c in cols)
+        // Lookup fields must ALSO be $expand-ed, projected as {name}/Id + {name}/{ShowField}
+        // (see AppendLookupSelect) — selecting a lookup by bare internal name, or as
+        // {name}/LookupId, is a 400, which used to abort the read and "copy" zero items.
+        string BuildUrl(bool lookupIdOnly)
         {
-            if (SpColumnDef.IsUserType(c.FieldType))
+            var selectParts = new List<string> { "Id", "Title", "Created", "Modified" };
+            var expandParts = new List<string>();
+            foreach (var c in cols)
             {
-                selectParts.Add($"{c.InternalName}/Name");
-                expandParts.Add(c.InternalName);
+                if (SpColumnDef.IsUserType(c.FieldType))
+                {
+                    selectParts.Add($"{c.InternalName}/Name");
+                    expandParts.Add(c.InternalName);
+                }
+                else if (SpColumnDef.IsLookupType(c.FieldType))
+                {
+                    AppendLookupSelect(selectParts, expandParts, c, lookupIdOnly);
+                }
+                else
+                {
+                    selectParts.Add(c.InternalName);
+                }
             }
-            else if (SpColumnDef.IsLookupType(c.FieldType))
-            {
-                selectParts.Add($"{c.InternalName}/LookupId");
-                selectParts.Add($"{c.InternalName}/LookupValue");
-                expandParts.Add(c.InternalName);
-            }
-            else
-            {
-                selectParts.Add(c.InternalName);
-            }
+            if (extraFieldNames != null)
+                selectParts.AddRange(extraFieldNames);
+
+            return $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items" +
+                   $"?$select={Uri.EscapeDataString(string.Join(",", selectParts))}" +
+                   (expandParts.Count > 0 ? $"&$expand={Uri.EscapeDataString(string.Join(",", expandParts))}" : "") +
+                   "&$top=5000";
         }
-        if (extraFieldNames != null)
-            selectParts.AddRange(extraFieldNames);
 
-        var baseUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items" +
-                      $"?$select={Uri.EscapeDataString(string.Join(",", selectParts))}" +
-                      (expandParts.Count > 0 ? $"&$expand={Uri.EscapeDataString(string.Join(",", expandParts))}" : "") +
-                      "&$top=5000";
-
+        var hasLookups   = cols.Any(c => SpColumnDef.IsLookupType(c.FieldType));
+        var lookupIdOnly = false;
         var result = new List<Dictionary<string, object?>>();
-        string? next = baseUrl;
+        string? next = BuildUrl(lookupIdOnly);
 
         while (next != null)
         {
@@ -164,6 +167,17 @@ public partial class SharePointService
                 r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
                 return r;
             }, siteUrl);
+
+            if (!resp.IsSuccessStatusCode && (int)resp.StatusCode == 400 && hasLookups && !lookupIdOnly)
+            {
+                // A lookup show field SharePoint won't project: restart reading lookup IDs only
+                // (display text then can't be matched at the target and is reported as unresolved,
+                // rather than the whole list failing).
+                lookupIdOnly = true;
+                result.Clear();
+                next = BuildUrl(lookupIdOnly);
+                continue;
+            }
 
             if (!resp.IsSuccessStatusCode)
             {
@@ -182,7 +196,7 @@ public partial class SharePointService
                     var item = new Dictionary<string, object?>();
                     foreach (var prop in el.EnumerateObject())
                         item[prop.Name] = colsByName.TryGetValue(prop.Name, out var col)
-                            ? ParseFieldValue(prop.Value, col.FieldType)
+                            ? ParseFieldValue(prop.Value, col.FieldType, col.LookupShowField)
                             : ExtractJsonValue(prop.Value);
                     result.Add(item);
                 }

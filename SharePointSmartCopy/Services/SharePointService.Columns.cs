@@ -210,6 +210,8 @@ public partial class SharePointService
             // field from this chunk and retry, instead of losing the entire chunk.
             var chunkCols = chunks[chunk].ToList();
             var excludedFields = new List<string>();
+            // Set when the lookup sub-select (Id + show field) is rejected: lookups then read Id only.
+            var lookupIdOnly = false;
 
             while (chunkCols.Count > 0)
             {
@@ -233,9 +235,7 @@ public partial class SharePointService
                     }
                     else if (SpColumnDef.IsLookupType(c.FieldType))
                     {
-                        selectParts.Add($"{c.InternalName}/LookupId");
-                        selectParts.Add($"{c.InternalName}/LookupValue");
-                        expandParts.Add(c.InternalName);
+                        AppendLookupSelect(selectParts, expandParts, c, lookupIdOnly);
                     }
                     else
                     {
@@ -271,6 +271,15 @@ public partial class SharePointService
                             break;
                         }
 
+                        // A lookup whose show field can't be projected (400): retry reading IDs only.
+                        if ((int)response.StatusCode == 400 && !lookupIdOnly &&
+                            chunkCols.Any(c => SpColumnDef.IsLookupType(c.FieldType)))
+                        {
+                            lookupIdOnly = true;
+                            retryWithFieldExcluded = true;
+                            break;
+                        }
+
                         // A failed page silently dropped every item beyond it from the bulk cache —
                         // their files then copied with NO custom column values and reported Success.
                         throw new HttpRequestException(
@@ -299,7 +308,7 @@ public partial class SharePointService
                             foreach (var col in chunkCols)
                             {
                                 if (!item.TryGetProperty(col.InternalName, out var valProp)) continue;
-                                fields[col.InternalName] = ParseFieldValue(valProp, col.FieldType);
+                                fields[col.InternalName] = ParseFieldValue(valProp, col.FieldType, col.LookupShowField);
                             }
 
                             if (chunk == 0 && systemMetadataOut != null)
@@ -387,7 +396,23 @@ public partial class SharePointService
         return null;
     }
 
-    private static object? ParseFieldValue(JsonElement el, SupportedFieldType type)
+    // The property a lookup's display text is projected under: its ShowField, with the computed
+    // title variants (LinkTitle/LinkTitleNoMenu) and an unset ShowField reading as "Title".
+    private static string LookupQueryField(string? showField) =>
+        string.IsNullOrEmpty(showField) || showField is "LinkTitle" or "LinkTitleNoMenu" ? "Title" : showField;
+
+    // Adds a lookup column to an items() $select/$expand. With $expand, "{name}/X" addresses field X
+    // on the lookup's TARGET list — "LookupId"/"LookupValue" are not fields there (HTTP 400), so the
+    // entry is projected as {name}/Id plus the show field. idOnly drops the show field (fallback for
+    // a show field SharePoint refuses to project); the display text is then empty.
+    private static void AppendLookupSelect(List<string> selectParts, List<string> expandParts, SpColumnDef col, bool idOnly = false)
+    {
+        selectParts.Add($"{col.InternalName}/Id");
+        if (!idOnly) selectParts.Add($"{col.InternalName}/{LookupQueryField(col.LookupShowField)}");
+        expandParts.Add(col.InternalName);
+    }
+
+    private static object? ParseFieldValue(JsonElement el, SupportedFieldType type, string? lookupShowField = null)
     {
         if (el.ValueKind == JsonValueKind.Null || el.ValueKind == JsonValueKind.Undefined)
             return null;
@@ -415,10 +440,13 @@ public partial class SharePointService
 
         if (SpColumnDef.IsLookupType(type))
         {
+            var showProp = LookupQueryField(lookupShowField);
             var entries = EnumerateComplexValues(el)
                 .Select(e => (
-                    Id:           e.TryGetProperty("LookupId",    out var id) && id.ValueKind == JsonValueKind.Number ? id.GetInt32() : 0,
-                    DisplayValue: e.TryGetProperty("LookupValue", out var dv) ? dv.GetString() ?? "" : ""))
+                    Id:           e.TryGetProperty("Id", out var id) && id.ValueKind == JsonValueKind.Number ? id.GetInt32() : 0,
+                    DisplayValue: e.TryGetProperty(showProp, out var dv) && dv.ValueKind != JsonValueKind.Null
+                                      ? (dv.ValueKind == JsonValueKind.String ? dv.GetString() ?? "" : dv.ToString())
+                                      : ""))
                 .Where(e => e.Id > 0)
                 .ToArray();
             return entries.Length > 0 ? new LookupFieldValue(entries) : null;
@@ -470,7 +498,7 @@ public partial class SharePointService
         string siteUrl, string lookupListId, string showField, string displayValue,
         CancellationToken ct = default)
     {
-        var queryField = showField is "LinkTitle" or "LinkTitleNoMenu" ? "Title" : showField;
+        var queryField = LookupQueryField(showField);
         var cacheKey   = $"{lookupListId}|{queryField}|{displayValue}";
         if (_lookupValueCache.TryGetValue(cacheKey, out var cached)) return cached;
         if (_lookupMissCache.TryGetValue(cacheKey, out var missedAt) && DateTime.UtcNow - missedAt < LookupMissTtl)

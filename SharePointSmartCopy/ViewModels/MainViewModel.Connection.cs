@@ -271,20 +271,47 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<SharePointNode> _targetLibraries = [];
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(NextCommand))] private SharePointNode? _selectedTargetFolder;
     [ObservableProperty] private ObservableCollection<ListPickerItem> _targetCustomLists = [];
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(NextCommand))]
-    [NotifyPropertyChangedFor(nameof(IsCreatingNewList))]
-    [NotifyPropertyChangedFor(nameof(EffectiveDestinationListName))]
-    private ListPickerItem? _selectedTargetList;
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(NextCommand))]
-    [NotifyPropertyChangedFor(nameof(EffectiveDestinationListName))]
-    private string _newListName = string.Empty;
 
-    private const string NewListSentinelId = "__new__";
-    public bool IsCreatingNewList => SelectedTargetList?.Id == NewListSentinelId;
-    public string EffectiveDestinationListName =>
-        IsCreatingNewList ? NewListName : (SelectedTargetList?.Title ?? string.Empty);
+    // Item-level copies: one destination per source list (the nodes carry their own choice).
+    // Rebuilt whenever the Target step is entered and after the target's lists load.
+    public ObservableCollection<SharePointNode> ItemDestinationNodes { get; } = [];
+
+    private static bool IsItemLevelList(SharePointNode l) =>
+        l.IsCustomList && (l.IsChecked == null || l.Children.Any(c => c.Type == NodeType.ListItem && c.IsChecked == true));
+
+    private void RebuildItemDestinations()
+    {
+        foreach (var n in ItemDestinationNodes) n.PropertyChanged -= OnItemDestinationChanged;
+        ItemDestinationNodes.Clear();
+        if (CopyScope == CopyScope.Library)
+            foreach (var n in SourceLibraries.Where(IsItemLevelList))
+            {
+                n.PropertyChanged += OnItemDestinationChanged;
+                ItemDestinationNodes.Add(n);
+                ApplyDefaultDestination(n);
+            }
+        NextCommand.NotifyCanExecuteChanged();
+    }
+
+    // Default: the target list with the same name if there is one, otherwise "create new" named after
+    // the source list. Always visible and editable per list on the Target step.
+    private void ApplyDefaultDestination(SharePointNode n)
+    {
+        if (n.DestinationList != null || TargetCustomLists.Count == 0) return;
+        n.DestinationList = TargetCustomLists.FirstOrDefault(l =>
+                l.Id != SharePointNode.NewDestinationSentinelId &&
+                string.Equals(l.Title, n.Name, StringComparison.OrdinalIgnoreCase))
+            ?? TargetCustomLists.First(l => l.Id == SharePointNode.NewDestinationSentinelId);
+        if (n.IsCreatingNewDestination && string.IsNullOrWhiteSpace(n.NewDestinationName))
+            n.NewDestinationName = n.Name;
+    }
+
+    private void OnItemDestinationChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(SharePointNode.DestinationList) or nameof(SharePointNode.NewDestinationName))
+            NextCommand.NotifyCanExecuteChanged();
+    }
+
     [ObservableProperty] private bool _isConnectingTarget;
 
     // Editing the target URL invalidates any existing connection state. Without this, retyping the
@@ -369,9 +396,12 @@ public partial class MainViewModel : ObservableObject
                     System.Windows.Application.Current.Dispatcher.Invoke(() =>
                     {
                         TargetCustomLists.Clear();
-                        TargetCustomLists.Add(new ListPickerItem(NewListSentinelId, Loc.T("VM_CreateNewList")));
+                        TargetCustomLists.Add(new ListPickerItem(SharePointNode.NewDestinationSentinelId, Loc.T("VM_CreateNewList")));
                         foreach (var (id, title, _) in lists)
                             TargetCustomLists.Add(new ListPickerItem(id, title));
+                        // Lists were just (re)loaded from this target — drop choices made against another one.
+                        foreach (var n in ItemDestinationNodes) { n.DestinationList = null; n.NewDestinationName = string.Empty; }
+                        RebuildItemDestinations();
                     });
                 }
                 catch { /* non-critical — list picker just stays empty */ }
@@ -408,8 +438,7 @@ public partial class MainViewModel : ObservableObject
         TargetStatus         = string.Empty;
         TargetSiteId         = string.Empty;
         SelectedTargetFolder = null;
-        SelectedTargetList   = null;
-        NewListName          = string.Empty;
+        foreach (var n in ItemDestinationNodes) { n.DestinationList = null; n.NewDestinationName = string.Empty; }
         TargetLibraries.Clear();
         TargetCustomLists.Clear();
     }

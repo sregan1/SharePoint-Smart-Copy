@@ -4,6 +4,19 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 4.0.2 — 2026-10-22
+
+### Changed
+
+- **Each list now gets its own destination on the Target step** — when several lists had items selected, a single "Destination List" picker applied to all of them (every list's items landed in the one list you chose), with nothing saying which list it was for. The Target step now shows one card per source list, naming the list and letting you pick an existing target list or create a new one for it. Each defaults to the same-named target list if there is one, otherwise to creating a new list with the source name. The Options-step mapping is still shared and is based on the first existing destination.
+
+### Fixed
+
+- **Unchecking items under an "items only" list is now honored** — moving a list's checkbox to the middle (items-only) state ticks every loaded item, but the copy then ignored the item checkboxes entirely, so a user who unchecked all but one item still got every item copied and reported. When some items are checked and some aren't, only the checked ones are copied; with all checked, or the list never expanded, it still copies everything.
+- **Lists and libraries with Lookup columns no longer fail to read (HTTP 400)** — the source read asked SharePoint for `Column/LookupId` and `Column/LookupValue`, which aren't fields on the lookup's target list, so any list with a lookup column was created at the target but copied zero items (the same query broke custom-column reads for libraries). Lookups are now read as `Column/Id` plus the column's show field, so lookups that show a column other than Title work. If SharePoint still rejects the show field, the read retries with IDs only instead of failing the whole list.
+
+---
+
 ## 4.0.1 — 2026-10-21
 
 ### Fixed

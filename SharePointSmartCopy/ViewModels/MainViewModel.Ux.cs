@@ -40,8 +40,8 @@ public partial class MainViewModel
                 1 => Loc.T("Why_SelectItems"),
                 2 => !TargetConnected                                                      ? Loc.T("Why_ConnectTarget")
                    : NeedsTargetFolder && SelectedTargetFolder == null                     ? Loc.T("Why_ChooseFolder")
-                   : IsItemSelectionActive && SelectedTargetList == null                   ? Loc.T("Why_ChooseList")
-                   : IsCreatingNewList && string.IsNullOrWhiteSpace(NewListName)           ? Loc.T("Why_NameList")
+                   : IsItemSelectionActive && ItemDestinationNodes.Any(n => n.DestinationList == null) ? Loc.T("Why_ChooseList")
+                   : ItemDestinationNodes.Any(n => n.IsCreatingNewDestination && string.IsNullOrWhiteSpace(n.NewDestinationName)) ? Loc.T("Why_NameList")
                    : string.Empty,
                 3 => Loc.T("Why_NothingToCopy"),
                 4 => IsRunInProgress ? Loc.T("Why_CopyRunning") : string.Empty,

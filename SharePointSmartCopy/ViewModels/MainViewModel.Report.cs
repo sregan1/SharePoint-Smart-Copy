@@ -158,7 +158,7 @@ public partial class MainViewModel : ObservableObject
                 break;
             case 1:
                 OnPropertyChanged(nameof(IsItemSelectionActive));
-                NextCommand.NotifyCanExecuteChanged();
+                RebuildItemDestinations();
                 CurrentStep = 2;
                 break;
             case 2 when (TargetConnected && (NeedsTargetFolder ? SelectedTargetFolder != null : true)) || IsDemoMode:
@@ -168,12 +168,11 @@ public partial class MainViewModel : ObservableObject
                     // Item-level copies write into the chosen destination list (or a new one) —
                     // reflect that name in the preview's Destination Name column so what the
                     // user typed at the Target step is what the preview shows.
-                    if (IsItemSelectionActive && !string.IsNullOrWhiteSpace(EffectiveDestinationListName))
+                    if (IsItemSelectionActive && ItemDestinationNodes.Count > 0)
                     {
-                        foreach (var lib in SourceLibraries.Where(l => l.IsCustomList &&
-                                     (l.IsChecked == null ||
-                                      l.Children.Any(c => c.Type == NodeType.ListItem && c.IsChecked == true))))
-                            lib.OverrideName = EffectiveDestinationListName;
+                        foreach (var lib in ItemDestinationNodes)
+                            if (!string.IsNullOrWhiteSpace(lib.EffectiveDestinationName))
+                                lib.OverrideName = lib.EffectiveDestinationName;
                         OnPropertyChanged(nameof(LibraryPreviewItems));
                     }
                     // Eagerly load target columns for mapping dialog; store task so dialog can await it
@@ -225,8 +224,7 @@ public partial class MainViewModel : ObservableObject
                : SourceLibraries.Any(l => l.GetCheckedNodes().Any()),
         2 => TargetConnected &&
              (NeedsTargetFolder ? SelectedTargetFolder != null : true) &&
-             (!IsItemSelectionActive || (SelectedTargetList != null &&
-                 (!IsCreatingNewList || !string.IsNullOrWhiteSpace(NewListName)))),
+             (!IsItemSelectionActive || (ItemDestinationNodes.Count > 0 && ItemDestinationNodes.All(n => n.HasValidDestination))),
         3 => IsLibraryOrSiteScope || CopyJobs.Count > 0,
         4 => IsCopyComplete && !IsUpdatingMetadata,
         _ => false

@@ -631,13 +631,13 @@ public partial class MainViewModel : ObservableObject
                 // isItemsOnly: IsChecked == null — copy all items, skip structure creation, use SelectedTargetList.
                 // isPartialSelection: IsChecked == false with individual children checked — copy those items only.
                 var isItemsOnly       = sourceNode?.IsChecked == null;
-                var selectedItemIds   = (!isItemsOnly && sourceNode != null)
-                    ? sourceNode.Children
-                        .Where(c => c.Type == NodeType.ListItem && c.IsChecked == true)
-                        .Select(c => c.Id)
-                        .ToHashSet()
-                    : [];
-                var isPartialSelection = selectedItemIds.Count > 0;
+                var loadedItems       = sourceNode?.Children.Where(c => c.Type == NodeType.ListItem).ToList() ?? [];
+                var selectedItemIds   = loadedItems.Where(c => c.IsChecked == true).Select(c => c.Id).ToHashSet();
+                // Items-only ticks every loaded item (the check cascades down), so a user who then
+                // UNCHECKS some of them is narrowing the selection — honoring only that subset. Before,
+                // items-only ignored the children entirely and copied every item in the list.
+                var narrowedItemsOnly  = isItemsOnly && selectedItemIds.Count > 0 && selectedItemIds.Count < loadedItems.Count;
+                var isPartialSelection = selectedItemIds.Count > 0 && (!isItemsOnly || narrowedItemsOnly);
                 var needsItemCopy      = CopyLibraryContent || isPartialSelection || isItemsOnly;
 
                 var listResult = new CopyResult
@@ -650,28 +650,33 @@ public partial class MainViewModel : ObservableObject
                 };
                 System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(listResult));
 
+                // This list's own destination on the Target step (null for whole-list copies).
+                var itemDest = sourceNode?.DestinationList;
+                var itemDestTitle = (isPartialSelection || isItemsOnly) && itemDest != null
+                    ? sourceNode!.EffectiveDestinationName : null;
+
                 try
                 {
                     StatusMessage = Loc.T("VM_CopyingList", def.Title);
                     string targetListId;
-                    if ((isPartialSelection || isItemsOnly) && SelectedTargetList != null)
+                    if ((isPartialSelection || isItemsOnly) && itemDest != null)
                     {
-                        // Items-only or partial selection: create a new list or use the chosen destination list.
-                        if (IsCreatingNewList)
+                        // Items-only or partial selection: create a new list or use this list's chosen destination.
+                        if (sourceNode!.IsCreatingNewDestination)
                         {
-                            // The Target step is the single authority for the destination list
+                            // The Target step is the single authority for each list's destination
                             // name; the preview's Destination Name column mirrors it read-only.
-                            def.Title    = NewListName.Trim();
+                            def.Title    = sourceNode.EffectiveDestinationName;
                             targetListId = await _libraryCopyService.CreateCustomListAsync(
                                 TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate);
                         }
                         else
                         {
-                            targetListId = SelectedTargetList.Id;
+                            targetListId = itemDest.Id;
                         }
                         if (CopyCustomColumns && def.Columns.Count > 0)
                         {
-                            var colTitle = IsCreatingNewList ? def.Title : SelectedTargetList.Title;
+                            var colTitle = sourceNode.IsCreatingNewDestination ? def.Title : itemDest.Title;
                             try
                             {
                                 var createdCols = await _libraryCopyService.AddMissingColumnsAsync(
@@ -705,7 +710,7 @@ public partial class MainViewModel : ObservableObject
                     }
 
                     if (needsItemCopy)
-                        await CopyListItemsAsync(targetListId, def, selectedItemIds, isPartialSelection, listResult);
+                        await CopyListItemsAsync(targetListId, def, selectedItemIds, isPartialSelection, listResult, itemDestTitle);
 
                     if (listResult.Status != CopyStatus.Failed)
                         listResult.Status = CopyStatus.Success;
@@ -728,7 +733,7 @@ public partial class MainViewModel : ObservableObject
                     }
 
                     if (needsItemCopy && !string.IsNullOrEmpty(alreadyEx.ListId))
-                        await CopyListItemsAsync(alreadyEx.ListId, def, selectedItemIds, isPartialSelection, listResult);
+                        await CopyListItemsAsync(alreadyEx.ListId, def, selectedItemIds, isPartialSelection, listResult, itemDestTitle);
 
                     if (listResult.Status != CopyStatus.Failed)
                         listResult.Status = CopyStatus.Skipped;

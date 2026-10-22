@@ -22,6 +22,27 @@ public partial class SharePointNode : ObservableObject
 
     [ObservableProperty] private string? _overrideName;
 
+    // Item-level copies (a list in items-only/partial mode): where THIS list's selected items go.
+    // Chosen per source list on the Target step — either an existing target list or a new one.
+    public const string NewDestinationSentinelId = "__new__";
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsCreatingNewDestination))]
+    [NotifyPropertyChangedFor(nameof(EffectiveDestinationName))]
+    [NotifyPropertyChangedFor(nameof(HasValidDestination))]
+    private ListPickerItem? _destinationList;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(EffectiveDestinationName))]
+    [NotifyPropertyChangedFor(nameof(HasValidDestination))]
+    private string _newDestinationName = string.Empty;
+
+    public bool IsCreatingNewDestination => DestinationList?.Id == NewDestinationSentinelId;
+    public string EffectiveDestinationName =>
+        IsCreatingNewDestination ? NewDestinationName.Trim() : (DestinationList?.Title ?? string.Empty);
+    public bool HasValidDestination =>
+        DestinationList != null && (!IsCreatingNewDestination || !string.IsNullOrWhiteSpace(NewDestinationName));
+
     public bool HasChildren { get; set; }
     public bool IsPage { get; set; }
     public bool IsCustomList { get; set; }

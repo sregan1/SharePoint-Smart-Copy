@@ -852,7 +852,8 @@ public partial class MainViewModel : ObservableObject
         LibraryDefinition def,
         HashSet<string> selectedItemIds,
         bool isPartialSelection,
-        CopyResult listResult)
+        CopyResult listResult,
+        string? destinationTitle = null)
     {
         var targetCols       = await SpService.GetLibraryColumnsAsync(TargetUrl.TrimEnd('/'), targetListId, skipCache: true);
         // GroupBy/First: duplicate display names are legal in SharePoint and a plain
@@ -895,8 +896,7 @@ public partial class MainViewModel : ObservableObject
             .OrderBy(i => i.TryGetValue("Id", out var oid) && long.TryParse(oid?.ToString(), out var on) ? on : long.MaxValue)
             .ToList();
 
-        var targetListTitle = IsCreatingNewList ? NewListName.Trim()
-                            : SelectedTargetList?.Title ?? def.Title;
+        var targetListTitle = !string.IsNullOrEmpty(destinationTitle) ? destinationTitle : def.Title;
 
         foreach (var item in items)
         {
@@ -1149,11 +1149,12 @@ public partial class MainViewModel : ObservableObject
                 ColumnLoadError = Loc.T("VM_TargetColumnsUnavailable", ex.Message);
             }
         }
-        else if (IsItemSelectionActive && SelectedTargetList != null)
+        else if (IsItemSelectionActive && ItemDestinationNodes.FirstOrDefault(n => n.DestinationList != null && !n.IsCreatingNewDestination)?.DestinationList is { } mappingDest)
         {
+            // One shared mapping covers every list, so it is based on the first existing destination.
             try
             {
-                _targetColumns = await SpService.GetLibraryColumnsAsync(TargetUrl.TrimEnd('/'), SelectedTargetList.Id);
+                _targetColumns = await SpService.GetLibraryColumnsAsync(TargetUrl.TrimEnd('/'), mappingDest.Id);
                 OnPropertyChanged(nameof(TargetColumns));
             }
             catch (Exception ex)
