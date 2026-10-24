@@ -139,6 +139,8 @@ Before using SharePoint Smart Copy for the first time, a one-time setup is requi
 
 > **Note:** `AllSites.FullControl` (SharePoint delegated) is required for Migration API mode. If your organization uses only Enhanced REST mode, this permission can be omitted — but the app will display an error if Migration API is selected without it.
 
+> **Optional — only for the Forms tool:** to copy Microsoft Forms, also add **Microsoft Forms** → **Delegated permissions** (search "Microsoft Forms" under *APIs my organization uses*) and grant consent. It is not needed for any other feature. See [Copying Forms and Flows](#copying-forms-and-flows--beta).
+
 > **Important — admin consent is per-tenant:** Consenting to these permissions in one Microsoft 365 tenant has no effect on any other tenant. If you're deploying to a new customer or a second tenant, repeat this entire Azure App Registration section — a new app registration, new permissions, and a fresh **Grant admin consent** click — inside *that* tenant. Consent can never be reused across tenants.
 
 ### Step 3 — Copy Your Application ID
@@ -307,6 +309,42 @@ What differs from a same-tenant copy:
 - **Entra groups do not carry over** unless you map them with an override.
 - The source and target must be on **different SharePoint hosts**. For two sites in the same tenant, use Single tenant mode.
 - Switching between Single tenant and Multi-tenant disconnects both sites (you are asked first).
+
+### Copying Forms and Flows — Beta
+
+On the **Browse** step, below the four copy-scope tiles, two more tiles open their own tools. They are not copy scopes: they use the sign-ins you already made (Single tenant: one shared sign-in; Multi-tenant: the source and target sign-ins).
+
+> **Unofficial API.** The Forms tool talks to the Microsoft Forms web API, which Microsoft does not document or support. It works today but may change without notice. Try a few forms first.
+
+**Forms tile** — four steps, like the main copy wizard:
+
+1. **Forms** — click **Load my forms** (you may be asked to sign in). Your own forms are listed; forms owned by Microsoft 365 groups and forms shared with you are not listed yet. Tick the forms to copy; the **filter box** narrows the list by title or type (**Select all** then takes just the visible forms), and the **Already copied** column shows forms you copied before. **Export responses…** (bottom left) writes one Excel file per ticked form, or one workbook with a sheet per form if **One workbook** is ticked; responses can't be re-submitted into a copy. If a selected form was already copied to the same account, you are asked before a second copy is made.
+2. **Target** — choose where the copies go. In *Single tenant* mode they are created in the same account, next to the originals. In *Multi-tenant* mode this step has its own **Sign in to the target account** button (separate from the SharePoint sign-ins) and confirms that the account can use Microsoft Forms before you can continue. You can add a suffix to the copied titles here.
+3. **Copy** — shows progress form by form. **Cancel** stops after the current form (Cancel is also available while loading, signing in and exporting). Closing the window during a copy asks first, because it can leave a half-built form in the target.
+4. **Results** — a dashboard like the file copy's report: how many forms copied, copied with warnings, or failed, how many questions copied, and how long it took. The table lists each form with the reason for any warning or failure. **Open selected copy** and **Open Microsoft Forms** jump to the copies, **Export results…** saves the table to Excel, and **Show form ID map** opens the file the Flows tool uses. **Copy more forms** starts again.
+
+Each copy keeps all questions (with their original IDs), choice branching, quiz type, settings, and theme. After each copy the tool checks that the copy has as many questions as the source. Background, logo, and header images are not copied yet, and quiz scoring is not verified; both are noted in the results.
+
+**Flows tile** — six steps:
+
+1. **Packages** — export your flows in Power Automate (**Export → Package (.zip)**) and add the files. Solution exports (.zip files with a `Workflows` folder) are read too. **Load mapping…** fills the following steps from a mapping you saved earlier (values that match these flows are applied; check them as you go). Each file is scanned as soon as you add it. A **What these flows use** table then lists each service the flows use (SharePoint, Microsoft Forms, Outlook, Teams, Planner, Excel, OneDrive, Approvals and others), how many flows and steps use it, what was found (for example "3 sites, 7 lists, 68 columns"), and what the tool does about it:
+   - *Rewrites what it finds* — SharePoint sites, lists and columns, Forms, and email addresses.
+   - *IDs reported; review after import* — services whose identifiers (a Teams channel, a Planner plan, an Excel file...) are detected and listed but not rewritten.
+   - *Connection only* — nothing tenant-specific beyond the connection itself.
+2. **Sites** — enter the target site for each source site (the site you connected in the wizard is prefilled).
+3. **Lists & columns** — matched automatically when the step opens. The tool reads each source list's name through your connection and finds the list with the same name on the target. Every list ID found in the flows has a **Target list ID** cell: type or paste a list GUID, or the link of the list's settings page, to choose a list yourself (for example when the name differs), then click **Match again**. The **Column mapping** table shows every column the flows use with the target column already chosen: same internal name first, then same display name, then a similar name (ignoring case, spaces and underscores). Rows that need you are listed first: *No match* rows have no suggestion and *Similar name* rows should be checked. Change any row from its dropdown, or choose **(leave unchanged)** to keep the source name. The same column can map differently on different lists.
+4. **Forms & email** — form IDs from the form ID map are filled in, and a **Check** column warns when a form is in the wrong tenant (for example the source tenant when you are copying across tenants). For a form you created yourself, paste its ID or the link of its edit page. You can move a whole email domain, and the **Other values** table lists individual email addresses, the tenant ID and library paths found in the flows, each with a **Replace with** cell.
+5. **Write** — choose an output folder (not the folder holding the originals). A summary shows what will be replaced. **Save mapping…** keeps your choices as a JSON file.
+6. **Report** — a dashboard: packages written, replacements made, values still pointing at the source, and items to review (other services' IDs, unmatched lists or columns). **Open output folder** and **Open report** show the results, and a **What to do next** list walks you through importing. `rewrite-report.html` (also saved as `rewrite-report.md`) lists what the flows use, what to do after import, and every change.
+
+After importing a package into Power Automate, **recreate each connection and re-select it** — connections can't be moved between tenants. Import flows turned off, review them, then turn them on. Your original packages are never modified.
+
+**Requirements and limits**
+
+- Forms needs the delegated **Microsoft Forms** permission on the app registration (see Step 2 of the Azure setup). If it is missing, the dialog shows a hint.
+- Legacy flow packages are fully supported. For solution exports only the flow definitions are rewritten; environment variables and connection references in the solution are not, and the report says so.
+- The tool edits the same values you would change by hand in a package's `definition.json` (form ID, site URL, list GUIDs, column names), and writes a new package for you to import.
+- Column names inside complex flow expressions are matched by pattern; review the report.
 
 ---
 

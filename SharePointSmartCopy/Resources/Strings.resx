@@ -794,4 +794,281 @@
   <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Map unresolved users…</value></data>
   <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Opens the identity mapping with the people this run could not find in the target.</value></data>
   <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>This run had no unresolved users.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Copy Forms</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Copy Microsoft Forms to the target account, keeping all questions, branching, settings, and theme. Responses can be exported to Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>This uses the Microsoft Forms web API, which Microsoft does not document or support. It works today but may change without notice. Try a few forms first.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Load my forms</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Source account: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Target account: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Target: the same account (single tenant). Copies are created next to the originals.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(you will be asked to sign in)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Form ID map (used by the Flows tool): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Loading forms…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>Loaded {0} forms.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Select at least one form first.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Copying forms…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Copying…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Copied</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Failed (see log)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Copying '{0}'</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Copy finished: {0} copied, {1} failed.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Choose a folder for the response exports</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Exporting responses…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>Exported '{0}': {1} responses to {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Exported responses for {0} forms to {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>The form was copied, but its ID could not be saved for the Flows tool: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Could not export '{0}': {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Exported responses for {0} forms to {2}; {1} failed (see the log).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Cancelled.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Error: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Hint: the app registration needs the delegated Microsoft Forms permission, with consent. Add it under API permissions (see the User Guide), then try again.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Hint: Microsoft Forms refused the request. Check that this account can open forms.office.com and that the app registration has the Microsoft Forms permission.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{0} of {1} selected</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Title</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Type</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Last modified</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Result</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Add to copied titles:</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Copy selected forms</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Export responses…</value></data>
+  <data name="Forms_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Forms</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Copy Microsoft Forms and export their responses</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Forms tool</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Rewrite Flows for the Target</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Update exported Power Automate packages (.zip) so they point at the target: sites, lists, columns, copied forms, and email domains. Your original packages are never changed.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Choose exported flow packages</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Add the flow packages (.zip) you exported from Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Add files…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Add folder…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Scan</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Flow packages (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Add at least one flow package first.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Scanning packages…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>Skipped {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} flows found. They reference {1} sites, {2} lists, and {3} forms.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Scan complete.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Map sites</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Enter the target site for each source site. The site you connected in the wizard is filled in for you.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Source site</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Target site</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Fill empty targets on host:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Fill, keeping paths</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Enter a full URL such as https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Filled empty targets using that host and each site's path.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Match lists and columns</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>The tool reads each list through your connections, finds the list with the same name on the target, and matches the columns. Everything is pre-filled; change anything that looks wrong.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Match lists and columns</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>List</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>Source list ID</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>Target list ID</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Source column</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Target column</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Scan the packages first.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Enter at least one target site first.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Matching lists and columns…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(not found)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Matched</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Site has no target</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Not found in source</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>No list with this name on target</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Same name</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Renamed on target</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>No match: choose a column</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} of {1} lists matched. Columns: {2} matched by name, {3} need your choice.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Forms and email</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Forms copied with the Forms tool are filled in automatically. For a form you created yourself, paste its ID or the link of its edit page.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>Source form ID</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>New form ID or edit-page link</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Move email domain:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Write the updated packages</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Choose an output folder (not the folder holding the originals). The updated packages and a report listing every change are saved there.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Write updated packages</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Save mapping…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Open output folder</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Connections can't be moved between tenants. After importing a package, recreate each connection in Power Automate and re-select it.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Choose an output folder first.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Writing updated packages…</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>The output folder holds the original package. Choose a different folder so the originals stay untouched.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Flow rewrite report
+
+Original packages are untouched. Connections are NOT migrated; recreate and re-select them on import.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Report written to {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} packages written, {1} replacements. {2} values still point at the source (see the report).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Mapping saved to {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Flows</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Update exported Power Automate flows for the target</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Flows tool</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>What these flows use</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>The services found in the scanned flows, and what this tool does about each one.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Service</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Flows</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Steps</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Found</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>What this tool does</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Rewrites what it finds</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>IDs reported; review after import</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Connection only (recreate it)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Column mapping</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Each column the flows use, with the target column chosen by automatic matching (same name, then same display name, then a similar name). Change any row from its dropdown; choose "(leave unchanged)" to keep the source name.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(leave unchanged)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Similar name: please check</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(not matched yet)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Entered by you</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Type or paste a target list ID, or the link of its list settings page, in the Target list ID column to choose a list yourself (for example when the name differs). Then click "Match again" to match its columns.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Could not find a list ID in '{0}'. Paste a GUID or the list settings page link.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Could not find a form ID in '{0}'. Paste the form ID or the link of the form's edit page.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Forms</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Target</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Copy</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Results</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Choose the forms to copy</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Reload forms</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Click "Load my forms" to see your forms.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>No forms were found in this account.</value></data>
+  <data name="Forms_Next" xml:space="preserve"><value>Next</value></data>
+  <data name="Forms_Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Copy {0} forms</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Copy more forms</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Choose where the copies go</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Single tenant: the copies are created in the same account you are using, next to the originals.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Multi-tenant: the copies are created in the target account. Sign in to it here; this is separate from the sign-in you used for the SharePoint sites.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Target account</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Signs in with the app registration: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Signs in with your target app registration (set in Settings).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Sign in to the target account</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Sign in again</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Signing in to the target account… a browser window may open.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Connected as {0}. Microsoft Forms access confirmed ({1} forms already in this account).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Could not connect to the target account: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>The target account is not connected yet.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Ready. Click the Copy button to start.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Ready: copies will be created in {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Sign in to the target account to continue.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Options</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} forms will be copied from {1} to {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>the source account</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>the target account</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Copying forms</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Starting…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Form {0} of {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Cancelling after the current form…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Copy finished: all {0} forms were copied</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Your copies are in {0}. Open Microsoft Forms to see them, or use the table below.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Copy finished: {0} of {1} forms were copied, some need attention</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>The copies are in {0}. Forms marked with a warning copied with problems, and failed forms were not created. See the Details column.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Copy finished, but no forms were copied</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>See the Details column for the reason. Common causes are a missing Microsoft Forms permission on the target registration, or an account without Forms access.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Copy cancelled after {0} of {1} forms</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>The forms listed below were completed. The form being copied when you cancelled was not finished and is not visible.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Copied</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>With warnings</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Failed</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Questions</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Source form</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Copy</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Questions</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Details</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Copied</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Copied with warnings</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Open selected copy</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Open Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Export results…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Show form ID map</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Select a copied form in the table first.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Results saved to {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Hint: the app registration has no matching redirect address. In Entra, under Authentication, add the platform "Mobile and desktop applications" with http://localhost, then try again.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Packages</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Sites</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Lists &amp; columns</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Forms &amp; email</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Write</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Report</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Choose your exported flows</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>In Power Automate: open My flows, pick a flow, then Export → Package (.zip). Add the downloaded .zip files here. Each file is scanned as soon as you add it.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Clear</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Add the exported flow packages to begin.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>No flows were found in those files. Make sure they are packages exported with Export → Package (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Scan complete. Review what the flows use, then click Next.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Choose the target sites</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>These flows do not use SharePoint sites with fixed addresses, so there is nothing to map here. Click Next.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Next, the tool reads each list through your connections and matches it on the target site. Leave a target empty to leave that site unchanged.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Enter the target site for each source site, then click Next.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Match lists and columns</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Match again</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Lists</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>These flows do not point at specific SharePoint lists, so there is nothing to match.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Lists and columns are matched when this step opens.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Forms and email</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Check the forms and email, then click Next.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>These flows do not use Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>Email addresses</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>To move every address from one email domain to another, enter both domains. Addresses on other domains are listed in the report, not changed.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Write the updated packages</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Output folder</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Choose the output folder, then click Write updated packages.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Ready to write {0} package(s) containing {1} flow(s). Replacing: {2} site(s), {3} list(s), {4} column mapping(s), {5} form(s).</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Write updated packages</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Packages written</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Replacements</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Still the source</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>To review</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Package</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Updated</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} value(s) still point at the source</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Open report</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Start over</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Done: {0} package(s) written</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Saved in {0}. Nothing was left pointing at the source. Follow the steps below to import them.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Done: {0} package(s) written, some items need your review</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Saved in {0}. Open the report to see values still pointing at the source and items the tool does not rewrite (other services, unmatched lists or columns).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>What to do next</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Open the report and check "still pointing at the source" and anything marked for review.
+2.  In Power Automate (target tenant), open My flows → Import → Import Package (Legacy) and choose a written package.
+3.  Under "Related resources" click "Select during import" for each connection and pick or create a connection in the target tenant. Connections cannot be moved between tenants.
+4.  Import the flow. Keep it turned off, open it, fix anything it flags, then turn it on.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>No changes (nothing in it matched your mapping)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Copied {0} to {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Copied before</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Already copied</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …and {0} more</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Copy again?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>{0} of the selected forms were already copied to this account:
+
+{1}
+
+Copying again creates a second copy of each. Continue?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>A copy is still running. If you close now, the form being copied may be left half-built in the target. Stop and close?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Copy in progress</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>No responses could be exported (see the log).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Filter by title or type</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>One workbook</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Export all selected forms into a single Excel file with one sheet per form.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>Email address</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Tenant ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Library path</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Other values</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Type a replacement for any value that should change. Rows left empty are not changed; they are listed in the report if they still point at the source.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Kind</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>In the flows</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Replace with</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Check</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Not a form ID or edit-page link</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Same as the source form</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>This form is in the source tenant, not the target</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>This form is in a different tenant than the source</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>From the Forms copy of {0} to {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>From an earlier Forms copy</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Load mapping…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Fill in sites, lists, columns, forms and other values from a mapping you saved earlier.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Could not load the mapping: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>Loaded {0}. Values that match these flows were filled in; check them on the next steps.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>Loaded {0}. It is applied when you add flow packages.</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Could not be read; no output written</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Cancelled.</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Error: {0}</value></data>
 </root>

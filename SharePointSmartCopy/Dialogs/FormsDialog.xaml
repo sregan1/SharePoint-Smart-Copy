@@ -1,0 +1,410 @@
+<Window xmlns:loc="clr-namespace:SharePointSmartCopy.Localization" x:Class="SharePointSmartCopy.Dialogs.FormsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:SharePointSmartCopy.Converters"
+        xmlns:models="clr-namespace:SharePointSmartCopy.Models"
+        Title="{loc:Loc Forms_Title}"
+        Width="980" Height="760"
+        MinWidth="820" MinHeight="620"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource WindowBgBrush}"
+        ResizeMode="CanResize">
+
+    <Window.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
+        <conv:InvertBoolConverter x:Key="InvBool"/>
+        <conv:IntToVisibilityConverter x:Key="IntToVis"/>
+        <conv:EqualToVisibilityConverter x:Key="EqToVis"/>
+        <conv:MultiEqualToBoolConverter x:Key="MultiEqual"/>
+        <conv:MultiGreaterThanToBoolConverter x:Key="MultiGreater"/>
+
+        <!-- Same four-step indicator as the main window: gray = upcoming, check = done, accent = current,
+             green = the final (Results) step. DataContext of a step is a StepInfo; CurrentStep comes from this
+             window's view model. -->
+        <x:Array x:Key="FormsSteps" Type="models:StepInfo">
+            <models:StepInfo Index="0" Display="1" Label="{loc:Loc Forms_StepForms}"/>
+            <models:StepInfo Index="1" Display="2" Label="{loc:Loc Forms_StepTarget}"/>
+            <models:StepInfo Index="2" Display="3" Label="{loc:Loc Forms_StepCopy}"/>
+            <models:StepInfo Index="3" Display="✓" Label="{loc:Loc Forms_StepResults}" IsFinal="True"/>
+        </x:Array>
+
+        <Style x:Key="StepBubble" TargetType="Border">
+            <Setter Property="Width" Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{DynamicResource BorderLightBrush}"/>
+            <Style.Triggers>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding Converter="{StaticResource MultiGreater}">
+                            <Binding Path="DataContext.CurrentStep" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                            <Binding Path="Index"/>
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Background" Value="{DynamicResource AccentLightBrush}"/>
+                </DataTrigger>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding Converter="{StaticResource MultiEqual}">
+                            <Binding Path="DataContext.CurrentStep" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                            <Binding Path="Index"/>
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+                </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Value="True">
+                            <Condition.Binding>
+                                <MultiBinding Converter="{StaticResource MultiEqual}">
+                                    <Binding Path="DataContext.CurrentStep" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                    <Binding Path="Index"/>
+                                </MultiBinding>
+                            </Condition.Binding>
+                        </Condition>
+                        <Condition Binding="{Binding IsFinal}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Background" Value="{DynamicResource SuccessBrush}"/>
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="StepBubbleText" TargetType="TextBlock">
+            <Setter Property="Text" Value="{Binding Display}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
+            <Style.Triggers>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding Converter="{StaticResource MultiGreater}">
+                            <Binding Path="DataContext.CurrentStep" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                            <Binding Path="Index"/>
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Text" Value="✓"/>
+                    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                </DataTrigger>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding Converter="{StaticResource MultiEqual}">
+                            <Binding Path="DataContext.CurrentStep" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                            <Binding Path="Index"/>
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Result banner: success (green), needs attention (amber), failed (red), cancelled (blue) -->
+        <Style x:Key="OutcomeBanner" TargetType="Border" BasedOn="{StaticResource InfoBanner}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Outcome}" Value="Success">
+                    <Setter Property="Background" Value="{DynamicResource SuccessBgBrush}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Outcome}" Value="Partial">
+                    <Setter Property="Background" Value="{DynamicResource WarningBgBrush}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource WarningBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Outcome}" Value="Failed">
+                    <Setter Property="Background" Value="{DynamicResource DangerBgBrush}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource DangerBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid TextElement.Foreground="{DynamicResource TextPrimaryBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>   <!-- header -->
+            <RowDefinition Height="Auto"/>   <!-- step indicator -->
+            <RowDefinition Height="*"/>      <!-- step content -->
+            <RowDefinition Height="Auto"/>   <!-- footer -->
+        </Grid.RowDefinitions>
+
+        <!-- Header + the always-visible heads-up about the unofficial API -->
+        <StackPanel Grid.Row="0" Margin="24,16,24,12">
+            <TextBlock Text="{loc:Loc Forms_Title}" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+            <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,0" Foreground="{DynamicResource TextTertiaryBrush}" Text="{loc:Loc Forms_Subtitle}"/>
+            <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0" Padding="10,6">
+                <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Forms_UnofficialWarning}"/>
+            </Border>
+        </StackPanel>
+
+        <!-- Step indicator -->
+        <Border Grid.Row="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}"
+                BorderThickness="0,1,0,1" Padding="20,10">
+            <ItemsControl ItemsSource="{StaticResource FormsSteps}" HorizontalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type models:StepInfo}">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Height="2" Width="60" Background="{DynamicResource BorderLightBrush}"
+                                    VerticalAlignment="Top" Margin="4,13,4,0"
+                                    Visibility="{Binding Index, Converter={StaticResource IntToVis}}"/>
+                            <StackPanel>
+                                <Border Style="{StaticResource StepBubble}">
+                                    <TextBlock Style="{StaticResource StepBubbleText}"/>
+                                </Border>
+                                <TextBlock Text="{Binding Label}" Style="{StaticResource StepText}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Border>
+
+        <!-- ══ Step content ═════════════════════════════════════════════════════ -->
+        <Grid Grid.Row="2" Margin="24,16">
+
+            <!-- ── Step 1: choose forms ─────────────────────────────────────── -->
+            <Grid Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=0}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Text="{loc:Loc Forms_ChooseFormsHeader}" Style="{StaticResource SectionHeader}"/>
+                        <TextBlock TextWrapping="Wrap" Style="{StaticResource SubHeader}" Text="{Binding SourceAccountText}"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" x:Name="LoadButton" Style="{StaticResource PrimaryBtn}" VerticalAlignment="Center"
+                            Content="{Binding LoadButtonText}" Click="Load_Click"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                </Grid>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,6"
+                            Visibility="{Binding HasForms, Converter={StaticResource BoolToVis}}">
+                    <Button Content="{loc:Loc Ui_SelectAll}" Style="{StaticResource LinkBtn}" Click="SelectAll_Click"/>
+                    <Button Content="{loc:Loc Ui_DeselectAll}" Style="{StaticResource LinkBtn}" Click="DeselectAll_Click" Margin="8,0,0,0"/>
+                    <TextBlock Text="{Binding SelectedCountText}" Margin="16,0,0,0" VerticalAlignment="Center" FontSize="12"
+                               Foreground="{DynamicResource TextTertiaryBrush}"/>
+                    <TextBox Width="220" Margin="16,0,0,0" VerticalAlignment="Center" Style="{StaticResource WatermarkTextBox}"
+                             Tag="{loc:Loc Forms_FilterWatermark}"
+                             Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                             AutomationProperties.Name="{loc:Loc Forms_FilterWatermark}"/>
+                </StackPanel>
+
+                <DataGrid Grid.Row="2" x:Name="FormsGrid" AutoGenerateColumns="False" CanUserAddRows="False"
+                          CanUserDeleteRows="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                          SelectionMode="Single" Background="{DynamicResource SurfaceBrush}"
+                          BorderBrush="{DynamicResource BorderLightBrush}" MinHeight="160" Margin="0,4,0,0">
+                    <DataGrid.Columns>
+                        <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" Width="36"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColTitle}" Binding="{Binding Title}" IsReadOnly="True" Width="*"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColType}" Binding="{Binding Type}" IsReadOnly="True" Width="80"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColModified}" Binding="{Binding ModifiedText}" IsReadOnly="True" Width="150"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColCopied}" Binding="{Binding CopiedText}" IsReadOnly="True" Width="220"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <!-- ── Step 2: choose the target ────────────────────────────────── -->
+            <ScrollViewer Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=1}"
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel MaxWidth="640" HorizontalAlignment="Center" Margin="0,8,0,0">
+                    <TextBlock Text="{loc:Loc Forms_TargetHeader}" Style="{StaticResource SectionHeader}"/>
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource SubHeader}" Text="{Binding TargetIntroText}"/>
+
+                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE77B;" Style="{StaticResource CardHeaderGlyph}" Margin="0,0,8,0"/>
+                                <TextBlock Text="{loc:Loc Forms_TargetAccount}" Style="{StaticResource CardHeader}"/>
+                            </StackPanel>
+
+                            <!-- Multi-tenant: the target is a different account/tenant and needs its own sign-in -->
+                            <StackPanel Visibility="{Binding IsMultiTenant, Converter={StaticResource BoolToVis}}">
+                                <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,8,0,0" Foreground="{DynamicResource TextSecondaryBrush}"
+                                           Text="{Binding TargetRegistrationText}"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                                    <Button x:Name="TargetSignInButton" Style="{StaticResource PrimaryBtn}" Click="TargetSignIn_Click"
+                                            Content="{Binding TargetButtonText}"
+                                            IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                                    <ProgressBar IsIndeterminate="True" Width="110" Height="4" Margin="12,0,0,0" VerticalAlignment="Center"
+                                                 Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Status of the target (both modes) -->
+                            <Border Margin="0,12,0,0" Padding="10,8" CornerRadius="4"
+                                    Visibility="{Binding HasTargetStatus, Converter={StaticResource BoolToVis}}">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="{DynamicResource WindowBgBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding TargetConnected}" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource SuccessBgBrush}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding TargetHasError}" Value="True">
+                                                <Setter Property="Background" Value="{DynamicResource DangerBgBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding TargetStatusText}"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="{loc:Loc Forms_Options}" Style="{StaticResource SectionHeader}" Margin="0,20,0,0"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <TextBlock Text="{loc:Loc Forms_TitleSuffix}" VerticalAlignment="Center" FontSize="12" Margin="0,0,8,0"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+                        <TextBox Width="200" Text="{Binding Suffix, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseTextBox}"/>
+                    </StackPanel>
+
+                    <Border Style="{StaticResource InfoBanner}" Margin="0,20,0,0">
+                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding SummaryText}"/>
+                    </Border>
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,10,0,0" Foreground="{DynamicResource TextTertiaryBrush}"
+                               Visibility="{Binding NeedsTargetSignIn, Converter={StaticResource BoolToVis}}"
+                               Text="{loc:Loc Forms_SignInToContinue}"/>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- ── Step 3: copying ──────────────────────────────────────────── -->
+            <Grid Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=2}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="{loc:Loc Forms_CopyingHeader}" Style="{StaticResource SectionHeader}"/>
+                <StackPanel Grid.Row="1" Margin="0,8,0,10">
+                    <TextBlock Text="{Binding ProgressText}" FontSize="13" Margin="0,0,0,6"/>
+                    <ProgressBar Height="10" Minimum="0" Maximum="{Binding ProgressMax}" Value="{Binding ProgressValue}"/>
+                </StackPanel>
+                <TextBox Grid.Row="2" x:Name="LogBox" IsReadOnly="True" TextWrapping="NoWrap" AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                         FontFamily="Consolas" FontSize="11" Style="{StaticResource BaseTextBox}"/>
+            </Grid>
+
+            <!-- ── Step 4: results ──────────────────────────────────────────── -->
+            <Grid Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=3}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Style="{StaticResource OutcomeBanner}" Padding="14,10">
+                    <StackPanel>
+                        <TextBlock Text="{Binding ResultHeadline}" FontSize="16" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding ResultSubline}" FontSize="12" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <WrapPanel Grid.Row="1" Margin="0,12,0,0">
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource SuccessBgBrush}" BorderBrush="{DynamicResource SuccessBrush}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding CopiedCount}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{loc:Loc Forms_CardCopied}" Foreground="{DynamicResource SuccessBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WarningBgBrush}" BorderBrush="{DynamicResource WarningBrush}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding PartialCount}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{loc:Loc Forms_CardWarnings}" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource DangerBgBrush}" BorderBrush="{DynamicResource DangerBrush}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding FailedCount}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{loc:Loc Forms_CardFailed}" Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WindowBgBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding QuestionsText}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{loc:Loc Forms_CardQuestions}" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WindowBgBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding DurationText}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{loc:Loc Ui_Duration}" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
+                        </StackPanel>
+                    </Border>
+                </WrapPanel>
+
+                <WrapPanel Grid.Row="2" Margin="0,4,0,8">
+                    <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_OpenSelected}" Click="OpenSelectedCopy_Click"/>
+                    <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_OpenForms}" Click="OpenForms_Click"/>
+                    <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_ExportResults}" Click="ExportResults_Click"/>
+                    <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_ShowMap}" Click="ShowMap_Click"/>
+                </WrapPanel>
+
+                <DataGrid Grid.Row="3" x:Name="ResultsGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+                          HeadersVisibility="Column" GridLinesVisibility="Horizontal" SelectionMode="Single"
+                          Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}" MinHeight="120">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColSourceForm}" Binding="{Binding SourceTitle}" Width="*"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColCopyTitle}" Binding="{Binding CopyTitle}" Width="*"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColResult}" Binding="{Binding StatusText}" Width="170"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColQuestions}" Binding="{Binding QuestionsText}" Width="90"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColDetails}" Binding="{Binding Details}" Width="2*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="ToolTip" Value="{Binding Details}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+
+        <!-- ══ Footer ═══════════════════════════════════════════════════════════ -->
+        <Border Grid.Row="3" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}"
+                BorderThickness="0,1,0,0" Padding="24,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Forms_ExportResponses}" Click="Export_Click"
+                            Visibility="{Binding ShowExportResponses, Converter={StaticResource BoolToVis}}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}" Margin="0,0,8,0"/>
+                    <CheckBox Content="{loc:Loc Forms_CombineExport}" IsChecked="{Binding CombineExport}" VerticalAlignment="Center"
+                              Visibility="{Binding ShowExportResponses, Converter={StaticResource BoolToVis}}"
+                              IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}" Margin="0,0,12,0"
+                              ToolTip="{loc:Loc Forms_CombineExportTip}"/>
+                    <TextBlock Text="{Binding StatusText}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center" MaxWidth="520"
+                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Forms_Back}" Click="Back_Click" Margin="0,0,8,0"
+                            Visibility="{Binding ShowBack, Converter={StaticResource BoolToVis}}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                    <Button x:Name="NextButton" Style="{StaticResource PrimaryBtn}" Content="{Binding NextButtonText}" Click="Next_Click" Margin="0,0,8,0"
+                            Visibility="{Binding ShowNext, Converter={StaticResource BoolToVis}}"
+                            IsEnabled="{Binding CanNext}"/>
+                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Ui_Cancel}" Click="CancelRun_Click" Margin="0,0,8,0"
+                            Visibility="{Binding ShowCancel, Converter={StaticResource BoolToVis}}"/>
+                    <Button Style="{StaticResource PrimaryBtn}" Content="{loc:Loc Forms_CopyMore}" Click="CopyMore_Click" Margin="0,0,8,0"
+                            Visibility="{Binding ShowCopyMore, Converter={StaticResource BoolToVis}}"/>
+                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Forms_Close}" Click="Close_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

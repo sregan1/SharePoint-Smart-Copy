@@ -71,6 +71,7 @@ public class AuthService
             .Build();
         _authResult = null;
         _pinnedAccountId = null;
+        FormsUserName = null;
         _tokenCache.Clear();
     }
 
@@ -164,6 +165,65 @@ public class AuthService
         finally { _refreshLock.Release(); }
     }
 
+    // Token for the (unofficial) Microsoft Forms web API, audience forms.office.com. Delegated only: the
+    // API rejects app-only tokens. The app registration needs the Microsoft Forms delegated permission
+    // consented (and Group.Read.All for group-owned forms); without it MSAL surfaces a consent error that
+    // the Forms dialog translates for the user. Same single-flight / pinned-account behavior as the other
+    // token getters; the access token is an encrypted JWE, so its claims can't be read client-side.
+    private const string FormsScope = "https://forms.office.com/.default";
+
+    // The account the Forms token was issued to (shown on the Forms target step); null until a token is acquired.
+    public string? FormsUserName { get; private set; }
+
+    public async Task<string> GetFormsTokenAsync(CancellationToken cancellationToken = default, bool forceRefresh = false)
+    {
+        if (_app == null)
+            throw new InvalidOperationException(Loc.T("Svc_Auth_NotConfiguredSignIn"));
+
+        var scopes   = new[] { FormsScope };
+        var cacheKey = FormsScope;
+
+        if (!forceRefresh && TryGetCachedToken(cacheKey, out var fastToken))
+            return fastToken;
+
+        await _refreshLock.WaitAsync(cancellationToken);
+        try
+        {
+            if (!forceRefresh && TryGetCachedToken(cacheKey, out var cachedToken))
+                return cachedToken;
+
+            var account = await GetPinnedAccountAsync();
+            if (account != null)
+            {
+                try
+                {
+                    var result = await _app.AcquireTokenSilent(scopes, account)
+                        .WithForceRefresh(forceRefresh)
+                        .ExecuteAsync(cancellationToken);
+                    _tokenCache[cacheKey] = result;
+                    FormsUserName = result.Account?.Username ?? FormsUserName;
+                    return result.AccessToken;
+                }
+                catch (MsalUiRequiredException) { /* fall through to interactive */ }
+            }
+
+            // Silent acquisition fails the first time (new resource = new consent). Reuse the account already
+            // signed in so the user sees at most a consent screen, not the account picker again.
+            var interactive = _app.AcquireTokenInteractive(scopes);
+            interactive = account != null
+                ? interactive.WithAccount(account)
+                : interactive.WithPrompt(Prompt.SelectAccount);
+            var authResult = await interactive.ExecuteAsync(cancellationToken);
+            // Pin only when nothing is pinned yet. Re-pinning here would let an account picked on this prompt
+            // silently replace the one the SharePoint/Graph sign-in uses (the same AuthService in single-tenant mode).
+            _pinnedAccountId ??= authResult.Account?.HomeAccountId?.Identifier;
+            _tokenCache[cacheKey] = authResult;
+            FormsUserName = authResult.Account?.Username ?? FormsUserName;
+            return authResult.AccessToken;
+        }
+        finally { _refreshLock.Release(); }
+    }
+
     public async Task SignOutAsync()
     {
         if (_app == null) return;
@@ -171,6 +231,7 @@ public class AuthService
             await _app.RemoveAsync(account);
         _authResult = null;
         _pinnedAccountId = null;
+        FormsUserName = null;
         _tokenCache.Clear();
     }
 

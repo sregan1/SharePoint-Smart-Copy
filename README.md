@@ -45,6 +45,13 @@ Choose from four copy scopes in a step-by-step wizard:
 | **Site** | All document libraries and custom lists on a source site, plus optional navigation links |
 | **Pages** | Modern SharePoint pages (.aspx), with optional web part URL remapping |
 
+**Related tools** (two more tiles on the Browse step, not copy scopes):
+
+| Tool | What it does |
+|---|---|
+| **Forms** | Copies Microsoft Forms (all question types, branching, quiz type, settings, theme) and exports responses to Excel. Uses the *unofficial* Microsoft Forms API and needs the delegated Microsoft Forms permission on your app registration |
+| **Flows** | Rewrites exported Power Automate packages for the target tenant: sites, lists (matched by name through your connections), columns, copied forms, and email domains. Connections must be recreated after import |
+
 **All scopes:**
 - Custom column values copied in both **Migration API** and **Enhanced REST** modes — including **Person/User**, **Managed Metadata**, **Lookup**, **Hyperlink**, and **Currency** columns
 - Custom column mapping dialog — map source columns to target columns, or create missing columns in the target
@@ -115,6 +122,7 @@ Go to **API permissions** → **Add a permission**:
 | Microsoft Graph | Delegated | `Sites.ReadWrite.All` | Browse and read SharePoint sites/files via Graph |
 | Microsoft Graph | Delegated | `Files.ReadWrite.All` | Upload/download file content via Graph |
 | SharePoint | Delegated | `AllSites.FullControl` | Required by the Migration API to submit migration jobs; also allows correct `IsSiteAdmin` evaluation in the OAuth context |
+| Microsoft Forms | Delegated | *(Microsoft Forms permissions)* | **Optional** — only for the Forms tool; search "Microsoft Forms" under *APIs my organization uses* |
 
 > **Why `AllSites.FullControl`?**
 > SharePoint's Migration API (`CreateMigrationJobEncrypted`) performs a server-side site-collection-administrator check.

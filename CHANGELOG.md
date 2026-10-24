@@ -4,6 +4,18 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## Unreleased
+
+### Added
+
+- **Forms tool (Browse step → Forms tile)** — four guided steps (Forms, Target, Copy, Results) like the file copy: the target has its own step with an explicit sign-in, and a results dashboard shows copied / with warnings / failed counts, questions copied, duration, and a per-form table with reasons, plus Open selected copy and Export results (Excel). copies Microsoft Forms to the target account with every question type, choice branching, quiz type, settings, and theme, keeping the original question IDs. Exports a form's responses to Excel (responses can't be re-submitted). It uses the unofficial Microsoft Forms web API, which Microsoft does not document or support, so the dialog says so. Form background/logo/header images are not copied yet. Each copy is recorded in a local form ID map (`%APPDATA%\SharePointSmartCopy\forms-id-map.json`) for the Flows tool.
+- **Flows tool (Browse step → Flows tile)** — six guided steps (Packages, Sites, Lists & columns, Forms & email, Write, Report) with an automatic scan, automatic list and column matching on entry, and a report dashboard with a what-to-do-next checklist. Rewrites exported Power Automate flow packages (.zip) so they point at the target: it reads each source list's name through your connection, finds the same-named list on the target, matches columns by internal then display name, and also rewrites sites, copied form IDs, and a whole email domain. Writes patched packages and a report (including anything still pointing at the source) to a separate folder; the originals are never modified. Connections can't be moved between tenants and must be recreated and re-selected after import. After scanning, a table shows which services the flows use (SharePoint, Forms, Outlook, Teams, Planner, Excel, OneDrive, Approvals...) and which of them the tool rewrites or only reports. The column mapping is an editable grid, pre-filled by automatic matching (same name, same display name, then a similar name), with a dropdown of the target list's columns per row; the same column can map differently on different lists. Target lists and forms can also be chosen by hand: paste a list GUID or list-settings link, or a form ID or form edit-page link.
+- **Forms tool refinements** — a filter box and an **Already copied** column on the forms list (from the local form ID map, which now also records the target account and date), a confirmation before copying a form to an account it was already copied to, Cancel for loading, sign-in and export (not only the copy), a confirmation when closing during a copy, and response export with real date cells, a score column when the responses carry one, and a **One workbook** option (one sheet per form). Forms API calls retry on throttling and on an expired token.
+- **Flows tool refinements** — a **Load mapping…** button restores a saved mapping, an **Other values** table maps individual email addresses, the tenant ID and library paths, each form ID is checked against the source tenant, solution exports (a `Workflows` folder) are read as well as legacy packages, and the report gains **What these flows use** and **To do after import** sections plus an HTML copy (`rewrite-report.html`). List lookups run four at a time.
+- **Microsoft Forms permission** — the Forms tool needs the delegated Microsoft Forms permission on the app registration (see the User Guide). Existing features are unaffected without it.
+
+---
+
 ## 4.0.2 — 2026-10-22
 
 ### Changed

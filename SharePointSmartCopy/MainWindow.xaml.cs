@@ -451,6 +451,14 @@ public partial class MainWindow : Window
         _ = VM.LoadPageLibraryAsync();
     }
 
+    // Forms and Flows are related tools, not copy scopes: they open their own dialogs, wired to the sign-ins
+    // already made here (single tenant = one shared sign-in; multi-tenant = source and target each use theirs).
+    private void ModeForms_Click(object sender, RoutedEventArgs e)
+        => new FormsDialog(VM.AuthService, VM.TargetAuthService, VM.IsMultiTenant, VM.TargetRegistrationName) { Owner = this }.ShowDialog();
+
+    private void ModeFlows_Click(object sender, RoutedEventArgs e)
+        => new FlowsDialog(VM.SpService, (url, isSource) => VM.PrepareSiteAccessAsync(url, isSource), VM.SourceUrl, VM.TargetUrl, VM.IsMultiTenant) { Owner = this }.ShowDialog();
+
     // ── Step 4 Copy log column sorting ───────────────────────────────────────────
 
     // Sort member for each copy-log column, in the column order of the ListView's GridView. Matching on
