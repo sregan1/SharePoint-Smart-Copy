@@ -121,7 +121,12 @@ public partial class FormsDialog : Window
                 _vm.TargetButtonText = Loc.T("Forms_TargetSignInAgain");
                 _vm.StatusText = Loc.T("Forms_TargetReady");
             }
-            catch (OperationCanceledException) { throw; }
+            catch (OperationCanceledException)
+            {
+                // Say so in the card too, not only in the status bar, and how to retry.
+                _vm.TargetStatusText = Loc.T("Forms_TargetCancelled");
+                throw;
+            }
             catch (Exception ex)
             {
                 _vm.TargetHasError = true;
@@ -236,7 +241,7 @@ public partial class FormsDialog : Window
                     // The copy itself succeeded; a locked or unwritable map file must not turn that into a crash.
                     try
                     {
-                        FormsIdMapStore.Record(row.Id, result.NewId, TargetAccount);
+                        FormsIdMapStore.Record(row.Id, result.NewId, TargetAccount, row.Title);
                         row.CopiedText = CopiedLabel(new FormsMapEntry(result.NewId, TargetAccount, DateTimeOffset.Now));
                     }
                     catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
@@ -454,7 +459,7 @@ public partial class FormsDialog : Window
     }
 
     // Most first-time failures are the Microsoft Forms permission missing from (or not consented on) the app registration.
-    private static string? HelpFor(Exception ex)
+    internal static string? HelpFor(Exception ex)
     {
         var m = ex.Message;
         if (m.Contains("AADSTS65001") || m.Contains("AADSTS500011") || m.Contains("AADSTS650057") || m.Contains("consent", StringComparison.OrdinalIgnoreCase))

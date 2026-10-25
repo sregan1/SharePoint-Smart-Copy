@@ -1,4 +1,4 @@
-﻿using SharePointSmartCopy.Localization;
+using SharePointSmartCopy.Localization;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
@@ -63,8 +63,37 @@ public partial class SharePointService
         catch { return []; }
     }
 
+    // Every non-hidden list and library on a site (catalogs excluded), by title. Unlike the lookups above this throws
+    // when SharePoint refuses, so a caller can say why the list is empty.
+    public async Task<List<(string Id, string Title)>> GetSiteListsAsync(string siteUrl, CancellationToken ct = default)
+    {
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists" +
+                  "?$filter=Hidden eq false and IsCatalog eq false&$select=Id,Title&$orderby=Title&$top=5000";
+        using var resp = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Get, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            return r;
+        }, siteUrl, cancellationToken: ct);
+
+        var body = await resp.Content.ReadAsStringAsync(ct);
+        if (!resp.IsSuccessStatusCode)
+            throw new Exception($"Listing the lists on {siteUrl} failed: HTTP {(int)resp.StatusCode}. {(body.Length > 160 ? body[..160] : body)}");
+
+        using var doc = JsonDocument.Parse(body);
+        var result = new List<(string, string)>();
+        if (!doc.RootElement.TryGetProperty("value", out var values)) return result;
+        foreach (var el in values.EnumerateArray())
+        {
+            var id = el.TryGetProperty("Id", out var ip) ? ip.GetString() ?? "" : "";
+            var title = el.TryGetProperty("Title", out var tp) ? tp.GetString() ?? "" : "";
+            if (id.Length > 0 && title.Length > 0) result.Add((id, title));
+        }
+        return result;
+    }
     // Returns the list GUID for a list looked up by title, or null if not found.
-    public async Task<string?> GetListIdByTitleAsync(string siteUrl, string title)
+    public async Task<string?> GetListIdByTitleAsync(string siteUrl, string title, CancellationToken ct = default)
     {
         var encoded = Uri.EscapeDataString(title.Replace("'", "''"));
         var url     = $"{siteUrl.TrimEnd('/')}/_api/web/lists/getbytitle('{encoded}')?$select=Id";
@@ -76,19 +105,20 @@ public partial class SharePointService
                 r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
                 return r;
-            }, siteUrl);
+            }, siteUrl, cancellationToken: ct);
             if (!resp.IsSuccessStatusCode) return null;
             var body = await resp.Content.ReadAsStringAsync();
             using var doc = JsonDocument.Parse(body);
             return doc.RootElement.TryGetProperty("Id", out var ip) ? ip.GetString() : null;
         }
+        catch (OperationCanceledException) { throw; }
         catch { return null; }
     }
 
     // Returns the display title for a list looked up by GUID, or null if not found.
     // Used to re-bind Lookup columns at the target: the source column stores the SOURCE list's
     // GUID, so the equivalent target list is resolved by matching title.
-    public async Task<string?> GetListTitleByIdAsync(string siteUrl, string listId)
+    public async Task<string?> GetListTitleByIdAsync(string siteUrl, string listId, CancellationToken ct = default)
     {
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')?$select=Title";
         try
@@ -99,12 +129,13 @@ public partial class SharePointService
                 r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
                 return r;
-            }, siteUrl);
+            }, siteUrl, cancellationToken: ct);
             if (!resp.IsSuccessStatusCode) return null;
             var body = await resp.Content.ReadAsStringAsync();
             using var doc = JsonDocument.Parse(body);
             return doc.RootElement.TryGetProperty("Title", out var tp) ? tp.GetString() : null;
         }
+        catch (OperationCanceledException) { throw; }
         catch { return null; }
     }
 

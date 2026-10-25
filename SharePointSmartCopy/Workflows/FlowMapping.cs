@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using SharePointSmartCopy.Localization;
 
 namespace SharePointSmartCopy.Workflows;
 
@@ -81,8 +82,7 @@ public sealed class FlowMapping
                 if (string.IsNullOrWhiteSpace(Columns.GetValueOrDefault(g.Key))) Columns[g.Key] = targets[0];
             }
             else if (targets.Count > 1)
-                notes.Add($"Column '{g.Key}' is mapped differently on different lists ({string.Join(", ", targets)}). " +
-                          "Each list's steps get their own mapping; expressions elsewhere in the flow keep the original name, so review them.");
+                notes.Add(Loc.T("Flows_Note_ColumnConflict", g.Key, string.Join(", ", targets)));
         }
         return notes;
     }

@@ -1,4 +1,4 @@
-﻿using SharePointSmartCopy.Localization;
+using SharePointSmartCopy.Localization;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
@@ -90,8 +90,40 @@ public partial class SharePointService
         _lookupMissCache.Clear();
     }
 
+    // Every editable, non-hidden column of a list, built-in ones such as Title included. GetLibraryColumnsAsync (below)
+    // returns only the custom columns the copy tool can recreate; this is the full picture for matching flow columns.
+    // Throws when SharePoint refuses, so a caller can say why the list of columns is empty.
+    public async Task<List<(string InternalName, string Title, string Type)>> GetListFieldsAsync(string siteUrl, string listId, CancellationToken ct = default)
+    {
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/fields" +
+                  "?$filter=Hidden eq false and ReadOnlyField eq false&$select=InternalName,Title,TypeAsString";
+        using var response = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Get, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            return r;
+        }, siteUrl, cancellationToken: ct);
+
+        var body = await response.Content.ReadAsStringAsync(ct);
+        if (!response.IsSuccessStatusCode)
+            throw new Exception($"Reading the columns failed: HTTP {(int)response.StatusCode}. {(body.Length > 160 ? body[..160] : body)}");
+
+        using var doc = JsonDocument.Parse(body);
+        var result = new List<(string, string, string)>();
+        if (!doc.RootElement.TryGetProperty("value", out var values)) return result;
+        foreach (var f in values.EnumerateArray())
+        {
+            var internalName = f.TryGetProperty("InternalName", out var ip) ? ip.GetString() ?? "" : "";
+            if (internalName.Length == 0 || internalName == "ContentType") continue;   // not a column a flow stores values in
+            var title = f.TryGetProperty("Title", out var tp) ? tp.GetString() ?? internalName : internalName;
+            var type = f.TryGetProperty("TypeAsString", out var ts) ? ts.GetString() ?? "" : "";
+            result.Add((internalName, title, type));
+        }
+        return result;
+    }
     // Returns the custom (non-built-in) columns for a library.
-    public async Task<List<SpColumnDef>> GetLibraryColumnsAsync(string siteUrl, string listId, bool skipCache = false)
+    public async Task<List<SpColumnDef>> GetLibraryColumnsAsync(string siteUrl, string listId, bool skipCache = false, CancellationToken ct = default)
     {
         if (!skipCache && _columnCache.TryGetValue(listId, out var cached))
             return cached;
@@ -106,7 +138,7 @@ public partial class SharePointService
             r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
             return r;
-        }, siteUrl);
+        }, siteUrl, cancellationToken: ct);
 
         var body = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode)

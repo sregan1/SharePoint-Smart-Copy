@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using SharePointSmartCopy.Localization;
 
 namespace SharePointSmartCopy.Workflows;
 
@@ -264,17 +265,17 @@ public static partial class FlowRewriter
         foreach (var (flow, changes) in results)
         {
             sb.Append($"### {flow}\n\n");
-            if (changes.Count == 0) sb.Append("_No changes (nothing in the mapping matched)._\n\n");
+            if (changes.Count == 0) sb.Append("_").Append(Loc.T("Flows_Rep_NoChanges")).Append("_\n\n");
             foreach (var g in changes.GroupBy(c => c.Category))
             {
-                sb.Append($"**{g.Key}** ({g.Sum(c => c.Count)} replacements)\n\n");
+                sb.Append("**").Append(g.Key).Append("** (").Append(Loc.T("Flows_Rep_Replacements", g.Sum(c => c.Count))).Append(")\n\n");
                 foreach (var c in g) sb.Append($"- `{Short(c.From)}` → `{Short(c.To)}` ×{c.Count}\n");
                 sb.Append('\n');
             }
         }
         if (leftovers.Count > 0)
         {
-            sb.Append("**Still pointing at source values (unmapped, review before import)**\n\n");
+            sb.Append("**").Append(Loc.T("Flows_Rep_StillSource")).Append("**\n\n");
             foreach (var g in leftovers.GroupBy(f => (f.Kind, f.Value)))
                 sb.Append($"- {g.Key.Kind}: `{Short(g.Key.Value)}` ×{g.Count()}\n");
             sb.Append('\n');

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:SharePointSmartCopy.Converters"
         xmlns:models="clr-namespace:SharePointSmartCopy.Models"
+        xmlns:local="clr-namespace:SharePointSmartCopy.Dialogs"
         Title="{loc:Loc Flows_Title}"
         Width="1040" Height="800"
         MinWidth="860" MinHeight="640"
@@ -12,6 +13,7 @@
 
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
+        <conv:BoolToVisibilityConverter x:Key="InvBoolToVis" Invert="True"/>
         <conv:InvertBoolConverter x:Key="InvBool"/>
         <conv:IntToVisibilityConverter x:Key="IntToVis"/>
         <conv:EqualToVisibilityConverter x:Key="EqToVis"/>
@@ -126,16 +128,19 @@
             <RowDefinition Height="Auto"/>   <!-- header -->
             <RowDefinition Height="Auto"/>   <!-- step indicator -->
             <RowDefinition Height="*"/>      <!-- step content -->
+            <RowDefinition Height="Auto"/>   <!-- activity strip: what the tool is doing -->
             <RowDefinition Height="Auto"/>   <!-- footer -->
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="24,16,24,12">
+        <!-- ══ Header: the subtitle is only needed on the first step ═════════════ -->
+        <StackPanel Grid.Row="0" Margin="24,12,24,8">
             <TextBlock Text="{loc:Loc Flows_Title}" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
-            <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,0" Foreground="{DynamicResource TextTertiaryBrush}" Text="{loc:Loc Flows_Subtitle}"/>
+            <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,0" Foreground="{DynamicResource TextTertiaryBrush}" Text="{loc:Loc Flows_Subtitle}"
+                       Visibility="{Binding ShowSubtitle, Converter={StaticResource BoolToVis}}"/>
         </StackPanel>
 
         <Border Grid.Row="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}"
-                BorderThickness="0,1,0,1" Padding="20,10">
+                BorderThickness="0,1,0,1" Padding="20,8">
             <ItemsControl ItemsSource="{StaticResource FlowsSteps}" HorizontalAlignment="Center">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -161,57 +166,93 @@
         </Border>
 
         <!-- ══ Step content ═════════════════════════════════════════════════════ -->
-        <Grid Grid.Row="2" Margin="24,16">
+        <Grid Grid.Row="2" Margin="24,12">
 
             <!-- ── Step 1: packages ─────────────────────────────────────────── -->
             <ScrollViewer Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=0}"
-                          VerticalScrollBarVisibility="Auto">
+                          VerticalScrollBarVisibility="Auto" AllowDrop="True" DragOver="Packages_DragOver" Drop="Packages_Drop">
                 <StackPanel Margin="0,0,12,0">
-                    <TextBlock Text="{loc:Loc Flows_PackagesHeader}" Style="{StaticResource SectionHeader}"/>
-                    <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Flows_Step1Hint}"/>
+                    <local:FlowStepIntro Title="{loc:Loc Flows_PackagesHeader}" What="{loc:Loc Flows_What1}" Why="{loc:Loc Flows_Why1}"/>
 
-                    <Border Style="{StaticResource InfoBanner}" Margin="0,12,0,0" Padding="12,8">
+                    <!-- First-time help: how to get a package. Gone once a package is added. -->
+                    <Border Style="{StaticResource InfoBanner}" Margin="0,10,0,0" Padding="12,8"
+                            Visibility="{Binding HasPackages, Converter={StaticResource InvBoolToVis}}">
                         <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Flows_HowToExport}"/>
                     </Border>
 
-                    <Grid Margin="0,12,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" x:Name="PackagesBox" IsReadOnly="True" Style="{StaticResource BaseTextBox}"
-                                 Text="{Binding PackagesText, Mode=OneWay}"/>
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0">
-                            <Button Style="{StaticResource PrimaryBtn}" Content="{loc:Loc Flows_AddZips}" Click="AddZips_Click"
-                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
-                            <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_AddFolder}" Click="AddFolder_Click" Margin="8,0,0,0"
-                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
-                            <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_ClearPackages}" Click="ClearPackages_Click" Margin="8,0,0,0"
-                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
-                            <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_LoadMapping}" Click="LoadMapping_Click" Margin="8,0,0,0"
-                                    ToolTip="{loc:Loc Flows_LoadMappingTip}"
-                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
-                        </StackPanel>
-                    </Grid>
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <Button Style="{StaticResource PrimaryBtn}" Content="{loc:Loc Flows_AddZips}" Click="AddZips_Click"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_AddFolder}" Click="AddFolder_Click" Margin="8,0,0,0"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_ClearPackages}" Click="ClearPackages_Click" Margin="8,0,0,0"
+                                Visibility="{Binding HasPackages, Converter={StaticResource BoolToVis}}"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        <TextBlock Text="{loc:Loc Flows_DropHint}" FontSize="12" VerticalAlignment="Center" Margin="14,0,0,0"
+                                   Foreground="{DynamicResource TextTertiaryBrush}"/>
+                    </StackPanel>
+
+                    <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0" Padding="12,8"
+                            Visibility="{Binding HasPackageWarning, Converter={StaticResource BoolToVis}}">
+                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding PackageWarning}"/>
+                    </Border>
+
+                    <!-- What was added: one row per package, with the flows found in it -->
+                    <DataGrid x:Name="PackagesList" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" HeadersVisibility="Column"
+                              GridLinesVisibility="Horizontal" MaxHeight="230" Margin="0,12,0,0" SelectionMode="Single"
+                              Visibility="{Binding HasPackages, Converter={StaticResource BoolToVis}}"
+                              Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="{loc:Loc Flows_ColPackage}" Binding="{Binding FileName}" Width="*"/>
+                            <DataGridTextColumn Header="{loc:Loc Flows_ColFlows}" Binding="{Binding FlowNames}" Width="*"/>
+                            <DataGridTextColumn Header="{loc:Loc Flows_ColPkgSites}" Binding="{Binding SiteCount}" Width="56"/>
+                            <DataGridTextColumn Header="{loc:Loc Flows_ColPkgLists}" Binding="{Binding ListCount}" Width="52"/>
+                            <DataGridTemplateColumn Header="{loc:Loc Flows_ColStatus}" Width="170">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource StatusChip}" Margin="2">
+                                            <TextBlock Text="{Binding StatusText}" FontSize="12"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="40">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{StaticResource LinkBtn}" Content="&#x2715;" Click="RemovePackage_Click" ToolTip="{loc:Loc Flows_RemovePackage}"
+                                                AutomationProperties.Name="{loc:Loc Flows_RemovePackage}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
 
                     <TextBlock FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}"
                                Text="{Binding ScanSummaryText}"/>
+                    <Button Style="{StaticResource LinkBtn}" Content="{loc:Loc Flows_LoadMappingLink}" Click="LoadMapping_Click" HorizontalAlignment="Left" Margin="0,6,0,0"
+                            ToolTip="{loc:Loc Flows_LoadMappingTip}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
 
-                    <StackPanel Visibility="{Binding HasScan, Converter={StaticResource BoolToVis}}" Margin="0,14,0,0">
-                        <TextBlock Text="{loc:Loc Flows_ResourcesHeader}" FontSize="13" FontWeight="SemiBold"/>
-                        <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Flows_ResourcesHint}"/>
-                        <DataGrid x:Name="ResourcesGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
-                                  HeadersVisibility="Column" GridLinesVisibility="Horizontal" MaxHeight="230" Margin="0,6,0,0"
-                                  Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="{loc:Loc Flows_ColService}" Binding="{Binding Service}" Width="180"/>
-                                <DataGridTextColumn Header="{loc:Loc Flows_ColFlows}" Binding="{Binding Flows}" Width="60"/>
-                                <DataGridTextColumn Header="{loc:Loc Flows_ColSteps}" Binding="{Binding Operations}" Width="60"/>
-                                <DataGridTextColumn Header="{loc:Loc Flows_ColFound}" Binding="{Binding Detail}" Width="*"/>
-                                <DataGridTextColumn Header="{loc:Loc Flows_ColHandling}" Binding="{Binding HandlingText}" Width="250"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </StackPanel>
+                    <!-- What the flows use: informative, so it is there but closed -->
+                    <Expander Style="{StaticResource OptionsExpander}" Margin="0,14,0,0" IsExpanded="True"
+                              Visibility="{Binding HasScan, Converter={StaticResource BoolToVis}}">
+                        <Expander.Header>
+                            <TextBlock Text="{Binding ResourcesHeaderText}" FontWeight="SemiBold" Margin="0,0,24,0"/>
+                        </Expander.Header>
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource SubHeader}" Margin="0,0,0,8" Text="{loc:Loc Flows_ResourcesHint}"/>
+                            <DataGrid x:Name="ResourcesGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+                                      HeadersVisibility="Column" GridLinesVisibility="Horizontal" MaxHeight="230"
+                                      Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="{loc:Loc Flows_ColService}" Binding="{Binding Service}" Width="180"/>
+                                    <DataGridTextColumn Header="{loc:Loc Flows_ColFlows}" Binding="{Binding Flows}" Width="60"/>
+                                    <DataGridTextColumn Header="{loc:Loc Flows_ColSteps}" Binding="{Binding Operations}" Width="60"/>
+                                    <DataGridTextColumn Header="{loc:Loc Flows_ColFound}" Binding="{Binding Detail}" Width="*"/>
+                                    <DataGridTextColumn Header="{loc:Loc Flows_ColHandling}" Binding="{Binding HandlingText}" Width="250"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Expander>
                 </StackPanel>
             </ScrollViewer>
 
@@ -219,30 +260,133 @@
             <ScrollViewer Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=1}"
                           VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="0,0,12,0">
-                    <TextBlock Text="{loc:Loc Flows_SitesHeader}" Style="{StaticResource SectionHeader}"/>
-                    <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Flows_Step2Hint}"/>
+                    <local:FlowStepIntro Title="{loc:Loc Flows_SitesHeader}" What="{loc:Loc Flows_What2}" Why="{loc:Loc Flows_Why2}"/>
 
-                    <Border Style="{StaticResource WarningBanner}" Margin="0,12,0,0" Padding="12,8"
+                    <!-- Where the flows come from and where they go. Each side: tenant address (bold), account, and a state chip.
+                         While a sign-in waits, that side's button becomes Cancel. -->
+                    <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="84"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- SOURCE -->
+                            <TextBlock Grid.Row="0" Text="{loc:Loc Flows_PaneSource}" Style="{StaticResource SourceLabel}" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding SourceConn.Host}" FontWeight="SemiBold" TextWrapping="Wrap"
+                                           Visibility="{Binding SourceConn.HasHost, Converter={StaticResource BoolToVis}}"/>
+                                <TextBlock FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap">
+                                    <Run Text="{Binding SourceConn.Account, Mode=OneWay}"/><Run Text=" "/><Run Text="{Binding SourceConn.Suffix, Mode=OneWay}"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding SourceConn.Note}" FontSize="12" TextWrapping="Wrap" Margin="0,2,0,0"
+                                           Visibility="{Binding SourceConn.HasNote, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                            <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource StatusChip}" DataContext="{Binding SourceConn}" Margin="8,0,0,0">
+                                <TextBlock Text="{Binding StateText}" FontSize="12"/>
+                            </Border>
+                            <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal" Margin="8,0,0,0">
+                                <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_ConnChangeSource}" Click="ConnectSource_Click"
+                                        Visibility="{Binding ShowSignInSource, Converter={StaticResource BoolToVis}}"
+                                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                                <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_CancelSignIn}" Click="CancelRun_Click"
+                                        Visibility="{Binding ShowCancelSource, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+
+                            <!-- TARGET -->
+                            <TextBlock Grid.Row="1" Text="{loc:Loc Flows_PaneTarget}" Style="{StaticResource TargetLabel}" VerticalAlignment="Center" Margin="0,12,0,0"/>
+                            <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="0,12,0,0">
+                                <TextBlock Text="{Binding TargetConn.Host}" FontWeight="SemiBold" TextWrapping="Wrap"
+                                           Visibility="{Binding TargetConn.HasHost, Converter={StaticResource BoolToVis}}"/>
+                                <TextBlock FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap">
+                                    <Run Text="{Binding TargetConn.Account, Mode=OneWay}"/><Run Text=" "/><Run Text="{Binding TargetConn.Suffix, Mode=OneWay}"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding TargetConn.Note}" FontSize="12" TextWrapping="Wrap" Margin="0,2,0,0"
+                                           Visibility="{Binding TargetConn.HasNote, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                            <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource StatusChip}" DataContext="{Binding TargetConn}" Margin="8,12,0,0">
+                                <TextBlock Text="{Binding StateText}" FontSize="12"/>
+                            </Border>
+                            <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Horizontal" Margin="8,12,0,0">
+                                <Button Style="{StaticResource PrimaryBtn}" Content="{loc:Loc Flows_ConnSignInTarget}" Click="ConnectTarget_Click"
+                                        Visibility="{Binding ShowSignInTargetFirst, Converter={StaticResource BoolToVis}}"
+                                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                                <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_ConnChangeTarget}" Click="ConnectTarget_Click"
+                                        Visibility="{Binding ShowChangeTarget, Converter={StaticResource BoolToVis}}"
+                                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                                <Button Style="{StaticResource PrimaryBtn}" Content="{loc:Loc Flows_CancelSignIn}" Click="CancelRun_Click"
+                                        Visibility="{Binding ShowCancelTarget, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,10,0,0"
+                                        Visibility="{Binding IsConnecting, Converter={StaticResource BoolToVis}}">
+                                <ProgressBar IsIndeterminate="True" Width="110" Height="4" VerticalAlignment="Center"/>
+                                <TextBlock Text="{loc:Loc Flows_CancelSignInHint}" FontSize="12" VerticalAlignment="Center" Margin="12,0,0,0"
+                                           TextWrapping="Wrap" MaxWidth="420" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- One warning at a time, chosen by priority in code -->
+                    <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0" Padding="12,8"
+                            Visibility="{Binding HasSourceWarning, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding SourceWarning}"/>
+                            <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_RemoveTargetPackages}" Click="RemoveTargetPackages_Click"
+                                    HorizontalAlignment="Left" Margin="0,8,0,0" Padding="14,5"
+                                    Visibility="{Binding ShowRemoveTargetPackages, Converter={StaticResource BoolToVis}}"
+                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0" Padding="12,8"
                             Visibility="{Binding NoSites, Converter={StaticResource BoolToVis}}">
                         <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Flows_NoSitesFound}"/>
                     </Border>
 
                     <DataGrid x:Name="SitesGrid" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column"
-                              GridLinesVisibility="Horizontal" MaxHeight="260" Margin="0,12,0,0"
+                              GridLinesVisibility="Horizontal" MaxHeight="300" Margin="0,12,0,0"
                               Visibility="{Binding HasSites, Converter={StaticResource BoolToVis}}"
                               Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="{loc:Loc Flows_ColSourceSite}" Binding="{Binding Source}" IsReadOnly="True" Width="*"/>
-                            <DataGridTextColumn Header="{loc:Loc Flows_ColTargetSite}" Binding="{Binding Target, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                            <DataGridTextColumn Header="{loc:Loc Flows_ColFrom}" Binding="{Binding Source}" IsReadOnly="True" Width="*"/>
+                            <DataGridTextColumn x:Name="ReadFromColumn" Header="{loc:Loc Flows_ColReadFrom}" Binding="{Binding ReadFrom, UpdateSourceTrigger=LostFocus}" Width="*" Visibility="Collapsed"/>
+                            <DataGridTextColumn Header="{loc:Loc Flows_ColTo}" Binding="{Binding Target, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                            <DataGridTemplateColumn Header="{loc:Loc Flows_ColStatus}" Width="230">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource StatusChip}" Margin="2">
+                                            <TextBlock Text="{Binding Effect}" FontSize="12"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Visibility="{Binding HasSites, Converter={StaticResource BoolToVis}}">
+
+                    <!-- Rarely needed: where the tool READS each site's lists from on the source (opens by itself when it filled one in) -->
+                    <CheckBox Margin="0,8,0,0" Content="{loc:Loc Flows_AdvancedReadFrom}" IsChecked="{Binding ShowReadFrom, Mode=TwoWay}"
+                              Visibility="{Binding HasSites, Converter={StaticResource BoolToVis}}"/>
+                    <Expander Style="{StaticResource OptionsExpander}" Margin="0,8,0,0" Visibility="{Binding HasSites, Converter={StaticResource BoolToVis}}">
+                        <Expander.Header>
+                            <TextBlock Text="{loc:Loc Flows_SitesColumnsHelpHeader}" Margin="0,0,24,0"/>
+                        </Expander.Header>
+                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Flows_SitesColumnsHint}"/>
+                    </Expander>
+
+                    <!-- Only shown when the address could not be read from the sign-in -->
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Visibility="{Binding ShowManualHost, Converter={StaticResource BoolToVis}}">
                         <TextBlock Text="{loc:Loc Flows_TargetHost}" VerticalAlignment="Center" FontSize="12" Margin="0,0,8,0"
                                    Foreground="{DynamicResource TextSecondaryBrush}"/>
-                        <TextBox x:Name="HostBox" Width="300" Style="{StaticResource WatermarkTextBox}" Tag="https://contoso.sharepoint.com"/>
+                        <TextBox x:Name="HostBox" Width="300" Style="{StaticResource WatermarkTextBox}" Tag="https://fabrikam.sharepoint.com"/>
                         <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_FillHost}" Click="FillHost_Click" Margin="8,0,0,0"/>
                     </StackPanel>
-                    <TextBlock Style="{StaticResource SubHeader}" Margin="0,12,0,0" Text="{loc:Loc Flows_SitesNext}"/>
                 </StackPanel>
             </ScrollViewer>
 
@@ -250,62 +394,175 @@
             <ScrollViewer Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=2}"
                           VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="0,0,12,0">
-                    <Grid>
+                    <local:FlowStepIntro Title="{loc:Loc Flows_MatchHeader}" What="{loc:Loc Flows_What3}" Why="{loc:Loc Flows_Why3}"/>
+
+                    <!-- Live summary of all the lists, with the page-level actions -->
+                    <Grid Margin="0,12,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel>
-                            <TextBlock Text="{loc:Loc Flows_MatchHeader}" Style="{StaticResource SectionHeader}"/>
-                            <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Flows_Step3Hint}"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                                    Visibility="{Binding HasMatchSummary, Converter={StaticResource BoolToVis}}">
+                            <Border Style="{StaticResource StatusChip}" DataContext="{Binding MatchSummary}">
+                                <TextBlock Text="{Binding Text}" FontSize="12" FontWeight="SemiBold"/>
+                            </Border>
+                            <Button Content="{loc:Loc Flows_ExpandAll}" Style="{StaticResource LinkBtn}" Click="ExpandAll_Click" Margin="14,0,0,0"/>
+                            <Button Content="{loc:Loc Flows_CollapseAll}" Style="{StaticResource LinkBtn}" Click="CollapseAll_Click" Margin="4,0,0,0"/>
                         </StackPanel>
-                        <Button Grid.Column="1" Style="{StaticResource SecondaryBtn}" VerticalAlignment="Top"
-                                Content="{loc:Loc Flows_MatchAgain}" Click="MatchAgain_Click"
-                                IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_CancelSignIn}" Click="CancelRun_Click" Margin="0,0,8,0"
+                                    Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
+                            <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_MatchAgain}" Click="MatchAgain_Click"
+                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        </StackPanel>
                     </Grid>
 
-                    <Border Style="{StaticResource InfoBanner}" Margin="0,10,0,0" Padding="12,8"
-                            Visibility="{Binding HasMatchSummary, Converter={StaticResource BoolToVis}}">
-                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding MatchSummaryText}"/>
-                    </Border>
-
+                    <!-- Lookup problems (a list that could not be read, a column mapped two ways...) -->
                     <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0" Padding="12,8"
                             Visibility="{Binding HasNotes, Converter={StaticResource BoolToVis}}">
-                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding NotesText}"/>
+                        <ScrollViewer MaxHeight="110" VerticalScrollBarVisibility="Auto">
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding NotesText}"/>
+                        </ScrollViewer>
                     </Border>
 
-                    <TextBlock Text="{loc:Loc Flows_ListsHeader}" FontSize="13" FontWeight="SemiBold" Margin="0,14,0,0"/>
-                    <DataGrid x:Name="ListsGrid" AutoGenerateColumns="False" CanUserAddRows="False"
-                              HeadersVisibility="Column" GridLinesVisibility="Horizontal" MaxHeight="220" Margin="0,6,0,0"
-                              Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="{loc:Loc Flows_ColList}" Binding="{Binding Title}" IsReadOnly="True" Width="170"/>
-                            <DataGridTextColumn Header="{loc:Loc Flows_ColSourceListId}" Binding="{Binding SourceListId}" IsReadOnly="True" Width="*"/>
-                            <DataGridTextColumn Header="{loc:Loc Flows_ColTargetListId}" Binding="{Binding TargetListId, UpdateSourceTrigger=LostFocus}" Width="*"/>
-                            <DataGridTextColumn Header="{loc:Loc Forms_ColResult}" Binding="{Binding StatusText}" IsReadOnly="True" Width="190"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                    <TextBlock Style="{StaticResource SubHeader}" Margin="0,4,0,0" Text="{loc:Loc Flows_ListsEditHint}"/>
+                    <!-- One card per list the flows use, however many flows use it. Each card is a SOURCE pane and a TARGET pane
+                         with the column mapping below. Cards that need a look come first and start open. -->
+                    <ItemsControl x:Name="CardsList" Margin="0,12,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <!-- Header: the list's name, where it goes, and its state. Click to open or close. -->
+                                        <Button Style="{StaticResource RowHeaderBtn}" Command="{Binding ToggleCommand}" AutomationProperties.Name="{Binding Title}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="24"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Chevron}" FontFamily="{StaticResource GlyphFont}" FontSize="12" VerticalAlignment="Center"
+                                                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="15" TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Text="{Binding HeaderStatus}" FontSize="12" TextTrimming="CharacterEllipsis" Margin="0,2,0,0"
+                                                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Border Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1"
+                                                            CornerRadius="10" Padding="9,2" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding UsedByChip}" FontSize="12"/>
+                                                    </Border>
+                                                    <Border Style="{StaticResource StatusChip}" Margin="8,0,0,0">
+                                                        <TextBlock Text="{Binding StatusChip}" FontSize="12" FontWeight="SemiBold"/>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Button>
 
-                    <TextBlock Text="{loc:Loc Flows_ColumnsHeader}" FontSize="13" FontWeight="SemiBold" Margin="0,14,0,0"/>
-                    <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Flows_ColumnsHint}"/>
-                    <DataGrid x:Name="ColumnsGrid" AutoGenerateColumns="False" CanUserAddRows="False"
-                              HeadersVisibility="Column" GridLinesVisibility="Horizontal" MaxHeight="280" Margin="0,6,0,0"
-                              SelectionUnit="Cell" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="{loc:Loc Flows_ColList}" Binding="{Binding ListTitle}" IsReadOnly="True" Width="170"/>
-                            <DataGridTextColumn Header="{loc:Loc Flows_ColSourceColumn}" Binding="{Binding SourceColumn}" IsReadOnly="True" Width="*"/>
-                            <DataGridTemplateColumn Header="{loc:Loc Flows_ColTargetColumn}" Width="*">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding Options}" DisplayMemberPath="Label" SelectedValuePath="Internal"
-                                                  SelectedValue="{Binding Selected, UpdateSourceTrigger=PropertyChanged}" Margin="2,1"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="{loc:Loc Forms_ColResult}" Binding="{Binding StatusText}" IsReadOnly="True" Width="190"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                                        <!-- Body -->
+                                        <StackPanel Margin="24,10,0,0" Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVis}}"
+                                                    IsEnabled="{Binding DataContext.IsBusy, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource InvBool}}">
+                                            <TextBlock FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}">
+                                                <Run Text="{loc:Loc Flows_CardUsedBy}" FontWeight="SemiBold"/><Run Text=" "/><Run Text="{Binding UsedBy, Mode=OneWay}"/>
+                                            </TextBlock>
+
+                                            <Grid Margin="0,10,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="40"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- SOURCE pane: where the flows come from -->
+                                                <Border Grid.Column="0" Style="{StaticResource SourcePane}">
+                                                    <StackPanel>
+                                                        <TextBlock Text="{loc:Loc Flows_PaneSource}" Style="{StaticResource SourceLabel}"/>
+                                                        <TextBlock Text="{Binding SourceHost}" FontWeight="SemiBold" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                                        <TextBlock Text="{loc:Loc Flows_CardListLabel}" Style="{StaticResource FieldLabel}" Margin="0,10,0,0"/>
+                                                        <TextBlock Text="{Binding SourceListName}" FontSize="14" TextWrapping="Wrap"/>
+                                                        <TextBlock Text="{Binding SourceListId}" FontSize="11" Margin="0,2,0,0" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                                        <TextBlock Text="{loc:Loc Flows_CardSiteLabel}" Style="{StaticResource FieldLabel}" Margin="0,8,0,0"/>
+                                                        <TextBlock Text="{Binding FlowSitePath}" FontSize="12" TextWrapping="Wrap"/>
+                                                        <TextBlock FontSize="12" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="{DynamicResource TextSecondaryBrush}"
+                                                                   Visibility="{Binding ShowReadSite, Converter={StaticResource BoolToVis}}">
+                                                            <Run Text="{loc:Loc Flows_CardReadFrom}" FontWeight="SemiBold"/><Run Text=" "/><Run Text="{Binding ReadSite, Mode=OneWay}"/>
+                                                        </TextBlock>
+                                                        <TextBlock Text="{Binding SourceNote}" FontSize="12" TextWrapping="Wrap" Margin="0,8,0,0"
+                                                                   Visibility="{Binding HasSourceNote, Converter={StaticResource BoolToVis}}"/>
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <TextBlock Grid.Column="1" Text="&#xE72A;" FontFamily="{StaticResource GlyphFont}" FontSize="18" HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center" Foreground="{DynamicResource TextTertiaryBrush}"/>
+
+                                                <!-- TARGET pane: where they go -->
+                                                <Border Grid.Column="2" Style="{StaticResource TargetPane}">
+                                                    <StackPanel>
+                                                        <TextBlock Text="{loc:Loc Flows_PaneTarget}" Style="{StaticResource TargetLabel}"/>
+                                                        <TextBlock Text="{Binding TargetHost}" FontWeight="SemiBold" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                                        <TextBlock Text="{loc:Loc Flows_CardListLabel}" Style="{StaticResource FieldLabel}" Margin="0,10,0,0"/>
+                                                        <ComboBox ItemsSource="{Binding TargetLists}" DisplayMemberPath="Title" SelectedItem="{Binding Picked, Mode=TwoWay}"
+                                                                  AutomationProperties.Name="{loc:Loc Flows_CardTargetList}"/>
+                                                        <TextBlock Text="{loc:Loc Flows_CardOrId}" FontSize="12" Margin="0,8,0,2" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                                        <TextBox Text="{Binding TargetListId, UpdateSourceTrigger=LostFocus}" Style="{StaticResource BaseTextBox}"/>
+                                                        <TextBlock Text="{Binding TargetNote}" FontSize="12" TextWrapping="Wrap" Margin="0,8,0,0"
+                                                                   Visibility="{Binding HasTargetNote, Converter={StaticResource BoolToVis}}"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </Grid>
+
+                                            <!-- Column mapping -->
+                                            <TextBlock Text="{Binding ColumnsHeaderText}" FontWeight="SemiBold" Margin="0,14,0,0" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding SummaryText}" TextWrapping="Wrap" FontSize="12" Margin="0,2,0,0"
+                                                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                            <CheckBox Content="{Binding ColumnsToggleText}" IsChecked="{Binding ShowAllColumns, Mode=TwoWay}" Margin="0,8,0,0"
+                                                      Visibility="{Binding HasHiddenColumns, Converter={StaticResource BoolToVis}}"/>
+
+                                            <DataGrid ItemsSource="{Binding ColumnsView}" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column"
+                                                      GridLinesVisibility="Horizontal" MaxHeight="300" Margin="0,6,0,0" SelectionUnit="Cell"
+                                                      Visibility="{Binding HasVisibleColumns, Converter={StaticResource BoolToVis}}"
+                                                      Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="{loc:Loc Flows_ColCardSource}" Binding="{Binding SourceLabel}" IsReadOnly="True" Width="*"/>
+                                                    <DataGridTextColumn Header="{loc:Loc Flows_ColCardType}" Binding="{Binding SourceType}" IsReadOnly="True" Width="90"/>
+                                                    <DataGridCheckBoxColumn Header="{loc:Loc Flows_ColCardUsed}" Binding="{Binding IsUsed, Mode=OneWay}" IsReadOnly="True" Width="56"/>
+                                                    <DataGridTemplateColumn Width="30">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="&#xE72A;" FontFamily="{StaticResource GlyphFont}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                           Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn Header="{loc:Loc Flows_ColTargetColumn}" Width="*">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <ComboBox ItemsSource="{Binding Options}" DisplayMemberPath="Label" SelectedValuePath="Internal"
+                                                                          SelectedValue="{Binding Selected, UpdateSourceTrigger=PropertyChanged}" Margin="2,1"/>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTemplateColumn Header="{loc:Loc Flows_ColStatus}" Width="190">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <Border Style="{StaticResource StatusChip}" Margin="2">
+                                                                    <TextBlock Text="{Binding StatusText}" FontSize="12"/>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                            <!-- Never a bare header row: say why there is nothing to show -->
+                                            <TextBlock Style="{StaticResource GhostText}" Text="{Binding EmptyColumnsText}" TextWrapping="Wrap" Margin="0,8,0,4"
+                                                       Visibility="{Binding HasVisibleColumns, Converter={StaticResource InvBoolToVis}}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
             </ScrollViewer>
 
@@ -313,84 +570,226 @@
             <ScrollViewer Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=3}"
                           VerticalScrollBarVisibility="Auto">
                 <StackPanel Margin="0,0,12,0">
-                    <TextBlock Text="{loc:Loc Flows_FormsEmailHeader}" Style="{StaticResource SectionHeader}"/>
-                    <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Flows_Step4Hint}"/>
+                    <local:FlowStepIntro Title="{loc:Loc Flows_FormsEmailHeader}" What="{loc:Loc Flows_What4}" Why="{loc:Loc Flows_Why4}"/>
 
+                    <!-- Forms: the flows' form on the left, the new form on the right -->
                     <TextBlock Text="{loc:Loc Flows_FormsHeader}" FontSize="13" FontWeight="SemiBold" Margin="0,14,0,0"/>
                     <Border Style="{StaticResource InfoBanner}" Margin="0,6,0,0" Padding="12,8"
                             Visibility="{Binding NoForms, Converter={StaticResource BoolToVis}}">
                         <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Flows_NoFormsFound}"/>
                     </Border>
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,6,0,0" Foreground="{DynamicResource TextSecondaryBrush}"
+                               Text="{loc:Loc Flows_FormsPickHelp}" Visibility="{Binding HasForms, Converter={StaticResource BoolToVis}}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0" Visibility="{Binding HasForms, Converter={StaticResource BoolToVis}}">
+                        <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_LoadFormNames}" Click="LoadFormNames_Click"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_CancelSignIn}" Click="CancelRun_Click" Margin="8,0,0,0"
+                                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
+                    </StackPanel>
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,6,0,0" Text="{Binding TargetFormsText}"
+                               Visibility="{Binding HasTargetFormsText, Converter={StaticResource BoolToVis}}"/>
                     <DataGrid x:Name="FormsGrid" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column"
-                              GridLinesVisibility="Horizontal" MaxHeight="220" Margin="0,6,0,0"
+                              GridLinesVisibility="Horizontal" MaxHeight="240" Margin="0,6,0,0"
                               Visibility="{Binding HasForms, Converter={StaticResource BoolToVis}}"
                               Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="{loc:Loc Flows_ColSourceForm}" Binding="{Binding SourceId}" IsReadOnly="True" Width="*"/>
+                            <DataGridTemplateColumn Header="{loc:Loc Flows_ColFormInFlows}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="4,2" ToolTip="{Binding SourceId}">
+                                            <TextBlock Text="{Binding DisplayTitle}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="{Binding ShortId}" FontSize="11" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="30">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="&#xE72A;" FontFamily="{StaticResource GlyphFont}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{loc:Loc Flows_ColPickForm}" Width="190">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding Options}" DisplayMemberPath="Title" SelectedItem="{Binding Picked, Mode=TwoWay}"
+                                                  Margin="2,1" ToolTip="{loc:Loc Flows_ColPickFormTip}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn Header="{loc:Loc Flows_ColNewForm}" Binding="{Binding NewId, UpdateSourceTrigger=LostFocus}" Width="*"/>
-                            <DataGridTextColumn Header="{loc:Loc Flows_ColFormNote}" Binding="{Binding Note}" IsReadOnly="True" Width="*"/>
+                            <DataGridTemplateColumn Header="{loc:Loc Flows_ColFormNote}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource StatusChip}" Margin="2" Visibility="{Binding HasNote, Converter={StaticResource BoolToVis}}">
+                                            <TextBlock Text="{Binding Note}" FontSize="12" TextWrapping="Wrap"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
 
+                    <!-- Other values, grouped by kind -->
                     <StackPanel Visibility="{Binding HasValues, Converter={StaticResource BoolToVis}}">
-                        <TextBlock Text="{loc:Loc Flows_ValuesHeader}" FontSize="13" FontWeight="SemiBold" Margin="0,20,0,0"/>
-                        <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Flows_ValuesHint}"/>
+                        <Grid Margin="0,20,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{loc:Loc Flows_ValuesHeader}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Style="{StaticResource LinkBtn}" Content="{loc:Loc Flows_ClearAutofill}" Click="ClearAutofill_Click"
+                                    Visibility="{Binding HasAutofill, Converter={StaticResource BoolToVis}}"/>
+                        </Grid>
+                        <TextBlock Style="{StaticResource SubHeader}" Margin="0,2,0,0" Text="{loc:Loc Flows_ValuesHint}"/>
                         <DataGrid x:Name="ValuesGrid" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column"
-                                  GridLinesVisibility="Horizontal" MaxHeight="240" Margin="0,6,0,0"
+                                  GridLinesVisibility="Horizontal" MaxHeight="260" Margin="0,2,0,0"
                                   Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
+                            <DataGrid.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock FontWeight="SemiBold" Margin="4,6">
+                                                <Run Text="{Binding Name, Mode=OneWay}"/><Run Text=" ("/><Run Text="{Binding ItemCount, Mode=OneWay}"/><Run Text=")"/>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </DataGrid.GroupStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="{loc:Loc Flows_ColValueKind}" Binding="{Binding KindText}" IsReadOnly="True" Width="110"/>
                                 <DataGridTextColumn Header="{loc:Loc Flows_ColValueSource}" Binding="{Binding Source}" IsReadOnly="True" Width="*"/>
                                 <DataGridTextColumn Header="{loc:Loc Flows_ColValueTarget}" Binding="{Binding Target, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                                <DataGridTemplateColumn Header="{loc:Loc Flows_ColFilledIn}" Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource StatusChip}" Margin="2" Visibility="{Binding HasNote, Converter={StaticResource BoolToVis}}">
+                                                <TextBlock Text="{Binding Note}" FontSize="12" TextWrapping="Wrap"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
 
+                    <!-- Email domain as a sentence -->
                     <TextBlock Text="{loc:Loc Flows_EmailHeader}" FontSize="13" FontWeight="SemiBold" Margin="0,20,0,0"/>
-                    <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Flows_EmailHint}"/>
                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                        <TextBlock Text="{loc:Loc Flows_EmailDomain}" VerticalAlignment="Center" FontSize="12" Margin="0,0,8,0"
-                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
-                        <TextBox x:Name="DomainFromBox" Width="220" Style="{StaticResource WatermarkTextBox}" Tag="contoso.com"/>
-                        <TextBlock Text="→" VerticalAlignment="Center" Margin="8,0"/>
-                        <TextBox x:Name="DomainToBox" Width="220" Style="{StaticResource WatermarkTextBox}" Tag="fabrikam.com"/>
+                        <TextBlock Text="{loc:Loc Flows_DomainMove}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBox x:Name="DomainFromBox" Width="200" Style="{StaticResource WatermarkTextBox}" Tag="contoso.com"
+                                 AutomationProperties.Name="{loc:Loc Flows_DomainFromName}"/>
+                        <TextBlock Text="{loc:Loc Flows_DomainTo}" VerticalAlignment="Center" Margin="8,0"/>
+                        <TextBox x:Name="DomainToBox" Width="200" Style="{StaticResource WatermarkTextBox}" Tag="fabrikam.com"
+                                 AutomationProperties.Name="{loc:Loc Flows_DomainToName}"/>
                     </StackPanel>
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,6,0,0" Text="{loc:Loc Flows_EmailHint}" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,0" Text="{Binding DomainNote}"
+                               Visibility="{Binding HasDomainNote, Converter={StaticResource BoolToVis}}"/>
                 </StackPanel>
             </ScrollViewer>
 
             <!-- ── Step 5: write ────────────────────────────────────────────── -->
             <ScrollViewer Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=4}"
                           VerticalScrollBarVisibility="Auto">
-                <StackPanel MaxWidth="720" HorizontalAlignment="Center" Margin="0,8,12,0">
-                    <TextBlock Text="{loc:Loc Flows_WriteHeader}" Style="{StaticResource SectionHeader}"/>
-                    <TextBlock Style="{StaticResource SubHeader}" Text="{loc:Loc Flows_Step5Hint}"/>
+                <StackPanel MaxWidth="760" HorizontalAlignment="Center" Margin="0,0,12,0">
+                    <local:FlowStepIntro Title="{loc:Loc Flows_WriteHeader}" What="{loc:Loc Flows_What5}" Why="{loc:Loc Flows_Why5}"/>
 
-                    <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                    <!-- Ready to write? Each line says where things stand; a line that needs a look links to its step. -->
+                    <Border Style="{StaticResource Card}" Margin="0,14,0,0">
+                        <StackPanel>
+                            <TextBlock Text="{loc:Loc Flows_ReadyToWrite}" Style="{StaticResource CardHeader}"/>
+                            <ItemsControl ItemsSource="{Binding Checklist}" Margin="0,8,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Style="{StaticResource StatusChip}" Padding="0,1" Width="22" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding Glyph}" FontSize="12" HorizontalAlignment="Center"/>
+                                            </Border>
+                                            <TextBlock Grid.Column="1" Text="{Binding Text}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                            <Button Grid.Column="2" Style="{StaticResource LinkBtn}" Content="{loc:Loc Flows_GoToStep}" Click="ChecklistGo_Click"
+                                                    Visibility="{Binding HasStep, Converter={StaticResource BoolToVis}}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource Card}" Margin="0,12,0,0">
                         <StackPanel>
                             <TextBlock Text="{loc:Loc Flows_OutputFolder}" Style="{StaticResource CardHeader}"/>
                             <Grid Margin="0,8,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBox Grid.Column="0" Text="{Binding OutputPath, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseTextBox}"/>
+                                <TextBox Grid.Column="0" Text="{Binding OutputPath, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseTextBox}"
+                                         AutomationProperties.Name="{loc:Loc Flows_OutputFolder}"/>
                                 <Button Grid.Column="1" Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Ui_Browse}" Click="BrowseOutput_Click" Margin="8,0,0,0"/>
+                                <Button Grid.Column="2" Style="{StaticResource LinkBtn}" Content="{loc:Loc Flows_OpenFolder}" Click="OpenOutputFolder_Click" Margin="4,0,0,0"/>
                             </Grid>
                         </StackPanel>
                     </Border>
 
-                    <Border Style="{StaticResource InfoBanner}" Margin="0,14,0,0">
-                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding WriteSummaryText}"/>
+                    <!-- Names: each package is saved as a new .zip; the name is editable per package -->
+                    <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                        <StackPanel>
+                            <TextBlock Text="{loc:Loc Flows_OutputName}" Style="{StaticResource CardHeader}"/>
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,8" Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="{loc:Loc Flows_NameCardHint}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{loc:Loc Flows_ColOriginalPackage}" Style="{StaticResource FieldLabel}"/>
+                                <TextBlock Grid.Column="2" Text="{loc:Loc Flows_ColSaveAs}" Style="{StaticResource FieldLabel}"/>
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding OutputNames}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="40"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Original}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" ToolTip="{Binding FullPath}"/>
+                                            <TextBlock Grid.Column="1" Text="&#xE72A;" FontFamily="{StaticResource GlyphFont}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                            <TextBox Grid.Column="2" Text="{Binding SaveAs, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseTextBox}"
+                                                     AutomationProperties.Name="{loc:Loc Flows_ColSaveAs}"/>
+                                            <TextBlock Grid.Column="3" Text=".zip" VerticalAlignment="Center" Margin="6,0,0,0" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                <Button Style="{StaticResource LinkBtn}" Content="{loc:Loc Flows_NameKeepAll}" Click="NamesKeep_Click"/>
+                                <Button Style="{StaticResource LinkBtn}" Content="{loc:Loc Flows_NameSuffixAll}" Click="NamesSuffix_Click" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0"
+
+                    <Border Style="{StaticResource WarningBanner}" Margin="0,12,0,0"
                             Visibility="{Binding HasNotes, Converter={StaticResource BoolToVis}}">
-                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding NotesText}"/>
-                    </Border>
-                    <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0">
-                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Flows_ConnectionsNote}"/>
+                        <ScrollViewer MaxHeight="110" VerticalScrollBarVisibility="Auto">
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding NotesText}"/>
+                        </ScrollViewer>
                     </Border>
                     <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_SaveMapping}" Click="SaveMapping_Click"
-                            HorizontalAlignment="Left" Margin="0,14,0,0"/>
+                            HorizontalAlignment="Left" Margin="0,12,0,0"/>
                 </StackPanel>
             </ScrollViewer>
 
@@ -402,6 +801,7 @@
                         <StackPanel>
                             <TextBlock Text="{Binding ResultHeadline}" FontSize="16" FontWeight="SemiBold"/>
                             <TextBlock Text="{Binding ResultSubline}" FontSize="12" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                            <TextBlock Text="{Binding DurationLabel}" FontSize="12" Margin="0,2,0,0" Foreground="{DynamicResource TextSecondaryBrush}"/>
                         </StackPanel>
                     </Border>
 
@@ -420,27 +820,40 @@
                         </Border>
                         <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WarningBgBrush}" BorderBrush="{DynamicResource WarningBrush}">
                             <StackPanel>
-                                <TextBlock Text="{Binding StillSourceCount}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center"/>
-                                <TextBlock Text="{loc:Loc Flows_CardStillSource}" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center" FontSize="13"/>
-                            </StackPanel>
-                        </Border>
-                        <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WarningBgBrush}" BorderBrush="{DynamicResource WarningBrush}">
-                            <StackPanel>
                                 <TextBlock Text="{Binding ReviewCount}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center"/>
                                 <TextBlock Text="{loc:Loc Flows_CardReview}" Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center" FontSize="13"/>
                             </StackPanel>
                         </Border>
-                        <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WindowBgBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
-                            <StackPanel>
-                                <TextBlock Text="{Binding DurationText}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextSecondaryBrush}" HorizontalAlignment="Center"/>
-                                <TextBlock Text="{loc:Loc Ui_Duration}" Foreground="{DynamicResource TextTertiaryBrush}" HorizontalAlignment="Center" FontSize="13"/>
-                            </StackPanel>
-                        </Border>
                     </WrapPanel>
 
-                    <WrapPanel Margin="0,4,0,8">
+                    <!-- What to review, in words, each with a link to the step that fixes it -->
+                    <Border Style="{StaticResource Card}" Margin="0,4,0,0" Visibility="{Binding HasReviewItems, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="{loc:Loc Flows_ToReviewHeader}" Style="{StaticResource CardHeader}"/>
+                            <ItemsControl ItemsSource="{Binding ReviewItems}" Margin="0,6,0,0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="18"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="&#x26A0;" VerticalAlignment="Top" Foreground="{DynamicResource WarningTextBrush}"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding Text}" TextWrapping="Wrap" FontSize="13"/>
+                                            <Button Grid.Column="2" Style="{StaticResource LinkBtn}" Content="{loc:Loc Flows_GoToStep}" Click="ReviewGo_Click" VerticalAlignment="Top"
+                                                    Visibility="{Binding HasStep, Converter={StaticResource BoolToVis}}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <WrapPanel Margin="0,12,0,8">
                         <Button Style="{StaticResource PrimaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Flows_OpenOutput}" Click="OpenOutput_Click"/>
                         <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Flows_OpenReport}" Click="OpenReport_Click"/>
+                        <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Flows_OpenPowerAutomate}" Click="OpenPowerAutomate_Click"/>
                         <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Flows_SaveMapping}" Click="SaveMapping_Click"/>
                     </WrapPanel>
 
@@ -455,16 +868,61 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
+                    <!-- Next steps, one numbered line each -->
                     <TextBlock Text="{loc:Loc Flows_NextStepsHeader}" Style="{StaticResource SectionHeader}" Margin="0,18,0,0"/>
                     <Border Style="{StaticResource Card}" Margin="0,8,0,0">
-                        <TextBlock TextWrapping="Wrap" FontSize="13" LineHeight="21" Text="{loc:Loc Flows_NextSteps}"/>
+                        <ItemsControl ItemsSource="{Binding NextSteps}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="22" Height="22" CornerRadius="11" Background="{DynamicResource AccentLightBrush}" VerticalAlignment="Top" HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding Number}" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <TextBlock Grid.Column="1" Text="{Binding Text}" TextWrapping="Wrap" FontSize="13" LineHeight="20"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </Border>
                 </StackPanel>
             </ScrollViewer>
         </Grid>
 
-        <!-- ══ Footer ═══════════════════════════════════════════════════════════ -->
+        <!-- ══ Activity strip: one line while closed (time, latest message); open shows the whole log ═══ -->
         <Border Grid.Row="3" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}"
+                BorderThickness="0,1,0,0" Padding="20,4,20,4"
+                Visibility="{Binding HasActivity, Converter={StaticResource BoolToVis}}">
+            <StackPanel>
+                <Button Style="{StaticResource RowHeaderBtn}" Click="ToggleActivity_Click" AutomationProperties.Name="{loc:Loc Flows_ActivityHeader}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding ActivityChevron}" FontFamily="{StaticResource GlyphFont}" FontSize="11" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,8,0"/>
+                        <TextBlock Grid.Column="1" Text="{loc:Loc Flows_ActivityHeader}" FontSize="12" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                        <TextBlock Grid.Column="2" Text="{Binding ActivityLatest}" FontSize="12" TextTrimming="CharacterEllipsis"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"
+                                   Visibility="{Binding IsActivityOpen, Converter={StaticResource InvBoolToVis}}"/>
+                    </Grid>
+                </Button>
+                <TextBox x:Name="ActivityBox" Text="{Binding ActivityText, Mode=OneWay}" IsReadOnly="True" TextWrapping="NoWrap"
+                         VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Height="96" Margin="0,4,0,2"
+                         FontFamily="Consolas" FontSize="11" Background="{DynamicResource WindowBgBrush}"
+                         BorderBrush="{DynamicResource BorderLightBrush}"
+                         Visibility="{Binding IsActivityOpen, Converter={StaticResource BoolToVis}}"
+                         AutomationProperties.Name="{loc:Loc Flows_ActivityHeader}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ══ Footer: the status line shows what is happening right now, nothing more ═══ -->
+        <Border Grid.Row="4" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}"
                 BorderThickness="0,1,0,0" Padding="24,12">
             <Grid>
                 <Grid.ColumnDefinitions>

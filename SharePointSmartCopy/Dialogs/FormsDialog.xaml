@@ -238,6 +238,8 @@
                                             IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
                                     <ProgressBar IsIndeterminate="True" Width="110" Height="4" Margin="12,0,0,0" VerticalAlignment="Center"
                                                  Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
+                                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Forms_CancelSignIn}" Click="CancelRun_Click" Margin="12,0,0,0"
+                                            Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
                                 </StackPanel>
                             </StackPanel>
 

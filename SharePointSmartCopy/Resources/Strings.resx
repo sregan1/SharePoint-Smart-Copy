@@ -849,15 +849,15 @@
   <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} flows found. They reference {1} sites, {2} lists, and {3} forms.</value></data>
   <data name="Flows_ScanDone" xml:space="preserve"><value>Scan complete.</value></data>
   <data name="Flows_Step2" xml:space="preserve"><value>2. Map sites</value></data>
-  <data name="Flows_Step2Hint" xml:space="preserve"><value>Enter the target site for each source site. The site you connected in the wizard is filled in for you.</value></data>
-  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Source site</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Where each flow&apos;s SharePoint site moves to. In Multi-tenant mode, sign in to the target and the new tenant&apos;s address is filled in for you; change any row whose site has a different name. In Single tenant mode, type the target site for each row.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Site in the flows (replaced)</value></data>
   <data name="Flows_ColTargetSite" xml:space="preserve"><value>Target site</value></data>
-  <data name="Flows_TargetHost" xml:space="preserve"><value>Fill empty targets on host:</value></data>
-  <data name="Flows_FillHost" xml:space="preserve"><value>Fill, keeping paths</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>New tenant address:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Fill empty targets, keeping paths</value></data>
   <data name="Flows_BadHost" xml:space="preserve"><value>Enter a full URL such as https://contoso.sharepoint.com.</value></data>
   <data name="Flows_HostFilled" xml:space="preserve"><value>Filled empty targets using that host and each site's path.</value></data>
   <data name="Flows_Step3" xml:space="preserve"><value>3. Match lists and columns</value></data>
-  <data name="Flows_Step3Hint" xml:space="preserve"><value>The tool reads each list through your connections, finds the list with the same name on the target, and matches the columns. Everything is pre-filled; change anything that looks wrong.</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>One card per list the flows use, however many flows use it. Each shows the list&apos;s name and columns, the list it maps to on the target (the one with the same name by default; pick another from the dropdown if the name differs), and how each column maps. Check the cards marked with a warning.</value></data>
   <data name="Flows_Resolve" xml:space="preserve"><value>Match lists and columns</value></data>
   <data name="Flows_ColList" xml:space="preserve"><value>List</value></data>
   <data name="Flows_ColSourceListId" xml:space="preserve"><value>Source list ID</value></data>
@@ -868,18 +868,18 @@
   <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Enter at least one target site first.</value></data>
   <data name="Flows_Resolving" xml:space="preserve"><value>Matching lists and columns…</value></data>
   <data name="Flows_NotFound" xml:space="preserve"><value>(not found)</value></data>
-  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Matched</value></data>
-  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Site has no target</value></data>
-  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Not found in source</value></data>
-  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>No list with this name on target</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Found a list with the same name on the target</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>The site this list is on has no target site (Sites step)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Could not read this list on the source site: it may not exist, this account may lack access, or the site is on a different tenant than your source connection</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>No list with this name on the target site: choose one from the dropdown</value></data>
   <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Same name</value></data>
   <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Renamed on target</value></data>
   <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>No match: choose a column</value></data>
-  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} of {1} lists matched. Columns: {2} matched by name, {3} need your choice.</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} of {1} lists have a target list. {2} column(s) to check.</value></data>
   <data name="Flows_Step4" xml:space="preserve"><value>4. Forms and email</value></data>
   <data name="Flows_Step4Hint" xml:space="preserve"><value>Forms copied with the Forms tool are filled in automatically. For a form you created yourself, paste its ID or the link of its edit page.</value></data>
   <data name="Flows_ColSourceForm" xml:space="preserve"><value>Source form ID</value></data>
-  <data name="Flows_ColNewForm" xml:space="preserve"><value>New form ID or edit-page link</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>Form ID (filled by the dropdown, or paste one)</value></data>
   <data name="Flows_EmailDomain" xml:space="preserve"><value>Move email domain:</value></data>
   <data name="Flows_Step5" xml:space="preserve"><value>5. Write the updated packages</value></data>
   <data name="Flows_Step5Hint" xml:space="preserve"><value>Choose an output folder (not the folder holding the originals). The updated packages and a report listing every change are saved there.</value></data>
@@ -889,7 +889,10 @@
   <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Connections can't be moved between tenants. After importing a package, recreate each connection in Power Automate and re-select it.</value></data>
   <data name="Flows_NoOutput" xml:space="preserve"><value>Choose an output folder first.</value></data>
   <data name="Flows_Rewriting" xml:space="preserve"><value>Writing updated packages…</value></data>
-  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>The output folder holds the original package. Choose a different folder so the originals stay untouched.</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Save the updated copy of {0} (package {1} of {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Power Automate package (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>You already chose that file name for another package. Pick a different name.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>A package would be saved on top of an original (same folder, same name). Choose a different output folder, or change its name in "Save as", so the originals stay untouched.</value></data>
   <data name="Flows_ReportHeader" xml:space="preserve"><value># Flow rewrite report
 
 Original packages are untouched. Connections are NOT migrated; recreate and re-select them on import.
@@ -912,11 +915,11 @@ Original packages are untouched. Connections are NOT migrated; recreate and re-s
   <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>IDs reported; review after import</value></data>
   <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Connection only (recreate it)</value></data>
   <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Column mapping</value></data>
-  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Each column the flows use, with the target column chosen by automatic matching (same name, then same display name, then a similar name). Change any row from its dropdown; choose "(leave unchanged)" to keep the source name.</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>A column appears here when a flow writes to it, filters or sorts on it, or reads it in an expression, on a list that was matched. The target column is chosen by automatic matching (same name, then same display name, then a similar name). You only need to act on rows marked "Similar name" or "No match"; change any row from its dropdown, or choose "(leave unchanged)" to keep the source name. Built-in columns such as Title are not listed because they exist everywhere.</value></data>
   <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(leave unchanged)</value></data>
   <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Similar name: please check</value></data>
   <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(not matched yet)</value></data>
-  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Entered by you</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Target list chosen by you</value></data>
   <data name="Flows_ListsEditHint" xml:space="preserve"><value>Type or paste a target list ID, or the link of its list settings page, in the Target list ID column to choose a list yourself (for example when the name differs). Then click "Match again" to match its columns.</value></data>
   <data name="Flows_BadListId" xml:space="preserve"><value>Could not find a list ID in '{0}'. Paste a GUID or the list settings page link.</value></data>
   <data name="Flows_BadFormId" xml:space="preserve"><value>Could not find a form ID in '{0}'. Paste the form ID or the link of the form's edit page.</value></data>
@@ -995,7 +998,7 @@ Original packages are untouched. Connections are NOT migrated; recreate and re-s
   <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Scan complete. Review what the flows use, then click Next.</value></data>
   <data name="Flows_SitesHeader" xml:space="preserve"><value>Choose the target sites</value></data>
   <data name="Flows_NoSitesFound" xml:space="preserve"><value>These flows do not use SharePoint sites with fixed addresses, so there is nothing to map here. Click Next.</value></data>
-  <data name="Flows_SitesNext" xml:space="preserve"><value>Next, the tool reads each list through your connections and matches it on the target site. Leave a target empty to leave that site unchanged.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Next, the tool reads each list through your connections and matches it on the target site.</value></data>
   <data name="Flows_StatusSites" xml:space="preserve"><value>Enter the target site for each source site, then click Next.</value></data>
   <data name="Flows_MatchHeader" xml:space="preserve"><value>Match lists and columns</value></data>
   <data name="Flows_MatchAgain" xml:space="preserve"><value>Match again</value></data>
@@ -1056,7 +1059,7 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Flows_ColValueKind" xml:space="preserve"><value>Kind</value></data>
   <data name="Flows_ColValueSource" xml:space="preserve"><value>In the flows</value></data>
   <data name="Flows_ColValueTarget" xml:space="preserve"><value>Replace with</value></data>
-  <data name="Flows_ColFormNote" xml:space="preserve"><value>Check</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>ID check</value></data>
   <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Not a form ID or edit-page link</value></data>
   <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Same as the source form</value></data>
   <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>This form is in the source tenant, not the target</value></data>
@@ -1068,7 +1071,269 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Could not load the mapping: {0}</value></data>
   <data name="Flows_MappingLoaded" xml:space="preserve"><value>Loaded {0}. Values that match these flows were filled in; check them on the next steps.</value></data>
   <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>Loaded {0}. It is applied when you add flow packages.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>Filled in {0} target site(s). Check them below, then click Next.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Every site already has a target, so nothing was changed. Clear a Target cell to have it filled in.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Shortcut: type the new tenant's address, for example https://fabrikam.sharepoint.com, and click the button. Every site that has no target yet gets that address with the same path as the source: https://contoso.sharepoint.com/sites/HR becomes https://fabrikam.sharepoint.com/sites/HR. OneDrive sites (contoso-my) go to the new tenant's -my address. Targets you already entered are not touched. The sites must already exist in the new tenant; this tool does not create them. If a site has a different name there, type its address in the Target site cell instead.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>If you leave a Target site empty, that site is left unchanged: the flows keep pointing at the old site, its lists and columns are not matched or rewritten, and the report lists it under "To do after import". That is right only for a site that is not moving to the new tenant.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>What happens</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Will move to the target</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Not changed (no target)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Site {0} was left unchanged (no target entered), so the flows still point at it and its lists were not matched. Fine if the site is not moving; otherwise rerun with a target.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>No columns to show yet: no list has been matched, so there is nothing to compare. Fix the lists above, then click Match again.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>No columns to map, so you don't need to do anything here. The matched lists have no custom columns that the flows write to, filter on, or read in a way the tool can see. The activity list at the bottom says what was found for each list.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} column(s) found: {1} have the same name on the target, {2} were renamed and matched, {3} look similar, {4} have no match.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Please check the rows marked "Similar name" and choose a column for the rows marked "No match". Rows marked "Same name" or "Renamed on target" need nothing.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Nothing to do here: every column already matches. Click Next.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Names of the updated packages</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>What to call the updated .zip file(s). Use {name} for the original file name: "{name} - Fabrikam" turns "Onboarding.zip" into "Onboarding - Fabrikam.zip". With one package you can simply type the full name. Leave it as {name} to keep the original names. A name used twice gets (2), (3)… so nothing is overwritten.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Will write: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>A flow only stores a form&apos;s ID, so the form names are read from Microsoft Forms when this step opens: the title of each form in your flows (source account) and the forms in the target account. A form whose title matches exactly one target form is matched for you; otherwise pick the new form from the dropdown, or paste its ID or edit-page link. Use Reload form names to read them again.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Load forms from the target account…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Loading the target account's forms… you may be asked to sign in.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Listing the forms owned by the target account {0} so you can pick the new form for each flow. Click Cancel to stop waiting for a sign-in.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Target: {0} form(s) found in {1}. Pick one per row, or paste an ID.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Target: no forms found in {0}. The dropdown lists only forms that account owns (not group forms), so copy the forms with the Forms tool first, or paste an ID.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Cancelled. Click Load form names to try again, or paste form IDs.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Target: could not load the forms: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(none)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(untitled form)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Source form</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Pick from the target's forms</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Choose a form from the target account. Click "Load forms from the target account" first.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Filled in from the target sign-in ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Your source account, replaced with your target account</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Filled in from your sign-ins ({0} → {1}). Clear both boxes to leave email domains unchanged.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>A site with an empty target is left unchanged: the flows keep pointing at it, and the report lists it.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Signed in as {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Signed in as {0}. The target tenant's SharePoint address is {1}; empty target sites were filled in from it.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Some sites in the flows are on {0}, which is the target account's own address. Either these packages already point at the target (for example packages this tool wrote, or flows exported from the target), so add the original exports from the source instead; or the source and target really are one tenant, so switch the app to Single tenant mode (Settings).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} is a package this tool wrote on {1}: it already holds the target addresses, so there is nothing left to move. Add the original export from the source tenant instead (the file in your Downloads, not the one in the output folder).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ These packages already point at your target tenant ({0}): their sites, list IDs, tenant ID and account are the target&apos;s, not the source&apos;s. That is what a package this tool already wrote looks like (a written package keeps the original&apos;s file name). Remove them and add the original exports from the source tenant. If the source and target really are one tenant, switch the app to Single tenant mode (Settings).</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Signed in. Filled in {0} target site(s) from {1}. Check them, then click Next.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Signed in. Every target site already had a value, so none were changed.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>The sign-in did not finish, or the new tenant's address could not be read (see the Target line). If you are signed in, enter the new tenant's address below to fill the target sites.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — connected as {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — not signed in yet</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Change target…</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Change source…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Signed in as {0}. The source tenant's SharePoint address is {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Source connection changed to {0}. The sites listed below must be on this tenant.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>The source sign-in did not finish, or the tenant's address could not be read (see the Source line). The previous source connection is kept if you cancelled.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Some sites are read from {0}, which is not the tenant you are connected to as source ({1}). Reading their lists will fail. Edit "Read lists from" for those rows to the address on your source tenant, or click Change source… and sign in with an account from that tenant.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>The flows' sites are on {0}, but you are connected to {1} as source. "Read lists from" was filled in with the same sites on {1}, so the tool reads list names and columns there. Check that those sites exist (edit any row), or click Change source… if the flows really came from {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Lists the flows use</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Click a list to open or close it. Lists that need a look are first and open.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Open all</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Close all</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Used by:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Source:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Target list</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>or paste its ID or link:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Source column</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Type</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Used</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Not used by the flows</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(none: leave this list unchanged)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ No target list chosen: flows that use it still point at the source list</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} column(s) to check</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ nothing to check</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} columns on this list; the flows use {1}: {2} with the same name on the target, {3} renamed and matched, {4} similar (please check), {5} with no match (please choose). The other columns are shown for context and are not changed.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} columns on this list; none are used by the flows in a way the tool can see, so nothing needs mapping.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>No columns could be read for this list (see the notes above and the activity list).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Choose a target list above to see its columns and map them.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>The target list's columns could not be read, so no matches could be suggested.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>The flow does not say which site this list is on (it uses a parameter), so it cannot be looked up. Paste the target list's ID or link.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>No target list: this list is left unchanged.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Reading the columns of the target list for {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>List '{0}': you chose another target list. Reading its columns on {1} to match them again.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — connected as {1} (the main window's sign-in)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Read lists from (source)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>"Site in the flows" is the address stored in the flows; that is what gets replaced, so it cannot be edited. "Read lists from" is where the tool reads each list's name and columns on the source side; it starts as the same address, so change it when the flow's address is old, renamed or on another tenant than your source connection.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>What these flows use</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} flow(s), {2} step(s): {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>rewritten by this tool</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>review manually</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>connection only</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>To do after import</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Import each patched package in the target environment and recreate the connections (they are never copied).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Solution packages: only the workflow definitions were rewritten. Environment variable values and connection references in the solution (customizations.xml) still hold source values; set them after import.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Flow owners and run-only users are not part of the package; share the flows with the right people after import.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>No changes (nothing in the mapping matched).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} replacements</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Still pointing at source values (unmapped, review before import)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Connecting to the source site {0} and the target site {1}. A sign-in window opens if you are not signed in yet.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Connected to {0} (source) and {1} (target).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Reading the lists and libraries on the target site {0}, so each list can be matched by name and offered in a dropdown.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>Found {0} list(s) and librar(ies) on {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Reading the name and columns of list {0} from the source site {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>List '{0}': looking for a list with the same name on the target site {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>List '{0}': found on the target. Reading the columns of the target list to match them.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>List '{0}': its columns could not be read, or it has none. Nothing to map for this list.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>List '{0}': {1} column(s), none of them used by the flows in a way the tool can see. Nothing needs mapping.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>List '{0}': the flows use {1} column name(s): {2} have the same name on the target (no change needed), {3} were renamed and matched, {4} look similar (please check), {5} have no match (your choice), {6} are built-in columns (nothing to map).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>List {0} is not on the source site, but it is on the target site as '{1}': the flow already points at the target.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Site '{0}' has no target; lists on it were not resolved.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Advanced: read lists from a different address</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Column mapping: from {0} to {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>No columns to show for this list.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>None of this list&apos;s columns are used by the flows. Tick &quot;Show all columns&quot; to see them.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>The source list could not be read, and the flow names no columns, so there is nothing to map.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>List</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(could not be read on the source)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Read from:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Site</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>This flow already points at this list on the target. The {0} column name(s) it uses are shown against the target&apos;s columns; nothing needs changing.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(list name unavailable)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Already on target</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Mapped by the flow&apos;s column names</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Can&apos;t read columns</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>No target list</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Nothing to map</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Ready</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Target columns unreadable</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} to check</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Used by {0} flow(s)</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} column mapping(s) still need a look.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>All column mappings are settled.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Connections are not copied between tenants: recreate them in Power Automate after importing.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>Email: every address on {0} becomes {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} of {1} form(s) point at a new form.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} of {1} list(s) have a target list.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>The lists have not been matched yet.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>Email addresses are not changed (no domain was mapped).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>The flows use no Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>The flows use no specific lists.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>The flows name no SharePoint sites.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{0} package(s) with {1} flow(s) will be written; the originals are not changed.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0} of {1} site(s) will move to a target site; the others stay as they are.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Clear values filled in automatically</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Filled in</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Form in your flows</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>From (in your flows)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Lists</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Sites</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>To (target)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Chosen by you</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Left unchanged</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(the main window&apos;s sign-in)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>Email domain to move from</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Move every address on</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>to</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>Email domain to move to</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…or drag .zip files (or a folder) onto this window.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Column &apos;{0}&apos; on list &apos;{1}&apos; has no match in the target list.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>List &apos;{0}&apos; ({1}) on {2} has no target list, so flows that use it still point at the source list.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(title not known)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Go to step</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Have a saved mapping? Load it…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Custom pattern…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Keep the original names</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Add &apos; - migrated&apos; to each name</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Open the report and check what is marked for review.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>In Power Automate (target tenant): My flows, Import, Import Package (Legacy), and choose a written package.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>Under Related resources click &quot;Select during import&quot; for each connection and pick or create one in the target tenant. Connections cannot be moved between tenants.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Import the flow, keep it turned off, open it, fix anything it flags, then turn it on.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Open folder</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Open Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>That output folder does not exist yet; it is created when you write the packages.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>SOURCE</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>TARGET</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} flow(s) found</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>No flows found</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Already written by this tool</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Could not be read</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Ready to write?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Remove this package from the list</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Flow rewrite report</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>What these flows use ({0} services)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} package(s) could not be written.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} value(s) in the written packages still point at the source. Open the report to see which.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Show all {0} columns</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Show only the columns the flows use</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>What do these columns mean?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>This list&apos;s ID is not on the source site, but it is the list &apos;{0}&apos; on the target site: the flow already points at the target, as in a package this tool already wrote.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Connected</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Problem</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Not signed in</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Waiting for sign-in…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} list(s) · all ready</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} list(s) · {1} ready · {2} need a look</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Took {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>To review</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Add the flow packages (.zip) you exported from the source tenant. Each is scanned as soon as you add it.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Say which site each flow moves to. Sign in to the target and the new tenant&apos;s address is filled in for you.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Each list the flows use is matched to a list on the target, and its columns are mapped. Check anything marked as needing a look.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Point copied forms at their new IDs, and decide how email addresses and the tenant ID change.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Check the list below, choose where to save the updated packages, then write them.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>What happens here</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>The tool reads each package on this computer (nothing is sent anywhere) to find the sites, lists, columns and forms the flows use. Add the ORIGINAL exports from the source, not packages this tool wrote earlier: those already hold the target&apos;s addresses.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Column '{0}' is mapped differently on different lists ({1}). Each list's steps get their own mapping; expressions elsewhere in the flow keep the original name, so review them.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Reload form names…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Loading form names… you may be asked to sign in.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Reading the titles of the forms in your flows from the source account {0}. Click Cancel to stop waiting for a sign-in.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Source: found the title of {0} of {1} form(s) ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Source: could not read the form titles: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} form(s) were matched to the target form with the same name.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Looks like a valid form ID</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Matched by name</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>The source and the target are on the same tenant ({0}). Switch the app to Single tenant mode (Settings), or sign in to the source and the target with accounts from different tenants.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Remove these packages</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>Removed {0} package(s) that already point at the target: {1}. Add the original exports from the source tenant instead.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Those packages were removed. Add the original exports from the source tenant.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Each package is saved as a new .zip in the output folder; the originals are never changed. To rename one, type a different name in Save as.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Keep the original names</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Add &apos; - migrated&apos; to every name</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Original package</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Save as</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Will be saved as: {0} (you can change the names below).</value></data>
   <data name="Flows_PackageFailed" xml:space="preserve"><value>Could not be read; no output written</value></data>
-  <data name="Flows_Cancelled" xml:space="preserve"><value>Cancelled.</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Cancelled. Nothing was changed. On the Sites step use Sign in to try again (for example in another browser); on the Lists step use Match again.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Cancelling… a sign-in window can take a moment to close.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>What the tool is doing</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Connections</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Multi-tenant: to match lists, the tool reads each list's name and columns from the source tenant and looks for the same list in the target tenant. That needs a sign-in to each. Sign in to each side here, or just click Next and you are asked then. A browser window opens; if it is the wrong browser, click Cancel and try again. Nothing is changed in either tenant.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Single tenant: source and target are the same tenant, so the tool uses the account you signed in with on the Connect step. There is nothing else to sign in to. Nothing is changed in the tenant.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Source</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Target</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Sign in to source…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Sign in to target…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Stops waiting for the sign-in window, so you can try again, for example in another browser.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Not signed in yet</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Uses the main window's sign-in: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Signed in as {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Ready</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Waiting for sign-in… a browser window should open</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Sign-in cancelled. Click Sign in to try again.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Signed in. Check the target sites below, then click Next.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>There is no source site to sign in to yet. Add flow packages first.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Enter at least one target site first (or use Fill, keeping paths); the sign-in goes to the target site's tenant.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Signing in to the source… a browser window opens.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Signing in to the target… a browser window opens.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>source</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>target</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Signing in to the source tenant. A browser window opens; click Cancel to stop waiting (for example to try another browser). The sign-in also tells the tool which tenant the source is.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Signing in to the target tenant. A browser window opens; click Cancel to stop waiting (for example to try another browser). The sign-in also tells the tool the new tenant&apos;s SharePoint address.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Connected to the {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Sign-in cancelled by you.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Reading {0} package file(s) on this computer to find the sites, lists, columns and forms the flows use. Nothing is sent anywhere.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Read {0}: {1} flow(s).</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Matching {0} list(s): for each, the tool asks the source site for its name, then looks for a list with that name on the target site.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Finished matching. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Writing {0} patched package(s) to {1}. The originals are not changed.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Writing {0} with your mapping applied.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Checking {0} for values that still point at the source.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Cancelled by you. Nothing was changed.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Stopped: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Each flow stores the address of the SharePoint site it reads from or writes to. To run in the new tenant, every flow must point at the matching site there, so tell the tool which new site replaces each old one. This only edits copies of your packages; nothing is looked up until you click Next.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>What happens here: for each list a flow uses, the tool reads the list&apos;s name and columns from the source site, looks for a list with the same name on the target site, and reads that list&apos;s columns to match them. Why: flows refer to lists and columns by ID or internal name, and those differ in the new tenant, so the tool finds the equivalent. This step only reads; nothing is created or changed in either tenant. You can change the target list and any column on its card.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>A copied form gets a new ID, so a flow that uses it must point at the copy. Email addresses and the tenant ID in a flow may also need to change for the new organization. Nothing is looked up here; you decide the replacements, and anything left empty stays as it is.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>The tool writes new .zip files to the output folder with your mapping applied, rescans them to find anything that still points at the source, and writes a report. Your original packages are never changed, and nothing is sent to either tenant. You import the new packages in Power Automate yourself afterward.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Sign-in cancelled. Click the button to try again, for example in another browser.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Cancel</value></data>
   <data name="Flows_Error" xml:space="preserve"><value>Error: {0}</value></data>
 </root>

@@ -4,9 +4,10 @@ using System.Text.Json.Nodes;
 
 namespace SharePointSmartCopy.Forms;
 
-// The latest copy of a source form: its new ID, which account it was copied to and when. The account and date are
-// null for entries written by earlier versions, which stored the new ID alone.
-public sealed record FormsMapEntry(string NewId, string? TargetAccount, DateTimeOffset? CopiedAt);
+// The latest copy of a source form: its new ID, which account it was copied to and when, and the source form's title
+// (so the Flows tool can show which form an ID refers to). The account, date and title are null for entries written by
+// earlier versions, which stored less.
+public sealed record FormsMapEntry(string NewId, string? TargetAccount, DateTimeOffset? CopiedAt, string? SourceTitle = null);
 
 // Persists "source form ID -> latest copy" for every form the Forms dialog copies, so the Flows dialog can
 // point flows at the copies and the Forms dialog can show what was already copied. Lives next to settings.json in
@@ -36,7 +37,8 @@ public static class FormsIdMapStore
                     map[source] = new FormsMapEntry(
                         newId,
                         o["targetAccount"]?.GetValue<string>(),
-                        DateTimeOffset.TryParse(o["copiedAt"]?.GetValue<string>(), out var at) ? at : null);
+                        DateTimeOffset.TryParse(o["copiedAt"]?.GetValue<string>(), out var at) ? at : null,
+                        o["sourceTitle"]?.GetValue<string>());
             }
         }
         catch (Exception ex) when (ex is JsonException or IOException or InvalidOperationException or FormatException)
@@ -46,11 +48,11 @@ public static class FormsIdMapStore
         return map;
     }
 
-    public static void Record(string sourceFormId, string newFormId, string? targetAccount = null, string? path = null)
+    public static void Record(string sourceFormId, string newFormId, string? targetAccount = null, string? sourceTitle = null, string? path = null)
     {
         path ??= DefaultPath;
         var map = Load(path);
-        map[sourceFormId] = new FormsMapEntry(newFormId, targetAccount, DateTimeOffset.Now);
+        map[sourceFormId] = new FormsMapEntry(newFormId, targetAccount, DateTimeOffset.Now, sourceTitle);
 
         var root = new JsonObject();
         foreach (var (source, e) in map)
@@ -59,6 +61,7 @@ public static class FormsIdMapStore
                 ["newId"] = e.NewId,
                 ["targetAccount"] = e.TargetAccount,
                 ["copiedAt"] = e.CopiedAt?.ToString("o"),
+                ["sourceTitle"] = e.SourceTitle,
             };
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         var tmp = path + ".tmp";

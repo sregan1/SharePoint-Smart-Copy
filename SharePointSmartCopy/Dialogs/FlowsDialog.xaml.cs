@@ -1,9 +1,10 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
-using CommunityToolkit.Mvvm.ComponentModel;
+using System.Windows.Data;
 using Microsoft.Win32;
 using SharePointSmartCopy.Forms;
 using SharePointSmartCopy.Localization;
@@ -17,47 +18,308 @@ namespace SharePointSmartCopy.Dialogs;
 //   1 Packages (add + automatic scan)  2 Sites  3 Lists & columns (automatic matching, editable)
 //   4 Forms & email  5 Write  6 Report
 // Originals are never modified; patched packages go to a separate output folder together with a report.
+//
+// Source and target are shown the same way on every step: SOURCE (neutral) is where the flows come from, TARGET (accent)
+// is where they go, each with its tenant address.
 public partial class FlowsDialog : Window
 {
     private readonly SharePointService _sp;
-    private readonly Func<string, bool, Task> _prepareSite;
+    private readonly Func<string, bool, CancellationToken, Task> _prepareSite;       // signs in to / registers a site: (siteUrl, isSource, ct)
+    private readonly Func<bool, string> _signedInUser;                                // account of the source (true) or target (false) sign-in
+    private readonly Func<bool, string?> _tenantId;                                   // tenant ID of the source (true) or target (false) sign-in
+    private readonly Func<CancellationToken, bool, Task<string>> _targetFormsToken;   // Microsoft Forms token of the target account
+    private readonly Func<CancellationToken, bool, Task<string>> _sourceFormsToken;   // Microsoft Forms token of the source account
+    private readonly Func<CancellationToken, Task<string?>> _signInSource;            // signs in to the source again (always opens the browser); returns its SharePoint address
+    private readonly Func<CancellationToken, Task<string?>> _signInTarget;            // the same for the target
+    private readonly Func<bool, CancellationToken, Task<string?>> _connectedRoot;     // tenant address of an already signed-in side (never prompts)
+    private string _sourceRoot = string.Empty;   // SharePoint address of the tenant connected as source, e.g. https://contoso.sharepoint.com
+    private string _targetRoot = string.Empty;   // the same for the target
     private readonly string _connectedSource;
     private readonly string _connectedTarget;
     private readonly bool _isMultiTenant;
     private readonly FlowsDialogViewModel _vm = new();
+
+    private readonly ObservableCollection<TargetFormOption> _targetForms = [];       // forms found in the target account (shared by every form row)
     private readonly ObservableCollection<ValueMapRow> _values = [];
+    private readonly ICollectionView _valuesView;
     // A mapping loaded from a file; applied to the rows now and again whenever the packages are rescanned.
     private FlowMapping? _loaded;
     private Dictionary<string, Dictionary<string, string>> _loadedColumns = new(StringComparer.OrdinalIgnoreCase);
 
     private readonly List<string> _zips = [];
+    // Packages in the list that this tool wrote earlier (recognized by content), by path.
+    private readonly Dictionary<string, FlowOutputLog.Entry> _rewritten = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, List<FlowScan>> _zipScans = new(StringComparer.OrdinalIgnoreCase);   // the flows found in each package
+    private readonly Dictionary<string, string> _saveAs = new(StringComparer.OrdinalIgnoreCase);        // package path -> the name the user chose to save it as
+    private bool _formNamesAttempted;   // the form names load by themselves the first time the Forms step opens
     private List<FlowScan> _scans = [];
     private FlowResolveResult? _resolved;
     private readonly ObservableCollection<SiteRow> _sites = [];
     private readonly ObservableCollection<FormMapRow> _forms = [];
-    private readonly ObservableCollection<ColumnMapRow> _columnRows = [];
-    private readonly ObservableCollection<ListMapRow> _listRows = [];
+    // One card per list the flows use (however many flows use it): its target list and column mapping.
+    private readonly ObservableCollection<ListCard> _cards = [];
+    private readonly Dictionary<string, ObservableCollection<TargetListOption>> _targetListOptions = new(StringComparer.OrdinalIgnoreCase);
+    private Dictionary<string, string> _lastReadMap = new(StringComparer.OrdinalIgnoreCase);   // flow site -> where its lists were read from
+    private SharePointFlowLookup? _lookup;                 // kept so a card can read a newly chosen target list's columns
+    private readonly List<string> _listIds = [];           // the distinct list IDs the flows use
     private CancellationTokenSource? _cts;
     private string? _lastOutput;
     private string? _lastReport;
 
-    public FlowsDialog(SharePointService sp, Func<string, bool, Task> prepareSite, string sourceUrl, string targetUrl, bool isMultiTenant)
+    public FlowsDialog(SharePointService sp, Func<string, bool, CancellationToken, Task> prepareSite, Func<bool, string> signedInUser,
+        Func<bool, string?> tenantId, Func<CancellationToken, bool, Task<string>> targetFormsToken,
+        Func<CancellationToken, bool, Task<string>> sourceFormsToken,
+        Func<CancellationToken, Task<string?>> signInSource, Func<CancellationToken, Task<string?>> signInTarget,
+        Func<bool, CancellationToken, Task<string?>> connectedRoot,
+        string sourceUrl, string targetUrl, bool isMultiTenant)
     {
         _sp = sp;
         _prepareSite = prepareSite;
+        _signedInUser = signedInUser;
+        _tenantId = tenantId;
+        _targetFormsToken = targetFormsToken;
+        _sourceFormsToken = sourceFormsToken;
+        _connectedRoot = connectedRoot;
+        _signInSource = signInSource;
+        _signInTarget = signInTarget;
         _isMultiTenant = isMultiTenant;
+        _vm.IsMultiTenant = isMultiTenant;
         _connectedSource = FlowMappingResolver.NormalizeSite(sourceUrl ?? "");
         _connectedTarget = FlowMappingResolver.NormalizeSite(targetUrl ?? "");
+        // Each side's tenant address is read from its signed-in account (see RefreshRootsAsync), NOT taken from the site URLs typed
+        // on the main window, which can be stale or belong to the other side.
         DataContext = _vm;
         InitializeComponent();
+
         SitesGrid.ItemsSource = _sites;
         FormsGrid.ItemsSource = _forms;
-        ValuesGrid.ItemsSource = _values;
-        ColumnsGrid.ItemsSource = _columnRows;
-        ListsGrid.ItemsSource = _listRows;
+        _valuesView = CollectionViewSource.GetDefaultView(_values);
+        _valuesView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(ValueMapRow.KindText)));
+        ValuesGrid.ItemsSource = _valuesView;
+        CardsList.ItemsSource = _cards;
+        PackagesList.ItemsSource = _vm.PackageRows;
         PackagesGrid.ItemsSource = _vm.PackageResults;
-        _vm.OutputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SharePointSmartCopy", "Flows");
-        _vm.StatusText = Loc.T("Flows_StatusStart");
+
+        // The last output folder is remembered; the first time it is Documents\SharePointSmartCopy\Flows.
+        _vm.OutputPath = FlowsUiState.Load().OutputPath is { Length: > 0 } saved
+            ? saved
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SharePointSmartCopy", "Flows");
+        _vm.PropertyChanged += OnViewModelChanged;
+        ShowConnectionStatus();
+        Loaded += async (_, _) => await RefreshRootsAsync();
+    }
+
+    private void OnViewModelChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(FlowsDialogViewModel.ShowReadFrom))
+            ReadFromColumn.Visibility = _vm.ShowReadFrom ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    // ── Connections (shown on the Sites step) ─────────────────────────────────
+
+    // "https://contoso.sharepoint.com" for any site URL on it, or "" when the text is not a URL.
+    private static string RootOf(string url) =>
+        Uri.TryCreate(url?.Trim(), UriKind.Absolute, out var u) ? $"{u.Scheme}://{u.Host}" : string.Empty;
+
+    private static string HostOf(string url) =>
+        Uri.TryCreate(url?.Trim(), UriKind.Absolute, out var u) ? u.Host : string.Empty;
+
+    // The tenant part of a SharePoint host, ignoring OneDrive's "-my": contoso-my.sharepoint.com and
+    // contoso.sharepoint.com are both "contoso".
+    private static string TenantOf(string host)
+    {
+        const string sp = ".sharepoint.com", my = "-my";
+        var h = host.EndsWith(sp, StringComparison.OrdinalIgnoreCase) ? host[..^sp.Length] : host;
+        return h.EndsWith(my, StringComparison.OrdinalIgnoreCase) ? h[..^my.Length] : h;
+    }
+
+    // Reads the tenant address of each side that is already signed in (the main window's connections), so the Source and
+    // Target lines show the tenant of the ACCOUNT, not a typed URL. Never opens a sign-in window; a side that is not signed
+    // in simply shows no address yet.
+    private async Task RefreshRootsAsync()
+    {
+        try
+        {
+            var source = await _connectedRoot(true, CancellationToken.None);
+            if (!string.IsNullOrWhiteSpace(source)) _sourceRoot = RootOf(source);
+            var target = await _connectedRoot(false, CancellationToken.None);
+            if (!string.IsNullOrWhiteSpace(target)) _targetRoot = RootOf(target);
+            ShowConnectionStatus();
+        }
+        catch (Exception ex) when (ex is not OutOfMemoryException)
+        {
+            // Only the address display depends on this; the tool works without it.
+            Log(ex.Message);
+        }
+    }
+
+    // What the dialog is signed in to right now: each side's tenant address and the account it is connected as. Single
+    // tenant: both sides are the account from the main window. Multi-tenant: each side has its own sign-in, made on the
+    // Connect step of the main window or with the buttons here.
+    private void ShowConnectionStatus()
+    {
+        ApplySide(_vm.SourceConn, _sourceRoot, _signedInUser(true));
+        ApplySide(_vm.TargetConn, _targetRoot, _signedInUser(false));
+        if (!_isMultiTenant) return;
+        FillReadFromSourceTenant();
+        UpdateSourceWarning();
+    }
+
+    private void ApplySide(SideConnection side, string root, string account)
+    {
+        if (side.State == "Waiting") return;   // a sign-in window is open; its own code sets the result
+        var signedIn = !string.IsNullOrWhiteSpace(account);
+        side.Host = HostOf(root);
+        side.Account = signedIn ? account : string.Empty;
+        side.State = signedIn ? "Connected" : "None";
+        side.Note = string.Empty;
+        side.Suffix = !_isMultiTenant && signedIn ? Loc.T("Flows_ConnMainWindowSignIn") : string.Empty;
+    }
+
+    // Puts a side back to what it really is (signed in or not) after a sign-in attempt ends.
+    private void Settle(SideConnection side)
+    {
+        side.State = "None";
+        ShowConnectionStatus();
+    }
+
+    // Hosts of flow sites whose "read from" address was filled in automatically (see FillReadFromSourceTenant).
+    private readonly HashSet<string> _autoFilledFlowHosts = new(StringComparer.OrdinalIgnoreCase);
+
+    // The flows name sites on whichever tenant they were exported from. When that is not the tenant connected as source,
+    // reading those sites from the flow's address can only fail, so "Read lists from" is filled in with the same site on the
+    // source tenant (same path, "-my" kept for OneDrive). A row the user edited is left alone; a row whose flow site IS on
+    // the source tenant goes back to the flow's own address.
+    private void FillReadFromSourceTenant()
+    {
+        _autoFilledFlowHosts.Clear();
+        if (!_isMultiTenant || _sourceRoot.Length == 0) return;
+        var root = new Uri(_sourceRoot);
+        var sourceTenant = TenantOf(root.Host);
+        foreach (var row in _sites.Where(r => !r.ReadFromEdited))
+        {
+            if (!Uri.TryCreate(row.Source, UriKind.Absolute, out var src)) continue;
+            if (TenantOf(src.Host).Equals(sourceTenant, StringComparison.OrdinalIgnoreCase))
+            {
+                if (!string.Equals(row.ReadFrom, row.Source, StringComparison.Ordinal)) row.SetReadFromAuto(row.Source);
+            }
+            else
+            {
+                row.SetReadFromAuto(TargetHostFor(src, root) + src.AbsolutePath.TrimEnd('/'));
+                _autoFilledFlowHosts.Add(src.Host);
+            }
+        }
+        // Show the advanced column when the tool changed something there, so the correction is visible.
+        if (_autoFilledFlowHosts.Count > 0) _vm.ShowReadFrom = true;
+    }
+
+    // Under the connections: ONE message, chosen by priority. A site that is on the target tenant (a package this tool wrote);
+    // a site still read from a tenant other than the source; or a note about what was filled in automatically.
+    private void UpdateSourceWarning()
+    {
+        _vm.ShowRemoveTargetPackages = false;
+        if (!_isMultiTenant) { _vm.SourceWarning = string.Empty; return; }
+        var sourceHost = _sourceRoot.Length > 0 ? new Uri(_sourceRoot).Host : string.Empty;
+        var sourceTenant = sourceHost.Length > 0 ? TenantOf(sourceHost) : string.Empty;
+        var others = _sites
+            .Select(r => HostOf(string.IsNullOrWhiteSpace(r.ReadFrom) ? r.Source : r.ReadFrom))
+            .Where(h => h.Length > 0 && !TenantOf(h).Equals(sourceTenant, StringComparison.OrdinalIgnoreCase))
+            .Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        // Flows whose own sites are on the TARGET tenant were most likely written by this tool already (or exported from the
+        // target): there is nothing left to move, and the source lookups cannot work on them. Before the target sign-in, the
+        // target address saved on the main window is good enough for this check.
+        var targetForCheck = _targetRoot.Length > 0 ? _targetRoot : RootOf(_connectedTarget);
+        var onTarget = targetForCheck.Length == 0 ? [] : _sites
+            .Select(r => HostOf(r.Source))
+            .Where(h => h.Length > 0 && TenantOf(h).Equals(TenantOf(HostOf(targetForCheck)), StringComparison.OrdinalIgnoreCase)
+                        && !TenantOf(h).Equals(sourceTenant, StringComparison.OrdinalIgnoreCase))
+            .Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+        // Source and target on one tenant: Multi-tenant mode cannot route that.
+        if (sourceTenant.Length > 0 && _targetRoot.Length > 0 && TenantOf(HostOf(_targetRoot)).Equals(sourceTenant, StringComparison.OrdinalIgnoreCase))
+        {
+            _vm.SourceWarning = Loc.T("Flows_SameTenantBoth", sourceHost);
+            return;
+        }
+        if (onTarget.Count > 0)
+        {
+            _vm.SourceWarning = Loc.T("Flows_FlowsOnTarget", string.Join(", ", onTarget));
+            _vm.ShowRemoveTargetPackages = true;
+            return;
+        }
+
+        if (sourceHost.Length == 0) { _vm.SourceWarning = string.Empty; return; }
+        _vm.SourceWarning = others.Count > 0 ? Loc.T("Flows_SourceWarn", string.Join(", ", others), sourceHost)
+            : _autoFilledFlowHosts.Count > 0 ? Loc.T("Flows_SourceAutoFilled", string.Join(", ", _autoFilledFlowHosts), sourceHost)
+            : string.Empty;
+    }
+
+    private async void ConnectSource_Click(object sender, RoutedEventArgs e) => await ConnectSideAsync(isSource: true);
+    private async void ConnectTarget_Click(object sender, RoutedEventArgs e) => await ConnectSideAsync(isSource: false);
+
+    // "Change source…" / "Sign in to target…": always opens the sign-in window (so it also switches account or browser),
+    // then reads that tenant's SharePoint address from the account and shows it. For the target it also fills the empty
+    // target sites from that address. No site has to be typed first. While it waits, the button is replaced by Cancel.
+    private async Task ConnectSideAsync(bool isSource)
+    {
+        var side = isSource ? _vm.SourceConn : _vm.TargetConn;
+        _vm.ConnectingSide = isSource ? "source" : "target";
+        side.State = "Waiting";
+        side.Note = Loc.T("Flows_ConnWaiting");
+        try
+        {
+            await RunAsync(Loc.T(isSource ? "Flows_ConnectingSource" : "Flows_ConnectingTarget"), async ct =>
+            {
+                try
+                {
+                    Log(Loc.T(isSource ? "Flows_LogConnectSource" : "Flows_LogConnectTarget"));
+                    var root = await (isSource ? _signInSource(ct) : _signInTarget(ct));
+                    Settle(side);
+                    if (string.IsNullOrWhiteSpace(root)) return;   // single tenant: nothing to infer
+
+                    var host = new Uri(root);
+                    var who = _signedInUser(isSource);
+                    if (isSource) _sourceRoot = RootOf(root); else _targetRoot = RootOf(root);
+                    _vm.ShowManualHost = false;
+                    Log(Loc.T(isSource ? "Flows_LogConnectedSource" : "Flows_LogConnectedTarget", who, root));
+                    ShowConnectionStatus();
+
+                    if (isSource)
+                    {
+                        _vm.StatusText = Loc.T("Flows_ConnSourceDone", host.Host);
+                        return;
+                    }
+
+                    var filled = FillTargetsFromHost(host);
+                    AutoFillFromSignIns();
+
+                    // If the flows turn out to be on the target (or both sides are one tenant), the warning under the connections
+                    // says so once; the sign-in itself worked, so the target stays "Connected".
+                    _vm.StatusText = filled > 0 ? Loc.T("Flows_ConnTargetFilled", filled, host.Host) : Loc.T("Flows_ConnTargetNothingToFill");
+                }
+                catch (OperationCanceledException)
+                {
+                    Settle(side);
+                    side.Note = Loc.T("Flows_ConnCancelled");
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    // The sign-in failed, or it worked but the address could not be read: say why. For the target, offer the
+                    // manual address box (unless the problem is "same tenant", which an address does not fix).
+                    Settle(side);
+                    side.State = "Error";
+                    side.Note = Loc.T("Flows_ConnFailed", ex.Message);
+                    if (!isSource) _vm.ShowManualHost = ex is not InvalidOperationException;
+                    Log(ex.Message, important: true);
+                    _vm.StatusText = Loc.T(isSource ? "Flows_ConnSourceFailed" : "Flows_ConnInferFailed");
+                }
+            });
+        }
+        finally
+        {
+            _vm.ConnectingSide = string.Empty;
+            if (side.State == "Waiting") Settle(side);
+        }
     }
 
     // ── Step 1: packages (scan runs automatically when files are added) ───────
@@ -76,13 +338,86 @@ public partial class FlowsDialog : Window
 
     private void ClearPackages_Click(object sender, RoutedEventArgs e) => ResetAll();
 
-    private async Task AddAndScanAsync(IEnumerable<string> paths)
+    // Dropping .zip files (or a folder of them) onto the Packages step adds them, same as the buttons.
+    private void Packages_DragOver(object sender, DragEventArgs e)
     {
-        foreach (var p in paths)
-            if (!_zips.Contains(p, StringComparer.OrdinalIgnoreCase)) _zips.Add(p);
-        _vm.PackagesText = string.Join("; ", _zips.Select(Path.GetFileName));
+        e.Effects = !_vm.IsBusy && e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
+        e.Handled = true;
+    }
+
+    private async void Packages_Drop(object sender, DragEventArgs e)
+    {
+        if (_vm.IsBusy || e.Data.GetData(DataFormats.FileDrop) is not string[] items) return;
+        var zips = new List<string>();
+        foreach (var item in items)
+        {
+            if (Directory.Exists(item)) zips.AddRange(Directory.GetFiles(item, "*.zip"));
+            else if (item.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)) zips.Add(item);
+        }
+        if (zips.Count > 0) await AddAndScanAsync(zips);
+    }
+
+    private async void RemovePackage_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.IsBusy || (sender as FrameworkElement)?.DataContext is not PackageRow row) return;
+        _zips.RemoveAll(z => string.Equals(z, row.FullPath, StringComparison.OrdinalIgnoreCase));
+        _rewritten.Remove(row.FullPath);
+        RefreshPackageWarning();
+        if (_zips.Count == 0) { ResetAll(); return; }
         await ScanAsync();
     }
+
+    // "Remove them" in the warning: drops every package whose sites are all on the TARGET tenant (a package this tool wrote),
+    // so the original exports can be added instead.
+    private async void RemoveTargetPackages_Click(object sender, RoutedEventArgs e)
+    {
+        if (_vm.IsBusy) return;
+        var targetForCheck = _targetRoot.Length > 0 ? _targetRoot : RootOf(_connectedTarget);
+        if (targetForCheck.Length == 0) return;
+        var targetTenant = TenantOf(HostOf(targetForCheck));
+        var drop = _zips.Where(z => _zipScans.TryGetValue(z, out var flows) && AllSitesOnTenant(flows, targetTenant)).ToList();
+        if (drop.Count == 0) return;
+        foreach (var z in drop) { _zips.Remove(z); _rewritten.Remove(z); }
+        RefreshPackageWarning();
+        Log(Loc.T("Flows_LogRemovedTargetPackages", drop.Count, string.Join(", ", drop.Select(Path.GetFileName))), important: true);
+        if (_zips.Count == 0)
+        {
+            ResetAll();
+            _vm.StatusText = Loc.T("Flows_RemovedAllAddOriginals");
+            return;
+        }
+        await ScanAsync();
+    }
+
+    private static bool AllSitesOnTenant(List<FlowScan> flows, string tenant)
+    {
+        var hosts = flows.SelectMany(f => f.Findings).Where(f => f.Kind == FindingKind.SiteUrl && !f.Value.StartsWith('@'))
+            .Select(f => HostOf(f.Value)).Where(h => h.Length > 0).ToList();
+        return hosts.Count > 0 && hosts.All(h => TenantOf(h).Equals(tenant, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task AddAndScanAsync(IEnumerable<string> paths)
+    {
+        var added = new List<string>();
+        foreach (var p in paths)
+            if (!_zips.Contains(p, StringComparer.OrdinalIgnoreCase)) { _zips.Add(p); added.Add(p); }
+
+        // A package this tool wrote keeps the original's file name but already holds the TARGET addresses, so it is easy to
+        // add by mistake. Recognized by content, wherever it was copied to.
+        var found = await Task.Run(() => added.Select(p => (Path: p, Entry: FlowOutputLog.Find(p))).Where(x => x.Entry is not null).ToList());
+        foreach (var (path, entry) in found)
+        {
+            _rewritten[path] = entry!;
+            Log(Loc.T("Flows_AlreadyRewritten", Path.GetFileName(path), entry!.WrittenAt.LocalDateTime.ToString("g")), important: true);
+        }
+        RefreshPackageWarning();
+        await ScanAsync();
+    }
+
+    // The step-1 warning lists the packages in the list that this tool wrote.
+    private void RefreshPackageWarning() =>
+        _vm.PackageWarning = string.Join("\n", _zips.Where(_rewritten.ContainsKey)
+            .Select(z => Loc.T("Flows_AlreadyRewritten", Path.GetFileName(z), _rewritten[z].WrittenAt.LocalDateTime.ToString("g"))));
 
     private async Task ScanAsync()
     {
@@ -90,21 +425,37 @@ public partial class FlowsDialog : Window
         await RunAsync(Loc.T("Flows_Scanning"), async ct =>
         {
             var scans = new List<FlowScan>();
+            var perZip = new Dictionary<string, List<FlowScan>>(StringComparer.OrdinalIgnoreCase);
+            var unreadable = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            Log(Loc.T("Flows_LogScanStart", _zips.Count));
             await Task.Run(() =>
             {
                 foreach (var zip in _zips)
                 {
                     ct.ThrowIfCancellationRequested();
-                    try { scans.AddRange(FlowScanner.ScanPackage(zip)); }
+                    try
+                    {
+                        var found = FlowScanner.ScanPackage(zip).ToList();
+                        perZip[zip] = found;
+                        scans.AddRange(found);
+                        Log(Loc.T("Flows_LogScanned", Path.GetFileName(zip), found.Count));
+                    }
                     catch (Exception ex) when (ex is InvalidDataException or IOException or System.Text.Json.JsonException)
                     {
+                        unreadable.Add(zip);
                         AppendLog(Loc.T("Flows_LogBadPackage", Path.GetFileName(zip), ex.Message));
+                        Log(Loc.T("Flows_LogBadPackage", Path.GetFileName(zip), ex.Message), important: true);
                     }
                 }
             }, ct);
             _scans = scans;
+            _zipScans = perZip;
+            _formNamesAttempted = false;
             _resolved = null;
-            _columnRows.Clear();
+            _cards.Clear();
+            _vm.HasCards = false;
+            _vm.MatchSummary.Text = string.Empty;
+            BuildPackageRows(perZip, unreadable);
             FillRowsFromScan();
             ShowResources(scans);
 
@@ -117,8 +468,34 @@ public partial class FlowsDialog : Window
                     f.Where(x => x.Kind == FindingKind.SiteUrl).Select(x => x.Value).Distinct().Count(),
                     f.Where(x => x.Kind == FindingKind.ListId).Select(x => x.Value).Distinct().Count(),
                     f.Where(x => x.Kind == FindingKind.FormId).Select(x => x.Value).Distinct().Count());
-            _vm.StatusText = scans.Count == 0 ? Loc.T("Flows_NoFlowsFound") : Loc.T("Flows_ScanDoneNext");
+            _vm.StatusText = scans.Count == 0 ? Loc.T("Flows_NoFlowsFound") : string.Empty;
         });
+    }
+
+    // One row per added package: the flows found in it, how many sites and lists they use, and whether anything is off.
+    private void BuildPackageRows(Dictionary<string, List<FlowScan>> perZip, HashSet<string> unreadable)
+    {
+        _vm.PackageRows.Clear();
+        foreach (var zip in _zips)
+        {
+            var flows = perZip.GetValueOrDefault(zip) ?? [];
+            var (status, level) =
+                unreadable.Contains(zip) ? (Loc.T("Flows_Pkg_Unreadable"), "Error")
+                : _rewritten.ContainsKey(zip) ? (Loc.T("Flows_Pkg_Rewritten"), "Look")
+                : flows.Count == 0 ? (Loc.T("Flows_Pkg_NoFlows"), "Look")
+                : (Loc.T("Flows_Pkg_Flows", flows.Count), "Ready");
+            var findings = flows.SelectMany(s => s.Findings).Where(x => !x.Value.StartsWith('@')).ToList();
+            _vm.PackageRows.Add(new PackageRow
+            {
+                FileName = Path.GetFileName(zip),
+                FullPath = zip,
+                FlowNames = string.Join(", ", flows.Select(s => s.FlowName)),
+                SiteCount = findings.Where(x => x.Kind == FindingKind.SiteUrl).Select(x => FlowMappingResolver.NormalizeSite(x.Value)).Distinct(StringComparer.OrdinalIgnoreCase).Count(),
+                ListCount = findings.Where(x => x.Kind == FindingKind.ListId).Select(x => x.Value).Distinct(StringComparer.OrdinalIgnoreCase).Count(),
+                StatusText = status,
+                StatusLevel = level,
+            });
+        }
     }
 
     private void FillRowsFromScan()
@@ -132,23 +509,25 @@ public partial class FlowsDialog : Window
             // The site the user connected as source maps to the connected target by default.
             var target = _connectedTarget.Length > 0 && string.Equals(norm, _connectedSource, StringComparison.OrdinalIgnoreCase)
                 ? _connectedTarget : string.Empty;
-            _sites.Add(new SiteRow { Source = norm, Target = target });
+            var row = new SiteRow { Source = norm, Target = target };
+            row.SetReadFromAuto(norm);
+            row.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(SiteRow.ReadFrom)) { _resolved = null; UpdateSourceWarning(); } };
+            _sites.Add(row);
         }
         _vm.HasSites = _sites.Count > 0;
 
-        _listRows.Clear();
-        foreach (var id in _scans.SelectMany(s => s.Findings).Where(f => f.Kind == FindingKind.ListId && !f.Value.StartsWith('@'))
-                     .Select(f => f.Value).Distinct(StringComparer.OrdinalIgnoreCase))
-            _listRows.Add(new ListMapRow { SourceListId = id, Title = Loc.T("Flows_NotResolvedYet") });
+        _listIds.Clear();
+        _listIds.AddRange(_scans.SelectMany(s => s.Findings).Where(f => f.Kind == FindingKind.ListId && !f.Value.StartsWith('@'))
+                     .Select(f => f.Value).Distinct(StringComparer.OrdinalIgnoreCase));
 
         _forms.Clear();
         var saved = FormsIdMapStore.Load();
         foreach (var id in _scans.SelectMany(s => s.Findings).Where(f => f.Kind == FindingKind.FormId).Select(f => f.Value).Distinct())
         {
             saved.TryGetValue(id, out var fromCopy);
-            var row = new FormMapRow { SourceId = id, NewId = fromCopy?.NewId ?? "" };
-            row.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(FormMapRow.NewId)) row.Note = FormNote(row, fromCopy); };
-            row.Note = FormNote(row, fromCopy);
+            var row = new FormMapRow { Options = _targetForms, SourceId = id, SourceTitle = fromCopy?.SourceTitle ?? "", NewId = fromCopy?.NewId ?? "" };
+            row.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(FormMapRow.NewId)) ShowFormNote(row, fromCopy); };
+            ShowFormNote(row, fromCopy);
             _forms.Add(row);
         }
         _vm.HasForms = _forms.Count > 0;
@@ -167,51 +546,252 @@ public partial class FlowsDialog : Window
         _vm.HasValues = _values.Count > 0;
 
         if (_loaded is not null) ApplyLoadedMapping(_loaded);
-    }
-
-    // What to tell the user about the form ID in a row: where it came from, or why it looks wrong.
-    private string FormNote(FormMapRow row, FormsMapEntry? fromCopy)
-    {
-        if (string.IsNullOrWhiteSpace(row.NewId)) return string.Empty;
-        var id = FlowIdParser.ParseFormId(row.NewId);
-        if (id is null) return Loc.T("Flows_FormNoteBadId");
-        if (string.Equals(id, row.SourceId, StringComparison.Ordinal)) return Loc.T("Flows_FormNoteSameAsSource");
-
-        // A form's ID carries its tenant. The copy must be in the target's tenant: a different one from the source when
-        // copying across tenants, the same one within a tenant.
-        if (FlowScanner.TryGetFormTenant(row.SourceId) is { } sourceTenant && FlowScanner.TryGetFormTenant(id) is { } copyTenant)
-        {
-            if (_isMultiTenant && sourceTenant == copyTenant) return Loc.T("Flows_FormNoteSameTenant");
-            if (!_isMultiTenant && sourceTenant != copyTenant) return Loc.T("Flows_FormNoteOtherTenant");
-        }
-        if (fromCopy is not null && string.Equals(fromCopy.NewId, id, StringComparison.Ordinal))
-            return fromCopy.CopiedAt is { } at ? Loc.T("Flows_FormNoteFromCopy", at.LocalDateTime.ToString("d"), fromCopy.TargetAccount ?? "") : Loc.T("Flows_FormNoteFromCopyOld");
-        return string.Empty;
+        AutoFillFromSignIns();   // after a loaded mapping, so loaded values win
+        ShowConnectionStatus();  // refreshes the "flows point at another tenant" warning for the new site list
     }
 
     // What the scanned flows use: one row per service with counts and how the tool handles it.
     private void ShowResources(IReadOnlyList<FlowScan> scans)
     {
-        ResourcesGrid.ItemsSource = FlowResources.Summarize(scans).Select(r => new
+        var rows = FlowResources.Summarize(scans);
+        ResourcesGrid.ItemsSource = rows.Select(r => new
         {
             r.Service, r.Flows, r.Operations, r.Detail,
             HandlingText = Loc.T("Flows_Handling_" + r.Handling),
         }).ToList();
+        _vm.ResourcesHeaderText = Loc.T("Flows_ResourcesHeaderCount", rows.Count);
+    }
+
+    // ── Activity strip ────────────────────────────────────────────────────────
+
+    private void ToggleActivity_Click(object sender, RoutedEventArgs e)
+    {
+        _vm.IsActivityOpen = !_vm.IsActivityOpen;
+        if (_vm.IsActivityOpen) ActivityBox.ScrollToEnd();
+    }
+
+    // ── Form names: the flows' forms on the source, the forms in the target ───
+
+    // The flow stores only a form's ID, so its title comes from Microsoft Forms. One action reads both sides:
+    //   source: the title of each form the flows use (the account's own forms, then each remaining ID on its own, which
+    //           covers a form shared with the account);
+    //   target: the forms the target account owns, for the dropdown on each row.
+    // Each side reports for itself (what it found, or why not), so a problem on one side never hides the other, and the
+    // result is always shown under the button. Then every form whose title matches exactly one target form is matched.
+    private async void LoadFormNames_Click(object sender, RoutedEventArgs e) => await LoadFormNamesAsync();
+
+    private async Task LoadFormNamesAsync()
+    {
+        _formNamesAttempted = true;
+        await RunAsync(Loc.T("Flows_LoadingFormNames"), async ct =>
+        {
+            var lines = new List<string>();
+            try
+            {
+                lines.Add(await LoadSourceTitlesAsync(ct));
+                lines.Add(await LoadTargetFormsAsync(ct));
+                var matched = SuggestFormsByTitle();
+                if (matched > 0) lines.Add(Loc.T("Flows_FormsMatchedByName", matched));
+            }
+            catch (OperationCanceledException)
+            {
+                lines.Add(Loc.T("Flows_TargetFormsCancelled"));
+                throw;
+            }
+            finally { _vm.TargetFormsText = string.Join("\n", lines); }
+        });
+    }
+
+    private async Task<string> LoadSourceTitlesAsync(CancellationToken ct)
+    {
+        var account = _signedInUser(true);
+        try
+        {
+            Log(Loc.T("Flows_LogLoadSourceForms", account));
+            var client = new FormsApiClient(_sourceFormsToken);
+            var owned = (await client.ListFormsAsync(ct)).GroupBy(f => f.Id).ToDictionary(g => g.Key, g => g.First().Title);
+            var found = 0;
+            foreach (var row in _forms)
+            {
+                if (owned.TryGetValue(row.SourceId, out var title) && title.Length > 0) { row.SourceTitle = title; found++; continue; }
+                // Not one of the account's own forms (shared with it, or owned by a group): ask for this one by its ID.
+                if (await client.GetFormTitleAsync(row.SourceId, ct) is { Length: > 0 } byId) { row.SourceTitle = byId; found++; }
+            }
+            var text = Loc.T("Flows_SourceTitlesLoaded", found, _forms.Count, account);
+            Log(text);
+            return text;
+        }
+        catch (OperationCanceledException) { throw; }
+        catch (Exception ex)
+        {
+            Log(ex.Message, important: true);
+            return Loc.T("Flows_SourceTitlesFailed", ex.Message) + (FormsDialog.HelpFor(ex) is { } h ? " " + h : "");
+        }
+    }
+
+    private async Task<string> LoadTargetFormsAsync(CancellationToken ct)
+    {
+        var account = _signedInUser(false);
+        try
+        {
+            Log(Loc.T("Flows_LogLoadTargetForms", account));
+            var forms = await new FormsApiClient(_targetFormsToken).ListFormsAsync(ct);
+            _targetForms.Clear();
+            _targetForms.Add(new TargetFormOption(string.Empty, Loc.T("Flows_FormNone")));
+            foreach (var f in forms.OrderBy(f => f.Title, StringComparer.CurrentCultureIgnoreCase))
+                _targetForms.Add(new TargetFormOption(f.Id, f.Title.Length == 0 ? Loc.T("Flows_FormUntitled") : f.Title));
+            foreach (var row in _forms) row.RefreshPicked();
+            var text = forms.Count == 0 ? Loc.T("Flows_TargetFormsNone", account) : Loc.T("Flows_TargetFormsLoaded", forms.Count, account);
+            Log(text);
+            return text;
+        }
+        catch (OperationCanceledException) { throw; }
+        catch (Exception ex)
+        {
+            Log(ex.Message, important: true);
+            return Loc.T("Flows_TargetFormsFailed", ex.Message) + (FormsDialog.HelpFor(ex) is { } h ? " " + h : "");
+        }
+    }
+
+    // A form with no target yet is matched to the target form that has the same title (or the same title plus " (copy)",
+    // which is what the Forms tool names a copy), when exactly one does. Never touches a row that already has a target.
+    private int SuggestFormsByTitle()
+    {
+        var real = _targetForms.Where(o => o.Id.Length > 0).ToList();
+        var matched = 0;
+        foreach (var row in _forms.Where(r => string.IsNullOrWhiteSpace(r.NewId) && r.SourceTitle.Length > 0))
+        {
+            var hits = real.Where(o => string.Equals(o.Title, row.SourceTitle, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (hits.Count != 1) hits = real.Where(o => string.Equals(o.Title, row.SourceTitle + " (copy)", StringComparison.OrdinalIgnoreCase)).ToList();
+            if (hits.Count != 1) continue;
+            row.NewId = hits[0].Id;
+            if (row.Note.Length == 0 || row.StatusLevel == "Ready") { row.Note = Loc.T("Flows_FormNoteMatchedByName"); row.StatusLevel = "Ready"; }   // keep a warning the new ID raised
+            matched++;
+        }
+        return matched;
+    }
+    // ── Fill in what the sign-ins already tell us ─────────────────────────────
+
+    // Fills EMPTY cells only (never anything you typed or loaded), and says so in the row, so each value can be checked:
+    //   - the target tenant ID, from the target sign-in (Multi-tenant; in Single tenant the tenant doesn't change);
+    //   - the source account's own address -> the target account's address;
+    //   - the email domain, when the two accounts are on different domains and the flows use the source domain.
+    private void AutoFillFromSignIns()
+    {
+        var sourceUser = _signedInUser(true).Trim();
+        var targetUser = _signedInUser(false).Trim();
+
+        if (_isMultiTenant && _tenantId(false) is { Length: > 0 } targetTenant)
+        {
+            foreach (var r in _values.Where(r => r.Category == "Tenant" && string.IsNullOrWhiteSpace(r.Target)
+                                                 && !string.Equals(r.Source, targetTenant, StringComparison.OrdinalIgnoreCase)))
+            {
+                r.Target = targetTenant;
+                r.Note = Loc.T("Flows_NoteTenant", _signedInUser(false));
+            }
+        }
+
+        if (sourceUser.Length > 0 && targetUser.Length > 0 && !string.Equals(sourceUser, targetUser, StringComparison.OrdinalIgnoreCase))
+        {
+            foreach (var r in _values.Where(r => r.Category == "Email" && string.IsNullOrWhiteSpace(r.Target)
+                                                 && string.Equals(r.Source, sourceUser, StringComparison.OrdinalIgnoreCase)))
+            {
+                r.Target = targetUser;
+                r.Note = Loc.T("Flows_NoteAccount");
+            }
+
+            var sourceDomain = DomainOf(sourceUser);
+            var targetDomain = DomainOf(targetUser);
+            if (sourceDomain.Length > 0 && targetDomain.Length > 0 && !sourceDomain.Equals(targetDomain, StringComparison.OrdinalIgnoreCase)
+                && string.IsNullOrWhiteSpace(DomainFromBox.Text) && string.IsNullOrWhiteSpace(DomainToBox.Text)
+                && _values.Any(r => r.Category == "Email" && DomainOf(r.Source).Equals(sourceDomain, StringComparison.OrdinalIgnoreCase)))
+            {
+                DomainFromBox.Text = sourceDomain;
+                DomainToBox.Text = targetDomain;
+                _vm.DomainNote = Loc.T("Flows_NoteDomain", sourceUser, targetUser);
+            }
+        }
+        _vm.HasAutofill = _values.Any(v => v.HasNote) || _vm.HasDomainNote;
+    }
+
+    // "Clear values filled in automatically": empties every cell the tool filled from the sign-ins, and the email domain.
+    private void ClearAutofill_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var r in _values.Where(v => v.HasNote)) r.Target = string.Empty;   // editing a value also clears its note
+        if (_vm.HasDomainNote)
+        {
+            DomainFromBox.Text = string.Empty;
+            DomainToBox.Text = string.Empty;
+            _vm.DomainNote = string.Empty;
+        }
+        _vm.HasAutofill = false;
+    }
+
+    private static string DomainOf(string email)
+    {
+        var at = email.LastIndexOf('@');
+        return at >= 0 && at < email.Length - 1 ? email[(at + 1)..].Trim() : string.Empty;
+    }
+
+    // What to tell the user about the form ID in a row: where it came from, or why it looks wrong.
+    private void ShowFormNote(FormMapRow row, FormsMapEntry? fromCopy)
+    {
+        var (text, level) = FormNote(row, fromCopy);
+        row.Note = text;
+        row.StatusLevel = level;
+    }
+
+    private (string Text, string Level) FormNote(FormMapRow row, FormsMapEntry? fromCopy)
+    {
+        if (string.IsNullOrWhiteSpace(row.NewId)) return (string.Empty, "Info");
+        var id = FlowIdParser.ParseFormId(row.NewId);
+        if (id is null) return (Loc.T("Flows_FormNoteBadId"), "Look");
+        if (string.Equals(id, row.SourceId, StringComparison.Ordinal)) return (Loc.T("Flows_FormNoteSameAsSource"), "Look");
+
+        // A form's ID carries its tenant. The copy must be in the target's tenant: a different one from the source when
+        // copying across tenants, the same one within a tenant.
+        if (FlowScanner.TryGetFormTenant(row.SourceId) is { } sourceTenant && FlowScanner.TryGetFormTenant(id) is { } copyTenant)
+        {
+            if (_isMultiTenant && sourceTenant == copyTenant) return (Loc.T("Flows_FormNoteSameTenant"), "Look");
+            if (!_isMultiTenant && sourceTenant != copyTenant) return (Loc.T("Flows_FormNoteOtherTenant"), "Look");
+        }
+        if (fromCopy is not null && string.Equals(fromCopy.NewId, id, StringComparison.Ordinal))
+            return (fromCopy.CopiedAt is { } at ? Loc.T("Flows_FormNoteFromCopy", at.LocalDateTime.ToString("d"), fromCopy.TargetAccount ?? "") : Loc.T("Flows_FormNoteFromCopyOld"), "Ready");
+        return (Loc.T("Flows_FormNoteOk"), "Ready");
     }
 
     // ── Step 2: sites ─────────────────────────────────────────────────────────
 
     private void FillHost_Click(object sender, RoutedEventArgs e)
     {
-        if (!Uri.TryCreate(HostBox.Text.Trim(), UriKind.Absolute, out var host))
+        // "contoso.sharepoint.com" without https:// is accepted too.
+        var typed = HostBox.Text.Trim();
+        if (typed.Length > 0 && !typed.Contains("://")) typed = "https://" + typed;
+        if (!Uri.TryCreate(typed, UriKind.Absolute, out var host))
         {
             _vm.StatusText = Loc.T("Flows_BadHost");
             return;
         }
+
+        var emptyBefore = _sites.Count(r => string.IsNullOrWhiteSpace(r.Target));
+        var filled = FillTargetsFromHost(host);
+        _vm.StatusText = filled > 0 ? Loc.T("Flows_HostFilledCount", filled)
+            : emptyBefore == 0 ? Loc.T("Flows_HostNothingToFill")
+            : Loc.T("Flows_BadHost");
+    }
+
+    // Gives every source site that has no target yet the same path on the given tenant address. Targets already there
+    // (the connected site's default, or one you typed) are left alone. Returns how many were filled.
+    private int FillTargetsFromHost(Uri host)
+    {
+        var filled = 0;
         foreach (var row in _sites.Where(r => string.IsNullOrWhiteSpace(r.Target)))
             if (Uri.TryCreate(row.Source, UriKind.Absolute, out var src))
+            {
                 row.Target = TargetHostFor(src, host) + src.AbsolutePath.TrimEnd('/');
-        _vm.StatusText = Loc.T("Flows_HostFilled");
+                filled++;
+            }
+        return filled;
     }
 
     // OneDrive sites live on the tenant's "-my" host (contoso-my.sharepoint.com), so each source keeps its kind of
@@ -243,73 +823,194 @@ public partial class FlowsDialog : Window
     private async Task ResolveAsync()
     {
         var siteMap = SiteMap();
-        if (_listRows.Count == 0)
+        if (_listIds.Count == 0)
         {
-            _vm.MatchSummaryText = Loc.T("Flows_NoListsFound");
-            _vm.StatusText = Loc.T("Flows_NoListsFound");
+            ShowMatchSummary(Loc.T("Flows_NoListsFound"), "Info");
             return;
         }
         if (siteMap.Count == 0)
         {
-            _vm.MatchSummaryText = Loc.T("Flows_NoSiteTargets");
-            _vm.StatusText = Loc.T("Flows_NoSiteTargets");
+            ShowMatchSummary(Loc.T("Flows_NoSiteTargets"), "Look");
             return;
         }
 
         await RunAsync(Loc.T("Flows_Resolving"), async ct =>
         {
             _vm.ClearNotes();
-            var lookup = new SharePointFlowLookup(_sp, _prepareSite, AppendLog);
-            // Targets the user typed or pasted win over name matching (this is how lists with different names are mapped).
-            var overrides = _listRows.Where(r => r.UserEdited)
-                .Select(r => (r.SourceListId, Target: FlowIdParser.ParseListId(r.TargetListId)))
-                .Where(x => x.Target is not null)
-                .ToDictionary(x => x.SourceListId, x => x.Target!, StringComparer.OrdinalIgnoreCase);
-            _resolved = await FlowMappingResolver.ResolveAsync(_scans, siteMap, lookup, ct, overrides);
+            Log(Loc.T("Flows_LogResolveStart", _listIds.Count));
+            _lookup = new SharePointFlowLookup(_sp, _prepareSite, AppendLog);
 
-            foreach (var l in _resolved.Lists)
-            {
-                var row = _listRows.FirstOrDefault(r => string.Equals(r.SourceListId, l.SourceListId, StringComparison.OrdinalIgnoreCase));
-                if (row is null) { row = new ListMapRow { SourceListId = l.SourceListId }; _listRows.Add(row); }
-                row.SetResolved(l.Title ?? Loc.T("Flows_NotFound"), l.TargetListId, Loc.T("Flows_ListStatus_" + l.Status));
-            }
-            ShowColumnRows(_resolved);
+            // Targets the user chose or typed win over name matching (this is how lists with different names are mapped),
+            // and so do the ones from a loaded mapping.
+            var overrides = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            if (_loaded is not null)
+                foreach (var (source, target) in _loaded.Lists)
+                    if (FlowIdParser.ParseListId(target) is { } loadedId) overrides[source] = loadedId;
+            foreach (var c in _cards.Where(c => c.UserEdited))
+                if (FlowIdParser.ParseListId(c.TargetListId) is { } id) overrides[c.SourceListId] = id;
+
+            // Column choices the user made are put back after the cards are rebuilt.
+            var kept = _cards.SelectMany(c => c.Columns.Where(r => r.UserEdited).Select(r => (c.SourceListId, r.SourceColumn, r.Selected))).ToList();
+
+            _lastReadMap = _sites.Where(r => !string.IsNullOrWhiteSpace(r.ReadFrom) && !string.Equals(FlowMappingResolver.NormalizeSite(r.ReadFrom), FlowMappingResolver.NormalizeSite(r.Source), StringComparison.OrdinalIgnoreCase))
+                .ToDictionary(r => FlowMappingResolver.NormalizeSite(r.Source), r => FlowMappingResolver.NormalizeSite(r.ReadFrom), StringComparer.OrdinalIgnoreCase);
+            _resolved = await FlowMappingResolver.ResolveAsync(_scans, siteMap, _lookup, ct, overrides, line => Log(line), _lastReadMap);
+            ShowConnectionStatus();
+            AutoFillFromSignIns();
+            BuildCards(_resolved, kept);
 
             foreach (var n in _resolved.Notes) AppendLog(n);
-            var matched = _resolved.Lists.Count(l => l.Status is ListMatchStatus.Matched or ListMatchStatus.Manual);
-            _vm.MatchSummaryText = Loc.T("Flows_ResolveDone", matched, _resolved.Lists.Count,
-                _resolved.Columns.Count(c => c.Status is ColumnMatchStatus.Renamed or ColumnMatchStatus.Similar),
-                _resolved.Columns.Count(c => c.Status == ColumnMatchStatus.NotFoundInTarget));
-            _vm.StatusText = _vm.MatchSummaryText;
+            Log(Loc.T("Flows_LogResolveDone", _vm.MatchSummary.Text));
         });
     }
 
-    // One editable row per column the flows use on a matched list. The target dropdown lists that target list's
-    // columns, pre-selected by the automapper; "(leave unchanged)" keeps the source name.
-    private void ShowColumnRows(FlowResolveResult resolved)
+    private void ShowMatchSummary(string text, string level)
     {
-        _columnRows.Clear();
-        static int Rank(ColumnMatchStatus s) => s switch
+        _vm.MatchSummary.Text = text;
+        _vm.MatchSummary.StatusLevel = level;
+    }
+
+    // "3 lists · 2 ready · 1 needs a look", recomputed whenever a card changes so it never disagrees with the cards.
+    private void UpdateMatchSummary()
+    {
+        if (_cards.Count == 0) { _vm.MatchSummary.Text = string.Empty; return; }
+        var look = _cards.Count(c => c.NeedsAttention);
+        ShowMatchSummary(look == 0 ? Loc.T("Flows_Summary_AllReady", _cards.Count) : Loc.T("Flows_Summary_Cards", _cards.Count, _cards.Count - look, look),
+                         look == 0 ? "Ready" : "Look");
+    }
+
+    // The flows that use a list, for the card's "Used by" line.
+    private IReadOnlyList<string> FlowsUsing(string listId) => _scans
+        .Where(s => s.Findings.Any(f => f.Kind == FindingKind.ListId && string.Equals(f.Value, listId, StringComparison.OrdinalIgnoreCase)))
+        .Select(s => s.FlowName).Distinct().ToList();
+
+    // The target lists of one site as dropdown choices, with a leading "(none)". One collection per site, shared by every
+    // card on it.
+    private ObservableCollection<TargetListOption> TargetOptionsFor(string? targetSite, FlowResolveResult resolved)
+    {
+        var none = new TargetListOption(string.Empty, Loc.T("Flows_TargetNone"));
+        if (string.IsNullOrEmpty(targetSite)) return [none];
+        if (!_targetListOptions.TryGetValue(targetSite, out var options)) _targetListOptions[targetSite] = options = [];
+        options.Clear();
+        options.Add(none);
+        foreach (var l in (resolved.TargetListsBySite.GetValueOrDefault(targetSite) ?? []).OrderBy(l => l.Title, StringComparer.CurrentCultureIgnoreCase))
+            options.Add(new TargetListOption(l.Id, l.Title));
+        return options;
+    }
+
+    // One card per list: its name and columns on the source, the target list (the same-named one by default, a dropdown of
+    // every list on the target site, or an ID to paste), and the column mapping between the two for the user to check.
+    // Cards that need a look come first and start open; cards that matched cleanly start closed.
+    private void BuildCards(FlowResolveResult resolved, List<(string ListId, string Column, string Selected)> keptChoices)
+    {
+        _cards.Clear();
+        _targetListOptions.Clear();
+        var made = new List<ListCard>();
+
+        string? Preferred(string listId, string column, List<ColumnOption> options)
         {
-            ColumnMatchStatus.NotFoundInTarget => 0, ColumnMatchStatus.Similar => 1, ColumnMatchStatus.Renamed => 2, _ => 3,
-        };
-        foreach (var c in resolved.Columns.OrderBy(c => Rank(c.Status)).ThenBy(c => c.ListTitle).ThenBy(c => c.SourceColumn, StringComparer.OrdinalIgnoreCase))
-        {
-            var options = new List<ColumnOption> { new(string.Empty, Loc.T("Flows_LeaveUnchanged")) };
-            if (resolved.TargetColumnsBySourceList.TryGetValue(c.SourceListId, out var targets))
-                options.AddRange(targets.OrderBy(t => t.DisplayName, StringComparer.OrdinalIgnoreCase)
-                    .Select(t => new ColumnOption(t.InternalName, t.DisplayName == t.InternalName ? t.InternalName : $"{t.DisplayName} ({t.InternalName})")));
-            _columnRows.Add(new ColumnMapRow
-            {
-                SourceListId = c.SourceListId,
-                ListTitle = c.ListTitle ?? string.Empty,
-                SourceColumn = c.SourceColumn,
-                Options = options,
-                // A column choice from a loaded mapping wins over the automapper, when that column exists on the target list.
-                Selected = LoadedColumnChoice(c.SourceListId, c.SourceColumn, options) ?? c.TargetColumn ?? string.Empty,
-                StatusText = Loc.T("Flows_ColumnStatus_" + c.Status),
-            });
+            var kept = keptChoices.FirstOrDefault(k => string.Equals(k.ListId, listId, StringComparison.OrdinalIgnoreCase) && k.Column == column);
+            if (kept.Column is not null && options.Any(o => o.Internal == kept.Selected)) return kept.Selected;
+            return LoadedColumnChoice(listId, column, options);
         }
+
+        void Hook(ListCard card, FlowResolveResult r)
+        {
+            card.Used = r.UsedColumnsBySourceList.GetValueOrDefault(card.SourceListId) ?? new HashSet<string>(StringComparer.Ordinal);
+            // When the source list could not be read there are no source columns to list, but the flow itself says which columns
+            // it uses: map those, so the user is never stuck with an empty grid.
+            card.SourceColumns = r.SourceColumnsBySourceList.GetValueOrDefault(card.SourceListId)
+                                 ?? card.Used.OrderBy(n => n, StringComparer.OrdinalIgnoreCase).Select(n => new FlowColumnInfo(n, n)).ToList();
+            card.FillColumns(r.TargetColumnsBySourceList.GetValueOrDefault(card.SourceListId) ?? [], Preferred);
+            foreach (var row in card.Columns)
+                if (keptChoices.Any(k => string.Equals(k.ListId, card.SourceListId, StringComparison.OrdinalIgnoreCase) && k.Column == row.SourceColumn)) row.MarkEdited();
+            card.IsExpanded = card.NeedsAttention;
+            card.TargetChanged += OnCardTargetChanged;
+        }
+
+        foreach (var l in resolved.Lists)
+        {
+            var readSite = _lastReadMap.GetValueOrDefault(FlowMappingResolver.NormalizeSite(l.SourceSite)) ?? l.SourceSite;
+            var flows = FlowsUsing(l.SourceListId);
+            var card = new ListCard
+            {
+                SourceSite = l.SourceSite, SourceListId = l.SourceListId,
+                UsedBy = string.Join(", ", flows), UsedByCount = flows.Count,
+                ReadSite = readSite, SourceHost = HostOf(readSite),
+                TargetSite = l.TargetSite ?? string.Empty, TargetHost = HostOf(l.TargetSite ?? string.Empty),
+                TargetLists = TargetOptionsFor(l.TargetSite, resolved),
+                SourceTitle = l.Title ?? string.Empty,
+                SourceReadable = l.Title is not null && l.Status != ListMatchStatus.AlreadyOnTarget,
+                AlreadyOnTarget = l.Status == ListMatchStatus.AlreadyOnTarget,
+                SourceNote = SourceNoteFor(l),
+                TargetBaseNote = l.Status == ListMatchStatus.TargetListNotFound ? Loc.T("Flows_ListStatus_TargetListNotFound") : string.Empty,
+            };
+            card.SetTarget(l.TargetListId);   // the name match (or the user's earlier choice): not counted as an edit
+            Hook(card, resolved);
+            made.Add(card);
+        }
+
+        // A list the flow reaches through an expression (so no site is stated) can't be looked up: its card says so and takes a
+        // pasted target list ID.
+        var seen = new HashSet<string>(resolved.Lists.Select(l => l.SourceListId), StringComparer.OrdinalIgnoreCase);
+        foreach (var id in _listIds.Where(i => !seen.Contains(i)))
+        {
+            var flows = FlowsUsing(id);
+            var card = new ListCard
+            {
+                SourceListId = id, UsedBy = string.Join(", ", flows), UsedByCount = flows.Count,
+                TargetLists = TargetOptionsFor(null, resolved),
+                SourceReadable = false,
+                SourceNote = Loc.T("Flows_ListStatus_NoSite"),
+            };
+            card.SetTarget(OverrideFor(id));
+            Hook(card, resolved);
+            made.Add(card);
+        }
+
+        foreach (var c in made.OrderBy(c => c.NeedsAttention ? 0 : 1).ThenBy(c => c.Title, StringComparer.CurrentCultureIgnoreCase)) _cards.Add(c);
+        _vm.HasCards = _cards.Count > 0;
+        UpdateMatchSummary();
+
+        string? OverrideFor(string listId) =>
+            _loaded?.Lists.FirstOrDefault(kv => string.Equals(kv.Key, listId, StringComparison.OrdinalIgnoreCase)).Value is { Length: > 0 } v
+                ? FlowIdParser.ParseListId(v) : null;
+    }
+
+    // Why a list's source side is not simply "read fine", in words; empty when it was.
+    private static string SourceNoteFor(ListResolution l) => l.Status switch
+    {
+        ListMatchStatus.AlreadyOnTarget => Loc.T("Flows_SourceNote_AlreadyOnTarget", l.Title ?? string.Empty),
+        ListMatchStatus.SourceListNotFound => Loc.T("Flows_ListStatus_SourceListNotFound"),
+        ListMatchStatus.SiteNotMapped => Loc.T("Flows_ListStatus_SiteNotMapped"),
+        _ => l.Title is null ? Loc.T("Flows_ListStatus_SourceListNotFound") : string.Empty,
+    };
+
+    private async void OnCardTargetChanged(ListCard card) => await ReloadCardAsync(card);
+
+    // The user chose another target list (or typed an ID): read its columns and match them again.
+    private async Task ReloadCardAsync(ListCard card)
+    {
+        var id = FlowIdParser.ParseListId(card.TargetListId);
+        if (id is null || _lookup is null || card.TargetSite.Length == 0)
+        {
+            // No target (or none that can be read): the columns have nothing to map to.
+            card.TargetBaseNote = string.IsNullOrWhiteSpace(card.TargetListId) ? Loc.T("Flows_ListStatus_None")
+                : id is null ? Loc.T("Flows_BadListId", card.TargetListId) : Loc.T("Flows_ListStatus_NoSite");
+            card.FillColumns([], null);
+            UpdateMatchSummary();
+            return;
+        }
+
+        await RunAsync(Loc.T("Flows_LoadingTargetColumns", card.Title), async ct =>
+        {
+            Log(Loc.T("Flows_LogReloadCard", card.Title, card.TargetSite));
+            var targetCols = await _lookup.GetTargetColumnsAsync(card.TargetSite, id, ct);
+            card.TargetBaseNote = string.Empty;
+            card.FillColumns(targetCols, LoadedColumnChoice);
+            Log(card.SummaryText);
+        });
+        UpdateMatchSummary();
     }
 
     private string? LoadedColumnChoice(string sourceListId, string sourceColumn, List<ColumnOption> options) =>
@@ -317,6 +1018,10 @@ public partial class FlowsDialog : Window
         && perList.TryGetValue(sourceColumn, out var target)
         && options.Any(o => o.Internal == target)
             ? target : null;
+
+    // Opens or closes every list card.
+    private void ExpandAll_Click(object sender, RoutedEventArgs e) { foreach (var c in _cards) c.IsExpanded = true; }
+    private void CollapseAll_Click(object sender, RoutedEventArgs e) { foreach (var c in _cards) c.IsExpanded = false; }
 
     // ── Load / save a mapping ─────────────────────────────────────────────────
 
@@ -348,7 +1053,6 @@ public partial class FlowsDialog : Window
             map.FirstOrDefault(kv => string.Equals(kv.Key.TrimEnd('/'), key.TrimEnd('/'), StringComparison.OrdinalIgnoreCase)).Value is { Length: > 0 } v ? v : null;
 
         foreach (var r in _sites) if (Get(m.Sites, r.Source) is { } s) r.Target = s;
-        foreach (var r in _listRows) if (Get(m.Lists, r.SourceListId) is { } l) r.TargetListId = l;   // typed targets win over name matching
         foreach (var r in _forms) if (Get(m.Forms, r.SourceId) is { } f) r.NewId = f;
         foreach (var r in _values)
         {
@@ -367,7 +1071,10 @@ public partial class FlowsDialog : Window
 
     private void Back_Click(object sender, RoutedEventArgs e)
     {
-        if (_vm.CurrentStep is >= 1 and <= 4) GoTo(_vm.CurrentStep - 1);
+        if (_vm.CurrentStep is < 1 or > 5) return;
+        var target = _vm.CurrentStep - 1;
+        if (target == 4) PrepareWrite();   // back from the report to Write: refresh what is ready
+        GoTo(target);
     }
 
     private async void Next_Click(object sender, RoutedEventArgs e)
@@ -382,7 +1089,10 @@ public partial class FlowsDialog : Window
                 if (_resolved is null) await ResolveAsync();   // automatic matching the first time the step opens
                 break;
             case 2:
+                AutoFillFromSignIns();   // by now the sign-ins exist; fill the tenant ID, account and domain
                 GoTo(3);
+                // The form names load by themselves the first time this step opens (the button reloads them).
+                if (_forms.Count > 0 && !_formNamesAttempted) await LoadFormNamesAsync();
                 break;
             case 3:
                 PrepareWrite();
@@ -394,18 +1104,11 @@ public partial class FlowsDialog : Window
         }
     }
 
+    // The footer shows only what is happening right now, so moving to another step clears it.
     private void GoTo(int step)
     {
         _vm.CurrentStep = step;
-        _vm.StatusText = step switch
-        {
-            0 => _vm.HasScan ? Loc.T("Flows_ScanDoneNext") : Loc.T("Flows_StatusStart"),
-            1 => _vm.HasSites ? Loc.T("Flows_StatusSites") : Loc.T("Flows_NoSitesFound"),
-            2 => _vm.MatchSummaryText.Length > 0 ? _vm.MatchSummaryText : Loc.T("Flows_StatusMatch"),
-            3 => Loc.T("Flows_StatusFormsEmail"),
-            4 => Loc.T("Flows_StatusWrite"),
-            _ => _vm.ResultHeadline,
-        };
+        _vm.StatusText = string.Empty;
     }
 
     // ── Step 4/5: build the mapping, then write ───────────────────────────────
@@ -415,18 +1118,20 @@ public partial class FlowsDialog : Window
         var map = new FlowMapping();
         var siteMap = SiteMap();
         _resolved?.ApplyTo(map, siteMap);
-        // The grid holds the final column decisions (automapped, then edited by the user), so it replaces the
-        // automapper's own column result.
+        // The cards hold the final decisions (automatic matches, then the user's edits), so they replace the automatic
+        // results. Only columns the flows use are renamed; the rest of a list's columns are shown for context.
+        map.Lists.Clear();
         map.Columns.Clear();
         map.ListColumns.Clear();
-        foreach (var note in map.ApplyColumnChoices(_columnRows.Select(r => new ColumnChoice(r.SourceListId, r.SourceColumn, r.Selected))))
+        foreach (var note in map.ApplyColumnChoices(_cards.SelectMany(c => c.Columns.Where(r => r.IsUsed)
+                     .Select(r => new ColumnChoice(c.SourceListId, r.SourceColumn, r.Selected)))))
             AppendLog(note);
         foreach (var (k, v) in siteMap) map.Sites[k] = v;   // user-entered sites always apply, even if no lists resolved
-        foreach (var l in _listRows.Where(l => !string.IsNullOrWhiteSpace(l.TargetListId)))
+        foreach (var c in _cards.Where(c => !string.IsNullOrWhiteSpace(c.TargetListId)))
         {
-            var id = FlowIdParser.ParseListId(l.TargetListId);
-            if (id is null) { AppendLog(Loc.T("Flows_BadListId", l.TargetListId)); continue; }
-            map.Lists[l.SourceListId] = id;
+            var id = FlowIdParser.ParseListId(c.TargetListId);
+            if (id is null) { AppendLog(Loc.T("Flows_BadListId", c.TargetListId)); continue; }
+            map.Lists[c.SourceListId] = id;
         }
         foreach (var f in _forms.Where(f => !string.IsNullOrWhiteSpace(f.NewId)))
         {
@@ -449,11 +1154,148 @@ public partial class FlowsDialog : Window
         return map;
     }
 
+    // One row per package with the name its updated copy will be saved as. Starts as the original name; whatever the user
+    // types is remembered for that package, also when they go back and forth.
+    private void BuildOutputNameRows()
+    {
+        _vm.OutputNames.Clear();
+        foreach (var zip in _zips)
+        {
+            var row = new OutputNameRow
+            {
+                Original = Path.GetFileName(zip), FullPath = zip,
+                SaveAs = _saveAs.GetValueOrDefault(zip) ?? Path.GetFileNameWithoutExtension(zip),
+            };
+            row.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(OutputNameRow.SaveAs)) _saveAs[zip] = row.SaveAs; };
+            _vm.OutputNames.Add(row);
+        }
+    }
+
+    private void NamesKeep_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var row in _vm.OutputNames) row.SaveAs = Path.GetFileNameWithoutExtension(row.FullPath);
+    }
+
+    private void NamesSuffix_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var row in _vm.OutputNames) row.SaveAs = Path.GetFileNameWithoutExtension(row.FullPath) + " - migrated";
+    }
+
+    // The file names the updated packages will get, one per package in the same order: what was typed in "Save as" (".zip" is
+    // optional), with characters Windows does not allow in file names turned into "_", an empty name falling back to the
+    // original, and a name used twice getting " (2)", " (3)"... so packages never overwrite each other.
+    private List<string> OutputFileNames()
+    {
+        var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var names = new List<string>();
+        foreach (var zip in _zips)
+        {
+            var typed = _vm.OutputNames.FirstOrDefault(r => string.Equals(r.FullPath, zip, StringComparison.OrdinalIgnoreCase))?.SaveAs?.Trim() ?? string.Empty;
+            if (typed.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)) typed = typed[..^4];
+            var baseName = SafeFileName(typed);
+            if (baseName.Length == 0) baseName = SafeFileName(Path.GetFileNameWithoutExtension(zip));
+            var fileName = baseName + ".zip";
+            for (var n = 2; !used.Add(fileName); n++) fileName = $"{baseName} ({n}).zip";
+            names.Add(fileName);
+        }
+        return names;
+    }
+
+    private static string SafeFileName(string name)
+    {
+        var invalid = Path.GetInvalidFileNameChars();
+        return new string(name.Select(c => invalid.Contains(c) ? '_' : c).ToArray()).Trim().TrimEnd('.');
+    }
+    // The "Ready to write?" list: where each thing stands, and for anything not settled, the step that settles it.
     private void PrepareWrite()
     {
+        BuildOutputNameRows();
         var map = BuildMapping();
-        _vm.WriteSummaryText = Loc.T("Flows_WriteSummary", _zips.Count, _vm.FlowCount, map.Sites.Count, map.Lists.Count,
-            map.ListColumns.Sum(kv => kv.Value.Count), map.Forms.Count);
+        var saved = OutputFileNames();
+        var list = new List<ChecklistItem>
+        {
+            new() { Text = Loc.T("Flows_Chk_Packages", _zips.Count, _vm.FlowCount), StatusLevel = "Ready" },
+            new() { Text = Loc.T("Flows_Chk_SavedAs", string.Join(", ", saved.Take(3)) + (saved.Count > 3 ? ", …" : "")), StatusLevel = "Info" },
+        };
+
+        var siteTotal = _sites.Count;
+        var siteMapped = _sites.Count(s => !string.IsNullOrWhiteSpace(s.Target));
+        list.Add(siteTotal == 0 ? new() { Text = Loc.T("Flows_Chk_NoSites"), StatusLevel = "Info" }
+            : new() { Text = Loc.T("Flows_Chk_Sites", siteMapped, siteTotal), StatusLevel = siteMapped == siteTotal ? "Ready" : "Look", Step = 1 });
+
+        if (_listIds.Count == 0) list.Add(new() { Text = Loc.T("Flows_Chk_NoLists"), StatusLevel = "Info" });
+        else if (_cards.Count == 0) list.Add(new() { Text = Loc.T("Flows_Chk_ListsNotMatched"), StatusLevel = "Look", Step = 2 });
+        else
+        {
+            var withTarget = _cards.Count(c => FlowIdParser.ParseListId(c.TargetListId) is not null);
+            list.Add(new() { Text = Loc.T("Flows_Chk_Lists", withTarget, _cards.Count), StatusLevel = withTarget == _cards.Count ? "Ready" : "Look", Step = 2 });
+            var toCheck = _cards.Where(c => c.HasTarget).Sum(c => c.Columns.Count(r => r.NeedsLook));
+            list.Add(toCheck == 0 ? new() { Text = Loc.T("Flows_Chk_ColumnsReady"), StatusLevel = "Ready" }
+                : new() { Text = Loc.T("Flows_Chk_Columns", toCheck), StatusLevel = "Look", Step = 2 });
+        }
+
+        var formsMapped = _forms.Count(f => FlowIdParser.ParseFormId(f.NewId) is not null);
+        list.Add(_forms.Count == 0 ? new() { Text = Loc.T("Flows_Chk_NoForms"), StatusLevel = "Info" }
+            : new() { Text = Loc.T("Flows_Chk_Forms", formsMapped, _forms.Count), StatusLevel = formsMapped == _forms.Count ? "Ready" : "Look", Step = 3 });
+
+        list.Add(map.EmailDomains.Count > 0
+            ? new() { Text = Loc.T("Flows_Chk_Email", map.EmailDomains.Keys.First(), map.EmailDomains.Values.First()), StatusLevel = "Info" }
+            : new() { Text = Loc.T("Flows_Chk_NoEmail"), StatusLevel = "Info" });
+        list.Add(new() { Text = Loc.T("Flows_Chk_Connections"), StatusLevel = "Info" });
+
+        _vm.Checklist.Clear();
+        foreach (var item in list) _vm.Checklist.Add(item);
+    }
+
+    private void ChecklistGo_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is ChecklistItem { HasStep: true } item) GoTo(item.Step);
+    }
+
+    private void ReviewGo_Click(object sender, RoutedEventArgs e)
+    {
+        if ((sender as FrameworkElement)?.DataContext is ReviewItem { HasStep: true } item) GoTo(item.Step);
+    }
+
+    // Asks where to save each updated package (name pre-filled from the "Save as" card). Returns the chosen paths in package order,
+    // or null when the user cancels. A path that is one of the originals is refused and asked again.
+    private List<string>? AskSaveLocations(string folder)
+    {
+        var names = OutputFileNames();
+        var originals = _zips.Select(Path.GetFullPath).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var chosen = new List<string>();
+        for (var i = 0; i < _zips.Count; i++)
+        {
+            var dir = chosen.Count > 0 ? Path.GetDirectoryName(chosen[^1])! : folder;
+            while (true)
+            {
+                var dlg = new Microsoft.Win32.SaveFileDialog
+                {
+                    Title = Loc.T("Flows_SaveAsTitle", Path.GetFileName(_zips[i]), i + 1, _zips.Count),
+                    Filter = Loc.T("Flows_SaveAsFilter"),
+                    DefaultExt = ".zip",
+                    AddExtension = true,
+                    OverwritePrompt = true,
+                    FileName = names[i],
+                    InitialDirectory = Directory.Exists(dir) ? dir : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                };
+                if (dlg.ShowDialog(this) != true) return null;
+                var path = Path.GetFullPath(dlg.FileName);
+                if (originals.Contains(path))
+                {
+                    MessageBox.Show(this, Loc.T("Flows_OutputSameAsSource"), Title, MessageBoxButton.OK, MessageBoxImage.Warning);
+                    continue;
+                }
+                if (chosen.Contains(path, StringComparer.OrdinalIgnoreCase))
+                {
+                    MessageBox.Show(this, Loc.T("Flows_SaveAsDuplicate"), Title, MessageBoxButton.OK, MessageBoxImage.Warning);
+                    continue;
+                }
+                chosen.Add(path);
+                break;
+            }
+        }
+        return chosen;
     }
 
     private async Task<bool> RewriteAsync()
@@ -461,38 +1303,49 @@ public partial class FlowsDialog : Window
         var outDir = _vm.OutputPath.Trim();
         if (outDir.Length == 0) { _vm.StatusText = Loc.T("Flows_NoOutput"); return false; }
 
+        // Every updated package is saved through a Save As dialog, so nothing is written without the user choosing where and
+        // under what name, and an original can never be overwritten. Cancel stops before anything is written.
+        var dests = AskSaveLocations(outDir);
+        if (dests is null) return false;
+        outDir = Path.GetDirectoryName(dests[0])!;
+
         var ok = false;
         await RunAsync(Loc.T("Flows_Rewriting"), async ct =>
         {
             var clock = Stopwatch.StartNew();
             var map = BuildMapping();
             Directory.CreateDirectory(outDir);
-            // Findings of this dialog that need follow-up outside the tool, for the report's "To do after import".
-            var followUps = new List<string>();
-            foreach (var l in _resolved?.Lists.Where(l => l.Status is not (ListMatchStatus.Matched or ListMatchStatus.Manual)) ?? [])
-                followUps.Add($"List {l.SourceListId} ({l.Title ?? "title unknown"}) on {l.SourceSite} has no target: {l.Status}. Flows that use it still point at the source list.");
-            foreach (var c in _columnRows.Where(r => string.IsNullOrEmpty(r.Selected) && r.StatusText == Loc.T("Flows_ColumnStatus_NotFoundInTarget")))
-                followUps.Add($"Column '{c.SourceColumn}' on list '{c.ListTitle}' has no match in the target list.");
 
+            // What the tool could not settle by itself: each is a line in the report's "To do after import" and on the report
+            // step, with the step that can fix it.
+            var review = new List<ReviewItem>();
+            foreach (var s in _sites.Where(s => string.IsNullOrWhiteSpace(s.Target)))
+                review.Add(new ReviewItem { Text = Loc.T("Flows_FollowUpSiteUnchanged", s.Source), Step = 1 });
+            foreach (var c in _cards.Where(c => FlowIdParser.ParseListId(c.TargetListId) is null))
+                review.Add(new ReviewItem { Text = Loc.T("Flows_FollowUpListNoTarget", c.Title, c.SourceListId, c.SourceSite), Step = 2 });
+            foreach (var c in _cards.Where(c => c.HasTarget))   // a list with no target is already listed above
+                foreach (var r in c.Columns.Where(r => r.IsUsed && string.IsNullOrEmpty(r.Selected) && r.Match == ColumnMatchStatus.NotFoundInTarget))
+                    review.Add(new ReviewItem { Text = Loc.T("Flows_FollowUpColumnNoMatch", r.SourceColumn, c.Title), Step = 2 });
+            var followUps = review.Select(r => r.Text).ToList();
+
+            Log(Loc.T("Flows_LogWriteStart", _zips.Count, outDir));
             var report = new StringBuilder(Loc.T("Flows_ReportHeader"));
             report.Append(FlowReport.Overview(_scans, followUps));
             var rows = new List<PackageResultRow>();
             int replacements = 0, leftoverValues = 0, failed = 0;
 
-            if (_zips.Any(z => string.Equals(Path.GetFullPath(Path.GetDirectoryName(z)!), Path.GetFullPath(outDir), StringComparison.OrdinalIgnoreCase)))
-                throw new InvalidOperationException(Loc.T("Flows_OutputSameAsSource"));
+            // The names come from the "Name of the updated package" setting (default: the original names), unique per package.
+            // A patched package must never land on top of an original.
 
             await Task.Run(() =>
             {
-                // Packages from different folders can share a file name; each gets its own output file.
-                var usedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                foreach (var zip in _zips)
+                for (var i = 0; i < _zips.Count; i++)
                 {
                     ct.ThrowIfCancellationRequested();
-                    var name = Path.GetFileNameWithoutExtension(zip);
-                    var fileName = name + ".zip";
-                    for (var n = 2; !usedNames.Add(fileName); n++) fileName = $"{name} ({n}).zip";
-                    var dest = Path.Combine(outDir, fileName);
+                    var zip = _zips[i];
+                    var dest = dests[i];
+                    var fileName = Path.GetFileName(dest);
+                    Log(Loc.T("Flows_LogWriting", fileName));
 
                     // One unreadable package (it was already reported as skipped by the scan) must not stop the others.
                     List<(string Flow, List<Change> Changes)> results;
@@ -505,6 +1358,9 @@ public partial class FlowsDialog : Window
                         failed++;
                         continue;
                     }
+                    try { FlowOutputLog.Record(dest); }
+                    catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { /* the log is a convenience */ }
+                    Log(Loc.T("Flows_LogChecking", fileName));
                     var leftovers = FlowRewriter.FindLeftovers(dest, map);
                     var changed = results.Sum(r => r.Changes.Sum(c => c.Count));
                     var still = leftovers.Select(l => l.Value).Distinct().Count();
@@ -520,22 +1376,24 @@ public partial class FlowsDialog : Window
                     report.Append(FlowRewriter.ToMarkdown(Path.GetFileNameWithoutExtension(fileName), results, leftovers));
                 }
                 File.WriteAllText(Path.Combine(outDir, "rewrite-report.md"), report.ToString());
-                File.WriteAllText(Path.Combine(outDir, "rewrite-report.html"), FlowReport.ToHtml(report.ToString(), "Flow rewrite report"), new UTF8Encoding(false));
+                File.WriteAllText(Path.Combine(outDir, "rewrite-report.html"), FlowReport.ToHtml(report.ToString(), Loc.T("Flows_ReportTitle")), new UTF8Encoding(false));
             }, ct);
             clock.Stop();
 
             _lastOutput = outDir;
             _lastReport = Path.Combine(outDir, "rewrite-report.html");
             AppendLog(Loc.T("Flows_LogReport", _lastReport));
+            FlowsUiState.SaveOutputPath(outDir);
 
-            // To review: services the tool doesn't rewrite, plus lists and columns that never got a target.
-            var otherIds = _scans.SelectMany(s => s.Findings).Where(f => f.Kind == FindingKind.OtherResource).Select(f => f.Value).Distinct().Count();
-            var unmatchedLists = _resolved?.Lists.Count(l => l.Status is not (ListMatchStatus.Matched or ListMatchStatus.Manual)) ?? 0;
-            var unmappedColumns = _columnRows.Count(r => string.IsNullOrEmpty(r.Selected) && r.StatusText == Loc.T("Flows_ColumnStatus_NotFoundInTarget"));
+            // Also to review: services the tool doesn't rewrite, values still pointing at the source, packages that failed.
+            foreach (var r in FlowResources.Summarize(_scans).Where(r => r.Handling == ResourceHandling.ReviewManually))
+                review.Add(new ReviewItem { Text = Loc.T("Flows_Rep_TodoReview", r.Service, r.Detail) });
+            if (leftoverValues > 0) review.Add(new ReviewItem { Text = Loc.T("Flows_Review_StillSource", leftoverValues) });
+            if (failed > 0) review.Add(new ReviewItem { Text = Loc.T("Flows_Review_PackagesFailed", failed) });
 
             _vm.PackageResults.Clear();
             foreach (var r in rows) _vm.PackageResults.Add(r);
-            _vm.Finish(rows.Count - failed, replacements, leftoverValues, failed + otherIds + unmatchedLists + unmappedColumns, clock.Elapsed, outDir);
+            _vm.Finish(rows.Count - failed, replacements, review, clock.Elapsed, outDir);
             ok = true;
         });
         return ok;
@@ -555,6 +1413,15 @@ public partial class FlowsDialog : Window
         if (dlg.ShowDialog(this) == true) _vm.OutputPath = dlg.FolderName;
     }
 
+    private void OpenOutputFolder_Click(object sender, RoutedEventArgs e)
+    {
+        var folder = _vm.OutputPath.Trim();
+        if (folder.Length > 0 && Directory.Exists(folder))
+            Process.Start(new ProcessStartInfo(folder) { UseShellExecute = true });
+        else
+            _vm.StatusText = Loc.T("Flows_OutputFolderMissing");
+    }
+
     // ── Step 6: report ────────────────────────────────────────────────────────
 
     private void OpenOutput_Click(object sender, RoutedEventArgs e)
@@ -569,19 +1436,31 @@ public partial class FlowsDialog : Window
             Process.Start(new ProcessStartInfo(_lastReport) { UseShellExecute = true });
     }
 
+    private void OpenPowerAutomate_Click(object sender, RoutedEventArgs e)
+    {
+        try { Process.Start(new ProcessStartInfo("https://make.powerautomate.com/") { UseShellExecute = true }); }
+        catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException) { /* no default browser */ }
+    }
+
     private void StartOver_Click(object sender, RoutedEventArgs e) => ResetAll();
 
     private void ResetAll()
     {
         _zips.Clear();
+        _zipScans = new(StringComparer.OrdinalIgnoreCase);
+        _saveAs.Clear();
+        _formNamesAttempted = false;
+        _vm.OutputNames.Clear();
+        _rewritten.Clear();
         _scans = [];
         _resolved = null;
-        _sites.Clear(); _forms.Clear(); _columnRows.Clear(); _listRows.Clear(); _values.Clear();
+        _sites.Clear(); _forms.Clear(); _cards.Clear(); _listIds.Clear(); _targetListOptions.Clear(); _lookup = null; _values.Clear();
+        _lastReadMap = new(StringComparer.OrdinalIgnoreCase);
         _loaded = null;
         _loadedColumns = new(StringComparer.OrdinalIgnoreCase);
         _vm.Reset();
+        _vm.PackageWarning = string.Empty;
         ResourcesGrid.ItemsSource = null;
-        _vm.StatusText = Loc.T("Flows_StatusStart");
     }
 
     // ── Plumbing ──────────────────────────────────────────────────────────────
@@ -592,16 +1471,42 @@ public partial class FlowsDialog : Window
         _vm.IsBusy = true;
         _vm.StatusText = busyText;
         try { await work(_cts.Token); }
-        catch (OperationCanceledException) { _vm.StatusText = Loc.T("Flows_Cancelled"); }
+        catch (OperationCanceledException)
+        {
+            _vm.StatusText = Loc.T("Flows_Cancelled");
+            Log(Loc.T("Flows_LogCancelled"), important: true);
+        }
         catch (Exception ex)
         {
             _vm.StatusText = Loc.T("Flows_Error", ex.Message);
             AppendLog(ex.Message);
+            Log(Loc.T("Flows_LogFailed", ex.Message), important: true);
         }
-        finally { _vm.IsBusy = false; }
+        finally
+        {
+            _vm.IsBusy = false;
+            // The footer shows what is happening right now; once it is done, don't leave the busy text behind.
+            if (_vm.StatusText == busyText) _vm.StatusText = string.Empty;
+        }
     }
 
-    private void CancelRun_Click(object sender, RoutedEventArgs e) => _cts?.Cancel();
+    private void CancelRun_Click(object sender, RoutedEventArgs e)
+    {
+        if (_cts is { IsCancellationRequested: false })
+        {
+            _cts.Cancel();
+            _vm.StatusText = Loc.T("Flows_Cancelling");   // a sign-in window can take a moment to close
+        }
+    }
+
+    // The activity strip: plain-language lines saying what the tool is doing right now and why. A failure or cancellation
+    // (important) opens the strip so it cannot be missed. Safe to call from any thread.
+    private void Log(string line, bool important = false)
+    {
+        if (!Dispatcher.CheckAccess()) { Dispatcher.Invoke(() => Log(line, important)); return; }
+        _vm.AddActivity(line, important);
+        if (_vm.IsActivityOpen) ActivityBox.ScrollToEnd();
+    }
 
     // Messages worth showing (a list that couldn't be read, a column mapped two ways...) appear in a notes box on the
     // matching and write steps. Repeats are collapsed so building the mapping twice doesn't duplicate them.
@@ -613,180 +1518,9 @@ public partial class FlowsDialog : Window
 
     private void Close_Click(object sender, RoutedEventArgs e) => Close();
 
-    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+    protected override void OnClosing(CancelEventArgs e)
     {
         _cts?.Cancel();
         base.OnClosing(e);
-    }
-}
-
-// One line of the report's package table.
-public sealed class PackageResultRow
-{
-    public string Package { get; init; } = string.Empty;
-    public int Flows { get; init; }
-    public int Replacements { get; init; }
-    public int StillSource { get; init; }
-    public string StatusText { get; init; } = string.Empty;
-}
-
-// State for the six steps. The dialog's code-behind does the work and sets these; the XAML binds to them.
-public partial class FlowsDialogViewModel : ObservableObject
-{
-    public ObservableCollection<PackageResultRow> PackageResults { get; } = [];
-
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(ShowBack), nameof(ShowNext), nameof(ShowStartOver), nameof(NextButtonText), nameof(CanNext))]
-    private int _currentStep;
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext))] private bool _isBusy;
-    [ObservableProperty] private string _statusText = string.Empty;
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasNotes))] private string _notesText = string.Empty;
-    public bool HasNotes => NotesText.Length > 0;
-
-    public void AddNote(string line)
-    {
-        if (string.IsNullOrWhiteSpace(line)) return;
-        var existing = NotesText.Split('\n');
-        if (!existing.Contains(line)) NotesText = NotesText.Length == 0 ? line : NotesText + "\n" + line;
-    }
-
-    public void ClearNotes() => NotesText = string.Empty;
-
-    // step 1
-    [ObservableProperty] private string _packagesText = string.Empty;
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext))] private bool _hasScan;
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext))] private int _flowCount;
-    [ObservableProperty] private string _scanSummaryText = string.Empty;
-    // step 2
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(NoSites))] private bool _hasSites;
-    public bool NoSites => HasScan && !HasSites;
-    // step 3
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasMatchSummary))] private string _matchSummaryText = string.Empty;
-    public bool HasMatchSummary => MatchSummaryText.Length > 0;
-    // step 4
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(NoForms))] private bool _hasForms;
-    public bool NoForms => HasScan && !HasForms;
-    [ObservableProperty] private bool _hasValues;
-    // step 5
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext))] private string _outputPath = string.Empty;
-    [ObservableProperty] private string _writeSummaryText = string.Empty;
-    // step 6
-    [ObservableProperty] private string _outcome = "Success";
-    [ObservableProperty] private string _resultHeadline = string.Empty;
-    [ObservableProperty] private string _resultSubline = string.Empty;
-    [ObservableProperty] private int _packagesWritten;
-    [ObservableProperty] private int _replacements;
-    [ObservableProperty] private int _stillSourceCount;
-    [ObservableProperty] private int _reviewCount;
-    [ObservableProperty] private string _durationText = string.Empty;
-
-    public bool ShowBack => CurrentStep is >= 1 and <= 4;
-    public bool ShowNext => CurrentStep <= 4;
-    public bool ShowStartOver => CurrentStep == 5;
-    public string NextButtonText => CurrentStep == 4 ? Loc.T("Flows_WriteButton") : Loc.T("Forms_Next");
-    public bool CanNext => !IsBusy && CurrentStep switch
-    {
-        0 => HasScan && FlowCount > 0,
-        4 => OutputPath.Trim().Length > 0,
-        <= 3 => true,
-        _ => false,
-    };
-
-    partial void OnCurrentStepChanged(int value) => OnPropertyChanged(nameof(CanNext));
-    partial void OnHasScanChanged(bool value) { OnPropertyChanged(nameof(NoSites)); OnPropertyChanged(nameof(NoForms)); }
-
-    public void Finish(int packages, int replacements, int stillSource, int review, TimeSpan elapsed, string outDir)
-    {
-        PackagesWritten = packages;
-        Replacements = replacements;
-        StillSourceCount = stillSource;
-        ReviewCount = review;
-        DurationText = elapsed.TotalMinutes >= 1 ? $"{(int)elapsed.TotalMinutes}m {elapsed.Seconds}s" : $"{Math.Max(1, (int)Math.Round(elapsed.TotalSeconds))}s";
-        if (stillSource == 0 && review == 0)
-        {
-            Outcome = "Success";
-            ResultHeadline = Loc.T("Flows_ResultSuccess", packages);
-            ResultSubline = Loc.T("Flows_ResultSuccessSub", outDir);
-        }
-        else
-        {
-            Outcome = "Partial";
-            ResultHeadline = Loc.T("Flows_ResultReview", packages);
-            ResultSubline = Loc.T("Flows_ResultReviewSub", outDir);
-        }
-        CurrentStep = 5;
-    }
-
-    public void Reset()
-    {
-        CurrentStep = 0;
-        PackagesText = string.Empty; HasScan = false; FlowCount = 0; ScanSummaryText = string.Empty;
-        HasSites = false; MatchSummaryText = string.Empty; HasForms = false; HasValues = false; WriteSummaryText = string.Empty;
-        PackageResults.Clear();
-        ClearNotes();
-    }
-}
-
-public partial class SiteRow : ObservableObject
-{
-    public string Source { get; init; } = string.Empty;
-    [ObservableProperty] private string _target = string.Empty;
-}
-
-public partial class FormMapRow : ObservableObject
-{
-    public string SourceId { get; init; } = string.Empty;
-    [ObservableProperty] private string _newId = string.Empty;
-    // Where the ID came from, or why it looks wrong (wrong tenant, not an ID).
-    [ObservableProperty] private string _note = string.Empty;
-}
-
-// A value in the flows that can be mapped by typing its replacement: an email address, the tenant ID or a library path.
-public partial class ValueMapRow : ObservableObject
-{
-    public string Category { get; init; } = string.Empty;   // Email | Tenant | Path
-    public string KindText { get; init; } = string.Empty;
-    public string Source { get; init; } = string.Empty;
-    [ObservableProperty] private string _target = string.Empty;
-}
-
-public sealed record ColumnOption(string Internal, string Label);
-
-public partial class ColumnMapRow : ObservableObject
-{
-    public string SourceListId { get; init; } = string.Empty;
-    public string ListTitle { get; init; } = string.Empty;
-    public string SourceColumn { get; init; } = string.Empty;
-    public string StatusText { get; init; } = string.Empty;
-    public List<ColumnOption> Options { get; init; } = [];
-    // Internal name of the chosen target column; empty = leave the source name unchanged.
-    [ObservableProperty] private string _selected = string.Empty;
-}
-
-public partial class ListMapRow : ObservableObject
-{
-    private bool _suppressEdit;
-    public string SourceListId { get; init; } = string.Empty;
-    [ObservableProperty] private string _title = string.Empty;
-    [ObservableProperty] private string _statusText = string.Empty;
-    [ObservableProperty] private string _targetListId = string.Empty;
-    // True once the user typed or pasted a target (as opposed to the automatic name match filling it in).
-    public bool UserEdited { get; private set; }
-
-    partial void OnTargetListIdChanged(string value)
-    {
-        if (!_suppressEdit) UserEdited = !string.IsNullOrWhiteSpace(value);
-    }
-
-    // Used by the matcher: fills in what it found without marking the row as edited by the user.
-    public void SetResolved(string title, string? targetId, string statusText)
-    {
-        _suppressEdit = true;
-        try
-        {
-            Title = title;
-            StatusText = statusText;
-            if (!UserEdited) TargetListId = targetId ?? string.Empty;
-        }
-        finally { _suppressEdit = false; }
     }
 }

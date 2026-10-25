@@ -1,4 +1,7 @@
-﻿using SharePointSmartCopy.Localization;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using SharePointSmartCopy.Localization;
 using Microsoft.Identity.Client;
 using SharePointSmartCopy.Models;
 
@@ -238,4 +241,28 @@ public class AuthService
     public bool IsAuthenticated => _authResult != null;
     public bool IsConfigured => _app != null;
     public string? UserName => _authResult?.Account?.Username;
+
+    // The tenant (directory) ID of the signed-in account, as reported by Microsoft Entra ID; null before sign-in. Used to
+    // fill in the target tenant ID in the Flows tool.
+    private static readonly HttpClient GraphHttp = new() { BaseAddress = new Uri("https://graph.microsoft.com/") };
+
+    // The address of the signed-in tenant's root SharePoint site (for example https://fabrikam.sharepoint.com), read from
+    // Microsoft Graph. This is how the Flows tool learns the new tenant's address from the target sign-in instead of asking
+    // for it. Throws with the HTTP status when Graph refuses.
+    public async Task<string> GetRootSiteUrlAsync(CancellationToken cancellationToken = default)
+    {
+        var token = await GetAccessTokenAsync(cancellationToken: cancellationToken);
+        using var req = new HttpRequestMessage(HttpMethod.Get, "v1.0/sites/root?$select=webUrl");
+        req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        using var resp = await GraphHttp.SendAsync(req, cancellationToken);
+        var body = await resp.Content.ReadAsStringAsync(cancellationToken);
+        if (!resp.IsSuccessStatusCode)
+            throw new HttpRequestException($"Could not read the tenant's SharePoint address ({(int)resp.StatusCode}). {(body.Length > 200 ? body[..200] : body)}", null, resp.StatusCode);
+        using var doc = JsonDocument.Parse(body);
+        var url = doc.RootElement.TryGetProperty("webUrl", out var w) ? w.GetString() : null;
+        return string.IsNullOrWhiteSpace(url) ? throw new InvalidOperationException("Microsoft Graph returned no SharePoint address for this tenant.") : url.TrimEnd('/');
+    }
+    public string? TenantId =>
+        _authResult?.TenantId is { Length: > 0 } t ? t
+        : _tokenCache.Values.Select(r => r.TenantId).FirstOrDefault(id => !string.IsNullOrEmpty(id));
 }

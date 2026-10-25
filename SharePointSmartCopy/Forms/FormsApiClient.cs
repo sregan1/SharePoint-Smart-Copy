@@ -56,6 +56,17 @@ public sealed class FormsApiClient
         return items;
     }
 
+    // The title of one form by its ID, or null when it cannot be read (no access, deleted, or an unexpected answer). The
+    // list below holds only the account's own forms, so this is how the title of a form shared with the account is found.
+    public async Task<string?> GetFormTitleAsync(string formId, CancellationToken ct = default)
+    {
+        var (status, body) = await SendRawAsync(HttpMethod.Get, $"formapi/api/forms('{formId}')", null, ct);
+        if (status != 200) return null;
+        try { return System.Text.Json.Nodes.JsonNode.Parse(body)?["title"]?.GetValue<string>(); }
+        catch (JsonException) { return null; }
+        catch (InvalidOperationException) { return null; }
+    }
+
     // The signed-in user's own forms (not group-owned ones, not forms shared with them), newest first as the
     // service returns them. Soft-deleted entries (recycle bin / API-created drafts) are skipped.
     public async Task<List<FormSummary>> ListFormsAsync(CancellationToken ct = default)

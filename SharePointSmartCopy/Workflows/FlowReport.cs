@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using SharePointSmartCopy.Localization;
 
 namespace SharePointSmartCopy.Workflows;
 
@@ -15,37 +16,30 @@ public static partial class FlowReport
         var sb = new StringBuilder();
         var resources = FlowResources.Summarize(scans);
 
-        sb.Append("## What these flows use\n\n");
+        sb.Append("## ").Append(Loc.T("Flows_Rep_UsesHeader")).Append("\n\n");
         foreach (var r in resources)
-            sb.Append($"- **{r.Service}** — {r.Flows} flow(s), {r.Operations} step(s): {r.Detail} ({HandlingLabel(r.Handling)})\n");
+            sb.Append("- ").Append(Loc.T("Flows_Rep_UsesLine", r.Service, r.Flows, r.Operations, r.Detail, HandlingLabel(r.Handling))).Append('\n');
         sb.Append('\n');
 
-        var todo = new List<string>
-        {
-            "Import each patched package in the target environment and recreate the connections (they are never copied).",
-        };
+        var todo = new List<string> { Loc.T("Flows_Rep_TodoImport") };
         foreach (var r in resources.Where(r => r.Handling == ResourceHandling.ReviewManually))
-            todo.Add($"{r.Service}: {r.Detail}.");
-        if (scans.Any(s => s.IsSolution))
-            todo.Add("Solution packages: only the workflow definitions were rewritten. Environment variable values and " +
-                     "connection references in the solution (customizations.xml) still hold source values; set them after import.");
-        if (scans.SelectMany(s => s.Findings).Any(f => f.Kind == FindingKind.UserId))
-            todo.Add("Flow owners and run-only users are not part of the package; share the flows with the right people after import.");
+            todo.Add(Loc.T("Flows_Rep_TodoReview", r.Service, r.Detail));
+        if (scans.Any(s => s.IsSolution)) todo.Add(Loc.T("Flows_Rep_TodoSolution"));
+        if (scans.SelectMany(s => s.Findings).Any(f => f.Kind == FindingKind.UserId)) todo.Add(Loc.T("Flows_Rep_TodoOwners"));
         todo.AddRange(extraFollowUps);
 
-        sb.Append("## To do after import\n\n");
-        foreach (var t in todo.Distinct()) sb.Append($"- {t}\n");
+        sb.Append("## ").Append(Loc.T("Flows_Rep_TodoHeader")).Append("\n\n");
+        foreach (var t in todo.Distinct()) sb.Append("- ").Append(t).Append('\n');
         sb.Append('\n');
         return sb.ToString();
     }
 
     private static string HandlingLabel(ResourceHandling h) => h switch
     {
-        ResourceHandling.Rewritten => "rewritten by this tool",
-        ResourceHandling.ReviewManually => "review manually",
-        _ => "connection only",
+        ResourceHandling.Rewritten => Loc.T("Flows_Rep_HandlingRewritten"),
+        ResourceHandling.ReviewManually => Loc.T("Flows_Rep_HandlingReview"),
+        _ => Loc.T("Flows_Rep_HandlingConnection"),
     };
-
     // Renders the Markdown subset the report uses (headings, bullets, paragraphs, **bold**, `code`, _italic_ lines).
     public static string ToHtml(string markdown, string title)
     {

@@ -190,6 +190,43 @@ public partial class MainViewModel
         else TargetSignedInUser = auth.UserName ?? TargetSignedInUser;
     }
 
+    // The SharePoint address of the tenant an ALREADY signed-in account belongs to (for example
+    // https://contoso.sharepoint.com), read from Microsoft Graph with the existing token. Never opens a sign-in window:
+    // returns null when that side is not signed in or the lookup fails. The Flows tool shows this as each side's tenant,
+    // instead of guessing from the site URL typed on the main window.
+    public async Task<string?> GetConnectedRootAsync(bool isSource, CancellationToken ct = default)
+    {
+        var auth = isSource ? AuthService : TargetAuthService;
+        if (!auth.IsAuthenticated) return null;
+        try { return await auth.GetRootSiteUrlAsync(ct); }
+        catch (OperationCanceledException) { throw; }
+        catch { return null; }
+    }
+    // The Flows tool's "Change source…": the same for the source side. Always opens the sign-in window, so the source
+    // account (and with it the source tenant) can be changed, then reads that tenant's SharePoint root address and
+    // registers the host with the source sign-in. Returns the address, e.g. https://contoso.sharepoint.com.
+    public async Task<string?> SignInSourceForToolsAsync(CancellationToken ct = default)
+    {
+        if (!IsMultiTenant) return null;
+        await AuthService.GetAccessTokenAsync(forceInteractive: true, cancellationToken: ct);
+        SignedInUser = AuthService.UserName ?? SignedInUser;
+        var root = await AuthService.GetRootSiteUrlAsync(ct);
+        await PrepareSiteAccessAsync(root, isSource: true, ct);
+        return root;
+    }
+    // The Flows tool's "Sign in to target": always opens the sign-in window (so it also works to switch accounts or
+    // browsers), then reads the address of the target tenant's SharePoint root site and registers that host with the
+    // target sign-in, so every later lookup on it uses the right account. Returns the address, e.g.
+    // https://fabrikam.sharepoint.com. Multi-tenant only (single tenant has one sign-in and nothing to infer).
+    public async Task<string?> SignInTargetForToolsAsync(CancellationToken ct = default)
+    {
+        if (!IsMultiTenant) return null;
+        await TargetAuthService.GetAccessTokenAsync(forceInteractive: true, cancellationToken: ct);
+        TargetSignedInUser = TargetAuthService.UserName ?? TargetSignedInUser;
+        var root = await TargetAuthService.GetRootSiteUrlAsync(ct);
+        await PrepareSiteAccessAsync(root, isSource: false, ct);
+        return root;
+    }
     // Same, for a saved run: both sites, plus the drives its roots refer to (so a verify started in a
     // later session — when nothing has been listed yet — can still route every request).
     public async Task PrepareReportAccessAsync(

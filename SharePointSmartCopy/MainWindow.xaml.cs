@@ -1,4 +1,4 @@
-﻿using SharePointSmartCopy.Localization;
+using SharePointSmartCopy.Localization;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -457,7 +457,15 @@ public partial class MainWindow : Window
         => new FormsDialog(VM.AuthService, VM.TargetAuthService, VM.IsMultiTenant, VM.TargetRegistrationName) { Owner = this }.ShowDialog();
 
     private void ModeFlows_Click(object sender, RoutedEventArgs e)
-        => new FlowsDialog(VM.SpService, (url, isSource) => VM.PrepareSiteAccessAsync(url, isSource), VM.SourceUrl, VM.TargetUrl, VM.IsMultiTenant) { Owner = this }.ShowDialog();
+        => new FlowsDialog(VM.SpService, (url, isSource, ct) => VM.PrepareSiteAccessAsync(url, isSource, ct),
+            isSource => isSource ? VM.SignedInUser : VM.TargetSignedInUser,
+            isSource => (isSource ? VM.AuthService : VM.TargetAuthService).TenantId,
+            (ct, force) => VM.TargetAuthService.GetFormsTokenAsync(ct, force),
+            (ct, force) => VM.AuthService.GetFormsTokenAsync(ct, force),
+            ct => VM.SignInSourceForToolsAsync(ct),
+            ct => VM.SignInTargetForToolsAsync(ct),
+            (isSource, ct) => VM.GetConnectedRootAsync(isSource, ct),
+            VM.SourceUrl, VM.TargetUrl, VM.IsMultiTenant) { Owner = this }.ShowDialog();
 
     // ── Step 4 Copy log column sorting ───────────────────────────────────────────
 
