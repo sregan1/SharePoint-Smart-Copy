@@ -1,8 +1,10 @@
 name: Release
 
+# Releases are cut by pushing a version tag (e.g. v4.1.0), never by pushing to main.
+# The tag must match <Version> in SharePointSmartCopy.csproj, or the run fails before building.
 on:
   push:
-    branches: [main]
+    tags: ['v*']
 
 permissions:
   contents: write
@@ -14,14 +16,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Read version from csproj
+      - name: Read version from csproj and check it matches the tag
         id: ver
         shell: pwsh
+        env:
+          TAG: ${{ github.ref_name }}
         run: |
           [xml]$proj = Get-Content SharePointSmartCopy/SharePointSmartCopy.csproj
           $version = $proj.Project.PropertyGroup.Version
+          Write-Host "csproj Version: $version; tag: $env:TAG"
+          if ($env:TAG -ne "v$version") {
+            Write-Error "Tag '$env:TAG' does not match csproj <Version> '$version' (expected tag 'v$version'). Bump the csproj version and CHANGELOG, commit, then re-tag."
+            exit 1
+          }
           "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-          Write-Host "Version: $version"
 
       - uses: actions/setup-dotnet@v4
         with:
@@ -79,7 +87,9 @@ jobs:
           Compress-Archive -Path publish\* -DestinationPath $zip
           Copy-Item publish\SharePointSmartCopy.exe $exe
 
+          # The tag already exists (it triggered this run); --verify-tag stops gh from ever creating one.
           gh release create $tag $zip $exe `
+            --verify-tag `
             --title "SharePoint Smart Copy $tag" `
             --latest `
             --notes-file release_notes.md
