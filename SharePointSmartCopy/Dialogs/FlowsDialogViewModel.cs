@@ -40,7 +40,7 @@ public partial class FlowsDialogViewModel : ObservableObject
         ReviewItems.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasReviewItems));
         TargetConn.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName == nameof(SideConnection.State)) { OnPropertyChanged(nameof(ShowSignInTargetFirst)); OnPropertyChanged(nameof(ShowChangeTarget)); }
+            if (e.PropertyName == nameof(SideConnection.State)) { OnPropertyChanged(nameof(ShowSignInTargetFirst)); OnPropertyChanged(nameof(ShowChangeTarget)); OnPropertyChanged(nameof(CanNext)); }
         };
         MatchSummary.PropertyChanged += (_, _) => OnPropertyChanged(nameof(HasMatchSummary));
     }
@@ -127,7 +127,7 @@ public partial class FlowsDialogViewModel : ObservableObject
     public bool ShowSignInTargetFirst => ShowSignInTarget && TargetConn.State != "Connected";
     public bool ShowChangeTarget => ShowSignInTarget && TargetConn.State == "Connected";
     public bool ShowCancelTarget => ConnectingSide == "target";
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(IsSingleTenant), nameof(ShowSignInSource), nameof(ShowSignInTarget), nameof(ShowSignInTargetFirst), nameof(ShowChangeTarget))] private bool _isMultiTenant;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(IsSingleTenant), nameof(ShowSignInSource), nameof(ShowSignInTarget), nameof(ShowSignInTargetFirst), nameof(ShowChangeTarget), nameof(CanNext))] private bool _isMultiTenant;
     public bool IsSingleTenant => !IsMultiTenant;
     // The one warning shown under the connections, chosen by priority.
     [ObservableProperty, NotifyPropertyChangedFor(nameof(HasSourceWarning))] private string _sourceWarning = string.Empty;
@@ -176,11 +176,15 @@ public partial class FlowsDialogViewModel : ObservableObject
     public bool ShowNext => CurrentStep <= 4;
     public bool ShowStartOver => CurrentStep == 5;
     public string NextButtonText => CurrentStep == 4 ? Loc.T("Flows_WriteButton") : Loc.T("Forms_Next");
+    // Why Next is off on a step that checks the flows will work (empty = nothing in the way).
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext), nameof(HasBlockReason))] private string _blockReason = string.Empty;
+    public bool HasBlockReason => BlockReason.Length > 0;
+
     public bool CanNext => !IsBusy && CurrentStep switch
     {
-        0 => HasScan && FlowCount > 0,
+        0 => HasScan && FlowCount > 0 && BlockReason.Length == 0,
         4 => OutputPath.Trim().Length > 0,
-        <= 3 => true,
+        1 or 2 or 3 => BlockReason.Length == 0,   // the steps that check the flows will work before going on
         _ => false,
     };
 

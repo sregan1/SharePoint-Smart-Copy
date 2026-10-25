@@ -93,6 +93,31 @@ public partial class ListCard : ObservableObject
     public bool AlreadyOnTarget { get; set; }
     public IReadOnlyList<FlowColumnInfo> SourceColumns { get; set; } = [];
     public HashSet<string> Used { get; set; } = new(StringComparer.Ordinal);
+    // The "Create item" steps on this list, and the columns of the chosen target list (with which are required).
+    public IReadOnlyList<CreateItemStep> CreateSteps { get; set; } = [];
+    private IReadOnlyList<FlowColumnInfo> _targetCols = [];
+
+    // What would make the flows fail on import or at run time, in words. While any is listed the wizard does not go on.
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasBlockers))] private int _blockerCount;
+    [ObservableProperty] private string _blockersText = string.Empty;
+    public bool HasBlockers => BlockerCount > 0;
+    // Values typed for required columns the Create item steps leave out (kept across "Check again"), and the boxes for them.
+    public ObservableCollection<RequiredFixRow> RequiredFixes { get; } = [];
+    public bool HasFixes => RequiredFixes.Count > 0;
+    private readonly Dictionary<string, string> _fixValues = new(StringComparer.Ordinal);
+    public IReadOnlyDictionary<string, string> FixValues => _fixValues.Where(kv => !string.IsNullOrWhiteSpace(kv.Value)).ToDictionary(kv => kv.Key, kv => kv.Value);
+    public void LoadFixValues(IReadOnlyDictionary<string, string>? values)
+    {
+        if (values is null) return;
+        foreach (var (k, v) in values) _fixValues[k] = v;
+    }
+    // Column types a typed value works for; for the rest only "make it optional" applies.
+    private static readonly HashSet<string> FixableTypes = new(StringComparer.OrdinalIgnoreCase) { "Text", "Note", "Number", "Currency", "Integer" };
+    // Raised by "Check again": the dialog reads the target list again (after the user fixed it in SharePoint).
+    public event Action<ListCard>? RecheckRequested;
+
+    [RelayCommand]
+    private void Recheck() => RecheckRequested?.Invoke(this);
 
     // Every list and library on the target site. Shared by all cards on that site; filled once per site.
     public ObservableCollection<TargetListOption> TargetLists { get; init; } = [];
@@ -136,6 +161,7 @@ public partial class ListCard : ObservableObject
 
     public ListCard()
     {
+        RequiredFixes.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasFixes));
         ColumnsView = CollectionViewSource.GetDefaultView(Columns);
         ColumnsView.Filter = o => o is ColumnMapRow r && (ShowAllColumns || r.IsUsed);
     }
@@ -213,6 +239,7 @@ public partial class ListCard : ObservableObject
     public void FillColumns(IReadOnlyList<FlowColumnInfo> targetCols, Func<string, string, List<ColumnOption>, string?>? preferred)
     {
         Columns.Clear();
+        _targetCols = targetCols;
         var options = new List<ColumnOption> { new(string.Empty, Loc.T("Flows_LeaveUnchanged")) };
         options.AddRange(targetCols.OrderBy(t => t.DisplayName, StringComparer.OrdinalIgnoreCase)
             .Select(t => new ColumnOption(t.InternalName, t.DisplayName == t.InternalName ? t.InternalName : $"{t.DisplayName} ({t.InternalName})")));
@@ -259,6 +286,70 @@ public partial class ListCard : ObservableObject
         OnPropertyChanged(nameof(ColumnsToggleText));
     }
 
+    // Built-in columns that exist on every list but are not in the editable-column listing; never a reason to stop.
+    private static readonly HashSet<string> SystemColumns = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "ID", "ContentType", "Author", "Editor", "Created", "Modified", "Attachments", "FileLeafRef", "_UIVersionString",
+    };
+
+    // What would make the flows fail with this target list, judged from the columns the target list really has:
+    //  - no target list at all;
+    //  - a column the flows use that is not on the target list (after the mapping);
+    //  - a column the target list REQUIRES that a "Create item" step does not set.
+    // Nothing is judged when the columns of the target list could not be read: that is shown as a warning instead.
+    private List<string> FindBlockers(int targetColumnCount, bool hasTarget)
+    {
+        var found = new List<string>();
+        if (!hasTarget) { SyncFixRows([]); found.Add(Loc.T("Flows_Block_NoTarget")); return found; }
+        if (targetColumnCount == 0 || _targetCols.Count == 0) { SyncFixRows([]); return found; }
+
+        var targetNames = _targetCols.Select(c => c.InternalName).ToHashSet(StringComparer.Ordinal);
+        string Mapped(string name)
+        {
+            var row = Columns.FirstOrDefault(c => c.SourceColumn == name);
+            return string.IsNullOrEmpty(row?.Selected) ? name : row.Selected;
+        }
+        var listName = Picked?.Title is { Length: > 0 } t ? t : TargetListId;
+
+        foreach (var row in Columns.Where(c => c.IsUsed && !SystemColumns.Contains(c.SourceColumn)))
+            if (!targetNames.Contains(Mapped(row.SourceColumn)))
+                found.Add(Loc.T("Flows_Block_ColumnMissing", row.SourceLabel, listName));
+
+        // A required column of the target list that a Create item step does not set: the import fails. A typed value fixes it
+        // (the rewriter adds it to those steps); otherwise the list must make the column optional.
+        var fixable = new List<FlowColumnInfo>();
+        foreach (var required in _targetCols.Where(c => c.Required && !SystemColumns.Contains(c.InternalName)))
+        {
+            var lacking = CreateSteps.Where(s => s.ColumnsKnown && !s.Columns.Select(Mapped).Contains(required.InternalName)).ToList();
+            if (lacking.Count == 0) continue;
+            var canFix = FixableTypes.Contains(required.TypeName);
+            if (canFix) fixable.Add(required);
+            if (canFix && !string.IsNullOrWhiteSpace(_fixValues.GetValueOrDefault(required.InternalName))) continue;
+            foreach (var step in lacking)
+                found.Add(Loc.T(canFix ? "Flows_Block_RequiredMissing" : "Flows_Block_RequiredMissingNoFix", listName, required.DisplayName, step.FlowName, step.StepName));
+        }
+        SyncFixRows(fixable);
+        return found.Distinct().ToList();
+    }
+
+    // One box per required column that needs a value; rebuilt only when that set changes, so typing is never interrupted.
+    private void SyncFixRows(List<FlowColumnInfo> columns)
+    {
+        if (RequiredFixes.Select(r => r.Column).SequenceEqual(columns.Select(c => c.InternalName))) return;
+        RequiredFixes.Clear();
+        foreach (var c in columns)
+        {
+            var row = new RequiredFixRow { Column = c.InternalName, Display = c.DisplayName, Value = _fixValues.GetValueOrDefault(c.InternalName) ?? string.Empty };
+            row.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName != nameof(RequiredFixRow.Value)) return;
+                _fixValues[row.Column] = row.Value;
+                Refresh(_targetColumnCount);
+            };
+            RequiredFixes.Add(row);
+        }
+    }
+
     // Recomputes the summary line, the chip, the collapsed header line, and why the grid is empty if it is. The chip is
     // never "Ready" unless the list really is: a target is chosen, its columns were read, and nothing needs a look.
     public void Refresh(int targetColumnCount)
@@ -290,8 +381,13 @@ public partial class ListCard : ObservableObject
             : !SourceReadable && !onTargetNow ? Loc.T("Flows_CardEmptyUnreadable")
             : Loc.T("Flows_CardEmptyNoColumns");
 
+        var blockers = FindBlockers(targetColumnCount, hasTarget);
+        BlockersText = string.Join(Environment.NewLine, blockers);
+        BlockerCount = blockers.Count;
+
         (StatusLevel, StatusChip) =
-            !hasTarget ? ("Look", Loc.T("Flows_Chip_NoTarget"))
+            !hasTarget ? ("Error", Loc.T("Flows_Chip_NoTarget"))
+            : blockers.Count > 0 ? ("Error", Loc.T("Flows_Chip_WillFail", blockers.Count))
             : onTargetNow ? ("Info", Loc.T("Flows_Chip_AlreadyTarget"))
             : unread.Length > 0 ? ("Look", Loc.T("Flows_Chip_TargetColsUnread"))
             : Columns.Count == 0 && !SourceReadable ? ("Error", Loc.T("Flows_Chip_CantRead"))

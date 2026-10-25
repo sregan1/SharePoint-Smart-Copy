@@ -20,8 +20,14 @@ public enum FindingKind
 public sealed record Finding(FindingKind Kind, string Value, string Location, string? Detail = null,
                              string? Site = null, string? ListId = null);
 
+// A "Create item" step on a SharePoint list: the columns the step sets. A target list that REQUIRES a column the step does not
+// set rejects the flow on import ("missing required property item/Title"). ColumnsKnown is false when the step passes the whole
+// item as an expression, so what it sets cannot be read.
+public sealed record CreateItemStep(string FlowName, string StepName, string Site, string ListId, IReadOnlyList<string> Columns, bool ColumnsKnown);
+
 public sealed class FlowScan
 {
+    public List<CreateItemStep> CreateSteps { get; } = [];
     public required string PackageName { get; init; }
     public required string FlowName { get; init; }
     public required string Trigger { get; init; }
@@ -159,6 +165,12 @@ public static partial class FlowScanner
         string? Literal(string key) => prm[key] is JsonValue lv && lv.TryGetValue<string>(out var ls) && !ls.StartsWith('@') ? ls : null;
         var site = connector == "shared_sharepointonline" ? Literal("dataset") : null;
         var list = connector == "shared_sharepointonline" ? Literal("table") : null;
+        if (connector == "shared_sharepointonline" && op == "PostItem" && site is not null && list is not null)
+        {
+            var written = prm.Select(kv => kv.Key).Where(k => k.StartsWith("item/")).Select(ColumnOf).Distinct(StringComparer.Ordinal).ToList();
+            var stepName = path[(path.LastIndexOf('/') + 1)..];
+            scan.CreateSteps.Add(new CreateItemStep(scan.FlowName, stepName, site, list, written, ColumnsKnown: !prm.ContainsKey("item")));
+        }
         foreach (var (key, val) in prm)
         {
             var s = val is JsonValue jv && jv.TryGetValue<string>(out var str) ? str : val?.ToJsonString() ?? "";

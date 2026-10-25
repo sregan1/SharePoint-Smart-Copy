@@ -27,6 +27,11 @@ public sealed class FlowMapping
     // name can map differently on different lists; this wins over `Columns` for that list's steps.
     public Dictionary<string, Dictionary<string, string>> ListColumns { get; set; } = new();
 
+    // Values for columns the TARGET list requires but a "Create item" step does not set (key = SOURCE list GUID, then the
+    // target column's internal name). The rewriter adds `item/<column>` with this value to every Create item step on that list
+    // that lacks it, because a required column left out makes the import fail ("missing required property").
+    public Dictionary<string, Dictionary<string, string>> RequiredValues { get; set; } = new();
+
     // Individual email addresses (recipients, shared mailboxes, approvers...).
     public Dictionary<string, string> Emails { get; set; } = new();
 

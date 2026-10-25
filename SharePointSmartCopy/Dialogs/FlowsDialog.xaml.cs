@@ -105,12 +105,14 @@ public partial class FlowsDialog : Window
             ? saved
             : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SharePointSmartCopy", "Flows");
         _vm.PropertyChanged += OnViewModelChanged;
+        _vm.TargetConn.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(SideConnection.State)) UpdateGates(); };
         ShowConnectionStatus();
         Loaded += async (_, _) => await RefreshRootsAsync();
     }
 
     private void OnViewModelChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName == nameof(FlowsDialogViewModel.IsBusy)) UpdateGates();
         if (e.PropertyName == nameof(FlowsDialogViewModel.ShowReadFrom))
             ReadFromColumn.Visibility = _vm.ShowReadFrom ? Visibility.Visible : Visibility.Collapsed;
     }
@@ -242,7 +244,7 @@ public partial class FlowsDialog : Window
         }
         if (onTarget.Count > 0)
         {
-            _vm.SourceWarning = Loc.T("Flows_FlowsOnTarget", string.Join(", ", onTarget));
+            _vm.SourceWarning = Loc.T("Flows_FlowsOnTarget", string.Join(", ", onTarget), sourceHost.Length > 0 ? sourceHost : Loc.T("Flows_State_None"));
             _vm.ShowRemoveTargetPackages = true;
             return;
         }
@@ -415,9 +417,12 @@ public partial class FlowsDialog : Window
     }
 
     // The step-1 warning lists the packages in the list that this tool wrote.
-    private void RefreshPackageWarning() =>
+    private void RefreshPackageWarning()
+    {
         _vm.PackageWarning = string.Join("\n", _zips.Where(_rewritten.ContainsKey)
             .Select(z => Loc.T("Flows_AlreadyRewritten", Path.GetFileName(z), _rewritten[z].WrittenAt.LocalDateTime.ToString("g"))));
+        UpdateGates();
+    }
 
     private async Task ScanAsync()
     {
@@ -511,10 +516,15 @@ public partial class FlowsDialog : Window
                 ? _connectedTarget : string.Empty;
             var row = new SiteRow { Source = norm, Target = target };
             row.SetReadFromAuto(norm);
-            row.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(SiteRow.ReadFrom)) { _resolved = null; UpdateSourceWarning(); } };
+            row.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(SiteRow.ReadFrom)) { _resolved = null; UpdateSourceWarning(); }
+                else if (e.PropertyName == nameof(SiteRow.Target)) UpdateGates();
+            };
             _sites.Add(row);
         }
         _vm.HasSites = _sites.Count > 0;
+        UpdateGates();
 
         _listIds.Clear();
         _listIds.AddRange(_scans.SelectMany(s => s.Findings).Where(f => f.Kind == FindingKind.ListId && !f.Value.StartsWith('@'))
@@ -526,7 +536,11 @@ public partial class FlowsDialog : Window
         {
             saved.TryGetValue(id, out var fromCopy);
             var row = new FormMapRow { Options = _targetForms, SourceId = id, SourceTitle = fromCopy?.SourceTitle ?? "", NewId = fromCopy?.NewId ?? "" };
-            row.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(FormMapRow.NewId)) ShowFormNote(row, fromCopy); };
+            row.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(FormMapRow.NewId)) { ShowFormNote(row, fromCopy); UpdateGates(); }
+                else if (e.PropertyName == nameof(FormMapRow.StatusLevel)) UpdateGates();
+            };
             ShowFormNote(row, fromCopy);
             _forms.Add(row);
         }
@@ -578,6 +592,14 @@ public partial class FlowsDialog : Window
     //   target: the forms the target account owns, for the dropdown on each row.
     // Each side reports for itself (what it found, or why not), so a problem on one side never hides the other, and the
     // result is always shown under the button. Then every form whose title matches exactly one target form is matched.
+    // Picking a form in a row's dropdown sets that row's form ID. Done here, on the selection itself, rather than relying on the
+    // binding alone, so the ID box is always filled the moment a form is picked.
+    private void FormCombo_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.ComboBox { DataContext: FormMapRow row, SelectedItem: TargetFormOption option } && !ReferenceEquals(row.Picked, option))
+            row.Picked = option;
+    }
+
     private async void LoadFormNames_Click(object sender, RoutedEventArgs e) => await LoadFormNamesAsync();
 
     private async Task LoadFormNamesAsync()
@@ -873,6 +895,7 @@ public partial class FlowsDialog : Window
     // "3 lists · 2 ready · 1 needs a look", recomputed whenever a card changes so it never disagrees with the cards.
     private void UpdateMatchSummary()
     {
+        UpdateGates();
         if (_cards.Count == 0) { _vm.MatchSummary.Text = string.Empty; return; }
         var look = _cards.Count(c => c.NeedsAttention);
         ShowMatchSummary(look == 0 ? Loc.T("Flows_Summary_AllReady", _cards.Count) : Loc.T("Flows_Summary_Cards", _cards.Count, _cards.Count - look, look),
@@ -921,11 +944,17 @@ public partial class FlowsDialog : Window
             // it uses: map those, so the user is never stuck with an empty grid.
             card.SourceColumns = r.SourceColumnsBySourceList.GetValueOrDefault(card.SourceListId)
                                  ?? card.Used.OrderBy(n => n, StringComparer.OrdinalIgnoreCase).Select(n => new FlowColumnInfo(n, n)).ToList();
+            if (_loaded?.RequiredValues.FirstOrDefault(kv => string.Equals(kv.Key, card.SourceListId, StringComparison.OrdinalIgnoreCase)).Value is { } savedValues)
+                card.LoadFixValues(savedValues);
+            card.CreateSteps = _scans.SelectMany(s => s.CreateSteps)
+                .Where(s => string.Equals(s.ListId, card.SourceListId, StringComparison.OrdinalIgnoreCase)).ToList();
             card.FillColumns(r.TargetColumnsBySourceList.GetValueOrDefault(card.SourceListId) ?? [], Preferred);
             foreach (var row in card.Columns)
                 if (keptChoices.Any(k => string.Equals(k.ListId, card.SourceListId, StringComparison.OrdinalIgnoreCase) && k.Column == row.SourceColumn)) row.MarkEdited();
             card.IsExpanded = card.NeedsAttention;
             card.TargetChanged += OnCardTargetChanged;
+            card.RecheckRequested += async c => await ReloadCardAsync(c, recheck: true);
+            card.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(ListCard.BlockerCount)) UpdateGates(); };
         }
 
         foreach (var l in resolved.Lists)
@@ -989,7 +1018,7 @@ public partial class FlowsDialog : Window
     private async void OnCardTargetChanged(ListCard card) => await ReloadCardAsync(card);
 
     // The user chose another target list (or typed an ID): read its columns and match them again.
-    private async Task ReloadCardAsync(ListCard card)
+    private async Task ReloadCardAsync(ListCard card, bool recheck = false)
     {
         var id = FlowIdParser.ParseListId(card.TargetListId);
         if (id is null || _lookup is null || card.TargetSite.Length == 0)
@@ -1007,7 +1036,11 @@ public partial class FlowsDialog : Window
             Log(Loc.T("Flows_LogReloadCard", card.Title, card.TargetSite));
             var targetCols = await _lookup.GetTargetColumnsAsync(card.TargetSite, id, ct);
             card.TargetBaseNote = string.Empty;
-            card.FillColumns(targetCols, LoadedColumnChoice);
+            // "Check again" reads the same target list after it was changed in SharePoint: the user's column choices stay.
+            var kept = recheck ? card.Columns.Where(r => r.UserEdited).ToDictionary(r => r.SourceColumn, r => r.Selected) : [];
+            card.FillColumns(targetCols, (listId, column, options) =>
+                kept.TryGetValue(column, out var chosen) && options.Any(o => o.Internal == chosen) ? chosen : LoadedColumnChoice(listId, column, options));
+            foreach (var row in card.Columns.Where(r => kept.ContainsKey(r.SourceColumn))) row.MarkEdited();
             Log(card.SummaryText);
         });
         UpdateMatchSummary();
@@ -1109,6 +1142,41 @@ public partial class FlowsDialog : Window
     {
         _vm.CurrentStep = step;
         _vm.StatusText = string.Empty;
+        UpdateGates();
+    }
+
+    // Decides whether the current step lets the user go on. The steps that check the flows will work (Sites, Lists & columns,
+    // Forms & email) stay closed while something would make the imported flows fail, and say what.
+    private void UpdateGates()
+    {
+        var reason = string.Empty;
+        switch (_vm.CurrentStep)
+        {
+            case 0:
+                // A package this tool wrote already holds the target's values, so it has nothing left to move.
+                var written = _zips.Count(_rewritten.ContainsKey);
+                if (written > 0) reason = Loc.T("Flows_Gate_Written", written);
+                break;
+            case 1:
+                var noTarget = _sites.Count(s => string.IsNullOrWhiteSpace(s.Target));
+                if (_vm.IsMultiTenant && _vm.TargetConn.State != "Connected") reason = Loc.T("Flows_Gate_SignInTarget");
+                else if (_vm.IsMultiTenant && noTarget > 0) reason = Loc.T("Flows_Gate_Sites", noTarget);
+                break;
+            case 2:
+                var failing = _cards.Count(c => c.HasBlockers);
+                if (failing > 0) reason = Loc.T("Flows_Gate_Lists", failing);
+                else if (_cards.Count == 0 && _listIds.Count > 0 && !_vm.IsBusy) reason = Loc.T("Flows_Gate_NoCards");
+                break;
+            case 3:
+                // A form ID that is not valid, or points at the wrong tenant, fails. An empty one keeps the source form, which
+                // only works inside one tenant.
+                var badForms = _forms.Count(f => string.IsNullOrWhiteSpace(f.NewId)
+                    ? _vm.IsMultiTenant
+                    : FlowIdParser.ParseFormId(f.NewId) is null || f.StatusLevel == "Look");
+                if (badForms > 0) reason = Loc.T("Flows_Gate_Forms", badForms);
+                break;
+        }
+        _vm.BlockReason = reason;
     }
 
     // ── Step 4/5: build the mapping, then write ───────────────────────────────
@@ -1133,6 +1201,9 @@ public partial class FlowsDialog : Window
             if (id is null) { AppendLog(Loc.T("Flows_BadListId", c.TargetListId)); continue; }
             map.Lists[c.SourceListId] = id;
         }
+        map.RequiredValues.Clear();
+        foreach (var c in _cards.Where(c => c.FixValues.Count > 0))
+            map.RequiredValues[c.SourceListId] = c.FixValues.ToDictionary(kv => kv.Key, kv => kv.Value);
         foreach (var f in _forms.Where(f => !string.IsNullOrWhiteSpace(f.NewId)))
         {
             var id = FlowIdParser.ParseFormId(f.NewId);

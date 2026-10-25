@@ -93,10 +93,10 @@ public partial class SharePointService
     // Every editable, non-hidden column of a list, built-in ones such as Title included. GetLibraryColumnsAsync (below)
     // returns only the custom columns the copy tool can recreate; this is the full picture for matching flow columns.
     // Throws when SharePoint refuses, so a caller can say why the list of columns is empty.
-    public async Task<List<(string InternalName, string Title, string Type)>> GetListFieldsAsync(string siteUrl, string listId, CancellationToken ct = default)
+    public async Task<List<(string InternalName, string Title, string Type, bool Required)>> GetListFieldsAsync(string siteUrl, string listId, CancellationToken ct = default)
     {
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/fields" +
-                  "?$filter=Hidden eq false and ReadOnlyField eq false&$select=InternalName,Title,TypeAsString";
+                  "?$filter=Hidden eq false and ReadOnlyField eq false&$select=InternalName,Title,TypeAsString,Required";
         using var response = await SendSharePointRequestAsync(token =>
         {
             var r = new HttpRequestMessage(HttpMethod.Get, url);
@@ -110,7 +110,7 @@ public partial class SharePointService
             throw new Exception($"Reading the columns failed: HTTP {(int)response.StatusCode}. {(body.Length > 160 ? body[..160] : body)}");
 
         using var doc = JsonDocument.Parse(body);
-        var result = new List<(string, string, string)>();
+        var result = new List<(string, string, string, bool)>();
         if (!doc.RootElement.TryGetProperty("value", out var values)) return result;
         foreach (var f in values.EnumerateArray())
         {
@@ -118,7 +118,8 @@ public partial class SharePointService
             if (internalName.Length == 0 || internalName == "ContentType") continue;   // not a column a flow stores values in
             var title = f.TryGetProperty("Title", out var tp) ? tp.GetString() ?? internalName : internalName;
             var type = f.TryGetProperty("TypeAsString", out var ts) ? ts.GetString() ?? "" : "";
-            result.Add((internalName, title, type));
+            var required = f.TryGetProperty("Required", out var rq) && rq.ValueKind == JsonValueKind.True;
+            result.Add((internalName, title, type, required));
         }
         return result;
     }

@@ -80,7 +80,7 @@ public sealed class SharePointFlowLookup : IFlowSiteLookup
         {
             await PrepareSiteAsync(siteUrl, isSource, ct);
             var cols = await _sp.GetListFieldsAsync(siteUrl, listId, ct);
-            return cols.Select(c => new FlowColumnInfo(c.InternalName, c.Title, c.Type)).ToList();
+            return cols.Select(c => new FlowColumnInfo(c.InternalName, c.Title, c.Type, c.Required)).ToList();
         }
         catch (OperationCanceledException) { throw; }
         catch (Exception ex)

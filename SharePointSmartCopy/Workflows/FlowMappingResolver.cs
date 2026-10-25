@@ -4,7 +4,8 @@ using SharePointSmartCopy.Localization;
 namespace SharePointSmartCopy.Workflows;
 
 // A column of a list: its internal name (what flows store), display name, and SharePoint type (for display only).
-public sealed record FlowColumnInfo(string InternalName, string DisplayName, string TypeName = "");
+// Required = the list marks the column as required (a "Create item" step that does not set it fails on import).
+public sealed record FlowColumnInfo(string InternalName, string DisplayName, string TypeName = "", bool Required = false);
 
 // A list or library on a site.
 public sealed record FlowListInfo(string Id, string Title);

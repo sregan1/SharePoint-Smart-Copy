@@ -54,6 +54,14 @@ public sealed partial class OutputNameRow : CommunityToolkit.Mvvm.ComponentModel
     [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty] private string _saveAs = string.Empty;
 }
 
+// A value for a column the target list requires but a Create item step leaves out; the rewriter adds it to the step.
+public sealed partial class RequiredFixRow : CommunityToolkit.Mvvm.ComponentModel.ObservableObject
+{
+    public string Column { get; init; } = string.Empty;    // internal name on the target list
+    public string Display { get; init; } = string.Empty;
+    [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty] private string _value = string.Empty;
+}
+
 // One item to review after writing (the report step), with the step that can fix it when there is one.
 public sealed class ReviewItem
 {

@@ -44,6 +44,8 @@ public static partial class FlowRewriter
         var perList = map.ListColumns.ToDictionary(
             kv => kv.Key, kv => FlowMapping.Active(kv.Value).ToList(), StringComparer.OrdinalIgnoreCase);
 
+        var requiredValues = new Dictionary<string, Dictionary<string, string>>(map.RequiredValues, StringComparer.OrdinalIgnoreCase);
+
         void Walk(JsonNode node)
         {
             switch (node)
@@ -57,6 +59,7 @@ public static partial class FlowRewriter
                             RenameColumnKeys(prm, cols, Hit);          // written fields: item/<Column>[/Value]
                             RewriteQueryParameters(prm, cols, Hit);    // $filter / $orderby / $select
                         }
+                        AddRequiredValues(inp, prm, requiredValues, Hit);
                     }
 
                     foreach (var key in o.Select(kv => kv.Key).ToList())
@@ -89,6 +92,22 @@ public static partial class FlowRewriter
         Walk(flow);
         return counts.Select(kv => new Change(kv.Key.Cat, kv.Key.From, kv.Key.To, kv.Value))
             .OrderBy(c => c.Category).ThenBy(c => c.From).ToList();
+    }
+
+    // A "Create item" step on a list whose target requires a column the step does not set gets that column, with the value the
+    // user typed. Runs before the list ID is replaced, so the table is still the source list's GUID.
+    private static void AddRequiredValues(JsonObject inp, JsonObject prm, Dictionary<string, Dictionary<string, string>> required,
+                                          Action<string, string, string, int> hit)
+    {
+        if (inp["host"]?["operationId"]?.GetValue<string>() != "PostItem" || prm.ContainsKey("item")) return;
+        if (prm["table"] is not JsonValue tv || !tv.TryGetValue<string>(out var table) || !required.TryGetValue(table, out var values)) return;
+        foreach (var (column, value) in values.Where(kv => !string.IsNullOrWhiteSpace(kv.Value)))
+        {
+            var has = prm.Select(kv => kv.Key).Any(k => k == "item/" + column || k.StartsWith("item/" + column + "/", StringComparison.Ordinal));
+            if (has) continue;
+            prm["item/" + column] = value;
+            hit("Required value", column, value, 1);
+        }
     }
 
     private static bool IsSharePoint(JsonNode? host) =>
