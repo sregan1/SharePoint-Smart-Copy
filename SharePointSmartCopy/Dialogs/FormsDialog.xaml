@@ -268,7 +268,8 @@
                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                         <TextBlock Text="{loc:Loc Forms_TitleSuffix}" VerticalAlignment="Center" FontSize="12" Margin="0,0,8,0"
                                    Foreground="{DynamicResource TextSecondaryBrush}"/>
-                        <TextBox Width="200" Text="{Binding Suffix, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource BaseTextBox}"/>
+                        <TextBox Width="200" Text="{Binding Suffix, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource WatermarkTextBox}"
+                                 Tag="{loc:Loc Forms_TitleSuffixHint}"/>
                     </StackPanel>
 
                     <Border Style="{StaticResource InfoBanner}" Margin="0,20,0,0">

@@ -128,7 +128,11 @@ public sealed class FormsCopier
                 if (q![p] is { } v) qb[p] = v.DeepClone();
             (st, body) = await _target.SendRawAsync(HttpMethod.Post, $"formapi/api/forms('{newId}')/questions", qb.ToJsonString(), ct);
             _log($"  question {q!["id"]} ({q["type"]}): {st}{(st >= 400 ? " " + Trim(body) : "")}");
-            if (st is 200 or 201) { copied++; setCopied(copied); }
+            if (st is 200 or 201)
+            {
+                copied++; setCopied(copied);
+                await RepairQuestionInfoAsync(q, newId, body, warnings, ct);
+            }
             else warnings.Add($"Question '{Clip(q["title"]?.GetValue<string>() ?? "(untitled)", 60)}' was not copied ({st}). {ShortReason(body)}".TrimEnd());
         }
 
@@ -140,6 +144,30 @@ public sealed class FormsCopier
         (st, body) = await _target.SendRawAsync(HttpMethod.Get, $"formapi/api/forms('{newId}')/questions", null, ct);
         if (st == 200 && JsonNode.Parse(body)?["value"] is JsonArray found && found.Count != questions.Count)
             warnings.Add($"The copy has {found.Count} questions but the source has {questions.Count}.");
+    }
+
+    // Ranking and Likert questions come back from the service with default content (one "Option 1", no rating scale)
+    // when created with their questionInfo, so the questionInfo of the created question is compared with the source's
+    // and, if it differs, PATCHed onto the question. Both shapes are logged so the real payload can be inspected.
+    private async Task RepairQuestionInfoAsync(JsonNode? q, string newId, string createResponse, List<string> warnings, CancellationToken ct)
+    {
+        var type = q?["type"]?.GetValue<string>() ?? "";
+        if (!type.Contains("rank", StringComparison.OrdinalIgnoreCase) && !type.Contains("likert", StringComparison.OrdinalIgnoreCase)) return;
+        var info = q!["questionInfo"];
+        var qid = q["id"]?.GetValue<string>();
+        if (info is null || qid is null) return;
+
+        _log($"    {type} source questionInfo: {Trim(info.ToJsonString())}");
+        string? createdInfo = null;
+        try { createdInfo = JsonNode.Parse(createResponse)?["questionInfo"]?.ToJsonString(); } catch { }
+        _log($"    {type} created questionInfo: {Trim(createdInfo ?? "(none)")}");
+        if (createdInfo == info.ToJsonString()) return;
+
+        var patch = new JsonObject { ["questionInfo"] = info.DeepClone() };
+        var (st, body) = await _target.SendRawAsync(HttpMethod.Patch, $"formapi/api/forms('{newId}')/questions('{qid}')", patch.ToJsonString(), ct);
+        _log($"    {type} repair questionInfo: {st}{(st >= 400 ? " " + Trim(body) : "")}");
+        if (st >= 400)
+            warnings.Add($"Question '{Clip(q["title"]?.GetValue<string>() ?? "(untitled)", 60)}' ({type}) was created but its options could not be copied ({st}).");
     }
 
     private static FormCopyResult Failed(string error, int questions = 0) =>

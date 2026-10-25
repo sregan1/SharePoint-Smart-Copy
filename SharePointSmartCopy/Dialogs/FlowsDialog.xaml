@@ -648,7 +648,13 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="{loc:Loc Flows_ColNewForm}" Binding="{Binding NewId, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                            <DataGridTemplateColumn Header="{loc:Loc Flows_ColNewForm}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding NewId, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" Style="{StaticResource BaseTextBox}" Margin="2,1"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTemplateColumn Header="{loc:Loc Flows_ColFormNote}" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -689,7 +695,13 @@
                             </DataGrid.GroupStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="{loc:Loc Flows_ColValueSource}" Binding="{Binding Source}" IsReadOnly="True" Width="*"/>
-                                <DataGridTextColumn Header="{loc:Loc Flows_ColValueTarget}" Binding="{Binding Target, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                                <DataGridTemplateColumn Header="{loc:Loc Flows_ColValueTarget}" Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Target, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" Style="{StaticResource BaseTextBox}" Margin="2,1"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="{loc:Loc Flows_ColFilledIn}" Width="*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>

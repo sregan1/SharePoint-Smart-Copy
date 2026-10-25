@@ -600,7 +600,7 @@ public partial class FormsDialogViewModel : ObservableObject
     [ObservableProperty] private bool _targetHasError;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(SummaryText))] private string _sourceAccountName = string.Empty;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(SummaryText))] private string _targetAccountName = string.Empty;
-    [ObservableProperty] private string _suffix = " (copy)";
+    [ObservableProperty] private string _suffix = string.Empty;
     public bool HasTargetStatus => !string.IsNullOrEmpty(TargetStatusText);
     public bool NeedsTargetSignIn => IsMultiTenant && !TargetConnected;
     public string TargetIntroText => IsMultiTenant ? Loc.T("Forms_TargetIntroMulti") : Loc.T("Forms_TargetIntroSingle");
