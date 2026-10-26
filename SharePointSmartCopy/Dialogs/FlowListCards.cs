@@ -84,7 +84,7 @@ public partial class ListCard : ObservableObject
     public string TargetSite { get; set; } = string.Empty;
     // Where the list is read from on the source (differs from SourceSite when the user or the tool redirected it).
     public string ReadSite { get; set; } = string.Empty;
-    // Tenant hosts shown on the two panes, e.g. "vivity.sharepoint.com".
+    // Tenant hosts shown on the two panes, e.g. "contoso.sharepoint.com".
     public string SourceHost { get; set; } = string.Empty;
     public string TargetHost { get; set; } = string.Empty;
     // False when the list could not be read on the source: the column names then come from the flow itself.

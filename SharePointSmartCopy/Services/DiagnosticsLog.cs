@@ -127,10 +127,11 @@ public static class DiagnosticsLog
 
         if (Directory.Exists(LogDirectory))
         {
-            // Not activity-*.log: those hold file names, site URLs and SharePoint's own error reports, which the
+            // Not activity-*.log or formscopy-*.log: those hold file names, site URLs, form questions and SharePoint's own error reports, which the
             // header above promises are not in this bundle. (Crash and app logs carry no tenant content.)
             foreach (var f in new DirectoryInfo(LogDirectory).GetFiles("*.log")
-                         .Where(f => !f.Name.StartsWith("activity-", StringComparison.OrdinalIgnoreCase))
+                         .Where(f => !f.Name.StartsWith("activity-", StringComparison.OrdinalIgnoreCase)
+                                     && !f.Name.StartsWith("formscopy-", StringComparison.OrdinalIgnoreCase))
                          .OrderByDescending(f => f.LastWriteTimeUtc).Take(10))
             {
                 try

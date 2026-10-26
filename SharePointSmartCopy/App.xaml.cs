@@ -14,6 +14,7 @@ public partial class App : Application
             EventManager.RegisterClassHandler(typeof(Window), FrameworkElement.LoadedEvent,
                 new EventHandler((s, _) => ((Window)s!).FlowDirection = Localization.Loc.FlowDirection));
         Services.ThemeManager.Apply(settings.Theme);
+        Services.TextCopySupport.Register();
         Services.DiagnosticsLog.Initialize();
         DispatcherUnhandledException += (_, args) =>
         {

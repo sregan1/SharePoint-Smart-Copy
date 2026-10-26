@@ -85,6 +85,39 @@ public sealed class FormsApiClient
         return forms;
     }
 
+    // Downloads a file (an image) from an absolute address WITHOUT the Forms token: that token is for forms.office.com, and the
+    // image store (hive.forms.usercontent.microsoft) is a different host. Returns status 0 when the request itself failed.
+    public async Task<(int Status, byte[]? Bytes, string? ContentType)> DownloadAnonymousAsync(string absoluteUrl, CancellationToken ct = default)
+    {
+        try
+        {
+            using var resp = await SharedHttp.GetAsync(absoluteUrl, ct);
+            var bytes = resp.IsSuccessStatusCode ? await resp.Content.ReadAsByteArrayAsync(ct) : null;
+            return ((int)resp.StatusCode, bytes, resp.Content.Headers.ContentType?.MediaType);
+        }
+        catch (HttpRequestException) { return (0, null, null); }
+    }
+
+    // Sends a file (an image) as the raw request body, the way the Forms web app does: the file's type as Content-Type and a
+    // Content-Disposition header naming it. One retry with a fresh token after a 401. Never throws on HTTP errors.
+    public async Task<(int Status, string Body)> SendBytesAsync(HttpMethod method, string relativeUrl, byte[] content, string contentType, string contentDisposition, CancellationToken ct = default)
+    {
+        var forceToken = false;
+        for (var attempt = 1; ; attempt++)
+        {
+            using var req = new HttpRequestMessage(method, relativeUrl);
+            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await _tokenProvider(ct, forceToken));
+            req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            req.Content = new ByteArrayContent(content);
+            req.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+            req.Content.Headers.TryAddWithoutValidation("Content-Disposition", contentDisposition);
+            using var resp = await _http.SendAsync(req, ct);
+            var body = await resp.Content.ReadAsStringAsync(ct);
+            if ((int)resp.StatusCode == 401 && attempt == 1) { forceToken = true; continue; }
+            return ((int)resp.StatusCode, body);
+        }
+    }
+
     // Any method; never throws on HTTP errors, returns status and raw body. Throttling (429), transient server
     // errors (502/503/504) and an expired token (401, retried once with a fresh token) are retried here, so a
     // bulk copy doesn't turn a brief throttle into a lost question or setting.

@@ -53,7 +53,7 @@ Choose from four copy scopes in a step-by-step wizard:
 
 | Tool | What it does |
 |---|---|
-| **Forms** | Copies Microsoft Forms (all question types, branching, quiz type, settings, theme) and exports responses to Excel. Uses the *unofficial* Microsoft Forms API and needs the delegated Microsoft Forms permission on your app registration |
+| **Forms** | Copies Microsoft Forms (all question types including Ranking and Likert, branching, quiz type, settings, theme, logo and background images) and exports responses to Excel. Uses the *unofficial* Microsoft Forms API and needs the delegated Microsoft Forms permission on your app registration |
 | **Flows** | Rewrites exported Power Automate packages for the target tenant: sites, lists (matched by name through your connections), columns, copied forms, and email domains. Connections must be recreated after import |
 
 **All scopes:**
@@ -274,6 +274,22 @@ Files checked out in SharePoint cannot be read by the API. Check them in at the 
 
 ---
 
+## About
+
+Originally created and released in May 2026 by Sean Regan.
+
+Copyright (c) 2026 Vivity, Inc.
+
+Part of SharePoint Smart Solutions, a software product brand of Vivity, Inc.
+
+## Disclaimer
+
+This software is provided "as is", without warranty of any kind, under the terms of the MIT License. Copying data between
+SharePoint sites and tenants can overwrite or miss content: verify the results (the Verification Report helps) before you rely
+on a copy or remove a source. The Forms tool uses an unofficial Microsoft Forms API that Microsoft does not document or
+support and may change without notice. This project is not affiliated with or endorsed by Microsoft. SharePoint, Microsoft
+Forms, Power Automate and Microsoft 365 are trademarks of Microsoft Corporation.
+
 ## License
 
-[MIT](LICENSE) © 2026 Sean Regan
+[MIT](LICENSE) © 2026 Vivity, Inc.

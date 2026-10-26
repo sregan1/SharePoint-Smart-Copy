@@ -139,6 +139,19 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <!-- One-line inputs read best centered; a box that holds several lines (a log, wrapped text) starts at the top, so a
+             short text sits under the header instead of floating in the middle. -->
+        <Style.Triggers>
+            <Trigger Property="AcceptsReturn" Value="True">
+                <Setter Property="VerticalContentAlignment" Value="Top"/>
+            </Trigger>
+            <Trigger Property="TextWrapping" Value="Wrap">
+                <Setter Property="VerticalContentAlignment" Value="Top"/>
+            </Trigger>
+            <Trigger Property="TextWrapping" Value="WrapWithOverflow">
+                <Setter Property="VerticalContentAlignment" Value="Top"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!-- Implicit app-wide TextBox style so every window gets the same input look -->

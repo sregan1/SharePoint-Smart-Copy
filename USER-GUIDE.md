@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 4.0.2  ·  October 2026**
+**Version 4.1.0  ·  October 2026**
 
 ---
 
@@ -336,7 +336,7 @@ On the **Browse** step, below the four copy-scope tiles, an **Other tools** row 
 
 **Forms** — four steps, like the main copy wizard:
 
-1. **Forms** — click **Load my forms** (you may be asked to sign in). Your own forms are listed; forms owned by Microsoft 365 groups and forms shared with you are not listed yet. Tick the forms to copy; the **filter box** narrows the list by title or type (**Select all** then takes just the visible forms), and the **Already copied** column shows forms you copied before. **Export responses…** (bottom left) writes one Excel file per ticked form, or one workbook with a sheet per form if **One workbook** is ticked; responses can't be re-submitted into a copy. If a selected form was already copied to the same account, you are asked before a second copy is made.
+1. **Forms** — your forms load as soon as the dialog opens (you may be asked to sign in); **Reload forms** reads them again, and **Load my forms** is the retry if the first attempt failed or was cancelled. Your own forms are listed; forms owned by Microsoft 365 groups and forms shared with you are not listed yet. Tick the forms to copy; the **filter box** narrows the list by title or type (**Select all** then takes just the visible forms), and the **Already copied** column shows forms you copied before. **Export responses…** (bottom left) writes one Excel file per ticked form, or one workbook with a sheet per form if **One workbook** is ticked; responses can't be re-submitted into a copy. If a selected form was already copied to the same account, you are asked before a second copy is made.
 
    ![Choosing forms to copy](SharePointSmartCopy/Docs/screenshots/14_forms_select.png)
 
@@ -350,7 +350,7 @@ On the **Browse** step, below the four copy-scope tiles, an **Other tools** row 
    ![Forms results with a warning](SharePointSmartCopy/Docs/screenshots/17_forms_results.png)
 
 
-Each copy keeps all questions (with their original IDs), choice branching, quiz type, settings, and theme. After each copy the tool checks that the copy has as many questions as the source. Background, logo, and header images are not copied yet, and quiz scoring is not verified; both are noted in the results.
+Each copy keeps all questions (with their original IDs), choice branching, quiz type, settings, and theme. After each copy the tool checks that the copy has as many questions as the source. Ranking options and Likert scales are copied too, and so are the form's logo, background, and header images: each is uploaded to the new form, then checked on the copy. If an image cannot be added, a copy of the file is saved in `Documents\SharePointSmartCopy\Forms images` and the warning names it, so you can add it in Microsoft Forms by hand. Quiz scoring is not verified; that is noted in the results.
 
 **Flows** — six steps. The same layout runs through all of them: **SOURCE** (grey) is where your flows come from and **TARGET** (blue) is where they go, each with its tenant address. Every step opens with one line saying what happens, and a **What happens here** link for the longer reason. A small **What the tool is doing** strip at the bottom shows the latest action; click it to see the whole log (it opens by itself when something fails).
 

@@ -48,7 +48,13 @@ public partial class FormsDialog : Window
         ResultsGrid.ItemsSource = _vm.Results;
         _vm.SourceAccountText = Loc.T("Forms_SourceAccount", sourceAuth.FormsUserName ?? sourceAuth.UserName ?? Loc.T("Forms_SignInOnDemand"));
         _vm.StatusText = Loc.T("Forms_StatusStart");
+        // The dialog is opened on purpose (its tile was clicked), so load the forms straight away instead of asking for a
+        // second click. The button stays as "Reload forms", and as the retry when this first attempt fails or is cancelled.
+        Loaded += async (_, _) => { if (AutoLoadForms && _rows.Count == 0) await LoadFormsAsync(); };
     }
+
+    // False for screenshot/demo hosts that fill the dialog themselves (a real load would need a sign-in).
+    public bool AutoLoadForms { get; init; } = true;
 
     private FormsApiClient SourceClient() => new((ct, force) => _sourceAuth.GetFormsTokenAsync(ct, force));
     private FormsApiClient TargetClient() => new((ct, force) => _targetAuth.GetFormsTokenAsync(ct, force));
@@ -62,7 +68,9 @@ public partial class FormsDialog : Window
 
     // ── Step 1: Forms ─────────────────────────────────────────────────────────
 
-    private async void Load_Click(object sender, RoutedEventArgs e)
+    private async void Load_Click(object sender, RoutedEventArgs e) => await LoadFormsAsync();
+
+    private async Task LoadFormsAsync()
     {
         await RunAsync(Loc.T("Forms_Loading"), async ct =>
         {

@@ -953,7 +953,7 @@
                                    Visibility="{Binding IsActivityOpen, Converter={StaticResource InvBoolToVis}}"/>
                     </Grid>
                 </Button>
-                <TextBox x:Name="ActivityBox" Text="{Binding ActivityText, Mode=OneWay}" IsReadOnly="True" TextWrapping="NoWrap"
+                <TextBox x:Name="ActivityBox" Text="{Binding ActivityText, Mode=OneWay}" IsReadOnly="True" TextWrapping="NoWrap" VerticalContentAlignment="Top"
                          VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Height="96" Margin="0,4,0,2"
                          FontFamily="Consolas" FontSize="11" Background="{DynamicResource WindowBgBrush}"
                          BorderBrush="{DynamicResource BorderLightBrush}"
