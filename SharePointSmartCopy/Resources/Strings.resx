@@ -640,7 +640,7 @@
   <data name="Ui2_AppRegsSetup" xml:space="preserve"><value>Setup: portal.azure.com → Microsoft Entra ID → App registrations → New registration. Add a Mobile/Desktop redirect URI of http://localhost. Under API permissions, add Graph delegated: Sites.ReadWrite.All + Files.ReadWrite.All, then grant admin consent.</value></data>
   <data name="Ui2_NoMappableColumnsDetail" xml:space="preserve"><value>The source library has no custom columns of a supported type. Supported types: Text, Note, Number, Currency, Boolean, Date, Choice, Multi-choice, Hyperlink, Person, Lookup, Managed Metadata (same tenant only). Image and Location columns are not supported.</value></data>
   <data name="Ui_SingleTenant" xml:space="preserve"><value>Single tenant</value></data>
-  <data name="Ui_MultiTenant" xml:space="preserve"><value>Multi-tenant (beta)</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Multi-tenant</value></data>
   <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Copy between two different Microsoft 365 tenants. You sign in separately to the source and to the target. Choose the target's app registration in Settings.</value></data>
   <data name="Ui_TargetRegistration" xml:space="preserve"><value>Target registration:</value></data>
   <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Multi-tenant mode: the app registration used to sign in to the target tenant. "Same as source" reuses the source registration, which must then be a multi-tenant app.</value></data>
@@ -833,6 +833,8 @@
   <data name="Forms_CopySelected" xml:space="preserve"><value>Copy selected forms</value></data>
   <data name="Forms_ExportResponses" xml:space="preserve"><value>Export responses…</value></data>
   <data name="Forms_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Check a copy against its source</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Other tools</value></data>
   <data name="Forms_TileTitle" xml:space="preserve"><value>Forms</value></data>
   <data name="Forms_TileDesc" xml:space="preserve"><value>Copy Microsoft Forms and export their responses</value></data>
   <data name="Forms_AutoTile" xml:space="preserve"><value>Forms tool</value></data>

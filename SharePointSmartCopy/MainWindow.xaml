@@ -132,7 +132,7 @@
         <Style x:Key="ModeTileButton" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource BorderLightBrush}"/>
-            <Setter Property="Margin" Value="0,0,8,8"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
             <Setter Property="Padding" Value="12,10"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="MinHeight" Value="110"/>
@@ -164,6 +164,36 @@
                     <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
                 </DataTrigger>
             </Style.Triggers>
+        </Style>
+
+        <!-- ── Tool button: a lighter, compact launcher for the tools that open their own dialog (Forms, Flows).
+             Unlike a ModeTile it is never "selected". ── -->
+        <Style x:Key="ToolButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderLightBrush}"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="ModeTileGlyph" TargetType="TextBlock" BasedOn="{StaticResource GlyphIcon}">
@@ -374,13 +404,6 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="&#xE81C;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
                                 <TextBlock Text="{loc:Loc Ui_History}" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button Style="{StaticResource AppBarBtn}" Margin="0,0,8,0" Click="CompareButton_Click"
-                                WindowChrome.IsHitTestVisibleInChrome="True">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE895;" Style="{StaticResource GlyphIcon}" FontSize="13" Margin="0,0,6,0"/>
-                                <TextBlock Text="{loc:Loc Ui_Compare}" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                         <Button Style="{StaticResource AppBarBtn}" Click="SettingsButton_Click"
@@ -618,9 +641,10 @@
                 <TextBlock Grid.Row="0" Text="{loc:Loc Ui_WhatWouldYouLikeTo}" Style="{StaticResource SectionHeader}"/>
 
                 <!-- ── Mode tile selector ── -->
-                <!-- Six tiles, three per row: the four copy scopes plus the Forms and Flows tools. Forms/Flows open
-                     their own dialogs (no copy scope / wizard steps involved), so they are never the selected tile. -->
-                <UniformGrid Grid.Row="1" Columns="3" Margin="0,8,0,4">
+                <!-- The four copy scopes, then a lighter "Other tools" row: Forms and Flows open their own dialogs (no copy
+                     scope / wizard steps involved), so they are launchers, never the selected tile. -->
+                <StackPanel Grid.Row="1" Margin="0,8,0,12">
+                <UniformGrid Columns="4">
                     <Button Style="{StaticResource ModeTileButton}" Tag="{Binding IsFilesScope}"
                             Click="ModeFiles_Click"
                             AutomationProperties.Name="{loc:Loc Ui2_AutoFilesFoldersMode}">
@@ -641,7 +665,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource ModeTileButton}" Tag="{Binding IsSiteScope}" Margin="0,0,0,8"
+                    <Button Style="{StaticResource ModeTileButton}" Tag="{Binding IsSiteScope}"
                             Click="ModeSite_Click"
                             AutomationProperties.Name="{loc:Loc Ui2_AutoEntireSiteMode}">
                         <StackPanel>
@@ -651,7 +675,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource ModeTileButton}" Tag="{Binding IsPagesScope}"
+                    <Button Style="{StaticResource ModeTileButton}" Tag="{Binding IsPagesScope}" Margin="0"
                             Click="ModePages_Click"
                             AutomationProperties.Name="{loc:Loc Ui2_AutoSitePagesMode}">
                         <StackPanel>
@@ -660,25 +684,57 @@
                             <TextBlock Text="{loc:Loc Ui_CopyModernPagesWithWeb}" Style="{StaticResource ModeTileDesc}"/>
                         </StackPanel>
                     </Button>
+                </UniformGrid>
 
-                    <Button Style="{StaticResource ModeTileButton}" Click="ModeForms_Click"
-                            AutomationProperties.Name="{loc:Loc Forms_AutoTile}">
-                        <StackPanel>
-                            <TextBlock Text="&#xE73A;" Style="{StaticResource ModeTileGlyph}"/>
-                            <TextBlock Text="{loc:Loc Forms_TileTitle}" Style="{StaticResource ModeTileTitle}"/>
-                            <TextBlock Text="{loc:Loc Forms_TileDesc}" Style="{StaticResource ModeTileDesc}"/>
-                        </StackPanel>
+                <TextBlock Text="{loc:Loc Ui_OtherTools}" FontSize="11" FontWeight="SemiBold" Margin="0,12,0,6"
+                           Foreground="{DynamicResource TextTertiaryBrush}"/>
+                <UniformGrid Columns="4">
+                    <Button Style="{StaticResource ToolButton}" Click="CompareButton_Click" AutomationProperties.Name="{loc:Loc Ui_Compare}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE895;" Style="{StaticResource GlyphIcon}" FontSize="18" Margin="0,0,10,0"
+                                       VerticalAlignment="Top" Foreground="{DynamicResource AccentBrush}"/>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="{loc:Loc Ui_Compare}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{loc:Loc Ui_CompareToolDesc}" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                            </StackPanel>
+                        </Grid>
                     </Button>
 
-                    <Button Style="{StaticResource ModeTileButton}" Click="ModeFlows_Click" Margin="0,0,0,8"
-                            AutomationProperties.Name="{loc:Loc Flows_AutoTile}">
-                        <StackPanel>
-                            <TextBlock Text="&#xE8AB;" Style="{StaticResource ModeTileGlyph}"/>
-                            <TextBlock Text="{loc:Loc Flows_TileTitle}" Style="{StaticResource ModeTileTitle}"/>
-                            <TextBlock Text="{loc:Loc Flows_TileDesc}" Style="{StaticResource ModeTileDesc}"/>
-                        </StackPanel>
+                    <Button Style="{StaticResource ToolButton}" Click="ModeForms_Click" AutomationProperties.Name="{loc:Loc Forms_AutoTile}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE73A;" Style="{StaticResource GlyphIcon}" FontSize="18" Margin="0,0,10,0"
+                                       VerticalAlignment="Top" Foreground="{DynamicResource AccentBrush}"/>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="{loc:Loc Forms_TileTitle}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{loc:Loc Forms_TileDesc}" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Style="{StaticResource ToolButton}" Click="ModeFlows_Click" AutomationProperties.Name="{loc:Loc Flows_AutoTile}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE8AB;" Style="{StaticResource GlyphIcon}" FontSize="18" Margin="0,0,10,0"
+                                       VerticalAlignment="Top" Foreground="{DynamicResource AccentBrush}"/>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="{loc:Loc Flows_TileTitle}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{loc:Loc Flows_TileDesc}" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                            </StackPanel>
+                        </Grid>
                     </Button>
                 </UniformGrid>
+                </StackPanel>
 
                 <Border Grid.Row="2" Style="{StaticResource InfoBanner}" Padding="10,6" Margin="0,0,0,8">
                     <TextBlock FontSize="12" Foreground="{DynamicResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis">

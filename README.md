@@ -20,6 +20,10 @@ A free and open source Windows desktop application for copying files, libraries,
 | **Progress — real-time file status** | **History — browse previous runs** |
 | ![Multi-tenant mode on the first screen](SharePointSmartCopy/Docs/screenshots/10_multitenant_source.png) | ![Identity mapping table with Check in target](SharePointSmartCopy/Docs/screenshots/11_identity_mapping.png) |
 | **Multi-tenant — separate sign-in for source and target** | **Identity mapping — who is who in the other tenant** |
+| ![Forms — choose the forms to copy](SharePointSmartCopy/Docs/screenshots/14_forms_select.png) | ![Forms — copy results](SharePointSmartCopy/Docs/screenshots/17_forms_results.png) |
+| **Forms — choose forms and copy them to the target** | **Forms — results with per-form warnings** |
+| ![Flows — lists and columns matched to the target](SharePointSmartCopy/Docs/screenshots/20_flows_lists.png) | ![Flows — report with items to review](SharePointSmartCopy/Docs/screenshots/23_flows_report.png) |
+| **Flows — match lists and columns** | **Flows — what was written and what to review** |
 
 ---
 
@@ -61,12 +65,12 @@ Choose from four copy scopes in a step-by-step wizard:
 - **Automatic recovery from Migration API batch aborts** — if SharePoint cancels an entire import after hitting its internal per-batch conflict threshold, the app clears the specific conflicting files and retries the batch automatically instead of requiring a manual re-run
 - Detailed per-item report with CSV export and inline permission status
 - Run history viewable in-app, with an independent **Verification Report** (Excel) that re-scans source and target to confirm every file actually landed
-- **Compare** — a standalone dialog (Compare button, top-right) generates the same kind of difference report for any source and target you connect to, with no copy or saved history required
+- **Compare** — a standalone dialog (**Compare** under *Other tools* on the Browse step) generates the same kind of difference report for any source and target you connect to, with no copy or saved history required
 - **Deep Verify** (optional) — for Office files flagged as mismatched, downloads both copies and compares actual internal content, ignoring only the parts SharePoint itself rewrites on upload, so a hash/date difference can be proven real or harmless instead of left unresolved
 - History opens instantly regardless of run size — a saved run's full per-file results load only when you open, export, or verify that run, not for every entry in the list
 - **Cancelled status** — items still in progress when a run is stopped or the app closes mid-copy are reported as Cancelled rather than Failed, so an interrupted run's summary doesn't look like a mass failure
 - **Large-file transfer reliability** — a self-tuning upload-concurrency gate and a global in-memory byte budget keep libraries containing many very large (multi-GB) files copying without exhausting memory or saturating the upload path
-- **Copy between tenants (beta)** — a Single tenant / Multi-tenant switch signs in to the source and target with separate app registrations. A **user mapping table** says which source user is which target user (with an email-domain shortcut and **Check in target**), and after a run the report lists anyone the target couldn't find so you can map them
+- **Copy between tenants** — a Single tenant / Multi-tenant switch signs in to the source and target with separate app registrations. A **user mapping table** says which source user is which target user (with an email-domain shortcut and **Check in target**), and after a run the report lists anyone the target couldn't find so you can map them
 - **Crash recovery and Resume** — a run interrupted by a crash or power loss is recovered as an **Interrupted** History entry, and **Resume / run again** re-runs its selection so only what's missing or changed is transferred
 - **Export diagnostics** (Settings) — a redacted zip of logs and system info for bug reports
 - **Total Size** shown alongside item counts on the preview, in-progress, and report screens, in the Excel verification report, and in History — including bytes from copied version history, not just each file's current version
@@ -130,6 +134,24 @@ Go to **API permissions** → **Add a permission**:
 > `AllSites.FullControl` raises the OAuth context to full control so SP recognizes the user's actual admin status.
 >
 > `AllSites.FullControl` is only required for Migration API mode. If your organization uses Enhanced REST mode exclusively, this permission can be omitted.
+
+#### Which permissions does each feature need?
+
+Every sign-in asks for the two Microsoft Graph permissions, so they are needed for anything that connects to SharePoint. The other two are only needed by the features marked below. If you do not use a feature, you can leave its permission out.
+
+| Feature | Graph `Sites.ReadWrite.All` | Graph `Files.ReadWrite.All` | SharePoint `AllSites.FullControl` | Microsoft Forms |
+|---|:-:|:-:|:-:|:-:|
+| Files & Folders, Libraries & Lists, Entire Site — **Enhanced REST** mode | ✔ | ✔ | — | — |
+| Files & Folders, Libraries & Lists, Entire Site — **Migration API** mode | ✔ | ✔ | ✔ | — |
+| Site Pages (always Enhanced REST) | ✔ | ✔ | — | — |
+| **Compare**, and verifying a copy | ✔ | ✔ | — | — |
+| **Forms** tool | ✔ | ✔ | — | ✔ |
+| **Flows** tool | ✔ | ✔ | — | optional* |
+| Browsing saved History, Settings (local only; verifying a run signs in like Compare) | — | — | — | — |
+
+\* The Flows tool only uses Microsoft Forms to look up form titles and the target account's forms. Without the permission those lookups report an error and you paste each new form's ID or edit-page link instead; everything else in Flows works.
+
+For example, a company that only wants to move Power Automate flows needs the two Graph permissions and nothing else: no Microsoft Forms permission, and no `AllSites.FullControl`. Flows reads your packages from disk and looks up lists and columns on the source and target sites with the same sign-in.
 
 ### 3. Grant admin consent
 

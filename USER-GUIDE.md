@@ -43,7 +43,7 @@ Two copy engines are available. **Migration API** mode uses SharePoint's server-
 - **OneNote notebooks** copy correctly as a single native operation, preserving their special notebook association instead of being rebuilt as a plain folder of files
 - **Verification Report** — independently re-scans source and target after a run and produces an Excel workbook confirming what actually matches
 - **Compare** — generate the same kind of difference report for any source and target you connect to, without needing a prior copy or a saved history entry
-- **Copy between two tenants (beta)** — Multi-tenant mode signs in to source and target separately, with a user mapping table and **Check in target**; the report lists people the target couldn't find so you can map them (see Section 5)
+- **Copy between two tenants** — Multi-tenant mode signs in to source and target separately, with a user mapping table and **Check in target**; the report lists people the target couldn't find so you can map them (see Section 5)
 - **Resume / run again** and **crash recovery** — a run cut short is recovered as an Interrupted History entry and can be resumed
 - Full copy history stored locally — browse, re-export, resume, or delete previous runs
 - System sleep is blocked automatically for the duration of a copy, metadata update, or verification
@@ -139,7 +139,25 @@ Before using SharePoint Smart Copy for the first time, a one-time setup is requi
 
 > **Note:** `AllSites.FullControl` (SharePoint delegated) is required for Migration API mode. If your organization uses only Enhanced REST mode, this permission can be omitted — but the app will display an error if Migration API is selected without it.
 
-> **Optional — only for the Forms tool:** to copy Microsoft Forms, also add **Microsoft Forms** → **Delegated permissions** (search "Microsoft Forms" under *APIs my organization uses*) and grant consent. It is not needed for any other feature. See [Copying Forms and Flows](#copying-forms-and-flows--beta).
+> **Optional — only for the Forms tool:** to copy Microsoft Forms, also add **Microsoft Forms** → **Delegated permissions** (search "Microsoft Forms" under *APIs my organization uses*) and grant consent. It is not needed for any other feature. See [Copying Forms and Flows](#copying-forms-and-flows).
+
+#### Which permissions does each feature need?
+
+Every sign-in asks for the two Microsoft Graph permissions, so they are needed for anything that connects to SharePoint. The other two are only needed by the features marked below. If you do not use a feature, you can leave its permission out.
+
+| Feature | Graph `Sites.ReadWrite.All` | Graph `Files.ReadWrite.All` | SharePoint `AllSites.FullControl` | Microsoft Forms |
+|---|:-:|:-:|:-:|:-:|
+| Files & Folders, Libraries & Lists, Entire Site — **Enhanced REST** mode | ✔ | ✔ | — | — |
+| Files & Folders, Libraries & Lists, Entire Site — **Migration API** mode | ✔ | ✔ | ✔ | — |
+| Site Pages (always Enhanced REST) | ✔ | ✔ | — | — |
+| **Compare**, and verifying a copy | ✔ | ✔ | — | — |
+| **Forms** tool | ✔ | ✔ | — | ✔ |
+| **Flows** tool | ✔ | ✔ | — | optional* |
+| Browsing saved History, Settings (local only; verifying a run signs in like Compare) | — | — | — | — |
+
+\* The Flows tool only uses Microsoft Forms to look up form titles and the target account's forms. Without the permission those lookups report an error and you paste each new form's ID or edit-page link instead; everything else in Flows works.
+
+For example, a company that only wants to move Power Automate flows needs the two Graph permissions and nothing else: no Microsoft Forms permission, and no `AllSites.FullControl`. Flows reads your packages from disk and looks up lists and columns on the source and target sites with the same sign-in.
 
 > **Important — admin consent is per-tenant:** Consenting to these permissions in one Microsoft 365 tenant has no effect on any other tenant. If you're deploying to a new customer or a second tenant, repeat this entire Azure App Registration section — a new app registration, new permissions, and a fresh **Grant admin consent** click — inside *that* tenant. Consent can never be reused across tenants.
 
@@ -279,11 +297,11 @@ The full per-file results table is shown below the summary cards. Use the **filt
 - **Compare source & target** and **Open History** — open the Compare tool and the run history without leaving the report
 - **Failed / Skipped cards** — click a card to filter the list to just those items
 
-### Copying Between Two Tenants (Multi-tenant Mode) — Beta
+### Copying Between Two Tenants (Multi-tenant Mode)
 
 On the first screen, choose **Multi-tenant** next to **Connection** when the source and the target are in **different** Microsoft 365 tenants. In the default **Single tenant** mode both sites share one sign-in, exactly as described above.
 
-> **Note:** Multi-tenant mode is in beta. It has been tested against two tenant pairs, but other setups (guest accounts, conditional access, very large libraries) may behave differently. Try it on a small library first and check the result with a Verification Report, and please report anything unexpected on GitHub.
+> **Note:** Multi-tenant mode has been tested against two tenant pairs, but other setups (guest accounts, conditional access, very large libraries) may behave differently. Try it on a small library first and check the result with a Verification Report, and please report anything unexpected on GitHub.
 
 1. **Create an app registration in each tenant** (Section 4) and add both in **Settings**. Each tenant's administrator must grant consent for its own registration.
 2. On the first screen, choose the **Source app registration** and the **Target app registration**. You sign in to each site separately, with an account from that tenant. The title bar shows both accounts (*Source: … · Target: …*).
@@ -310,31 +328,58 @@ What differs from a same-tenant copy:
 - The source and target must be on **different SharePoint hosts**. For two sites in the same tenant, use Single tenant mode.
 - Switching between Single tenant and Multi-tenant disconnects both sites (you are asked first).
 
-### Copying Forms and Flows — Beta
+### Copying Forms and Flows
 
-On the **Browse** step, below the four copy-scope tiles, two more tiles open their own tools. They are not copy scopes: they use the sign-ins you already made (Single tenant: one shared sign-in; Multi-tenant: the source and target sign-ins).
+On the **Browse** step, below the four copy-scope tiles, an **Other tools** row has two buttons, **Forms** and **Flows**, that open their own tools. They are not copy scopes: they use the sign-ins you already made (Single tenant: one shared sign-in; Multi-tenant: the source and target sign-ins).
 
 > **Unofficial API.** The Forms tool talks to the Microsoft Forms web API, which Microsoft does not document or support. It works today but may change without notice. Try a few forms first.
 
-**Forms tile** — four steps, like the main copy wizard:
+**Forms** — four steps, like the main copy wizard:
 
 1. **Forms** — click **Load my forms** (you may be asked to sign in). Your own forms are listed; forms owned by Microsoft 365 groups and forms shared with you are not listed yet. Tick the forms to copy; the **filter box** narrows the list by title or type (**Select all** then takes just the visible forms), and the **Already copied** column shows forms you copied before. **Export responses…** (bottom left) writes one Excel file per ticked form, or one workbook with a sheet per form if **One workbook** is ticked; responses can't be re-submitted into a copy. If a selected form was already copied to the same account, you are asked before a second copy is made.
+
+   ![Choosing forms to copy](SharePointSmartCopy/Docs/screenshots/14_forms_select.png)
+
 2. **Target** — choose where the copies go. In *Single tenant* mode they are created in the same account, next to the originals. In *Multi-tenant* mode this step has its own **Sign in to the target account** button (separate from the SharePoint sign-ins) and confirms that the account can use Microsoft Forms before you can continue. You can add a suffix to the copied titles here.
+
+   ![The Forms Target step](SharePointSmartCopy/Docs/screenshots/15_forms_target.png)
+
 3. **Copy** — shows progress form by form. **Cancel** stops after the current form (Cancel is also available while loading, signing in and exporting). Closing the window during a copy asks first, because it can leave a half-built form in the target.
 4. **Results** — a dashboard like the file copy's report: how many forms copied, copied with warnings, or failed, how many questions copied, and how long it took. The table lists each form with the reason for any warning or failure. **Open selected copy** and **Open Microsoft Forms** jump to the copies, **Export results…** saves the table to Excel, and **Show form ID map** opens the file the Flows tool uses. **Copy more forms** starts again.
 
+   ![Forms results with a warning](SharePointSmartCopy/Docs/screenshots/17_forms_results.png)
+
+
 Each copy keeps all questions (with their original IDs), choice branching, quiz type, settings, and theme. After each copy the tool checks that the copy has as many questions as the source. Background, logo, and header images are not copied yet, and quiz scoring is not verified; both are noted in the results.
 
-**Flows tile** — six steps. The same layout runs through all of them: **SOURCE** (grey) is where your flows come from and **TARGET** (blue) is where they go, each with its tenant address. Every step opens with one line saying what happens, and a **What happens here** link for the longer reason. A small **What the tool is doing** strip at the bottom shows the latest action; click it to see the whole log (it opens by itself when something fails).
+**Flows** — six steps. The same layout runs through all of them: **SOURCE** (grey) is where your flows come from and **TARGET** (blue) is where they go, each with its tenant address. Every step opens with one line saying what happens, and a **What happens here** link for the longer reason. A small **What the tool is doing** strip at the bottom shows the latest action; click it to see the whole log (it opens by itself when something fails).
 
 1. **Packages** — export your flows in Power Automate (**Export → Package (.zip)**) and add the files, or drag them onto the window. Each package is listed with the flows found in it and how many sites and lists they use; **✕** removes one. Add the **original** exports from the source, not packages this tool wrote earlier (the tool recognizes those and warns). Solution exports (.zip files with a `Workflows` folder) are read too. **Have a saved mapping? Load it…** fills the following steps from a mapping you saved earlier. **What these flows use** (closed by default) lists the services the flows use and what the tool does about each.
+
+   ![The Flows Packages step](SharePointSmartCopy/Docs/screenshots/18_flows_packages.png)
+
 2. **Sites** — shows where each flow's site moves to. The **Source** and **Target** lines show each tenant's address, the account it is connected as, and a state chip. In *Multi-tenant* mode, **Change source…** signs in to the source again, and **Sign in to target…** signs in to the target (the window always opens, so you can switch account or browser; the button turns into **Cancel** while it waits). The tool reads the target tenant's address from the account and fills in every empty target site with the same path on it. The table is **From** (the address in your flows), **To** (the target site, editable) and a status chip. A site left empty is not changed, and the report lists it. If a flow's sites are on a different tenant than your source connection, **Advanced: read lists from a different address** opens by itself with the corrected address. One warning at a time is shown under the connections.
+
+   ![The Flows Sites step](SharePointSmartCopy/Docs/screenshots/19_flows_sites.png)
+
 3. **Lists & columns** — **one card per list** the flows use, however many flows use it. A card has a header (the list's name, which target it goes to, how many flows use it, and a status chip) and opens into a **SOURCE** pane (tenant, list name and ID, site) and a **TARGET** pane (tenant, a dropdown of every list on the target site, or paste an ID). The same-named target list is chosen for you. Below is the **column mapping** from source to target: the columns the flows use (tick "Show all columns" for the rest) with the target column chosen for you. You only need to act on cards marked **Needs a look** and rows marked *Similar name* or *No match*; a row you fix stops asking for attention. If the source list cannot be read, the card says why and still lets you map, using the column names found in the flow. If the list's ID is already a list on the target (a package this tool wrote), the card says **Already on target**. The summary line at the top ("7 lists · 5 ready · 2 need a look") always matches the cards.
+
+   ![A list card with its column mapping](SharePointSmartCopy/Docs/screenshots/20_flows_lists.png)
+
 **Next stays off until the flows would work.** On Sites (Multi-tenant: target signed in, every site has a target), Lists & columns (every list has a target list, every column the flows use exists there, and every column the target list requires is filled in by the flow's Create item steps, or by a value you type on the list card, which the tool adds to those steps) and Forms & email (a valid target form), the footer says what is in the way. Fix it, use **Check again** on a list card after changing the list in SharePoint, and Next turns on.
 
 4. **Forms & email** — each form in your flows is shown with its target. A flow only stores a form's ID, form names load automatically when you arrive (**Load form names…** retries): the tool reads each form's title from Microsoft Forms (source account, including forms shared with it) and the forms the target account owns, and reports what it found on each side right under the button (or why it could not). A form whose title matches exactly one target form (or "title (copy)") is matched for you; otherwise pick the new form from the dropdown, or paste its ID or edit-page link. Either works, and **Cancel** stops a pending sign-in. The dropdown lists only forms the target account owns, not group-owned forms. **Other values** (email addresses, the tenant ID, library paths) are grouped by kind. Values the tool filled in from your sign-ins are marked **✓ filled in**; **Clear values filled in automatically** undoes them. Email domains are one sentence: *Move every address on [domain] to [domain]*.
+
+   ![The Flows Forms and email step](SharePointSmartCopy/Docs/screenshots/21_flows_forms.png)
+
 5. **Write** — a **Ready to write?** list says where everything stands (packages, sites, lists, columns, forms, email); a line that needs a look has a **Go to step** link. Choose the output folder (it is remembered) and the name of each updated package in the **Names of the updated packages** card (type a new name per package, or use **Keep the original names** or **Add ' - migrated'**). When you click **Write updated packages**, a Save As dialog opens for each package with that name filled in; you can change the folder or name there, the tool refuses to save over an original, and Cancel writes nothing. **Save mapping…** keeps your choices as a JSON file.
+
+   ![The Flows Write step](SharePointSmartCopy/Docs/screenshots/22_flows_write.png)
+
 6. **Report** — what was written, how many replacements were made, and **To review**: each item the tool could not settle, in words, with a **Go to step** link where one step fixes it. **Open output folder**, **Open report**, **Open Power Automate** and **Save mapping…** are one click away, and **What to do next** is numbered. `rewrite-report.html` (also saved as `rewrite-report.md`) lists what the flows use, what to do after import, and every change.
+
+   ![The Flows Report step](SharePointSmartCopy/Docs/screenshots/23_flows_report.png)
+
 After importing a package into Power Automate, **recreate each connection and re-select it** — connections can't be moved between tenants. Import flows turned off, review them, then turn them on. Your original packages are never modified.
 
 **Requirements and limits**
@@ -451,7 +496,7 @@ The resulting workbook contains:
 
 ### Compare (Source vs. Target)
 
-Click the **Compare** button in the top-right corner, next to History, to generate a difference report between any two locations — without needing a prior copy or a saved History entry first. This is useful for checking whether a site copied by another means (or edited independently on both sides since a copy) still matches, or for a one-off audit that was never meant to be a full copy job.
+On the **Browse** step, click **Compare** in the **Other tools** row (below the copy-scope tiles) to generate a difference report between any two locations — without needing a prior copy or a saved History entry first. This is useful for checking whether a site copied by another means (or edited independently on both sides since a copy) still matches, or for a one-off audit that was never meant to be a full copy job.
 
 *Compare — connect to any source and target and pick a library or folder on each side*
 
