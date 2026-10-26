@@ -57,11 +57,15 @@ public class PermissionCopyService(SharePointService spService)
         string targetSiteUrl,
         string sourceApiPath,
         string targetApiPath,
-        bool hasUniquePermissions,
+        bool? hasUniquePermissions,
         string itemDisplayName,
         CancellationToken ct = default)
     {
-        if (!hasUniquePermissions)
+        // null = the source could not be asked (see TryGetHasUniqueRoleAssignmentsAsync): say so instead of
+        // silently leaving the item with inherited permissions.
+        if (hasUniquePermissions is null)
+            return new PermissionCopyResult(itemDisplayName, 0, [], Loc.T("Svc_Perm_UniqueUnknown"));
+        if (hasUniquePermissions == false)
             return new PermissionCopyResult(itemDisplayName, 0, []);
 
         // Guard BEFORE breaking inheritance: with an empty role-definition cache (failed/skipped

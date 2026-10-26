@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>הצליחו ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>נכשלו ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>דולגו ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>מעודכן</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>לא ניתן היה לקרוא אם למקור יש הרשאות משלו (הגבלת קצב או שגיאת גישה) — ההרשאות לא הועתקו עבור פריט זה. הפעל שוב כדי לנסות מחדש.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>קובץ היעד הקיים הוסר לצורך הדריסה, אך לא ניתן היה להעלות את ההעתק החדש ({0}). הקובץ חסר כעת ביעד — הפעל שוב את ההעתקה כדי לשחזר אותו.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>ספריית יעד נכשלה ({0}). הקבצים שלה סומנו כנכשלו; שאר הספריות ממשיכות.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: קובץ המקור השתנה בזמן ההורדה — ההורדה מתחילה מחדש.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint לא דיווח על התקדמות בייבוא זה במשך {0} דקות, ולכן הוא נזנח. הקבצים שלו סומנו כנכשלו; הפעל שוב את ההעתקה כדי לנסות אותם מחדש.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>דייר יחיד</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>ריבוי דיירים</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>העתקה בין שני דיירי Microsoft 365 שונים. אתה מתחבר בנפרד למקור וליעד. בחר בהגדרות את רישום האפליקציה של היעד.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>רישום היעד:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>מצב ריבוי דיירים: רישום האפליקציה המשמש להתחברות לדייר היעד. &quot;זהה למקור&quot; משתמש שוב ברישום המקור, שחייב אז להיות אפליקציית ריבוי דיירים.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>המשך / הפעל שוב</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>מתחבר מחדש ומפעיל שוב את הבחירה הזו עם העתק אם חדש יותר, כך שקבצים שכבר הועתקו מדולגים ומועברים רק קבצים חסרים או שהשתנו.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>להרצה זו אין בחירה שמורה להמשך (רק הרצות של בחירת קבצים שומרות בחירה).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>העתקה כבר פועלת. סיים או בטל אותה קודם.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>לא ניתן להמשיך: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} הרצות שהופסקו שוחזרו. ראה היסטוריה.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>ממשיך: {0} פריטים שוחזרו מההרצה הקודמת, כאשר העתק אם חדש יותר נבחר. סקור את האפשרויות ולאחר מכן לחץ על הבא. (מיפויי עמודות מותאמים אישית אינם משוחזרים.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>הופסק — האפליקציה נסגרה לפני שהרצה זו הסתיימה. מבין הפריטים שהסתיימו: {0} הצליחו, {1} נכשלו, {2} דולגו, {3} בוטלו  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>ייצוא אבחון…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>שומר קובץ zip עם יומנים אחרונים, פרטי מערכת וההגדרות שלך ללא פרטי הארגון — לצירוף לדוח באג. הוא אינו כולל דוחות העתקה או שמות קבצים.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>האבחון נשמר ב-{0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>לא ניתן לשמור את האבחון: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>התוכן זהה (רק חלקים המנוהלים על ידי SharePoint שונים), אך תאריך השינוי לא נשמר.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>ההרשאות לא הועתקו: לא ניתן היה לפענח את מזהי SharePoint של הפריט.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>ההרשאות לא הועתקו: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>תיקייה &quot;{0}&quot;: {1} לא הוחלו — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>בתיקיות נוספות היו בעיות דומות לאלה שלמעלה; המאוחרות יותר אינן מפורטות בנפרד.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>הרשאות</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>תאריכים</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>יוצר / עורך</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} נשמרו — היעד כבר מעודכן)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>אזהרה: קריאת מטא-נתונים מהמקור ({0}) נכשלה: {1}. ייתכן שפריטים ממנו יועתקו ללא ערכי העמודות המותאמות אישית או ההרשאות הייחודיות שלהם. הפעל שוב לאחר שהבעיה תיפתר (דריסה או אם חדש יותר מחילים אותם מחדש).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>אזהרה: לא ניתן היה למצוא את רשימת המקור של ספרייה, ולכן ההרשאות שלה לא יועתקו.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>מארח SharePoint &apos;{0}&apos; אינו משויך לדייר מחובר. התחבר מחדש לאתרי המקור והיעד ונסה שוב.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>העתקה בין דיירים: ערכי עמודות מטא-נתונים מנוהלים (טקסונומיה) אינם מועתקים, ופנקסי OneNote / ערכות מסמכים עדיין אינם ניתנים להעתקה בין דיירים. זהויות ממופות לפי הגדרות מיפוי הזהויות שלך; מי שאינו נמצא ביעד מדולג.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>מיפוי זהויות</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>מיפוי זהויות…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>רשום כל אדם (או קבוצה) בדייר המקור ומי הוא בדייר היעד — אלה חשבונות שונים. יוצרים, עורכים, עמודות אדם והרשאות נכתבים לפי טבלה זו. מי שלא רשום מותאם לפי החלפת דומיין אם הגדרת כזו; מי שעדיין לא נמצא ביעד מדולג ומדווח.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>דומיין דוא&quot;ל של המקור</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>דומיין דוא&quot;ל של היעד</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>עקיפות — זוג &quot;מקור,יעד&quot; אחד בכל שורה (שמות משתמשים או קבוצות; # מתחיל הערה)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>זהה למקור</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>המקור והיעד נמצאים באותו דייר. עבור למצב דייר יחיד להעתקות באותו דייר.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>העתקת תיקיות מקורית (פנקסי OneNote, ערכות מסמכים) עדיין אינה נתמכת בין דיירים.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>הכונן &apos;{0}&apos; אינו משויך לדייר מחובר. התחבר מחדש לאתרי המקור והיעד ונסה שוב.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>עדיין לא הוגדר רישום אפליקציה. פתח את ההגדרות והוסף את רישום האפליקציה שלך ב-Azure (מזהה האפליקציה/הלקוח שלו) לפני ההתחברות.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>ההתחברות בוטלה. לחץ על התחבר כדי לנסות שוב.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>מנהל מערכת עדיין לא אישר אפליקציה זו בדייר זה. בקש ממנהל מערכת גלובלי להעניק הסכמת מנהל עבור רישום האפליקציה (ראה הגדרה במדריך למשתמש).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>רישום האפליקציה לא נמצא בדייר זה. בדוק את מזהה הלקוח ואת מזהה הדייר בהגדרות.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>הדייר לא נמצא. בדוק את מזהה הדייר בהגדרות (השתמש בדומיין שלך, ב-GUID של הדייר או ב-&apos;common&apos;).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>ברישום האפליקציה חסרה כתובת ההפניה שבה משתמשת אפליקציה זו. ב-Azure, הוסף את URI ההפניה http://localhost תחת &quot;אפליקציות לנייד ולשולחן העבודה&quot;.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>רישום האפליקציה אינו מוגדר להתחברות משולחן העבודה. ב-Azure, הפעל &quot;אפשר זרימות לקוח ציבורי&quot; עבור הרישום.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>חשבון זה אינו מורשה להשתמש ברישום האפליקציה הזה. התחבר עם חשבון מהדייר שבבעלותו הרישום, או בחר רישום אחר בהגדרות.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint דחה את ההתחברות. לחץ על התחבר כדי להתחבר שוב.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>אין לך גישה לאתר זה. ודא שהחשבון שלך יכול לפתוח אותו בדפדפן ושהאפליקציה קיבלה את ההרשאה Sites.ReadWrite.All.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>האתר לא נמצא. בדוק את הכתובת — היא צריכה להיראות כך: https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(פרטים: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>התחבר לאתר המקור כדי להמשיך.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>בחר לפחות פריט אחד (סמן תיבת סימון) כדי להמשיך.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>התחבר לאתר היעד כדי להמשיך.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>בחר תיקיית יעד כדי להמשיך.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>בחר רשימת יעד כדי להמשיך.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>הזן שם לרשימה החדשה כדי להמשיך.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>לא נבחר דבר להעתקה.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>ממתין לסיום ההעתקה…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>מקור: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>יעד: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>רישום האפליקציה שלך השתנה, ולכן נותקת משני האתרים. התחבר שוב כדי להמשיך.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>לעצור את ההעתקה?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>העתקה מתבצעת כעת. עצירתה עכשיו תשאיר את הפריטים הנותרים ללא העתקה (תוכל להמשיך מאוחר יותר מההיסטוריה). לעצור את ההעתקה?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>העתקה עדיין פועלת. סגירת האפליקציה תעצור אותה ותשאיר את הפריטים הנותרים ללא העתקה (תוכל להמשיך מאוחר יותר מההיסטוריה). לסגור בכל זאת?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>להחליף את מצב החיבור?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>מעבר בין דייר יחיד לריבוי דיירים מנתק את שני האתרים, ותצטרך להתחבר שוב. להחליף בכל זאת?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>חיבור:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>רישום אפליקציה של המקור</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>רישום אפליקציה של היעד</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>מתחבר לדייר היעד באמצעות:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>שינוי</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>פתיחת הגדרות</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• עליך להחזיק בגישת קריאה לאוסף האתרים של המקור.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• הגדר בהגדרות את רישום האפליקציה של Microsoft Entra ID לפני ההתחברות.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>אפשרויות קבצים</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>אפשרויות ספריות וקבצים</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>מעתיק קבצים…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>מעתיק ספריות…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>הבא</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>התחל העתקה</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>הצג דוח</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>הזן את שם הרשימה החדשה שתיווצר</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>רשימת היעד נבחרה בשלב היעד. חזור אחורה כדי לשנות אותה.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>הגדר קודם רישום אפליקציה</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy מתחבר באמצעות רישום אפליקציה שאתה יוצר בדייר Microsoft Entra ID (Azure) שלך. פתח את ההגדרות, הוסף את מזהה האפליקציה (הלקוח) של הרישום, ואז חזור לכאן כדי להתחבר.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>מידע נוסף</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>גרור כדי להגדיל או להקטין את פיד הפעילות</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>לחץ כדי להציג רק את הפריטים שנכשלו</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>לחץ כדי להציג רק את הפריטים שדולגו</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>מיפוי עמודות</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>השוואת מקור ויעד</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>פותח את כלי ההשוואה כדי לבדוק העתקה זו מול המקור.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>פתיחת היסטוריה</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>הרישום שנבחר משמש עבור המקור — ועבור שני הצדדים במצב דייר יחיד.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>רישום חדש</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>הוסף לפחות רישום אפליקציה אחד.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>אימות</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>מזהה לקוח נדרש עבור הרישום שנבחר.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>נותקת. תתבקש להתחבר בחיבור הבא.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>נותקת</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>הניתוק נכשל: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>ניתוק</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>נמצאו {0} מיפויים.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>לא ניתן לקרוא {0} שורות (שורה {1}). כל שורה חייבת להיראות כך: מקור,יעד.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>דומייני המקור והיעד זהים, ולכן החלפת הדומיין לא תשנה דבר.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>ייבוא CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>לא ניתן לקרוא חלק משורות העקיפה (שורה {0}). כל שורה חייבת להיות &quot;מקור,יעד&quot;. תקן או הסר אותן — או התחל שורה ב-# כדי להפוך אותה להערה.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>לא ניתן לשמור את מיפוי הזהויות: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>לא ניתן לקרוא את הקובץ: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>בין דיירים: {0} חשבונות יוצר/עורך בספרייה זו לא נמצאו בדייר היעד ויישארו כחשבון המעתיק. לאחר ההרצה, השתמש ב&quot;מפה משתמשים אלה&quot; בדוח כדי לתקן אותם.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>הזן את משתמש או קבוצת המקור.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>הזן מי זה בדייר היעד — או הסר את השורה.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>המקור והיעד זהים.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>מקור זה מופיע יותר מפעם אחת.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>מקור (דייר זה)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>יעד (דייר אחר)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>סוג</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>ביעד?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>נדרש עבור</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>משתמש</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>קבוצה</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>לא נבדק</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>בודק…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ נמצא</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ לא נמצא</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>הוסף</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>הסר</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>מלא יעדים לפי החלפת דומיין</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>בשורות ללא יעד, ממלא את הכתובת שהחלפת הדומיין הייתה מפיקה.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>בדוק ביעד</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>מחפש כל משתמש יעד בדייר היעד. פעולה זו גם מוסיפה אותם לרשימת המשתמשים של אתר היעד, מה שההעתקה עושה בכל מקרה לפני שהיא יכולה להגדיר אותם כיוצר או להעניק להם גישה.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>התחבר קודם ליעד ריבוי דיירים: הזן את כתובת ה-URL של אתר היעד בשלב היעד ואז פתח מחדש את הדיאלוג הזה.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>ייצוא CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>אנשים אלה נדרשו להעתקה אך לא נמצאו בדייר היעד. עבור כל אחד, הזן מי הוא ביעד — או הסר את השורה כדי להשאירו ללא מיפוי.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} מיפויים.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} שורות דורשות תשומת לב.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>נבדקו: {0} נמצאו, {1} לא נמצאו{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} לא ניתן היה לבדוק</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>בודק {0} מתוך {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>אין מה לבדוק: באף שורה אין כתובת דוא&quot;ל של יעד.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>חלק מהשורות דורשות תשומת לב (מודגשות). תקן או הסר אותן ואז שמור.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>המיפוי נשמר. כדי להחיל אותו על קבצים שכבר הועתקו, הפעל שוב עם דריסה — העתק אם חדש יותר מדלג על קבצים מעודכנים, ולכן היוצרים שלהם לא משתנים. ההרשאות מתרעננות בכל מקרה.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>{0} אנשים מהמקור לא נמצאו בדייר היעד ולכן הושמטו: לא ניתנה להם גישה, הם לא הוגדרו כיוצר או עורך, או שהוסרו מעמודות אדם.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>מפה משתמשים אלה…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>מפה משתמשים שלא נפתרו…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>פותח את מיפוי הזהויות עם האנשים שהרצה זו לא מצאה ביעד.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>בהרצה זו לא היו משתמשים שלא נפתרו.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>העתקת טפסים</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>העתק טפסי Microsoft Forms לחשבון היעד תוך שמירה על כל השאלות, ההסתעפות, ההגדרות וערכת הנושא. ניתן לייצא תשובות ל-Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>הכלי משתמש ב-API האינטרנטי של Microsoft Forms, ש-Microsoft אינה מתעדת או תומכת בו. הוא עובד כיום אך עשוי להשתנות ללא הודעה מראש. נסה קודם כמה טפסים.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>טען את הטפסים שלי</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>חשבון מקור: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>חשבון יעד: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>יעד: אותו חשבון (דייר יחיד). ההעתקים נוצרים לצד המקוריים.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(תתבקש להתחבר)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>מיפוי מזהי טפסים (בשימוש כלי הזרימות): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>טוען טפסים…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>נטענו {0} טפסים.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>בחר קודם לפחות טופס אחד.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>מעתיק טפסים…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>מעתיק…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>הועתק</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>נכשל (ראה יומן)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>מעתיק את &apos;{0}&apos;</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>ההעתקה הסתיימה: {0} הועתקו, {1} נכשלו.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>בחר תיקייה לייצוא התשובות</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>מייצא תשובות…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>&apos;{0}&apos; יוצא: {1} תשובות אל {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>תשובות של {0} טפסים יוצאו אל {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>הטופס הועתק, אך לא ניתן היה לשמור את המזהה שלו עבור כלי הזרימות: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>לא ניתן לייצא את &apos;{0}&apos;: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>תשובות של {0} טפסים יוצאו אל {2}; {1} נכשלו (ראה יומן).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>בוטל.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>שגיאה: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>רמז: רישום האפליקציה זקוק להרשאה המואצלת של Microsoft Forms, עם הסכמה. הוסף אותה תחת הרשאות API (ראה המדריך למשתמש) ונסה שוב.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>רמז: Microsoft Forms דחה את הבקשה. ודא שחשבון זה יכול לפתוח את forms.office.com ושלרישום האפליקציה יש הרשאת Microsoft Forms.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{0} מתוך {1} נבחרו</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>כותרת</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>סוג</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>שונה לאחרונה</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>תוצאה</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>הוסף לכותרות שהועתקו:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (העתק)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>העתק את הטפסים שנבחרו</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>ייצוא תשובות…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>בדיקת העתק מול המקור שלו</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>כלים נוספים</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>טפסים</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>העתקת טפסי Microsoft Forms וייצוא התשובות שלהם</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>כלי הטפסים</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>כתיבה מחדש של זרימות עבור היעד</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>עדכן חבילות Power Automate שיוצאו (.zip) כך שיצביעו על היעד: אתרים, רשימות, עמודות, טפסים שהועתקו ודומייני דוא&quot;ל. החבילות המקוריות שלך לעולם אינן משתנות.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. בחירת חבילות זרימה שיוצאו</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>הוסף את חבילות הזרימה (.zip) שייצאת מ-Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>הוספת קבצים…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>הוספת תיקייה…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>סריקה</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>חבילות זרימה (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>הוסף קודם לפחות חבילת זרימה אחת.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>סורק חבילות…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>דולג על {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>נמצאו {0} זרימות. הן מפנות ל-{1} אתרים, {2} רשימות ו-{3} טפסים.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>הסריקה הסתיימה.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. מיפוי אתרים</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>לאן עובר אתר ה-SharePoint של כל זרימה. במצב ריבוי דיירים, התחבר ליעד וכתובת הדייר החדש תמולא עבורך; שנה כל שורה שבה לאתר יש שם שונה. במצב דייר יחיד, הקלד את אתר היעד עבור כל שורה.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>אתר בזרימות (יוחלף)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>אתר יעד</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>כתובת הדייר החדש:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>מלא יעדים ריקים תוך שמירה על הנתיבים</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>הזן כתובת URL מלאה כגון https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>יעדים ריקים מולאו באמצעות המארח הזה והנתיב של כל אתר.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. התאמת רשימות ועמודות</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>כרטיס אחד לכל רשימה שהזרימות משתמשות בה, ללא קשר לכמה זרימות משתמשות בה. כל כרטיס מציג את שם הרשימה ואת העמודות שלה, את הרשימה שאליה היא ממופה ביעד (ברירת המחדל היא זו עם אותו שם; בחר אחרת מהרשימה הנפתחת אם השם שונה), ואת האופן שבו כל עמודה ממופה. בדוק את הכרטיסים המסומנים באזהרה.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>התאמת רשימות ועמודות</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>רשימה</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>מזהה רשימת מקור</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>מזהה רשימת יעד</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>עמודת מקור</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>עמודת יעד</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>סרוק קודם את החבילות.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>הזן קודם לפחות אתר יעד אחד.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>מתאים רשימות ועמודות…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(לא נמצא)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>נמצאה ביעד רשימה עם אותו שם</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>לאתר שבו נמצאת רשימה זו אין אתר יעד (שלב האתרים)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>לא ניתן היה לקרוא רשימה זו באתר המקור: ייתכן שאינה קיימת, שלחשבון זה אין גישה, או שהאתר נמצא בדייר שונה מחיבור המקור שלך</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>אין באתר היעד רשימה בשם זה: בחר אחת מהרשימה הנפתחת</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>אותו שם</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>שונה שם ביעד</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>אין התאמה: בחר עמודה</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>ל-{0} מתוך {1} רשימות יש רשימת יעד. {2} עמודות לבדיקה.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. טפסים ודוא&quot;ל</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>טפסים שהועתקו באמצעות כלי הטפסים ממולאים אוטומטית. עבור טופס שיצרת בעצמך, הדבק את המזהה שלו או את הקישור לדף העריכה שלו.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>מזהה טופס מקור</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>מזהה טופס (ממולא מהרשימה הנפתחת, או הדבק מזהה)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>העבר דומיין דוא&quot;ל:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. כתיבת החבילות המעודכנות</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>בחר תיקיית פלט (לא התיקייה שמכילה את המקוריים). החבילות המעודכנות ודוח שמפרט כל שינוי נשמרים שם.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>כתוב חבילות מעודכנות</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>שמירת מיפוי…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>פתח את תיקיית הפלט</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>לא ניתן להעביר חיבורים בין דיירים. לאחר ייבוא חבילה, צור מחדש כל חיבור ב-Power Automate ובחר אותו שוב.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>בחר קודם תיקיית פלט.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>כותב חבילות מעודכנות…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>שמור את ההעתק המעודכן של {0} (חבילה {1} מתוך {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>חבילת Power Automate (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>כבר בחרת בשם קובץ זה עבור חבילה אחרת. בחר שם אחר.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>חבילה תישמר מעל מקור (אותה תיקייה, אותו שם). בחר תיקיית פלט אחרת, או שנה את שמה ב&quot;שמירה בשם&quot;, כדי שהמקוריים יישארו ללא שינוי.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># דוח כתיבה מחדש של זרימות
+
+החבילות המקוריות לא שונו. החיבורים אינם מועברים; צור אותם מחדש ובחר אותם שוב בעת הייבוא.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>הדוח נכתב אל {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>נכתבו {0} חבילות, {1} החלפות. {2} ערכים עדיין מצביעים על המקור (ראה הדוח).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>המיפוי נשמר אל {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>זרימות</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>עדכון זרימות Power Automate שיוצאו עבור היעד</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>כלי הזרימות</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>במה משתמשות הזרימות האלה</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>השירותים שנמצאו בזרימות שנסרקו, ומה הכלי הזה עושה עבור כל אחד.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>שירות</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>זרימות</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>שלבים</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>נמצאו</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>מה הכלי הזה עושה</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>כותב מחדש את מה שהוא מוצא</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>מזהים מדווחים; סקור לאחר הייבוא</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>חיבור בלבד (צור מחדש)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>מיפוי עמודות</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>עמודה מופיעה כאן כאשר זרימה כותבת אליה, מסננת או ממיינת לפיה, או קוראת אותה בביטוי, ברשימה שהותאמה. עמודת היעד נבחרת בהתאמה אוטומטית (אותו שם, אחר כך אותו שם תצוגה, אחר כך שם דומה). עליך לפעול רק בשורות המסומנות &quot;שם דומה&quot; או &quot;אין התאמה&quot;; שנה כל שורה מהרשימה הנפתחת שלה, או בחר &quot;(השאר ללא שינוי)&quot; כדי לשמור את שם המקור. עמודות מובנות כמו Title אינן מופיעות כי הן קיימות בכל מקום.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(השאר ללא שינוי)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>שם דומה: אנא בדוק</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(עדיין לא הותאם)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>רשימת יעד שבחרת</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>הקלד או הדבק מזהה רשימת יעד, או את הקישור לדף הגדרות הרשימה שלה, בעמודה מזהה רשימת יעד כדי לבחור רשימה בעצמך (לדוגמה כשהשם שונה). לאחר מכן לחץ על &quot;התאם שוב&quot; כדי להתאים את העמודות שלה.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>לא נמצא מזהה רשימה ב-&apos;{0}&apos;. הדבק GUID או את הקישור לדף הגדרות הרשימה.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>לא נמצא מזהה טופס ב-&apos;{0}&apos;. הדבק את מזהה הטופס או את הקישור לדף העריכה של הטופס.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>טפסים</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>יעד</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>העתקה</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>תוצאות</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>בחר את הטפסים להעתקה</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>טען טפסים מחדש</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>לחץ על &quot;טען את הטפסים שלי&quot; כדי לראות את הטפסים שלך.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>לא נמצאו טפסים בחשבון זה.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>העתק {0} טפסים</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>העתק טפסים נוספים</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>בחר לאן ילכו ההעתקים</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>דייר יחיד: ההעתקים נוצרים באותו חשבון שבו אתה משתמש, לצד המקוריים.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>ריבוי דיירים: ההעתקים נוצרים בחשבון היעד. התחבר אליו כאן; זה נפרד מההתחברות ששימשה לאתרי SharePoint.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>חשבון יעד</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>מתחבר עם רישום האפליקציה: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>מתחבר עם רישום האפליקציה של היעד (מוגדר בהגדרות).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>התחבר לחשבון היעד</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>התחבר שוב</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>מתחבר לחשבון היעד… ייתכן שייפתח חלון דפדפן.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>מחובר בשם {0}. הגישה ל-Microsoft Forms אושרה ({1} טפסים כבר בחשבון זה).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>לא ניתן להתחבר לחשבון היעד: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>חשבון היעד עדיין אינו מחובר.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>מוכן. לחץ על לחצן ההעתקה כדי להתחיל.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>מוכן: ההעתקים ייווצרו ב-{0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>התחבר לחשבון היעד כדי להמשיך.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>אפשרויות</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} טפסים יועתקו מ-{1} אל {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>חשבון המקור</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>חשבון היעד</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>מעתיק טפסים</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>מתחיל…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>טופס {0} מתוך {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>מבטל לאחר הטופס הנוכחי…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>ההעתקה הסתיימה: כל {0} הטפסים הועתקו</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>ההעתקים שלך נמצאים ב-{0}. פתח את Microsoft Forms כדי לראות אותם, או השתמש בטבלה שלמטה.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>ההעתקה הסתיימה: {0} מתוך {1} טפסים הועתקו, חלקם דורשים תשומת לב</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>ההעתקים נמצאים ב-{0}. טפסים המסומנים באזהרה הועתקו עם בעיות, וטפסים שנכשלו לא נוצרו. ראה את העמודה פרטים.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>ההעתקה הסתיימה, אך אף טופס לא הועתק</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>ראה את העמודה פרטים לסיבה. סיבות נפוצות הן הרשאת Microsoft Forms חסרה ברישום היעד, או חשבון ללא גישה ל-Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>ההעתקה בוטלה לאחר {0} מתוך {1} טפסים</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>הטפסים המפורטים למטה הושלמו. הטופס שהועתק בעת הביטול לא הסתיים ואינו גלוי.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>הועתקו</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>עם אזהרות</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>נכשלו</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>שאלות</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>טופס מקור</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>העתק</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>שאלות</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>פרטים</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>הועתק</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>הועתק עם אזהרות</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>נכשל</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>פתח את ההעתק שנבחר</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>פתח את Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>ייצוא תוצאות…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>הצג מיפוי מזהי טפסים</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>בחר קודם טופס שהועתק בטבלה.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>התוצאות נשמרו ב-{0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>רמז: לרישום האפליקציה אין כתובת הפניה תואמת. ב-Entra, תחת אימות, הוסף את הפלטפורמה &quot;אפליקציות לנייד ולשולחן העבודה&quot; עם http://localhost ונסה שוב.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>חבילות</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>אתרים</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>רשימות ועמודות</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>טפסים ודוא&quot;ל</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>כתיבה</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>דוח</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>בחר את הזרימות שיוצאו</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>ב-Power Automate: פתח את הזרימות שלי, בחר זרימה ואז ייצוא ← חבילה (.zip). הוסף כאן את קבצי ה-zip שהורדו. כל קובץ נסרק מיד עם הוספתו.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>נקה</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>הוסף את חבילות הזרימה שיוצאו כדי להתחיל.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>לא נמצאו זרימות בקבצים אלה. ודא שהן חבילות שיוצאו באמצעות ייצוא ← חבילה (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>הסריקה הסתיימה. סקור במה משתמשות הזרימות ואז לחץ על הבא.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>בחר את אתרי היעד</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>זרימות אלה אינן משתמשות באתרי SharePoint עם כתובות קבועות, ולכן אין כאן מה למפות. לחץ על הבא.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>בשלב הבא, הכלי קורא כל רשימה דרך החיבורים שלך ומתאים אותה באתר היעד.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>הזן את אתר היעד עבור כל אתר מקור ואז לחץ על הבא.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>התאמת רשימות ועמודות</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>התאם שוב</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>רשימות</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>זרימות אלה אינן מפנות לרשימות SharePoint ספציפיות, ולכן אין מה להתאים.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>רשימות ועמודות מותאמות כשהשלב הזה נפתח.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>טפסים ודוא&quot;ל</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>בדוק את הטפסים והדוא&quot;ל ואז לחץ על הבא.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>זרימות אלה אינן משתמשות ב-Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>כתובות דוא&quot;ל</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>כדי להעביר כל כתובת מדומיין דוא&quot;ל אחד לאחר, הזן את שני הדומיינים. כתובות בדומיינים אחרים מפורטות בדוח ואינן משתנות.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>כתיבת החבילות המעודכנות</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>תיקיית פלט</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>בחר את תיקיית הפלט ואז לחץ על כתוב חבילות מעודכנות.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>מוכן לכתוב {0} חבילות המכילות {1} זרימות. מחליף: {2} אתרים, {3} רשימות, {4} מיפויי עמודות, {5} טפסים.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>כתוב חבילות מעודכנות</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>חבילות שנכתבו</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>החלפות</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>עדיין המקור</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>לסקירה</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>חבילה</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>עודכן</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} ערכים עדיין מצביעים על המקור</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>פתח דוח</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>התחל מחדש</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>הסתיים: נכתבו {0} חבילות</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>נשמרו ב-{0}. דבר לא נשאר מצביע על המקור. בצע את השלבים שלמטה כדי לייבא אותן.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>הסתיים: נכתבו {0} חבילות, חלק מהפריטים דורשים את סקירתך</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>נשמרו ב-{0}. פתח את הדוח כדי לראות ערכים שעדיין מצביעים על המקור ופריטים שהכלי אינו כותב מחדש (שירותים אחרים, רשימות או עמודות שלא הותאמו).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>מה לעשות הלאה</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  פתח את הדוח ובדוק את &quot;עדיין מצביע על המקור&quot; ואת כל מה שמסומן לסקירה.
+2.  ב-Power Automate (דייר היעד), פתח את הזרימות שלי ← ייבוא ← ייבוא חבילה (מדור קודם) ובחר חבילה שנכתבה.
+3.  תחת &quot;משאבים קשורים&quot; לחץ על &quot;בחר במהלך הייבוא&quot; עבור כל חיבור ובחר או צור חיבור בדייר היעד. לא ניתן להעביר חיבורים בין דיירים.
+4.  ייבא את הזרימה. השאר אותה כבויה, פתח אותה, תקן כל מה שהיא מסמנת ואז הפעל אותה.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>אין שינויים (דבר בה לא התאים למיפוי שלך)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>הועתק {0} אל {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>הועתק בעבר</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>כבר הועתק</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …ועוד {0}</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>להעתיק שוב?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>{0} מהטפסים שנבחרו כבר הועתקו לחשבון זה:
+
+{1}
+
+העתקה חוזרת יוצרת העתק שני של כל אחד. להמשיך?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>העתקה עדיין פועלת. אם תסגור עכשיו, ייתכן שהטופס שמועתק יישאר בנוי למחצה ביעד. לעצור ולסגור?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>העתקה מתבצעת</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>לא ניתן היה לייצא תשובות (ראה יומן).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>סינון לפי כותרת או סוג</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>חוברת עבודה אחת</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>ייצוא כל הטפסים שנבחרו לקובץ Excel יחיד עם גיליון אחד לכל טופס.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>כתובת דוא&quot;ל</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>מזהה דייר</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>נתיב ספרייה</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>ערכים אחרים</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>הקלד תחליף לכל ערך שצריך להשתנות. שורות שנותרו ריקות אינן משתנות; הן מפורטות בדוח אם הן עדיין מצביעות על המקור.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>סוג</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>בזרימות</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>החלף ב-</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>בדיקת מזהה</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>אינו מזהה טופס או קישור לדף עריכה</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>זהה לטופס המקור</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>טופס זה נמצא בדייר המקור, לא ביעד</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>טופס זה נמצא בדייר שונה מהמקור</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>מהעתקת הטפסים של {0} אל {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>מהעתקת טפסים קודמת</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>טעינת מיפוי…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>מלא אתרים, רשימות, עמודות, טפסים וערכים אחרים ממיפוי ששמרת קודם.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>לא ניתן לטעון את המיפוי: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>{0} נטען. ערכים שמתאימים לזרימות אלה מולאו; בדוק אותם בשלבים הבאים.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>{0} נטען. הוא יוחל כשתוסיף חבילות זרימה.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>מולאו {0} אתרי יעד. בדוק אותם למטה ואז לחץ על הבא.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>לכל אתר כבר יש יעד, ולכן דבר לא שונה. נקה תא יעד כדי שימולא.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>קיצור דרך: הקלד את כתובת הדייר החדש, לדוגמה https://fabrikam.sharepoint.com, ולחץ על הלחצן. כל אתר שאין לו עדיין יעד מקבל את הכתובת הזו עם אותו נתיב כמו במקור: https://contoso.sharepoint.com/sites/HR הופך ל-https://fabrikam.sharepoint.com/sites/HR. אתרי OneDrive (contoso-my) עוברים לכתובת ה--my של הדייר החדש. יעדים שכבר הזנת אינם משתנים. האתרים חייבים כבר להתקיים בדייר החדש; הכלי הזה אינו יוצר אותם. אם לאתר יש שם שונה שם, הקלד את הכתובת שלו בתא אתר יעד במקום זאת.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>אם תשאיר אתר יעד ריק, האתר הזה יישאר ללא שינוי: הזרימות ימשיכו להצביע על האתר הישן, הרשימות והעמודות שלו לא יותאמו ולא ייכתבו מחדש, והדוח יפרט אותו תחת &quot;לביצוע לאחר הייבוא&quot;. זה נכון רק עבור אתר שאינו עובר לדייר החדש.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>מה קורה</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ יועבר ליעד</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ ללא שינוי (אין יעד)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>האתר {0} נשאר ללא שינוי (לא הוזן יעד), ולכן הזרימות עדיין מצביעות עליו והרשימות שלו לא הותאמו. בסדר אם האתר אינו עובר; אחרת הפעל שוב עם יעד.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>אין עדיין עמודות להצגה: לא הותאמה אף רשימה, ולכן אין מה להשוות. תקן את הרשימות שלמעלה ואז לחץ על התאם שוב.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>אין עמודות למפות, ולכן אין צורך לעשות דבר כאן. לרשימות שהותאמו אין עמודות מותאמות אישית שהזרימות כותבות אליהן, מסננות לפיהן או קוראות אותן באופן שהכלי יכול לראות. רשימת הפעילות בתחתית אומרת מה נמצא עבור כל רשימה.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>נמצאו {0} עמודות: ל-{1} יש אותו שם ביעד, {2} שונה שמן והותאמו, {3} נראות דומות, ל-{4} אין התאמה.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>אנא בדוק את השורות המסומנות &quot;שם דומה&quot; ובחר עמודה עבור השורות המסומנות &quot;אין התאמה&quot;. שורות המסומנות &quot;אותו שם&quot; או &quot;שונה שם ביעד&quot; אינן דורשות דבר.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>אין מה לעשות כאן: כל עמודה כבר מותאמת. לחץ על הבא.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>שמות החבילות המעודכנות</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>איך לקרוא לקובצי ה-zip המעודכנים. השתמש ב-{name} עבור שם הקובץ המקורי: &quot;{name} - Fabrikam&quot; הופך את &quot;Onboarding.zip&quot; ל-&quot;Onboarding - Fabrikam.zip&quot;. עם חבילה אחת אפשר פשוט להקליד את השם המלא. השאר כ-{name} כדי לשמור את השמות המקוריים. שם שנעשה בו שימוש פעמיים מקבל (2), (3)… כדי שדבר לא יידרס.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>ייכתב: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>זרימה שומרת רק את מזהה הטופס, ולכן שמות הטפסים נקראים מ-Microsoft Forms כשהשלב הזה נפתח: כותרת כל טופס בזרימות שלך (חשבון המקור) והטפסים בחשבון היעד. טופס שהכותרת שלו תואמת בדיוק לטופס יעד אחד מותאם עבורך; אחרת בחר את הטופס החדש מהרשימה הנפתחת, או הדבק את המזהה שלו או את הקישור לדף העריכה. השתמש בטען שמות טפסים מחדש כדי לקרוא אותם שוב.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>טען טפסים מחשבון היעד…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>טוען את הטפסים של חשבון היעד… ייתכן שתתבקש להתחבר.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>מפרט את הטפסים שבבעלות חשבון היעד {0} כדי שתוכל לבחור את הטופס החדש עבור כל זרימה. לחץ על ביטול כדי להפסיק להמתין להתחברות.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>יעד: נמצאו {0} טפסים ב-{1}. בחר אחד בכל שורה, או הדבק מזהה.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>יעד: לא נמצאו טפסים ב-{0}. הרשימה הנפתחת מציגה רק טפסים שבבעלות אותו חשבון (לא טפסי קבוצה), ולכן העתק קודם את הטפסים באמצעות כלי הטפסים, או הדבק מזהה.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>בוטל. לחץ על טען שמות טפסים כדי לנסות שוב, או הדבק מזהי טפסים.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>יעד: לא ניתן לטעון את הטפסים: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(אין)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(טופס ללא כותרת)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>טופס מקור</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>בחר מטפסי היעד</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>בחר טופס מחשבון היעד. לחץ קודם על &quot;טען טפסים מחשבון היעד&quot;.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>מולא מההתחברות ליעד ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>חשבון המקור שלך, הוחלף בחשבון היעד שלך</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>מולא מההתחברויות שלך ({0} ← {1}). נקה את שתי התיבות כדי להשאיר את דומייני הדוא&quot;ל ללא שינוי.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>אתר עם יעד ריק נשאר ללא שינוי: הזרימות ממשיכות להצביע עליו, והדוח מפרט אותו.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ מחובר בשם {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>מחובר בשם {0}. כתובת SharePoint של דייר היעד היא {1}; אתרי יעד ריקים מולאו ממנה.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ חלק מהאתרים בזרימות נמצאים ב-{0}, שהיא הכתובת של חשבון היעד עצמו. או שהחבילות האלה כבר מצביעות על היעד (לדוגמה חבילות שהכלי כתב, או זרימות שיוצאו מהיעד), ולכן הוסף במקום זאת את הייצוא המקורי מהמקור; או שהמקור והיעד הם באמת דייר אחד, ולכן עבור למצב דייר יחיד (הגדרות).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} היא חבילה שהכלי הזה כתב ב-{1}: היא כבר מכילה את כתובות היעד, ולכן אין מה להעביר. הוסף במקום זאת את הייצוא המקורי מדייר המקור (הקובץ בהורדות שלך, לא זה שבתיקיית הפלט).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ האתרים בזרימות אלה נמצאים ב-{0}, שהוא דייר היעד שלך, אך המקור שלך הוא {1}. אם החבילות יוצאו מ-{0}, התחבר לדייר זה כמקור (שנה מקור…). אם הכלי הזה כתב אותן קודם, הסר אותן והוסף את הייצוא המקורי.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>מחובר. מולאו {0} אתרי יעד מ-{1}. בדוק אותם ואז לחץ על הבא.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>מחובר. לכל אתר יעד כבר היה ערך, ולכן דבר לא שונה.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>ההתחברות לא הסתיימה, או שלא ניתן היה לקרוא את כתובת הדייר החדש (ראה שורת היעד). אם אתה מחובר, הזן למטה את כתובת הדייר החדש כדי למלא את אתרי היעד.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — מחובר בשם {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — עדיין לא מחובר</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>שנה יעד…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>לא נבחרה רשימת יעד, ולכן הזרימות האלה עדיין יצביעו על רשימה שאינה ביעד. בחר את רשימת היעד, או צור קודם את הרשימה באתר היעד.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>הזרימות משתמשות בעמודה &quot;{0}&quot;, אך לרשימת היעד &quot;{1}&quot; אין עמודה מתאימה. בחר את עמודת היעד שלה בטבלה, או הוסף את העמודה לרשימת היעד ולחץ על בדוק שוב.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>רשימת היעד &quot;{0}&quot; דורשת את העמודה &quot;{1}&quot;, אך השלב &quot;יצירת פריט&quot; &quot;{3}&quot; בזרימה &quot;{2}&quot; אינו מגדיר אותה, ולכן הייבוא ייכשל עם &quot;missing required property item/{1}&quot;. הקלד לה ערך למטה והכלי יוסיף אותו לשלב זה, או הפוך את &quot;{1}&quot; לאופציונלית ברשימת היעד ולחץ על בדוק שוב.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>רשימת היעד &quot;{0}&quot; דורשת את העמודה &quot;{1}&quot;, אך השלב &quot;יצירת פריט&quot; &quot;{3}&quot; בזרימה &quot;{2}&quot; אינו מגדיר אותה, ולכן הייבוא ייכשל עם &quot;missing required property item/{1}&quot;. הפוך את &quot;{1}&quot; לאופציונלית ברשימת היעד ב-SharePoint ואז לחץ על בדוק שוב.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>ערך למילוי עבור העמודות הנדרשות האלה (יתווסף לכל שלב יצירת פריט שמשמיט אותן):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>זה ייכשל בייבוא. תקן כדי להמשיך:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>בדוק שוב</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>ייכשל ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ התחבר ליעד כדי להמשיך.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} חבילות נכתבו על ידי הכלי הזה וכבר מכילות את ערכי היעד. הסר אותן (ה-✕ ברשימה) והוסף את הייצוא המקורי.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ ל-{0} אתרים אין יעד. אתר שיישאר כמות שהוא עדיין יצביע על דייר המקור.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} רשימות ייכשלו בייבוא. תקן את הרשימות המסומנות &quot;ייכשל&quot; כדי להמשיך.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ הרשימות עדיין לא הותאמו. חזור שלב אחד אחורה וקדימה שוב כדי לנסות מחדש.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} טפסים זקוקים למזהה טופס יעד תקין כדי להמשיך.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>שנה מקור…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>מחובר בשם {0}. כתובת SharePoint של דייר המקור היא {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>חיבור המקור שונה ל-{0}. האתרים המפורטים למטה חייבים להיות בדייר זה.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>ההתחברות למקור לא הסתיימה, או שלא ניתן היה לקרוא את כתובת הדייר (ראה שורת המקור). חיבור המקור הקודם נשמר אם ביטלת.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ חלק מהאתרים נקראים מ-{0}, שאינו הדייר שאליו אתה מחובר כמקור ({1}). קריאת הרשימות שלהם תיכשל. ערוך את &quot;קרא רשימות מ-&quot; עבור שורות אלה לכתובת בדייר המקור שלך, או לחץ על שנה מקור… והתחבר עם חשבון מאותו דייר.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>אתרי הזרימות נמצאים ב-{0}, אך אתה מחובר ל-{1} כמקור. &quot;קרא רשימות מ-&quot; מולא באותם אתרים ב-{1}, ולכן הכלי קורא שם את שמות הרשימות והעמודות. בדוק שהאתרים האלה קיימים (ערוך כל שורה), או לחץ על שנה מקור… אם הזרימות באמת הגיעו מ-{0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>רשימות שהזרימות משתמשות בהן</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>לחץ על רשימה כדי לפתוח או לסגור אותה. רשימות שדורשות מבט נמצאות ראשונות ופתוחות.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>פתח הכול</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>סגור הכול</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>בשימוש:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>מקור:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>רשימת יעד</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>או הדבק את המזהה או הקישור שלה:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>עמודת מקור</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>סוג</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>בשימוש</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>לא בשימוש הזרימות</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(אין: השאר רשימה זו ללא שינוי)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ לא נבחרה רשימת יעד: זרימות שמשתמשות בה עדיין מצביעות על רשימת המקור</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>← {0} · ⚠ {1} עמודות לבדיקה</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>← {0} · ✓ אין מה לבדוק</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} עמודות ברשימה זו; הזרימות משתמשות ב-{1}: {2} עם אותו שם ביעד, {3} שונה שמן והותאמו, {4} דומות (אנא בדוק), {5} ללא התאמה (אנא בחר). שאר העמודות מוצגות להקשר ואינן משתנות.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} עמודות ברשימה זו; אף אחת מהן אינה בשימוש הזרימות באופן שהכלי יכול לראות, ולכן אין צורך למפות דבר.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>לא ניתן היה לקרוא עמודות עבור רשימה זו (ראה ההערות למעלה ואת רשימת הפעילות).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>בחר רשימת יעד למעלה כדי לראות את העמודות שלה ולמפות אותן.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>לא ניתן היה לקרוא את עמודות רשימת היעד, ולכן לא ניתן היה להציע התאמות.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>הזרימה אינה אומרת באיזה אתר נמצאת רשימה זו (היא משתמשת בפרמטר), ולכן לא ניתן לחפש אותה. הדבק את המזהה או הקישור של רשימת היעד.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>אין רשימת יעד: רשימה זו נשארת ללא שינוי.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>קורא את העמודות של רשימת היעד עבור {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>רשימה &apos;{0}&apos;: בחרת רשימת יעד אחרת. קורא את העמודות שלה ב-{1} כדי להתאים אותן שוב.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — מחובר בשם {1} (ההתחברות של החלון הראשי)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>קרא רשימות מ- (מקור)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>&quot;אתר בזרימות&quot; הוא הכתובת השמורה בזרימות; היא מוחלפת, ולכן לא ניתן לערוך אותה. &quot;קרא רשימות מ-&quot; הוא המקום שממנו הכלי קורא את שם הרשימה והעמודות שלה בצד המקור; היא מתחילה כאותה כתובת, ולכן שנה אותה כשכתובת הזרימה ישנה, ששונה שמה או שנמצאת בדייר שונה מחיבור המקור שלך.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>במה משתמשות הזרימות האלה</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} זרימות, {2} שלבים: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>נכתב מחדש על ידי הכלי הזה</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>סקירה ידנית</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>חיבור בלבד</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>לביצוע לאחר הייבוא</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>ייבא כל חבילה מתוקנת לסביבת היעד וצור מחדש את החיבורים (הם אינם מועתקים לעולם).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>חבילות פתרון: רק הגדרות הזרימה נכתבו מחדש. ערכי משתני הסביבה והפניות החיבור בפתרון (customizations.xml) עדיין מכילים ערכי מקור; הגדר אותם לאחר הייבוא.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>בעלי זרימות ומשתמשי הרצה בלבד אינם חלק מהחבילה; שתף את הזרימות עם האנשים הנכונים לאחר הייבוא.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>אין שינויים (דבר במיפוי לא התאים).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} החלפות</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>עדיין מצביע על ערכי מקור (לא ממופה, סקור לפני הייבוא)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>מתחבר לאתר המקור {0} ולאתר היעד {1}. חלון התחברות ייפתח אם עדיין לא התחברת.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>מחובר ל-{0} (מקור) ול-{1} (יעד).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>קורא את הרשימות והספריות באתר היעד {0}, כדי שניתן יהיה להתאים כל רשימה לפי שם ולהציע אותה ברשימה נפתחת.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>נמצאו {0} רשימות וספריות ב-{1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>קורא את השם והעמודות של הרשימה {0} מאתר המקור {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>רשימה &apos;{0}&apos;: מחפש רשימה עם אותו שם באתר היעד {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>רשימה &apos;{0}&apos;: נמצאה ביעד. קורא את העמודות של רשימת היעד כדי להתאים אותן.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>רשימה &apos;{0}&apos;: לא ניתן היה לקרוא את העמודות שלה, או שאין לה עמודות. אין מה למפות עבור רשימה זו.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>רשימה &apos;{0}&apos;: {1} עמודות, אף אחת מהן אינה בשימוש הזרימות באופן שהכלי יכול לראות. אין צורך למפות דבר.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>רשימה &apos;{0}&apos;: הזרימות משתמשות ב-{1} שמות עמודות: ל-{2} יש אותו שם ביעד (אין צורך בשינוי), {3} שונה שמן והותאמו, {4} נראות דומות (אנא בדוק), ל-{5} אין התאמה (לבחירתך), {6} הן עמודות מובנות (אין מה למפות).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>הרשימה {0} אינה באתר המקור, אך היא נמצאת באתר היעד בשם &apos;{1}&apos;: הזרימה כבר מצביעה על היעד.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>לאתר &apos;{0}&apos; אין יעד; הרשימות בו לא נפתרו.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>מתקדם: קרא רשימות מכתובת אחרת</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>← {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>מיפוי עמודות: מ-{0} אל {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>אין עמודות להצגה עבור רשימה זו.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>אף אחת מעמודות הרשימה הזו אינה בשימוש הזרימות. סמן &quot;הצג את כל העמודות&quot; כדי לראות אותן.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>לא ניתן היה לקרוא את רשימת המקור, והזרימה אינה מציינת עמודות, ולכן אין מה למפות.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>רשימה</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(לא ניתן לקריאה במקור)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>נקרא מ-:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>אתר</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>זרימה זו כבר מצביעה על הרשימה הזו ביעד. {0} שמות העמודות שבהן היא משתמשת מוצגים מול עמודות היעד; אין צורך לשנות דבר.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(שם הרשימה אינו זמין)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>כבר ביעד</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>ממופה לפי שמות העמודות של הזרימה</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>לא ניתן לקרוא עמודות</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>אין רשימת יעד</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>אין מה למפות</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>מוכן</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>עמודות היעד אינן קריאות</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} לבדיקה</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>בשימוש {0} זרימות</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} מיפויי עמודות עדיין דורשים מבט.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>כל מיפויי העמודות הוסדרו.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>חיבורים אינם מועתקים בין דיירים: צור אותם מחדש ב-Power Automate לאחר הייבוא.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>דוא&quot;ל: כל כתובת ב-{0} הופכת ל-{1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} מתוך {1} טפסים מצביעים על טופס חדש.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>ל-{0} מתוך {1} רשימות יש רשימת יעד.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>הרשימות עדיין לא הותאמו.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>כתובות הדוא&quot;ל אינן משתנות (לא מופה דומיין).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>הזרימות אינן משתמשות ב-Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>הזרימות אינן משתמשות ברשימות ספציפיות.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>הזרימות אינן מציינות אתרי SharePoint.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>ייכתבו {0} חבילות עם {1} זרימות; המקוריות אינן משתנות.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0} מתוך {1} אתרים יעברו לאתר יעד; האחרים נשארים כפי שהם.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>נקה ערכים שמולאו אוטומטית</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>מולא</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>טופס בזרימות שלך</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>מ- (בזרימות שלך)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>רשימות</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>אתרים</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>סטטוס</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>אל (יעד)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>נבחר על ידך</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>נשאר ללא שינוי</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(ההתחברות של החלון הראשי)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>דומיין דוא&quot;ל להעברה ממנו</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>העבר כל כתובת מ-</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>אל</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>דומיין דוא&quot;ל להעברה אליו</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…או גרור קובצי zip (או תיקייה) לחלון זה.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>לעמודה &apos;{0}&apos; ברשימה &apos;{1}&apos; אין התאמה ברשימת היעד.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>לרשימה &apos;{0}&apos; ({1}) ב-{2} אין רשימת יעד, ולכן זרימות שמשתמשות בה עדיין מצביעות על רשימת המקור.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(הכותרת אינה ידועה)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>עבור לשלב</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>יש לך מיפוי שמור? טען אותו…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>תבנית מותאמת אישית…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>שמור את השמות המקוריים</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>הוסף &apos; - migrated&apos; לכל שם</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>פתח את הדוח ובדוק מה מסומן לסקירה.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>ב-Power Automate (דייר היעד): הזרימות שלי, ייבוא, ייבוא חבילה (מדור קודם), ובחר חבילה שנכתבה.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>תחת משאבים קשורים לחץ על &quot;בחר במהלך הייבוא&quot; עבור כל חיבור ובחר או צור אחד בדייר היעד. לא ניתן להעביר חיבורים בין דיירים.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>ייבא את הזרימה, השאר אותה כבויה, פתח אותה, תקן כל מה שהיא מסמנת ואז הפעל אותה.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>פתח תיקייה</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>פתח את Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>תיקיית הפלט הזו עדיין לא קיימת; היא נוצרת כשאתה כותב את החבילות.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>מקור</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>יעד</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>נמצאו {0} זרימות</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>לא נמצאו זרימות</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>כבר נכתבה על ידי הכלי הזה</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>לא ניתן היה לקרוא</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>מוכן לכתיבה?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>הסר חבילה זו מהרשימה</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>דוח כתיבה מחדש של זרימות</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>במה משתמשות הזרימות האלה ({0} שירותים)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>לא ניתן היה לכתוב {0} חבילות.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} ערכים בחבילות שנכתבו עדיין מצביעים על המקור. פתח את הדוח כדי לראות אילו.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>הצג את כל {0} העמודות</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>הצג רק את העמודות שהזרימות משתמשות בהן</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>מה משמעות העמודות האלה?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>מזהה הרשימה הזו אינו באתר המקור, אך זוהי הרשימה &apos;{0}&apos; באתר היעד: הזרימה כבר מצביעה על היעד, כמו בחבילה שהכלי הזה כבר כתב.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>מחובר</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>בעיה</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>לא מחובר</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>ממתין להתחברות…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} רשימות · כולן מוכנות</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} רשימות · {1} מוכנות · {2} דורשות מבט</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>ארך {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>לסקירה</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>הוסף את חבילות הזרימה (.zip) שייצאת מדייר המקור. כל אחת נסרקת מיד עם הוספתה.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>ציין לאיזה אתר עוברת כל זרימה. התחבר ליעד וכתובת הדייר החדש תמולא עבורך.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>כל רשימה שהזרימות משתמשות בה מותאמת לרשימה ביעד, והעמודות שלה ממופות. בדוק כל מה שמסומן כדורש מבט.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>כוון טפסים שהועתקו אל המזהים החדשים שלהם, והחלט איך ישתנו כתובות הדוא&quot;ל ומזהה הדייר.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>בדוק את הרשימה שלמטה, בחר היכן לשמור את החבילות המעודכנות ואז כתוב אותן.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>מה קורה כאן</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>הכלי קורא כל חבילה במחשב זה (דבר אינו נשלח לשום מקום) כדי למצוא את האתרים, הרשימות, העמודות והטפסים שהזרימות משתמשות בהם. הוסף את הייצוא המקורי מהמקור, לא חבילות שהכלי הזה כתב קודם: הן כבר מכילות את כתובות היעד.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>העמודה &apos;{0}&apos; ממופה באופן שונה ברשימות שונות ({1}). שלבי כל רשימה מקבלים מיפוי משלהם; ביטויים במקומות אחרים בזרימה שומרים את השם המקורי, ולכן סקור אותם.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>טען שמות טפסים מחדש…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>טוען שמות טפסים… ייתכן שתתבקש להתחבר.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>קורא את כותרות הטפסים בזרימות שלך מחשבון המקור {0}. לחץ על ביטול כדי להפסיק להמתין להתחברות.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>מקור: נמצאה הכותרת של {0} מתוך {1} טפסים ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>מקור: לא ניתן היה לקרוא את כותרות הטפסים: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} טפסים הותאמו לטופס היעד עם אותו שם.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>נראה כמזהה טופס תקין</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>הותאם לפי שם</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>המקור והיעד נמצאים באותו דייר ({0}). עבור למצב דייר יחיד (הגדרות), או התחבר למקור וליעד עם חשבונות מדיירים שונים.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>הסר חבילות אלה</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>הוסרו {0} חבילות שכבר מצביעות על היעד: {1}. הוסף במקום זאת את הייצוא המקורי מדייר המקור.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>החבילות האלה הוסרו. הוסף את הייצוא המקורי מדייר המקור.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>כל חבילה נשמרת כקובץ zip חדש בתיקיית הפלט; המקוריות אינן משתנות לעולם. כדי לשנות שם של אחת, הקלד שם אחר ב&quot;שמירה בשם&quot;.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>שמור את השמות המקוריים</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>הוסף &apos; - migrated&apos; לכל שם</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>חבילה מקורית</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>שמירה בשם</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>תישמר בשם: {0} (תוכל לשנות את השמות למטה).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>לא ניתן היה לקרוא; לא נכתב פלט</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>בוטל. דבר לא שונה. בשלב האתרים השתמש בהתחבר כדי לנסות שוב (לדוגמה בדפדפן אחר); בשלב הרשימות השתמש בהתאם שוב.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>מבטל… סגירת חלון התחברות יכולה לקחת רגע.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>מה הכלי עושה</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>חיבורים</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>ריבוי דיירים: כדי להתאים רשימות, הכלי קורא את השם והעמודות של כל רשימה מדייר המקור ומחפש את אותה רשימה בדייר היעד. לשם כך נדרשת התחברות לכל אחד. התחבר לכל צד כאן, או פשוט לחץ על הבא ותתבקש אז. ייפתח חלון דפדפן; אם זה הדפדפן הלא נכון, לחץ על ביטול ונסה שוב. דבר אינו משתנה באף אחד מהדיירים.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>דייר יחיד: המקור והיעד הם אותו דייר, ולכן הכלי משתמש בחשבון שאיתו התחברת בשלב ההתחברות. אין צורך להתחבר לשום דבר אחר. דבר אינו משתנה בדייר.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>מקור</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>יעד</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>התחבר למקור…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>התחבר ליעד…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>ביטול</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>מפסיק להמתין לחלון ההתחברות, כדי שתוכל לנסות שוב, לדוגמה בדפדפן אחר.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>עדיין לא מחובר</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>משתמש בהתחברות של החלון הראשי: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ מחובר בשם {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ מוכן</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>ממתין להתחברות… אמור להיפתח חלון דפדפן</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>ההתחברות בוטלה. לחץ על התחבר כדי לנסות שוב.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>מחובר. בדוק את אתרי היעד למטה ואז לחץ על הבא.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>עדיין אין אתר מקור להתחבר אליו. הוסף קודם חבילות זרימה.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>הזן קודם לפחות אתר יעד אחד (או השתמש במילוי תוך שמירה על נתיבים); ההתחברות מתבצעת לדייר של אתר היעד.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>מתחבר למקור… ייפתח חלון דפדפן.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>מתחבר ליעד… ייפתח חלון דפדפן.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>מקור</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>יעד</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>מתחבר לדייר המקור. ייפתח חלון דפדפן; לחץ על ביטול כדי להפסיק להמתין (לדוגמה כדי לנסות דפדפן אחר). ההתחברות גם מודיעה לכלי מהו דייר המקור.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>מתחבר לדייר היעד. ייפתח חלון דפדפן; לחץ על ביטול כדי להפסיק להמתין (לדוגמה כדי לנסות דפדפן אחר). ההתחברות גם מודיעה לכלי מהי כתובת SharePoint של הדייר החדש.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>מחובר אל {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>ההתחברות בוטלה על ידך.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>קורא {0} קובצי חבילה במחשב זה כדי למצוא את האתרים, הרשימות, העמודות והטפסים שהזרימות משתמשות בהם. דבר אינו נשלח לשום מקום.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>נקרא {0}: {1} זרימות.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>מתאים {0} רשימות: עבור כל אחת, הכלי שואל את אתר המקור את שמה ואז מחפש רשימה בשם זה באתר היעד.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>ההתאמה הסתיימה. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>כותב {0} חבילות מתוקנות אל {1}. המקוריות אינן משתנות.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>כותב את {0} עם המיפוי שלך מוחל.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>בודק את {0} לאיתור ערכים שעדיין מצביעים על המקור.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>בוטל על ידך. דבר לא שונה.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>נעצר: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>כל זרימה שומרת את הכתובת של אתר ה-SharePoint שממנו היא קוראת או שאליו היא כותבת. כדי לפעול בדייר החדש, כל זרימה חייבת להצביע על האתר המתאים שם, ולכן ציין לכלי איזה אתר חדש מחליף כל אתר ישן. פעולה זו עורכת רק העתקים של החבילות שלך; דבר אינו מחופש עד שתלחץ על הבא.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>מה קורה כאן: עבור כל רשימה שזרימה משתמשת בה, הכלי קורא את שם הרשימה והעמודות שלה מאתר המקור, מחפש רשימה באותו שם באתר היעד וקורא את העמודות של אותה רשימה כדי להתאים אותן. למה: זרימות מתייחסות לרשימות ולעמודות לפי מזהה או שם פנימי, ואלה שונים בדייר החדש, ולכן הכלי מוצא את המקבילה. שלב זה רק קורא; דבר אינו נוצר או משתנה באף אחד מהדיירים. תוכל לשנות את רשימת היעד וכל עמודה בכרטיס שלה.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>טופס שהועתק מקבל מזהה חדש, ולכן זרימה שמשתמשת בו חייבת להצביע על ההעתק. ייתכן שגם כתובות דוא&quot;ל ומזהה הדייר בזרימה יצטרכו להשתנות עבור הארגון החדש. דבר אינו מחופש כאן; אתה מחליט על התחליפים, וכל מה שנשאר ריק נשאר כפי שהוא.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>הכלי כותב קובצי zip חדשים לתיקיית הפלט עם המיפוי שלך מוחל, סורק אותם שוב כדי למצוא כל דבר שעדיין מצביע על המקור, וכותב דוח. החבילות המקוריות שלך אינן משתנות לעולם, ודבר אינו נשלח לאף אחד מהדיירים. אתה מייבא את החבילות החדשות ב-Power Automate בעצמך לאחר מכן.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>ההתחברות בוטלה. לחץ על הלחצן כדי לנסות שוב, לדוגמה בדפדפן אחר.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>ביטול</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>שגיאה: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>לא ניתן היה לקרוא את טופס המקור ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>לא ניתן היה ליצור את הטופס ביעד ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>בוטל באמצע. טופס חלקי נשאר ביעד; מחק אותו ב-Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>ההעתקה נעצרה באמצע ({0}). טופס חלקי נשאר ביעד; מחק אותו ב-Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>תמונת רקע</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>לוגו</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>תמונת כותרת</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>ה-{0} לא הועתק (תמונות עדיין אינן נתמכות).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>ניקוד החידון (תשובות נכונות ונקודות) אינו מאומת; אנא בדוק את ההעתק.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>לא ניתן היה להעתיק את ההגדרה &apos;{0}&apos; ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>השאלה &apos;{0}&apos; לא הועתקה ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(ללא כותרת)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>לא ניתן היה להעתיק את כללי ההסתעפות ({0}); אנא בדוק את ההעתק.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>ההעתק נוצר אך לא ניתן היה להפוך אותו לגלוי ב-Microsoft Forms ({0}); ייתכן שהוא נמצא בסל המיחזור.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>בהעתק יש {0} שאלות אך במקור יש {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>השאלה &apos;{0}&apos; ({1}) נוצרה אך לא ניתן היה להעתיק את האפשרויות שלה ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>תוצאות</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>טופס מקור</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>מזהה טופס מקור</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>כותרת ההעתק</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>מזהה טופס ההעתק</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>סטטוס</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>שאלות שהועתקו</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>שאלות במקור</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>אזהרות</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>הערות</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>שגיאה</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>חוברת עבודה של Excel (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>קובצי JSON (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>מזהה</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>שעת התחלה</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>שעת סיום</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>משיב</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>שם</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>ציון</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>תשובות לא ממופות (JSON גולמי)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (נחתך: ארוך מדי לתא Excel)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>לעצור את ההרצה?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>השוואה או אימות עדיין פועלים. סגירת חלון זה תעצור אותם, ולא ייכתב דוח. לסגור בכל זאת?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>לסגור בזמן עבודה?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>הכלי עדיין עובד (סריקה, התאמה, התחברות או כתיבת חבילות). סגירה עכשיו תעצור אותו. לסגור בכל זאת?</value></data>
 </root>

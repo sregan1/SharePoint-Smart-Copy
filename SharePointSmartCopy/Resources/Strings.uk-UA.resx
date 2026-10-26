@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Успішно ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Помилка ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Пропущено ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Актуально</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Не вдалося визначити, чи має джерело власні дозволи (обмеження швидкості або помилка доступу) — дозволи для цього елемента не скопійовано. Запустіть повторно, щоб спробувати ще раз.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Наявний файл призначення видалено для перезапису, але нову копію не вдалося передати ({0}). Наразі файл у призначенні відсутній — повторно запустіть копіювання, щоб відновити його.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Бібліотека призначення зазнала помилки ({0}). Її файли позначено як помилкові; інші бібліотеки продовжують обробку.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: файл-джерело змінився під час завантаження — завантаження починається заново.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint не повідомляв про прогрес цього імпорту протягом {0} хв., тому його припинено. Його файли позначено як помилкові; повторно запустіть копіювання, щоб спробувати ще раз.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Один тенант</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Кілька тенантів</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Копіювання між двома різними тенантами Microsoft 365. Ви входите окремо до джерела й до призначення. Виберіть реєстрацію додатка для призначення в розділі «Налаштування».</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Реєстрація призначення:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Режим із кількома тенантами: реєстрація додатка, яка використовується для входу в тенант призначення. Варіант «Як у джерела» повторно використовує реєстрацію джерела, яка в такому разі має бути багатотенантним додатком.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Відновити / запустити знову</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Повторно підключається й заново виконує цей вибір із режимом «Копіювати, якщо новіший», тож уже скопійовані файли пропускаються, а передається лише те, чого бракує або що змінилося.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Для цього запуску немає збереженого вибору для відновлення (вибір зберігають лише запуски з вибором файлів).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>Копіювання вже виконується. Спочатку завершіть або скасуйте його.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Не вдалося відновити: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>Відновлено перерваних запусків: {0}. Див. «Історія».</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Відновлення: елементів, відновлених із попереднього запуску, — {0}, вибрано «Копіювати, якщо новіший». Перегляньте параметри, потім натисніть «Далі». (Настроювані зіставлення стовпців не відновлюються.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>ПЕРЕРВАНО — додаток закрився до завершення цього запуску. З оброблених елементів: успішно — {0}, помилок — {1}, пропущено — {2}, скасовано — {3}  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Експортувати діагностику…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Зберігає zip-архів із нещодавніми журналами, відомостями про систему та вашими налаштуваннями без даних про організацію — для додавання до звіту про помилку. Звіти про копіювання та імена файлів не включаються.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Діагностику збережено в {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Не вдалося зберегти діагностику: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Вміст ідентичний (відрізняються лише частини, якими керує SharePoint), але дату зміни не збережено.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Дозволи не скопійовано: не вдалося визначити ідентифікатори SharePoint елемента.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Дозволи не скопійовано: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Папка «{0}»: {1} не застосовано — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>У більшої кількості папок виникли подібні проблеми; наступні окремо не наводяться.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>дозволи</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>дати</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>автор / редактор</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> (збережено {0} — призначення вже актуальне)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>УВАГА: не вдалося прочитати метадані із джерела ({0}): {1}. Елементи з нього можуть бути скопійовані БЕЗ значень настроюваних стовпців або унікальних дозволів. Запустіть повторно, коли проблему буде усунено («Перезаписати» або «Якщо новіший» застосує їх знову).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>УВАГА: не вдалося знайти список-джерело для бібліотеки, тому її дозволи НЕ буде скопійовано.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>Вузол SharePoint «{0}» не пов’язано з підключеним тенантом. Повторно підключіть сайти джерела та призначення й спробуйте ще раз.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Копіювання між тенантами: значення стовпців керованих метаданих (таксономії) не копіюються, а блокноти OneNote / набори документів поки що не можна копіювати між тенантами. Ідентичності зіставляються за налаштуваннями зіставлення ідентичностей; користувачів, яких не вдалося визначити в призначенні, пропущено.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Зіставлення ідентичностей</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Зіставлення ідентичностей…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Наведіть кожну особу (або групу) в тенанті-джерелі та хто це в тенанті призначення — це різні облікові записи. Автори, редактори, стовпці з користувачами та дозволи записуються за цією таблицею. Тих, кого немає в списку, буде зіставлено за заміною домену, якщо її задано; кого й так не вдалося знайти в призначенні, буде пропущено та зазначено у звіті.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Домен електронної пошти джерела</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Домен електронної пошти призначення</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Перевизначення — одна пара «джерело,призначення» на рядок (імена користувачів або груп; # починає коментар)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Як у джерела</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Джерело й призначення в одному тенанті. Для копіювання в межах одного тенанта перейдіть у режим одного тенанта.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Власне копіювання папок (блокноти OneNote, набори документів) між тенантами поки що не підтримується.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Диск «{0}» не пов’язано з підключеним тенантом. Повторно підключіть сайти джерела та призначення й спробуйте ще раз.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Реєстрацію додатка ще не налаштовано. Перед підключенням відкрийте «Налаштування» та додайте реєстрацію додатка Azure (її ідентифікатор додатка/клієнта).</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Вхід скасовано. Натисніть «Підключити», щоб спробувати ще раз.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Адміністратор ще не схвалив цей додаток у цьому тенанті. Попросіть глобального адміністратора надати згоду адміністратора для реєстрації додатка (див. розділ «Налаштування» в посібнику користувача).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Реєстрацію додатка не знайдено в цьому тенанті. Перевірте ідентифікатор клієнта й ідентифікатор тенанта в налаштуваннях.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Цей тенант не знайдено. Перевірте ідентифікатор тенанта в налаштуваннях (використовуйте свій домен, GUID тенанта або «common»).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>У реєстрації додатка відсутня адреса перенаправлення, яку використовує цей додаток. В Azure додайте URI перенаправлення http://localhost у розділі «Мобільні та настільні додатки».</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Реєстрацію додатка не налаштовано для входу на настільному комп’ютері. В Azure увімкніть для реєстрації параметр «Дозволити потоки публічного клієнта».</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Цьому обліковому запису не дозволено використовувати цю реєстрацію додатка. Увійдіть за допомогою облікового запису з тенанта, якому вона належить, або виберіть іншу реєстрацію в налаштуваннях.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint відхилив вхід. Натисніть «Підключити», щоб увійти знову.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>У вас немає доступу до цього сайту. Переконайтеся, що ваш обліковий запис може відкрити його в браузері та що додатку надано дозвіл Sites.ReadWrite.All.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Цей сайт не знайдено. Перевірте адресу — вона має виглядати так: https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Подробиці: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Підключіться до сайту-джерела, щоб продовжити.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Виберіть принаймні один елемент (позначте прапорець), щоб продовжити.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Підключіться до сайту призначення, щоб продовжити.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Виберіть папку призначення, щоб продовжити.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Виберіть список призначення, щоб продовжити.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Введіть назву нового списку, щоб продовжити.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Нічого не вибрано для копіювання.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Очікування завершення копіювання…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Джерело: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Призначення: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Реєстрацію вашого додатка змінено, тому ви вийшли з обох сайтів. Підключіться знову, щоб продовжити.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Зупинити копіювання?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>Виконується копіювання. Якщо зупинити його зараз, решту елементів не буде скопійовано (пізніше можна відновити з розділу «Історія»). Зупинити копіювання?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>Копіювання ще виконується. Закриття додатка зупинить його, і решту елементів не буде скопійовано (пізніше можна відновити з розділу «Історія»). Усе одно закрити?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Змінити режим підключення?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Перемикання між режимами одного й кількох тенантів роз’єднує обидва сайти, і вам доведеться підключитися знову. Усе одно перемкнути?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Підключення:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Реєстрація додатка джерела</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Реєстрація додатка призначення</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Вхід у тенант призначення виконується за допомогою:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Змінити</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Відкрити налаштування</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Ви повинні мати доступ для читання до колекції сайтів-джерела.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Перед підключенням налаштуйте реєстрацію додатка Microsoft Entra ID в налаштуваннях.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Параметри файлів</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Параметри бібліотек і файлів</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Копіювання файлів…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Копіювання бібліотек…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Далі</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Почати копіювання</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Переглянути звіт</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Введіть назву нового списку, який потрібно створити</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>Список призначення вибрано на кроці «Призначення». Поверніться, щоб змінити його.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Спочатку налаштуйте реєстрацію додатка</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy виконує вхід за допомогою реєстрації додатка, яку ви створюєте у власному тенанті Microsoft Entra ID (Azure). Відкрийте «Налаштування», додайте ідентифікатор додатка (клієнта) вашої реєстрації, потім поверніться сюди, щоб підключитися.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Докладніше</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Перетягніть, щоб збільшити або зменшити висоту стрічки активності</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Натисніть, щоб показати лише елементи з помилками</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Натисніть, щоб показати лише пропущені елементи</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Зіставлення стовпців</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Порівняти джерело й призначення</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Відкрийте засіб порівняння, щоб звірити цю копію з джерелом.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Відкрити історію</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Вибрана реєстрація використовується для джерела — а в режимі одного тенанта й для обох сторін.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Нова реєстрація</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Додайте принаймні одну реєстрацію додатка.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Перевірка</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Для вибраної реєстрації потрібен ідентифікатор клієнта.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Вихід виконано. Під час наступного підключення вам буде запропоновано увійти.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Вихід виконано</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Не вдалося вийти: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Вийти</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>Знайдено зіставлень: {0}.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>Рядків, які не вдалося прочитати: {0} (рядок {1}). Кожен рядок має мати вигляд джерело,призначення.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Домени джерела й призначення однакові, тому заміна домену нічого не змінить.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Імпортувати CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Деякі рядки перевизначення не вдалося прочитати (рядок {0}). Кожен рядок має мати вигляд «джерело,призначення». Виправте або видаліть їх — або почніть рядок із #, щоб зробити його коментарем.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Не вдалося зберегти зіставлення ідентичностей: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Не вдалося прочитати цей файл: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Між тенантами: облікових записів авторів/редакторів у цій бібліотеці, не знайдених у тенанті призначення, — {0}; їх буде залишено як обліковий запис, що виконує копіювання. Після запуску скористайтеся у звіті командою «Зіставити цих користувачів», щоб виправити це.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Введіть користувача або групу джерела.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Введіть, хто це в тенанті призначення — або видаліть рядок.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Джерело й призначення однакові.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Це джерело зустрічається більше одного разу.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Джерело (цей тенант)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Призначення (інший тенант)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Тип</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>У призначенні?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Потрібно для</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Користувач</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Група</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Не перевірено</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Перевірка…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Знайдено</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Не знайдено</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Додати</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Видалити</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Заповнити призначення за заміною домену</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>Для рядків, у яких ще немає призначення, підставляє адресу, яку дала б заміна домену.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Перевірити в призначенні</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Шукає кожного користувача призначення в тенанті призначення. Це також додає їх до списку користувачів сайту призначення, що копіювання все одно робить, перш ніж призначити їх авторами або надати їм доступ.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Спочатку підключіться до багатотенантного призначення: введіть URL сайту призначення на кроці «Призначення», потім знову відкрийте це діалогове вікно.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Експортувати CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Ці особи були потрібні для копіювання, але їх не вдалося знайти в тенанті призначення. Для кожної введіть, хто це в призначенні, — або видаліть рядок, щоб залишити без зіставлення.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>Зіставлень: {0}.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>Рядків, що потребують уваги: {0}.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Перевірено: знайдено — {0}, не знайдено — {1}{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, не вдалося перевірити — {0}</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Перевірка {0} з {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Нічого перевіряти: жоден рядок не має адреси електронної пошти призначення.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Деякі рядки потребують уваги (виділено). Виправте або видаліть їх, потім збережіть.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Зіставлення збережено. Щоб застосувати його до вже скопійованих файлів, запустіть знову з режимом «Перезаписати» — «Копіювати, якщо новіший» пропускає актуальні файли, тому їхні автори не змінюються. Дозволи оновлюються в обох випадках.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>Осіб із джерела, яких не вдалося знайти в тенанті призначення, — {0}, тому їх пропущено: не надано доступ, не призначено автором чи редактором або вилучено зі стовпців із користувачами.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Зіставити цих користувачів…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Зіставити невизначених користувачів…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Відкриває зіставлення ідентичностей з особами, яких цей запуск не зміг знайти в призначенні.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>У цьому запуску не було невизначених користувачів.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Копіювання форм</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Копіюйте форми Microsoft Forms до облікового запису призначення зі збереженням усіх запитань, розгалужень, налаштувань і теми. Відповіді можна експортувати в Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Використовується вебінтерфейс API Microsoft Forms, який Microsoft не документує й не підтримує. Сьогодні він працює, але може змінитися без попередження. Спершу спробуйте кілька форм.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Завантажити мої форми</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Обліковий запис джерела: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Обліковий запис призначення: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Призначення: той самий обліковий запис (один тенант). Копії створюються поруч з оригіналами.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(вам буде запропоновано увійти)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Зіставлення ідентифікаторів форм (використовується засобом «Потоки»): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Завантаження форм…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>Завантажено форм: {0}.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Спочатку виберіть принаймні одну форму.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Копіювання форм…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Копіювання…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Скопійовано</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Помилка (див. журнал)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Копіювання «{0}»</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Копіювання завершено: скопійовано — {0}, помилок — {1}.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Виберіть папку для експорту відповідей</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Експорт відповідей…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>Експортовано «{0}»: відповідей — {1}, у {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Відповіді для форм ({0}) експортовано в {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Форму скопійовано, але її ідентифікатор не вдалося зберегти для засобу «Потоки»: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Не вдалося експортувати «{0}»: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Відповіді для форм ({0}) експортовано в {2}; помилок — {1} (див. журнал).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Скасовано.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Помилка: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Підказка: реєстрації додатка потрібен делегований дозвіл Microsoft Forms зі згодою. Додайте його в розділі «Дозволи API» (див. посібник користувача), потім спробуйте ще раз.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Підказка: Microsoft Forms відхилив запит. Переконайтеся, що цей обліковий запис може відкрити forms.office.com і що реєстрація додатка має дозвіл Microsoft Forms.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>Вибрано {0} з {1}</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Назва</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Тип</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Остання зміна</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Результат</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Додати до назв копій:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (копія)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Копіювати вибрані форми</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Експортувати відповіді…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Звірте копію з джерелом</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Інші засоби</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Форми</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Копіюйте форми Microsoft Forms і експортуйте їхні відповіді</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Засіб «Форми»</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Перезапис потоків для призначення</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Оновіть експортовані пакети Power Automate (.zip), щоб вони вказували на призначення: сайти, списки, стовпці, скопійовані форми та домени електронної пошти. Ваші оригінальні пакети ніколи не змінюються.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Виберіть експортовані пакети потоків</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Додайте пакети потоків (.zip), які ви експортували з Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Додати файли…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Додати папку…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Сканувати</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Пакети потоків (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Спочатку додайте принаймні один пакет потоку.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Сканування пакетів…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>Пропущено {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>Знайдено потоків: {0}. Вони посилаються на сайтів — {1}, списків — {2}, форм — {3}.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Сканування завершено.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Зіставлення сайтів</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Куди переходить сайт SharePoint кожного потоку. У режимі кількох тенантів увійдіть у призначення — адресу нового тенанта буде підставлено автоматично; змініть кожен рядок, сайт якого має іншу назву. У режимі одного тенанта введіть сайт призначення для кожного рядка.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Сайт у потоках (замінюється)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Сайт призначення</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Адреса нового тенанта:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Заповнити порожні призначення зі збереженням шляхів</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Введіть повний URL, наприклад https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Порожні призначення заповнено з використанням цього вузла та шляху кожного сайту.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Зіставлення списків і стовпців</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Одна картка на кожен список, який використовують потоки, незалежно від кількості потоків. Кожна показує назву й стовпці списку, список, з яким він зіставляється в призначенні (за замовчуванням з тією самою назвою; якщо назва інша — виберіть інший зі спадного списку), і як зіставляється кожен стовпець. Перевірте картки з позначкою попередження.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Зіставити списки й стовпці</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Список</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>ID списку-джерела</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>ID списку призначення</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Стовпець-джерело</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Стовпець призначення</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Спочатку проскануйте пакети.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Спочатку введіть принаймні один сайт призначення.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Зіставлення списків і стовпців…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(не знайдено)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>У призначенні знайдено список з такою самою назвою</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Для сайту, на якому розміщено цей список, не задано сайт призначення (крок «Сайти»)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Не вдалося прочитати цей список на сайті-джерелі: він може не існувати, цей обліковий запис може не мати доступу, або сайт розташований в іншому тенанті, ніж ваше підключення до джерела</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>На сайті призначення немає списку з такою назвою: виберіть один зі спадного списку</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Та сама назва</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Перейменовано в призначенні</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Немає відповідності: виберіть стовпець</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>Списків із призначенням: {0} з {1}. Стовпців для перевірки: {2}.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Форми й електронна пошта</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Форми, скопійовані засобом «Форми», заповнюються автоматично. Для форми, створеної вами самостійно, вставте її ID або посилання на сторінку редагування.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>ID форми-джерела</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>ID форми (заповнюється зі спадного списку, або вставте власний)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Перенести домен електронної пошти:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Запис оновлених пакетів</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Виберіть папку виводу (не ту, де лежать оригінали). Туди буде збережено оновлені пакети та звіт зі списком усіх змін.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Записати оновлені пакети</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Зберегти зіставлення…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Відкрити папку виводу</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Підключення не можна переносити між тенантами. Після імпорту пакета заново створіть кожне підключення в Power Automate та виберіть його знову.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Спочатку виберіть папку виводу.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Запис оновлених пакетів…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Збережіть оновлену копію {0} (пакет {1} з {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Пакет Power Automate (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Ви вже вибрали цю назву файлу для іншого пакета. Виберіть іншу назву.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Пакет буде збережено поверх оригіналу (та сама папка, та сама назва). Виберіть іншу папку виводу або змініть назву в полі «Зберегти як», щоб оригінали лишилися недоторканими.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Звіт про перезапис потоків
+
+Оригінальні пакети не змінено. Підключення НЕ переносяться; заново створіть їх і виберіть під час імпорту.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Звіт записано в {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>Записано пакетів: {0}, замін: {1}. Значень, що досі вказують на джерело: {2} (див. звіт).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Зіставлення збережено в {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Потоки</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Оновіть експортовані потоки Power Automate для призначення</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Засіб «Потоки»</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Що використовують ці потоки</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Служби, знайдені в проскановних потоках, і що цей засіб робить щодо кожної з них.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Служба</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Потоки</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Кроки</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Знайдено</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Що робить цей засіб</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Перезаписує знайдене</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>ID наводяться у звіті; перегляньте після імпорту</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Лише підключення (створіть його заново)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Зіставлення стовпців</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Стовпець з’являється тут, коли потік записує в нього, фільтрує чи сортує за ним або читає його у виразі в зіставленому списку. Стовпець призначення вибирається автоматичним зіставленням (та сама назва, потім те саме відображуване ім’я, потім подібна назва). Діяти потрібно лише для рядків із позначкою «Подібна назва» або «Немає відповідності»; змініть будь-який рядок зі спадного списку або виберіть «(не змінювати)», щоб зберегти назву з джерела. Вбудовані стовпці, як-от Title, не наводяться, бо існують скрізь.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(не змінювати)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Подібна назва: перевірте</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(ще не зіставлено)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Список призначення вибрано вами</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Щоб вибрати список самостійно (наприклад, коли назва відрізняється), введіть або вставте ID списку призначення чи посилання на сторінку його параметрів у стовпці «ID списку призначення». Потім натисніть «Зіставити знову», щоб зіставити його стовпці.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Не вдалося знайти ID списку в «{0}». Вставте GUID або посилання на сторінку параметрів списку.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Не вдалося знайти ID форми в «{0}». Вставте ID форми або посилання на сторінку редагування форми.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Форми</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Призначення</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Копіювання</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Результати</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Виберіть форми для копіювання</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Перезавантажити форми</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Натисніть «Завантажити мої форми», щоб побачити свої форми.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>У цьому обліковому записі форм не знайдено.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Копіювати форми: {0}</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Копіювати більше форм</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Виберіть, куди помістити копії</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Один тенант: копії створюються в тому самому обліковому записі, яким ви користуєтеся, поруч з оригіналами.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Кілька тенантів: копії створюються в обліковому записі призначення. Увійдіть у нього тут; це окремо від входу, який ви використовували для сайтів SharePoint.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Обліковий запис призначення</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Вхід за допомогою реєстрації додатка: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Вхід за допомогою вашої реєстрації додатка призначення (задається в налаштуваннях).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Увійти в обліковий запис призначення</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Увійти знову</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Вхід в обліковий запис призначення… може відкритися вікно браузера.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Підключено як {0}. Доступ до Microsoft Forms підтверджено (форм уже в цьому обліковому записі: {1}).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Не вдалося підключитися до облікового запису призначення: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Обліковий запис призначення ще не підключено.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Готово. Натисніть кнопку «Копіювання», щоб почати.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Готово: копії буде створено в {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Увійдіть в обліковий запис призначення, щоб продовжити.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Параметри</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>Форм буде скопійовано: {0}, з {1} до {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>облікового запису джерела</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>облікового запису призначення</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Копіювання форм</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Запуск…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Форма {0} з {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Скасування після поточної форми…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Копіювання завершено: усі форми ({0}) скопійовано</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Ваші копії в {0}. Відкрийте Microsoft Forms, щоб побачити їх, або скористайтеся таблицею нижче.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Копіювання завершено: скопійовано форм — {0} з {1}, деякі потребують уваги</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Копії в {0}. Форми з позначкою попередження скопійовано з проблемами, а форми з помилками не створено. Див. стовпець «Подробиці».</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Копіювання завершено, але жодної форми не скопійовано</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Причину див. у стовпці «Подробиці». Поширені причини — відсутній дозвіл Microsoft Forms у реєстрації призначення або обліковий запис без доступу до Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Копіювання скасовано після {0} з {1} форм</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Форми, наведені нижче, завершено. Форму, яку копіювали під час скасування, не завершено, і вона не відображається.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Скопійовано</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>З попередженнями</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Помилка</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Запитання</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Форма-джерело</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Копія</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Запитання</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Подробиці</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Скопійовано</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Скопійовано з попередженнями</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Помилка</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Відкрити вибрану копію</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Відкрити Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Експортувати результати…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Показати зіставлення ID форм</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Спочатку виберіть скопійовану форму в таблиці.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Результати збережено в {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Підказка: у реєстрації додатка немає відповідної адреси перенаправлення. У Entra в розділі «Автентифікація» додайте платформу «Мобільні та настільні додатки» з http://localhost, потім спробуйте ще раз.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Пакети</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Сайти</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Списки й стовпці</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Форми й електронна пошта</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Запис</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Звіт</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Виберіть експортовані потоки</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>У Power Automate: відкрийте «Мої потоки», виберіть потік, потім «Експортувати» → «Пакет (.zip)». Додайте сюди завантажені .zip-файли. Кожен файл сканується одразу після додавання.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Очистити</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Щоб почати, додайте експортовані пакети потоків.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>У цих файлах потоків не знайдено. Переконайтеся, що це пакети, експортовані через «Експортувати» → «Пакет (.zip)».</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Сканування завершено. Перегляньте, що використовують потоки, потім натисніть «Далі».</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Виберіть сайти призначення</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Ці потоки не використовують сайти SharePoint із фіксованими адресами, тому тут нічого зіставляти. Натисніть «Далі».</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Далі засіб прочитає кожен список через ваші підключення та зіставить його на сайті призначення.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Введіть сайт призначення для кожного сайту-джерела, потім натисніть «Далі».</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Зіставлення списків і стовпців</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Зіставити знову</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Списки</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Ці потоки не вказують на конкретні списки SharePoint, тому нічого зіставляти.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Списки й стовпці зіставляються під час відкриття цього кроку.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Форми й електронна пошта</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Перевірте форми й електронну пошту, потім натисніть «Далі».</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Ці потоки не використовують Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>Адреси електронної пошти</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Щоб перенести всі адреси з одного домену електронної пошти на інший, введіть обидва домени. Адреси в інших доменах наводяться у звіті, але не змінюються.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Запис оновлених пакетів</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Папка виводу</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Виберіть папку виводу, потім натисніть «Записати оновлені пакети».</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Готово до запису пакетів: {0}, потоків у них: {1}. Замінюється: сайтів — {2}, списків — {3}, зіставлень стовпців — {4}, форм — {5}.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Записати оновлені пакети</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Записано пакетів</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Заміни</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Досі джерело</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>До перегляду</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Пакет</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Оновлено</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>Значень, що досі вказують на джерело: {0}</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Відкрити звіт</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Почати спочатку</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Готово: записано пакетів — {0}</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Збережено в {0}. Ніщо не вказує на джерело. Виконайте кроки нижче, щоб імпортувати їх.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Готово: записано пакетів — {0}, деякі елементи потребують вашого перегляду</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Збережено в {0}. Відкрийте звіт, щоб побачити значення, що досі вказують на джерело, та елементи, які засіб не перезаписує (інші служби, незіставлені списки чи стовпці).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Що робити далі</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Відкрийте звіт і перевірте «досі вказує на джерело» та все, що позначено для перегляду.
+2.  У Power Automate (тенант призначення) відкрийте «Мої потоки» → «Імпортувати» → «Імпортувати пакет (застарілий)» і виберіть записаний пакет.
+3.  У розділі «Пов’язані ресурси» натисніть «Вибрати під час імпорту» для кожного підключення та виберіть або створіть підключення в тенанті призначення. Підключення не можна переносити між тенантами.
+4.  Імпортуйте потік. Залиште його вимкненим, відкрийте його, виправте все, що він позначить, потім увімкніть.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Без змін (у ньому нічого не збіглося з вашим зіставленням)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Скопійовано {0} до {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Скопійовано раніше</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Уже скопійовано</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …і ще {0}</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Копіювати знову?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>Вибраних форм, уже скопійованих до цього облікового запису: {0}:
+
+{1}
+
+Повторне копіювання створює другу копію кожної. Продовжити?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>Копіювання ще виконується. Якщо закрити зараз, форма, що копіюється, може залишитися в призначенні недобудованою. Зупинити й закрити?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Виконується копіювання</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Не вдалося експортувати жодної відповіді (див. журнал).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Фільтр за назвою або типом</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Одна книга</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Експортувати всі вибрані форми в один файл Excel з окремим аркушем для кожної форми.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>Адреса електронної пошти</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>ID тенанта</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Шлях до бібліотеки</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Інші значення</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Введіть заміну для кожного значення, яке має змінитися. Порожні рядки не змінюються; якщо вони досі вказують на джерело, їх наведено у звіті.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Вид</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>У потоках</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Замінити на</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Перевірка ID</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Не ID форми й не посилання на сторінку редагування</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Те саме, що форма-джерело</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Ця форма в тенанті-джерелі, а не в призначенні</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Ця форма в іншому тенанті, ніж джерело</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>З копіювання Forms з {0} до {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>З раніше виконаного копіювання Forms</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Завантажити зіставлення…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Заповніть сайти, списки, стовпці, форми та інші значення зі збереженого раніше зіставлення.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Не вдалося завантажити зіставлення: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>Завантажено {0}. Значення, що збігаються з цими потоками, заповнено; перевірте їх на наступних кроках.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>Завантажено {0}. Його буде застосовано, коли ви додасте пакети потоків.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>Заповнено сайтів призначення: {0}. Перевірте їх нижче, потім натисніть «Далі».</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Кожен сайт уже має призначення, тому нічого не змінено. Очистьте клітинку «Призначення», щоб її заповнили.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Швидкий спосіб: введіть адресу нового тенанта, наприклад https://fabrikam.sharepoint.com, і натисніть кнопку. Кожен сайт, що ще не має призначення, отримає цю адресу з тим самим шляхом, що й у джерела: https://contoso.sharepoint.com/sites/HR стане https://fabrikam.sharepoint.com/sites/HR. Сайти OneDrive (contoso-my) переходять на адресу -my нового тенанта. Уже введені вами призначення не змінюються. Сайти вже мають існувати в новому тенанті; цей засіб їх не створює. Якщо сайт там має іншу назву, введіть його адресу в клітинку «Сайт призначення».</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Якщо залишити «Сайт призначення» порожнім, цей сайт не змінюється: потоки й надалі вказують на старий сайт, його списки й стовпці не зіставляються та не перезаписуються, а звіт наводить його в розділі «Що зробити після імпорту». Це правильно лише для сайту, який не переходить у новий тенант.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Що станеться</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Буде перенесено до призначення</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Не змінено (немає призначення)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Сайт {0} залишено без змін (призначення не введено), тому потоки й надалі вказують на нього, а його списки не зіставлено. Це нормально, якщо сайт не переноситься; інакше запустіть знову з призначенням.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Поки немає стовпців для показу: жоден список не зіставлено, тому порівнювати нічого. Виправте списки вище, потім натисніть «Зіставити знову».</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Немає стовпців для зіставлення, тож тут нічого робити не потрібно. Зіставлені списки не мають настроюваних стовпців, у які потоки записують, за якими фільтрують або які читають так, що засіб це бачить. Список активності внизу показує, що знайдено для кожного списку.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>Знайдено стовпців: {0}. З тією самою назвою в призначенні — {1}, перейменовано й зіставлено — {2}, схожих — {3}, без відповідності — {4}.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Перевірте рядки з позначкою «Подібна назва» та виберіть стовпець для рядків із позначкою «Немає відповідності». Рядки з позначкою «Та сама назва» або «Перейменовано в призначенні» дій не потребують.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Тут нічого робити: кожен стовпець уже зіставлено. Натисніть «Далі».</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Назви оновлених пакетів</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Як назвати оновлені .zip-файли. Використовуйте {name} для оригінальної назви файлу: «{name} - Fabrikam» перетворює «Onboarding.zip» на «Onboarding - Fabrikam.zip». Для одного пакета можна просто ввести повну назву. Залиште {name}, щоб зберегти оригінальні назви. Назва, використана двічі, отримує (2), (3)…, тому нічого не перезаписується.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Буде записано: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Потік зберігає лише ID форми, тому назви форм читаються з Microsoft Forms під час відкриття цього кроку: назва кожної форми у ваших потоках (обліковий запис джерела) і форми в обліковому записі призначення. Форма, назва якої точно збігається з однією формою призначення, зіставляється автоматично; інакше виберіть нову форму зі спадного списку або вставте її ID чи посилання на сторінку редагування. Натисніть «Перезавантажити назви форм», щоб прочитати їх знову.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Завантажити форми з облікового запису призначення…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Завантаження форм облікового запису призначення… вам може бути запропоновано увійти.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Перелік форм, що належать обліковому запису призначення {0}, щоб ви могли вибрати нову форму для кожного потоку. Натисніть «Скасувати», щоб припинити очікування входу.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Призначення: знайдено форм — {0} у {1}. Виберіть одну на рядок або вставте ID.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Призначення: форм у {0} не знайдено. Спадний список показує лише форми, що належать цьому обліковому запису (не групові форми), тому спочатку скопіюйте форми засобом «Форми» або вставте ID.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Скасовано. Натисніть «Завантажити назви форм», щоб спробувати ще раз, або вставте ID форм.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Призначення: не вдалося завантажити форми: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(немає)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(форма без назви)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Форма-джерело</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Виберіть із форм призначення</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Виберіть форму з облікового запису призначення. Спочатку натисніть «Завантажити форми з облікового запису призначення».</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Заповнено за входом у призначення ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Ваш обліковий запис джерела замінено вашим обліковим записом призначення</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Заповнено за вашими входами ({0} → {1}). Очистьте обидва поля, щоб не змінювати домени електронної пошти.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Сайт із порожнім призначенням залишається без змін: потоки й надалі вказують на нього, а звіт його наводить.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Вхід виконано як {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Вхід виконано як {0}. Адреса SharePoint тенанта призначення — {1}; порожні сайти призначення заповнено на її основі.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Деякі сайти в потоках розташовані на {0}, що є власною адресою облікового запису призначення. Або ці пакети вже вказують на призначення (наприклад, пакети, записані цим засобом, або потоки, експортовані з призначення), тоді додайте натомість оригінальні експорти з джерела; або джерело й призначення справді є одним тенантом, тоді перемкніть додаток у режим одного тенанта (Налаштування).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} — це пакет, записаний цим засобом {1}: він уже містить адреси призначення, тож переносити нічого. Додайте натомість оригінальний експорт з тенанта-джерела (файл у «Завантаженнях», а не з папки виводу).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Сайти в цих потоках розташовані на {0}, що є вашим тенантом призначення, але ваше джерело — {1}. Якщо пакети експортовано з {0}, увійдіть у цей тенант як у джерело («Змінити джерело…»). Якщо їх раніше записав цей засіб, видаліть їх і додайте оригінальні експорти.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Вхід виконано. Заповнено сайтів призначення: {0} на основі {1}. Перевірте їх, потім натисніть «Далі».</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Вхід виконано. Кожен сайт призначення вже мав значення, тому жодного не змінено.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Вхід не завершено, або адресу нового тенанта не вдалося прочитати (див. рядок «Призначення»). Якщо ви ввійшли, введіть нижче адресу нового тенанта, щоб заповнити сайти призначення.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — підключено як {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — вхід ще не виконано</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Змінити призначення…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Список призначення не вибрано, тому ці потоки й надалі вказуватимуть на список, якого немає в призначенні. Виберіть список призначення або спочатку створіть список на сайті призначення.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Потоки використовують стовпець «{0}», але у списку призначення «{1}» немає для нього стовпця. Виберіть його стовпець призначення в таблиці або додайте стовпець до списку призначення й натисніть «Перевірити знову».</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>Список призначення «{0}» вимагає стовпець «{1}», але крок «Створити елемент» «{3}» у потоці «{2}» не задає його, тому імпорт завершиться помилкою «missing required property item/{1}». Введіть для нього значення нижче, і засіб додасть його до цього кроку, або зробіть «{1}» необов’язковим у списку призначення й натисніть «Перевірити знову».</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>Список призначення «{0}» вимагає стовпець «{1}», але крок «Створити елемент» «{3}» у потоці «{2}» не задає його, тому імпорт завершиться помилкою «missing required property item/{1}». Зробіть «{1}» необов’язковим у списку призначення в SharePoint, потім натисніть «Перевірити знову».</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Значення для цих обов’язкових стовпців (додається до кожного кроку «Створити елемент», що їх пропускає):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Під час імпорту це завершиться помилкою. Виправте, щоб продовжити:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Перевірити знову</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Завершиться помилкою ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Увійдіть у призначення, щоб продовжити.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ Пакетів ({0}) записано цим засобом, і вони вже містять значення призначення. Видаліть їх (✕ у списку) та додайте оригінальні експорти.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ Сайтів без призначення: {0}. Сайт, залишений як є, і надалі вказуватиме на тенант-джерело.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ Списків, що завершаться помилкою під час імпорту: {0}. Виправте списки з позначкою «Завершиться помилкою», щоб продовжити.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Списки ще не зіставлено. Поверніться на крок назад і знову вперед, щоб спробувати ще раз.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ Форм, яким потрібен дійсний ID форми призначення, щоб продовжити: {0}.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Змінити джерело…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Вхід виконано як {0}. Адреса SharePoint тенанта-джерела — {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Підключення до джерела змінено на {0}. Сайти, наведені нижче, мають бути в цьому тенанті.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Вхід у джерело не завершено, або адресу тенанта не вдалося прочитати (див. рядок «Джерело»). Якщо ви скасували, попереднє підключення до джерела зберігається.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Деякі сайти читаються з {0}, що не є тенантом, до якого ви підключені як до джерела ({1}). Читання їхніх списків завершиться помилкою. Змініть для цих рядків «Читати списки з» на адресу у вашому тенанті-джерелі або натисніть «Змінити джерело…» та увійдіть за допомогою облікового запису з цього тенанта.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Сайти потоків розташовані на {0}, але ви підключені до {1} як до джерела. «Читати списки з» заповнено тими самими сайтами на {1}, тож засіб читає назви списків і стовпці звідти. Перевірте, що ці сайти існують (змініть будь-який рядок), або натисніть «Змінити джерело…», якщо потоки справді походять із {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Списки, які використовують потоки</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Натисніть список, щоб відкрити або згорнути його. Списки, що потребують уваги, розташовано першими й розгорнуто.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Розгорнути все</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Згорнути все</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Використовується:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Джерело:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Список призначення</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>або вставте його ID чи посилання:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Стовпець-джерело</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Тип</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Використовується</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Потоками не використовується</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(немає: не змінювати цей список)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Список призначення не вибрано: потоки, що його використовують, і надалі вказують на список-джерело</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ стовпців для перевірки: {1}</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ нічого перевіряти</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>Стовпців у цьому списку: {0}; потоки використовують {1}: з тією самою назвою в призначенні — {2}, перейменовано й зіставлено — {3}, подібних (перевірте) — {4}, без відповідності (виберіть) — {5}. Інші стовпці показано для контексту, вони не змінюються.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>Стовпців у цьому списку: {0}; жоден не використовується потоками так, щоб засіб це бачив, тому зіставляти нічого.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Не вдалося прочитати стовпці цього списку (див. примітки вище та список активності).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Виберіть список призначення вище, щоб побачити його стовпці й зіставити їх.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Не вдалося прочитати стовпці списку призначення, тому запропонувати відповідності неможливо.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Потік не вказує, на якому сайті розташовано цей список (використовується параметр), тому його не можна знайти. Вставте ID або посилання списку призначення.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Немає списку призначення: цей список залишається без змін.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Читання стовпців списку призначення для {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Список «{0}»: ви вибрали інший список призначення. Читання його стовпців на {1} для повторного зіставлення.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — підключено як {1} (вхід головного вікна)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Читати списки з (джерело)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>«Сайт у потоках» — це адреса, збережена в потоках; саме вона замінюється, тому її не можна редагувати. «Читати списки з» — це місце, звідки засіб читає назву й стовпці кожного списку з боку джерела; спочатку це та сама адреса, тож змініть її, коли адреса потоку застаріла, перейменована або розташована в іншому тенанті, ніж ваше підключення до джерела.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Що використовують ці потоки</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — потоків: {1}, кроків: {2}: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>перезаписується цим засобом</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>перегляньте вручну</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>лише підключення</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>Що зробити після імпорту</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Імпортуйте кожен виправлений пакет у середовищі призначення та заново створіть підключення (вони ніколи не копіюються).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Пакети рішень: перезаписано лише визначення робочих процесів. Значення змінних середовища та посилання на підключення в рішенні (customizations.xml) досі містять значення джерела; задайте їх після імпорту.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Власники потоків і користувачі лише з правом запуску не входять до пакета; після імпорту надайте спільний доступ до потоків потрібним особам.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Без змін (у зіставленні нічого не збіглося).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>Замін: {0}</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Досі вказує на значення джерела (не зіставлено, перегляньте перед імпортом)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Підключення до сайту-джерела {0} і сайту призначення {1}. Якщо ви ще не ввійшли, відкриється вікно входу.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Підключено до {0} (джерело) і {1} (призначення).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Читання списків і бібліотек на сайті призначення {0}, щоб кожен список можна було зіставити за назвою та запропонувати у спадному списку.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>Знайдено списків і бібліотек: {0} на {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Читання назви та стовпців списку {0} із сайту-джерела {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Список «{0}»: пошук списку з такою самою назвою на сайті призначення {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Список «{0}»: знайдено в призначенні. Читання стовпців списку призначення для зіставлення.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Список «{0}»: його стовпці не вдалося прочитати, або їх немає. Для цього списку нічого зіставляти.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Список «{0}»: стовпців — {1}, жоден не використовується потоками так, щоб засіб це бачив. Нічого зіставляти.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Список «{0}»: потоки використовують назв стовпців — {1}: з тією самою назвою в призначенні — {2} (зміни не потрібні), перейменовано й зіставлено — {3}, схожих — {4} (перевірте), без відповідності — {5} (ваш вибір), вбудованих стовпців — {6} (нічого зіставляти).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>Список {0} відсутній на сайті-джерелі, але є на сайті призначення як «{1}»: потік уже вказує на призначення.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Сайт «{0}» не має призначення; списки на ньому не зіставлено.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Додатково: читати списки з іншої адреси</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Зіставлення стовпців: з {0} до {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Для цього списку немає стовпців для показу.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Жоден зі стовпців цього списку не використовується потоками. Позначте «Показати всі стовпці», щоб побачити їх.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>Список-джерело не вдалося прочитати, а потік не називає жодних стовпців, тому зіставляти нічого.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Список</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(не вдалося прочитати в джерелі)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Читається з:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Сайт</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Цей потік уже вказує на цей список у призначенні. Назви стовпців, які він використовує ({0}), показано відносно стовпців призначення; нічого змінювати не потрібно.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(назва списку недоступна)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Уже в призначенні</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Зіставлено за назвами стовпців потоку</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Не вдається прочитати стовпці</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Немає списку призначення</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Нічого зіставляти</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Готово</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Стовпці призначення недоступні для читання</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>Для перевірки: {0}</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Використовується потоків: {0}</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>Зіставлень стовпців, що ще потребують перегляду: {0}.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Усі зіставлення стовпців визначено.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Підключення не копіюються між тенантами: заново створіть їх у Power Automate після імпорту.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>Електронна пошта: кожна адреса на {0} стає {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>Форм, що вказують на нову форму: {0} з {1}.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>Списків, що мають список призначення: {0} з {1}.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Списки ще не зіставлено.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>Адреси електронної пошти не змінюються (жоден домен не зіставлено).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Потоки не використовують Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Потоки не використовують конкретних списків.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Потоки не називають жодних сайтів SharePoint.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>Буде записано пакетів: {0}, потоків у них: {1}; оригінали не змінюються.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>Сайтів, що перейдуть на сайт призначення: {0} з {1}; решта залишаються як є.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Очистити автоматично заповнені значення</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Заповнено</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Форма у ваших потоках</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Із (у ваших потоках)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Списки</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Сайти</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Стан</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>До (призначення)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Вибрано вами</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Залишено без змін</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(вхід головного вікна)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>Домен електронної пошти, з якого переносити</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Перенести кожну адресу з</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>на</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>Домен електронної пошти, на який переносити</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…або перетягніть .zip-файли (чи папку) у це вікно.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Стовпець «{0}» у списку «{1}» не має відповідності у списку призначення.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>Список «{0}» ({1}) на {2} не має списку призначення, тому потоки, що його використовують, і надалі вказують на список-джерело.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(назва невідома)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Перейти до кроку</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Є збережене зіставлення? Завантажити…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Власний шаблон…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Зберегти оригінальні назви</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Додати &apos; - migrated&apos; до кожної назви</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Відкрийте звіт і перевірте те, що позначено для перегляду.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>У Power Automate (тенант призначення): «Мої потоки», «Імпортувати», «Імпортувати пакет (застарілий)» і виберіть записаний пакет.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>У розділі «Пов’язані ресурси» натисніть «Вибрати під час імпорту» для кожного підключення та виберіть або створіть його в тенанті призначення. Підключення не можна переносити між тенантами.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Імпортуйте потік, залиште його вимкненим, відкрийте його, виправте все, що він позначить, потім увімкніть.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Відкрити папку</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Відкрити Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Цієї папки виводу ще не існує; її буде створено під час запису пакетів.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>ДЖЕРЕЛО</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>ПРИЗНАЧЕННЯ</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>Знайдено потоків: {0}</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Потоків не знайдено</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Уже записано цим засобом</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Не вдалося прочитати</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Готові до запису?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Видалити цей пакет зі списку</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Звіт про перезапис потоків</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Що використовують ці потоки (служб: {0})</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>Пакетів, які не вдалося записати: {0}.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>Значень у записаних пакетах, що досі вказують на джерело: {0}. Відкрийте звіт, щоб побачити, яких саме.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Показати всі стовпці ({0})</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Показати лише стовпці, які використовують потоки</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Що означають ці стовпці?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>ID цього списку немає на сайті-джерелі, але це список «{0}» на сайті призначення: потік уже вказує на призначення, як у пакеті, який цей засіб уже записав.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Підключено</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Проблема</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Вхід не виконано</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Очікування входу…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>Списків: {0} · усі готові</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>Списків: {0} · готово: {1} · потребують уваги: {2}</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Тривало {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>До перегляду</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Додайте пакети потоків (.zip), які ви експортували з тенанта-джерела. Кожен сканується одразу після додавання.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Вкажіть, на який сайт переходить кожен потік. Увійдіть у призначення — адресу нового тенанта буде підставлено автоматично.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Кожен список, який використовують потоки, зіставляється зі списком у призначенні, а його стовпці зіставляються. Перевірте все, що позначено як таке, що потребує уваги.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Спрямуйте скопійовані форми на їхні нові ID та вирішіть, як змінюватимуться адреси електронної пошти та ID тенанта.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Перевірте список нижче, виберіть, куди зберегти оновлені пакети, потім запишіть їх.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Що тут відбувається</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Засіб читає кожен пакет на цьому комп’ютері (нічого нікуди не надсилається), щоб знайти сайти, списки, стовпці та форми, які використовують потоки. Додавайте ОРИГІНАЛЬНІ експорти з джерела, а не пакети, раніше записані цим засобом: вони вже містять адреси призначення.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Стовпець «{0}» зіставлено по-різному в різних списках ({1}). Кроки кожного списку отримують власне зіставлення; вирази в інших місцях потоку зберігають оригінальну назву, тому перегляньте їх.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Перезавантажити назви форм…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Завантаження назв форм… вам може бути запропоновано увійти.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Читання назв форм у ваших потоках з облікового запису джерела {0}. Натисніть «Скасувати», щоб припинити очікування входу.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Джерело: знайдено назви для {0} з {1} форм ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Джерело: не вдалося прочитати назви форм: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>Форм, зіставлених із формою призначення з такою самою назвою: {0}.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Схоже на дійсний ID форми</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Зіставлено за назвою</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>Джерело й призначення в одному тенанті ({0}). Перемкніть додаток у режим одного тенанта (Налаштування) або увійдіть у джерело й призначення за допомогою облікових записів із різних тенантів.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Видалити ці пакети</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>Видалено пакетів, що вже вказують на призначення: {0}: {1}. Додайте натомість оригінальні експорти з тенанта-джерела.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Ці пакети видалено. Додайте оригінальні експорти з тенанта-джерела.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Кожен пакет зберігається як новий .zip у папці виводу; оригінали ніколи не змінюються. Щоб перейменувати пакет, введіть іншу назву в полі «Зберегти як».</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Зберегти оригінальні назви</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Додати &apos; - migrated&apos; до кожної назви</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Оригінальний пакет</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Зберегти як</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Буде збережено як: {0} (назви можна змінити нижче).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Не вдалося прочитати; вивід не записано</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Скасовано. Нічого не змінено. На кроці «Сайти» скористайтеся «Увійти», щоб спробувати ще раз (наприклад, в іншому браузері); на кроці «Списки» — «Зіставити знову».</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Скасування… закриття вікна входу може тривати певний час.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Що робить засіб</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Підключення</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Кілька тенантів: щоб зіставити списки, засіб читає назву й стовпці кожного списку з тенанта-джерела та шукає такий самий список у тенанті призначення. Для цього потрібен вхід в обидва. Увійдіть з кожного боку тут або просто натисніть «Далі», і вас запитають тоді. Відкриється вікно браузера; якщо це не той браузер, натисніть «Скасувати» та спробуйте ще раз. У жодному тенанті нічого не змінюється.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Один тенант: джерело й призначення — той самий тенант, тому засіб використовує обліковий запис, яким ви ввійшли на кроці «Підключення». Більше нікуди входити не потрібно. У тенанті нічого не змінюється.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Джерело</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Призначення</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Увійти в джерело…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Увійти в призначення…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Скасувати</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Припиняє очікування вікна входу, щоб можна було спробувати ще раз, наприклад в іншому браузері.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Вхід ще не виконано</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Використовує вхід головного вікна: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Вхід виконано як {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Готово</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Очікування входу… має відкритися вікно браузера</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Вхід скасовано. Натисніть «Увійти», щоб спробувати ще раз.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Вхід виконано. Перевірте сайти призначення нижче, потім натисніть «Далі».</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Поки немає сайту-джерела, до якого можна увійти. Спочатку додайте пакети потоків.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Спочатку введіть принаймні один сайт призначення (або скористайтеся «Заповнити» зі збереженням шляхів); вхід виконується в тенант сайту призначення.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Вхід у джерело… відкриється вікно браузера.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Вхід у призначення… відкриється вікно браузера.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>джерело</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>призначення</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Вхід у тенант-джерело. Відкриється вікно браузера; натисніть «Скасувати», щоб припинити очікування (наприклад, щоб спробувати інший браузер). Вхід також повідомляє засобу, який тенант є джерелом.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Вхід у тенант призначення. Відкриється вікно браузера; натисніть «Скасувати», щоб припинити очікування (наприклад, щоб спробувати інший браузер). Вхід також повідомляє засобу адресу SharePoint нового тенанта.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Підключено до {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Вхід скасовано вами.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Читання файлів пакетів ({0}) на цьому комп’ютері, щоб знайти сайти, списки, стовпці та форми, які використовують потоки. Нічого нікуди не надсилається.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Прочитано {0}: потоків — {1}.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Зіставлення списків ({0}): для кожного засіб запитує назву на сайті-джерелі, потім шукає список із такою назвою на сайті призначення.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Зіставлення завершено. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Запис виправлених пакетів ({0}) у {1}. Оригінали не змінюються.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Запис {0} із застосуванням вашого зіставлення.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Перевірка {0} на значення, що досі вказують на джерело.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Скасовано вами. Нічого не змінено.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Зупинено: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Кожен потік зберігає адресу сайту SharePoint, з якого читає або в який записує. Щоб працювати в новому тенанті, кожен потік має вказувати на відповідний сайт там, тож повідомте засобу, який новий сайт замінює кожен старий. Це редагує лише копії ваших пакетів; нічого не шукається, доки ви не натиснете «Далі».</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Що тут відбувається: для кожного списку, який використовує потік, засіб читає назву й стовпці списку із сайту-джерела, шукає список із такою самою назвою на сайті призначення та читає стовпці цього списку, щоб зіставити їх. Навіщо: потоки посилаються на списки й стовпці за ID або внутрішньою назвою, а вони в новому тенанті інші, тому засіб знаходить відповідник. Цей крок лише читає; у жодному тенанті нічого не створюється й не змінюється. Список призначення та будь-який стовпець можна змінити на його картці.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Скопійована форма отримує новий ID, тому потік, що її використовує, має вказувати на копію. Адреси електронної пошти й ID тенанта в потоці також може знадобитися змінити для нової організації. Тут нічого не шукається; заміни визначаєте ви, а все, що залишено порожнім, залишається як є.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Засіб записує нові .zip-файли в папку виводу із застосованим вашим зіставленням, повторно сканує їх, щоб знайти все, що досі вказує на джерело, і записує звіт. Ваші оригінальні пакети ніколи не змінюються, і нічого не надсилається в жоден тенант. Нові пакети ви потім імпортуєте в Power Automate самостійно.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Вхід скасовано. Натисніть кнопку, щоб спробувати ще раз, наприклад в іншому браузері.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Скасувати</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Помилка: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Не вдалося прочитати форму-джерело ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Не вдалося створити форму в призначенні ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Скасовано на півдорозі. У призначенні залишилася неповна форма; видаліть її в Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Копіювання зупинилося на півдорозі ({0}). У призначенні залишилася неповна форма; видаліть її в Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>фонове зображення</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>логотип</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>зображення заголовка</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>Елемент «{0}» не скопійовано (зображення поки що не підтримуються).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Оцінювання вікторини (правильні відповіді та бали) не перевірено; перевірте копію.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Параметр «{0}» не вдалося скопіювати ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Запитання «{0}» не скопійовано ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(без назви)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Правила розгалуження не вдалося скопіювати ({0}); перевірте копію.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>Копію створено, але не вдалося зробити її видимою в Microsoft Forms ({0}); вона може бути в кошику.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>У копії запитань: {0}, а в джерелі: {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Запитання «{0}» ({1}) створено, але його варіанти не вдалося скопіювати ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Результати</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Форма-джерело</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>ID форми-джерела</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Назва копії</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>ID форми копії</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Стан</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Скопійовано запитань</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Запитань у джерелі</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Попередження</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Примітки</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Помилка</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Книга Excel (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>Файли JSON (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>ID</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Час початку</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Час завершення</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Респондент</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Ім’я</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Бали</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Незіставлені відповіді (необроблений JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (обрізано: надто довго для клітинки Excel)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Зупинити запуск?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>Порівняння або перевірка ще виконується. Закриття цього вікна зупинить його, і звіт не буде записано. Усе одно закрити?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Закрити під час роботи?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Засіб ще працює (сканування, зіставлення, вхід або запис пакетів). Закриття зараз зупинить його. Усе одно закрити?</value></data>
 </root>

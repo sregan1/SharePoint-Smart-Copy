@@ -967,7 +967,7 @@ public partial class MainViewModel : ObservableObject
                             TimestampComparer.IsUpToDate(sv, tv))
                         {
                             itemResult.Status       = CopyStatus.Skipped;
-                            itemResult.ErrorMessage = "Up to date";
+                            itemResult.ErrorMessage = CopyResult.UpToDate;
                             continue;
                         }
                     }
@@ -1003,7 +1003,7 @@ public partial class MainViewModel : ObservableObject
                                 hasUniquePermissions: true,
                                 rowLabel, _copyCts.Token);
                             if (perm.HasActivity)
-                                AddPermissionResult(perm, itemResult.TargetPath);
+                                AddPermissionResult(perm, itemResult.TargetPath, itemResult);
                         }
                     }
                     catch (OperationCanceledException) { throw; }
@@ -1060,7 +1060,9 @@ public partial class MainViewModel : ObservableObject
 
     // For file-level results: stamps the perm outcome onto the existing file row.
     // For site/library-level results (no matching file row): adds a structural summary row.
-    private void AddPermissionResult(PermissionCopyResult perm, string targetPath)
+    // targetRow: the exact row to stamp when the caller has it (list items all share their list's TargetPath, so a path
+    // lookup would stamp whichever row comes first).
+    private void AddPermissionResult(PermissionCopyResult perm, string targetPath, CopyResult? targetRow = null)
     {
         string detail;
         CopyStatus status;
@@ -1081,7 +1083,8 @@ public partial class MainViewModel : ObservableObject
 
         // Match by full target path first — name-only matching stamps the wrong row when the
         // same item name exists in more than one place.
-        var row = CopyResults.FirstOrDefault(r =>
+        var row = targetRow
+            ?? CopyResults.FirstOrDefault(r =>
                 !r.IsPermissionResult &&
                 string.Equals(r.TargetPath, targetPath, StringComparison.OrdinalIgnoreCase))
             ?? CopyResults.FirstOrDefault(r =>

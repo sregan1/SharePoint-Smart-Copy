@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Onnistui ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Epäonnistui ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Ohitettu ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Ajan tasalla</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Ei voitu lukea, onko lähteellä omat käyttöoikeudet (rajoitus tai käyttövirhe) – käyttöoikeuksia ei kopioitu tälle kohteelle. Yritä uudelleen suorittamalla uudelleen.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Kohteen olemassa oleva tiedosto poistettiin korvaamista varten, mutta uutta kopiota ei voitu ladata ({0}). Tiedosto puuttuu tällä hetkellä kohteesta – palauta se suorittamalla kopiointi uudelleen.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Kohdekirjasto epäonnistui ({0}). Sen tiedostot on merkitty epäonnistuneiksi; muut kirjastot jatkuvat.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: lähdetiedosto muuttui latauksen aikana – lataus aloitetaan alusta.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint ei ilmoittanut tämän tuonnin etenemisestä {0} minuuttiin, joten se hylättiin. Sen tiedostot on merkitty epäonnistuneiksi; yritä niitä uudelleen suorittamalla kopiointi uudelleen.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Yksi vuokraaja</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Usea vuokraaja</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Kopioi kahden eri Microsoft 365 -vuokraajan välillä. Kirjaudut lähteeseen ja kohteeseen erikseen. Valitse kohteen sovellusrekisteröinti Asetuksissa.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Kohteen rekisteröinti:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Usean vuokraajan tila: sovellusrekisteröinti, jolla kirjaudutaan kohdevuokraajaan. ”Sama kuin lähde” käyttää lähteen rekisteröintiä, jonka on tällöin oltava usean vuokraajan sovellus.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Jatka / suorita uudelleen</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Yhdistää uudelleen ja suorittaa tämän valinnan uudelleen asetuksella Kopioi jos uudempi, jolloin jo kopioidut tiedostot ohitetaan ja siirretään vain puuttuvat tai muuttuneet.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Tällä suorituksella ei ole jatkettavaa tallennettua valintaa (vain tiedostovalintasuoritukset tallentavat sellaisen).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>Kopiointi on jo käynnissä. Odota sen valmistumista tai peruuta se ensin.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Jatkaminen epäonnistui: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} keskeytynyttä suoritusta palautettu. Katso Historia.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Jatketaan: {0} kohdetta palautettu aiemmasta suorituksesta, ja Kopioi jos uudempi on valittuna. Tarkista asetukset ja valitse sitten Seuraava. (Mukautettuja sarakeyhdistämisiä ei palauteta.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>KESKEYTYI – sovellus suljettiin ennen tämän suorituksen valmistumista. Valmistuneista kohteista: {0} onnistui, {1} epäonnistui, {2} ohitettiin, {3} peruttiin  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Vie diagnostiikka…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Tallentaa zip-tiedoston, jossa on viimeisimmät lokit, järjestelmätiedot ja asetuksesi ilman organisaation tietoja – liitettäväksi virheraporttiin. Se ei sisällä kopiointiraportteja eikä tiedostonimiä.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Diagnostiikka tallennettu kohteeseen {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Diagnostiikan tallennus epäonnistui: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Sisältö on identtinen (vain SharePointin hallitsemat osat eroavat), mutta muokkauspäivää ei säilytetty.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Käyttöoikeuksia ei kopioitu: kohteen SharePoint-tunnuksia ei voitu selvittää.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Käyttöoikeuksia ei kopioitu: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Kansio ”{0}”: {1} ei otettu käyttöön – {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>Useammassa kansiossa oli samanlaisia ongelmia kuin yllä; myöhempiä ei luetella erikseen.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>käyttöoikeudet</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>päivämäärät</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>tekijä / muokkaaja</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} säilytetty – kohde on jo ajan tasalla)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>VAROITUS: metatietojen lukeminen lähteestä ({0}) epäonnistui: {1}. Sen kohteet voidaan kopioida ILMAN mukautettujen sarakkeiden arvoja tai yksilöllisiä käyttöoikeuksia. Suorita uudelleen, kun ongelma on poistunut (Korvaa tai Jos uudempi ottaa ne uudelleen käyttöön).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>VAROITUS: kirjaston lähdeluetteloa ei löytynyt, joten sen käyttöoikeuksia EI kopioida.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>SharePoint-isäntä &apos;{0}&apos; ei ole liitetty yhdistettyyn vuokraajaan. Yhdistä lähde- ja kohdesivustot uudelleen ja yritä uudelleen.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Vuokraajien välinen kopiointi: hallittujen metatietojen (taksonomia) sarakearvoja ei kopioida, eikä OneNote-muistikirjoja / asiakirjajoukkoja voi vielä kopioida vuokraajien välillä. Identiteetit yhdistetään identiteettiyhdistämisen asetusten mukaan; ketään, jota ei löydy kohteesta, ei oteta mukaan.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Identiteettiyhdistäminen</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Identiteettiyhdistäminen…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Luettele jokainen lähdevuokraajan henkilö (tai ryhmä) ja se, kuka hän on kohdevuokraajassa – ne ovat eri tilejä. Tekijät, muokkaajat, henkilösarakkeet ja käyttöoikeudet kirjoitetaan tämän taulukon avulla. Luettelemattomat täsmätään verkkotunnuksen vaihdolla, jos olet määrittänyt sellaisen; ketkä tahansa, joita ei edelleenkään löydy kohteesta, ohitetaan ja raportoidaan.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Lähteen sähköpostin verkkotunnus</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Kohteen sähköpostin verkkotunnus</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Ohitukset – yksi ”lähde,kohde”-pari riviä kohden (käyttäjien tai ryhmien nimet; # aloittaa kommentin)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Sama kuin lähde</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Lähde ja kohde ovat samassa vuokraajassa. Vaihda yhden vuokraajan tilaan saman vuokraajan sisäisiä kopiointeja varten.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Kansioiden natiivikopiointia (OneNote-muistikirjat, asiakirjajoukot) ei vielä tueta vuokraajien välillä.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Asemaa &apos;{0}&apos; ei ole liitetty yhdistettyyn vuokraajaan. Yhdistä lähde- ja kohdesivustot uudelleen ja yritä uudelleen.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Sovellusrekisteröintiä ei ole vielä määritetty. Avaa Asetukset ja lisää Azure-sovellusrekisteröintisi (sen sovellus-/asiakastunnus) ennen yhdistämistä.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Kirjautuminen peruutettiin. Yritä uudelleen valitsemalla Yhdistä.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Järjestelmänvalvoja ei ole vielä hyväksynyt tätä sovellusta tässä vuokraajassa. Pyydä yleistä järjestelmänvalvojaa myöntämään sovellusrekisteröinnille järjestelmänvalvojan suostumus (katso Käyttöoppaan Asennus-osio).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Sovellusrekisteröintiä ei löytynyt tästä vuokraajasta. Tarkista asiakastunnus ja vuokraajan tunnus Asetuksissa.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Vuokraajaa ei löytynyt. Tarkista vuokraajan tunnus Asetuksissa (käytä verkkotunnustasi, vuokraajan GUID-tunnusta tai arvoa &apos;common&apos;).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>Sovellusrekisteröinnistä puuttuu tämän sovelluksen käyttämä uudelleenohjausosoite. Lisää Azuressa uudelleenohjauksen URI http://localhost kohtaan ”Mobiili- ja työpöytäsovellukset”.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Sovellusrekisteröintiä ei ole määritetty työpöytäkirjautumista varten. Ota Azuressa rekisteröinnille käyttöön ”Salli julkiset asiakasvirrat”.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Tällä tilillä ei saa käyttää tätä sovellusrekisteröintiä. Kirjaudu tilillä sen omistavasta vuokraajasta tai valitse Asetuksissa eri rekisteröinti.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint hylkäsi kirjautumisen. Kirjaudu uudelleen valitsemalla Yhdistä.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>Sinulla ei ole käyttöoikeutta tähän sivustoon. Varmista, että tilisi voi avata sen selaimessa ja että sovellukselle on myönnetty Sites.ReadWrite.All-käyttöoikeus.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Sivustoa ei löytynyt. Tarkista osoite – sen pitäisi näyttää tältä: https://contoso.sharepoint.com/sites/nimi.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Tiedot: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Jatka yhdistämällä lähdesivustoon.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Jatka valitsemalla vähintään yksi kohde (valitse valintaruutu).</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Jatka yhdistämällä kohdesivustoon.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Jatka valitsemalla kohdekansio.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Jatka valitsemalla kohdeluettelo.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Jatka antamalla uuden luettelon nimi.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Kopioitavaa ei ole valittu.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Odotetaan kopioinnin valmistumista…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Lähde: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Kohde: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Sovellusrekisteröintisi muuttui, joten sinut kirjattiin ulos molemmista sivustoista. Jatka yhdistämällä uudelleen.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Pysäytetäänkö kopiointi?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>Kopiointi on käynnissä. Jos pysäytät sen nyt, jäljellä olevat kohteet jäävät kopioimatta (voit jatkaa myöhemmin Historiasta). Pysäytetäänkö kopiointi?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>Kopiointi on edelleen käynnissä. Sovelluksen sulkeminen pysäyttää sen ja jättää jäljellä olevat kohteet kopioimatta (voit jatkaa myöhemmin Historiasta). Suljetaanko silti?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Vaihdetaanko yhteystilaa?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Yhden ja usean vuokraajan tilan välillä vaihtaminen katkaisee yhteyden molempiin sivustoihin, ja sinun on yhdistettävä uudelleen. Vaihdetaanko silti?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Yhteys:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Lähteen sovellusrekisteröinti</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Kohteen sovellusrekisteröinti</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Kirjautuu kohdevuokraajaan käyttäen:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Muuta</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Avaa Asetukset</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Sinulla on oltava lukuoikeus lähdesivustokokoelmaan.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Määritä Microsoft Entra ID -sovellusrekisteröintisi Asetuksissa ennen yhdistämistä.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Tiedostoasetukset</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Kirjasto- ja tiedostoasetukset</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Kopioidaan tiedostoja…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Kopioidaan kirjastoja…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Seuraava</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Aloita kopiointi</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Näytä raportti</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Anna luotavan uuden luettelon nimi</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>Kohdeluettelo valittiin Kohde-vaiheessa. Muuta sitä palaamalla takaisin.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Määritä ensin sovellusrekisteröinti</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy kirjautuu sovellusrekisteröinnillä, jonka luot omassa Microsoft Entra ID (Azure) -vuokraajassasi. Avaa Asetukset, lisää rekisteröintisi sovellus- (asiakas-) tunnus ja palaa sitten tänne yhdistämään.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Lisätietoja</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Vedä muuttaaksesi toimintosyötteen korkeutta</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Napsauta näyttääksesi vain epäonnistuneet kohteet</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Napsauta näyttääksesi vain ohitetut kohteet</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Sarakeyhdistäminen</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Vertaa lähdettä ja kohdetta</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Avaa Vertailu-työkalun, jolla tämä kopio tarkistetaan lähteeseen nähden.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Avaa Historia</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Valittua rekisteröintiä käytetään lähteelle – ja yhden vuokraajan tilassa molemmille puolille.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Uusi rekisteröinti</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Lisää vähintään yksi sovellusrekisteröinti.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Vahvistus</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Asiakastunnus on pakollinen valitulle rekisteröinnille.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Uloskirjautuminen onnistui. Sinua pyydetään kirjautumaan seuraavan yhteyden yhteydessä.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Kirjauduttu ulos</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Uloskirjautuminen epäonnistui: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Kirjaudu ulos</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} yhdistämistä löytyi.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} riviä ei voi lukea (rivi {1}). Jokaisen rivin on oltava muotoa lähde,kohde.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Lähteen ja kohteen verkkotunnukset ovat samat, joten verkkotunnuksen vaihto ei muuta mitään.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Tuo CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Joitakin ohitusrivejä ei voi lukea (rivi {0}). Jokaisen rivin on oltava ”lähde,kohde”. Korjaa tai poista ne – tai aloita rivi merkillä #, jolloin siitä tulee kommentti.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Identiteettiyhdistämisen tallennus epäonnistui: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Tiedoston lukeminen epäonnistui: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Vuokraajien välinen: {0} tämän kirjaston tekijä-/muokkaajatiliä ei löytynyt kohdevuokraajasta, ja ne jätetään kopioivaksi tiliksi. Korjaa ne suorituksen jälkeen raportin kohdalla valitsemalla ”Yhdistä nämä käyttäjät”.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Anna lähdekäyttäjä tai -ryhmä.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Anna, kuka tämä on kohdevuokraajassa – tai poista rivi.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Lähde ja kohde ovat samat.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Tämä lähde esiintyy useammin kuin kerran.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Lähde (tämä vuokraaja)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Kohde (toinen vuokraaja)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Tyyppi</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>Kohteessa?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Tarvitaan kohteelle</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Käyttäjä</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Ryhmä</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Ei tarkistettu</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Tarkistetaan…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Löytyi</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Ei löytynyt</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Lisää</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Poista</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Täytä kohteet verkkotunnuksen vaihdolla</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>Täyttää riveille, joilla ei vielä ole kohdetta, osoitteen, jonka verkkotunnuksen vaihto tuottaisi.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Tarkista kohteesta</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Hakee jokaisen kohdekäyttäjän kohdevuokraajasta. Tämä lisää heidät myös kohdesivuston käyttäjäluetteloon, minkä kopiointi tekee joka tapauksessa ennen kuin se voi asettaa heidät tekijäksi tai antaa heille käyttöoikeuden.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Yhdistä ensin usean vuokraajan kohteeseen: anna kohdesivuston URL Kohde-vaiheessa ja avaa sitten tämä valintaikkuna uudelleen.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Vie CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Kopiointi tarvitsi näitä henkilöitä, mutta heitä ei löytynyt kohdevuokraajasta. Anna jokaisesta, kuka hän on kohteessa – tai poista rivi jättääksesi hänet yhdistämättä.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} yhdistämistä.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} riviä vaatii huomiota.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Tarkistettu: {0} löytyi, {1} ei löytynyt{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} ei voitu tarkistaa</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Tarkistetaan {0}/{1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Ei tarkistettavaa: millään rivillä ei ole kohteen sähköpostiosoitetta.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Jotkin rivit vaativat huomiota (korostettu). Korjaa tai poista ne ja tallenna sitten.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Yhdistäminen tallennettu. Ota se käyttöön jo kopioiduille tiedostoille suorittamalla uudelleen asetuksella Korvaa – Kopioi jos uudempi ohittaa ajan tasalla olevat tiedostot, joten niiden tekijöitä ei muuteta. Käyttöoikeudet päivitetään kummassakin tapauksessa.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>{0} lähteen henkilöä ei löytynyt kohdevuokraajasta, joten heidät jätettiin pois: heille ei annettu käyttöoikeutta, heitä ei asetettu tekijäksi tai muokkaajaksi tai heidät poistettiin henkilösarakkeista.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Yhdistä nämä käyttäjät…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Yhdistä selvittämättömät käyttäjät…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Avaa identiteettiyhdistämisen niiden henkilöiden kanssa, joita tämä suoritus ei löytänyt kohteesta.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Tällä suorituksella ei ollut selvittämättömiä käyttäjiä.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Kopioi lomakkeet</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Kopioi Microsoft Forms -lomakkeet kohdetilille säilyttäen kaikki kysymykset, haarautumisen, asetukset ja teeman. Vastaukset voi viedä Exceliin.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Tämä käyttää Microsoft Forms -verkkorajapintaa, jota Microsoft ei dokumentoi eikä tue. Se toimii nyt, mutta voi muuttua ilman ilmoitusta. Kokeile ensin muutamaa lomaketta.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Lataa lomakkeeni</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Lähdetili: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Kohdetili: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Kohde: sama tili (yksi vuokraaja). Kopiot luodaan alkuperäisten viereen.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(sinua pyydetään kirjautumaan)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Lomaketunnusten yhdistäminen (Työnkulut-työkalun käyttämä): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Ladataan lomakkeita…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>{0} lomaketta ladattu.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Valitse ensin vähintään yksi lomake.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Kopioidaan lomakkeita…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Kopioidaan…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Kopioitu</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Epäonnistui (katso loki)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Kopioidaan &apos;{0}&apos;</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Kopiointi valmis: {0} kopioitu, {1} epäonnistui.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Valitse kansio vastausten viennille</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Viedään vastauksia…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>Viety &apos;{0}&apos;: {1} vastausta kohteeseen {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>{0} lomakkeen vastaukset viety kohteeseen {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Lomake kopioitiin, mutta sen tunnusta ei voitu tallentaa Työnkulut-työkalua varten: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Kohteen &apos;{0}&apos; vienti epäonnistui: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>{0} lomakkeen vastaukset viety kohteeseen {2}; {1} epäonnistui (katso loki).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Peruutettu.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Virhe: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Vihje: sovellusrekisteröinti tarvitsee delegoidun Microsoft Forms -käyttöoikeuden suostumuksella. Lisää se kohdassa API-käyttöoikeudet (katso Käyttöopas) ja yritä uudelleen.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Vihje: Microsoft Forms hylkäsi pyynnön. Tarkista, että tämä tili voi avata forms.office.com ja että sovellusrekisteröinnillä on Microsoft Forms -käyttöoikeus.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{0}/{1} valittu</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Otsikko</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Tyyppi</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Viimeksi muokattu</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Tulos</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Lisää kopioitujen otsikoiden perään:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (kopio)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Kopioi valitut lomakkeet</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Vie vastaukset…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Tarkista kopio lähteeseen nähden</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Muut työkalut</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Lomakkeet</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Kopioi Microsoft Forms -lomakkeita ja vie niiden vastaukset</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Lomaketyökalu</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Kirjoita työnkulut uudelleen kohteelle</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Päivitä viedyt Power Automate -paketit (.zip) osoittamaan kohteeseen: sivustot, luettelot, sarakkeet, kopioidut lomakkeet ja sähköpostin verkkotunnukset. Alkuperäisiä pakettejasi ei koskaan muuteta.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Valitse viedyt työnkulkupaketit</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Lisää työnkulkupaketit (.zip), jotka veit Power Automatesta.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Lisää tiedostoja…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Lisää kansio…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Skannaa</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Työnkulkupaketit (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Lisää ensin vähintään yksi työnkulkupaketti.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Skannataan paketteja…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>Ohitettu {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} työnkulkua löytyi. Ne viittaavat {1} sivustoon, {2} luetteloon ja {3} lomakkeeseen.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Skannaus valmis.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Yhdistä sivustot</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Minne kunkin työnkulun SharePoint-sivusto siirtyy. Usean vuokraajan tilassa kirjaudu kohteeseen, jolloin uuden vuokraajan osoite täytetään puolestasi; muuta jokaista riviä, jonka sivustolla on eri nimi. Yhden vuokraajan tilassa kirjoita kunkin rivin kohdesivusto.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Sivusto työnkuluissa (korvataan)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Kohdesivusto</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Uuden vuokraajan osoite:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Täytä tyhjät kohteet säilyttäen polut</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Anna täydellinen URL, kuten https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Tyhjät kohteet täytettiin käyttäen kyseistä isäntää ja kunkin sivuston polkua.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Täsmäytä luettelot ja sarakkeet</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Yksi kortti jokaista työnkulkujen käyttämää luetteloa kohden, riippumatta siitä, kuinka moni työnkulku sitä käyttää. Jokainen näyttää luettelon nimen ja sarakkeet, luettelon, johon se yhdistyy kohteessa (oletuksena samanniminen; valitse toinen avattavasta luettelosta, jos nimi on eri) sekä sen, miten kukin sarake yhdistyy. Tarkista varoituksella merkityt kortit.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Täsmäytä luettelot ja sarakkeet</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Luettelo</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>Lähdeluettelon tunnus</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>Kohdeluettelon tunnus</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Lähdesarake</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Kohdesarake</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Skannaa paketit ensin.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Anna ensin vähintään yksi kohdesivusto.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Täsmäytetään luetteloita ja sarakkeita…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(ei löytynyt)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Kohteesta löytyi samanniminen luettelo</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Sivustolla, jolla tämä luettelo on, ei ole kohdesivustoa (Sivustot-vaihe)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Tätä luetteloa ei voitu lukea lähdesivustolta: sitä ei ehkä ole, tililtä saattaa puuttua käyttöoikeus tai sivusto on eri vuokraajassa kuin lähdeyhteytesi</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Kohdesivustolla ei ole tämännimistä luetteloa: valitse yksi avattavasta luettelosta</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Sama nimi</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Nimetty uudelleen kohteessa</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Ei vastaavuutta: valitse sarake</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0}/{1} luettelolla on kohdeluettelo. {2} saraketta tarkistettavana.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Lomakkeet ja sähköposti</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Lomaketyökalulla kopioidut lomakkeet täytetään automaattisesti. Jos lomake on itse luotu, liitä sen tunnus tai sen muokkaussivun linkki.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>Lähdelomakkeen tunnus</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>Lomakkeen tunnus (täytetään avattavasta luettelosta, tai liitä tunnus)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Siirrä sähköpostin verkkotunnus:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Kirjoita päivitetyt paketit</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Valitse tulostekansio (ei alkuperäisiä sisältävä kansio). Päivitetyt paketit ja jokaisen muutoksen luetteloiva raportti tallennetaan sinne.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Kirjoita päivitetyt paketit</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Tallenna yhdistäminen…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Avaa tulostekansio</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Yhteyksiä ei voi siirtää vuokraajien välillä. Kun olet tuonut paketin, luo jokainen yhteys uudelleen Power Automatessa ja valitse se uudelleen.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Valitse ensin tulostekansio.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Kirjoitetaan päivitettyjä paketteja…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Tallenna kohteen {0} päivitetty kopio (paketti {1}/{2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Power Automate -paketti (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Valitsit jo tämän tiedostonimen toiselle paketille. Valitse eri nimi.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Paketti tallennettaisiin alkuperäisen päälle (sama kansio, sama nimi). Valitse toinen tulostekansio tai muuta nimeä kohdassa ”Tallenna nimellä”, jotta alkuperäiset säilyvät koskemattomina.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Työnkulkujen uudelleenkirjoitusraportti
+
+Alkuperäiset paketit ovat koskemattomia. Yhteyksiä EI siirretä; luo ne uudelleen ja valitse ne uudelleen tuonnin yhteydessä.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Raportti kirjoitettu kohteeseen {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} pakettia kirjoitettu, {1} korvausta. {2} arvoa osoittaa edelleen lähteeseen (katso raportti).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Yhdistäminen tallennettu kohteeseen {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Työnkulut</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Päivitä viedyt Power Automate -työnkulut kohteelle</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Työnkulkutyökalu</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Mitä nämä työnkulut käyttävät</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Skannatuista työnkuluista löytyneet palvelut ja se, mitä tämä työkalu tekee kullekin.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Palvelu</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Työnkulut</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Vaiheet</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Löydetty</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Mitä tämä työkalu tekee</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Kirjoittaa löytämänsä uudelleen</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>Tunnukset raportoidaan; tarkista tuonnin jälkeen</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Vain yhteys (luo uudelleen)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Sarakeyhdistäminen</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Sarake näkyy tässä, kun työnkulku kirjoittaa siihen, suodattaa tai lajittelee sen mukaan tai lukee sen lausekkeessa täsmätyssä luettelossa. Kohdesarake valitaan automaattisella täsmäytyksellä (sama nimi, sitten sama näyttönimi, sitten samankaltainen nimi). Sinun tarvitsee toimia vain riveillä, jotka on merkitty ”Samankaltainen nimi” tai ”Ei vastaavuutta”; muuta mitä tahansa riviä sen avattavasta luettelosta tai valitse ”(jätä ennalleen)” säilyttääksesi lähteen nimen. Sisäänrakennettuja sarakkeita, kuten Title, ei luetella, koska ne ovat kaikkialla.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(jätä ennalleen)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Samankaltainen nimi: tarkista</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(ei vielä täsmätty)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Kohdeluettelon valitsit itse</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Kirjoita tai liitä kohdeluettelon tunnus tai sen luetteloasetussivun linkki Kohdeluettelon tunnus -sarakkeeseen valitaksesi luettelon itse (esimerkiksi kun nimi on eri). Napsauta sitten ”Täsmäytä uudelleen” täsmätäksesi sen sarakkeet.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Luettelon tunnusta ei löytynyt kohteesta &apos;{0}&apos;. Liitä GUID tai luetteloasetussivun linkki.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Lomakkeen tunnusta ei löytynyt kohteesta &apos;{0}&apos;. Liitä lomakkeen tunnus tai lomakkeen muokkaussivun linkki.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Lomakkeet</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Kohde</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Kopioi</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Tulokset</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Valitse kopioitavat lomakkeet</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Lataa lomakkeet uudelleen</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Näet lomakkeesi valitsemalla ”Lataa lomakkeeni”.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>Tililtä ei löytynyt lomakkeita.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Kopioi {0} lomaketta</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Kopioi lisää lomakkeita</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Valitse, minne kopiot menevät</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Yksi vuokraaja: kopiot luodaan samalle tilille, jota käytät, alkuperäisten viereen.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Usea vuokraaja: kopiot luodaan kohdetilille. Kirjaudu siihen tässä; tämä on erillinen SharePoint-sivustoille käyttämästäsi kirjautumisesta.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Kohdetili</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Kirjautuu sovellusrekisteröinnillä: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Kirjautuu kohteen sovellusrekisteröinnilläsi (määritetty Asetuksissa).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Kirjaudu kohdetilille</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Kirjaudu uudelleen</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Kirjaudutaan kohdetilille… selainikkuna saattaa avautua.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Yhdistetty käyttäjänä {0}. Microsoft Forms -käyttö vahvistettu ({1} lomaketta jo tällä tilillä).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Kohdetiliin ei voitu yhdistää: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Kohdetiliä ei ole vielä yhdistetty.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Valmis. Aloita napsauttamalla Kopioi-painiketta.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Valmis: kopiot luodaan kohteeseen {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Jatka kirjautumalla kohdetilille.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Asetukset</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} lomaketta kopioidaan kohteesta {1} kohteeseen {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>lähdetili</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>kohdetili</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Kopioidaan lomakkeita</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Aloitetaan…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Lomake {0}/{1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Peruutetaan nykyisen lomakkeen jälkeen…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopiointi valmis: kaikki {0} lomaketta kopioitiin</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Kopiosi ovat kohteessa {0}. Näet ne avaamalla Microsoft Formsin tai käyttämällä alla olevaa taulukkoa.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopiointi valmis: {0}/{1} lomaketta kopioitiin, osa vaatii huomiota</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Kopiot ovat kohteessa {0}. Varoituksella merkityt lomakkeet kopioitiin ongelmin, eikä epäonnistuneita lomakkeita luotu. Katso Tiedot-sarake.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopiointi valmis, mutta yhtään lomaketta ei kopioitu</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Syy näkyy Tiedot-sarakkeessa. Yleisiä syitä ovat kohderekisteröinnistä puuttuva Microsoft Forms -käyttöoikeus tai tili, jolla ei ole Forms-käyttöä.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopiointi peruutettu {0}/{1} lomakkeen jälkeen</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Alla luetellut lomakkeet valmistuivat. Peruuttaessasi kopioitavana ollut lomake ei valmistunut, eikä se ole näkyvissä.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Kopioitu</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>Varoituksin</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Epäonnistui</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Kysymykset</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Lähdelomake</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Kopio</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Kysymykset</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Tiedot</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Kopioitu</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Kopioitu varoituksin</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Epäonnistui</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Avaa valittu kopio</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Avaa Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Vie tulokset…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Näytä lomaketunnusten yhdistäminen</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Valitse ensin kopioitu lomake taulukosta.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Tulokset tallennettu kohteeseen {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Vihje: sovellusrekisteröinnillä ei ole vastaavaa uudelleenohjausosoitetta. Lisää Entrassa kohdassa Todennus alusta ”Mobiili- ja työpöytäsovellukset” osoitteella http://localhost ja yritä uudelleen.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Paketit</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Sivustot</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Luettelot ja sarakkeet</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Lomakkeet ja sähköposti</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Kirjoita</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Raportti</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Valitse viedyt työnkulkusi</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>Power Automatessa: avaa Omat työnkulut, valitse työnkulku ja sitten Vie → Paketti (.zip). Lisää ladatut .zip-tiedostot tähän. Jokainen tiedosto skannataan heti, kun lisäät sen.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Tyhjennä</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Aloita lisäämällä viedyt työnkulkupaketit.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>Näistä tiedostoista ei löytynyt työnkulkuja. Varmista, että ne ovat paketteja, jotka on viety komennolla Vie → Paketti (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Skannaus valmis. Tarkista, mitä työnkulut käyttävät, ja valitse sitten Seuraava.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Valitse kohdesivustot</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Nämä työnkulut eivät käytä SharePoint-sivustoja kiinteillä osoitteilla, joten tässä ei ole mitään yhdistettävää. Valitse Seuraava.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Seuraavaksi työkalu lukee jokaisen luettelon yhteyksiesi kautta ja täsmää sen kohdesivustolla.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Anna kullekin lähdesivustolle kohdesivusto ja valitse sitten Seuraava.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Täsmäytä luettelot ja sarakkeet</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Täsmäytä uudelleen</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Luettelot</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Nämä työnkulut eivät viittaa tiettyihin SharePoint-luetteloihin, joten täsmättävää ei ole.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Luettelot ja sarakkeet täsmätään, kun tämä vaihe avautuu.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Lomakkeet ja sähköposti</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Tarkista lomakkeet ja sähköposti ja valitse sitten Seuraava.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Nämä työnkulut eivät käytä Microsoft Formsia.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>Sähköpostiosoitteet</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Jos haluat siirtää kaikki osoitteet yhdestä sähköpostin verkkotunnuksesta toiseen, anna molemmat verkkotunnukset. Muiden verkkotunnusten osoitteet luetellaan raportissa, eikä niitä muuteta.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Kirjoita päivitetyt paketit</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Tulostekansio</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Valitse tulostekansio ja valitse sitten Kirjoita päivitetyt paketit.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Valmis kirjoittamaan {0} pakettia, jotka sisältävät {1} työnkulkua. Korvataan: {2} sivustoa, {3} luetteloa, {4} sarakeyhdistämistä, {5} lomaketta.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Kirjoita päivitetyt paketit</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Paketteja kirjoitettu</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Korvaukset</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Edelleen lähde</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>Tarkistettavat</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Paketti</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Päivitetty</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} arvoa osoittaa edelleen lähteeseen</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Avaa raportti</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Aloita alusta</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Valmis: {0} pakettia kirjoitettu</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Tallennettu kohteeseen {0}. Mikään ei jäänyt osoittamaan lähteeseen. Tuo ne noudattamalla alla olevia ohjeita.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Valmis: {0} pakettia kirjoitettu, osa kohteista vaatii tarkistuksen</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Tallennettu kohteeseen {0}. Avaa raportti nähdäksesi arvot, jotka osoittavat edelleen lähteeseen, sekä kohteet, joita työkalu ei kirjoita uudelleen (muut palvelut, täsmäämättömät luettelot tai sarakkeet).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Mitä tehdä seuraavaksi</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Avaa raportti ja tarkista ”osoittaa edelleen lähteeseen” sekä kaikki tarkistettavaksi merkityt.
+2.  Avaa Power Automatessa (kohdevuokraaja) Omat työnkulut → Tuo → Tuo paketti (vanha) ja valitse kirjoitettu paketti.
+3.  Napsauta kohdassa ”Liittyvät resurssit” jokaisen yhteyden kohdalla ”Valitse tuonnin aikana” ja valitse tai luo yhteys kohdevuokraajassa. Yhteyksiä ei voi siirtää vuokraajien välillä.
+4.  Tuo työnkulku. Pidä se pois päältä, avaa se, korjaa kaikki, mistä se huomauttaa, ja kytke se sitten päälle.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Ei muutoksia (mikään siinä ei vastannut yhdistämistäsi)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Kopioitu {0} kohteeseen {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Kopioitu aiemmin</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Jo kopioitu</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …ja {0} lisää</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Kopioidaanko uudelleen?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>{0} valituista lomakkeista on jo kopioitu tälle tilille:
+
+{1}
+
+Uudelleen kopioiminen luo jokaisesta toisen kopion. Jatketaanko?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>Kopiointi on edelleen käynnissä. Jos suljet nyt, kopioitavana oleva lomake voi jäädä kohteeseen puolivalmiiksi. Pysäytetäänkö ja suljetaanko?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Kopiointi käynnissä</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Vastauksia ei voitu viedä (katso loki).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Suodata otsikon tai tyypin mukaan</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Yksi työkirja</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Vie kaikki valitut lomakkeet yhteen Excel-tiedostoon, jossa on yksi taulukko lomaketta kohden.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>Sähköpostiosoite</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Vuokraajan tunnus</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Kirjaston polku</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Muut arvot</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Kirjoita korvaava arvo jokaiselle arvolle, jonka pitäisi muuttua. Tyhjäksi jätettyjä rivejä ei muuteta; ne luetellaan raportissa, jos ne osoittavat edelleen lähteeseen.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Laji</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>Työnkuluissa</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Korvaa arvolla</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Tunnuksen tarkistus</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Ei lomaketunnus eikä muokkaussivun linkki</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Sama kuin lähdelomake</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Tämä lomake on lähdevuokraajassa, ei kohteessa</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Tämä lomake on eri vuokraajassa kuin lähde</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>Lomakekopioinnista {0} kohteeseen {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Aiemmasta lomakekopioinnista</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Lataa yhdistäminen…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Täytä sivustot, luettelot, sarakkeet, lomakkeet ja muut arvot aiemmin tallentamastasi yhdistämisestä.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Yhdistämisen lataus epäonnistui: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>{0} ladattu. Näitä työnkulkuja vastaavat arvot täytettiin; tarkista ne seuraavissa vaiheissa.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>{0} ladattu. Se otetaan käyttöön, kun lisäät työnkulkupaketteja.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>{0} kohdesivustoa täytetty. Tarkista ne alta ja valitse sitten Seuraava.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Jokaisella sivustolla on jo kohde, joten mitään ei muutettu. Tyhjennä Kohde-solu, jotta se täytetään.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Pikavalinta: kirjoita uuden vuokraajan osoite, esimerkiksi https://fabrikam.sharepoint.com, ja napsauta painiketta. Jokainen sivusto, jolla ei vielä ole kohdetta, saa kyseisen osoitteen ja saman polun kuin lähde: https://contoso.sharepoint.com/sites/HR muuttuu muotoon https://fabrikam.sharepoint.com/sites/HR. OneDrive-sivustot (contoso-my) siirtyvät uuden vuokraajan -my-osoitteeseen. Jo antamiasi kohteita ei muuteta. Sivustojen on oltava jo olemassa uudessa vuokraajassa; tämä työkalu ei luo niitä. Jos sivustolla on siellä eri nimi, kirjoita sen osoite Kohdesivusto-soluun.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Jos jätät Kohdesivuston tyhjäksi, kyseinen sivusto jää ennalleen: työnkulut osoittavat edelleen vanhaan sivustoon, sen luetteloita ja sarakkeita ei täsmätä eikä kirjoiteta uudelleen, ja raportti luettelee sen kohdassa ”Tehtävää tuonnin jälkeen”. Se on oikein vain sivustolle, joka ei siirry uuteen vuokraajaan.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Mitä tapahtuu</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Siirtyy kohteeseen</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Ei muutettu (ei kohdetta)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Sivusto {0} jätettiin ennalleen (kohdetta ei annettu), joten työnkulut osoittavat edelleen siihen eikä sen luetteloita täsmätty. Sopii, jos sivusto ei siirry; muussa tapauksessa suorita uudelleen kohteen kanssa.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Ei vielä näytettäviä sarakkeita: luetteloa ei ole täsmätty, joten ei ole mitään verrattavaa. Korjaa luettelot yllä ja valitse sitten Täsmäytä uudelleen.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Ei yhdistettäviä sarakkeita, joten sinun ei tarvitse tehdä tässä mitään. Täsmätyillä luetteloilla ei ole mukautettuja sarakkeita, joihin työnkulut kirjoittavat, joiden mukaan ne suodattavat tai joita ne lukevat tavalla, jonka työkalu näkee. Alareunan toimintoluettelo kertoo, mitä kustakin luettelosta löytyi.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} saraketta löytyi: {1} on samanniminen kohteessa, {2} nimettiin uudelleen ja täsmättiin, {3} näyttää samankaltaiselta, {4} ei vastaavuutta.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Tarkista rivit, jotka on merkitty ”Samankaltainen nimi”, ja valitse sarake riveille, jotka on merkitty ”Ei vastaavuutta”. Rivit, jotka on merkitty ”Sama nimi” tai ”Nimetty uudelleen kohteessa”, eivät vaadi mitään.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Ei tehtävää tässä: jokainen sarake täsmää jo. Valitse Seuraava.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Päivitettyjen pakettien nimet</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Mitä päivitettyjä .zip-tiedostoja kutsutaan. Käytä {name} alkuperäisen tiedostonimen kohdalla: ”{name} - Fabrikam” muuttaa tiedoston ”Onboarding.zip” tiedostoksi ”Onboarding - Fabrikam.zip”. Yhden paketin kohdalla voit yksinkertaisesti kirjoittaa koko nimen. Jätä arvoksi {name}, jos haluat säilyttää alkuperäiset nimet. Kahdesti käytettyyn nimeen lisätään (2), (3)… jotta mitään ei ylikirjoiteta.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Kirjoitetaan: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Työnkulku tallentaa vain lomakkeen tunnuksen, joten lomakkeiden nimet luetaan Microsoft Formsista, kun tämä vaihe avautuu: työnkulkujesi jokaisen lomakkeen otsikko (lähdetili) ja kohdetilin lomakkeet. Lomake, jonka otsikko vastaa täsmälleen yhtä kohdelomaketta, täsmätään puolestasi; muussa tapauksessa valitse uusi lomake avattavasta luettelosta tai liitä sen tunnus tai muokkaussivun linkki. Lue ne uudelleen valitsemalla Lataa lomakenimet uudelleen.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Lataa lomakkeet kohdetililtä…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Ladataan kohdetilin lomakkeita… sinua saatetaan pyytää kirjautumaan.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Luetellaan kohdetilin {0} omistamat lomakkeet, jotta voit valita uuden lomakkeen jokaiselle työnkululle. Lopeta kirjautumisen odotus valitsemalla Peruuta.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Kohde: {0} lomaketta löytyi kohteesta {1}. Valitse yksi riviä kohden tai liitä tunnus.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Kohde: lomakkeita ei löytynyt kohteesta {0}. Avattava luettelo näyttää vain kyseisen tilin omistamat lomakkeet (ei ryhmälomakkeita), joten kopioi lomakkeet ensin Lomaketyökalulla tai liitä tunnus.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Peruutettu. Yritä uudelleen valitsemalla Lataa lomakenimet tai liitä lomaketunnukset.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Kohde: lomakkeiden lataus epäonnistui: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(ei mitään)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(nimetön lomake)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Lähdelomake</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Valitse kohteen lomakkeista</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Valitse lomake kohdetililtä. Valitse ensin ”Lataa lomakkeet kohdetililtä”.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Täytetty kohdekirjautumisesta ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Lähdetilisi, korvattu kohdetililläsi</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Täytetty kirjautumisistasi ({0} → {1}). Tyhjennä molemmat kentät jättääksesi sähköpostin verkkotunnukset ennalleen.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Sivusto, jonka kohde on tyhjä, jää ennalleen: työnkulut osoittavat siihen edelleen, ja raportti luettelee sen.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Kirjautunut käyttäjänä {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Kirjauduttu käyttäjänä {0}. Kohdevuokraajan SharePoint-osoite on {1}; tyhjät kohdesivustot täytettiin sen perusteella.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Jotkin työnkulkujen sivustot ovat osoitteessa {0}, joka on kohdetilin oma osoite. Joko nämä paketit osoittavat jo kohteeseen (esimerkiksi tämän työkalun kirjoittamat paketit tai kohteesta viedyt työnkulut), jolloin lisää sen sijaan alkuperäiset viennit lähteestä; tai lähde ja kohde ovat todella sama vuokraaja, jolloin vaihda sovellus Yksi vuokraaja -tilaan (Asetukset).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} on paketti, jonka tämä työkalu kirjoitti {1}: se sisältää jo kohteen osoitteet, joten siirrettävää ei ole. Lisää sen sijaan alkuperäinen vienti lähdevuokraajasta (tiedosto Lataukset-kansiostasi, ei tulostekansiossa oleva).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Näiden työnkulkujen sivustot ovat osoitteessa {0}, joka on kohdevuokraajasi, mutta lähteesi on {1}. Jos paketit viedään osoitteesta {0}, kirjaudu kyseiseen vuokraajaan lähteenä (Vaihda lähde…). Jos tämä työkalu kirjoitti ne aiemmin, poista ne ja lisää alkuperäiset viennit.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Kirjauduttu. {0} kohdesivustoa täytetty osoitteesta {1}. Tarkista ne ja valitse sitten Seuraava.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Kirjauduttu. Jokaisella kohdesivustolla oli jo arvo, joten mitään ei muutettu.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Kirjautuminen ei valmistunut tai uuden vuokraajan osoitetta ei voitu lukea (katso Kohde-rivi). Jos olet kirjautunut, anna uuden vuokraajan osoite alla täyttääksesi kohdesivustot.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — yhdistetty käyttäjänä {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — ei vielä kirjautunut</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Vaihda kohde…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Kohdeluetteloa ei ole valittu, joten nämä työnkulut osoittaisivat edelleen luetteloon, jota ei ole kohteessa. Valitse kohdeluettelo tai luo luettelo ensin kohdesivustolle.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Työnkulut käyttävät saraketta ”{0}”, mutta kohdeluettelossa ”{1}” ei ole sitä vastaavaa saraketta. Valitse sen kohdesarake taulukosta tai lisää sarake kohdeluetteloon ja valitse Tarkista uudelleen.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>Kohdeluettelo ”{0}” vaatii sarakkeen ”{1}”, mutta työnkulun ”{2}” ”Luo kohde” -vaihe ”{3}” ei aseta sitä, joten tuonti epäonnistuisi virheeseen ”missing required property item/{1}”. Kirjoita sille arvo alle, jolloin työkalu lisää sen kyseiseen vaiheeseen, tai tee ”{1}” valinnaiseksi kohdeluettelossa ja valitse Tarkista uudelleen.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>Kohdeluettelo ”{0}” vaatii sarakkeen ”{1}”, mutta työnkulun ”{2}” ”Luo kohde” -vaihe ”{3}” ei aseta sitä, joten tuonti epäonnistuisi virheeseen ”missing required property item/{1}”. Tee ”{1}” valinnaiseksi kohdeluettelossa SharePointissa ja valitse sitten Tarkista uudelleen.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Täytettävä arvo näille pakollisille sarakkeille (lisätään jokaiseen Luo kohde -vaiheeseen, joka jättää ne pois):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Tämä epäonnistuisi tuonnissa. Korjaa jatkaaksesi:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Tarkista uudelleen</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Epäonnistuu ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Jatka kirjautumalla kohteeseen.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} pakettia on tämän työkalun kirjoittamia ja sisältää jo kohteen arvot. Poista ne (luettelon ✕) ja lisää alkuperäiset viennit.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} sivustolla ei ole kohdetta. Ennalleen jätetty sivusto osoittaisi edelleen lähdevuokraajaan.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} luetteloa epäonnistuisi tuonnissa. Jatka korjaamalla ”Epäonnistuu”-merkityt luettelot.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Luetteloita ei ole vielä täsmätty. Yritä uudelleen palaamalla yksi vaihe taaksepäin ja siirtymällä uudelleen eteenpäin.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} lomaketta tarvitsee kelvollisen kohdelomakkeen tunnuksen jatkaakseen.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Vaihda lähde…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Kirjauduttu käyttäjänä {0}. Lähdevuokraajan SharePoint-osoite on {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Lähdeyhteydeksi vaihdettu {0}. Alla luetellut sivustot on oltava tässä vuokraajassa.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Lähdekirjautuminen ei valmistunut tai vuokraajan osoitetta ei voitu lukea (katso Lähde-rivi). Edellinen lähdeyhteys säilytetään, jos peruutit.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Joitakin sivustoja luetaan osoitteesta {0}, joka ei ole vuokraaja, johon olet yhdistetty lähteenä ({1}). Niiden luetteloiden lukeminen epäonnistuu. Muuta näiden rivien ”Lue luettelot lähteestä” lähdevuokraajasi osoitteeseen tai valitse Vaihda lähde… ja kirjaudu tilillä kyseisestä vuokraajasta.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Työnkulkujen sivustot ovat osoitteessa {0}, mutta olet yhdistetty lähteenä osoitteeseen {1}. ”Lue luettelot lähteestä” täytettiin samoilla sivustoilla osoitteessa {1}, joten työkalu lukee luettelonimet ja sarakkeet sieltä. Tarkista, että nämä sivustot ovat olemassa (muuta mitä tahansa riviä), tai valitse Vaihda lähde…, jos työnkulut todella tulivat osoitteesta {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Työnkulkujen käyttämät luettelot</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Avaa tai sulje luettelo napsauttamalla sitä. Tarkistusta tarvitsevat luettelot ovat ensimmäisinä ja avoinna.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Avaa kaikki</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Sulje kaikki</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Käyttäjä:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Lähde:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Kohdeluettelo</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>tai liitä sen tunnus tai linkki:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Lähdesarake</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Tyyppi</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Käytetty</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Työnkulut eivät käytä</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(ei mitään: jätä tämä luettelo ennalleen)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Kohdeluetteloa ei ole valittu: sitä käyttävät työnkulut osoittavat edelleen lähdeluetteloon</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} saraketta tarkistettavana</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ ei tarkistettavaa</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>Tässä luettelossa on {0} saraketta; työnkulut käyttävät {1}: {2} samannimisenä kohteessa, {3} nimetty uudelleen ja täsmätty, {4} samankaltaista (tarkista), {5} ilman vastaavuutta (valitse). Muut sarakkeet näytetään taustatietona, eikä niitä muuteta.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>Tässä luettelossa on {0} saraketta; työnkulut eivät käytä yhtäkään tavalla, jonka työkalu näkee, joten mitään ei tarvitse yhdistää.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Tämän luettelon sarakkeita ei voitu lukea (katso yllä olevat huomautukset ja toimintoluettelo).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Valitse kohdeluettelo yllä nähdäksesi sen sarakkeet ja yhdistääksesi ne.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Kohdeluettelon sarakkeita ei voitu lukea, joten vastaavuuksia ei voitu ehdottaa.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Työnkulku ei kerro, millä sivustolla tämä luettelo on (se käyttää parametria), joten sitä ei voi hakea. Liitä kohdeluettelon tunnus tai linkki.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Ei kohdeluetteloa: tämä luettelo jää ennalleen.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Luetaan kohdeluettelon sarakkeita kohteelle {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Luettelo &apos;{0}&apos;: valitsit toisen kohdeluettelon. Luetaan sen sarakkeet kohteessa {1} niiden täsmäämiseksi uudelleen.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — yhdistetty käyttäjänä {1} (pääikkunan kirjautuminen)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Lue luettelot lähteestä</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>”Sivusto työnkuluissa” on työnkuluihin tallennettu osoite; se korvataan, joten sitä ei voi muokata. ”Lue luettelot lähteestä” on paikka, josta työkalu lukee kunkin luettelon nimen ja sarakkeet lähdepuolella; se on aluksi sama osoite, joten muuta sitä, kun työnkulun osoite on vanha, nimetty uudelleen tai eri vuokraajassa kuin lähdeyhteytesi.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Mitä nämä työnkulut käyttävät</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} työnkulkua, {2} vaihetta: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>tämän työkalun uudelleenkirjoittama</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>tarkista manuaalisesti</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>vain yhteys</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>Tehtävää tuonnin jälkeen</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Tuo jokainen korjattu paketti kohdeympäristöön ja luo yhteydet uudelleen (niitä ei koskaan kopioida).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Ratkaisupaketit: vain työnkulkumääritykset kirjoitettiin uudelleen. Ratkaisun ympäristömuuttujien arvot ja yhteysviittaukset (customizations.xml) sisältävät edelleen lähdearvoja; aseta ne tuonnin jälkeen.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Työnkulkujen omistajat ja vain suorittavat käyttäjät eivät kuulu pakettiin; jaa työnkulut oikeille henkilöille tuonnin jälkeen.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Ei muutoksia (mikään yhdistämisessä ei vastannut).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} korvausta</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Osoittaa edelleen lähdearvoihin (yhdistämättä, tarkista ennen tuontia)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Yhdistetään lähdesivustoon {0} ja kohdesivustoon {1}. Kirjautumisikkuna avautuu, jos et ole vielä kirjautunut.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Yhdistetty kohteisiin {0} (lähde) ja {1} (kohde).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Luetaan kohdesivuston {0} luetteloita ja kirjastoja, jotta jokainen luettelo voidaan täsmätä nimen mukaan ja tarjota avattavassa luettelossa.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>Löytyi {0} luetteloa ja kirjastoa kohteesta {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Luetaan luettelon {0} nimi ja sarakkeet lähdesivustolta {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Luettelo &apos;{0}&apos;: etsitään samannimistä luetteloa kohdesivustolta {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Luettelo &apos;{0}&apos;: löytyi kohteesta. Luetaan kohdeluettelon sarakkeet niiden täsmäämiseksi.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Luettelo &apos;{0}&apos;: sen sarakkeita ei voitu lukea tai sillä ei ole niitä. Tälle luettelolle ei ole mitään yhdistettävää.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Luettelo &apos;{0}&apos;: {1} saraketta, joista työnkulut eivät käytä yhtäkään tavalla, jonka työkalu näkee. Mitään ei tarvitse yhdistää.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Luettelo &apos;{0}&apos;: työnkulut käyttävät {1} sarakenimeä: {2} on samanniminen kohteessa (ei muutosta tarvita), {3} nimettiin uudelleen ja täsmättiin, {4} näyttää samankaltaiselta (tarkista), {5} ei vastaavuutta (valintasi), {6} on sisäänrakennettuja sarakkeita (ei yhdistettävää).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>Luettelo {0} ei ole lähdesivustolla, mutta se on kohdesivustolla nimellä &apos;{1}&apos;: työnkulku osoittaa jo kohteeseen.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Sivustolla &apos;{0}&apos; ei ole kohdetta; sen luetteloita ei selvitetty.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Lisäasetus: lue luettelot toisesta osoitteesta</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Sarakeyhdistäminen: {0} → {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Tälle luettelolle ei ole näytettäviä sarakkeita.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Työnkulut eivät käytä yhtäkään tämän luettelon saraketta. Näet ne valitsemalla ”Näytä kaikki sarakkeet”.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>Lähdeluetteloa ei voitu lukea, eikä työnkulku nimeä sarakkeita, joten mitään ei ole yhdistettävää.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Luettelo</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(ei luettavissa lähteessä)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Luetaan kohteesta:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Sivusto</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Tämä työnkulku osoittaa jo tähän luetteloon kohteessa. Sen käyttämät {0} sarakenimeä näytetään kohteen sarakkeita vasten; mitään ei tarvitse muuttaa.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(luettelon nimi ei ole käytettävissä)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Jo kohteessa</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Yhdistetty työnkulun sarakenimillä</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Sarakkeita ei voi lukea</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Ei kohdeluetteloa</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Ei yhdistettävää</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Valmis</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Kohdesarakkeet eivät ole luettavissa</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} tarkistettavana</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>{0} työnkulun käyttämä</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} sarakeyhdistämistä vaatii vielä tarkistuksen.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Kaikki sarakeyhdistämiset on ratkaistu.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Yhteyksiä ei kopioida vuokraajien välillä: luo ne uudelleen Power Automatessa tuonnin jälkeen.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>Sähköposti: jokainen osoite verkkotunnuksessa {0} muuttuu muotoon {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0}/{1} lomaketta osoittaa uuteen lomakkeeseen.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0}/{1} luettelolla on kohdeluettelo.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Luetteloita ei ole vielä täsmätty.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>Sähköpostiosoitteita ei muuteta (verkkotunnusta ei yhdistetty).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Työnkulut eivät käytä Microsoft Formsia.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Työnkulut eivät käytä tiettyjä luetteloita.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Työnkulut eivät nimeä SharePoint-sivustoja.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{0} pakettia, joissa on {1} työnkulkua, kirjoitetaan; alkuperäisiä ei muuteta.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0}/{1} sivustoa siirtyy kohdesivustolle; muut pysyvät ennallaan.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Tyhjennä automaattisesti täytetyt arvot</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Täytetty</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Lomake työnkuluissasi</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Mistä (työnkuluissasi)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Luettelot</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Sivustot</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Tila</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>Mihin (kohde)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Valitsit itse</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Jätetty ennalleen</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(pääikkunan kirjautuminen)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>Sähköpostin verkkotunnus, josta siirretään</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Siirrä jokainen osoite verkkotunnuksesta</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>verkkotunnukseen</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>Sähköpostin verkkotunnus, johon siirretään</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…tai vedä .zip-tiedostoja (tai kansio) tähän ikkunaan.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Luettelon &apos;{1}&apos; sarakkeella &apos;{0}&apos; ei ole vastaavuutta kohdeluettelossa.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>Luettelolla &apos;{0}&apos; ({1}) kohteessa {2} ei ole kohdeluetteloa, joten sitä käyttävät työnkulut osoittavat edelleen lähdeluetteloon.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(otsikko ei tiedossa)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Siirry vaiheeseen</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Onko sinulla tallennettu yhdistäminen? Lataa se…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Mukautettu malli…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Säilytä alkuperäiset nimet</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Lisää &apos; - migrated&apos; jokaisen nimen perään</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Avaa raportti ja tarkista tarkistettavaksi merkityt.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>Power Automatessa (kohdevuokraaja): Omat työnkulut, Tuo, Tuo paketti (vanha) ja valitse kirjoitettu paketti.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>Napsauta Liittyvät resurssit -kohdassa jokaisen yhteyden kohdalla ”Valitse tuonnin aikana” ja valitse tai luo yhteys kohdevuokraajassa. Yhteyksiä ei voi siirtää vuokraajien välillä.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Tuo työnkulku, pidä se pois päältä, avaa se, korjaa kaikki, mistä se huomauttaa, ja kytke se sitten päälle.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Avaa kansio</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Avaa Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Tulostekansiota ei ole vielä olemassa; se luodaan, kun kirjoitat paketit.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>LÄHDE</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>KOHDE</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} työnkulkua löytyi</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Työnkulkuja ei löytynyt</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Tämän työkalun jo kirjoittama</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Ei voitu lukea</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Valmis kirjoittamaan?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Poista tämä paketti luettelosta</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Työnkulkujen uudelleenkirjoitusraportti</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Mitä nämä työnkulut käyttävät ({0} palvelua)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} pakettia ei voitu kirjoittaa.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} arvoa kirjoitetuissa paketeissa osoittaa edelleen lähteeseen. Näet ne avaamalla raportin.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Näytä kaikki {0} saraketta</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Näytä vain työnkulkujen käyttämät sarakkeet</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Mitä nämä sarakkeet tarkoittavat?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>Tämän luettelon tunnusta ei ole lähdesivustolla, mutta se on luettelo &apos;{0}&apos; kohdesivustolla: työnkulku osoittaa jo kohteeseen, kuten tämän työkalun jo kirjoittamassa paketissa.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Yhdistetty</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Ongelma</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Ei kirjautunut</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Odotetaan kirjautumista…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} luetteloa · kaikki valmiita</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} luetteloa · {1} valmista · {2} vaatii tarkistuksen</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Kesti {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>Tarkistettavat</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Lisää työnkulkupaketit (.zip), jotka veit lähdevuokraajasta. Jokainen skannataan heti, kun lisäät sen.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Kerro, minne kukin työnkulku siirtyy. Kirjaudu kohteeseen, jolloin uuden vuokraajan osoite täytetään puolestasi.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Jokainen työnkulkujen käyttämä luettelo täsmätään kohteen luetteloon ja sen sarakkeet yhdistetään. Tarkista kaikki, mikä on merkitty tarkistusta vaativaksi.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Osoita kopioidut lomakkeet niiden uusiin tunnuksiin ja päätä, miten sähköpostiosoitteet ja vuokraajan tunnus muuttuvat.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Tarkista alla oleva luettelo, valitse, minne päivitetyt paketit tallennetaan, ja kirjoita ne sitten.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Mitä tässä tapahtuu</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Työkalu lukee jokaisen paketin tällä tietokoneella (mitään ei lähetetä minnekään) löytääkseen työnkulkujen käyttämät sivustot, luettelot, sarakkeet ja lomakkeet. Lisää lähteen ALKUPERÄISET viennit, ei tämän työkalun aiemmin kirjoittamia paketteja: ne sisältävät jo kohteen osoitteet.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Sarake &apos;{0}&apos; on yhdistetty eri tavoin eri luetteloissa ({1}). Kunkin luettelon vaiheet saavat oman yhdistämisensä; työnkulun muualla olevat lausekkeet säilyttävät alkuperäisen nimen, joten tarkista ne.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Lataa lomakenimet uudelleen…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Ladataan lomakenimiä… sinua saatetaan pyytää kirjautumaan.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Luetaan työnkulkujesi lomakkeiden otsikot lähdetililtä {0}. Lopeta kirjautumisen odotus valitsemalla Peruuta.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Lähde: löytyi {0}/{1} lomakkeen otsikko ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Lähde: lomakkeiden otsikoita ei voitu lukea: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} lomaketta täsmättiin samannimiseen kohdelomakkeeseen.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Näyttää kelvolliselta lomaketunnukselta</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Täsmätty nimen perusteella</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>Lähde ja kohde ovat samassa vuokraajassa ({0}). Vaihda sovellus Yksi vuokraaja -tilaan (Asetukset) tai kirjaudu lähteeseen ja kohteeseen tileillä eri vuokraajista.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Poista nämä paketit</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>Poistettu {0} pakettia, jotka osoittavat jo kohteeseen: {1}. Lisää sen sijaan alkuperäiset viennit lähdevuokraajasta.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Nämä paketit poistettiin. Lisää alkuperäiset viennit lähdevuokraajasta.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Jokainen paketti tallennetaan uutena .zip-tiedostona tulostekansioon; alkuperäisiä ei koskaan muuteta. Nimeä paketti uudelleen kirjoittamalla eri nimi kohtaan Tallenna nimellä.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Säilytä alkuperäiset nimet</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Lisää &apos; - migrated&apos; jokaisen nimen perään</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Alkuperäinen paketti</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Tallenna nimellä</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Tallennetaan nimellä: {0} (voit muuttaa nimiä alla).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Ei voitu lukea; tulostetta ei kirjoitettu</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Peruutettu. Mitään ei muutettu. Yritä uudelleen Sivustot-vaiheessa Kirjaudu-toiminnolla (esimerkiksi toisessa selaimessa); Luettelot-vaiheessa käytä Täsmäytä uudelleen.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Peruutetaan… kirjautumisikkunan sulkeutuminen voi kestää hetken.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Mitä työkalu tekee</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Yhteydet</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Usea vuokraaja: luetteloiden täsmäämiseksi työkalu lukee jokaisen luettelon nimen ja sarakkeet lähdevuokraajasta ja etsii saman luettelon kohdevuokraajasta. Se vaatii kirjautumisen kumpaankin. Kirjaudu kumpaankin puoleen tässä tai valitse vain Seuraava, jolloin sinulta kysytään silloin. Selainikkuna avautuu; jos se on väärä selain, valitse Peruuta ja yritä uudelleen. Kummassakaan vuokraajassa ei muuteta mitään.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Yksi vuokraaja: lähde ja kohde ovat sama vuokraaja, joten työkalu käyttää tiliä, jolla kirjauduit Yhdistä-vaiheessa. Muuhun ei tarvitse kirjautua. Vuokraajassa ei muuteta mitään.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Lähde</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Kohde</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Kirjaudu lähteeseen…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Kirjaudu kohteeseen…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Peruuta</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Lopettaa kirjautumisikkunan odotuksen, jotta voit yrittää uudelleen, esimerkiksi toisessa selaimessa.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Ei vielä kirjautunut</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Käyttää pääikkunan kirjautumista: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Kirjautunut käyttäjänä {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Valmis</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Odotetaan kirjautumista… selainikkunan pitäisi avautua</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Kirjautuminen peruutettu. Yritä uudelleen valitsemalla Kirjaudu.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Kirjauduttu. Tarkista kohdesivustot alta ja valitse sitten Seuraava.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Lähdesivustoa, johon kirjautua, ei vielä ole. Lisää ensin työnkulkupaketteja.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Anna ensin vähintään yksi kohdesivusto (tai käytä toimintoa Täytä säilyttäen polut); kirjautuminen tapahtuu kohdesivuston vuokraajaan.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Kirjaudutaan lähteeseen… selainikkuna avautuu.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Kirjaudutaan kohteeseen… selainikkuna avautuu.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>lähde</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>kohde</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Kirjaudutaan lähdevuokraajaan. Selainikkuna avautuu; lopeta odotus valitsemalla Peruuta (esimerkiksi kokeillaksesi toista selainta). Kirjautuminen kertoo työkalulle myös, mikä vuokraaja lähde on.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Kirjaudutaan kohdevuokraajaan. Selainikkuna avautuu; lopeta odotus valitsemalla Peruuta (esimerkiksi kokeillaksesi toista selainta). Kirjautuminen kertoo työkalulle myös uuden vuokraajan SharePoint-osoitteen.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Yhdistetty kohteeseen: {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Peruutit kirjautumisen.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Luetaan {0} pakettitiedostoa tällä tietokoneella löytääkseen työnkulkujen käyttämät sivustot, luettelot, sarakkeet ja lomakkeet. Mitään ei lähetetä minnekään.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Luettu {0}: {1} työnkulkua.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Täsmätään {0} luetteloa: työkalu kysyy kunkin nimeä lähdesivustolta ja etsii sitten luetteloa, jolla on kyseinen nimi, kohdesivustolta.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Täsmäytys valmis. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Kirjoitetaan {0} korjattua pakettia kohteeseen {1}. Alkuperäisiä ei muuteta.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Kirjoitetaan {0} yhdistämisesi käyttöön otettuna.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Tarkistetaan {0} arvojen varalta, jotka osoittavat edelleen lähteeseen.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Peruit. Mitään ei muutettu.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Pysäytetty: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Jokainen työnkulku tallentaa sen SharePoint-sivuston osoitteen, josta se lukee tai johon se kirjoittaa. Jotta työnkulku toimisi uudessa vuokraajassa, sen on osoitettava siellä vastaavaan sivustoon, joten kerro työkalulle, mikä uusi sivusto korvaa minkäkin vanhan. Tämä muokkaa vain pakettiesi kopioita; mitään ei haeta ennen kuin valitset Seuraava.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Mitä tässä tapahtuu: jokaiselle työnkulun käyttämälle luettelolle työkalu lukee luettelon nimen ja sarakkeet lähdesivustolta, etsii samannimisen luettelon kohdesivustolta ja lukee kyseisen luettelon sarakkeet täsmätäkseen ne. Miksi: työnkulut viittaavat luetteloihin ja sarakkeisiin tunnuksen tai sisäisen nimen perusteella, ja ne eroavat uudessa vuokraajassa, joten työkalu etsii vastineen. Tämä vaihe vain lukee; kummassakaan vuokraajassa ei luoda tai muuteta mitään. Voit muuttaa kohdeluetteloa ja mitä tahansa saraketta sen kortissa.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Kopioitu lomake saa uuden tunnuksen, joten sitä käyttävän työnkulun on osoitettava kopioon. Työnkulun sähköpostiosoitteet ja vuokraajan tunnus voivat myös tarvita muutosta uutta organisaatiota varten. Mitään ei haeta tässä; päätät korvaukset itse, ja kaikki tyhjäksi jätetty pysyy ennallaan.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Työkalu kirjoittaa uudet .zip-tiedostot tulostekansioon yhdistämisesi käyttöön otettuna, skannaa ne uudelleen löytääkseen kaiken, mikä osoittaa edelleen lähteeseen, ja kirjoittaa raportin. Alkuperäisiä pakettejasi ei koskaan muuteta, eikä mitään lähetetä kummallekaan vuokraajalle. Tuot uudet paketit Power Automateen itse sen jälkeen.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Kirjautuminen peruutettu. Yritä uudelleen napsauttamalla painiketta, esimerkiksi toisessa selaimessa.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Peruuta</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Virhe: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Lähdelomaketta ei voitu lukea ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Lomaketta ei voitu luoda kohteeseen ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Peruutettu kesken kaiken. Osittainen lomake jäi kohteeseen; poista se Microsoft Formsissa.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Kopiointi pysähtyi kesken kaiken ({0}). Osittainen lomake jäi kohteeseen; poista se Microsoft Formsissa.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>taustakuva</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>logo</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>otsikkokuva</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>Kohdetta {0} ei kopioitu (kuvia ei vielä tueta).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Tietovisan pisteytystä (oikeat vastaukset ja pisteet) ei ole vahvistettu; tarkista kopio.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Asetusta &apos;{0}&apos; ei voitu kopioida ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Kysymystä &apos;{0}&apos; ei kopioitu ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(nimetön)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Haarautumissääntöjä ei voitu kopioida ({0}); tarkista kopio.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>Kopio luotiin, mutta sitä ei voitu tehdä näkyväksi Microsoft Formsissa ({0}); se voi olla roskakorissa.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>Kopiossa on {0} kysymystä, mutta lähteessä {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Kysymys &apos;{0}&apos; ({1}) luotiin, mutta sen vaihtoehtoja ei voitu kopioida ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Tulokset</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Lähdelomake</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>Lähdelomakkeen tunnus</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Kopion otsikko</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>Kopiolomakkeen tunnus</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Tila</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Kopioidut kysymykset</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Kysymykset lähteessä</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Varoitukset</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Huomautukset</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Virhe</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Excel-työkirja (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>JSON-tiedostot (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Tunnus</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Aloitusaika</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Valmistumisaika</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Vastaaja</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Nimi</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Pisteet</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Yhdistämättömät vastaukset (raaka JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (katkaistu: liian pitkä Excel-soluun)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Pysäytetäänkö suoritus?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>Vertailu tai vahvistus on edelleen käynnissä. Tämän ikkunan sulkeminen pysäyttää sen, eikä raporttia kirjoiteta. Suljetaanko silti?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Suljetaanko kesken työn?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Työkalu on edelleen käynnissä (skannaus, täsmäytys, kirjautuminen tai pakettien kirjoitus). Sulkeminen nyt pysäyttää sen. Suljetaanko silti?</value></data>
 </root>

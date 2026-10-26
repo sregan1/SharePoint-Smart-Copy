@@ -2,6 +2,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using ClosedXML.Excel;
+using SharePointSmartCopy.Localization;
 
 namespace SharePointSmartCopy.Forms;
 
@@ -84,11 +85,11 @@ public sealed class FormsResponseExporter
         var extra = scoreCol + (scoreKey is null ? 0 : 1);
 
         var ws = wb.AddWorksheet(sheetName);
-        string[] fixedHeaders = ["Id", "Start time", "Completion time", "Responder", "Name"];
+        string[] fixedHeaders = [Loc.T("Forms_Exp_RId"), Loc.T("Forms_Exp_RStart"), Loc.T("Forms_Exp_REnd"), Loc.T("Forms_Exp_RResponder"), Loc.T("Forms_Exp_RName")];
         for (var i = 0; i < fixedHeaders.Length; i++) ws.Cell(1, i + 1).Value = fixedHeaders[i];
         foreach (var q in questions) ws.Cell(1, index[q["id"]!.GetValue<string>()]).Value = q["title"]?.GetValue<string>() ?? "";
-        if (scoreKey is not null) ws.Cell(1, scoreCol).Value = "Score";
-        ws.Cell(1, extra).Value = "Unmapped answers (raw JSON)";
+        if (scoreKey is not null) ws.Cell(1, scoreCol).Value = Loc.T("Forms_Exp_RScore");
+        ws.Cell(1, extra).Value = Loc.T("Forms_Exp_RUnmapped");
 
         var row = 2;
         foreach (var r in responses)
@@ -110,15 +111,20 @@ public sealed class FormsResponseExporter
                 var qid = a["questionId"]?.GetValue<string>();
                 var text = string.Join("; ", a.Where(kv => kv.Key != "questionId" && kv.Value is not null)
                     .Select(kv => Render(kv.Value!)).Where(t => t.Length > 0));
-                if (qid is not null && index.TryGetValue(qid, out var col)) ws.Cell(row, col).Value = text;
+                if (qid is not null && index.TryGetValue(qid, out var col)) ws.Cell(row, col).Value = Clip(text);
                 else if (text.Length > 0 || a.Any(kv => kv.Key != "questionId" && kv.Value is not null && Render(kv.Value).Length > 0))
                     unmapped.Add(a.ToJsonString());   // empty answers for non-question rows (e.g. matrix groups) are noise
             }
-            if (unmapped.Count > 0) ws.Cell(row, extra).Value = string.Join("\n", unmapped);
+            if (unmapped.Count > 0) ws.Cell(row, extra).Value = Clip(string.Join("\n", unmapped));
             row++;
         }
         ws.SheetView.FreezeRows(1);
     }
+
+    // Excel rejects a cell over 32,767 characters, and one over-long answer used to fail the whole export.
+    private const int MaxCellChars = 32_000;
+    private static string Clip(string text) =>
+        text.Length <= MaxCellChars ? text : text[..MaxCellChars] + Loc.T("Forms_Exp_Cut");
 
     // A real Excel date (local time) when the value parses, so the column sorts and filters; otherwise the text as is.
     private static void SetDate(IXLCell cell, JsonNode? node)

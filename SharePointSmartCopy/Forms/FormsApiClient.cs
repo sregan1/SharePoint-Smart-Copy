@@ -110,7 +110,10 @@ public sealed class FormsApiClient
                 forceToken = true;
                 continue;
             }
-            if (status is 429 or 502 or 503 or 504 && attempt < MaxAttempts)
+            // A POST is only retried on 429 (the request was not processed). After a 502/503/504 the server may already have
+            // created the form or question, and a second POST would duplicate it (or fail as a conflict on the same ID).
+            var retriable = status == 429 || (method != HttpMethod.Post && status is 502 or 503 or 504);
+            if (retriable && attempt < MaxAttempts)
             {
                 var delay = resp.Headers.RetryAfter?.Delta
                     ?? (resp.Headers.RetryAfter?.Date is { } when ? when - DateTimeOffset.UtcNow : (TimeSpan?)null)

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Úspěch ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Selhalo ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Přeskočeno ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Aktuální</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Nepodařilo se zjistit, zda má zdroj vlastní oprávnění (omezení propustnosti nebo chyba přístupu) – oprávnění pro tuto položku nebyla zkopírována. Spusťte kopírování znovu.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Existující cílový soubor byl odstraněn kvůli přepsání, ale novou kopii se nepodařilo nahrát ({0}). Soubor v cíli aktuálně chybí – spusťte kopírování znovu a obnovte ho.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Cílová knihovna selhala ({0}). Její soubory jsou označeny jako neúspěšné; ostatní knihovny pokračují.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: zdrojový soubor se během stahování změnil – stahování začíná znovu.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint nehlásil u tohoto importu žádný pokrok po dobu {0} min, a proto byl import opuštěn. Jeho soubory jsou označeny jako neúspěšné; spusťte kopírování znovu.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Jeden tenant</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Více tenantů</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Kopírování mezi dvěma různými tenanty Microsoft 365. Ke zdroji a k cíli se přihlašujete odděleně. Registraci aplikace pro cíl vyberte v Nastavení.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Registrace cíle:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Režim více tenantů: registrace aplikace použitá k přihlášení k cílovému tenantu. „Stejná jako zdroj“ znovu použije registraci zdroje, která pak musí být víceklientská aplikace.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Pokračovat / spustit znovu</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Znovu se připojí a spustí tento výběr s volbou Kopírovat, pokud je novější, takže již zkopírované soubory se přeskočí a přenese se jen to, co chybí nebo se změnilo.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Tento běh nemá uložený výběr, ze kterého by bylo možné pokračovat (výběr ukládají jen běhy s výběrem souborů).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>Kopírování již probíhá. Nejprve ho dokončete nebo zrušte.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Pokračování se nezdařilo: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>Obnoveno přerušených běhů: {0}. Viz Historie.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Pokračování: z předchozího běhu bylo obnoveno položek: {0}, s vybranou volbou Kopírovat, pokud je novější. Zkontrolujte možnosti a klikněte na Další. (Vlastní mapování sloupců se neobnovuje.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>PŘERUŠENO – aplikace byla zavřena před dokončením tohoto běhu. Z dokončených položek: {0} úspěšných, {1} neúspěšných, {2} přeskočených, {3} zrušených  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Exportovat diagnostiku…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Uloží soubor zip s nedávnými protokoly, informacemi o systému a vašimi nastaveními bez údajů o organizaci – k připojení k hlášení chyby. Neobsahuje sestavy kopírování ani názvy souborů.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Diagnostika byla uložena do {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Diagnostiku se nepodařilo uložit: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Obsah je shodný (liší se jen části spravované službou SharePoint), ale datum změny nebylo zachováno.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Oprávnění nebyla zkopírována: nepodařilo se zjistit ID položky v SharePointu.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Oprávnění nebyla zkopírována: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Složka „{0}“: {1} nebylo použito – {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>U dalších složek se vyskytly podobné problémy jako výše; pozdější nejsou uvedeny jednotlivě.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>oprávnění</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>data</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>autor / editor</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> (ponecháno {0} – cíl je již aktuální)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>VAROVÁNÍ: čtení metadat ze zdroje ({0}) se nezdařilo: {1}. Položky z něj mohou být zkopírovány BEZ hodnot vlastních sloupců nebo jedinečných oprávnění. Po odstranění problému spusťte kopírování znovu (volba Přepsat nebo Pokud je novější je použije znovu).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>VAROVÁNÍ: nepodařilo se najít zdrojový seznam knihovny, takže její oprávnění NEBUDOU zkopírována.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>Hostitel SharePointu „{0}“ není přidružen k připojenému tenantu. Znovu připojte zdrojový a cílový web a zkuste to znovu.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Kopírování mezi tenanty: hodnoty sloupců spravovaných metadat (taxonomie) se nekopírují a poznámkové bloky OneNote / sady dokumentů zatím nelze mezi tenanty kopírovat. Identity se mapují podle nastavení mapování identit; kdokoli, kdo se v cíli nenajde, je přeskočen.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Mapování identit</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Mapování identit…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Uveďte každou osobu (nebo skupinu) ve zdrojovém tenantu a kým je v cílovém tenantu – jde o různé účty. Podle této tabulky se zapisují autoři, editoři, sloupce osob a oprávnění. Kdokoli, kdo není uveden, se páruje záměnou domény, pokud ji nastavíte; kdokoli, kdo se v cíli stále nenajde, je přeskočen a nahlášen.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>E-mailová doména zdroje</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>E-mailová doména cíle</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Přepsání – jeden pár „zdroj,cíl“ na řádek (uživatelé nebo názvy skupin; # začíná komentář)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Stejné jako zdroj</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Zdroj a cíl jsou ve stejném tenantu. Pro kopírování v rámci jednoho tenantu přepněte do režimu jednoho tenantu.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Nativní kopírování složek (poznámkové bloky OneNote, sady dokumentů) mezi tenanty zatím není podporováno.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Jednotka „{0}“ není přidružena k připojenému tenantu. Znovu připojte zdrojový a cílový web a zkuste to znovu.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Zatím není nastavena žádná registrace aplikace. Před připojením otevřete Nastavení a přidejte registraci aplikace Azure (její ID aplikace/klienta).</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Přihlášení bylo zrušeno. Kliknutím na Připojit to zkuste znovu.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Správce zatím tuto aplikaci v tomto tenantu neschválil. Požádejte globálního správce, aby udělil souhlas správce pro registraci aplikace (viz Nastavení v uživatelské příručce).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Registrace aplikace nebyla v tomto tenantu nalezena. Zkontrolujte ID klienta a ID tenantu v Nastavení.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Tento tenant nebyl nalezen. Zkontrolujte ID tenantu v Nastavení (použijte svou doménu, GUID tenantu nebo „common“).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>V registraci aplikace chybí adresa přesměrování, kterou tato aplikace používá. V Azure přidejte identifikátor URI přesměrování http://localhost v části „Mobilní a desktopové aplikace“.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Registrace aplikace není nastavena pro přihlášení z počítače. V Azure pro registraci zapněte „Povolit toky veřejného klienta“.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Tento účet nemůže tuto registraci aplikace používat. Přihlaste se účtem z tenantu, který ji vlastní, nebo v Nastavení vyberte jinou registraci.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint odmítl přihlášení. Kliknutím na Připojit se přihlaste znovu.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>K tomuto webu nemáte přístup. Ujistěte se, že ho váš účet dokáže otevřít v prohlížeči a že aplikaci bylo uděleno oprávnění Sites.ReadWrite.All.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Tento web nebyl nalezen. Zkontrolujte adresu – měla by vypadat například takto: https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Podrobnosti: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Chcete-li pokračovat, připojte se ke zdrojovému webu.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Chcete-li pokračovat, vyberte alespoň jednu položku (zaškrtněte políčko).</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Chcete-li pokračovat, připojte se k cílovému webu.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Chcete-li pokračovat, vyberte cílovou složku.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Chcete-li pokračovat, vyberte cílový seznam.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Chcete-li pokračovat, zadejte název nového seznamu.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Není vybráno nic ke zkopírování.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Čeká se na dokončení kopírování…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Zdroj: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Cíl: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Registrace aplikace se změnila, takže jste byli odhlášeni z obou webů. Chcete-li pokračovat, připojte se znovu.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Zastavit kopírování?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>Probíhá kopírování. Pokud ho nyní zastavíte, zbývající položky zůstanou nezkopírovány (později můžete pokračovat z Historie). Zastavit kopírování?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>Kopírování stále probíhá. Zavřením aplikace ho zastavíte a zbývající položky zůstanou nezkopírovány (později můžete pokračovat z Historie). Přesto zavřít?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Přepnout režim připojení?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Přepnutím mezi jedním tenantem a více tenanty se odpojí oba weby a bude nutné se připojit znovu. Přesto přepnout?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Připojení:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Registrace aplikace zdroje</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Registrace aplikace cíle</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>K cílovému tenantu se přihlašuje pomocí:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Změnit</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Otevřít Nastavení</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Musíte mít oprávnění ke čtení zdrojové kolekce webů.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Před připojením nastavte v Nastavení registraci aplikace Microsoft Entra ID.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Možnosti souborů</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Možnosti knihoven a souborů</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Kopírování souborů…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Kopírování knihoven…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Další</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Spustit kopírování</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Zobrazit sestavu</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Zadejte název nového seznamu, který se má vytvořit</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>Cílový seznam byl vybrán v kroku Cíl. Chcete-li ho změnit, vraťte se zpět.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Nejprve nastavte registraci aplikace</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy se přihlašuje pomocí registrace aplikace, kterou vytvoříte ve vlastním tenantu Microsoft Entra ID (Azure). Otevřete Nastavení, přidejte ID aplikace (klienta) své registrace a poté se vraťte sem a připojte se.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Další informace</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Přetažením zvětšíte nebo zmenšíte kanál aktivity</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Kliknutím zobrazíte pouze neúspěšné položky</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Kliknutím zobrazíte pouze přeskočené položky</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Mapování sloupců</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Porovnat zdroj a cíl</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Otevře nástroj Porovnat a zkontroluje tuto kopii proti zdroji.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Otevřít Historii</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Vybraná registrace se používá pro zdroj – a pro obě strany v režimu jednoho tenantu.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Nová registrace</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Přidejte alespoň jednu registraci aplikace.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Ověření</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Pro vybranou registraci je vyžadováno ID klienta.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Odhlášeno. Při příštím připojení budete vyzváni k přihlášení.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Odhlášeno</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Odhlášení se nezdařilo: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Odhlásit</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>Nalezeno mapování: {0}.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>Řádky, které nelze přečíst: {0} (řádek {1}). Každý řádek musí vypadat takto: zdroj,cíl.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Zdrojová a cílová doména jsou stejné, takže záměna domény nic nezmění.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Importovat CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Některé řádky přepsání nelze přečíst (řádek {0}). Každý řádek musí mít tvar „zdroj,cíl“. Opravte je nebo odstraňte – nebo řádek začněte znakem #, aby se z něj stal komentář.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Mapování identit se nepodařilo uložit: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Tento soubor se nepodařilo přečíst: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Mezi tenanty: počet účtů autora/editora v této knihovně, které nebyly v cílovém tenantu nalezeny a zůstanou jako kopírující účet: {0}. Po dokončení běhu je opravte pomocí „Mapovat tyto uživatele“ v sestavě.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Zadejte zdrojového uživatele nebo skupinu.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Zadejte, kdo to je v cílovém tenantu – nebo řádek odstraňte.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Zdroj a cíl jsou stejné.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Tento zdroj se vyskytuje více než jednou.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Zdroj (tento tenant)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Cíl (druhý tenant)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Typ</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>V cíli?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Potřeba pro</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Uživatel</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Skupina</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Nezkontrolováno</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Kontrola…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Nalezeno</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Nenalezeno</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Přidat</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Odebrat</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Vyplnit cíle záměnou domény</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>U řádků, které ještě nemají cíl, doplní adresu, kterou by vytvořila záměna domény.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Zkontrolovat v cíli</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Vyhledá každého cílového uživatele v cílovém tenantu. Tím se také přidá do seznamu uživatelů cílového webu, což kopírování stejně dělá, než je může nastavit jako autora nebo jim udělit přístup.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Nejprve se připojte k cíli ve více tenantech: zadejte adresu URL cílového webu v kroku Cíl a poté toto dialogové okno znovu otevřete.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Exportovat CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Tyto osoby kopírování potřebovalo, ale v cílovém tenantu se nenašly. U každé zadejte, kdo to je v cíli – nebo řádek odstraňte, aby zůstala nenamapovaná.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>Mapování: {0}.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>Řádky vyžadující pozornost: {0}.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Zkontrolováno: nalezeno {0}, nenalezeno {1}{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, nelze zkontrolovat {0}</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Kontrola {0} z {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Není co kontrolovat: žádný řádek nemá cílovou e-mailovou adresu.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Některé řádky vyžadují pozornost (zvýrazněné). Opravte je nebo odstraňte a poté uložte.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Mapování bylo uloženo. Chcete-li ho použít na již zkopírované soubory, spusťte kopírování znovu s volbou Přepsat – volba Pokud je novější přeskakuje aktuální soubory, takže jejich autoři se nezmění. Oprávnění se obnoví v obou případech.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>Počet osob ze zdroje, které se v cílovém tenantu nenašly, a proto byly vynechány (nebyl jim udělen přístup, nebyli nastaveni jako autor ani editor nebo byli vypuštěni ze sloupců osob): {0}.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Mapovat tyto uživatele…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Mapovat nevyřešené uživatele…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Otevře mapování identit s osobami, které tento běh v cíli nenašel.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Tento běh neměl žádné nevyřešené uživatele.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Kopírovat formuláře</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Zkopírujte formuláře Microsoft Forms do cílového účtu se zachováním všech otázek, větvení, nastavení a motivu. Odpovědi lze exportovat do Excelu.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Používá se webové rozhraní API služby Microsoft Forms, které Microsoft nedokumentuje ani nepodporuje. Dnes funguje, ale může se bez upozornění změnit. Nejprve vyzkoušejte několik formulářů.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Načíst moje formuláře</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Zdrojový účet: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Cílový účet: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Cíl: stejný účet (jeden tenant). Kopie se vytvoří vedle originálů.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(budete vyzváni k přihlášení)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Mapa ID formulářů (používá nástroj Toky): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Načítání formulářů…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>Načteno formulářů: {0}.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Nejprve vyberte alespoň jeden formulář.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Kopírování formulářů…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Kopírování…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Zkopírováno</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Selhalo (viz protokol)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Kopírování „{0}“</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Kopírování dokončeno: zkopírováno {0}, selhalo {1}.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Vyberte složku pro exporty odpovědí</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Export odpovědí…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>Exportováno „{0}“: odpovědí {1} do {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Odpovědi exportovány pro formuláře: {0}, do {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Formulář byl zkopírován, ale jeho ID se nepodařilo uložit pro nástroj Toky: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Nepodařilo se exportovat „{0}“: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Odpovědi exportovány pro formuláře: {0}, do {2}; selhalo {1} (viz protokol).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Zrušeno.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Chyba: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Tip: registrace aplikace potřebuje delegované oprávnění Microsoft Forms se souhlasem. Přidejte ho v části Oprávnění rozhraní API (viz uživatelská příručka) a zkuste to znovu.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Tip: Microsoft Forms požadavek odmítl. Zkontrolujte, zda tento účet může otevřít forms.office.com a zda má registrace aplikace oprávnění Microsoft Forms.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>Vybráno {0} z {1}</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Název</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Typ</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Naposledy změněno</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Výsledek</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Přidat ke zkopírovaným názvům:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (kopie)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Kopírovat vybrané formuláře</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Exportovat odpovědi…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Zkontrolovat kopii proti jejímu zdroji</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Další nástroje</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Formuláře</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Kopírování formulářů Microsoft Forms a export jejich odpovědí</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Nástroj Formuláře</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Přepsat toky pro cíl</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Aktualizujte exportované balíčky Power Automate (.zip), aby odkazovaly na cíl: weby, seznamy, sloupce, zkopírované formuláře a e-mailové domény. Vaše původní balíčky se nikdy nemění.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Vyberte exportované balíčky toků</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Přidejte balíčky toků (.zip), které jste exportovali z Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Přidat soubory…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Přidat složku…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Prohledat</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Balíčky toků (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Nejprve přidejte alespoň jeden balíček toku.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Prohledávání balíčků…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>Přeskočeno {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>Nalezeno toků: {0}. Odkazují na weby: {1}, seznamy: {2} a formuláře: {3}.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Prohledávání dokončeno.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Mapování webů</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Kam se přesune web SharePoint jednotlivých toků. V režimu více tenantů se přihlaste k cíli a adresa nového tenantu se vyplní za vás; změňte každý řádek, jehož web má jiný název. V režimu jednoho tenantu zadejte cílový web pro každý řádek.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Web v tocích (nahrazuje se)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Cílový web</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Adresa nového tenantu:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Vyplnit prázdné cíle se zachováním cest</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Zadejte úplnou adresu URL, například https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Prázdné cíle byly vyplněny pomocí tohoto hostitele a cesty každého webu.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Spárování seznamů a sloupců</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Jedna karta pro každý seznam, který toky používají, bez ohledu na to, kolik toků ho používá. Každá zobrazuje název a sloupce seznamu, seznam, na který se mapuje v cíli (ve výchozím nastavení ten se stejným názvem; pokud se název liší, vyberte jiný z rozevíracího seznamu), a způsob mapování jednotlivých sloupců. Zkontrolujte karty označené varováním.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Spárovat seznamy a sloupce</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Seznam</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>ID zdrojového seznamu</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>ID cílového seznamu</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Zdrojový sloupec</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Cílový sloupec</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Nejprve prohledejte balíčky.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Nejprve zadejte alespoň jeden cílový web.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Párování seznamů a sloupců…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(nenalezeno)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>V cíli byl nalezen seznam se stejným názvem</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Web, na kterém tento seznam je, nemá cílový web (krok Weby)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Tento seznam se na zdrojovém webu nepodařilo přečíst: možná neexistuje, tento účet nemá přístup, nebo je web v jiném tenantu než vaše zdrojové připojení</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Na cílovém webu není seznam s tímto názvem: vyberte jeden z rozevíracího seznamu</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Stejný název</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>V cíli přejmenováno</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Žádná shoda: vyberte sloupec</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>Seznamů s cílovým seznamem: {0} z {1}. Sloupců ke kontrole: {2}.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Formuláře a e-mail</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Formuláře zkopírované nástrojem Formuláře se vyplní automaticky. U formuláře, který jste vytvořili sami, vložte jeho ID nebo odkaz na jeho stránku úprav.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>ID zdrojového formuláře</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>ID formuláře (vyplní se z rozevíracího seznamu, nebo jej vložte)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Přesunout e-mailovou doménu:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Zapsání aktualizovaných balíčků</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Vyberte výstupní složku (ne složku s originály). Uloží se do ní aktualizované balíčky a sestava se všemi změnami.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Zapsat aktualizované balíčky</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Uložit mapování…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Otevřít výstupní složku</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Připojení nelze přesouvat mezi tenanty. Po importu balíčku znovu vytvořte každé připojení v Power Automate a znovu ho vyberte.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Nejprve vyberte výstupní složku.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Zapisování aktualizovaných balíčků…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Uložit aktualizovanou kopii {0} (balíček {1} z {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Balíček Power Automate (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Tento název souboru jste již vybrali pro jiný balíček. Zvolte jiný název.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Balíček by se uložil přes originál (stejná složka, stejný název). Vyberte jinou výstupní složku nebo změňte název v části „Uložit jako“, aby originály zůstaly nedotčeny.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Sestava přepsání toků
+
+Původní balíčky nejsou změněny. Připojení se NEMIGRUJÍ; při importu je znovu vytvořte a znovu vyberte.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Sestava byla zapsána do {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>Zapsáno balíčků: {0}, nahrazení: {1}. Hodnot, které stále odkazují na zdroj: {2} (viz sestava).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Mapování bylo uloženo do {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Toky</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Aktualizace exportovaných toků Power Automate pro cíl</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Nástroj Toky</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Co tyto toky používají</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Služby nalezené v prohledaných tocích a to, co s nimi tento nástroj dělá.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Služba</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Toky</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Kroky</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Nalezeno</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Co nástroj dělá</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Přepíše, co najde</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>ID jsou nahlášena; zkontrolujte po importu</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Pouze připojení (znovu ho vytvořte)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Mapování sloupců</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Sloupec se zde zobrazí, když do něj tok zapisuje, filtruje nebo řadí podle něj nebo ho čte ve výrazu, a to u seznamu, který byl spárován. Cílový sloupec se vybírá automatickým párováním (stejný název, poté stejný zobrazovaný název, poté podobný název). Zasáhnout musíte jen u řádků označených „Podobný název“ nebo „Žádná shoda“; kterýkoli řádek změníte v jeho rozevíracím seznamu, nebo zvolte „(ponechat beze změny)“ a ponechte zdrojový název. Vestavěné sloupce, například Title, se neuvádějí, protože existují všude.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(ponechat beze změny)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Podobný název: zkontrolujte</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(zatím nespárováno)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Cílový seznam vybraný vámi</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Chcete-li seznam vybrat sami (například když se název liší), zadejte nebo vložte ID cílového seznamu nebo odkaz na stránku nastavení seznamu do sloupce ID cílového seznamu. Poté klikněte na „Spárovat znovu“ a spárujte jeho sloupce.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>V „{0}“ se nepodařilo najít ID seznamu. Vložte GUID nebo odkaz na stránku nastavení seznamu.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>V „{0}“ se nepodařilo najít ID formuláře. Vložte ID formuláře nebo odkaz na jeho stránku úprav.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Formuláře</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Cíl</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Kopírovat</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Výsledky</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Vyberte formuláře ke zkopírování</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Znovu načíst formuláře</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Kliknutím na „Načíst moje formuláře“ zobrazíte své formuláře.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>V tomto účtu nebyly nalezeny žádné formuláře.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Kopírovat formuláře: {0}</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Kopírovat další formuláře</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Vyberte, kam se kopie uloží</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Jeden tenant: kopie se vytvoří ve stejném účtu, který používáte, vedle originálů.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Více tenantů: kopie se vytvoří v cílovém účtu. Přihlaste se k němu zde; je to oddělené od přihlášení, které jste použili pro weby SharePoint.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Cílový účet</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Přihlašuje se pomocí registrace aplikace: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Přihlašuje se pomocí vaší registrace cílové aplikace (nastavuje se v Nastavení).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Přihlásit se k cílovému účtu</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Přihlásit se znovu</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Přihlašování k cílovému účtu… může se otevřít okno prohlížeče.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Připojeno jako {0}. Přístup k Microsoft Forms potvrzen (formulářů již v tomto účtu: {1}).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>K cílovému účtu se nepodařilo připojit: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Cílový účet ještě není připojen.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Připraveno. Kopírování spustíte kliknutím na tlačítko Kopírovat.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Připraveno: kopie se vytvoří v {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Chcete-li pokračovat, přihlaste se k cílovému účtu.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Možnosti</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>Formulářů ke zkopírování: {0}, z {1} do {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>zdrojového účtu</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>cílového účtu</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Kopírování formulářů</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Spouštění…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Formulář {0} z {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Zrušení po aktuálním formuláři…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopírování dokončeno: zkopírovány všechny formuláře ({0})</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Vaše kopie jsou v {0}. Otevřete Microsoft Forms, abyste je viděli, nebo použijte tabulku níže.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopírování dokončeno: zkopírováno {0} z {1} formulářů, některé vyžadují pozornost</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Kopie jsou v {0}. Formuláře označené varováním byly zkopírovány s problémy a neúspěšné formuláře nebyly vytvořeny. Viz sloupec Podrobnosti.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopírování dokončeno, ale žádné formuláře nebyly zkopírovány</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Důvod najdete ve sloupci Podrobnosti. Častými příčinami jsou chybějící oprávnění Microsoft Forms v cílové registraci nebo účet bez přístupu k Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopírování zrušeno po {0} z {1} formulářů</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Níže uvedené formuláře byly dokončeny. Formulář, který se kopíroval v okamžiku zrušení, nebyl dokončen a není viditelný.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Zkopírováno</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>S varováním</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Selhalo</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Otázky</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Zdrojový formulář</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Kopie</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Otázky</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Podrobnosti</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Zkopírováno</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Zkopírováno s varováním</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Selhalo</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Otevřít vybranou kopii</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Otevřít Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Exportovat výsledky…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Zobrazit mapu ID formulářů</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Nejprve v tabulce vyberte zkopírovaný formulář.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Výsledky byly uloženy do {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Tip: registrace aplikace nemá odpovídající adresu přesměrování. V Entra v části Ověřování přidejte platformu „Mobilní a desktopové aplikace“ s adresou http://localhost a zkuste to znovu.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Balíčky</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Weby</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Seznamy a sloupce</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Formuláře a e-mail</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Zápis</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Sestava</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Vyberte své exportované toky</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>V Power Automate: otevřete Moje toky, vyberte tok a poté Exportovat → Balíček (.zip). Stažené soubory .zip sem přidejte. Každý soubor se prohledá hned po přidání.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Vymazat</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Začněte přidáním exportovaných balíčků toků.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>V těchto souborech nebyly nalezeny žádné toky. Ujistěte se, že jde o balíčky exportované pomocí Exportovat → Balíček (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Prohledávání dokončeno. Zkontrolujte, co toky používají, a klikněte na Další.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Vyberte cílové weby</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Tyto toky nepoužívají weby SharePoint s pevnými adresami, takže zde není co mapovat. Klikněte na Další.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Dále nástroj přečte každý seznam prostřednictvím vašich připojení a spáruje ho na cílovém webu.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Zadejte cílový web pro každý zdrojový web a klikněte na Další.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Spárování seznamů a sloupců</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Spárovat znovu</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Seznamy</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Tyto toky neodkazují na konkrétní seznamy SharePoint, takže není co párovat.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Seznamy a sloupce se spárují při otevření tohoto kroku.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Formuláře a e-mail</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Zkontrolujte formuláře a e-mail a klikněte na Další.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Tyto toky nepoužívají Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>E-mailové adresy</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Chcete-li přesunout všechny adresy z jedné e-mailové domény do jiné, zadejte obě domény. Adresy v jiných doménách jsou uvedeny v sestavě a nemění se.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Zapsání aktualizovaných balíčků</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Výstupní složka</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Vyberte výstupní složku a klikněte na Zapsat aktualizované balíčky.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Připraveno k zápisu balíčků: {0} obsahujících toků: {1}. Nahrazuje se: webů {2}, seznamů {3}, mapování sloupců {4}, formulářů {5}.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Zapsat aktualizované balíčky</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Zapsané balíčky</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Nahrazení</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Stále zdroj</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>Ke kontrole</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Balíček</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Aktualizováno</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>Hodnot, které stále odkazují na zdroj: {0}</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Otevřít sestavu</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Začít znovu</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Hotovo: zapsáno balíčků: {0}</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Uloženo v {0}. Nic nezůstalo odkazovat na zdroj. Pro import postupujte podle kroků níže.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Hotovo: zapsáno balíčků: {0}, některé položky vyžadují vaši kontrolu</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Uloženo v {0}. Otevřete sestavu, kde uvidíte hodnoty, které stále odkazují na zdroj, a položky, které nástroj nepřepisuje (jiné služby, nespárované seznamy nebo sloupce).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Co dělat dál</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Otevřete sestavu a zkontrolujte „stále odkazuje na zdroj“ a vše, co je označeno ke kontrole.
+2.  V Power Automate (cílový tenant) otevřete Moje toky → Importovat → Importovat balíček (starší verze) a vyberte zapsaný balíček.
+3.  V části „Související prostředky“ klikněte u každého připojení na „Vybrat během importu“ a vyberte nebo vytvořte připojení v cílovém tenantu. Připojení nelze přesouvat mezi tenanty.
+4.  Importujte tok. Nechte ho vypnutý, otevřete ho, opravte vše, na co upozorní, a poté ho zapněte.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Beze změn (nic v něm neodpovídalo vašemu mapování)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Zkopírováno {0} do {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Zkopírováno dříve</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Již zkopírováno</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …a dalších: {0}</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>Počet vybraných formulářů, které již byly do tohoto účtu zkopírovány: {0}
+
+{1}
+
+Při opakovaném kopírování se z každého vytvoří druhá kopie. Pokračovat?</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Kopírovat znovu?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>Kopírování stále probíhá. Pokud nyní zavřete, kopírovaný formulář může zůstat v cíli rozpracovaný. Zastavit a zavřít?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Probíhá kopírování</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Nepodařilo se exportovat žádné odpovědi (viz protokol).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Filtrovat podle názvu nebo typu</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Jeden sešit</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Exportuje všechny vybrané formuláře do jednoho souboru Excel s jedním listem pro každý formulář.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>E-mailová adresa</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>ID tenantu</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Cesta ke knihovně</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Další hodnoty</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Zadejte náhradu pro každou hodnotu, která se má změnit. Prázdné řádky se nemění; pokud stále odkazují na zdroj, jsou uvedeny v sestavě.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Druh</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>V tocích</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Nahradit za</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Kontrola ID</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Není ID formuláře ani odkaz na stránku úprav</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Stejný jako zdrojový formulář</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Tento formulář je ve zdrojovém tenantu, ne v cílovém</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Tento formulář je v jiném tenantu než zdroj</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>Z kopírování formuláře {0} do {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Z dřívějšího kopírování formulářů</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Načíst mapování…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Vyplní weby, seznamy, sloupce, formuláře a další hodnoty z mapování, které jste dříve uložili.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Mapování se nepodařilo načíst: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>Načteno {0}. Hodnoty odpovídající těmto tokům byly vyplněny; zkontrolujte je v dalších krocích.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>Načteno {0}. Použije se po přidání balíčků toků.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>Vyplněno cílových webů: {0}. Zkontrolujte je níže a klikněte na Další.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Každý web již má cíl, takže se nic nezměnilo. Chcete-li buňku vyplnit, vymažte buňku Cíl.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Zkratka: zadejte adresu nového tenantu, například https://fabrikam.sharepoint.com, a klikněte na tlačítko. Každý web, který ještě nemá cíl, dostane tuto adresu se stejnou cestou jako zdroj: https://contoso.sharepoint.com/sites/HR se změní na https://fabrikam.sharepoint.com/sites/HR. Weby OneDrive (contoso-my) přejdou na adresu -my nového tenantu. Cíle, které jste již zadali, se nemění. Weby musí v novém tenantu již existovat; tento nástroj je nevytváří. Pokud má web tam jiný název, zadejte místo toho jeho adresu do buňky Cílový web.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Pokud necháte Cílový web prázdný, tento web zůstane beze změny: toky nadále odkazují na starý web, jeho seznamy a sloupce se nepáruji ani nepřepisují a sestava ho uvede v části „Co udělat po importu“. To je správně jen u webu, který se do nového tenantu nepřesouvá.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Co se stane</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Přesune se do cíle</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Beze změny (bez cíle)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Web {0} zůstal beze změny (nebyl zadán cíl), takže toky na něj stále odkazují a jeho seznamy nebyly spárovány. V pořádku, pokud se web nepřesouvá; jinak spusťte znovu s cílem.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Zatím nejsou žádné sloupce k zobrazení: nebyl spárován žádný seznam, takže není co porovnávat. Opravte seznamy výše a klikněte na Spárovat znovu.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Nejsou žádné sloupce k mapování, takže tu nemusíte nic dělat. Spárované seznamy nemají žádné vlastní sloupce, do kterých by toky zapisovaly, podle kterých by filtrovaly nebo které by četly způsobem, jejž nástroj vidí. Seznam aktivit dole uvádí, co bylo nalezeno u každého seznamu.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>Nalezeno sloupců: {0}; se stejným názvem v cíli: {1}, přejmenovaných a spárovaných: {2}, podobných: {3}, bez shody: {4}.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Zkontrolujte řádky označené „Podobný název“ a u řádků označených „Žádná shoda“ vyberte sloupec. Řádky označené „Stejný název“ nebo „V cíli přejmenováno“ nic nevyžadují.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Tady není co dělat: každý sloupec již odpovídá. Klikněte na Další.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Názvy aktualizovaných balíčků</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Jak pojmenovat aktualizované soubory .zip. Pro původní název souboru použijte {name}: „{name} - Fabrikam“ změní „Onboarding.zip“ na „Onboarding - Fabrikam.zip“. U jednoho balíčku můžete jednoduše zadat celý název. Ponecháte-li {name}, zachovají se původní názvy. Název použitý dvakrát získá (2), (3)…, aby se nic nepřepsalo.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Zapíše se: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Tok ukládá pouze ID formuláře, proto se názvy formulářů čtou z Microsoft Forms při otevření tohoto kroku: název každého formuláře ve vašich tocích (zdrojový účet) a formuláře v cílovém účtu. Formulář, jehož název přesně odpovídá jednomu cílovému formuláři, se spáruje automaticky; jinak vyberte nový formulář z rozevíracího seznamu nebo vložte jeho ID či odkaz na stránku úprav. Pro opětovné načtení použijte Znovu načíst názvy formulářů.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Načíst formuláře z cílového účtu…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Načítání formulářů cílového účtu… můžete být vyzváni k přihlášení.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Výpis formulářů vlastněných cílovým účtem {0}, abyste mohli pro každý tok vybrat nový formulář. Kliknutím na Zrušit přestanete čekat na přihlášení.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Cíl: nalezeno formulářů: {0} v {1}. Vyberte jeden pro každý řádek nebo vložte ID.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Cíl: v {0} nebyly nalezeny žádné formuláře. Rozevírací seznam uvádí jen formuláře vlastněné tímto účtem (ne skupinové formuláře), takže nejprve zkopírujte formuláře nástrojem Formuláře, nebo vložte ID.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Zrušeno. Kliknutím na Načíst názvy formulářů to zkuste znovu, nebo vložte ID formulářů.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Cíl: formuláře se nepodařilo načíst: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(žádný)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(formulář bez názvu)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Zdrojový formulář</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Vybrat z formulářů cíle</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Vyberte formulář z cílového účtu. Nejprve klikněte na „Načíst formuláře z cílového účtu“.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Vyplněno z přihlášení k cíli ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Váš zdrojový účet, nahrazený vaším cílovým účtem</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Vyplněno z vašich přihlášení ({0} → {1}). Chcete-li e-mailové domény ponechat beze změny, vymažte obě pole.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Web s prázdným cílem zůstane beze změny: toky na něj nadále odkazují a sestava ho uvede.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Přihlášen jako {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Přihlášen jako {0}. Adresa SharePointu cílového tenantu je {1}; prázdné cílové weby byly podle ní vyplněny.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Některé weby v tocích jsou na {0}, což je vlastní adresa cílového účtu. Buď tyto balíčky již odkazují na cíl (například balíčky zapsané tímto nástrojem nebo toky exportované z cíle), pak místo nich přidejte původní exporty ze zdroje; nebo jsou zdroj a cíl skutečně jeden tenant, pak přepněte aplikaci do režimu jednoho tenantu (Nastavení).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} je balíček, který tento nástroj zapsal {1}: již obsahuje cílové adresy, takže není co přesouvat. Místo něj přidejte původní export ze zdrojového tenantu (soubor ve Stažených souborech, ne ten ve výstupní složce).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Weby v těchto tocích jsou na {0}, což je váš cílový tenant, ale váš zdroj je {1}. Pokud byly balíčky exportovány z {0}, přihlaste se k tomuto tenantu jako ke zdroji (Změnit zdroj…). Pokud je tento nástroj zapsal dříve, odeberte je a přidejte původní exporty.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Přihlášeno. Vyplněno cílových webů: {0} z {1}. Zkontrolujte je a klikněte na Další.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Přihlášeno. Každý cílový web již měl hodnotu, takže se nic nezměnilo.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Přihlášení nebylo dokončeno, nebo se nepodařilo přečíst adresu nového tenantu (viz řádek Cíl). Pokud jste přihlášeni, zadejte níže adresu nového tenantu a vyplňte cílové weby.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — připojeno jako {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — zatím nepřihlášeno</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Změnit cíl…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Není vybrán žádný cílový seznam, takže tyto toky by stále odkazovaly na seznam, který v cíli není. Vyberte cílový seznam nebo nejprve vytvořte seznam na cílovém webu.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Toky používají sloupec „{0}“, ale cílový seznam „{1}“ pro něj nemá sloupec. Vyberte jeho cílový sloupec v tabulce, nebo sloupec přidejte do cílového seznamu a klikněte na Zkontrolovat znovu.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>Cílový seznam „{0}“ vyžaduje sloupec „{1}“, ale krok „Vytvořit položku“ „{3}“ v toku „{2}“ ho nenastavuje, takže import by selhal s chybou „missing required property item/{1}“. Zadejte pro něj níže hodnotu a nástroj ji do tohoto kroku přidá, nebo nastavte „{1}“ v cílovém seznamu jako nepovinný a klikněte na Zkontrolovat znovu.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>Cílový seznam „{0}“ vyžaduje sloupec „{1}“, ale krok „Vytvořit položku“ „{3}“ v toku „{2}“ ho nenastavuje, takže import by selhal s chybou „missing required property item/{1}“. Nastavte „{1}“ v cílovém seznamu v SharePointu jako nepovinný a poté klikněte na Zkontrolovat znovu.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Hodnota k vyplnění pro tyto povinné sloupce (přidá se do každého kroku Vytvořit položku, který je vynechává):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Při importu by to selhalo. Pro pokračování to opravte:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Zkontrolovat znovu</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Selže ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Chcete-li pokračovat, přihlaste se k cíli.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ Balíčky zapsané tímto nástrojem, které již obsahují cílové hodnoty: {0}. Odeberte je (✕ v seznamu) a přidejte původní exporty.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ Weby bez cíle: {0}. Web ponechaný tak, jak je, by stále odkazoval na zdrojový tenant.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ Seznamy, které by při importu selhaly: {0}. Chcete-li pokračovat, opravte seznamy označené „Selže“.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Seznamy zatím nebyly spárovány. Vraťte se o krok zpět a znovu vpřed, abyste to zkusili znovu.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ Formuláře, které pro pokračování potřebují platné cílové ID formuláře: {0}.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Změnit zdroj…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Přihlášen jako {0}. Adresa SharePointu zdrojového tenantu je {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Zdrojové připojení bylo změněno na {0}. Weby uvedené níže musí být v tomto tenantu.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Přihlášení ke zdroji nebylo dokončeno, nebo se nepodařilo přečíst adresu tenantu (viz řádek Zdroj). Pokud jste zrušili, zachová se předchozí zdrojové připojení.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Některé weby se čtou z {0}, což není tenant, ke kterému jste připojeni jako ke zdroji ({1}). Čtení jejich seznamů selže. Upravte u těchto řádků „Číst seznamy z“ na adresu ve vašem zdrojovém tenantu, nebo klikněte na Změnit zdroj… a přihlaste se účtem z tohoto tenantu.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Weby toků jsou na {0}, ale jako zdroj jste připojeni k {1}. Pole „Číst seznamy z“ bylo vyplněno stejnými weby na {1}, takže nástroj čte názvy seznamů a sloupce tam. Zkontrolujte, že tyto weby existují (upravte kterýkoli řádek), nebo klikněte na Změnit zdroj…, pokud toky skutečně pocházejí z {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Seznamy, které toky používají</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Kliknutím na seznam ho otevřete nebo zavřete. Seznamy, které vyžadují pozornost, jsou první a otevřené.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Otevřít vše</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Zavřít vše</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Používají:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Zdroj:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Cílový seznam</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>nebo vložte jeho ID či odkaz:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Zdrojový sloupec</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Typ</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Používá se</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Toky nepoužívají</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(žádný: ponechat tento seznam beze změny)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Není vybrán žádný cílový seznam: toky, které ho používají, stále odkazují na zdrojový seznam</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ sloupců ke kontrole: {1}</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ není co kontrolovat</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>Sloupců v tomto seznamu: {0}; toky používají {1}: se stejným názvem v cíli {2}, přejmenovaných a spárovaných {3}, podobných (zkontrolujte) {4}, bez shody (vyberte) {5}. Ostatní sloupce se zobrazují pro kontext a nemění se.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>Sloupců v tomto seznamu: {0}; toky nepoužívají žádný z nich způsobem, který nástroj vidí, takže není co mapovat.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Pro tento seznam se nepodařilo přečíst žádné sloupce (viz poznámky výše a seznam aktivit).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Vyberte výše cílový seznam, abyste viděli jeho sloupce a mohli je mapovat.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Sloupce cílového seznamu se nepodařilo přečíst, takže nebylo možné navrhnout žádné shody.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Tok neuvádí, na kterém webu tento seznam je (používá parametr), takže ho nelze vyhledat. Vložte ID nebo odkaz cílového seznamu.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Žádný cílový seznam: tento seznam zůstane beze změny.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Čtení sloupců cílového seznamu pro {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Seznam „{0}“: vybrali jste jiný cílový seznam. Čtení jeho sloupců na {1} kvůli novému spárování.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — připojeno jako {1} (přihlášení hlavního okna)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Číst seznamy z (zdroj)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>„Web v tocích“ je adresa uložená v tocích; ta se nahrazuje, a proto ji nelze upravit. „Číst seznamy z“ je místo, odkud nástroj na straně zdroje čte název a sloupce každého seznamu; začíná jako stejná adresa, takže ji změňte, pokud je adresa toku stará, přejmenovaná nebo v jiném tenantu než vaše zdrojové připojení.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Co tyto toky používají</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — toků: {1}, kroků: {2}: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>přepisuje tento nástroj</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>zkontrolovat ručně</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>pouze připojení</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>Co udělat po importu</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Importujte každý upravený balíček v cílovém prostředí a znovu vytvořte připojení (nikdy se nekopírují).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Balíčky řešení: přepsány byly jen definice pracovních postupů. Hodnoty proměnných prostředí a odkazy na připojení v řešení (customizations.xml) stále obsahují zdrojové hodnoty; po importu je nastavte.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Vlastníci toků a uživatelé s oprávněním pouze ke spuštění nejsou součástí balíčku; po importu sdílejte toky se správnými lidmi.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Beze změn (nic v mapování neodpovídalo).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>Nahrazení: {0}</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Stále odkazuje na zdrojové hodnoty (nenamapované, zkontrolujte před importem)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Připojování ke zdrojovému webu {0} a cílovému webu {1}. Pokud jste ještě nepřihlášeni, otevře se okno přihlášení.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Připojeno k {0} (zdroj) a {1} (cíl).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Čtení seznamů a knihoven na cílovém webu {0}, aby bylo možné každý seznam spárovat podle názvu a nabídnout v rozevíracím seznamu.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>Nalezeno seznamů a knihoven: {0} na {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Čtení názvu a sloupců seznamu {0} ze zdrojového webu {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Seznam „{0}“: hledání seznamu se stejným názvem na cílovém webu {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Seznam „{0}“: nalezen v cíli. Čtení sloupců cílového seznamu kvůli spárování.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Seznam „{0}“: jeho sloupce se nepodařilo přečíst, nebo žádné nemá. Pro tento seznam není co mapovat.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Seznam „{0}“: sloupců {1}, žádný z nich toky nepoužívají způsobem, který nástroj vidí. Není co mapovat.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Seznam „{0}“: toky používají názvů sloupců {1}: se stejným názvem v cíli (změna není potřeba) {2}, přejmenovaných a spárovaných {3}, podobných (zkontrolujte) {4}, bez shody (vaše volba) {5}, vestavěných sloupců (není co mapovat) {6}.</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>Seznam {0} není na zdrojovém webu, ale je na cílovém webu jako „{1}“: tok již odkazuje na cíl.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Web „{0}“ nemá cíl; seznamy na něm nebyly vyřešeny.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Upřesnit: číst seznamy z jiné adresy</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Mapování sloupců: z {0} do {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Pro tento seznam nejsou žádné sloupce k zobrazení.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Toky nepoužívají žádný ze sloupců tohoto seznamu. Zaškrtněte „Zobrazit všechny sloupce“, abyste je viděli.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>Zdrojový seznam se nepodařilo přečíst a tok neuvádí žádné sloupce, takže není co mapovat.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Seznam</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(na zdroji se nepodařilo přečíst)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Číst z:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Web</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Tento tok již odkazuje na tento seznam v cíli. Názvy sloupců, které používá ({0}), jsou zobrazeny proti sloupcům cíle; nic není třeba měnit.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(název seznamu není k dispozici)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Již v cíli</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Mapováno podle názvů sloupců toku</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Sloupce nelze přečíst</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Žádný cílový seznam</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Není co mapovat</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Připraveno</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Sloupce cíle nelze přečíst</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>Ke kontrole: {0}</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Používá toků: {0}</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>Mapování sloupců, která stále vyžadují pozornost: {0}.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Všechna mapování sloupců jsou vyřešena.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Připojení se mezi tenanty nekopírují: po importu je znovu vytvořte v Power Automate.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>E-mail: každá adresa v {0} se změní na {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>Formulářů odkazujících na nový formulář: {0} z {1}.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>Seznamů s cílovým seznamem: {0} z {1}.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Seznamy zatím nebyly spárovány.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>E-mailové adresy se nemění (nebyla namapována žádná doména).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Toky nepoužívají žádné Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Toky nepoužívají žádné konkrétní seznamy.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Toky neuvádějí žádné weby SharePoint.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>Balíčků k zapsání: {0}, s toky: {1}; originály se nemění.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>Webů, které se přesunou na cílový web: {0} z {1}; ostatní zůstanou, jak jsou.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Vymazat automaticky vyplněné hodnoty</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Vyplněno</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Formulář ve vašich tocích</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Z (ve vašich tocích)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Seznamy</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Weby</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Stav</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>Do (cíl)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Vybráno vámi</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Ponecháno beze změny</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(přihlášení hlavního okna)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>E-mailová doména, ze které přesunout</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Přesunout každou adresu v</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>do</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>E-mailová doména, do které přesunout</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…nebo přetáhněte soubory .zip (nebo složku) do tohoto okna.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Sloupec „{0}“ v seznamu „{1}“ nemá v cílovém seznamu shodu.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>Seznam „{0}“ ({1}) na {2} nemá cílový seznam, takže toky, které ho používají, stále odkazují na zdrojový seznam.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(název není znám)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Přejít na krok</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Máte uložené mapování? Načtěte ho…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Vlastní vzor…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Ponechat původní názvy</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Přidat &apos; - migrated&apos; ke každému názvu</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Otevřete sestavu a zkontrolujte, co je označeno ke kontrole.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>V Power Automate (cílový tenant): Moje toky, Importovat, Importovat balíček (starší verze) a vyberte zapsaný balíček.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>V části Související prostředky klikněte u každého připojení na „Vybrat během importu“ a vyberte nebo vytvořte připojení v cílovém tenantu. Připojení nelze přesouvat mezi tenanty.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Importujte tok, nechte ho vypnutý, otevřete ho, opravte vše, na co upozorní, a poté ho zapněte.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Otevřít složku</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Otevřít Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Tato výstupní složka zatím neexistuje; vytvoří se při zápisu balíčků.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>ZDROJ</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>CÍL</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>Nalezeno toků: {0}</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Nenalezeny žádné toky</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Již zapsáno tímto nástrojem</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Nelze přečíst</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Připraveno k zápisu?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Odebrat tento balíček ze seznamu</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Sestava přepsání toků</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Co tyto toky používají (služeb: {0})</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>Balíčků, které se nepodařilo zapsat: {0}.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>Hodnot v zapsaných balíčcích, které stále odkazují na zdroj: {0}. Které, zjistíte v sestavě.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Zobrazit všechny sloupce ({0})</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Zobrazit pouze sloupce, které toky používají</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Co tyto sloupce znamenají?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>ID tohoto seznamu není na zdrojovém webu, ale jde o seznam „{0}“ na cílovém webu: tok již odkazuje na cíl, jako v balíčku, který tento nástroj již zapsal.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Připojeno</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Problém</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Nepřihlášeno</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Čekání na přihlášení…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>Seznamů: {0} · vše připraveno</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>Seznamů: {0} · připraveno {1} · vyžaduje pozornost {2}</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Trvalo {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>Ke kontrole</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Přidejte balíčky toků (.zip), které jste exportovali ze zdrojového tenantu. Každý se prohledá hned po přidání.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Určete, na který web se každý tok přesune. Přihlaste se k cíli a adresa nového tenantu se vyplní za vás.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Každý seznam, který toky používají, se spáruje se seznamem v cíli a jeho sloupce se namapují. Zkontrolujte vše, co je označeno jako vyžadující pozornost.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Nasměrujte zkopírované formuláře na jejich nová ID a rozhodněte, jak se změní e-mailové adresy a ID tenantu.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Zkontrolujte seznam níže, vyberte, kam se aktualizované balíčky uloží, a poté je zapište.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Co se zde děje</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Nástroj čte každý balíček v tomto počítači (nic se nikam neodesílá), aby našel weby, seznamy, sloupce a formuláře, které toky používají. Přidejte PŮVODNÍ exporty ze zdroje, ne balíčky zapsané tímto nástrojem dříve: ty již obsahují cílové adresy.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Sloupec „{0}“ je v různých seznamech mapován odlišně ({1}). Kroky každého seznamu dostanou vlastní mapování; výrazy jinde v toku ponechávají původní název, proto je zkontrolujte.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Znovu načíst názvy formulářů…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Načítání názvů formulářů… můžete být vyzváni k přihlášení.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Čtení názvů formulářů ve vašich tocích ze zdrojového účtu {0}. Kliknutím na Zrušit přestanete čekat na přihlášení.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Zdroj: nalezen název {0} z {1} formulářů ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Zdroj: názvy formulářů se nepodařilo přečíst: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>Formulářů spárovaných s cílovým formulářem se stejným názvem: {0}.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Vypadá jako platné ID formuláře</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Spárováno podle názvu</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>Zdroj a cíl jsou ve stejném tenantu ({0}). Přepněte aplikaci do režimu jednoho tenantu (Nastavení) nebo se ke zdroji a cíli přihlaste účty z různých tenantů.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Odebrat tyto balíčky</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>Odebrané balíčky, které již odkazují na cíl: {0}: {1}. Místo nich přidejte původní exporty ze zdrojového tenantu.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Tyto balíčky byly odebrány. Přidejte původní exporty ze zdrojového tenantu.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Každý balíček se uloží jako nový soubor .zip do výstupní složky; originály se nikdy nemění. Chcete-li jeden přejmenovat, zadejte jiný název v části Uložit jako.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Ponechat původní názvy</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Přidat &apos; - migrated&apos; ke všem názvům</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Původní balíček</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Uložit jako</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Uloží se jako: {0} (názvy můžete změnit níže).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Nelze přečíst; nebyl zapsán žádný výstup</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Zrušeno. Nic nebylo změněno. V kroku Weby použijte Přihlásit a zkuste to znovu (například v jiném prohlížeči); v kroku Seznamy použijte Spárovat znovu.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Rušení… zavření okna přihlášení může chvíli trvat.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Co nástroj právě dělá</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Připojení</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Více tenantů: aby bylo možné seznamy spárovat, nástroj čte název a sloupce každého seznamu ze zdrojového tenantu a hledá stejný seznam v cílovém tenantu. K tomu je potřeba přihlášení k oběma. Přihlaste se zde ke každé straně, nebo jen klikněte na Další a budete vyzváni tehdy. Otevře se okno prohlížeče; pokud je to špatný prohlížeč, klikněte na Zrušit a zkuste to znovu. V žádném z tenantů se nic nemění.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Jeden tenant: zdroj a cíl jsou stejný tenant, takže nástroj používá účet, kterým jste se přihlásili v kroku Připojení. Není se kam jinam přihlašovat. V tenantu se nic nemění.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Zdroj</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Cíl</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Přihlásit ke zdroji…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Přihlásit k cíli…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Zrušit</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Přestane čekat na okno přihlášení, abyste to mohli zkusit znovu, například v jiném prohlížeči.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Zatím nepřihlášeno</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Používá přihlášení hlavního okna: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Přihlášen jako {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Připraveno</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Čekání na přihlášení… mělo by se otevřít okno prohlížeče</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Přihlášení zrušeno. Kliknutím na Přihlásit to zkuste znovu.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Přihlášeno. Zkontrolujte cílové weby níže a klikněte na Další.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Zatím není žádný zdrojový web, ke kterému by se dalo přihlásit. Nejprve přidejte balíčky toků.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Nejprve zadejte alespoň jeden cílový web (nebo použijte Vyplnit se zachováním cest); přihlášení směřuje do tenantu cílového webu.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Přihlašování ke zdroji… otevře se okno prohlížeče.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Přihlašování k cíli… otevře se okno prohlížeče.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>zdroji</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>cíli</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Přihlašování ke zdrojovému tenantu. Otevře se okno prohlížeče; kliknutím na Zrušit přestanete čekat (například abyste zkusili jiný prohlížeč). Přihlášení také nástroji sdělí, který tenant je zdrojem.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Přihlašování k cílovému tenantu. Otevře se okno prohlížeče; kliknutím na Zrušit přestanete čekat (například abyste zkusili jiný prohlížeč). Přihlášení také nástroji sdělí adresu SharePointu nového tenantu.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Připojeno k {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Přihlášení jste zrušili.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Čtení souborů balíčků v tomto počítači ({0}) za účelem nalezení webů, seznamů, sloupců a formulářů, které toky používají. Nic se nikam neodesílá.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Přečteno {0}: toků {1}.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Párování seznamů ({0}): pro každý se nástroj zeptá zdrojového webu na jeho název a poté hledá seznam s tímto názvem na cílovém webu.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Párování dokončeno. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Zapisování upravených balíčků ({0}) do {1}. Originály se nemění.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Zapisování {0} s použitým vaším mapováním.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Kontrola {0} na hodnoty, které stále odkazují na zdroj.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Zrušeno vámi. Nic nebylo změněno.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Zastaveno: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Každý tok ukládá adresu webu SharePoint, ze kterého čte nebo do kterého zapisuje. Aby fungoval v novém tenantu, musí každý tok odkazovat na odpovídající web tam, proto nástroji sdělte, který nový web nahrazuje který starý. Upravují se pouze kopie vašich balíčků; nic se nevyhledává, dokud neklepnete na Další.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Co se zde děje: u každého seznamu, který tok používá, nástroj přečte název a sloupce seznamu ze zdrojového webu, vyhledá seznam se stejným názvem na cílovém webu a přečte sloupce tohoto seznamu, aby je spároval. Proč: toky odkazují na seznamy a sloupce podle ID nebo interního názvu, které se v novém tenantu liší, takže nástroj hledá ekvivalent. Tento krok pouze čte; v žádném z tenantů se nic nevytváří ani nemění. Cílový seznam i kterýkoli sloupec můžete změnit na jeho kartě.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Zkopírovaný formulář dostane nové ID, takže tok, který ho používá, musí odkazovat na kopii. Pro novou organizaci se může také změnit e-mailové adresy a ID tenantu v toku. Nic se tu nevyhledává; náhrady určujete vy a vše, co zůstane prázdné, zůstane, jak je.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Nástroj zapíše do výstupní složky nové soubory .zip s použitým vaším mapováním, znovu je prohledá, aby našel vše, co stále odkazuje na zdroj, a zapíše sestavu. Vaše původní balíčky se nikdy nemění a do žádného tenantu se nic neodesílá. Nové balíčky poté importujete v Power Automate sami.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Přihlášení zrušeno. Kliknutím na tlačítko to zkuste znovu, například v jiném prohlížeči.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Zrušit</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Chyba: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Zdrojový formulář se nepodařilo přečíst ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Formulář se v cíli nepodařilo vytvořit ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Zrušeno uprostřed. V cíli zůstal částečný formulář; odstraňte ho v Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Kopírování se zastavilo uprostřed ({0}). V cíli zůstal částečný formulář; odstraňte ho v Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>obrázek na pozadí</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>logo</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>obrázek záhlaví</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>Položka {0} nebyla zkopírována (obrázky zatím nejsou podporovány).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Bodování kvízu (správné odpovědi a body) není ověřeno; zkontrolujte kopii.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Nastavení „{0}“ se nepodařilo zkopírovat ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Otázka „{0}“ nebyla zkopírována ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(bez názvu)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Pravidla větvení se nepodařilo zkopírovat ({0}); zkontrolujte kopii.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>Kopie byla vytvořena, ale nepodařilo se ji zviditelnit v Microsoft Forms ({0}); může být v koši.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>Kopie má otázek: {0}, ale zdroj jich má {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Otázka „{0}“ ({1}) byla vytvořena, ale její možnosti se nepodařilo zkopírovat ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Výsledky</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Zdrojový formulář</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>ID zdrojového formuláře</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Název kopie</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>ID formuláře kopie</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Stav</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Zkopírované otázky</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Otázky ve zdroji</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Varování</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Poznámky</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Chyba</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Sešit Excel (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>Soubory JSON (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>ID</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Čas zahájení</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Čas dokončení</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Respondent</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Jméno</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Skóre</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Nenamapované odpovědi (nezpracovaný JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (oříznuto: příliš dlouhé pro buňku Excelu)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Zastavit běh?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>Porovnání nebo ověření stále probíhá. Zavřením tohoto okna ho zastavíte a nebude zapsána žádná sestava. Přesto zavřít?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Zavřít během práce?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Nástroj stále pracuje (prohledává, páruje, přihlašuje nebo zapisuje balíčky). Zavřením ho nyní zastavíte. Přesto zavřít?</value></data>
 </root>

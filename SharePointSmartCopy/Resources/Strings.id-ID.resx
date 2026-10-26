@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Berhasil ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Gagal ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Dilewati ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Sudah terbaru</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Tidak dapat membaca apakah sumber memiliki izin sendiri (pembatasan atau kesalahan akses) — izin tidak disalin untuk item ini. Jalankan ulang untuk mencoba lagi.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>File target yang ada telah dihapus untuk penimpaan, tetapi salinan baru tidak dapat diunggah ({0}). File saat ini hilang dari target — jalankan ulang penyalinan untuk memulihkannya.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Satu pustaka target gagal ({0}). File-nya ditandai Gagal; pustaka lainnya tetap dilanjutkan.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: file sumber berubah saat diunduh — unduhan dimulai ulang.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint tidak melaporkan kemajuan untuk impor ini selama {0} menit, sehingga dihentikan. File-nya ditandai Gagal; jalankan ulang penyalinan untuk mencobanya lagi.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Satu tenant</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Multi-tenant</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Salin di antara dua tenant Microsoft 365 yang berbeda. Anda masuk secara terpisah ke sumber dan ke target. Pilih registrasi aplikasi target di Pengaturan.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Registrasi target:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Mode multi-tenant: registrasi aplikasi yang digunakan untuk masuk ke tenant target. &quot;Sama dengan sumber&quot; menggunakan kembali registrasi sumber, yang dalam hal ini harus berupa aplikasi multi-tenant.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Lanjutkan / jalankan lagi</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Menyambung kembali dan menjalankan ulang pilihan ini dengan Salin jika lebih baru, sehingga file yang sudah disalin dilewati dan hanya yang hilang atau berubah yang ditransfer.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Proses ini tidak memiliki pilihan tersimpan untuk dilanjutkan (hanya proses dengan pemilihan file yang merekamnya).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>Penyalinan sedang berjalan. Selesaikan atau batalkan terlebih dahulu.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Tidak dapat melanjutkan: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} proses yang terhenti dipulihkan. Lihat Riwayat.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Melanjutkan: {0} item dipulihkan dari proses sebelumnya, dengan Salin jika lebih baru dipilih. Tinjau opsinya, lalu klik Berikutnya. (Pemetaan kolom kustom tidak dipulihkan.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>TERHENTI — aplikasi ditutup sebelum proses ini selesai. Dari item yang sudah selesai: {0} berhasil, {1} gagal, {2} dilewati, {3} dibatalkan  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Ekspor diagnostik…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Menyimpan file zip berisi log terbaru, informasi sistem, dan pengaturan Anda dengan detail organisasi dihapus — untuk dilampirkan pada laporan bug. Tidak menyertakan laporan penyalinan atau nama file.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Diagnostik disimpan ke {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Tidak dapat menyimpan diagnostik: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Konten identik (hanya bagian yang dikelola SharePoint yang berbeda), tetapi tanggal Diubah tidak dipertahankan.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Izin tidak disalin: ID SharePoint item tidak dapat diselesaikan.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Izin tidak disalin: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Folder &quot;{0}&quot;: {1} tidak diterapkan — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>Folder lain mengalami masalah seperti di atas; yang berikutnya tidak dicantumkan satu per satu.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>izin</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>tanggal</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>penulis / editor</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} dipertahankan — target sudah terbaru)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>PERINGATAN: membaca metadata dari sumber ({0}) gagal: {1}. Item darinya mungkin disalin TANPA nilai kolom kustom atau izin uniknya. Jalankan ulang setelah masalah teratasi (Timpa atau Jika lebih baru akan menerapkannya kembali).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>PERINGATAN: daftar sumber untuk sebuah pustaka tidak ditemukan, sehingga izinnya TIDAK akan disalin.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>Host SharePoint &apos;{0}&apos; tidak terkait dengan tenant yang terhubung. Hubungkan kembali situs sumber dan target, lalu coba lagi.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Salinan lintas tenant: nilai kolom metadata terkelola (taksonomi) tidak disalin, dan buku catatan OneNote / set dokumen belum dapat disalin antar tenant. Identitas dipetakan menggunakan pengaturan Pemetaan identitas Anda; siapa pun yang tidak dapat diselesaikan di target akan dilewati.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Pemetaan identitas</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Pemetaan identitas…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Cantumkan setiap orang (atau grup) di tenant sumber dan siapa mereka di tenant target — keduanya adalah akun yang berbeda. Penulis, editor, kolom orang, dan izin ditulis menggunakan tabel ini. Siapa pun yang tidak tercantum dicocokkan melalui pertukaran domain jika Anda menetapkannya; siapa pun yang tetap tidak ditemukan di target akan dilewati dan dilaporkan.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Domain email sumber</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Domain email target</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Penimpaan — satu pasangan &quot;sumber,target&quot; per baris (nama pengguna atau grup; # memulai komentar)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Sama dengan sumber</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Sumber dan target berada di tenant yang sama. Beralihlah ke mode satu tenant untuk penyalinan dalam tenant yang sama.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Penyalinan folder asli (buku catatan OneNote, set dokumen) belum didukung lintas tenant.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Drive &apos;{0}&apos; tidak terkait dengan tenant yang terhubung. Hubungkan kembali situs sumber dan target, lalu coba lagi.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Belum ada registrasi aplikasi yang disiapkan. Buka Pengaturan dan tambahkan registrasi aplikasi Azure Anda (Application/Client ID-nya) sebelum menghubungkan.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Proses masuk dibatalkan. Klik Hubungkan untuk mencoba lagi.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Administrator belum menyetujui aplikasi ini di tenant ini. Minta Global Administrator untuk memberikan persetujuan admin bagi registrasi aplikasi (lihat Penyiapan di Panduan Pengguna).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Registrasi aplikasi tidak ditemukan di tenant ini. Periksa Client ID dan Tenant ID di Pengaturan.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Tenant tersebut tidak ditemukan. Periksa Tenant ID di Pengaturan (gunakan domain Anda, GUID tenant, atau &apos;common&apos;).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>Registrasi aplikasi tidak memiliki alamat pengalihan yang digunakan aplikasi ini. Di Azure, tambahkan URI pengalihan http://localhost di bawah &apos;Mobile and desktop applications&apos;.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Registrasi aplikasi belum disiapkan untuk masuk dari desktop. Di Azure, aktifkan &apos;Allow public client flows&apos; untuk registrasi tersebut.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Akun ini tidak diizinkan menggunakan registrasi aplikasi tersebut. Masuk dengan akun dari tenant pemiliknya, atau pilih registrasi lain di Pengaturan.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint menolak proses masuk. Klik Hubungkan untuk masuk lagi.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>Anda tidak memiliki akses ke situs ini. Pastikan akun Anda dapat membukanya di browser, dan aplikasi telah diberi izin Sites.ReadWrite.All.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Situs tersebut tidak ditemukan. Periksa alamatnya — seharusnya terlihat seperti https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Detail: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Hubungkan ke situs sumber untuk melanjutkan.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Pilih setidaknya satu item (centang kotak) untuk melanjutkan.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Hubungkan ke situs target untuk melanjutkan.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Pilih folder tujuan untuk melanjutkan.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Pilih daftar tujuan untuk melanjutkan.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Masukkan nama untuk daftar baru untuk melanjutkan.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Tidak ada yang dipilih untuk disalin.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Menunggu penyalinan selesai…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Sumber: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Target: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Registrasi aplikasi Anda berubah, sehingga Anda keluar dari kedua situs. Hubungkan lagi untuk melanjutkan.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Hentikan penyalinan?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>Penyalinan sedang berlangsung. Menghentikannya sekarang membuat item yang tersisa tidak tersalin (Anda dapat melanjutkan nanti dari Riwayat). Hentikan penyalinan?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>Penyalinan masih berjalan. Menutup aplikasi akan menghentikannya dan membuat item yang tersisa tidak tersalin (Anda dapat melanjutkan nanti dari Riwayat). Tutup juga?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Ganti mode koneksi?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Beralih antara satu tenant dan multi-tenant akan memutuskan kedua situs, dan Anda perlu menghubungkan lagi. Tetap beralih?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Koneksi:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Registrasi aplikasi sumber</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Registrasi aplikasi target</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Masuk ke tenant target dengan:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Ubah</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Buka Pengaturan</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Anda harus memiliki akses baca ke koleksi situs sumber.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Siapkan registrasi aplikasi Microsoft Entra ID Anda di Pengaturan sebelum menghubungkan.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Opsi File</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Opsi Pustaka &amp; File</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Menyalin File…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Menyalin Pustaka…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Berikutnya</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Mulai Salin</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Lihat Laporan</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Masukkan nama daftar baru yang akan dibuat</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>Daftar tujuan dipilih pada langkah Target. Kembali untuk mengubahnya.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Siapkan registrasi aplikasi terlebih dahulu</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy masuk menggunakan registrasi aplikasi yang Anda buat di tenant Microsoft Entra ID (Azure) Anda sendiri. Buka Pengaturan, tambahkan Application (client) ID registrasi Anda, lalu kembali ke sini untuk menghubungkan.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Informasi lebih lanjut</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Seret untuk memperpanjang atau memperpendek umpan aktivitas</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Klik untuk hanya menampilkan item yang gagal</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Klik untuk hanya menampilkan item yang dilewati</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Pemetaan kolom</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Bandingkan sumber &amp; target</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Buka alat Bandingkan untuk memeriksa salinan ini terhadap sumber.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Buka Riwayat</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Registrasi yang dipilih digunakan untuk sumber — dan untuk kedua sisi dalam mode satu tenant.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Registrasi Baru</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Tambahkan setidaknya satu registrasi aplikasi.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validasi</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Client ID wajib diisi untuk registrasi yang dipilih.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Telah keluar. Anda akan diminta masuk pada koneksi berikutnya.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Telah keluar</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Gagal keluar: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Keluar</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} pemetaan ditemukan.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} baris tidak dapat dibaca (baris {1}). Setiap baris harus berbentuk sumber,target.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Domain sumber dan target sama, sehingga pertukaran domain tidak akan mengubah apa pun.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Impor CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Beberapa baris penimpaan tidak dapat dibaca (baris {0}). Setiap baris harus berbentuk &quot;sumber,target&quot;. Perbaiki atau hapus — atau awali baris dengan # untuk menjadikannya komentar.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Tidak dapat menyimpan pemetaan identitas: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Tidak dapat membaca file tersebut: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Lintas tenant: {0} akun penulis/editor di pustaka ini tidak ditemukan di tenant target dan akan dibiarkan sebagai akun penyalin. Setelah proses selesai, gunakan &quot;Petakan pengguna ini&quot; pada laporan untuk memperbaikinya.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Masukkan pengguna atau grup sumber.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Masukkan siapa ini di tenant target — atau hapus barisnya.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Sumber dan target sama.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Sumber ini muncul lebih dari sekali.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Sumber (tenant ini)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Target (tenant lain)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Tipe</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>Di target?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Diperlukan untuk</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Pengguna</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Grup</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Belum diperiksa</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Memeriksa…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Ditemukan</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Tidak ditemukan</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Tambah</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Hapus</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Isi target dari pertukaran domain</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>Untuk baris yang belum memiliki target, mengisi alamat yang akan dihasilkan oleh pertukaran domain.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Periksa di target</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Mencari setiap pengguna target di tenant target. Ini juga menambahkan mereka ke daftar pengguna situs target, yang memang dilakukan penyalinan sebelum dapat menetapkan mereka sebagai penulis atau memberi mereka akses.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Hubungkan ke target multi-tenant terlebih dahulu: masukkan URL situs target pada langkah Target, lalu buka kembali dialog ini.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Ekspor CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Orang-orang ini diperlukan oleh penyalinan tetapi tidak ditemukan di tenant target. Untuk masing-masing, masukkan siapa mereka di target — atau hapus barisnya agar tetap tidak dipetakan.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} pemetaan.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} baris perlu diperhatikan.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Diperiksa: {0} ditemukan, {1} tidak ditemukan{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} tidak dapat diperiksa</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Memeriksa {0} dari {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Tidak ada yang diperiksa: tidak ada baris yang memiliki alamat email target.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Beberapa baris perlu diperhatikan (disorot). Perbaiki atau hapus, lalu simpan.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Pemetaan disimpan. Untuk menerapkannya pada file yang sudah disalin, jalankan ulang dengan Timpa — Salin jika lebih baru melewati file yang sudah terbaru, sehingga penulisnya tidak berubah. Izin diperbarui dalam kedua kasus.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>{0} orang dari sumber tidak dapat ditemukan di tenant target, sehingga dikecualikan: tidak diberi akses, tidak ditetapkan sebagai penulis atau editor, atau dihapus dari kolom orang.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Petakan pengguna ini…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Petakan pengguna yang belum terselesaikan…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Membuka pemetaan identitas beserta orang-orang yang tidak dapat ditemukan proses ini di target.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Proses ini tidak memiliki pengguna yang belum terselesaikan.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Salin Formulir</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Salin Microsoft Forms ke akun target, dengan mempertahankan semua pertanyaan, percabangan, pengaturan, dan tema. Respons dapat diekspor ke Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Ini menggunakan API web Microsoft Forms, yang tidak didokumentasikan atau didukung oleh Microsoft. Saat ini berfungsi tetapi dapat berubah tanpa pemberitahuan. Coba beberapa formulir terlebih dahulu.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Muat formulir saya</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Akun sumber: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Akun target: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Target: akun yang sama (satu tenant). Salinan dibuat di samping aslinya.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(Anda akan diminta masuk)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Peta ID formulir (digunakan oleh alat Alur): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Memuat formulir…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>{0} formulir dimuat.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Pilih setidaknya satu formulir terlebih dahulu.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Menyalin formulir…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Menyalin…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Tersalin</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Gagal (lihat log)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Menyalin &apos;{0}&apos;</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Penyalinan selesai: {0} tersalin, {1} gagal.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Pilih folder untuk ekspor respons</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Mengekspor respons…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>&apos;{0}&apos; diekspor: {1} respons ke {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Respons untuk {0} formulir diekspor ke {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Formulir telah disalin, tetapi ID-nya tidak dapat disimpan untuk alat Alur: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Tidak dapat mengekspor &apos;{0}&apos;: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Respons untuk {0} formulir diekspor ke {2}; {1} gagal (lihat log).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Dibatalkan.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Kesalahan: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Petunjuk: registrasi aplikasi memerlukan izin Microsoft Forms terdelegasi, dengan persetujuan. Tambahkan di bawah API permissions (lihat Panduan Pengguna), lalu coba lagi.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Petunjuk: Microsoft Forms menolak permintaan. Periksa apakah akun ini dapat membuka forms.office.com dan registrasi aplikasi memiliki izin Microsoft Forms.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{0} dari {1} dipilih</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Judul</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Tipe</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Terakhir diubah</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Hasil</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Tambahkan ke judul yang disalin:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (salinan)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Salin formulir yang dipilih</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Ekspor respons…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Periksa salinan terhadap sumbernya</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Alat lainnya</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Formulir</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Salin Microsoft Forms dan ekspor responsnya</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Alat Formulir</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Tulis Ulang Alur untuk Target</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Perbarui paket Power Automate yang diekspor (.zip) agar mengarah ke target: situs, daftar, kolom, formulir yang disalin, dan domain email. Paket asli Anda tidak pernah diubah.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Pilih paket alur yang diekspor</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Tambahkan paket alur (.zip) yang Anda ekspor dari Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Tambah file…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Tambah folder…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Pindai</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Paket alur (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Tambahkan setidaknya satu paket alur terlebih dahulu.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Memindai paket…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>{0} dilewati: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} alur ditemukan. Alur tersebut merujuk ke {1} situs, {2} daftar, dan {3} formulir.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Pemindaian selesai.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Petakan situs</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Ke mana situs SharePoint setiap alur dipindahkan. Dalam mode Multi-tenant, masuk ke target dan alamat tenant baru akan diisikan untuk Anda; ubah baris mana pun yang situsnya memiliki nama berbeda. Dalam mode Satu tenant, ketik situs target untuk setiap baris.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Situs dalam alur (diganti)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Situs target</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Alamat tenant baru:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Isi target kosong, pertahankan path</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Masukkan URL lengkap seperti https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Target kosong diisi menggunakan host tersebut dan path setiap situs.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Cocokkan daftar dan kolom</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Satu kartu per daftar yang digunakan alur, berapa pun jumlah alur yang menggunakannya. Setiap kartu menampilkan nama dan kolom daftar, daftar di target yang menjadi pasangannya (secara default yang bernama sama; pilih yang lain dari dropdown jika namanya berbeda), dan bagaimana setiap kolom dipetakan. Periksa kartu yang ditandai dengan peringatan.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Cocokkan daftar dan kolom</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Daftar</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>ID daftar sumber</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>ID daftar target</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Kolom sumber</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Kolom target</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Pindai paket terlebih dahulu.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Masukkan setidaknya satu situs target terlebih dahulu.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Mencocokkan daftar dan kolom…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(tidak ditemukan)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Ditemukan daftar dengan nama yang sama di target</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Situs tempat daftar ini berada tidak memiliki situs target (langkah Situs)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Tidak dapat membaca daftar ini di situs sumber: mungkin tidak ada, akun ini mungkin tidak memiliki akses, atau situs berada di tenant yang berbeda dari koneksi sumber Anda</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Tidak ada daftar dengan nama ini di situs target: pilih salah satu dari dropdown</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Nama sama</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Diganti namanya di target</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Tidak cocok: pilih kolom</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} dari {1} daftar memiliki daftar target. {2} kolom perlu diperiksa.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Formulir dan email</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Formulir yang disalin dengan alat Formulir diisi otomatis. Untuk formulir yang Anda buat sendiri, tempel ID-nya atau tautan halaman editnya.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>ID formulir sumber</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>ID formulir (diisi dari dropdown, atau tempel satu)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Pindahkan domain email:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Tulis paket yang diperbarui</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Pilih folder output (bukan folder tempat file asli berada). Paket yang diperbarui dan laporan yang mencantumkan setiap perubahan disimpan di sana.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Tulis paket yang diperbarui</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Simpan pemetaan…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Buka folder output</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Koneksi tidak dapat dipindahkan antar tenant. Setelah mengimpor paket, buat ulang setiap koneksi di Power Automate dan pilih kembali.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Pilih folder output terlebih dahulu.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Menulis paket yang diperbarui…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Simpan salinan {0} yang diperbarui (paket {1} dari {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Paket Power Automate (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Anda sudah memilih nama file itu untuk paket lain. Pilih nama yang berbeda.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Sebuah paket akan disimpan menimpa file asli (folder sama, nama sama). Pilih folder output yang berbeda, atau ubah namanya di &quot;Simpan sebagai&quot;, agar file asli tetap utuh.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Laporan penulisan ulang alur
+
+Paket asli tidak tersentuh. Koneksi TIDAK dimigrasikan; buat ulang dan pilih kembali saat impor.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Laporan ditulis ke {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} paket ditulis, {1} penggantian. {2} nilai masih mengarah ke sumber (lihat laporan).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Pemetaan disimpan ke {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Alur</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Perbarui alur Power Automate yang diekspor untuk target</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Alat Alur</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Yang digunakan alur ini</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Layanan yang ditemukan dalam alur yang dipindai, dan apa yang dilakukan alat ini untuk masing-masing.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Layanan</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Alur</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Langkah</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Ditemukan</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Yang dilakukan alat ini</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Menulis ulang yang ditemukan</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>ID dilaporkan; tinjau setelah impor</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Hanya koneksi (buat ulang)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Pemetaan kolom</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Sebuah kolom muncul di sini ketika alur menulis ke dalamnya, memfilter atau mengurutkan berdasarkannya, atau membacanya dalam ekspresi, pada daftar yang telah dicocokkan. Kolom target dipilih melalui pencocokan otomatis (nama sama, lalu nama tampilan sama, lalu nama yang mirip). Anda hanya perlu bertindak pada baris yang ditandai &quot;Nama mirip&quot; atau &quot;Tidak cocok&quot;; ubah baris mana pun dari dropdown-nya, atau pilih &quot;(biarkan tidak berubah)&quot; untuk mempertahankan nama sumber. Kolom bawaan seperti Title tidak dicantumkan karena ada di mana-mana.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(biarkan tidak berubah)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Nama mirip: harap periksa</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(belum dicocokkan)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Daftar target dipilih oleh Anda</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Ketik atau tempel ID daftar target, atau tautan halaman pengaturan daftarnya, di kolom ID daftar target untuk memilih daftar sendiri (misalnya ketika namanya berbeda). Lalu klik &quot;Cocokkan lagi&quot; untuk mencocokkan kolomnya.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Tidak dapat menemukan ID daftar di &apos;{0}&apos;. Tempel GUID atau tautan halaman pengaturan daftar.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Tidak dapat menemukan ID formulir di &apos;{0}&apos;. Tempel ID formulir atau tautan halaman edit formulir.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Formulir</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Target</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Salin</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Hasil</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Pilih formulir yang akan disalin</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Muat ulang formulir</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Klik &quot;Muat formulir saya&quot; untuk melihat formulir Anda.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>Tidak ada formulir yang ditemukan di akun ini.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Salin {0} formulir</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Salin formulir lainnya</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Pilih ke mana salinan dikirim</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Satu tenant: salinan dibuat di akun yang sama dengan yang Anda gunakan, di samping aslinya.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Multi-tenant: salinan dibuat di akun target. Masuk ke akun tersebut di sini; ini terpisah dari proses masuk yang Anda gunakan untuk situs SharePoint.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Akun target</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Masuk dengan registrasi aplikasi: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Masuk dengan registrasi aplikasi target Anda (diatur di Pengaturan).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Masuk ke akun target</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Masuk lagi</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Masuk ke akun target… jendela browser mungkin terbuka.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Terhubung sebagai {0}. Akses Microsoft Forms dikonfirmasi ({1} formulir sudah ada di akun ini).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Tidak dapat terhubung ke akun target: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Akun target belum terhubung.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Siap. Klik tombol Salin untuk memulai.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Siap: salinan akan dibuat di {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Masuk ke akun target untuk melanjutkan.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Opsi</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} formulir akan disalin dari {1} ke {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>akun sumber</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>akun target</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Menyalin formulir</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Memulai…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Formulir {0} dari {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Membatalkan setelah formulir saat ini…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Penyalinan selesai: semua {0} formulir tersalin</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Salinan Anda ada di {0}. Buka Microsoft Forms untuk melihatnya, atau gunakan tabel di bawah.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Penyalinan selesai: {0} dari {1} formulir tersalin, beberapa perlu diperhatikan</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Salinan ada di {0}. Formulir yang ditandai peringatan tersalin dengan masalah, dan formulir yang gagal tidak dibuat. Lihat kolom Detail.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Penyalinan selesai, tetapi tidak ada formulir yang tersalin</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Lihat kolom Detail untuk alasannya. Penyebab umum adalah izin Microsoft Forms yang hilang pada registrasi target, atau akun tanpa akses Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Penyalinan dibatalkan setelah {0} dari {1} formulir</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Formulir yang tercantum di bawah telah selesai. Formulir yang sedang disalin saat Anda membatalkan belum selesai dan tidak terlihat.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Tersalin</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>Dengan peringatan</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Gagal</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Pertanyaan</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Formulir sumber</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Salinan</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Pertanyaan</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Detail</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Tersalin</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Tersalin dengan peringatan</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Gagal</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Buka salinan yang dipilih</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Buka Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Ekspor hasil…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Tampilkan peta ID formulir</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Pilih formulir yang telah disalin di tabel terlebih dahulu.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Hasil disimpan ke {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Petunjuk: registrasi aplikasi tidak memiliki alamat pengalihan yang cocok. Di Entra, di bawah Authentication, tambahkan platform &quot;Mobile and desktop applications&quot; dengan http://localhost, lalu coba lagi.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Paket</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Situs</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Daftar &amp; kolom</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Formulir &amp; email</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Tulis</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Laporan</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Pilih alur yang telah diekspor</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>Di Power Automate: buka My flows, pilih alur, lalu Export → Package (.zip). Tambahkan file .zip yang diunduh di sini. Setiap file dipindai segera setelah Anda menambahkannya.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Bersihkan</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Tambahkan paket alur yang diekspor untuk memulai.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>Tidak ada alur yang ditemukan di file tersebut. Pastikan file tersebut adalah paket yang diekspor dengan Export → Package (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Pemindaian selesai. Tinjau apa yang digunakan alur, lalu klik Berikutnya.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Pilih situs target</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Alur ini tidak menggunakan situs SharePoint dengan alamat tetap, jadi tidak ada yang perlu dipetakan di sini. Klik Berikutnya.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Selanjutnya, alat membaca setiap daftar melalui koneksi Anda dan mencocokkannya di situs target.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Masukkan situs target untuk setiap situs sumber, lalu klik Berikutnya.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Cocokkan daftar dan kolom</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Cocokkan lagi</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Daftar</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Alur ini tidak mengarah ke daftar SharePoint tertentu, jadi tidak ada yang perlu dicocokkan.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Daftar dan kolom dicocokkan saat langkah ini dibuka.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Formulir dan email</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Periksa formulir dan email, lalu klik Berikutnya.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Alur ini tidak menggunakan Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>Alamat email</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Untuk memindahkan setiap alamat dari satu domain email ke domain lain, masukkan kedua domain. Alamat pada domain lain dicantumkan di laporan, tidak diubah.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Tulis paket yang diperbarui</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Folder output</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Pilih folder output, lalu klik Tulis paket yang diperbarui.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Siap menulis {0} paket yang berisi {1} alur. Mengganti: {2} situs, {3} daftar, {4} pemetaan kolom, {5} formulir.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Tulis paket yang diperbarui</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Paket ditulis</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Penggantian</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Masih sumber</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>Perlu ditinjau</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Paket</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Diperbarui</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} nilai masih mengarah ke sumber</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Buka laporan</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Mulai dari awal</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Selesai: {0} paket ditulis</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Disimpan di {0}. Tidak ada yang tersisa mengarah ke sumber. Ikuti langkah di bawah untuk mengimpornya.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Selesai: {0} paket ditulis, beberapa item perlu Anda tinjau</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Disimpan di {0}. Buka laporan untuk melihat nilai yang masih mengarah ke sumber dan item yang tidak ditulis ulang oleh alat (layanan lain, daftar atau kolom yang tidak cocok).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Yang dilakukan selanjutnya</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Buka laporan dan periksa &quot;masih mengarah ke sumber&quot; serta apa pun yang ditandai untuk ditinjau.
+2.  Di Power Automate (tenant target), buka My flows → Import → Import Package (Legacy) dan pilih paket yang telah ditulis.
+3.  Di bawah &quot;Related resources&quot; klik &quot;Select during import&quot; untuk setiap koneksi dan pilih atau buat koneksi di tenant target. Koneksi tidak dapat dipindahkan antar tenant.
+4.  Impor alur. Biarkan tetap nonaktif, buka, perbaiki apa pun yang ditandainya, lalu aktifkan.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Tidak ada perubahan (tidak ada yang cocok dengan pemetaan Anda)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Disalin {0} ke {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Disalin sebelumnya</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Sudah disalin</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …dan {0} lainnya</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Salin lagi?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>{0} dari formulir yang dipilih sudah disalin ke akun ini:
+
+{1}
+
+Menyalin lagi akan membuat salinan kedua dari masing-masing. Lanjutkan?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>Penyalinan masih berjalan. Jika Anda menutup sekarang, formulir yang sedang disalin mungkin tertinggal setengah jadi di target. Hentikan dan tutup?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Penyalinan sedang berlangsung</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Tidak ada respons yang dapat diekspor (lihat log).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Filter berdasarkan judul atau tipe</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Satu workbook</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Ekspor semua formulir yang dipilih ke satu file Excel dengan satu lembar per formulir.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>Alamat email</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Tenant ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Path pustaka</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Nilai lainnya</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Ketik pengganti untuk nilai apa pun yang harus berubah. Baris yang dibiarkan kosong tidak diubah; baris tersebut dicantumkan di laporan jika masih mengarah ke sumber.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Jenis</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>Dalam alur</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Ganti dengan</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Pemeriksaan ID</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Bukan ID formulir atau tautan halaman edit</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Sama dengan formulir sumber</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Formulir ini berada di tenant sumber, bukan target</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Formulir ini berada di tenant yang berbeda dari sumber</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>Dari salinan Formulir {0} ke {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Dari salinan Formulir sebelumnya</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Muat pemetaan…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Isi situs, daftar, kolom, formulir, dan nilai lainnya dari pemetaan yang Anda simpan sebelumnya.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Tidak dapat memuat pemetaan: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>{0} dimuat. Nilai yang cocok dengan alur ini telah diisi; periksa pada langkah berikutnya.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>{0} dimuat. Pemetaan diterapkan saat Anda menambahkan paket alur.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>{0} situs target diisi. Periksa di bawah, lalu klik Berikutnya.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Setiap situs sudah memiliki target, jadi tidak ada yang diubah. Kosongkan sel Target agar diisi.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Pintasan: ketik alamat tenant baru, misalnya https://fabrikam.sharepoint.com, dan klik tombol. Setiap situs yang belum memiliki target mendapat alamat itu dengan path yang sama seperti sumber: https://contoso.sharepoint.com/sites/HR menjadi https://fabrikam.sharepoint.com/sites/HR. Situs OneDrive (contoso-my) menuju alamat -my tenant baru. Target yang sudah Anda masukkan tidak disentuh. Situs harus sudah ada di tenant baru; alat ini tidak membuatnya. Jika situs memiliki nama berbeda di sana, ketik alamatnya di sel Situs target sebagai gantinya.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Jika Anda membiarkan Situs target kosong, situs itu dibiarkan tidak berubah: alur tetap mengarah ke situs lama, daftar dan kolomnya tidak dicocokkan atau ditulis ulang, dan laporan mencantumkannya di bawah &quot;Yang perlu dilakukan setelah impor&quot;. Itu benar hanya untuk situs yang tidak pindah ke tenant baru.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Yang terjadi</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Akan dipindahkan ke target</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Tidak diubah (tanpa target)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Situs {0} dibiarkan tidak berubah (tidak ada target yang dimasukkan), sehingga alur masih mengarah ke situs tersebut dan daftarnya tidak dicocokkan. Tidak masalah jika situs tidak dipindahkan; jika tidak, jalankan ulang dengan target.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Belum ada kolom untuk ditampilkan: belum ada daftar yang dicocokkan, jadi tidak ada yang dapat dibandingkan. Perbaiki daftar di atas, lalu klik Cocokkan lagi.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Tidak ada kolom untuk dipetakan, jadi Anda tidak perlu melakukan apa pun di sini. Daftar yang dicocokkan tidak memiliki kolom kustom yang ditulis, difilter, atau dibaca alur dengan cara yang dapat dilihat alat. Daftar aktivitas di bagian bawah menjelaskan apa yang ditemukan untuk setiap daftar.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} kolom ditemukan: {1} memiliki nama yang sama di target, {2} diganti namanya dan dicocokkan, {3} tampak mirip, {4} tidak memiliki padanan.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Harap periksa baris yang ditandai &quot;Nama mirip&quot; dan pilih kolom untuk baris yang ditandai &quot;Tidak cocok&quot;. Baris yang ditandai &quot;Nama sama&quot; atau &quot;Diganti namanya di target&quot; tidak memerlukan tindakan.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Tidak ada yang perlu dilakukan di sini: setiap kolom sudah cocok. Klik Berikutnya.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Nama paket yang diperbarui</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Nama untuk file .zip yang diperbarui. Gunakan {name} untuk nama file asli: &quot;{name} - Fabrikam&quot; mengubah &quot;Onboarding.zip&quot; menjadi &quot;Onboarding - Fabrikam.zip&quot;. Dengan satu paket, Anda cukup mengetik nama lengkap. Biarkan sebagai {name} untuk mempertahankan nama asli. Nama yang digunakan dua kali mendapat (2), (3)… agar tidak ada yang tertimpa.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Akan ditulis: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Alur hanya menyimpan ID formulir, jadi nama formulir dibaca dari Microsoft Forms saat langkah ini dibuka: judul setiap formulir dalam alur Anda (akun sumber) dan formulir di akun target. Formulir yang judulnya cocok persis dengan satu formulir target dicocokkan untuk Anda; jika tidak, pilih formulir baru dari dropdown, atau tempel ID atau tautan halaman editnya. Gunakan Muat ulang nama formulir untuk membacanya lagi.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Muat formulir dari akun target…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Memuat formulir akun target… Anda mungkin diminta masuk.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Mencantumkan formulir yang dimiliki akun target {0} agar Anda dapat memilih formulir baru untuk setiap alur. Klik Batal untuk berhenti menunggu proses masuk.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Target: {0} formulir ditemukan di {1}. Pilih satu per baris, atau tempel ID.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Target: tidak ada formulir ditemukan di {0}. Dropdown hanya mencantumkan formulir yang dimiliki akun tersebut (bukan formulir grup), jadi salin formulir dengan alat Formulir terlebih dahulu, atau tempel ID.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Dibatalkan. Klik Muat nama formulir untuk mencoba lagi, atau tempel ID formulir.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Target: tidak dapat memuat formulir: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(tidak ada)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(formulir tanpa judul)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Formulir sumber</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Pilih dari formulir target</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Pilih formulir dari akun target. Klik &quot;Muat formulir dari akun target&quot; terlebih dahulu.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Diisi dari proses masuk target ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Akun sumber Anda, diganti dengan akun target Anda</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Diisi dari proses masuk Anda ({0} → {1}). Kosongkan kedua kotak agar domain email tidak berubah.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Situs dengan target kosong dibiarkan tidak berubah: alur tetap mengarah ke situs itu, dan laporan mencantumkannya.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Masuk sebagai {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Masuk sebagai {0}. Alamat SharePoint tenant target adalah {1}; situs target yang kosong diisi darinya.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Beberapa situs dalam alur berada di {0}, yaitu alamat milik akun target. Entah paket ini sudah mengarah ke target (misalnya paket yang ditulis alat ini, atau alur yang diekspor dari target), sehingga tambahkan ekspor asli dari sumber; atau sumber dan target memang satu tenant, sehingga alihkan aplikasi ke mode Satu tenant (Pengaturan).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} adalah paket yang ditulis alat ini pada {1}: paket ini sudah berisi alamat target, jadi tidak ada lagi yang perlu dipindahkan. Tambahkan ekspor asli dari tenant sumber sebagai gantinya (file di Downloads Anda, bukan yang ada di folder output).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Situs dalam alur ini berada di {0}, yaitu tenant target Anda, tetapi sumber Anda adalah {1}. Jika paket diekspor dari {0}, masuk ke tenant itu sebagai sumber (Ubah sumber…). Jika alat ini yang menulisnya sebelumnya, hapus dan tambahkan ekspor asli.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Telah masuk. {0} situs target diisi dari {1}. Periksa, lalu klik Berikutnya.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Telah masuk. Setiap situs target sudah memiliki nilai, jadi tidak ada yang diubah.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Proses masuk tidak selesai, atau alamat tenant baru tidak dapat dibaca (lihat baris Target). Jika Anda sudah masuk, masukkan alamat tenant baru di bawah untuk mengisi situs target.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — terhubung sebagai {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — belum masuk</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Ubah target…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Tidak ada daftar target yang dipilih, sehingga alur ini masih akan mengarah ke daftar yang tidak ada di target. Pilih daftar target, atau buat daftar di situs target terlebih dahulu.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Alur menggunakan kolom &quot;{0}&quot;, tetapi daftar target &quot;{1}&quot; tidak memiliki kolom untuknya. Pilih kolom targetnya di tabel, atau tambahkan kolom ke daftar target dan klik Periksa lagi.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>Daftar target &quot;{0}&quot; mewajibkan kolom &quot;{1}&quot;, tetapi langkah &quot;Create item&quot; &quot;{3}&quot; dalam alur &quot;{2}&quot; tidak menetapkannya, sehingga impor akan gagal dengan &quot;missing required property item/{1}&quot;. Ketik nilai untuknya di bawah dan alat akan menambahkannya ke langkah tersebut, atau jadikan &quot;{1}&quot; opsional di daftar target dan klik Periksa lagi.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>Daftar target &quot;{0}&quot; mewajibkan kolom &quot;{1}&quot;, tetapi langkah &quot;Create item&quot; &quot;{3}&quot; dalam alur &quot;{2}&quot; tidak menetapkannya, sehingga impor akan gagal dengan &quot;missing required property item/{1}&quot;. Jadikan &quot;{1}&quot; opsional di daftar target di SharePoint, lalu klik Periksa lagi.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Nilai yang diisi untuk kolom wajib ini (ditambahkan ke setiap langkah Create item yang tidak menyertakannya):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Ini akan gagal saat impor. Perbaiki untuk melanjutkan:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Periksa lagi</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Akan gagal ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Masuk ke target untuk melanjutkan.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} paket ditulis oleh alat ini dan sudah berisi nilai target. Hapus (✕ di daftar) dan tambahkan ekspor asli.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} situs tidak memiliki target. Situs yang dibiarkan apa adanya masih akan mengarah ke tenant sumber.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} daftar akan gagal saat impor. Perbaiki daftar yang ditandai &quot;Akan gagal&quot; untuk melanjutkan.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Daftar belum dicocokkan. Kembali satu langkah lalu maju lagi untuk mencoba ulang.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} formulir memerlukan ID formulir target yang valid untuk melanjutkan.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Ubah sumber…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Masuk sebagai {0}. Alamat SharePoint tenant sumber adalah {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Koneksi sumber diubah ke {0}. Situs yang tercantum di bawah harus berada di tenant ini.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Proses masuk sumber tidak selesai, atau alamat tenant tidak dapat dibaca (lihat baris Sumber). Koneksi sumber sebelumnya dipertahankan jika Anda membatalkan.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Beberapa situs dibaca dari {0}, yang bukan tenant tempat Anda terhubung sebagai sumber ({1}). Membaca daftarnya akan gagal. Ubah &quot;Baca daftar dari&quot; untuk baris tersebut ke alamat di tenant sumber Anda, atau klik Ubah sumber… dan masuk dengan akun dari tenant itu.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Situs alur berada di {0}, tetapi Anda terhubung ke {1} sebagai sumber. &quot;Baca daftar dari&quot; diisi dengan situs yang sama di {1}, sehingga alat membaca nama daftar dan kolom di sana. Periksa apakah situs tersebut ada (edit baris mana pun), atau klik Ubah sumber… jika alur memang berasal dari {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Daftar yang digunakan alur</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Klik daftar untuk membuka atau menutupnya. Daftar yang perlu dilihat berada di urutan pertama dan terbuka.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Buka semua</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Tutup semua</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Digunakan oleh:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Sumber:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Daftar target</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>atau tempel ID atau tautannya:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Kolom sumber</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Tipe</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Digunakan</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Tidak digunakan oleh alur</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(tidak ada: biarkan daftar ini tidak berubah)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Tidak ada daftar target yang dipilih: alur yang menggunakannya masih mengarah ke daftar sumber</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} kolom perlu diperiksa</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ tidak ada yang perlu diperiksa</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} kolom pada daftar ini; alur menggunakan {1}: {2} dengan nama yang sama di target, {3} diganti namanya dan dicocokkan, {4} mirip (harap periksa), {5} tanpa padanan (harap pilih). Kolom lainnya ditampilkan sebagai konteks dan tidak diubah.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} kolom pada daftar ini; tidak ada yang digunakan alur dengan cara yang dapat dilihat alat, jadi tidak ada yang perlu dipetakan.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Tidak ada kolom yang dapat dibaca untuk daftar ini (lihat catatan di atas dan daftar aktivitas).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Pilih daftar target di atas untuk melihat kolomnya dan memetakannya.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Kolom daftar target tidak dapat dibaca, sehingga tidak ada kecocokan yang dapat disarankan.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Alur tidak menyebutkan situs tempat daftar ini berada (menggunakan parameter), sehingga tidak dapat dicari. Tempel ID atau tautan daftar target.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Tidak ada daftar target: daftar ini dibiarkan tidak berubah.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Membaca kolom daftar target untuk {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Daftar &apos;{0}&apos;: Anda memilih daftar target lain. Membaca kolomnya di {1} untuk mencocokkannya kembali.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — terhubung sebagai {1} (proses masuk jendela utama)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Baca daftar dari (sumber)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>&quot;Situs dalam alur&quot; adalah alamat yang tersimpan dalam alur; itulah yang diganti, sehingga tidak dapat diedit. &quot;Baca daftar dari&quot; adalah tempat alat membaca nama dan kolom setiap daftar di sisi sumber; awalnya sama dengan alamat tersebut, jadi ubah jika alamat alur sudah lama, diganti namanya, atau berada di tenant yang berbeda dari koneksi sumber Anda.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Yang digunakan alur ini</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} alur, {2} langkah: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>ditulis ulang oleh alat ini</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>tinjau secara manual</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>hanya koneksi</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>Yang perlu dilakukan setelah impor</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Impor setiap paket yang telah ditambal di lingkungan target dan buat ulang koneksi (tidak pernah disalin).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Paket solusi: hanya definisi alur kerja yang ditulis ulang. Nilai variabel lingkungan dan referensi koneksi dalam solusi (customizations.xml) masih berisi nilai sumber; atur setelah impor.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Pemilik alur dan pengguna khusus-jalankan bukan bagian dari paket; bagikan alur kepada orang yang tepat setelah impor.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Tidak ada perubahan (tidak ada yang cocok dalam pemetaan).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} penggantian</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Masih mengarah ke nilai sumber (belum dipetakan, tinjau sebelum impor)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Menghubungkan ke situs sumber {0} dan situs target {1}. Jendela masuk akan terbuka jika Anda belum masuk.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Terhubung ke {0} (sumber) dan {1} (target).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Membaca daftar dan pustaka di situs target {0}, agar setiap daftar dapat dicocokkan berdasarkan nama dan ditawarkan dalam dropdown.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>Ditemukan {0} daftar dan pustaka di {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Membaca nama dan kolom daftar {0} dari situs sumber {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Daftar &apos;{0}&apos;: mencari daftar dengan nama yang sama di situs target {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Daftar &apos;{0}&apos;: ditemukan di target. Membaca kolom daftar target untuk mencocokkannya.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Daftar &apos;{0}&apos;: kolomnya tidak dapat dibaca, atau tidak ada. Tidak ada yang perlu dipetakan untuk daftar ini.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Daftar &apos;{0}&apos;: {1} kolom, tidak ada yang digunakan alur dengan cara yang dapat dilihat alat. Tidak ada yang perlu dipetakan.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Daftar &apos;{0}&apos;: alur menggunakan {1} nama kolom: {2} memiliki nama yang sama di target (tidak perlu perubahan), {3} diganti namanya dan dicocokkan, {4} tampak mirip (harap periksa), {5} tidak memiliki padanan (pilihan Anda), {6} adalah kolom bawaan (tidak ada yang dipetakan).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>Daftar {0} tidak ada di situs sumber, tetapi ada di situs target sebagai &apos;{1}&apos;: alur sudah mengarah ke target.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Situs &apos;{0}&apos; tidak memiliki target; daftar di dalamnya tidak diselesaikan.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Lanjutan: baca daftar dari alamat yang berbeda</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Pemetaan kolom: dari {0} ke {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Tidak ada kolom untuk ditampilkan pada daftar ini.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Tidak ada kolom daftar ini yang digunakan oleh alur. Centang &quot;Tampilkan semua kolom&quot; untuk melihatnya.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>Daftar sumber tidak dapat dibaca, dan alur tidak menyebutkan kolom apa pun, jadi tidak ada yang perlu dipetakan.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Daftar</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(tidak dapat dibaca di sumber)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Dibaca dari:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Situs</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Alur ini sudah mengarah ke daftar ini di target. {0} nama kolom yang digunakannya ditampilkan di samping kolom target; tidak ada yang perlu diubah.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(nama daftar tidak tersedia)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Sudah di target</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Dipetakan berdasarkan nama kolom alur</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Tidak dapat membaca kolom</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Tanpa daftar target</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Tidak ada yang dipetakan</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Siap</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Kolom target tidak dapat dibaca</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} perlu diperiksa</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Digunakan oleh {0} alur</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} pemetaan kolom masih perlu dilihat.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Semua pemetaan kolom sudah beres.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Koneksi tidak disalin antar tenant: buat ulang di Power Automate setelah mengimpor.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>Email: setiap alamat di {0} menjadi {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} dari {1} formulir mengarah ke formulir baru.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} dari {1} daftar memiliki daftar target.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Daftar belum dicocokkan.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>Alamat email tidak diubah (tidak ada domain yang dipetakan).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Alur tidak menggunakan Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Alur tidak menggunakan daftar tertentu.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Alur tidak menyebutkan situs SharePoint.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{0} paket dengan {1} alur akan ditulis; file asli tidak diubah.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0} dari {1} situs akan dipindahkan ke situs target; sisanya tetap seperti semula.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Bersihkan nilai yang diisi otomatis</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Diisi</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Formulir dalam alur Anda</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Dari (dalam alur Anda)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Daftar</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Situs</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>Ke (target)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Dipilih oleh Anda</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Dibiarkan tidak berubah</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(proses masuk jendela utama)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>Domain email asal</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Pindahkan setiap alamat di</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>ke</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>Domain email tujuan</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…atau seret file .zip (atau folder) ke jendela ini.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Kolom &apos;{0}&apos; pada daftar &apos;{1}&apos; tidak memiliki padanan di daftar target.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>Daftar &apos;{0}&apos; ({1}) di {2} tidak memiliki daftar target, sehingga alur yang menggunakannya masih mengarah ke daftar sumber.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(judul tidak diketahui)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Buka langkah</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Punya pemetaan tersimpan? Muat…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Pola kustom…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Pertahankan nama asli</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Tambahkan &apos; - migrated&apos; ke setiap nama</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Buka laporan dan periksa apa yang ditandai untuk ditinjau.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>Di Power Automate (tenant target): My flows, Import, Import Package (Legacy), dan pilih paket yang telah ditulis.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>Di bawah Related resources klik &quot;Select during import&quot; untuk setiap koneksi dan pilih atau buat satu di tenant target. Koneksi tidak dapat dipindahkan antar tenant.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Impor alur, biarkan tetap nonaktif, buka, perbaiki apa pun yang ditandainya, lalu aktifkan.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Buka folder</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Buka Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Folder output itu belum ada; folder dibuat saat Anda menulis paket.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>SUMBER</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>TARGET</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} alur ditemukan</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Tidak ada alur ditemukan</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Sudah ditulis oleh alat ini</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Tidak dapat dibaca</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Siap menulis?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Hapus paket ini dari daftar</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Laporan penulisan ulang alur</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Yang digunakan alur ini ({0} layanan)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} paket tidak dapat ditulis.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} nilai dalam paket yang ditulis masih mengarah ke sumber. Buka laporan untuk melihat yang mana.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Tampilkan semua {0} kolom</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Tampilkan hanya kolom yang digunakan alur</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Apa arti kolom-kolom ini?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>ID daftar ini tidak ada di situs sumber, tetapi merupakan daftar &apos;{0}&apos; di situs target: alur sudah mengarah ke target, seperti pada paket yang sudah ditulis alat ini.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Terhubung</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Masalah</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Belum masuk</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Menunggu proses masuk…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} daftar · semua siap</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} daftar · {1} siap · {2} perlu dilihat</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Memakan waktu {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>Perlu ditinjau</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Tambahkan paket alur (.zip) yang Anda ekspor dari tenant sumber. Masing-masing dipindai segera setelah Anda menambahkannya.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Tentukan ke situs mana setiap alur dipindahkan. Masuk ke target dan alamat tenant baru akan diisikan untuk Anda.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Setiap daftar yang digunakan alur dicocokkan dengan daftar di target, dan kolomnya dipetakan. Periksa apa pun yang ditandai perlu dilihat.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Arahkan formulir yang disalin ke ID barunya, dan tentukan bagaimana alamat email dan tenant ID berubah.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Periksa daftar di bawah, pilih tempat menyimpan paket yang diperbarui, lalu tulis.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Yang terjadi di sini</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Alat membaca setiap paket di komputer ini (tidak ada yang dikirim ke mana pun) untuk menemukan situs, daftar, kolom, dan formulir yang digunakan alur. Tambahkan ekspor ASLI dari sumber, bukan paket yang ditulis alat ini sebelumnya: paket tersebut sudah berisi alamat target.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Kolom &apos;{0}&apos; dipetakan secara berbeda pada daftar yang berbeda ({1}). Langkah setiap daftar mendapat pemetaan masing-masing; ekspresi di tempat lain dalam alur mempertahankan nama asli, jadi tinjau ekspresi tersebut.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Muat ulang nama formulir…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Memuat nama formulir… Anda mungkin diminta masuk.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Membaca judul formulir dalam alur Anda dari akun sumber {0}. Klik Batal untuk berhenti menunggu proses masuk.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Sumber: judul {0} dari {1} formulir ditemukan ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Sumber: tidak dapat membaca judul formulir: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} formulir dicocokkan dengan formulir target yang bernama sama.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Tampak seperti ID formulir yang valid</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Dicocokkan berdasarkan nama</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>Sumber dan target berada di tenant yang sama ({0}). Alihkan aplikasi ke mode Satu tenant (Pengaturan), atau masuk ke sumber dan target dengan akun dari tenant yang berbeda.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Hapus paket ini</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>{0} paket yang sudah mengarah ke target dihapus: {1}. Tambahkan ekspor asli dari tenant sumber sebagai gantinya.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Paket tersebut telah dihapus. Tambahkan ekspor asli dari tenant sumber.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Setiap paket disimpan sebagai .zip baru di folder output; file asli tidak pernah diubah. Untuk mengganti nama, ketik nama lain di Simpan sebagai.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Pertahankan nama asli</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Tambahkan &apos; - migrated&apos; ke setiap nama</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Paket asli</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Simpan sebagai</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Akan disimpan sebagai: {0} (Anda dapat mengubah nama di bawah).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Tidak dapat dibaca; tidak ada output yang ditulis</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Dibatalkan. Tidak ada yang diubah. Pada langkah Situs gunakan Masuk untuk mencoba lagi (misalnya di browser lain); pada langkah Daftar gunakan Cocokkan lagi.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Membatalkan… jendela masuk mungkin memerlukan waktu untuk menutup.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Yang sedang dilakukan alat</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Koneksi</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Multi-tenant: untuk mencocokkan daftar, alat membaca nama dan kolom setiap daftar dari tenant sumber dan mencari daftar yang sama di tenant target. Itu memerlukan proses masuk ke masing-masing. Masuk ke setiap sisi di sini, atau cukup klik Berikutnya dan Anda akan diminta saat itu. Jendela browser terbuka; jika browser-nya salah, klik Batal dan coba lagi. Tidak ada yang diubah di kedua tenant.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Satu tenant: sumber dan target adalah tenant yang sama, sehingga alat menggunakan akun yang Anda gunakan untuk masuk pada langkah Hubungkan. Tidak ada lagi yang perlu dimasuki. Tidak ada yang diubah di tenant.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Sumber</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Target</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Masuk ke sumber…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Masuk ke target…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Batal</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Berhenti menunggu jendela masuk, sehingga Anda dapat mencoba lagi, misalnya di browser lain.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Belum masuk</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Menggunakan proses masuk jendela utama: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Masuk sebagai {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Siap</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Menunggu proses masuk… jendela browser seharusnya terbuka</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Proses masuk dibatalkan. Klik Masuk untuk mencoba lagi.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Telah masuk. Periksa situs target di bawah, lalu klik Berikutnya.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Belum ada situs sumber untuk dimasuki. Tambahkan paket alur terlebih dahulu.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Masukkan setidaknya satu situs target terlebih dahulu (atau gunakan Isi, pertahankan path); proses masuk menuju tenant situs target.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Masuk ke sumber… jendela browser terbuka.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Masuk ke target… jendela browser terbuka.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>sumber</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>target</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Masuk ke tenant sumber. Jendela browser terbuka; klik Batal untuk berhenti menunggu (misalnya untuk mencoba browser lain). Proses masuk juga memberi tahu alat tenant mana yang menjadi sumber.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Masuk ke tenant target. Jendela browser terbuka; klik Batal untuk berhenti menunggu (misalnya untuk mencoba browser lain). Proses masuk juga memberi tahu alat alamat SharePoint tenant baru.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Terhubung ke {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Proses masuk dibatalkan oleh Anda.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Membaca {0} file paket di komputer ini untuk menemukan situs, daftar, kolom, dan formulir yang digunakan alur. Tidak ada yang dikirim ke mana pun.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Membaca {0}: {1} alur.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Mencocokkan {0} daftar: untuk masing-masing, alat menanyakan nama kepada situs sumber, lalu mencari daftar dengan nama itu di situs target.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Pencocokan selesai. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Menulis {0} paket yang ditambal ke {1}. File asli tidak diubah.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Menulis {0} dengan pemetaan Anda diterapkan.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Memeriksa {0} untuk nilai yang masih mengarah ke sumber.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Dibatalkan oleh Anda. Tidak ada yang diubah.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Dihentikan: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Setiap alur menyimpan alamat situs SharePoint tempat ia membaca atau menulis. Agar berjalan di tenant baru, setiap alur harus mengarah ke situs yang sesuai di sana, jadi beri tahu alat situs baru mana yang menggantikan setiap situs lama. Ini hanya mengedit salinan paket Anda; tidak ada yang dicari sampai Anda mengklik Berikutnya.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Yang terjadi di sini: untuk setiap daftar yang digunakan alur, alat membaca nama dan kolom daftar dari situs sumber, mencari daftar dengan nama yang sama di situs target, dan membaca kolom daftar itu untuk mencocokkannya. Alasannya: alur merujuk daftar dan kolom berdasarkan ID atau nama internal, dan itu berbeda di tenant baru, jadi alat mencari padanannya. Langkah ini hanya membaca; tidak ada yang dibuat atau diubah di kedua tenant. Anda dapat mengubah daftar target dan kolom mana pun pada kartunya.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Formulir yang disalin mendapat ID baru, sehingga alur yang menggunakannya harus mengarah ke salinan. Alamat email dan tenant ID dalam alur mungkin juga perlu diubah untuk organisasi baru. Tidak ada yang dicari di sini; Anda yang menentukan penggantinya, dan apa pun yang dibiarkan kosong tetap seperti semula.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Alat menulis file .zip baru ke folder output dengan pemetaan Anda diterapkan, memindainya ulang untuk menemukan apa pun yang masih mengarah ke sumber, dan menulis laporan. Paket asli Anda tidak pernah diubah, dan tidak ada yang dikirim ke tenant mana pun. Anda mengimpor paket baru di Power Automate sendiri setelahnya.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Proses masuk dibatalkan. Klik tombol untuk mencoba lagi, misalnya di browser lain.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Batal</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Kesalahan: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Tidak dapat membaca formulir sumber ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Tidak dapat membuat formulir di target ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Dibatalkan di tengah jalan. Formulir parsial tertinggal di target; hapus di Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Penyalinan berhenti di tengah jalan ({0}). Formulir parsial tertinggal di target; hapus di Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>gambar latar belakang</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>logo</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>gambar header</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>{0} tidak disalin (gambar belum didukung).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Penilaian kuis (jawaban benar dan poin) belum diverifikasi; harap periksa salinannya.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Pengaturan &apos;{0}&apos; tidak dapat disalin ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Pertanyaan &apos;{0}&apos; tidak disalin ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(tanpa judul)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Aturan percabangan tidak dapat disalin ({0}); harap periksa salinannya.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>Salinan dibuat tetapi tidak dapat ditampilkan di Microsoft Forms ({0}); mungkin berada di tempat sampah.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>Salinan memiliki {0} pertanyaan tetapi sumber memiliki {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Pertanyaan &apos;{0}&apos; ({1}) dibuat tetapi opsinya tidak dapat disalin ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Hasil</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Formulir sumber</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>ID formulir sumber</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Judul salinan</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>ID formulir salinan</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Status</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Pertanyaan yang disalin</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Pertanyaan di sumber</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Peringatan</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Catatan</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Kesalahan</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Workbook Excel (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>File JSON (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Id</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Waktu mulai</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Waktu selesai</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Responden</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Nama</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Skor</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Jawaban tidak terpetakan (JSON mentah)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (dipotong: terlalu panjang untuk sel Excel)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Hentikan proses?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>Perbandingan atau verifikasi masih berjalan. Menutup jendela ini akan menghentikannya, dan tidak ada laporan yang ditulis. Tutup juga?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Tutup saat sedang bekerja?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Alat masih bekerja (memindai, mencocokkan, masuk, atau menulis paket). Menutup sekarang akan menghentikannya. Tutup juga?</value></data>
 </root>

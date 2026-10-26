@@ -89,6 +89,14 @@ public partial class HistoryDialog : Window
     // potentially 100k-file pair kept running headless after the dialog was gone.
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
+        // Esc is bound to Close, so one stray key press used to throw away a verification that may have run for hours.
+        if (VerifyCancelButton.Visibility == Visibility.Visible && _verifyCts is { IsCancellationRequested: false }
+            && MessageBox.Show(this, Loc.T("Dlg_StopRunBody"), Loc.T("Dlg_StopRunTitle"),
+                MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
+        {
+            e.Cancel = true;
+            return;
+        }
         _verifyCts?.Cancel();
         base.OnClosing(e);
     }
@@ -174,22 +182,9 @@ public partial class HistoryDialog : Window
         };
         if (dlg.ShowDialog() != true) return;
 
-        static string Csv(string? s) => $"\"{(s ?? "").Replace("\"", "\"\"")}\"";
-        var sb = new StringBuilder();
-        sb.AppendLine(Loc.T("Dlg_CsvHeader"));
-        foreach (var item in report.Items)
-        {
-            sb.AppendLine(
-                $"{Csv(item.FileName)}," +
-                $"{Csv(item.SourcePath)}," +
-                $"{Csv(item.TargetPath)}," +
-                $"{item.Status}," +
-                $"{item.VersionsCopied}," +
-                $"{Csv(item.ErrorMessage)}," +
-                $"{item.PermissionStatus?.ToString() ?? ""}," +
-                $"{Csv(item.PermissionDetails)}");
-        }
-        System.IO.File.WriteAllText(dlg.FileName, sb.ToString());
+        CsvReportExport.Save(dlg.FileName, Loc.T("Dlg_CsvHeader"),
+            report.Items.Select(item => CsvReportExport.Row(
+                item.FileName, item.SourcePath, item.TargetPath, item.Status, item.VersionsCopied, item.ErrorMessage, item.PermissionStatus, item.PermissionDetails)));
         System.Diagnostics.Process.Start(
             new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
     }

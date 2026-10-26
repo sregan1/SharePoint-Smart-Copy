@@ -392,7 +392,7 @@
 
     <!-- Transient bottom-center notification -->
     <Style x:Key="ToastBorder" TargetType="Border">
-        <Setter Property="Background" Value="#323130"/>
+        <Setter Property="Background" Value="{DynamicResource ToastBgBrush}"/>
         <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Padding" Value="16,10"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>

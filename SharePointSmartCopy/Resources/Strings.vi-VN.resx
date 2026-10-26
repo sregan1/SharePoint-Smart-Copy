@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Thành công ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Thất bại ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Đã bỏ qua ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Đã cập nhật</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Không thể đọc xem nguồn có quyền riêng hay không (bị giới hạn tốc độ hoặc lỗi truy cập) — quyền chưa được sao chép cho mục này. Chạy lại để thử lại.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Tệp đích hiện có đã bị xóa để ghi đè, nhưng không thể tải bản sao mới lên ({0}). Hiện tệp đang bị thiếu ở đích — hãy chạy lại thao tác sao chép để khôi phục.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Một thư viện đích đã thất bại ({0}). Các tệp của thư viện này được đánh dấu Thất bại; các thư viện khác vẫn tiếp tục.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: tệp nguồn đã thay đổi trong khi đang tải xuống — bắt đầu tải xuống lại.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint không báo cáo tiến độ nào cho lần nhập này trong {0} phút, nên đã bị bỏ. Các tệp của lần nhập được đánh dấu Thất bại; hãy chạy lại thao tác sao chép để thử lại.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Một tenant</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Nhiều tenant</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Sao chép giữa hai tenant Microsoft 365 khác nhau. Bạn đăng nhập riêng vào nguồn và đích. Chọn đăng ký ứng dụng của đích trong Cài đặt.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Đăng ký của đích:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Chế độ nhiều tenant: đăng ký ứng dụng dùng để đăng nhập vào tenant đích. &quot;Giống nguồn&quot; dùng lại đăng ký của nguồn, khi đó đăng ký này phải là ứng dụng đa tenant.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Tiếp tục / chạy lại</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Kết nối lại và chạy lại lựa chọn này với Sao chép nếu mới hơn, nên các tệp đã sao chép sẽ được bỏ qua và chỉ những gì còn thiếu hoặc đã thay đổi mới được chuyển.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Lần chạy này không có lựa chọn đã lưu để tiếp tục (chỉ các lần chạy chọn tệp mới ghi lại lựa chọn).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>Một thao tác sao chép đang chạy. Hãy hoàn tất hoặc hủy nó trước.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Không thể tiếp tục: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>Đã khôi phục {0} lần chạy bị gián đoạn. Xem Lịch sử.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Đang tiếp tục: đã khôi phục {0} mục từ lần chạy trước, với Sao chép nếu mới hơn được chọn. Xem lại các tùy chọn, rồi nhấp Tiếp theo. (Ánh xạ cột tùy chỉnh không được khôi phục.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>BỊ GIÁN ĐOẠN — ứng dụng đã đóng trước khi lần chạy này kết thúc. Trong các mục đã xử lý xong: {0} thành công, {1} thất bại, {2} bị bỏ qua, {3} đã hủy  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Xuất dữ liệu chẩn đoán…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Lưu một tệp zip chứa nhật ký gần đây, thông tin hệ thống và cài đặt của bạn đã loại bỏ thông tin tổ chức — để đính kèm vào báo cáo lỗi. Không bao gồm báo cáo sao chép hoặc tên tệp.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Đã lưu dữ liệu chẩn đoán vào {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Không thể lưu dữ liệu chẩn đoán: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Nội dung giống hệt (chỉ các phần do SharePoint quản lý khác nhau), nhưng ngày Sửa đổi không được giữ nguyên.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Quyền chưa được sao chép: không thể phân giải ID SharePoint của mục.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Quyền chưa được sao chép: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Thư mục &quot;{0}&quot;: {1} chưa được áp dụng — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>Có thêm thư mục gặp sự cố tương tự như trên; các thư mục sau không được liệt kê riêng.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>quyền</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>ngày</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>tác giả / người chỉnh sửa</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> (giữ {0} — đích đã cập nhật)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>CẢNH BÁO: đọc siêu dữ liệu từ nguồn ({0}) thất bại: {1}. Các mục từ đó có thể được sao chép MÀ KHÔNG có giá trị cột tùy chỉnh hoặc quyền duy nhất. Hãy chạy lại sau khi sự cố được khắc phục (Ghi đè hoặc Nếu mới hơn sẽ áp dụng lại).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>CẢNH BÁO: không tìm thấy danh sách nguồn của một thư viện, nên quyền của thư viện đó sẽ KHÔNG được sao chép.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>Máy chủ SharePoint &apos;{0}&apos; chưa được liên kết với tenant đã kết nối. Hãy kết nối lại các trang web nguồn và đích rồi thử lại.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Sao chép giữa các tenant: giá trị cột siêu dữ liệu được quản lý (phân loại) không được sao chép, và sổ tay OneNote / bộ tài liệu chưa thể sao chép giữa các tenant. Danh tính được ánh xạ theo cài đặt Ánh xạ danh tính của bạn; những người không thể phân giải ở đích sẽ bị bỏ qua.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Ánh xạ danh tính</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Ánh xạ danh tính…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Liệt kê từng người (hoặc nhóm) trong tenant nguồn và họ là ai trong tenant đích — đây là các tài khoản khác nhau. Tác giả, người chỉnh sửa, cột người và quyền được ghi theo bảng này. Người không có trong danh sách sẽ được khớp bằng hoán đổi miền nếu bạn đã đặt; ai vẫn không tìm thấy ở đích sẽ bị bỏ qua và được báo cáo.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Miền email nguồn</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Miền email đích</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Ghi đè — mỗi dòng một cặp &quot;nguồn,đích&quot; (tên người dùng hoặc nhóm; # bắt đầu một chú thích)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Giống nguồn</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Nguồn và đích ở cùng một tenant. Hãy chuyển sang chế độ một tenant để sao chép trong cùng tenant.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Sao chép thư mục gốc (sổ tay OneNote, bộ tài liệu) chưa được hỗ trợ giữa các tenant.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Ổ &apos;{0}&apos; chưa được liên kết với tenant đã kết nối. Hãy kết nối lại các trang web nguồn và đích rồi thử lại.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Chưa thiết lập đăng ký ứng dụng nào. Hãy mở Cài đặt và thêm đăng ký ứng dụng Azure của bạn (ID ứng dụng/ID máy khách) trước khi kết nối.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Đã hủy đăng nhập. Nhấp Kết nối để thử lại.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Quản trị viên chưa phê duyệt ứng dụng này trong tenant này. Hãy nhờ Quản trị viên toàn cầu cấp sự đồng ý của quản trị viên cho đăng ký ứng dụng (xem phần Thiết lập trong Hướng dẫn sử dụng).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Không tìm thấy đăng ký ứng dụng trong tenant này. Hãy kiểm tra ID máy khách và ID tenant trong Cài đặt.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Không tìm thấy tenant đó. Hãy kiểm tra ID tenant trong Cài đặt (dùng miền của bạn, GUID của tenant hoặc &apos;common&apos;).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>Đăng ký ứng dụng thiếu địa chỉ chuyển hướng mà ứng dụng này sử dụng. Trong Azure, hãy thêm URI chuyển hướng http://localhost trong mục &apos;Ứng dụng di động và máy tính để bàn&apos;.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Đăng ký ứng dụng chưa được thiết lập để đăng nhập trên máy tính. Trong Azure, hãy bật &apos;Cho phép luồng máy khách công khai&apos; cho đăng ký.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Tài khoản này không được phép dùng đăng ký ứng dụng đó. Hãy đăng nhập bằng tài khoản từ tenant sở hữu nó, hoặc chọn một đăng ký khác trong Cài đặt.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint đã từ chối đăng nhập. Nhấp Kết nối để đăng nhập lại.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>Bạn không có quyền truy cập trang web này. Hãy đảm bảo tài khoản của bạn có thể mở nó trong trình duyệt và ứng dụng đã được cấp quyền Sites.ReadWrite.All.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Không tìm thấy trang web đó. Hãy kiểm tra địa chỉ — nó phải có dạng https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Chi tiết: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Kết nối với trang web nguồn để tiếp tục.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Chọn ít nhất một mục (đánh dấu hộp kiểm) để tiếp tục.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Kết nối với trang web đích để tiếp tục.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Chọn thư mục đích để tiếp tục.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Chọn danh sách đích để tiếp tục.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Nhập tên cho danh sách mới để tiếp tục.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Chưa chọn gì để sao chép.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Đang chờ sao chép hoàn tất…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Nguồn: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Đích: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Đăng ký ứng dụng của bạn đã thay đổi, nên bạn đã bị đăng xuất khỏi cả hai trang web. Hãy kết nối lại để tiếp tục.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Dừng sao chép?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>Đang có một thao tác sao chép. Nếu dừng ngay bây giờ, các mục còn lại sẽ không được sao chép (bạn có thể tiếp tục sau từ Lịch sử). Dừng sao chép?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>Một thao tác sao chép vẫn đang chạy. Đóng ứng dụng sẽ dừng nó và các mục còn lại sẽ không được sao chép (bạn có thể tiếp tục sau từ Lịch sử). Vẫn đóng?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Chuyển chế độ kết nối?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Chuyển giữa chế độ một tenant và nhiều tenant sẽ ngắt kết nối cả hai trang web, và bạn cần kết nối lại. Vẫn chuyển?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Kết nối:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Đăng ký ứng dụng nguồn</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Đăng ký ứng dụng đích</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Đăng nhập vào tenant đích bằng:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Thay đổi</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Mở Cài đặt</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Bạn phải có quyền đọc đối với bộ sưu tập trang web nguồn.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Thiết lập đăng ký ứng dụng Microsoft Entra ID của bạn trong Cài đặt trước khi kết nối.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Tùy chọn tệp</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Tùy chọn thư viện và tệp</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Đang sao chép tệp…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Đang sao chép thư viện…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Tiếp theo</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Bắt đầu sao chép</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Xem báo cáo</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Nhập tên của danh sách mới cần tạo</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>Danh sách đích đã được chọn ở bước Đích. Hãy quay lại để thay đổi.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Hãy thiết lập đăng ký ứng dụng trước</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy đăng nhập bằng một đăng ký ứng dụng mà bạn tạo trong tenant Microsoft Entra ID (Azure) của riêng mình. Mở Cài đặt, thêm ID ứng dụng (máy khách) của đăng ký, rồi quay lại đây để kết nối.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Thông tin thêm</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Kéo để làm nguồn cấp hoạt động cao hơn hoặc thấp hơn</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Nhấp để chỉ hiển thị các mục thất bại</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Nhấp để chỉ hiển thị các mục bị bỏ qua</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Ánh xạ cột</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>So sánh nguồn và đích</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Mở công cụ So sánh để đối chiếu bản sao này với nguồn.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Mở Lịch sử</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Đăng ký được chọn được dùng cho nguồn — và cho cả hai phía ở chế độ một tenant.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Đăng ký mới</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Hãy thêm ít nhất một đăng ký ứng dụng.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Xác thực</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Cần có ID máy khách cho đăng ký được chọn.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Đã đăng xuất. Bạn sẽ được nhắc đăng nhập ở lần kết nối tiếp theo.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Đã đăng xuất</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Đăng xuất thất bại: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Đăng xuất</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>Tìm thấy {0} ánh xạ.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>Không đọc được {0} dòng (dòng {1}). Mỗi dòng phải có dạng nguồn,đích.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Miền nguồn và đích giống nhau, nên hoán đổi miền sẽ không thay đổi gì.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Nhập CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Một số dòng ghi đè không đọc được (dòng {0}). Mỗi dòng phải là &quot;nguồn,đích&quot;. Hãy sửa hoặc xóa chúng — hoặc bắt đầu dòng bằng # để biến nó thành chú thích.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Không thể lưu ánh xạ danh tính: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Không thể đọc tệp đó: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Giữa các tenant: {0} tài khoản tác giả/người chỉnh sửa trong thư viện này không tìm thấy trong tenant đích và sẽ được để là tài khoản thực hiện sao chép. Sau khi chạy, hãy dùng &quot;Ánh xạ những người dùng này&quot; trong báo cáo để sửa.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Nhập người dùng hoặc nhóm nguồn.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Nhập người này là ai trong tenant đích — hoặc xóa dòng.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Nguồn và đích giống nhau.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Nguồn này xuất hiện nhiều hơn một lần.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Nguồn (tenant này)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Đích (tenant khác)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Loại</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>Có ở đích?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Cần cho</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Người dùng</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Nhóm</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Chưa kiểm tra</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Đang kiểm tra…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Đã tìm thấy</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Không tìm thấy</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Thêm</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Xóa</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Điền đích từ hoán đổi miền</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>Với các dòng chưa có đích, điền địa chỉ mà hoán đổi miền sẽ tạo ra.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Kiểm tra ở đích</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Tra cứu từng người dùng đích trong tenant đích. Việc này cũng thêm họ vào danh sách người dùng của trang web đích, điều mà thao tác sao chép vẫn làm trước khi đặt họ làm tác giả hoặc cấp quyền truy cập.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Trước tiên hãy kết nối với đích nhiều tenant: nhập URL trang web đích ở bước Đích, rồi mở lại hộp thoại này.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Xuất CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Những người này cần cho thao tác sao chép nhưng không tìm thấy trong tenant đích. Với mỗi người, hãy nhập họ là ai ở đích — hoặc xóa dòng để để chưa ánh xạ.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} ánh xạ.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} dòng cần chú ý.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Đã kiểm tra: {0} tìm thấy, {1} không tìm thấy{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} không thể kiểm tra</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Đang kiểm tra {0} trên {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Không có gì để kiểm tra: không dòng nào có địa chỉ email đích.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Một số dòng cần chú ý (được tô sáng). Hãy sửa hoặc xóa chúng, rồi lưu.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Đã lưu ánh xạ. Để áp dụng cho các tệp đã sao chép, hãy chạy lại với Ghi đè — Sao chép nếu mới hơn bỏ qua các tệp đã cập nhật nên tác giả của chúng không thay đổi. Quyền được làm mới trong cả hai trường hợp.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>{0} người từ nguồn không tìm thấy trong tenant đích, nên đã bị loại: không được cấp quyền truy cập, không được đặt làm tác giả hoặc người chỉnh sửa, hoặc bị bỏ khỏi các cột người.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Ánh xạ những người dùng này…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Ánh xạ người dùng chưa phân giải…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Mở ánh xạ danh tính cùng những người mà lần chạy này không tìm thấy ở đích.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Lần chạy này không có người dùng chưa phân giải.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Sao chép biểu mẫu</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Sao chép Microsoft Forms sang tài khoản đích, giữ nguyên mọi câu hỏi, phân nhánh, cài đặt và giao diện. Có thể xuất phản hồi sang Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Chức năng này dùng API web của Microsoft Forms mà Microsoft không công bố tài liệu hay hỗ trợ. Hiện nay vẫn hoạt động nhưng có thể thay đổi mà không báo trước. Hãy thử với vài biểu mẫu trước.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Tải biểu mẫu của tôi</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Tài khoản nguồn: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Tài khoản đích: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Đích: cùng tài khoản (một tenant). Các bản sao được tạo cạnh bản gốc.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(bạn sẽ được nhắc đăng nhập)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Ánh xạ ID biểu mẫu (công cụ Luồng sử dụng): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Đang tải biểu mẫu…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>Đã tải {0} biểu mẫu.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Hãy chọn ít nhất một biểu mẫu trước.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Đang sao chép biểu mẫu…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Đang sao chép…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Đã sao chép</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Thất bại (xem nhật ký)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Đang sao chép &apos;{0}&apos;</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Sao chép hoàn tất: {0} đã sao chép, {1} thất bại.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Chọn thư mục để xuất phản hồi</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Đang xuất phản hồi…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>Đã xuất &apos;{0}&apos;: {1} phản hồi vào {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Đã xuất phản hồi của {0} biểu mẫu vào {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Biểu mẫu đã được sao chép, nhưng không thể lưu ID của nó cho công cụ Luồng: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Không thể xuất &apos;{0}&apos;: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Đã xuất phản hồi của {0} biểu mẫu vào {2}; {1} thất bại (xem nhật ký).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Đã hủy.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Lỗi: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Gợi ý: đăng ký ứng dụng cần quyền Microsoft Forms được ủy quyền, kèm sự đồng ý. Hãy thêm nó trong Quyền API (xem Hướng dẫn sử dụng), rồi thử lại.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Gợi ý: Microsoft Forms đã từ chối yêu cầu. Hãy kiểm tra tài khoản này có thể mở forms.office.com và đăng ký ứng dụng có quyền Microsoft Forms.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>Đã chọn {0} trên {1}</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Tiêu đề</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Loại</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Sửa đổi lần cuối</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Kết quả</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Thêm vào tiêu đề bản sao:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (bản sao)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Sao chép các biểu mẫu đã chọn</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Xuất phản hồi…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Đối chiếu bản sao với nguồn của nó</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Công cụ khác</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Biểu mẫu</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Sao chép Microsoft Forms và xuất phản hồi của chúng</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Công cụ Biểu mẫu</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Ghi lại luồng cho đích</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Cập nhật các gói Power Automate (.zip) đã xuất để chúng trỏ tới đích: trang web, danh sách, cột, biểu mẫu đã sao chép và miền email. Gói gốc của bạn không bao giờ bị thay đổi.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Chọn các gói luồng đã xuất</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Thêm các gói luồng (.zip) bạn đã xuất từ Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Thêm tệp…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Thêm thư mục…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Quét</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Gói luồng (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Hãy thêm ít nhất một gói luồng trước.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Đang quét các gói…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>Đã bỏ qua {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>Tìm thấy {0} luồng. Chúng tham chiếu {1} trang web, {2} danh sách và {3} biểu mẫu.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Quét hoàn tất.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Ánh xạ trang web</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Trang web SharePoint của mỗi luồng chuyển tới đâu. Ở chế độ Nhiều tenant, hãy đăng nhập vào đích và địa chỉ của tenant mới sẽ được điền sẵn cho bạn; hãy đổi dòng nào có trang web mang tên khác. Ở chế độ Một tenant, hãy nhập trang web đích cho từng dòng.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Trang web trong các luồng (sẽ bị thay thế)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Trang web đích</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Địa chỉ tenant mới:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Điền các đích trống, giữ nguyên đường dẫn</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Nhập URL đầy đủ, chẳng hạn https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Đã điền các đích trống bằng máy chủ đó và đường dẫn của từng trang web.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Khớp danh sách và cột</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Mỗi danh sách mà các luồng sử dụng có một thẻ, bất kể bao nhiêu luồng dùng nó. Mỗi thẻ hiển thị tên và các cột của danh sách, danh sách mà nó ánh xạ tới ở đích (mặc định là danh sách cùng tên; nếu tên khác, hãy chọn danh sách khác từ danh sách thả xuống), và cách ánh xạ từng cột. Hãy kiểm tra các thẻ có dấu cảnh báo.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Khớp danh sách và cột</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Danh sách</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>ID danh sách nguồn</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>ID danh sách đích</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Cột nguồn</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Cột đích</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Hãy quét các gói trước.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Hãy nhập ít nhất một trang web đích trước.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Đang khớp danh sách và cột…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(không tìm thấy)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Tìm thấy danh sách cùng tên ở đích</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Trang web chứa danh sách này chưa có trang web đích (bước Trang web)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Không đọc được danh sách này trên trang web nguồn: có thể nó không tồn tại, tài khoản này có thể không có quyền truy cập, hoặc trang web thuộc tenant khác với kết nối nguồn của bạn</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Không có danh sách nào mang tên này trên trang web đích: hãy chọn một danh sách từ danh sách thả xuống</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Cùng tên</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Đã đổi tên ở đích</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Không khớp: hãy chọn một cột</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} trên {1} danh sách có danh sách đích. {2} cột cần kiểm tra.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Biểu mẫu và email</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Các biểu mẫu được sao chép bằng công cụ Biểu mẫu sẽ được điền tự động. Với biểu mẫu do bạn tự tạo, hãy dán ID của nó hoặc liên kết trang chỉnh sửa của nó.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>ID biểu mẫu nguồn</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>ID biểu mẫu (điền từ danh sách thả xuống, hoặc dán một ID)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Chuyển miền email:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Ghi các gói đã cập nhật</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Chọn thư mục đầu ra (không phải thư mục chứa bản gốc). Các gói đã cập nhật và một báo cáo liệt kê mọi thay đổi sẽ được lưu ở đó.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Ghi các gói đã cập nhật</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Lưu ánh xạ…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Mở thư mục đầu ra</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Không thể chuyển kết nối giữa các tenant. Sau khi nhập gói, hãy tạo lại từng kết nối trong Power Automate và chọn lại.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Hãy chọn thư mục đầu ra trước.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Đang ghi các gói đã cập nhật…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Lưu bản sao đã cập nhật của {0} (gói {1}/{2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Gói Power Automate (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Bạn đã chọn tên tệp đó cho một gói khác. Hãy chọn tên khác.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Một gói sẽ được lưu đè lên bản gốc (cùng thư mục, cùng tên). Hãy chọn thư mục đầu ra khác, hoặc đổi tên trong &quot;Lưu thành&quot;, để bản gốc không bị đụng tới.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Báo cáo ghi lại luồng
+
+Các gói gốc không bị thay đổi. Kết nối KHÔNG được chuyển; hãy tạo lại và chọn lại khi nhập.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Đã ghi báo cáo vào {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>Đã ghi {0} gói, {1} lần thay thế. {2} giá trị vẫn trỏ về nguồn (xem báo cáo).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Đã lưu ánh xạ vào {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Luồng</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Cập nhật các luồng Power Automate đã xuất cho đích</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Công cụ Luồng</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Những gì các luồng này sử dụng</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Các dịch vụ tìm thấy trong các luồng đã quét, và công cụ này xử lý từng dịch vụ như thế nào.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Dịch vụ</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Luồng</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Bước</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Đã tìm thấy</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Công cụ này làm gì</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Ghi lại những gì tìm thấy</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>Báo cáo ID; xem lại sau khi nhập</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Chỉ kết nối (hãy tạo lại)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Ánh xạ cột</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Một cột xuất hiện ở đây khi luồng ghi vào nó, lọc hoặc sắp xếp theo nó, hoặc đọc nó trong một biểu thức, trên một danh sách đã được khớp. Cột đích được chọn bằng khớp tự động (cùng tên, rồi cùng tên hiển thị, rồi tên tương tự). Bạn chỉ cần xử lý các dòng được đánh dấu &quot;Tên tương tự&quot; hoặc &quot;Không khớp&quot;; đổi bất kỳ dòng nào từ danh sách thả xuống, hoặc chọn &quot;(giữ nguyên)&quot; để giữ tên nguồn. Các cột tích hợp như Title không được liệt kê vì chúng tồn tại ở mọi nơi.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(giữ nguyên)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Tên tương tự: vui lòng kiểm tra</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(chưa khớp)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Danh sách đích do bạn chọn</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Nhập hoặc dán ID danh sách đích, hoặc liên kết trang cài đặt danh sách của nó, vào cột ID danh sách đích để tự chọn danh sách (ví dụ khi tên khác nhau). Sau đó nhấp &quot;Khớp lại&quot; để khớp các cột của nó.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Không tìm thấy ID danh sách trong &apos;{0}&apos;. Hãy dán một GUID hoặc liên kết trang cài đặt danh sách.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Không tìm thấy ID biểu mẫu trong &apos;{0}&apos;. Hãy dán ID biểu mẫu hoặc liên kết trang chỉnh sửa của biểu mẫu.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Biểu mẫu</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Đích</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Sao chép</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Kết quả</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Chọn các biểu mẫu cần sao chép</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Tải lại biểu mẫu</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Nhấp &quot;Tải biểu mẫu của tôi&quot; để xem các biểu mẫu của bạn.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>Không tìm thấy biểu mẫu nào trong tài khoản này.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Sao chép {0} biểu mẫu</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Sao chép thêm biểu mẫu</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Chọn nơi đặt các bản sao</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Một tenant: các bản sao được tạo trong cùng tài khoản bạn đang dùng, cạnh bản gốc.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Nhiều tenant: các bản sao được tạo trong tài khoản đích. Hãy đăng nhập vào đó tại đây; việc này tách biệt với lần đăng nhập bạn dùng cho các trang web SharePoint.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Tài khoản đích</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Đăng nhập bằng đăng ký ứng dụng: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Đăng nhập bằng đăng ký ứng dụng đích của bạn (đặt trong Cài đặt).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Đăng nhập vào tài khoản đích</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Đăng nhập lại</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Đang đăng nhập vào tài khoản đích… một cửa sổ trình duyệt có thể mở ra.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Đã kết nối với tư cách {0}. Đã xác nhận quyền truy cập Microsoft Forms (đã có {1} biểu mẫu trong tài khoản này).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Không thể kết nối với tài khoản đích: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Tài khoản đích chưa được kết nối.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Sẵn sàng. Nhấp nút Sao chép để bắt đầu.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Sẵn sàng: các bản sao sẽ được tạo trong {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Đăng nhập vào tài khoản đích để tiếp tục.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Tùy chọn</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} biểu mẫu sẽ được sao chép từ {1} sang {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>tài khoản nguồn</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>tài khoản đích</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Đang sao chép biểu mẫu</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Đang bắt đầu…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Biểu mẫu {0}/{1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Đang hủy sau biểu mẫu hiện tại…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Sao chép hoàn tất: đã sao chép toàn bộ {0} biểu mẫu</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Các bản sao của bạn nằm trong {0}. Mở Microsoft Forms để xem, hoặc dùng bảng bên dưới.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Sao chép hoàn tất: đã sao chép {0} trên {1} biểu mẫu, một số cần chú ý</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Các bản sao nằm trong {0}. Các biểu mẫu có dấu cảnh báo được sao chép nhưng có vấn đề, còn biểu mẫu thất bại thì chưa được tạo. Xem cột Chi tiết.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Sao chép hoàn tất, nhưng không có biểu mẫu nào được sao chép</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Xem cột Chi tiết để biết lý do. Nguyên nhân thường gặp là đăng ký đích thiếu quyền Microsoft Forms, hoặc tài khoản không có quyền truy cập Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Đã hủy sao chép sau {0} trên {1} biểu mẫu</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Các biểu mẫu liệt kê bên dưới đã hoàn tất. Biểu mẫu đang được sao chép khi bạn hủy chưa hoàn thành và không hiển thị.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Đã sao chép</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>Có cảnh báo</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Thất bại</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Câu hỏi</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Biểu mẫu nguồn</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Bản sao</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Câu hỏi</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Chi tiết</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Đã sao chép</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Đã sao chép kèm cảnh báo</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Thất bại</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Mở bản sao đã chọn</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Mở Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Xuất kết quả…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Hiển thị ánh xạ ID biểu mẫu</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Hãy chọn một biểu mẫu đã sao chép trong bảng trước.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Đã lưu kết quả vào {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Gợi ý: đăng ký ứng dụng không có địa chỉ chuyển hướng phù hợp. Trong Entra, ở mục Xác thực, hãy thêm nền tảng &quot;Ứng dụng di động và máy tính để bàn&quot; với http://localhost, rồi thử lại.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Gói</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Trang web</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Danh sách và cột</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Biểu mẫu và email</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Ghi</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Báo cáo</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Chọn các luồng đã xuất của bạn</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>Trong Power Automate: mở Luồng của tôi, chọn một luồng, rồi Xuất → Gói (.zip). Thêm các tệp .zip đã tải xuống vào đây. Mỗi tệp được quét ngay khi bạn thêm.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Xóa</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Thêm các gói luồng đã xuất để bắt đầu.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>Không tìm thấy luồng nào trong các tệp đó. Hãy đảm bảo chúng là các gói được xuất bằng Xuất → Gói (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Quét hoàn tất. Xem lại những gì các luồng sử dụng, rồi nhấp Tiếp theo.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Chọn các trang web đích</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Các luồng này không dùng trang web SharePoint có địa chỉ cố định, nên không có gì để ánh xạ ở đây. Nhấp Tiếp theo.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Tiếp theo, công cụ đọc từng danh sách qua các kết nối của bạn và khớp nó trên trang web đích.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Nhập trang web đích cho từng trang web nguồn, rồi nhấp Tiếp theo.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Khớp danh sách và cột</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Khớp lại</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Danh sách</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Các luồng này không trỏ tới danh sách SharePoint cụ thể nào, nên không có gì để khớp.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Danh sách và cột được khớp khi bước này mở ra.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Biểu mẫu và email</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Kiểm tra biểu mẫu và email, rồi nhấp Tiếp theo.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Các luồng này không dùng Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>Địa chỉ email</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Để chuyển mọi địa chỉ từ một miền email sang miền khác, hãy nhập cả hai miền. Các địa chỉ ở miền khác được liệt kê trong báo cáo, không bị thay đổi.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Ghi các gói đã cập nhật</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Thư mục đầu ra</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Chọn thư mục đầu ra, rồi nhấp Ghi các gói đã cập nhật.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Sẵn sàng ghi {0} gói chứa {1} luồng. Thay thế: {2} trang web, {3} danh sách, {4} ánh xạ cột, {5} biểu mẫu.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Ghi các gói đã cập nhật</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Gói đã ghi</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Lần thay thế</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Vẫn là nguồn</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>Cần xem lại</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Gói</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Đã cập nhật</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} giá trị vẫn trỏ về nguồn</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Mở báo cáo</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Bắt đầu lại</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Xong: đã ghi {0} gói</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Đã lưu trong {0}. Không còn gì trỏ về nguồn. Làm theo các bước bên dưới để nhập chúng.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Xong: đã ghi {0} gói, một số mục cần bạn xem lại</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Đã lưu trong {0}. Mở báo cáo để xem các giá trị vẫn trỏ về nguồn và các mục công cụ không ghi lại (dịch vụ khác, danh sách hoặc cột chưa khớp).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Việc cần làm tiếp theo</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Mở báo cáo và kiểm tra &quot;vẫn trỏ về nguồn&quot; cùng mọi mục được đánh dấu cần xem lại.
+2.  Trong Power Automate (tenant đích), mở Luồng của tôi → Nhập → Nhập gói (Cũ) và chọn một gói đã ghi.
+3.  Trong &quot;Tài nguyên liên quan&quot;, nhấp &quot;Chọn trong khi nhập&quot; cho từng kết nối và chọn hoặc tạo một kết nối trong tenant đích. Không thể chuyển kết nối giữa các tenant.
+4.  Nhập luồng. Giữ nó ở trạng thái tắt, mở nó, sửa mọi thứ nó đánh dấu, rồi bật lên.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Không có thay đổi (không có gì trong đó khớp với ánh xạ của bạn)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Đã sao chép {0} sang {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Đã sao chép trước đó</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Đã sao chép</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …và {0} mục nữa</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Sao chép lại?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>{0} trong số các biểu mẫu đã chọn đã được sao chép sang tài khoản này:
+
+{1}
+
+Sao chép lại sẽ tạo bản sao thứ hai cho mỗi biểu mẫu. Tiếp tục?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>Một thao tác sao chép vẫn đang chạy. Nếu đóng bây giờ, biểu mẫu đang được sao chép có thể bị dở dang ở đích. Dừng và đóng?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Đang sao chép</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Không thể xuất phản hồi nào (xem nhật ký).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Lọc theo tiêu đề hoặc loại</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Một sổ làm việc</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Xuất tất cả biểu mẫu đã chọn vào một tệp Excel duy nhất, mỗi biểu mẫu một trang tính.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>Địa chỉ email</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Tenant ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Đường dẫn thư viện</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Giá trị khác</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Nhập giá trị thay thế cho bất kỳ giá trị nào cần thay đổi. Các dòng để trống không bị thay đổi; chúng được liệt kê trong báo cáo nếu vẫn trỏ về nguồn.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Loại</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>Trong các luồng</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Thay bằng</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Kiểm tra ID</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Không phải ID biểu mẫu hay liên kết trang chỉnh sửa</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Giống biểu mẫu nguồn</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Biểu mẫu này nằm trong tenant nguồn, không phải đích</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Biểu mẫu này nằm trong tenant khác với nguồn</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>Từ lần sao chép Forms của {0} sang {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Từ lần sao chép Forms trước đó</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Tải ánh xạ…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Điền trang web, danh sách, cột, biểu mẫu và các giá trị khác từ ánh xạ bạn đã lưu trước đó.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Không thể tải ánh xạ: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>Đã tải {0}. Các giá trị khớp với những luồng này đã được điền; hãy kiểm tra chúng ở các bước tiếp theo.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>Đã tải {0}. Nó sẽ được áp dụng khi bạn thêm gói luồng.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>Đã điền {0} trang web đích. Kiểm tra chúng bên dưới, rồi nhấp Tiếp theo.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Mọi trang web đều đã có đích, nên không có gì thay đổi. Hãy xóa một ô Đích để nó được điền.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Lối tắt: nhập địa chỉ của tenant mới, ví dụ https://fabrikam.sharepoint.com, rồi nhấp nút. Mọi trang web chưa có đích sẽ nhận địa chỉ đó với cùng đường dẫn như nguồn: https://contoso.sharepoint.com/sites/HR trở thành https://fabrikam.sharepoint.com/sites/HR. Các trang web OneDrive (contoso-my) chuyển sang địa chỉ -my của tenant mới. Các đích bạn đã nhập sẽ không bị đụng tới. Các trang web phải tồn tại sẵn trong tenant mới; công cụ này không tạo chúng. Nếu một trang web có tên khác ở đó, hãy nhập địa chỉ của nó vào ô Trang web đích.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Nếu bạn để trống Trang web đích, trang web đó được giữ nguyên: các luồng vẫn trỏ về trang web cũ, danh sách và cột của nó không được khớp hay ghi lại, và báo cáo liệt kê nó trong &quot;Việc cần làm sau khi nhập&quot;. Điều này chỉ đúng với trang web không chuyển sang tenant mới.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Điều sẽ xảy ra</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Sẽ chuyển sang đích</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Không thay đổi (không có đích)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Trang web {0} được giữ nguyên (chưa nhập đích), nên các luồng vẫn trỏ về nó và danh sách của nó chưa được khớp. Không sao nếu trang web không chuyển đi; nếu không, hãy chạy lại với một đích.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Chưa có cột để hiển thị: chưa có danh sách nào được khớp, nên không có gì để so sánh. Hãy sửa các danh sách ở trên, rồi nhấp Khớp lại.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Không có cột cần ánh xạ, nên bạn không cần làm gì ở đây. Các danh sách đã khớp không có cột tùy chỉnh nào mà các luồng ghi vào, lọc theo hoặc đọc theo cách công cụ có thể thấy. Danh sách hoạt động ở dưới cùng cho biết đã tìm thấy gì cho từng danh sách.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>Tìm thấy {0} cột: {1} cùng tên ở đích, {2} đã đổi tên và được khớp, {3} trông tương tự, {4} không khớp.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Vui lòng kiểm tra các dòng được đánh dấu &quot;Tên tương tự&quot; và chọn cột cho các dòng được đánh dấu &quot;Không khớp&quot;. Các dòng được đánh dấu &quot;Cùng tên&quot; hoặc &quot;Đã đổi tên ở đích&quot; không cần làm gì.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Không có gì cần làm ở đây: mọi cột đã khớp. Nhấp Tiếp theo.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Tên của các gói đã cập nhật</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Đặt tên gì cho các tệp .zip đã cập nhật. Dùng {name} cho tên tệp gốc: &quot;{name} - Fabrikam&quot; biến &quot;Onboarding.zip&quot; thành &quot;Onboarding - Fabrikam.zip&quot;. Với một gói, bạn có thể chỉ cần gõ tên đầy đủ. Để nguyên {name} để giữ tên gốc. Tên dùng hai lần sẽ được thêm (2), (3)… để không có gì bị ghi đè.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Sẽ ghi: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Một luồng chỉ lưu ID của biểu mẫu, nên tên biểu mẫu được đọc từ Microsoft Forms khi bước này mở ra: tiêu đề của từng biểu mẫu trong các luồng của bạn (tài khoản nguồn) và các biểu mẫu trong tài khoản đích. Biểu mẫu có tiêu đề khớp chính xác với đúng một biểu mẫu đích sẽ được khớp giúp bạn; nếu không, hãy chọn biểu mẫu mới từ danh sách thả xuống, hoặc dán ID hay liên kết trang chỉnh sửa của nó. Dùng Tải lại tên biểu mẫu để đọc lại.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Tải biểu mẫu từ tài khoản đích…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Đang tải biểu mẫu của tài khoản đích… bạn có thể được nhắc đăng nhập.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Đang liệt kê các biểu mẫu do tài khoản đích {0} sở hữu để bạn chọn biểu mẫu mới cho từng luồng. Nhấp Hủy để ngừng chờ đăng nhập.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Đích: tìm thấy {0} biểu mẫu trong {1}. Chọn một biểu mẫu cho mỗi dòng, hoặc dán một ID.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Đích: không tìm thấy biểu mẫu nào trong {0}. Danh sách thả xuống chỉ liệt kê các biểu mẫu do tài khoản đó sở hữu (không phải biểu mẫu nhóm), nên hãy sao chép biểu mẫu bằng công cụ Biểu mẫu trước, hoặc dán một ID.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Đã hủy. Nhấp Tải tên biểu mẫu để thử lại, hoặc dán ID biểu mẫu.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Đích: không thể tải biểu mẫu: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(không có)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(biểu mẫu không có tiêu đề)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Biểu mẫu nguồn</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Chọn từ các biểu mẫu của đích</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Chọn một biểu mẫu từ tài khoản đích. Trước tiên hãy nhấp &quot;Tải biểu mẫu từ tài khoản đích&quot;.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Điền từ lần đăng nhập đích ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Tài khoản nguồn của bạn, được thay bằng tài khoản đích của bạn</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Điền từ các lần đăng nhập của bạn ({0} → {1}). Xóa cả hai ô để giữ nguyên miền email.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Trang web có đích để trống được giữ nguyên: các luồng vẫn trỏ về nó, và báo cáo liệt kê nó.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Đã đăng nhập với tư cách {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Đã đăng nhập với tư cách {0}. Địa chỉ SharePoint của tenant đích là {1}; các trang web đích trống đã được điền từ đó.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Một số trang web trong các luồng nằm trên {0}, chính là địa chỉ của tài khoản đích. Hoặc các gói này đã trỏ tới đích (ví dụ gói do công cụ này ghi, hoặc luồng xuất từ đích), khi đó hãy thêm các bản xuất gốc từ nguồn; hoặc nguồn và đích thực sự là một tenant, khi đó hãy chuyển ứng dụng sang chế độ Một tenant (Cài đặt).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} là gói do công cụ này ghi vào {1}: nó đã chứa địa chỉ đích, nên không còn gì để chuyển. Hãy thêm bản xuất gốc từ tenant nguồn (tệp trong Tải xuống của bạn, không phải tệp trong thư mục đầu ra).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Các trang web trong những luồng này nằm trên {0}, là tenant đích của bạn, nhưng nguồn của bạn là {1}. Nếu các gói được xuất từ {0}, hãy đăng nhập vào tenant đó làm nguồn (Đổi nguồn…). Nếu công cụ này đã ghi chúng trước đó, hãy xóa chúng và thêm các bản xuất gốc.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Đã đăng nhập. Đã điền {0} trang web đích từ {1}. Hãy kiểm tra chúng, rồi nhấp Tiếp theo.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Đã đăng nhập. Mọi trang web đích đã có giá trị, nên không có gì thay đổi.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Đăng nhập chưa hoàn tất, hoặc không đọc được địa chỉ của tenant mới (xem dòng Đích). Nếu bạn đã đăng nhập, hãy nhập địa chỉ của tenant mới bên dưới để điền các trang web đích.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — đã kết nối với tư cách {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — chưa đăng nhập</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Đổi đích…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Chưa chọn danh sách đích, nên các luồng này vẫn trỏ tới một danh sách không có ở đích. Hãy chọn danh sách đích, hoặc tạo danh sách trên trang web đích trước.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Các luồng dùng cột &quot;{0}&quot;, nhưng danh sách đích &quot;{1}&quot; không có cột tương ứng. Hãy chọn cột đích của nó trong bảng, hoặc thêm cột vào danh sách đích rồi nhấp Kiểm tra lại.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>Danh sách đích &quot;{0}&quot; yêu cầu cột &quot;{1}&quot;, nhưng bước &quot;Tạo mục&quot; &quot;{3}&quot; trong luồng &quot;{2}&quot; không đặt nó, nên việc nhập sẽ thất bại với lỗi &quot;missing required property item/{1}&quot;. Hãy nhập giá trị cho nó bên dưới và công cụ sẽ thêm vào bước đó, hoặc đặt &quot;{1}&quot; thành tùy chọn trên danh sách đích rồi nhấp Kiểm tra lại.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>Danh sách đích &quot;{0}&quot; yêu cầu cột &quot;{1}&quot;, nhưng bước &quot;Tạo mục&quot; &quot;{3}&quot; trong luồng &quot;{2}&quot; không đặt nó, nên việc nhập sẽ thất bại với lỗi &quot;missing required property item/{1}&quot;. Hãy đặt &quot;{1}&quot; thành tùy chọn trên danh sách đích trong SharePoint, rồi nhấp Kiểm tra lại.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Giá trị cần điền cho các cột bắt buộc này (được thêm vào mọi bước Tạo mục bỏ sót chúng):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Điều này sẽ thất bại khi nhập. Hãy sửa để tiếp tục:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Kiểm tra lại</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Sẽ thất bại ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Đăng nhập vào đích để tiếp tục.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} gói do công cụ này ghi và đã chứa giá trị của đích. Hãy xóa chúng (dấu ✕ trong danh sách) và thêm các bản xuất gốc.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} trang web chưa có đích. Một trang web để nguyên vẫn trỏ về tenant nguồn.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} danh sách sẽ thất bại khi nhập. Hãy sửa các danh sách được đánh dấu &quot;Sẽ thất bại&quot; để tiếp tục.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Các danh sách chưa được khớp. Hãy quay lại một bước rồi tiến lên lại để thử lại.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} biểu mẫu cần ID biểu mẫu đích hợp lệ để tiếp tục.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Đổi nguồn…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Đã đăng nhập với tư cách {0}. Địa chỉ SharePoint của tenant nguồn là {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Kết nối nguồn đã đổi thành {0}. Các trang web liệt kê bên dưới phải nằm trong tenant này.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Đăng nhập nguồn chưa hoàn tất, hoặc không đọc được địa chỉ của tenant (xem dòng Nguồn). Kết nối nguồn trước đó được giữ lại nếu bạn đã hủy.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Một số trang web được đọc từ {0}, không phải tenant mà bạn đang kết nối làm nguồn ({1}). Việc đọc danh sách của chúng sẽ thất bại. Hãy sửa &quot;Đọc danh sách từ&quot; của các dòng đó thành địa chỉ trên tenant nguồn của bạn, hoặc nhấp Đổi nguồn… và đăng nhập bằng tài khoản từ tenant đó.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Các trang web của luồng nằm trên {0}, nhưng bạn đang kết nối với {1} làm nguồn. &quot;Đọc danh sách từ&quot; đã được điền bằng chính các trang web đó trên {1}, nên công cụ đọc tên danh sách và cột từ đó. Hãy kiểm tra các trang web đó có tồn tại (sửa bất kỳ dòng nào), hoặc nhấp Đổi nguồn… nếu các luồng thực sự đến từ {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Các danh sách mà luồng sử dụng</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Nhấp một danh sách để mở hoặc đóng. Các danh sách cần xem xét nằm đầu và đang mở.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Mở tất cả</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Đóng tất cả</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Được dùng bởi:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Nguồn:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Danh sách đích</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>hoặc dán ID hay liên kết của nó:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Cột nguồn</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Loại</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Đã dùng</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Các luồng không sử dụng</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(không có: giữ nguyên danh sách này)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Chưa chọn danh sách đích: các luồng dùng nó vẫn trỏ về danh sách nguồn</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} cột cần kiểm tra</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ không có gì cần kiểm tra</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} cột trên danh sách này; các luồng dùng {1}: {2} cùng tên ở đích, {3} đã đổi tên và được khớp, {4} tương tự (vui lòng kiểm tra), {5} không khớp (vui lòng chọn). Các cột khác được hiển thị để tham khảo và không bị thay đổi.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} cột trên danh sách này; không cột nào được các luồng dùng theo cách công cụ có thể thấy, nên không cần ánh xạ gì.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Không đọc được cột nào của danh sách này (xem các ghi chú ở trên và danh sách hoạt động).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Hãy chọn danh sách đích ở trên để xem các cột của nó và ánh xạ chúng.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Không đọc được các cột của danh sách đích, nên không thể gợi ý kết quả khớp nào.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Luồng không cho biết danh sách này nằm trên trang web nào (nó dùng một tham số), nên không thể tra cứu. Hãy dán ID hoặc liên kết của danh sách đích.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Không có danh sách đích: danh sách này được giữ nguyên.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Đang đọc các cột của danh sách đích cho {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Danh sách &apos;{0}&apos;: bạn đã chọn danh sách đích khác. Đang đọc các cột của nó trên {1} để khớp lại.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — đã kết nối với tư cách {1} (đăng nhập của cửa sổ chính)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Đọc danh sách từ (nguồn)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>&quot;Trang web trong các luồng&quot; là địa chỉ được lưu trong các luồng; đó là thứ bị thay thế, nên không thể chỉnh sửa. &quot;Đọc danh sách từ&quot; là nơi công cụ đọc tên và cột của từng danh sách ở phía nguồn; ban đầu nó là cùng địa chỉ, nên hãy đổi khi địa chỉ của luồng đã cũ, đã đổi tên, hoặc nằm trên tenant khác với kết nối nguồn của bạn.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Những gì các luồng này sử dụng</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} luồng, {2} bước: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>được công cụ này ghi lại</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>xem lại thủ công</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>chỉ kết nối</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>Việc cần làm sau khi nhập</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Nhập từng gói đã vá vào môi trường đích và tạo lại các kết nối (chúng không bao giờ được sao chép).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Gói giải pháp: chỉ các định nghĩa quy trình làm việc được ghi lại. Giá trị biến môi trường và tham chiếu kết nối trong giải pháp (customizations.xml) vẫn giữ giá trị của nguồn; hãy đặt chúng sau khi nhập.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Chủ sở hữu luồng và người dùng chỉ chạy không nằm trong gói; hãy chia sẻ các luồng với đúng người sau khi nhập.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Không có thay đổi (không có gì trong ánh xạ khớp).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} lần thay thế</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Vẫn trỏ về giá trị nguồn (chưa ánh xạ, hãy xem lại trước khi nhập)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Đang kết nối với trang web nguồn {0} và trang web đích {1}. Một cửa sổ đăng nhập sẽ mở nếu bạn chưa đăng nhập.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Đã kết nối với {0} (nguồn) và {1} (đích).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Đang đọc các danh sách và thư viện trên trang web đích {0}, để mỗi danh sách có thể được khớp theo tên và đưa vào danh sách thả xuống.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>Tìm thấy {0} danh sách và thư viện trên {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Đang đọc tên và các cột của danh sách {0} từ trang web nguồn {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Danh sách &apos;{0}&apos;: đang tìm danh sách cùng tên trên trang web đích {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Danh sách &apos;{0}&apos;: đã tìm thấy ở đích. Đang đọc các cột của danh sách đích để khớp.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Danh sách &apos;{0}&apos;: không đọc được các cột của nó, hoặc nó không có cột nào. Không có gì để ánh xạ cho danh sách này.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Danh sách &apos;{0}&apos;: {1} cột, không cột nào được các luồng dùng theo cách công cụ có thể thấy. Không cần ánh xạ gì.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Danh sách &apos;{0}&apos;: các luồng dùng {1} tên cột: {2} cùng tên ở đích (không cần thay đổi), {3} đã đổi tên và được khớp, {4} trông tương tự (vui lòng kiểm tra), {5} không khớp (tùy bạn chọn), {6} là cột tích hợp (không cần ánh xạ).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>Danh sách {0} không có trên trang web nguồn, nhưng có trên trang web đích với tên &apos;{1}&apos;: luồng đã trỏ tới đích.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Trang web &apos;{0}&apos; không có đích; các danh sách trên đó chưa được phân giải.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Nâng cao: đọc danh sách từ một địa chỉ khác</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Ánh xạ cột: từ {0} sang {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Không có cột nào để hiển thị cho danh sách này.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Không cột nào của danh sách này được các luồng dùng. Đánh dấu &quot;Hiển thị tất cả cột&quot; để xem chúng.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>Không đọc được danh sách nguồn, và luồng không nêu cột nào, nên không có gì để ánh xạ.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Danh sách</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(không đọc được trên nguồn)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Đọc từ:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Trang web</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Luồng này đã trỏ tới danh sách này ở đích. {0} tên cột mà nó dùng được hiển thị đối chiếu với các cột của đích; không cần thay đổi gì.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(không có tên danh sách)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Đã ở đích</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Ánh xạ theo tên cột của luồng</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Không đọc được cột</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Không có danh sách đích</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Không có gì để ánh xạ</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Sẵn sàng</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Không đọc được cột đích</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} cần kiểm tra</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Được {0} luồng sử dụng</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} ánh xạ cột vẫn cần xem xét.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Mọi ánh xạ cột đã được xác định.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Kết nối không được sao chép giữa các tenant: hãy tạo lại chúng trong Power Automate sau khi nhập.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>Email: mọi địa chỉ trên {0} trở thành {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} trên {1} biểu mẫu trỏ tới biểu mẫu mới.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} trên {1} danh sách có danh sách đích.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Các danh sách chưa được khớp.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>Địa chỉ email không bị thay đổi (chưa ánh xạ miền nào).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Các luồng không dùng Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Các luồng không dùng danh sách cụ thể nào.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Các luồng không nêu trang web SharePoint nào.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>Sẽ ghi {0} gói chứa {1} luồng; bản gốc không bị thay đổi.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0} trên {1} trang web sẽ chuyển sang trang web đích; các trang web còn lại giữ nguyên.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Xóa các giá trị được điền tự động</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Đã điền</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Biểu mẫu trong các luồng của bạn</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Từ (trong các luồng của bạn)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Danh sách</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Trang web</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>Sang (đích)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Do bạn chọn</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Giữ nguyên</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(đăng nhập của cửa sổ chính)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>Miền email cần chuyển từ</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Chuyển mọi địa chỉ trên</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>sang</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>Miền email cần chuyển sang</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…hoặc kéo các tệp .zip (hoặc một thư mục) vào cửa sổ này.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Cột &apos;{0}&apos; trên danh sách &apos;{1}&apos; không có kết quả khớp trong danh sách đích.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>Danh sách &apos;{0}&apos; ({1}) trên {2} không có danh sách đích, nên các luồng dùng nó vẫn trỏ về danh sách nguồn.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(không rõ tiêu đề)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Đi tới bước</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Có ánh xạ đã lưu? Hãy tải nó…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Mẫu tùy chỉnh…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Giữ nguyên tên gốc</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Thêm &apos; - migrated&apos; vào mỗi tên</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Mở báo cáo và kiểm tra những gì được đánh dấu cần xem lại.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>Trong Power Automate (tenant đích): Luồng của tôi, Nhập, Nhập gói (Cũ), và chọn một gói đã ghi.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>Trong Tài nguyên liên quan, nhấp &quot;Chọn trong khi nhập&quot; cho từng kết nối và chọn hoặc tạo một kết nối trong tenant đích. Không thể chuyển kết nối giữa các tenant.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Nhập luồng, giữ nó ở trạng thái tắt, mở nó, sửa mọi thứ nó đánh dấu, rồi bật lên.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Mở thư mục</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Mở Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Thư mục đầu ra đó chưa tồn tại; nó được tạo khi bạn ghi các gói.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>NGUỒN</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>ĐÍCH</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>Tìm thấy {0} luồng</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Không tìm thấy luồng nào</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Đã được công cụ này ghi</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Không đọc được</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Sẵn sàng ghi?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Xóa gói này khỏi danh sách</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Báo cáo ghi lại luồng</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Những gì các luồng này sử dụng ({0} dịch vụ)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>Không thể ghi {0} gói.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} giá trị trong các gói đã ghi vẫn trỏ về nguồn. Mở báo cáo để xem giá trị nào.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Hiển thị tất cả {0} cột</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Chỉ hiển thị các cột mà luồng sử dụng</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Các cột này có nghĩa là gì?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>ID của danh sách này không có trên trang web nguồn, nhưng nó là danh sách &apos;{0}&apos; trên trang web đích: luồng đã trỏ tới đích, như trong gói mà công cụ này đã ghi.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Đã kết nối</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Sự cố</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Chưa đăng nhập</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Đang chờ đăng nhập…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} danh sách · tất cả sẵn sàng</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} danh sách · {1} sẵn sàng · {2} cần xem xét</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Mất {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>Cần xem lại</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Thêm các gói luồng (.zip) bạn đã xuất từ tenant nguồn. Mỗi gói được quét ngay khi bạn thêm.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Cho biết mỗi luồng chuyển tới trang web nào. Đăng nhập vào đích và địa chỉ của tenant mới sẽ được điền sẵn cho bạn.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Mỗi danh sách mà các luồng dùng được khớp với một danh sách ở đích, và các cột của nó được ánh xạ. Hãy kiểm tra mọi mục được đánh dấu cần xem xét.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Trỏ các biểu mẫu đã sao chép tới ID mới của chúng, và quyết định cách địa chỉ email và ID tenant thay đổi.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Kiểm tra danh sách bên dưới, chọn nơi lưu các gói đã cập nhật, rồi ghi chúng.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Điều gì xảy ra ở đây</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Công cụ đọc từng gói trên máy tính này (không gửi gì đi đâu cả) để tìm các trang web, danh sách, cột và biểu mẫu mà các luồng dùng. Hãy thêm các bản xuất GỐC từ nguồn, không phải gói do công cụ này ghi trước đó: chúng đã chứa địa chỉ đích.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Cột &apos;{0}&apos; được ánh xạ khác nhau trên các danh sách khác nhau ({1}). Các bước của mỗi danh sách có ánh xạ riêng; các biểu thức ở nơi khác trong luồng giữ nguyên tên gốc, nên hãy xem lại chúng.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Tải lại tên biểu mẫu…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Đang tải tên biểu mẫu… bạn có thể được nhắc đăng nhập.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Đang đọc tiêu đề của các biểu mẫu trong luồng của bạn từ tài khoản nguồn {0}. Nhấp Hủy để ngừng chờ đăng nhập.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Nguồn: tìm thấy tiêu đề của {0} trên {1} biểu mẫu ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Nguồn: không thể đọc tiêu đề biểu mẫu: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} biểu mẫu đã được khớp với biểu mẫu đích cùng tên.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Có vẻ là ID biểu mẫu hợp lệ</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Khớp theo tên</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>Nguồn và đích ở cùng một tenant ({0}). Hãy chuyển ứng dụng sang chế độ Một tenant (Cài đặt), hoặc đăng nhập vào nguồn và đích bằng các tài khoản từ những tenant khác nhau.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Xóa các gói này</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>Đã xóa {0} gói đã trỏ tới đích: {1}. Hãy thêm các bản xuất gốc từ tenant nguồn.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Các gói đó đã bị xóa. Hãy thêm các bản xuất gốc từ tenant nguồn.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Mỗi gói được lưu thành một tệp .zip mới trong thư mục đầu ra; bản gốc không bao giờ bị thay đổi. Để đổi tên một gói, hãy nhập tên khác vào Lưu thành.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Giữ nguyên tên gốc</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Thêm &apos; - migrated&apos; vào mọi tên</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Gói gốc</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Lưu thành</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Sẽ được lưu thành: {0} (bạn có thể đổi tên bên dưới).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Không đọc được; không ghi đầu ra</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Đã hủy. Không có gì thay đổi. Ở bước Trang web, dùng Đăng nhập để thử lại (ví dụ trong trình duyệt khác); ở bước Danh sách, dùng Khớp lại.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Đang hủy… cửa sổ đăng nhập có thể mất một lúc để đóng.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Công cụ đang làm gì</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Kết nối</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Nhiều tenant: để khớp danh sách, công cụ đọc tên và cột của từng danh sách từ tenant nguồn và tìm danh sách tương ứng trong tenant đích. Việc đó cần đăng nhập vào từng bên. Hãy đăng nhập từng bên tại đây, hoặc chỉ cần nhấp Tiếp theo và bạn sẽ được hỏi khi đó. Một cửa sổ trình duyệt sẽ mở; nếu sai trình duyệt, hãy nhấp Hủy và thử lại. Không có gì bị thay đổi trong cả hai tenant.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Một tenant: nguồn và đích là cùng một tenant, nên công cụ dùng tài khoản bạn đã đăng nhập ở bước Kết nối. Không cần đăng nhập thêm gì. Không có gì bị thay đổi trong tenant.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Nguồn</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Đích</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Đăng nhập vào nguồn…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Đăng nhập vào đích…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Hủy</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Ngừng chờ cửa sổ đăng nhập, để bạn có thể thử lại, ví dụ trong trình duyệt khác.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Chưa đăng nhập</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Dùng đăng nhập của cửa sổ chính: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Đã đăng nhập với tư cách {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Sẵn sàng</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Đang chờ đăng nhập… một cửa sổ trình duyệt sẽ mở</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Đã hủy đăng nhập. Nhấp Đăng nhập để thử lại.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Đã đăng nhập. Kiểm tra các trang web đích bên dưới, rồi nhấp Tiếp theo.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Chưa có trang web nguồn để đăng nhập. Hãy thêm các gói luồng trước.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Hãy nhập ít nhất một trang web đích trước (hoặc dùng Điền, giữ nguyên đường dẫn); việc đăng nhập diễn ra tại tenant của trang web đích.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Đang đăng nhập vào nguồn… một cửa sổ trình duyệt sẽ mở.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Đang đăng nhập vào đích… một cửa sổ trình duyệt sẽ mở.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>nguồn</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>đích</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Đang đăng nhập vào tenant nguồn. Một cửa sổ trình duyệt sẽ mở; nhấp Hủy để ngừng chờ (ví dụ để thử trình duyệt khác). Việc đăng nhập cũng cho công cụ biết tenant nguồn là tenant nào.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Đang đăng nhập vào tenant đích. Một cửa sổ trình duyệt sẽ mở; nhấp Hủy để ngừng chờ (ví dụ để thử trình duyệt khác). Việc đăng nhập cũng cho công cụ biết địa chỉ SharePoint của tenant mới.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Đã kết nối với {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Bạn đã hủy đăng nhập.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Đang đọc {0} tệp gói trên máy tính này để tìm các trang web, danh sách, cột và biểu mẫu mà các luồng dùng. Không gửi gì đi đâu cả.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Đã đọc {0}: {1} luồng.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Đang khớp {0} danh sách: với mỗi danh sách, công cụ hỏi trang web nguồn về tên của nó, rồi tìm danh sách có tên đó trên trang web đích.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Đã khớp xong. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Đang ghi {0} gói đã vá vào {1}. Bản gốc không bị thay đổi.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Đang ghi {0} với ánh xạ của bạn được áp dụng.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Đang kiểm tra {0} để tìm các giá trị vẫn trỏ về nguồn.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Bạn đã hủy. Không có gì thay đổi.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Đã dừng: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Mỗi luồng lưu địa chỉ của trang web SharePoint mà nó đọc hoặc ghi. Để chạy trong tenant mới, mỗi luồng phải trỏ tới trang web tương ứng ở đó, nên hãy cho công cụ biết trang web mới nào thay thế từng trang web cũ. Việc này chỉ chỉnh sửa các bản sao của gói của bạn; không có gì được tra cứu cho đến khi bạn nhấp Tiếp theo.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Điều xảy ra ở đây: với mỗi danh sách mà luồng dùng, công cụ đọc tên và cột của danh sách từ trang web nguồn, tìm danh sách cùng tên trên trang web đích, và đọc các cột của danh sách đó để khớp chúng. Lý do: các luồng tham chiếu danh sách và cột bằng ID hoặc tên nội bộ, và chúng khác nhau trong tenant mới, nên công cụ tìm ra bản tương đương. Bước này chỉ đọc; không có gì được tạo hay thay đổi trong cả hai tenant. Bạn có thể đổi danh sách đích và bất kỳ cột nào trên thẻ của nó.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Biểu mẫu đã sao chép nhận một ID mới, nên luồng dùng nó phải trỏ tới bản sao. Địa chỉ email và ID tenant trong luồng cũng có thể cần thay đổi cho tổ chức mới. Không có gì được tra cứu ở đây; bạn quyết định các giá trị thay thế, và mọi thứ để trống sẽ giữ nguyên.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Công cụ ghi các tệp .zip mới vào thư mục đầu ra với ánh xạ của bạn được áp dụng, quét lại chúng để tìm mọi thứ vẫn trỏ về nguồn, và ghi một báo cáo. Các gói gốc của bạn không bao giờ bị thay đổi, và không có gì được gửi tới cả hai tenant. Sau đó bạn tự nhập các gói mới trong Power Automate.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Đã hủy đăng nhập. Nhấp nút để thử lại, ví dụ trong trình duyệt khác.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Hủy</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Lỗi: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Không thể đọc biểu mẫu nguồn ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Không thể tạo biểu mẫu ở đích ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Đã hủy giữa chừng. Một biểu mẫu dở dang còn lại ở đích; hãy xóa nó trong Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Sao chép dừng giữa chừng ({0}). Một biểu mẫu dở dang còn lại ở đích; hãy xóa nó trong Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>hình nền</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>biểu trưng</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>hình tiêu đề</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>{0} chưa được sao chép (hình ảnh chưa được hỗ trợ).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Chấm điểm bài kiểm tra (đáp án đúng và điểm) chưa được xác minh; vui lòng kiểm tra bản sao.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Không thể sao chép cài đặt &apos;{0}&apos; ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Câu hỏi &apos;{0}&apos; chưa được sao chép ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(không có tiêu đề)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Không thể sao chép quy tắc phân nhánh ({0}); vui lòng kiểm tra bản sao.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>Bản sao đã được tạo nhưng không thể hiển thị trong Microsoft Forms ({0}); nó có thể nằm trong thùng rác.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>Bản sao có {0} câu hỏi nhưng nguồn có {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Câu hỏi &apos;{0}&apos; ({1}) đã được tạo nhưng không thể sao chép các tùy chọn của nó ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Kết quả</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Biểu mẫu nguồn</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>ID biểu mẫu nguồn</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Tiêu đề bản sao</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>ID biểu mẫu bản sao</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Câu hỏi đã sao chép</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Câu hỏi trong nguồn</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Cảnh báo</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Ghi chú</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Lỗi</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Sổ làm việc Excel (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>Tệp JSON (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>ID</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Thời gian bắt đầu</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Thời gian hoàn thành</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Người phản hồi</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Tên</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Điểm</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Câu trả lời chưa ánh xạ (JSON thô)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (đã cắt: quá dài cho một ô Excel)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Dừng lần chạy?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>Một phép so sánh hoặc xác minh vẫn đang chạy. Đóng cửa sổ này sẽ dừng nó và không có báo cáo nào được ghi. Vẫn đóng?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Đóng khi đang làm việc?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Công cụ vẫn đang làm việc (quét, khớp, đăng nhập hoặc ghi gói). Đóng bây giờ sẽ dừng nó. Vẫn đóng?</value></data>
 </root>

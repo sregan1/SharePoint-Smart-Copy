@@ -505,6 +505,16 @@ public partial class FlowsDialog : Window
 
     private void FillRowsFromScan()
     {
+        // Adding or removing a package scans again and rebuilds every row. Keep what was already entered for the
+        // rows that still exist (site targets, "read from" edits, form IDs, replacement values) instead of
+        // handing the user a blank table after they filled it in.
+        var prevSites = new Dictionary<string, (string Target, string? ReadFrom)>(StringComparer.OrdinalIgnoreCase);
+        foreach (var r in _sites) prevSites.TryAdd(r.Source, (r.Target, r.ReadFromEdited ? r.ReadFrom : null));
+        var prevForms = new Dictionary<string, (string NewId, string Title)>(StringComparer.Ordinal);
+        foreach (var r in _forms) prevForms.TryAdd(r.SourceId, (r.NewId, r.SourceTitle));
+        var prevValues = new Dictionary<string, (string Target, string Note)>(StringComparer.OrdinalIgnoreCase);
+        foreach (var r in _values) prevValues.TryAdd(r.Category + "|" + r.Source, (r.Target, r.Note));
+
         _sites.Clear();
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var f in _scans.SelectMany(s => s.Findings).Where(f => f.Kind == FindingKind.SiteUrl && !f.Value.StartsWith('@')))
@@ -514,12 +524,15 @@ public partial class FlowsDialog : Window
             // The site the user connected as source maps to the connected target by default.
             var target = _connectedTarget.Length > 0 && string.Equals(norm, _connectedSource, StringComparison.OrdinalIgnoreCase)
                 ? _connectedTarget : string.Empty;
+            prevSites.TryGetValue(norm, out var prevSite);
+            if (!string.IsNullOrWhiteSpace(prevSite.Target)) target = prevSite.Target;
             var row = new SiteRow { Source = norm, Target = target };
             row.SetReadFromAuto(norm);
+            if (prevSite.ReadFrom is { Length: > 0 } keptRead) row.ReadFrom = keptRead;   // a user edit stays an edit
             row.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(SiteRow.ReadFrom)) { _resolved = null; UpdateSourceWarning(); }
-                else if (e.PropertyName == nameof(SiteRow.Target)) UpdateGates();
+                else if (e.PropertyName == nameof(SiteRow.Target)) { _resolved = null; UpdateGates(); }   // lists were matched against the OLD target site
             };
             _sites.Add(row);
         }
@@ -535,7 +548,13 @@ public partial class FlowsDialog : Window
         foreach (var id in _scans.SelectMany(s => s.Findings).Where(f => f.Kind == FindingKind.FormId).Select(f => f.Value).Distinct())
         {
             saved.TryGetValue(id, out var fromCopy);
-            var row = new FormMapRow { Options = _targetForms, SourceId = id, SourceTitle = fromCopy?.SourceTitle ?? "", NewId = fromCopy?.NewId ?? "" };
+            prevForms.TryGetValue(id, out var prevForm);
+            var row = new FormMapRow
+            {
+                Options = _targetForms, SourceId = id,
+                SourceTitle = prevForm.Title is { Length: > 0 } t ? t : fromCopy?.SourceTitle ?? "",
+                NewId = prevForm.NewId is { Length: > 0 } n ? n : fromCopy?.NewId ?? "",
+            };
             row.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(FormMapRow.NewId)) { ShowFormNote(row, fromCopy); UpdateGates(); }
@@ -557,6 +576,8 @@ public partial class FlowsDialog : Window
         AddValues("Email", findings.Where(f => f.Kind is FindingKind.Email or FindingKind.Mailbox));
         AddValues("Tenant", findings.Where(f => f.Kind == FindingKind.TenantId));
         AddValues("Path", findings.Where(f => f.Kind == FindingKind.FilePath && f.Detail is null));
+        foreach (var v in _values)
+            if (prevValues.TryGetValue(v.Category + "|" + v.Source, out var pv) && pv.Target.Length > 0) { v.Target = pv.Target; v.Note = pv.Note; }
         _vm.HasValues = _values.Count > 0;
 
         if (_loaded is not null) ApplyLoadedMapping(_loaded);
@@ -869,7 +890,14 @@ public partial class FlowsDialog : Window
                 foreach (var (source, target) in _loaded.Lists)
                     if (FlowIdParser.ParseListId(target) is { } loadedId) overrides[source] = loadedId;
             foreach (var c in _cards.Where(c => c.UserEdited))
-                if (FlowIdParser.ParseListId(c.TargetListId) is { } id) overrides[c.SourceListId] = id;
+            {
+                // A list the user picked lives on the target site it was picked from; if that site's target changed since,
+                // the choice no longer applies and the list is matched by name again.
+                var stillSameSite = c.SourceSite.Length == 0 || string.Equals(
+                    FlowMappingResolver.NormalizeSite(siteMap.GetValueOrDefault(FlowMappingResolver.NormalizeSite(c.SourceSite)) ?? ""),
+                    FlowMappingResolver.NormalizeSite(c.TargetSite), StringComparison.OrdinalIgnoreCase);
+                if (stillSameSite && FlowIdParser.ParseListId(c.TargetListId) is { } id) overrides[c.SourceListId] = id;
+            }
 
             // Column choices the user made are put back after the cards are rebuilt.
             var kept = _cards.SelectMany(c => c.Columns.Where(r => r.UserEdited).Select(r => (c.SourceListId, r.SourceColumn, r.Selected))).ToList();
@@ -1060,7 +1088,7 @@ public partial class FlowsDialog : Window
 
     private void LoadMapping_Click(object sender, RoutedEventArgs e)
     {
-        var dlg = new OpenFileDialog { Filter = "JSON (*.json)|*.json", Title = Loc.T("Flows_LoadMapping") };
+        var dlg = new OpenFileDialog { Filter = Loc.T("Flows_FilterJson"), Title = Loc.T("Flows_LoadMapping") };
         if (dlg.ShowDialog(this) != true) return;
         try
         {
@@ -1421,9 +1449,12 @@ public partial class FlowsDialog : Window
                     // One unreadable package (it was already reported as skipped by the scan) must not stop the others.
                     List<(string Flow, List<Change> Changes)> results;
                     try { results = FlowRewriter.RewritePackage(zip, dest, map); }
-                    catch (Exception ex) when (ex is InvalidDataException or IOException or System.Text.Json.JsonException)
+                    // Also an unwritable folder (UnauthorizedAccessException) and a package whose JSON has an unexpected shape
+                    // (InvalidOperationException, FormatException from GetValue<T>): those fail THIS package, not the whole run.
+                    catch (Exception ex) when (ex is InvalidDataException or IOException or System.Text.Json.JsonException
+                                                   or UnauthorizedAccessException or InvalidOperationException or FormatException)
                     {
-                        try { File.Delete(dest); } catch (IOException) { /* partial output: best effort */ }
+                        try { File.Delete(dest); } catch (Exception delEx) when (delEx is IOException or UnauthorizedAccessException) { /* partial output: best effort */ }
                         AppendLog(Loc.T("Flows_LogBadPackage", Path.GetFileName(zip), ex.Message));
                         rows.Add(new PackageResultRow { Package = Path.GetFileName(zip), StatusText = "✗ " + Loc.T("Flows_PackageFailed") });
                         failed++;
@@ -1472,7 +1503,7 @@ public partial class FlowsDialog : Window
 
     private void SaveMapping_Click(object sender, RoutedEventArgs e)
     {
-        var dlg = new SaveFileDialog { Filter = "JSON (*.json)|*.json", FileName = "flow-mapping.json" };
+        var dlg = new SaveFileDialog { Filter = Loc.T("Flows_FilterJson"), FileName = "flow-mapping.json" };
         if (dlg.ShowDialog(this) != true) return;
         BuildMapping().Save(dlg.FileName);
         _vm.StatusText = Loc.T("Flows_MappingSaved", dlg.FileName);
@@ -1531,7 +1562,10 @@ public partial class FlowsDialog : Window
         _loadedColumns = new(StringComparer.OrdinalIgnoreCase);
         _vm.Reset();
         _vm.PackageWarning = string.Empty;
+        DomainFromBox.Text = string.Empty;   // the previous batch's email-domain rewrite must not carry over
+        DomainToBox.Text = string.Empty;
         ResourcesGrid.ItemsSource = null;
+        UpdateGates();
     }
 
     // ── Plumbing ──────────────────────────────────────────────────────────────
@@ -1591,6 +1625,13 @@ public partial class FlowsDialog : Window
 
     protected override void OnClosing(CancelEventArgs e)
     {
+        // Close also answers to Esc: do not abandon a write, scan or sign-in that is still running without asking.
+        if (_vm.IsBusy && MessageBox.Show(this, Loc.T("Flows_ClosePrompt"), Loc.T("Flows_CloseTitle"),
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) != MessageBoxResult.Yes)
+        {
+            e.Cancel = true;
+            return;
+        }
         _cts?.Cancel();
         base.OnClosing(e);
     }

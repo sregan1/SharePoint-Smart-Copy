@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Επιτυχία ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Αποτυχία ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Παραλείφθηκαν ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Ενημερωμένο</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση του αν η πηγή έχει δικά της δικαιώματα (περιορισμός ρυθμού ή σφάλμα πρόσβασης) — τα δικαιώματα δεν αντιγράφηκαν για αυτό το στοιχείο. Εκτελέστε ξανά για να επαναλάβετε την προσπάθεια.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Το υπάρχον αρχείο προορισμού αφαιρέθηκε για την αντικατάσταση, αλλά το νέο αντίγραφο δεν ήταν δυνατό να μεταφορτωθεί ({0}). Το αρχείο λείπει αυτήν τη στιγμή από τον προορισμό — εκτελέστε ξανά την αντιγραφή για να το επαναφέρετε.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Μια βιβλιοθήκη προορισμού απέτυχε ({0}). Τα αρχεία της επισημαίνονται ως Αποτυχία· οι υπόλοιπες βιβλιοθήκες συνεχίζουν.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: το αρχείο προέλευσης άλλαξε κατά τη λήψη του — η λήψη ξεκινά από την αρχή.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>Το SharePoint δεν ανέφερε καμία πρόοδο για αυτήν την εισαγωγή επί {0} λεπτά, οπότε εγκαταλείφθηκε. Τα αρχεία της επισημαίνονται ως Αποτυχία· εκτελέστε ξανά την αντιγραφή για να τα δοκιμάσετε ξανά.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Ένας μισθωτής</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Πολλοί μισθωτές</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Αντιγραφή μεταξύ δύο διαφορετικών μισθωτών Microsoft 365. Συνδέεστε ξεχωριστά στην πηγή και στον προορισμό. Επιλέξτε την εγγραφή εφαρμογής του προορισμού στις Ρυθμίσεις.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Εγγραφή προορισμού:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Λειτουργία πολλών μισθωτών: η εγγραφή εφαρμογής που χρησιμοποιείται για τη σύνδεση στον μισθωτή προορισμού. Η επιλογή «Ίδια με την πηγή» επαναχρησιμοποιεί την εγγραφή της πηγής, η οποία πρέπει τότε να είναι εφαρμογή πολλών μισθωτών.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Συνέχιση / εκτέλεση ξανά</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Επανασυνδέεται και εκτελεί ξανά αυτήν την επιλογή με το Αντιγραφή αν είναι νεότερο, έτσι ώστε τα αρχεία που έχουν ήδη αντιγραφεί να παραλείπονται και να μεταφέρονται μόνο όσα λείπουν ή έχουν αλλάξει.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Αυτή η εκτέλεση δεν έχει αποθηκευμένη επιλογή για συνέχιση (μόνο οι εκτελέσεις με επιλογή αρχείων καταγράφουν μία).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>Μια αντιγραφή εκτελείται ήδη. Ολοκληρώστε την ή ακυρώστε την πρώτα.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η συνέχιση: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>Ανακτήθηκαν {0} διακοπείσες εκτελέσεις. Δείτε το Ιστορικό.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Συνέχιση: επαναφέρθηκαν {0} στοιχεία από την προηγούμενη εκτέλεση, με επιλεγμένο το Αντιγραφή αν είναι νεότερο. Ελέγξτε τις επιλογές και κάντε κλικ στο Επόμενο. (Οι προσαρμοσμένες αντιστοιχίσεις στηλών δεν επαναφέρονται.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>ΔΙΑΚΟΠΗ — η εφαρμογή έκλεισε πριν ολοκληρωθεί αυτή η εκτέλεση. Από τα στοιχεία που είχαν ολοκληρωθεί: {0} επιτυχή, {1} με αποτυχία, {2} παραλείφθηκαν, {3} ακυρώθηκαν  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Εξαγωγή διαγνωστικών…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Αποθηκεύει ένα αρχείο zip με πρόσφατα αρχεία καταγραφής, πληροφορίες συστήματος και τις ρυθμίσεις σας χωρίς τα στοιχεία του οργανισμού — για επισύναψη σε αναφορά σφάλματος. Δεν περιλαμβάνει αναφορές αντιγραφής ή ονόματα αρχείων.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Τα διαγνωστικά αποθηκεύτηκαν στο {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η αποθήκευση των διαγνωστικών: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Το περιεχόμενο είναι πανομοιότυπο (διαφέρουν μόνο τα τμήματα που διαχειρίζεται το SharePoint), αλλά η ημερομηνία τροποποίησης δεν διατηρήθηκε.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Τα δικαιώματα δεν αντιγράφηκαν: δεν ήταν δυνατή η επίλυση των αναγνωριστικών SharePoint του στοιχείου.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Τα δικαιώματα δεν αντιγράφηκαν: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Φάκελος «{0}»: {1} δεν εφαρμόστηκε — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>Περισσότεροι φάκελοι είχαν προβλήματα όπως τα παραπάνω· οι επόμενοι δεν αναφέρονται ξεχωριστά.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>δικαιώματα</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>ημερομηνίες</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>συντάκτης / επεξεργαστής</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> (διατηρήθηκαν {0} — ο προορισμός είναι ήδη ενημερωμένος)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>ΠΡΟΕΙΔΟΠΟΙΗΣΗ: η ανάγνωση μεταδεδομένων από την πηγή ({0}) απέτυχε: {1}. Τα στοιχεία της ενδέχεται να αντιγραφούν ΧΩΡΙΣ τις τιμές των προσαρμοσμένων στηλών ή τα μοναδικά δικαιώματά τους. Εκτελέστε ξανά μόλις λυθεί το πρόβλημα (η Αντικατάσταση ή το Αν είναι νεότερο τα εφαρμόζει ξανά).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>ΠΡΟΕΙΔΟΠΟΙΗΣΗ: δεν βρέθηκε η λίστα προέλευσης μιας βιβλιοθήκης, επομένως τα δικαιώματά της ΔΕΝ θα αντιγραφούν.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>Ο κεντρικός υπολογιστής SharePoint «{0}» δεν συσχετίζεται με συνδεδεμένο μισθωτή. Συνδέστε ξανά τους ιστοτόπους προέλευσης και προορισμού και δοκιμάστε ξανά.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Αντιγραφή μεταξύ μισθωτών: οι τιμές στηλών διαχειριζόμενων μεταδεδομένων (ταξινομία) δεν αντιγράφονται, και τα σημειωματάρια OneNote / σύνολα εγγράφων δεν μπορούν ακόμη να αντιγραφούν μεταξύ μισθωτών. Οι ταυτότητες αντιστοιχίζονται με βάση τις ρυθμίσεις αντιστοίχισης ταυτοτήτων σας· όποιος δεν μπορεί να επιλυθεί στον προορισμό παραλείπεται.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Αντιστοίχιση ταυτοτήτων</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Αντιστοίχιση ταυτοτήτων…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Καταχωρίστε κάθε άτομο (ή ομάδα) του μισθωτή προέλευσης και ποιος είναι στον μισθωτή προορισμού — πρόκειται για διαφορετικούς λογαριασμούς. Οι συντάκτες, οι επεξεργαστές, οι στήλες ατόμου και τα δικαιώματα γράφονται με βάση αυτόν τον πίνακα. Όσοι δεν αναφέρονται αντιστοιχίζονται με την αντικατάσταση τομέα, αν την έχετε ορίσει· όσοι εξακολουθούν να μην βρίσκονται στον προορισμό παραλείπονται και αναφέρονται.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Τομέας email προέλευσης</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Τομέας email προορισμού</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Παρακάμψεις — ένα ζεύγος «πηγή,προορισμός» ανά γραμμή (ονόματα χρηστών ή ομάδων· το # ξεκινά σχόλιο)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Ίδιο με την πηγή</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Η πηγή και ο προορισμός βρίσκονται στον ίδιο μισθωτή. Μεταβείτε στη λειτουργία ενός μισθωτή για αντιγραφές εντός του ίδιου μισθωτή.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Η εγγενής αντιγραφή φακέλων (σημειωματάρια OneNote, σύνολα εγγράφων) δεν υποστηρίζεται ακόμη μεταξύ μισθωτών.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Η μονάδα «{0}» δεν συσχετίζεται με συνδεδεμένο μισθωτή. Συνδέστε ξανά τους ιστοτόπους προέλευσης και προορισμού και δοκιμάστε ξανά.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Δεν έχει ρυθμιστεί ακόμη εγγραφή εφαρμογής. Ανοίξτε τις Ρυθμίσεις και προσθέστε την εγγραφή εφαρμογής Azure (το αναγνωριστικό εφαρμογής/πελάτη της) πριν από τη σύνδεση.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Η σύνδεση ακυρώθηκε. Κάντε κλικ στο Σύνδεση για να δοκιμάσετε ξανά.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Ένας διαχειριστής δεν έχει εγκρίνει ακόμη αυτήν την εφαρμογή σε αυτόν τον μισθωτή. Ζητήστε από έναν καθολικό διαχειριστή να παραχωρήσει συναίνεση διαχειριστή για την εγγραφή εφαρμογής (δείτε τη Ρύθμιση στον Οδηγό χρήσης).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Η εγγραφή εφαρμογής δεν βρέθηκε σε αυτόν τον μισθωτή. Ελέγξτε το αναγνωριστικό πελάτη και το αναγνωριστικό μισθωτή στις Ρυθμίσεις.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Ο μισθωτής αυτός δεν βρέθηκε. Ελέγξτε το αναγνωριστικό μισθωτή στις Ρυθμίσεις (χρησιμοποιήστε τον τομέα σας, το GUID του μισθωτή ή το «common»).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>Στην εγγραφή εφαρμογής λείπει η διεύθυνση ανακατεύθυνσης που χρησιμοποιεί αυτή η εφαρμογή. Στο Azure, προσθέστε το URI ανακατεύθυνσης http://localhost στις «Εφαρμογές για κινητά και υπολογιστές».</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Η εγγραφή εφαρμογής δεν έχει ρυθμιστεί για σύνδεση από υπολογιστή. Στο Azure, ενεργοποιήστε την επιλογή «Να επιτρέπονται οι ροές δημόσιου πελάτη» για την εγγραφή.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Αυτός ο λογαριασμός δεν επιτρέπεται να χρησιμοποιήσει αυτήν την εγγραφή εφαρμογής. Συνδεθείτε με λογαριασμό από τον μισθωτή που την κατέχει ή επιλέξτε διαφορετική εγγραφή στις Ρυθμίσεις.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>Το SharePoint απέρριψε τη σύνδεση. Κάντε κλικ στο Σύνδεση για να συνδεθείτε ξανά.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>Δεν έχετε πρόσβαση σε αυτόν τον ιστότοπο. Βεβαιωθείτε ότι ο λογαριασμός σας μπορεί να τον ανοίξει σε πρόγραμμα περιήγησης και ότι στην εφαρμογή έχει παραχωρηθεί το δικαίωμα Sites.ReadWrite.All.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Ο ιστότοπος αυτός δεν βρέθηκε. Ελέγξτε τη διεύθυνση — πρέπει να έχει τη μορφή https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Λεπτομέρειες: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Συνδεθείτε στον ιστότοπο προέλευσης για να συνεχίσετε.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Επιλέξτε τουλάχιστον ένα στοιχείο (επιλέξτε ένα πλαίσιο ελέγχου) για να συνεχίσετε.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Συνδεθείτε στον ιστότοπο προορισμού για να συνεχίσετε.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Επιλέξτε φάκελο προορισμού για να συνεχίσετε.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Επιλέξτε λίστα προορισμού για να συνεχίσετε.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Εισαγάγετε όνομα για τη νέα λίστα για να συνεχίσετε.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Δεν έχει επιλεγεί τίποτα για αντιγραφή.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Αναμονή για την ολοκλήρωση της αντιγραφής…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Πηγή: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Προορισμός: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Η εγγραφή εφαρμογής σας άλλαξε, οπότε αποσυνδεθήκατε και από τους δύο ιστοτόπους. Συνδεθείτε ξανά για να συνεχίσετε.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Διακοπή της αντιγραφής;</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>Μια αντιγραφή βρίσκεται σε εξέλιξη. Αν τη διακόψετε τώρα, τα υπόλοιπα στοιχεία θα μείνουν χωρίς αντιγραφή (μπορείτε να τη συνεχίσετε αργότερα από το Ιστορικό). Να διακοπεί η αντιγραφή;</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>Μια αντιγραφή εκτελείται ακόμη. Το κλείσιμο της εφαρμογής θα τη διακόψει και τα υπόλοιπα στοιχεία θα μείνουν χωρίς αντιγραφή (μπορείτε να τη συνεχίσετε αργότερα από το Ιστορικό). Να γίνει κλείσιμο παρ&apos; όλα αυτά;</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Αλλαγή λειτουργίας σύνδεσης;</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Η εναλλαγή μεταξύ ενός μισθωτή και πολλών μισθωτών αποσυνδέει και τους δύο ιστοτόπους και θα χρειαστεί να συνδεθείτε ξανά. Να γίνει η αλλαγή παρ&apos; όλα αυτά;</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Σύνδεση:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Εγγραφή εφαρμογής προέλευσης</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Εγγραφή εφαρμογής προορισμού</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Συνδέεται στον μισθωτή προορισμού με:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Αλλαγή</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Άνοιγμα Ρυθμίσεων</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Πρέπει να έχετε δικαίωμα ανάγνωσης στη συλλογή ιστοτόπων προέλευσης.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Ρυθμίστε την εγγραφή εφαρμογής Microsoft Entra ID στις Ρυθμίσεις πριν από τη σύνδεση.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Επιλογές αρχείων</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Επιλογές βιβλιοθήκης και αρχείων</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Αντιγραφή αρχείων…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Αντιγραφή βιβλιοθηκών…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Επόμενο</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Έναρξη αντιγραφής</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Προβολή αναφοράς</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Εισαγάγετε το όνομα της νέας λίστας που θα δημιουργηθεί</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>Η λίστα προορισμού επιλέχθηκε στο βήμα Προορισμός. Επιστρέψτε για να την αλλάξετε.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Ρυθμίστε πρώτα μια εγγραφή εφαρμογής</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Το Smart Copy συνδέεται με μια εγγραφή εφαρμογής που δημιουργείτε στον δικό σας μισθωτή Microsoft Entra ID (Azure). Ανοίξτε τις Ρυθμίσεις, προσθέστε το αναγνωριστικό εφαρμογής (πελάτη) της εγγραφής σας και επιστρέψτε εδώ για να συνδεθείτε.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Περισσότερες πληροφορίες</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Σύρετε για να αυξήσετε ή να μειώσετε το ύψος της ροής δραστηριότητας</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Κάντε κλικ για να εμφανιστούν μόνο τα στοιχεία που απέτυχαν</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Κάντε κλικ για να εμφανιστούν μόνο τα στοιχεία που παραλείφθηκαν</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Αντιστοίχιση στηλών</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Σύγκριση πηγής και προορισμού</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Ανοίγει το εργαλείο Σύγκριση για να ελέγξετε αυτήν την αντιγραφή σε σχέση με την πηγή.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Άνοιγμα Ιστορικού</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Η επιλεγμένη εγγραφή χρησιμοποιείται για την πηγή — και για τις δύο πλευρές στη λειτουργία ενός μισθωτή.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Νέα εγγραφή</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Προσθέστε τουλάχιστον μία εγγραφή εφαρμογής.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Επικύρωση</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Το αναγνωριστικό πελάτη είναι υποχρεωτικό για την επιλεγμένη εγγραφή.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Αποσυνδεθήκατε. Θα σας ζητηθεί να συνδεθείτε κατά την επόμενη σύνδεση.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Αποσύνδεση</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Η αποσύνδεση απέτυχε: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Αποσύνδεση</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>Βρέθηκαν {0} αντιστοιχίσεις.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} γραμμές δεν μπορούν να αναγνωστούν (γραμμή {1}). Κάθε γραμμή πρέπει να έχει τη μορφή πηγή,προορισμός.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Ο τομέας προέλευσης και ο τομέας προορισμού είναι ίδιοι, οπότε η αντικατάσταση τομέα δεν θα αλλάξει τίποτα.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Εισαγωγή CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Ορισμένες γραμμές παράκαμψης δεν μπορούν να αναγνωστούν (γραμμή {0}). Κάθε γραμμή πρέπει να είναι «πηγή,προορισμός». Διορθώστε ή αφαιρέστε τες — ή ξεκινήστε μια γραμμή με # για να γίνει σχόλιο.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η αποθήκευση της αντιστοίχισης ταυτοτήτων: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση αυτού του αρχείου: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Μεταξύ μισθωτών: {0} λογαριασμοί συντάκτη/επεξεργαστή σε αυτήν τη βιβλιοθήκη δεν βρέθηκαν στον μισθωτή προορισμού και θα παραμείνουν ο λογαριασμός που αντιγράφει. Μετά την εκτέλεση, χρησιμοποιήστε το «Αντιστοίχιση αυτών των χρηστών» στην αναφορά για να τους διορθώσετε.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Εισαγάγετε τον χρήστη ή την ομάδα προέλευσης.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Εισαγάγετε ποιος είναι στον μισθωτή προορισμού — ή αφαιρέστε τη γραμμή.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Η πηγή και ο προορισμός είναι ίδια.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Αυτή η πηγή εμφανίζεται περισσότερες από μία φορές.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Πηγή (αυτός ο μισθωτής)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Προορισμός (άλλος μισθωτής)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Τύπος</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>Στον προορισμό;</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Απαραίτητο για</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Χρήστης</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Ομάδα</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Δεν ελέγχθηκε</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Έλεγχος…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Βρέθηκε</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Δεν βρέθηκε</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Προσθήκη</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Αφαίρεση</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Συμπλήρωση προορισμών με αντικατάσταση τομέα</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>Για γραμμές χωρίς προορισμό, συμπληρώνει τη διεύθυνση που θα παρήγαγε η αντικατάσταση τομέα.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Έλεγχος στον προορισμό</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Αναζητά κάθε χρήστη προορισμού στον μισθωτή προορισμού. Έτσι προστίθενται επίσης στη λίστα χρηστών του ιστοτόπου προορισμού, κάτι που η αντιγραφή κάνει ούτως ή άλλως προτού μπορέσει να τους ορίσει ως συντάκτες ή να τους δώσει πρόσβαση.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Συνδεθείτε πρώτα σε προορισμό πολλών μισθωτών: εισαγάγετε τη διεύθυνση URL του ιστοτόπου προορισμού στο βήμα Προορισμός και ανοίξτε ξανά αυτό το παράθυρο διαλόγου.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Εξαγωγή CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Αυτά τα άτομα χρειάστηκαν για την αντιγραφή, αλλά δεν βρέθηκαν στον μισθωτή προορισμού. Για καθένα, εισαγάγετε ποιος είναι στον προορισμό — ή αφαιρέστε τη γραμμή για να μείνει χωρίς αντιστοίχιση.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} αντιστοιχίσεις.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} γραμμές χρειάζονται προσοχή.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Έλεγχος: {0} βρέθηκαν, {1} δεν βρέθηκαν{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} δεν ήταν δυνατό να ελεγχθούν</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Έλεγχος {0} από {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Δεν υπάρχει τίποτα για έλεγχο: καμία γραμμή δεν έχει διεύθυνση email προορισμού.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Ορισμένες γραμμές χρειάζονται προσοχή (επισημασμένες). Διορθώστε ή αφαιρέστε τες και μετά αποθηκεύστε.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Η αντιστοίχιση αποθηκεύτηκε. Για να εφαρμοστεί σε αρχεία που έχουν ήδη αντιγραφεί, εκτελέστε ξανά με Αντικατάσταση — το Αντιγραφή αν είναι νεότερο παραλείπει τα ενημερωμένα αρχεία, επομένως οι συντάκτες τους δεν αλλάζουν. Τα δικαιώματα ανανεώνονται σε κάθε περίπτωση.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>{0} άτομα από την πηγή δεν βρέθηκαν στον μισθωτή προορισμού, οπότε παραλείφθηκαν: δεν τους δόθηκε πρόσβαση, δεν ορίστηκαν ως συντάκτες ή επεξεργαστές ή αφαιρέθηκαν από στήλες ατόμου.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Αντιστοίχιση αυτών των χρηστών…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Αντιστοίχιση μη επιλυμένων χρηστών…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Ανοίγει την αντιστοίχιση ταυτοτήτων με τα άτομα που αυτή η εκτέλεση δεν μπόρεσε να βρει στον προορισμό.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Αυτή η εκτέλεση δεν είχε μη επιλυμένους χρήστες.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Αντιγραφή φορμών</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Αντιγράψτε Microsoft Forms στον λογαριασμό προορισμού, διατηρώντας όλες τις ερωτήσεις, τη διακλάδωση, τις ρυθμίσεις και το θέμα. Οι απαντήσεις μπορούν να εξαχθούν στο Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Χρησιμοποιεί το web API του Microsoft Forms, το οποίο η Microsoft δεν τεκμηριώνει ούτε υποστηρίζει. Λειτουργεί σήμερα, αλλά μπορεί να αλλάξει χωρίς ειδοποίηση. Δοκιμάστε πρώτα μερικές φόρμες.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Φόρτωση των φορμών μου</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Λογαριασμός προέλευσης: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Λογαριασμός προορισμού: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Προορισμός: ο ίδιος λογαριασμός (ένας μισθωτής). Τα αντίγραφα δημιουργούνται δίπλα στα πρωτότυπα.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(θα σας ζητηθεί να συνδεθείτε)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Αντιστοίχιση αναγνωριστικών φορμών (χρησιμοποιείται από το εργαλείο Ροές): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Φόρτωση φορμών…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>Φορτώθηκαν {0} φόρμες.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Επιλέξτε πρώτα τουλάχιστον μία φόρμα.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Αντιγραφή φορμών…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Αντιγραφή…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Αντιγράφηκε</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Αποτυχία (δείτε το αρχείο καταγραφής)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Αντιγραφή του «{0}»</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Η αντιγραφή ολοκληρώθηκε: {0} αντιγράφηκαν, {1} απέτυχαν.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Επιλέξτε φάκελο για τις εξαγωγές απαντήσεων</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Εξαγωγή απαντήσεων…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>Εξήχθη το «{0}»: {1} απαντήσεις στο {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Εξήχθησαν απαντήσεις για {0} φόρμες στο {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Η φόρμα αντιγράφηκε, αλλά το αναγνωριστικό της δεν ήταν δυνατό να αποθηκευτεί για το εργαλείο Ροές: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η εξαγωγή του «{0}»: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Εξήχθησαν απαντήσεις για {0} φόρμες στο {2}· {1} απέτυχαν (δείτε το αρχείο καταγραφής).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Ακυρώθηκε.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Σφάλμα: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Υπόδειξη: η εγγραφή εφαρμογής χρειάζεται το εκχωρημένο δικαίωμα Microsoft Forms, με συναίνεση. Προσθέστε το στα Δικαιώματα API (δείτε τον Οδηγό χρήσης) και δοκιμάστε ξανά.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Υπόδειξη: το Microsoft Forms απέρριψε το αίτημα. Ελέγξτε ότι αυτός ο λογαριασμός μπορεί να ανοίξει το forms.office.com και ότι η εγγραφή εφαρμογής έχει το δικαίωμα Microsoft Forms.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{0} από {1} επιλεγμένα</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Τίτλος</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Τύπος</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Τελευταία τροποποίηση</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Αποτέλεσμα</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Προσθήκη στους τίτλους των αντιγράφων:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (αντίγραφο)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Αντιγραφή επιλεγμένων φορμών</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Εξαγωγή απαντήσεων…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Έλεγχος ενός αντιγράφου σε σχέση με την πηγή του</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Άλλα εργαλεία</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Φόρμες</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Αντιγραφή Microsoft Forms και εξαγωγή των απαντήσεών τους</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Εργαλείο Φόρμες</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Αναδιατύπωση ροών για τον προορισμό</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Ενημερώστε τα εξαγόμενα πακέτα Power Automate (.zip) ώστε να δείχνουν στον προορισμό: ιστοτόπους, λίστες, στήλες, αντιγραμμένες φόρμες και τομείς email. Τα αρχικά πακέτα σας δεν αλλάζουν ποτέ.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Επιλογή εξαγόμενων πακέτων ροών</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Προσθέστε τα πακέτα ροών (.zip) που εξαγάγατε από το Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Προσθήκη αρχείων…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Προσθήκη φακέλου…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Σάρωση</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Πακέτα ροών (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Προσθέστε πρώτα τουλάχιστον ένα πακέτο ροής.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Σάρωση πακέτων…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>Παραλείφθηκε το {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>Βρέθηκαν {0} ροές. Αναφέρονται σε {1} ιστοτόπους, {2} λίστες και {3} φόρμες.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Η σάρωση ολοκληρώθηκε.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Αντιστοίχιση ιστοτόπων</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Πού μετακινείται ο ιστότοπος SharePoint κάθε ροής. Στη λειτουργία πολλών μισθωτών, συνδεθείτε στον προορισμό και η διεύθυνση του νέου μισθωτή συμπληρώνεται αυτόματα· αλλάξτε όποια γραμμή έχει ιστότοπο με διαφορετικό όνομα. Στη λειτουργία ενός μισθωτή, πληκτρολογήστε τον ιστότοπο προορισμού για κάθε γραμμή.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Ιστότοπος στις ροές (αντικαθίσταται)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Ιστότοπος προορισμού</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Διεύθυνση νέου μισθωτή:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Συμπλήρωση κενών προορισμών, με διατήρηση των διαδρομών</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Εισαγάγετε πλήρη διεύθυνση URL, όπως https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Οι κενοί προορισμοί συμπληρώθηκαν με αυτόν τον κεντρικό υπολογιστή και τη διαδρομή κάθε ιστοτόπου.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Αντιστοίχιση λιστών και στηλών</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Μία κάρτα ανά λίστα που χρησιμοποιούν οι ροές, όσες ροές κι αν τη χρησιμοποιούν. Κάθε κάρτα δείχνει το όνομα και τις στήλες της λίστας, τη λίστα στην οποία αντιστοιχίζεται στον προορισμό (από προεπιλογή εκείνη με το ίδιο όνομα· επιλέξτε άλλη από την αναπτυσσόμενη λίστα αν το όνομα διαφέρει) και πώς αντιστοιχίζεται κάθε στήλη. Ελέγξτε τις κάρτες που φέρουν προειδοποίηση.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Αντιστοίχιση λιστών και στηλών</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Λίστα</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>Αναγνωριστικό λίστας προέλευσης</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>Αναγνωριστικό λίστας προορισμού</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Στήλη προέλευσης</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Στήλη προορισμού</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Σαρώστε πρώτα τα πακέτα.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Εισαγάγετε πρώτα τουλάχιστον έναν ιστότοπο προορισμού.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Αντιστοίχιση λιστών και στηλών…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(δεν βρέθηκε)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Βρέθηκε λίστα με το ίδιο όνομα στον προορισμό</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Ο ιστότοπος στον οποίο βρίσκεται αυτή η λίστα δεν έχει ιστότοπο προορισμού (βήμα Ιστότοποι)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση αυτής της λίστας στον ιστότοπο προέλευσης: ίσως δεν υπάρχει, ο λογαριασμός ίσως δεν έχει πρόσβαση ή ο ιστότοπος βρίσκεται σε διαφορετικό μισθωτή από τη σύνδεση προέλευσής σας</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Δεν υπάρχει λίστα με αυτό το όνομα στον ιστότοπο προορισμού: επιλέξτε μία από την αναπτυσσόμενη λίστα</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Ίδιο όνομα</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Μετονομάστηκε στον προορισμό</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Καμία αντιστοιχία: επιλέξτε στήλη</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} από {1} λίστες έχουν λίστα προορισμού. {2} στήλες προς έλεγχο.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Φόρμες και email</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Οι φόρμες που αντιγράφηκαν με το εργαλείο Φόρμες συμπληρώνονται αυτόματα. Για φόρμα που δημιουργήσατε εσείς, επικολλήστε το αναγνωριστικό της ή τον σύνδεσμο της σελίδας επεξεργασίας της.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>Αναγνωριστικό φόρμας προέλευσης</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>Αναγνωριστικό φόρμας (συμπληρώνεται από την αναπτυσσόμενη λίστα ή επικολλήστε ένα)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Μετακίνηση τομέα email:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Εγγραφή των ενημερωμένων πακέτων</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Επιλέξτε φάκελο εξόδου (όχι τον φάκελο που περιέχει τα πρωτότυπα). Τα ενημερωμένα πακέτα και μια αναφορά με κάθε αλλαγή αποθηκεύονται εκεί.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Εγγραφή ενημερωμένων πακέτων</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Αποθήκευση αντιστοίχισης…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Άνοιγμα φακέλου εξόδου</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Οι συνδέσεις δεν μπορούν να μετακινηθούν μεταξύ μισθωτών. Μετά την εισαγωγή ενός πακέτου, δημιουργήστε ξανά κάθε σύνδεση στο Power Automate και επιλέξτε την ξανά.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Επιλέξτε πρώτα φάκελο εξόδου.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Εγγραφή ενημερωμένων πακέτων…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Αποθήκευση του ενημερωμένου αντιγράφου του {0} (πακέτο {1} από {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Πακέτο Power Automate (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Έχετε ήδη επιλέξει αυτό το όνομα αρχείου για άλλο πακέτο. Επιλέξτε διαφορετικό όνομα.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Ένα πακέτο θα αποθηκευόταν πάνω σε πρωτότυπο (ίδιος φάκελος, ίδιο όνομα). Επιλέξτε διαφορετικό φάκελο εξόδου ή αλλάξτε το όνομά του στο «Αποθήκευση ως», ώστε τα πρωτότυπα να μείνουν αναλλοίωτα.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Αναφορά αναδιατύπωσης ροών
+
+Τα αρχικά πακέτα παραμένουν αναλλοίωτα. Οι συνδέσεις ΔΕΝ μεταφέρονται· δημιουργήστε τις ξανά και επιλέξτε τις ξανά κατά την εισαγωγή.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Η αναφορά γράφτηκε στο {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>Γράφτηκαν {0} πακέτα, {1} αντικαταστάσεις. {2} τιμές εξακολουθούν να δείχνουν στην πηγή (δείτε την αναφορά).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Η αντιστοίχιση αποθηκεύτηκε στο {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Ροές</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Ενημέρωση εξαγόμενων ροών Power Automate για τον προορισμό</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Εργαλείο Ροές</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Τι χρησιμοποιούν αυτές οι ροές</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Οι υπηρεσίες που βρέθηκαν στις σαρωμένες ροές και τι κάνει αυτό το εργαλείο για καθεμία.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Υπηρεσία</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Ροές</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Βήματα</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Βρέθηκαν</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Τι κάνει αυτό το εργαλείο</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Αναδιατυπώνει ό,τι βρίσκει</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>Αναφέρονται αναγνωριστικά· έλεγχος μετά την εισαγωγή</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Μόνο σύνδεση (δημιουργήστε την ξανά)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Αντιστοίχιση στηλών</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Μια στήλη εμφανίζεται εδώ όταν μια ροή γράφει σε αυτήν, φιλτράρει ή ταξινομεί με βάση αυτήν, ή την ανακτά σε μια έκφραση, σε λίστα που έχει αντιστοιχιστεί. Η στήλη προορισμού επιλέγεται με αυτόματη αντιστοίχιση (ίδιο όνομα, μετά ίδιο εμφανιζόμενο όνομα, μετά παρόμοιο όνομα). Χρειάζεται να ενεργήσετε μόνο στις γραμμές με την ένδειξη «Παρόμοιο όνομα» ή «Καμία αντιστοιχία»· αλλάξτε οποιαδήποτε γραμμή από την αναπτυσσόμενη λίστα της ή επιλέξτε «(να μείνει αμετάβλητο)» για να διατηρηθεί το όνομα της πηγής. Οι ενσωματωμένες στήλες όπως η Title δεν εμφανίζονται επειδή υπάρχουν παντού.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(να μείνει αμετάβλητο)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Παρόμοιο όνομα: ελέγξτε</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(δεν έχει αντιστοιχιστεί ακόμη)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Λίστα προορισμού που επιλέξατε εσείς</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Πληκτρολογήστε ή επικολλήστε ένα αναγνωριστικό λίστας προορισμού, ή τον σύνδεσμο της σελίδας ρυθμίσεων της λίστας, στη στήλη Αναγνωριστικό λίστας προορισμού για να επιλέξετε μόνοι σας λίστα (για παράδειγμα όταν το όνομα διαφέρει). Έπειτα κάντε κλικ στο «Νέα αντιστοίχιση» για να αντιστοιχίσετε τις στήλες της.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Δεν βρέθηκε αναγνωριστικό λίστας στο «{0}». Επικολλήστε ένα GUID ή τον σύνδεσμο της σελίδας ρυθμίσεων της λίστας.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Δεν βρέθηκε αναγνωριστικό φόρμας στο «{0}». Επικολλήστε το αναγνωριστικό της φόρμας ή τον σύνδεσμο της σελίδας επεξεργασίας της.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Φόρμες</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Προορισμός</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Αντιγραφή</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Αποτελέσματα</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Επιλέξτε τις φόρμες προς αντιγραφή</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Επαναφόρτωση φορμών</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Κάντε κλικ στο «Φόρτωση των φορμών μου» για να δείτε τις φόρμες σας.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>Δεν βρέθηκαν φόρμες σε αυτόν τον λογαριασμό.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Αντιγραφή {0} φορμών</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Αντιγραφή περισσότερων φορμών</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Επιλέξτε πού θα πάνε τα αντίγραφα</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Ένας μισθωτής: τα αντίγραφα δημιουργούνται στον ίδιο λογαριασμό που χρησιμοποιείτε, δίπλα στα πρωτότυπα.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Πολλοί μισθωτές: τα αντίγραφα δημιουργούνται στον λογαριασμό προορισμού. Συνδεθείτε σε αυτόν εδώ· είναι ξεχωριστό από τη σύνδεση που χρησιμοποιήσατε για τους ιστοτόπους SharePoint.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Λογαριασμός προορισμού</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Συνδέεται με την εγγραφή εφαρμογής: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Συνδέεται με την εγγραφή εφαρμογής προορισμού σας (ορίζεται στις Ρυθμίσεις).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Σύνδεση στον λογαριασμό προορισμού</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Σύνδεση ξανά</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Σύνδεση στον λογαριασμό προορισμού… ενδέχεται να ανοίξει ένα παράθυρο προγράμματος περιήγησης.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Συνδεθήκατε ως {0}. Επιβεβαιώθηκε η πρόσβαση στο Microsoft Forms ({1} φόρμες ήδη σε αυτόν τον λογαριασμό).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η σύνδεση στον λογαριασμό προορισμού: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Ο λογαριασμός προορισμού δεν έχει συνδεθεί ακόμη.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Έτοιμο. Κάντε κλικ στο κουμπί Αντιγραφή για να ξεκινήσετε.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Έτοιμο: τα αντίγραφα θα δημιουργηθούν στο {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Συνδεθείτε στον λογαριασμό προορισμού για να συνεχίσετε.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Επιλογές</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>Θα αντιγραφούν {0} φόρμες από το {1} στο {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>τον λογαριασμό προέλευσης</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>τον λογαριασμό προορισμού</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Αντιγραφή φορμών</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Έναρξη…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Φόρμα {0} από {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Ακύρωση μετά την τρέχουσα φόρμα…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Η αντιγραφή ολοκληρώθηκε: αντιγράφηκαν και οι {0} φόρμες</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Τα αντίγραφά σας βρίσκονται στο {0}. Ανοίξτε το Microsoft Forms για να τα δείτε ή χρησιμοποιήστε τον παρακάτω πίνακα.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Η αντιγραφή ολοκληρώθηκε: αντιγράφηκαν {0} από {1} φόρμες, ορισμένες χρειάζονται προσοχή</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Τα αντίγραφα βρίσκονται στο {0}. Οι φόρμες που επισημαίνονται με προειδοποίηση αντιγράφηκαν με προβλήματα και οι φόρμες που απέτυχαν δεν δημιουργήθηκαν. Δείτε τη στήλη Λεπτομέρειες.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Η αντιγραφή ολοκληρώθηκε, αλλά δεν αντιγράφηκε καμία φόρμα</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Δείτε τη στήλη Λεπτομέρειες για τον λόγο. Συχνές αιτίες είναι η έλλειψη του δικαιώματος Microsoft Forms στην εγγραφή προορισμού ή ένας λογαριασμός χωρίς πρόσβαση στο Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Η αντιγραφή ακυρώθηκε μετά από {0} από {1} φόρμες</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Οι φόρμες που αναφέρονται παρακάτω ολοκληρώθηκαν. Η φόρμα που αντιγραφόταν τη στιγμή της ακύρωσης δεν ολοκληρώθηκε και δεν είναι ορατή.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Αντιγράφηκαν</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>Με προειδοποιήσεις</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Απέτυχαν</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Ερωτήσεις</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Φόρμα προέλευσης</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Αντίγραφο</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Ερωτήσεις</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Λεπτομέρειες</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Αντιγράφηκε</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Αντιγράφηκε με προειδοποιήσεις</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Αποτυχία</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Άνοιγμα επιλεγμένου αντιγράφου</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Άνοιγμα Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Εξαγωγή αποτελεσμάτων…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Εμφάνιση αντιστοίχισης αναγνωριστικών φορμών</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Επιλέξτε πρώτα μια αντιγραμμένη φόρμα στον πίνακα.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Τα αποτελέσματα αποθηκεύτηκαν στο {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Υπόδειξη: η εγγραφή εφαρμογής δεν έχει αντίστοιχη διεύθυνση ανακατεύθυνσης. Στο Entra, στην ενότητα Έλεγχος ταυτότητας, προσθέστε την πλατφόρμα «Εφαρμογές για κινητά και υπολογιστές» με http://localhost και δοκιμάστε ξανά.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Πακέτα</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Ιστότοποι</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Λίστες και στήλες</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Φόρμες και email</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Εγγραφή</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Αναφορά</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Επιλέξτε τις εξαγόμενες ροές σας</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>Στο Power Automate: ανοίξτε τις Ροές μου, επιλέξτε μια ροή και μετά Εξαγωγή → Πακέτο (.zip). Προσθέστε εδώ τα αρχεία .zip που λήφθηκαν. Κάθε αρχείο σαρώνεται μόλις το προσθέσετε.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Απαλοιφή</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Προσθέστε τα εξαγόμενα πακέτα ροών για να ξεκινήσετε.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>Δεν βρέθηκαν ροές σε αυτά τα αρχεία. Βεβαιωθείτε ότι είναι πακέτα που εξήχθησαν με Εξαγωγή → Πακέτο (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Η σάρωση ολοκληρώθηκε. Ελέγξτε τι χρησιμοποιούν οι ροές και κάντε κλικ στο Επόμενο.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Επιλέξτε τους ιστοτόπους προορισμού</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Αυτές οι ροές δεν χρησιμοποιούν ιστοτόπους SharePoint με σταθερές διευθύνσεις, επομένως δεν υπάρχει τίποτα για αντιστοίχιση εδώ. Κάντε κλικ στο Επόμενο.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Στη συνέχεια, το εργαλείο διαβάζει κάθε λίστα μέσω των συνδέσεών σας και την αντιστοιχίζει στον ιστότοπο προορισμού.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Εισαγάγετε τον ιστότοπο προορισμού για κάθε ιστότοπο προέλευσης και κάντε κλικ στο Επόμενο.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Αντιστοίχιση λιστών και στηλών</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Νέα αντιστοίχιση</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Λίστες</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Αυτές οι ροές δεν δείχνουν σε συγκεκριμένες λίστες SharePoint, επομένως δεν υπάρχει τίποτα για αντιστοίχιση.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Οι λίστες και οι στήλες αντιστοιχίζονται όταν ανοίξει αυτό το βήμα.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Φόρμες και email</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Ελέγξτε τις φόρμες και τα email και κάντε κλικ στο Επόμενο.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Αυτές οι ροές δεν χρησιμοποιούν Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>Διευθύνσεις email</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Για να μετακινήσετε κάθε διεύθυνση από έναν τομέα email σε άλλον, εισαγάγετε και τους δύο τομείς. Οι διευθύνσεις σε άλλους τομείς αναφέρονται στην αναφορά και δεν αλλάζουν.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Εγγραφή των ενημερωμένων πακέτων</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Φάκελος εξόδου</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Επιλέξτε τον φάκελο εξόδου και κάντε κλικ στο Εγγραφή ενημερωμένων πακέτων.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Έτοιμο για εγγραφή {0} πακέτων που περιέχουν {1} ροές. Αντικαθίστανται: {2} ιστότοποι, {3} λίστες, {4} αντιστοιχίσεις στηλών, {5} φόρμες.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Εγγραφή ενημερωμένων πακέτων</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Πακέτα που γράφτηκαν</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Αντικαταστάσεις</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Ακόμη η πηγή</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>Προς έλεγχο</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Πακέτο</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Ενημερώθηκε</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} τιμές εξακολουθούν να δείχνουν στην πηγή</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Άνοιγμα αναφοράς</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Έναρξη από την αρχή</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Ολοκληρώθηκε: γράφτηκαν {0} πακέτα</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Αποθηκεύτηκαν στο {0}. Τίποτα δεν έμεινε να δείχνει στην πηγή. Ακολουθήστε τα παρακάτω βήματα για να τα εισαγάγετε.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Ολοκληρώθηκε: γράφτηκαν {0} πακέτα, ορισμένα στοιχεία χρειάζονται τον έλεγχό σας</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Αποθηκεύτηκαν στο {0}. Ανοίξτε την αναφορά για να δείτε τιμές που εξακολουθούν να δείχνουν στην πηγή και στοιχεία που το εργαλείο δεν αναδιατυπώνει (άλλες υπηρεσίες, λίστες ή στήλες χωρίς αντιστοίχιση).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Τι να κάνετε στη συνέχεια</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Ανοίξτε την αναφορά και ελέγξτε το «εξακολουθούν να δείχνουν στην πηγή» και ό,τι έχει επισημανθεί για έλεγχο.
+2.  Στο Power Automate (μισθωτής προορισμού), ανοίξτε Ροές μου → Εισαγωγή → Εισαγωγή πακέτου (παλαιού τύπου) και επιλέξτε ένα πακέτο που γράφτηκε.
+3.  Στις «Σχετικές πηγές», κάντε κλικ στο «Επιλογή κατά την εισαγωγή» για κάθε σύνδεση και επιλέξτε ή δημιουργήστε μια σύνδεση στον μισθωτή προορισμού. Οι συνδέσεις δεν μπορούν να μετακινηθούν μεταξύ μισθωτών.
+4.  Εισαγάγετε τη ροή. Κρατήστε την απενεργοποιημένη, ανοίξτε την, διορθώστε ό,τι επισημαίνει και μετά ενεργοποιήστε την.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Καμία αλλαγή (τίποτα σε αυτό δεν ταίριαζε με την αντιστοίχισή σας)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Αντιγράφηκε στις {0} στο {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Αντιγράφηκε στο παρελθόν</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Ήδη αντιγραμμένη</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …και {0} ακόμη</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Αντιγραφή ξανά;</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>{0} από τις επιλεγμένες φόρμες έχουν ήδη αντιγραφεί σε αυτόν τον λογαριασμό:
+
+{1}
+
+Η νέα αντιγραφή δημιουργεί δεύτερο αντίγραφο για καθεμία. Συνέχεια;</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>Μια αντιγραφή εκτελείται ακόμη. Αν κλείσετε τώρα, η φόρμα που αντιγράφεται ίσως μείνει μισοδιαμορφωμένη στον προορισμό. Να γίνει διακοπή και κλείσιμο;</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Αντιγραφή σε εξέλιξη</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Δεν ήταν δυνατή η εξαγωγή απαντήσεων (δείτε το αρχείο καταγραφής).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Φιλτράρισμα κατά τίτλο ή τύπο</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Ένα βιβλίο εργασίας</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Εξαγωγή όλων των επιλεγμένων φορμών σε ένα μόνο αρχείο Excel με ένα φύλλο ανά φόρμα.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>Διεύθυνση email</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Αναγνωριστικό μισθωτή</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Διαδρομή βιβλιοθήκης</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Άλλες τιμές</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Πληκτρολογήστε αντικατάσταση για κάθε τιμή που πρέπει να αλλάξει. Οι γραμμές που μένουν κενές δεν αλλάζουν· αναφέρονται στην αναφορά αν εξακολουθούν να δείχνουν στην πηγή.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Είδος</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>Στις ροές</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Αντικατάσταση με</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Έλεγχος αναγνωριστικού</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Δεν είναι αναγνωριστικό φόρμας ή σύνδεσμος σελίδας επεξεργασίας</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Ίδια με τη φόρμα προέλευσης</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Αυτή η φόρμα βρίσκεται στον μισθωτή προέλευσης, όχι στον προορισμό</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Αυτή η φόρμα βρίσκεται σε διαφορετικό μισθωτή από την πηγή</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>Από την αντιγραφή Φορμών του {0} στο {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Από προηγούμενη αντιγραφή Φορμών</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Φόρτωση αντιστοίχισης…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Συμπληρώνει ιστοτόπους, λίστες, στήλες, φόρμες και άλλες τιμές από αντιστοίχιση που αποθηκεύσατε νωρίτερα.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η φόρτωση της αντιστοίχισης: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>Φορτώθηκε το {0}. Οι τιμές που ταιριάζουν με αυτές τις ροές συμπληρώθηκαν· ελέγξτε τις στα επόμενα βήματα.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>Φορτώθηκε το {0}. Εφαρμόζεται όταν προσθέσετε πακέτα ροών.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>Συμπληρώθηκαν {0} ιστότοποι προορισμού. Ελέγξτε τους παρακάτω και κάντε κλικ στο Επόμενο.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Κάθε ιστότοπος έχει ήδη προορισμό, οπότε δεν άλλαξε τίποτα. Απαλείψτε ένα κελί Προορισμού για να συμπληρωθεί.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Συντόμευση: πληκτρολογήστε τη διεύθυνση του νέου μισθωτή, για παράδειγμα https://fabrikam.sharepoint.com, και κάντε κλικ στο κουμπί. Κάθε ιστότοπος που δεν έχει ακόμη προορισμό παίρνει αυτήν τη διεύθυνση με την ίδια διαδρομή με την πηγή: το https://contoso.sharepoint.com/sites/HR γίνεται https://fabrikam.sharepoint.com/sites/HR. Οι ιστότοποι OneDrive (contoso-my) πηγαίνουν στη διεύθυνση -my του νέου μισθωτή. Οι προορισμοί που έχετε ήδη εισαγάγει δεν αλλάζουν. Οι ιστότοποι πρέπει να υπάρχουν ήδη στον νέο μισθωτή· αυτό το εργαλείο δεν τους δημιουργεί. Αν ένας ιστότοπος έχει διαφορετικό όνομα εκεί, πληκτρολογήστε τη διεύθυνσή του στο κελί Ιστότοπος προορισμού.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Αν αφήσετε κενό έναν Ιστότοπο προορισμού, ο ιστότοπος αυτός μένει αμετάβλητος: οι ροές εξακολουθούν να δείχνουν στον παλιό ιστότοπο, οι λίστες και οι στήλες του δεν αντιστοιχίζονται ούτε αναδιατυπώνονται, και η αναφορά τον καταγράφει στο «Εκκρεμότητες μετά την εισαγωγή». Αυτό είναι σωστό μόνο για ιστότοπο που δεν μετακινείται στον νέο μισθωτή.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Τι συμβαίνει</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Θα μετακινηθεί στον προορισμό</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Αμετάβλητο (χωρίς προορισμό)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Ο ιστότοπος {0} έμεινε αμετάβλητος (δεν εισήχθη προορισμός), οπότε οι ροές εξακολουθούν να δείχνουν σε αυτόν και οι λίστες του δεν αντιστοιχίστηκαν. Σωστό αν ο ιστότοπος δεν μετακινείται· διαφορετικά εκτελέστε ξανά με προορισμό.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Δεν υπάρχουν ακόμη στήλες προς εμφάνιση: δεν έχει αντιστοιχιστεί καμία λίστα, επομένως δεν υπάρχει τίποτα για σύγκριση. Διορθώστε τις παραπάνω λίστες και κάντε κλικ στο Νέα αντιστοίχιση.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Δεν υπάρχουν στήλες προς αντιστοίχιση, οπότε δεν χρειάζεται να κάνετε τίποτα εδώ. Οι αντιστοιχισμένες λίστες δεν έχουν προσαρμοσμένες στήλες στις οποίες γράφουν οι ροές, με βάση τις οποίες φιλτράρουν ή τις οποίες διαβάζουν με τρόπο που μπορεί να δει το εργαλείο. Η λίστα δραστηριότητας στο κάτω μέρος δείχνει τι βρέθηκε για κάθε λίστα.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>Βρέθηκαν {0} στήλες: {1} έχουν το ίδιο όνομα στον προορισμό, {2} μετονομάστηκαν και αντιστοιχίστηκαν, {3} μοιάζουν παρόμοιες, {4} δεν έχουν αντιστοιχία.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Ελέγξτε τις γραμμές με την ένδειξη «Παρόμοιο όνομα» και επιλέξτε στήλη για τις γραμμές με την ένδειξη «Καμία αντιστοιχία». Οι γραμμές με την ένδειξη «Ίδιο όνομα» ή «Μετονομάστηκε στον προορισμό» δεν χρειάζονται τίποτα.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Δεν χρειάζεται καμία ενέργεια εδώ: κάθε στήλη αντιστοιχεί ήδη. Κάντε κλικ στο Επόμενο.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Ονόματα των ενημερωμένων πακέτων</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Πώς θα ονομάζονται τα ενημερωμένα αρχεία .zip. Χρησιμοποιήστε το {name} για το αρχικό όνομα αρχείου: το «{name} - Fabrikam» μετατρέπει το «Onboarding.zip» σε «Onboarding - Fabrikam.zip». Με ένα μόνο πακέτο μπορείτε απλώς να πληκτρολογήσετε το πλήρες όνομα. Αφήστε το ως {name} για να διατηρηθούν τα αρχικά ονόματα. Ένα όνομα που χρησιμοποιείται δύο φορές παίρνει (2), (3)… ώστε να μη γίνει αντικατάσταση.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Θα γραφτεί: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Μια ροή αποθηκεύει μόνο το αναγνωριστικό μιας φόρμας, οπότε τα ονόματα των φορμών διαβάζονται από το Microsoft Forms όταν ανοίξει αυτό το βήμα: ο τίτλος κάθε φόρμας στις ροές σας (λογαριασμός προέλευσης) και οι φόρμες στον λογαριασμό προορισμού. Μια φόρμα της οποίας ο τίτλος ταιριάζει ακριβώς με μία φόρμα προορισμού αντιστοιχίζεται αυτόματα· διαφορετικά επιλέξτε τη νέα φόρμα από την αναπτυσσόμενη λίστα ή επικολλήστε το αναγνωριστικό ή τον σύνδεσμο της σελίδας επεξεργασίας της. Χρησιμοποιήστε το Επαναφόρτωση ονομάτων φορμών για να τα διαβάσετε ξανά.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Φόρτωση φορμών από τον λογαριασμό προορισμού…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Φόρτωση των φορμών του λογαριασμού προορισμού… ίσως σας ζητηθεί να συνδεθείτε.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Εμφάνιση των φορμών που ανήκουν στον λογαριασμό προορισμού {0}, ώστε να επιλέξετε τη νέα φόρμα για κάθε ροή. Κάντε κλικ στο Άκυρο για να σταματήσετε την αναμονή σύνδεσης.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Προορισμός: βρέθηκαν {0} φόρμες στο {1}. Επιλέξτε μία ανά γραμμή ή επικολλήστε ένα αναγνωριστικό.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Προορισμός: δεν βρέθηκαν φόρμες στο {0}. Η αναπτυσσόμενη λίστα εμφανίζει μόνο φόρμες που ανήκουν σε αυτόν τον λογαριασμό (όχι φόρμες ομάδας), οπότε αντιγράψτε πρώτα τις φόρμες με το εργαλείο Φόρμες ή επικολλήστε ένα αναγνωριστικό.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Ακυρώθηκε. Κάντε κλικ στο Φόρτωση ονομάτων φορμών για να δοκιμάσετε ξανά ή επικολλήστε αναγνωριστικά φορμών.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Προορισμός: δεν ήταν δυνατή η φόρτωση των φορμών: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(καμία)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(φόρμα χωρίς τίτλο)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Φόρμα προέλευσης</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Επιλογή από τις φόρμες του προορισμού</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Επιλέξτε μια φόρμα από τον λογαριασμό προορισμού. Κάντε πρώτα κλικ στο «Φόρτωση φορμών από τον λογαριασμό προορισμού».</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Συμπληρώθηκε από τη σύνδεση προορισμού ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Ο λογαριασμός προέλευσής σας, αντικατεστημένος από τον λογαριασμό προορισμού σας</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Συμπληρώθηκε από τις συνδέσεις σας ({0} → {1}). Απαλείψτε και τα δύο πλαίσια για να μείνουν αμετάβλητοι οι τομείς email.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Ένας ιστότοπος με κενό προορισμό μένει αμετάβλητος: οι ροές εξακολουθούν να δείχνουν σε αυτόν και η αναφορά τον καταγράφει.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Συνδεθήκατε ως {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Συνδεθήκατε ως {0}. Η διεύθυνση SharePoint του μισθωτή προορισμού είναι {1}· οι κενοί ιστότοποι προορισμού συμπληρώθηκαν από αυτήν.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Ορισμένοι ιστότοποι στις ροές βρίσκονται στο {0}, που είναι η δική διεύθυνση του λογαριασμού προορισμού. Είτε αυτά τα πακέτα δείχνουν ήδη στον προορισμό (για παράδειγμα πακέτα που έγραψε αυτό το εργαλείο ή ροές που εξήχθησαν από τον προορισμό), οπότε προσθέστε αντί γι&apos; αυτά τις αρχικές εξαγωγές από την πηγή· είτε η πηγή και ο προορισμός είναι πράγματι ένας μισθωτής, οπότε αλλάξτε την εφαρμογή σε λειτουργία ενός μισθωτή (Ρυθμίσεις).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>Το {0} είναι πακέτο που έγραψε αυτό το εργαλείο στις {1}: περιέχει ήδη τις διευθύνσεις προορισμού, επομένως δεν μένει τίποτα για μετακίνηση. Προσθέστε αντ&apos; αυτού την αρχική εξαγωγή από τον μισθωτή προέλευσης (το αρχείο στις Λήψεις σας, όχι εκείνο στον φάκελο εξόδου).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Οι ιστότοποι σε αυτές τις ροές βρίσκονται στο {0}, που είναι ο μισθωτής προορισμού σας, αλλά η πηγή σας είναι το {1}. Αν τα πακέτα εξήχθησαν από το {0}, συνδεθείτε σε αυτόν τον μισθωτή ως πηγή (Αλλαγή πηγής…). Αν τα έγραψε νωρίτερα αυτό το εργαλείο, αφαιρέστε τα και προσθέστε τις αρχικές εξαγωγές.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Συνδεθήκατε. Συμπληρώθηκαν {0} ιστότοποι προορισμού από το {1}. Ελέγξτε τους και κάντε κλικ στο Επόμενο.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Συνδεθήκατε. Κάθε ιστότοπος προορισμού είχε ήδη τιμή, οπότε δεν άλλαξε κανένας.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Η σύνδεση δεν ολοκληρώθηκε ή η διεύθυνση του νέου μισθωτή δεν ήταν δυνατό να αναγνωστεί (δείτε τη γραμμή Προορισμός). Αν έχετε συνδεθεί, εισαγάγετε παρακάτω τη διεύθυνση του νέου μισθωτή για να συμπληρωθούν οι ιστότοποι προορισμού.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — συνδεδεμένος ως {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — δεν έχει γίνει σύνδεση ακόμη</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Αλλαγή προορισμού…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Δεν έχει επιλεγεί λίστα προορισμού, οπότε αυτές οι ροές θα εξακολουθούσαν να δείχνουν σε λίστα που δεν υπάρχει στον προορισμό. Επιλέξτε τη λίστα προορισμού ή δημιουργήστε πρώτα τη λίστα στον ιστότοπο προορισμού.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Οι ροές χρησιμοποιούν τη στήλη «{0}», αλλά η λίστα προορισμού «{1}» δεν έχει αντίστοιχη στήλη. Επιλέξτε τη στήλη προορισμού της στον πίνακα ή προσθέστε τη στήλη στη λίστα προορισμού και κάντε κλικ στο Έλεγχος ξανά.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>Η λίστα προορισμού «{0}» απαιτεί τη στήλη «{1}», αλλά το βήμα «Δημιουργία στοιχείου» «{3}» στη ροή «{2}» δεν την ορίζει, οπότε η εισαγωγή θα αποτύγχανε με «missing required property item/{1}». Πληκτρολογήστε παρακάτω μια τιμή για αυτήν και το εργαλείο θα την προσθέσει σε αυτό το βήμα, ή κάντε το «{1}» προαιρετικό στη λίστα προορισμού και κάντε κλικ στο Έλεγχος ξανά.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>Η λίστα προορισμού «{0}» απαιτεί τη στήλη «{1}», αλλά το βήμα «Δημιουργία στοιχείου» «{3}» στη ροή «{2}» δεν την ορίζει, οπότε η εισαγωγή θα αποτύγχανε με «missing required property item/{1}». Κάντε το «{1}» προαιρετικό στη λίστα προορισμού στο SharePoint και μετά κάντε κλικ στο Έλεγχος ξανά.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Τιμή συμπλήρωσης για αυτές τις υποχρεωτικές στήλες (προστίθεται σε κάθε βήμα Δημιουργία στοιχείου που τις παραλείπει):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Αυτό θα αποτύγχανε κατά την εισαγωγή. Διορθώστε το για να συνεχίσετε:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Έλεγχος ξανά</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Θα αποτύχει ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Συνδεθείτε στον προορισμό για να συνεχίσετε.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} πακέτα γράφτηκαν από αυτό το εργαλείο και περιέχουν ήδη τις τιμές του προορισμού. Αφαιρέστε τα (το ✕ στη λίστα) και προσθέστε τις αρχικές εξαγωγές.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} ιστότοποι δεν έχουν προορισμό. Ένας ιστότοπος που μένει ως έχει θα εξακολουθούσε να δείχνει στον μισθωτή προέλευσης.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} λίστες θα αποτύγχαναν κατά την εισαγωγή. Διορθώστε τις λίστες με την ένδειξη «Θα αποτύχει» για να συνεχίσετε.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Οι λίστες δεν έχουν αντιστοιχιστεί ακόμη. Επιστρέψτε ένα βήμα και προχωρήστε ξανά για να δοκιμάσετε πάλι.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} φόρμες χρειάζονται έγκυρο αναγνωριστικό φόρμας προορισμού για να συνεχίσετε.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Αλλαγή πηγής…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Συνδεθήκατε ως {0}. Η διεύθυνση SharePoint του μισθωτή προέλευσης είναι {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Η σύνδεση προέλευσης άλλαξε σε {0}. Οι ιστότοποι που αναφέρονται παρακάτω πρέπει να βρίσκονται σε αυτόν τον μισθωτή.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Η σύνδεση προέλευσης δεν ολοκληρώθηκε ή η διεύθυνση του μισθωτή δεν ήταν δυνατό να αναγνωστεί (δείτε τη γραμμή Πηγή). Η προηγούμενη σύνδεση προέλευσης διατηρείται αν ακυρώσατε.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Ορισμένοι ιστότοποι διαβάζονται από το {0}, που δεν είναι ο μισθωτής στον οποίο είστε συνδεδεμένοι ως πηγή ({1}). Η ανάγνωση των λιστών τους θα αποτύχει. Επεξεργαστείτε το «Ανάγνωση λιστών από» για αυτές τις γραμμές στη διεύθυνση του μισθωτή προέλευσής σας ή κάντε κλικ στο Αλλαγή πηγής… και συνδεθείτε με λογαριασμό από αυτόν τον μισθωτή.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Οι ιστότοποι των ροών βρίσκονται στο {0}, αλλά είστε συνδεδεμένοι στο {1} ως πηγή. Το «Ανάγνωση λιστών από» συμπληρώθηκε με τους ίδιους ιστοτόπους στο {1}, ώστε το εργαλείο να διαβάζει εκεί ονόματα λιστών και στήλες. Ελέγξτε ότι αυτοί οι ιστότοποι υπάρχουν (επεξεργαστείτε οποιαδήποτε γραμμή) ή κάντε κλικ στο Αλλαγή πηγής… αν οι ροές όντως προέρχονται από το {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Λίστες που χρησιμοποιούν οι ροές</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Κάντε κλικ σε μια λίστα για να την ανοίξετε ή να την κλείσετε. Οι λίστες που χρειάζονται προσοχή εμφανίζονται πρώτες και ανοιχτές.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Άνοιγμα όλων</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Κλείσιμο όλων</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Χρησιμοποιείται από:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Πηγή:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Λίστα προορισμού</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>ή επικολλήστε το αναγνωριστικό ή τον σύνδεσμό της:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Στήλη προέλευσης</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Τύπος</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Χρησιμοποιείται</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Δεν χρησιμοποιείται από τις ροές</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(καμία: να μείνει αμετάβλητη αυτή η λίστα)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Δεν έχει επιλεγεί λίστα προορισμού: οι ροές που τη χρησιμοποιούν εξακολουθούν να δείχνουν στη λίστα προέλευσης</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} στήλες προς έλεγχο</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ δεν υπάρχει τίποτα προς έλεγχο</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} στήλες σε αυτήν τη λίστα· οι ροές χρησιμοποιούν {1}: {2} με το ίδιο όνομα στον προορισμό, {3} μετονομασμένες και αντιστοιχισμένες, {4} παρόμοιες (ελέγξτε), {5} χωρίς αντιστοιχία (επιλέξτε). Οι υπόλοιπες στήλες εμφανίζονται για πληροφόρηση και δεν αλλάζουν.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} στήλες σε αυτήν τη λίστα· καμία δεν χρησιμοποιείται από τις ροές με τρόπο που μπορεί να δει το εργαλείο, επομένως δεν χρειάζεται αντιστοίχιση.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση στηλών για αυτήν τη λίστα (δείτε τις παραπάνω σημειώσεις και τη λίστα δραστηριότητας).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Επιλέξτε παραπάνω μια λίστα προορισμού για να δείτε τις στήλες της και να τις αντιστοιχίσετε.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Οι στήλες της λίστας προορισμού δεν ήταν δυνατό να αναγνωστούν, οπότε δεν ήταν δυνατό να προταθούν αντιστοιχίες.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Η ροή δεν αναφέρει σε ποιον ιστότοπο βρίσκεται αυτή η λίστα (χρησιμοποιεί παράμετρο), επομένως δεν είναι δυνατή η αναζήτησή της. Επικολλήστε το αναγνωριστικό ή τον σύνδεσμο της λίστας προορισμού.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Δεν υπάρχει λίστα προορισμού: αυτή η λίστα μένει αμετάβλητη.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Ανάγνωση των στηλών της λίστας προορισμού για το {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Λίστα «{0}»: επιλέξατε άλλη λίστα προορισμού. Ανάγνωση των στηλών της στο {1} για νέα αντιστοίχιση.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — συνδεδεμένος ως {1} (η σύνδεση του κύριου παραθύρου)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Ανάγνωση λιστών από (πηγή)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>Το «Ιστότοπος στις ροές» είναι η διεύθυνση που είναι αποθηκευμένη στις ροές· αυτή αντικαθίσταται, οπότε δεν μπορεί να επεξεργαστεί. Το «Ανάγνωση λιστών από» είναι το σημείο από όπου το εργαλείο διαβάζει το όνομα και τις στήλες κάθε λίστας από την πλευρά της πηγής· ξεκινά ως η ίδια διεύθυνση, οπότε αλλάξτε το όταν η διεύθυνση της ροής είναι παλιά, έχει μετονομαστεί ή βρίσκεται σε άλλον μισθωτή από τη σύνδεση προέλευσής σας.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Τι χρησιμοποιούν αυτές οι ροές</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} ροές, {2} βήματα: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>αναδιατυπώνεται από αυτό το εργαλείο</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>έλεγχος με μη αυτόματο τρόπο</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>μόνο σύνδεση</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>Εκκρεμότητες μετά την εισαγωγή</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Εισαγάγετε κάθε τροποποιημένο πακέτο στο περιβάλλον προορισμού και δημιουργήστε ξανά τις συνδέσεις (δεν αντιγράφονται ποτέ).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Πακέτα λύσεων: αναδιατυπώθηκαν μόνο οι ορισμοί των ροών εργασίας. Οι τιμές των μεταβλητών περιβάλλοντος και οι αναφορές συνδέσεων στη λύση (customizations.xml) εξακολουθούν να περιέχουν τιμές της πηγής· ορίστε τις μετά την εισαγωγή.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Οι κάτοχοι ροών και οι χρήστες μόνο εκτέλεσης δεν αποτελούν μέρος του πακέτου· μοιραστείτε τις ροές με τα σωστά άτομα μετά την εισαγωγή.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Καμία αλλαγή (τίποτα στην αντιστοίχιση δεν ταίριαξε).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} αντικαταστάσεις</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Εξακολουθούν να δείχνουν σε τιμές της πηγής (χωρίς αντιστοίχιση, έλεγχος πριν από την εισαγωγή)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Σύνδεση στον ιστότοπο προέλευσης {0} και στον ιστότοπο προορισμού {1}. Ανοίγει ένα παράθυρο σύνδεσης αν δεν έχετε συνδεθεί ακόμη.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Συνδεθήκατε στο {0} (πηγή) και στο {1} (προορισμός).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Ανάγνωση των λιστών και των βιβλιοθηκών στον ιστότοπο προορισμού {0}, ώστε κάθε λίστα να αντιστοιχιστεί με βάση το όνομα και να προσφερθεί σε αναπτυσσόμενη λίστα.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>Βρέθηκαν {0} λίστες και βιβλιοθήκες στο {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Ανάγνωση του ονόματος και των στηλών της λίστας {0} από τον ιστότοπο προέλευσης {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Λίστα «{0}»: αναζήτηση λίστας με το ίδιο όνομα στον ιστότοπο προορισμού {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Λίστα «{0}»: βρέθηκε στον προορισμό. Ανάγνωση των στηλών της λίστας προορισμού για αντιστοίχιση.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Λίστα «{0}»: οι στήλες της δεν ήταν δυνατό να αναγνωστούν ή δεν έχει. Δεν υπάρχει τίποτα προς αντιστοίχιση για αυτήν τη λίστα.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Λίστα «{0}»: {1} στήλες, καμία από τις οποίες δεν χρησιμοποιείται από τις ροές με τρόπο που μπορεί να δει το εργαλείο. Δεν χρειάζεται αντιστοίχιση.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Λίστα «{0}»: οι ροές χρησιμοποιούν {1} ονόματα στηλών: {2} έχουν το ίδιο όνομα στον προορισμό (δεν χρειάζεται αλλαγή), {3} μετονομάστηκαν και αντιστοιχίστηκαν, {4} μοιάζουν παρόμοιες (ελέγξτε), {5} δεν έχουν αντιστοιχία (δική σας επιλογή), {6} είναι ενσωματωμένες στήλες (τίποτα προς αντιστοίχιση).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>Η λίστα {0} δεν βρίσκεται στον ιστότοπο προέλευσης, αλλά βρίσκεται στον ιστότοπο προορισμού ως «{1}»: η ροή δείχνει ήδη στον προορισμό.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Ο ιστότοπος «{0}» δεν έχει προορισμό· οι λίστες του δεν αντιστοιχίστηκαν.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Για προχωρημένους: ανάγνωση λιστών από διαφορετική διεύθυνση</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Αντιστοίχιση στηλών: από {0} σε {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Δεν υπάρχουν στήλες προς εμφάνιση για αυτήν τη λίστα.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Καμία από τις στήλες αυτής της λίστας δεν χρησιμοποιείται από τις ροές. Επιλέξτε «Εμφάνιση όλων των στηλών» για να τις δείτε.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>Η λίστα προέλευσης δεν ήταν δυνατό να αναγνωστεί και η ροή δεν ονομάζει στήλες, επομένως δεν υπάρχει τίποτα προς αντιστοίχιση.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Λίστα</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(δεν ήταν δυνατή η ανάγνωση στην πηγή)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Ανάγνωση από:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Ιστότοπος</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Αυτή η ροή δείχνει ήδη σε αυτήν τη λίστα στον προορισμό. Τα {0} ονόματα στηλών που χρησιμοποιεί εμφανίζονται δίπλα στις στήλες του προορισμού· δεν χρειάζεται καμία αλλαγή.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(το όνομα λίστας δεν είναι διαθέσιμο)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Ήδη στον προορισμό</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Αντιστοίχιση με τα ονόματα στηλών της ροής</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Οι στήλες δεν διαβάζονται</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Χωρίς λίστα προορισμού</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Τίποτα προς αντιστοίχιση</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Έτοιμο</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Οι στήλες προορισμού δεν διαβάζονται</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} προς έλεγχο</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Χρησιμοποιείται από {0} ροές</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} αντιστοιχίσεις στηλών χρειάζονται ακόμη έλεγχο.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Όλες οι αντιστοιχίσεις στηλών έχουν διευθετηθεί.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Οι συνδέσεις δεν αντιγράφονται μεταξύ μισθωτών: δημιουργήστε τις ξανά στο Power Automate μετά την εισαγωγή.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>Email: κάθε διεύθυνση στο {0} γίνεται {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} από {1} φόρμες δείχνουν σε νέα φόρμα.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} από {1} λίστες έχουν λίστα προορισμού.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Οι λίστες δεν έχουν αντιστοιχιστεί ακόμη.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>Οι διευθύνσεις email δεν αλλάζουν (δεν αντιστοιχίστηκε τομέας).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Οι ροές δεν χρησιμοποιούν Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Οι ροές δεν χρησιμοποιούν συγκεκριμένες λίστες.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Οι ροές δεν ονομάζουν ιστοτόπους SharePoint.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>Θα γραφτούν {0} πακέτα με {1} ροές· τα πρωτότυπα δεν αλλάζουν.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0} από {1} ιστότοποι θα μετακινηθούν σε ιστότοπο προορισμού· οι υπόλοιποι μένουν ως έχουν.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Απαλοιφή τιμών που συμπληρώθηκαν αυτόματα</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Συμπληρώθηκε</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Φόρμα στις ροές σας</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Από (στις ροές σας)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Λίστες</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Ιστότοποι</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Κατάσταση</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>Προς (προορισμός)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Επιλέχθηκε από εσάς</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Αμετάβλητη</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(η σύνδεση του κύριου παραθύρου)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>Τομέας email από τον οποίο γίνεται η μετακίνηση</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Μετακίνηση κάθε διεύθυνσης στο</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>σε</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>Τομέας email προς τον οποίο γίνεται η μετακίνηση</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…ή σύρετε αρχεία .zip (ή έναν φάκελο) σε αυτό το παράθυρο.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Η στήλη «{0}» της λίστας «{1}» δεν έχει αντιστοιχία στη λίστα προορισμού.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>Η λίστα «{0}» ({1}) στο {2} δεν έχει λίστα προορισμού, οπότε οι ροές που τη χρησιμοποιούν εξακολουθούν να δείχνουν στη λίστα προέλευσης.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(άγνωστος τίτλος)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Μετάβαση στο βήμα</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Έχετε αποθηκευμένη αντιστοίχιση; Φορτώστε την…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Προσαρμοσμένο μοτίβο…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Διατήρηση των αρχικών ονομάτων</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Προσθήκη «&apos; - migrated&apos;» σε κάθε όνομα</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Ανοίξτε την αναφορά και ελέγξτε ό,τι έχει επισημανθεί για έλεγχο.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>Στο Power Automate (μισθωτής προορισμού): Ροές μου, Εισαγωγή, Εισαγωγή πακέτου (παλαιού τύπου) και επιλέξτε ένα πακέτο που γράφτηκε.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>Στις Σχετικές πηγές, κάντε κλικ στο «Επιλογή κατά την εισαγωγή» για κάθε σύνδεση και επιλέξτε ή δημιουργήστε μία στον μισθωτή προορισμού. Οι συνδέσεις δεν μπορούν να μετακινηθούν μεταξύ μισθωτών.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Εισαγάγετε τη ροή, κρατήστε την απενεργοποιημένη, ανοίξτε την, διορθώστε ό,τι επισημαίνει και μετά ενεργοποιήστε την.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Άνοιγμα φακέλου</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Άνοιγμα Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Αυτός ο φάκελος εξόδου δεν υπάρχει ακόμη· δημιουργείται όταν γράψετε τα πακέτα.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>ΠΗΓΗ</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>ΠΡΟΟΡΙΣΜΟΣ</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>Βρέθηκαν {0} ροές</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Δεν βρέθηκαν ροές</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Ήδη γραμμένο από αυτό το εργαλείο</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Έτοιμο για εγγραφή;</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Αφαίρεση αυτού του πακέτου από τη λίστα</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Αναφορά αναδιατύπωσης ροών</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Τι χρησιμοποιούν αυτές οι ροές ({0} υπηρεσίες)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} πακέτα δεν ήταν δυνατό να γραφτούν.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} τιμές στα πακέτα που γράφτηκαν εξακολουθούν να δείχνουν στην πηγή. Ανοίξτε την αναφορά για να δείτε ποιες.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Εμφάνιση και των {0} στηλών</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Εμφάνιση μόνο των στηλών που χρησιμοποιούν οι ροές</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Τι σημαίνουν αυτές οι στήλες;</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>Το αναγνωριστικό αυτής της λίστας δεν βρίσκεται στον ιστότοπο προέλευσης, αλλά είναι η λίστα «{0}» στον ιστότοπο προορισμού: η ροή δείχνει ήδη στον προορισμό, όπως σε πακέτο που έχει ήδη γράψει αυτό το εργαλείο.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Συνδεδεμένο</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Πρόβλημα</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Δεν έχει γίνει σύνδεση</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Αναμονή για σύνδεση…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} λίστες · όλες έτοιμες</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} λίστες · {1} έτοιμες · {2} χρειάζονται προσοχή</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Διήρκεσε {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>Προς έλεγχο</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Προσθέστε τα πακέτα ροών (.zip) που εξαγάγατε από τον μισθωτή προέλευσης. Κάθε ένα σαρώνεται μόλις το προσθέσετε.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Πείτε σε ποιον ιστότοπο μετακινείται κάθε ροή. Συνδεθείτε στον προορισμό και η διεύθυνση του νέου μισθωτή συμπληρώνεται αυτόματα.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Κάθε λίστα που χρησιμοποιούν οι ροές αντιστοιχίζεται με μια λίστα στον προορισμό και οι στήλες της αντιστοιχίζονται. Ελέγξτε ό,τι επισημαίνεται ως προσοχή.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Κατευθύνετε τις αντιγραμμένες φόρμες στα νέα αναγνωριστικά τους και αποφασίστε πώς αλλάζουν οι διευθύνσεις email και το αναγνωριστικό μισθωτή.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Ελέγξτε την παρακάτω λίστα, επιλέξτε πού θα αποθηκευτούν τα ενημερωμένα πακέτα και μετά γράψτε τα.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Τι συμβαίνει εδώ</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Το εργαλείο διαβάζει κάθε πακέτο σε αυτόν τον υπολογιστή (δεν στέλνεται τίποτα πουθενά) για να βρει τους ιστοτόπους, τις λίστες, τις στήλες και τις φόρμες που χρησιμοποιούν οι ροές. Προσθέστε τις ΑΡΧΙΚΕΣ εξαγωγές από την πηγή, όχι πακέτα που έγραψε νωρίτερα αυτό το εργαλείο: αυτά περιέχουν ήδη τις διευθύνσεις του προορισμού.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Η στήλη «{0}» αντιστοιχίζεται διαφορετικά σε διαφορετικές λίστες ({1}). Τα βήματα κάθε λίστας παίρνουν τη δική τους αντιστοίχιση· οι εκφράσεις αλλού στη ροή διατηρούν το αρχικό όνομα, οπότε ελέγξτε τες.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Επαναφόρτωση ονομάτων φορμών…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Φόρτωση ονομάτων φορμών… ίσως σας ζητηθεί να συνδεθείτε.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Ανάγνωση των τίτλων των φορμών στις ροές σας από τον λογαριασμό προέλευσης {0}. Κάντε κλικ στο Άκυρο για να σταματήσετε την αναμονή σύνδεσης.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Πηγή: βρέθηκε ο τίτλος {0} από {1} φόρμες ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Πηγή: δεν ήταν δυνατή η ανάγνωση των τίτλων των φορμών: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} φόρμες αντιστοιχίστηκαν με τη φόρμα προορισμού με το ίδιο όνομα.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Μοιάζει με έγκυρο αναγνωριστικό φόρμας</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Αντιστοίχιση με βάση το όνομα</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>Η πηγή και ο προορισμός βρίσκονται στον ίδιο μισθωτή ({0}). Αλλάξτε την εφαρμογή σε λειτουργία ενός μισθωτή (Ρυθμίσεις) ή συνδεθείτε στην πηγή και στον προορισμό με λογαριασμούς από διαφορετικούς μισθωτές.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Αφαίρεση αυτών των πακέτων</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>Αφαιρέθηκαν {0} πακέτα που δείχνουν ήδη στον προορισμό: {1}. Προσθέστε αντ&apos; αυτών τις αρχικές εξαγωγές από τον μισθωτή προέλευσης.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Αυτά τα πακέτα αφαιρέθηκαν. Προσθέστε τις αρχικές εξαγωγές από τον μισθωτή προέλευσης.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Κάθε πακέτο αποθηκεύεται ως νέο .zip στον φάκελο εξόδου· τα πρωτότυπα δεν αλλάζουν ποτέ. Για να μετονομάσετε ένα, πληκτρολογήστε διαφορετικό όνομα στο Αποθήκευση ως.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Διατήρηση των αρχικών ονομάτων</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Προσθήκη «&apos; - migrated&apos;» σε κάθε όνομα</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Αρχικό πακέτο</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Αποθήκευση ως</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Θα αποθηκευτεί ως: {0} (μπορείτε να αλλάξετε τα ονόματα παρακάτω).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση· δεν γράφτηκε έξοδος</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Ακυρώθηκε. Δεν άλλαξε τίποτα. Στο βήμα Ιστότοποι χρησιμοποιήστε τη Σύνδεση για να δοκιμάσετε ξανά (για παράδειγμα σε άλλο πρόγραμμα περιήγησης)· στο βήμα Λίστες χρησιμοποιήστε το Νέα αντιστοίχιση.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Ακύρωση… το κλείσιμο ενός παραθύρου σύνδεσης μπορεί να διαρκέσει λίγο.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Τι κάνει το εργαλείο</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Συνδέσεις</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Πολλοί μισθωτές: για την αντιστοίχιση λιστών, το εργαλείο διαβάζει το όνομα και τις στήλες κάθε λίστας από τον μισθωτή προέλευσης και αναζητά την ίδια λίστα στον μισθωτή προορισμού. Αυτό απαιτεί σύνδεση σε καθένα. Συνδεθείτε σε κάθε πλευρά εδώ ή απλώς κάντε κλικ στο Επόμενο και θα σας ζητηθεί τότε. Ανοίγει ένα παράθυρο προγράμματος περιήγησης· αν είναι λάθος πρόγραμμα περιήγησης, κάντε κλικ στο Άκυρο και δοκιμάστε ξανά. Τίποτα δεν αλλάζει σε κανέναν από τους δύο μισθωτές.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Ένας μισθωτής: η πηγή και ο προορισμός είναι ο ίδιος μισθωτής, οπότε το εργαλείο χρησιμοποιεί τον λογαριασμό με τον οποίο συνδεθήκατε στο βήμα Σύνδεση. Δεν χρειάζεται να συνδεθείτε πουθενά αλλού. Τίποτα δεν αλλάζει στον μισθωτή.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Πηγή</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Προορισμός</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Σύνδεση στην πηγή…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Σύνδεση στον προορισμό…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Άκυρο</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Σταματά την αναμονή για το παράθυρο σύνδεσης, ώστε να δοκιμάσετε ξανά, για παράδειγμα σε άλλο πρόγραμμα περιήγησης.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Δεν έχει γίνει σύνδεση ακόμη</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Χρησιμοποιεί τη σύνδεση του κύριου παραθύρου: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Συνδεθήκατε ως {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Έτοιμο</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Αναμονή για σύνδεση… θα πρέπει να ανοίξει ένα παράθυρο προγράμματος περιήγησης</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Η σύνδεση ακυρώθηκε. Κάντε κλικ στο Σύνδεση για να δοκιμάσετε ξανά.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Συνδεθήκατε. Ελέγξτε τους ιστοτόπους προορισμού παρακάτω και κάντε κλικ στο Επόμενο.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Δεν υπάρχει ακόμη ιστότοπος προέλευσης για σύνδεση. Προσθέστε πρώτα πακέτα ροών.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Εισαγάγετε πρώτα τουλάχιστον έναν ιστότοπο προορισμού (ή χρησιμοποιήστε τη Συμπλήρωση, με διατήρηση των διαδρομών)· η σύνδεση γίνεται στον μισθωτή του ιστοτόπου προορισμού.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Σύνδεση στην πηγή… ανοίγει ένα παράθυρο προγράμματος περιήγησης.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Σύνδεση στον προορισμό… ανοίγει ένα παράθυρο προγράμματος περιήγησης.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>πηγή</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>προορισμός</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Σύνδεση στον μισθωτή προέλευσης. Ανοίγει ένα παράθυρο προγράμματος περιήγησης· κάντε κλικ στο Άκυρο για να σταματήσετε την αναμονή (για παράδειγμα για να δοκιμάσετε άλλο πρόγραμμα περιήγησης). Η σύνδεση ενημερώνει επίσης το εργαλείο ποιος είναι ο μισθωτής προέλευσης.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Σύνδεση στον μισθωτή προορισμού. Ανοίγει ένα παράθυρο προγράμματος περιήγησης· κάντε κλικ στο Άκυρο για να σταματήσετε την αναμονή (για παράδειγμα για να δοκιμάσετε άλλο πρόγραμμα περιήγησης). Η σύνδεση ενημερώνει επίσης το εργαλείο για τη διεύθυνση SharePoint του νέου μισθωτή.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Συνδεθήκατε στο εξής: {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Η σύνδεση ακυρώθηκε από εσάς.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Ανάγνωση {0} αρχείων πακέτων σε αυτόν τον υπολογιστή για να βρεθούν οι ιστότοποι, οι λίστες, οι στήλες και οι φόρμες που χρησιμοποιούν οι ροές. Δεν στέλνεται τίποτα πουθενά.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Διαβάστηκε το {0}: {1} ροές.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Αντιστοίχιση {0} λιστών: για καθεμία, το εργαλείο ρωτά τον ιστότοπο προέλευσης για το όνομά της και μετά αναζητά λίστα με αυτό το όνομα στον ιστότοπο προορισμού.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Η αντιστοίχιση ολοκληρώθηκε. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Εγγραφή {0} τροποποιημένων πακέτων στο {1}. Τα πρωτότυπα δεν αλλάζουν.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Εγγραφή του {0} με εφαρμοσμένη την αντιστοίχισή σας.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Έλεγχος του {0} για τιμές που εξακολουθούν να δείχνουν στην πηγή.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Ακυρώθηκε από εσάς. Δεν άλλαξε τίποτα.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Διακόπηκε: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Κάθε ροή αποθηκεύει τη διεύθυνση του ιστοτόπου SharePoint από τον οποίο διαβάζει ή στον οποίο γράφει. Για να εκτελείται στον νέο μισθωτή, κάθε ροή πρέπει να δείχνει στον αντίστοιχο ιστότοπο εκεί, οπότε πείτε στο εργαλείο ποιος νέος ιστότοπος αντικαθιστά κάθε παλιό. Αυτό επεξεργάζεται μόνο αντίγραφα των πακέτων σας· τίποτα δεν αναζητείται μέχρι να κάνετε κλικ στο Επόμενο.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Τι συμβαίνει εδώ: για κάθε λίστα που χρησιμοποιεί μια ροή, το εργαλείο διαβάζει το όνομα και τις στήλες της λίστας από τον ιστότοπο προέλευσης, αναζητά λίστα με το ίδιο όνομα στον ιστότοπο προορισμού και διαβάζει τις στήλες αυτής της λίστας για να τις αντιστοιχίσει. Γιατί: οι ροές αναφέρονται σε λίστες και στήλες με αναγνωριστικό ή εσωτερικό όνομα, και αυτά διαφέρουν στον νέο μισθωτή, οπότε το εργαλείο βρίσκει το αντίστοιχο. Αυτό το βήμα μόνο διαβάζει· τίποτα δεν δημιουργείται ή αλλάζει σε κανέναν από τους δύο μισθωτές. Μπορείτε να αλλάξετε τη λίστα προορισμού και οποιαδήποτε στήλη στην κάρτα της.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Μια αντιγραμμένη φόρμα παίρνει νέο αναγνωριστικό, οπότε μια ροή που τη χρησιμοποιεί πρέπει να δείχνει στο αντίγραφο. Οι διευθύνσεις email και το αναγνωριστικό μισθωτή σε μια ροή ίσως χρειαστεί επίσης να αλλάξουν για τον νέο οργανισμό. Εδώ τίποτα δεν αναζητείται· εσείς αποφασίζετε τις αντικαταστάσεις και ό,τι μείνει κενό παραμένει ως έχει.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Το εργαλείο γράφει νέα αρχεία .zip στον φάκελο εξόδου με εφαρμοσμένη την αντιστοίχισή σας, τα σαρώνει ξανά για να βρει ό,τι εξακολουθεί να δείχνει στην πηγή και γράφει μια αναφορά. Τα αρχικά πακέτα σας δεν αλλάζουν ποτέ και τίποτα δεν στέλνεται σε κανέναν από τους δύο μισθωτές. Εισάγετε εσείς τα νέα πακέτα στο Power Automate στη συνέχεια.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Η σύνδεση ακυρώθηκε. Κάντε κλικ στο κουμπί για να δοκιμάσετε ξανά, για παράδειγμα σε άλλο πρόγραμμα περιήγησης.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Άκυρο</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Σφάλμα: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση της φόρμας προέλευσης ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Δεν ήταν δυνατή η δημιουργία της φόρμας στον προορισμό ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Ακυρώθηκε στη μέση. Μια ημιτελής φόρμα έμεινε στον προορισμό· διαγράψτε την στο Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Η αντιγραφή διακόπηκε στη μέση ({0}). Μια ημιτελής φόρμα έμεινε στον προορισμό· διαγράψτε την στο Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>εικόνα φόντου</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>λογότυπο</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>εικόνα κεφαλίδας</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>Το στοιχείο «{0}» δεν αντιγράφηκε (οι εικόνες δεν υποστηρίζονται ακόμη).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Η βαθμολόγηση του κουίζ (σωστές απαντήσεις και βαθμοί) δεν έχει επαληθευτεί· ελέγξτε το αντίγραφο.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Η ρύθμιση «{0}» δεν ήταν δυνατό να αντιγραφεί ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Η ερώτηση «{0}» δεν αντιγράφηκε ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(χωρίς τίτλο)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Οι κανόνες διακλάδωσης δεν ήταν δυνατό να αντιγραφούν ({0})· ελέγξτε το αντίγραφο.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>Το αντίγραφο δημιουργήθηκε αλλά δεν ήταν δυνατό να γίνει ορατό στο Microsoft Forms ({0})· ίσως βρίσκεται στον κάδο ανακύκλωσης.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>Το αντίγραφο έχει {0} ερωτήσεις αλλά η πηγή έχει {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Η ερώτηση «{0}» ({1}) δημιουργήθηκε αλλά οι επιλογές της δεν ήταν δυνατό να αντιγραφούν ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Αποτελέσματα</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Φόρμα προέλευσης</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>Αναγνωριστικό φόρμας προέλευσης</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Τίτλος αντιγράφου</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>Αναγνωριστικό φόρμας αντιγράφου</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Κατάσταση</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Ερωτήσεις που αντιγράφηκαν</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Ερωτήσεις στην πηγή</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Προειδοποιήσεις</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Σημειώσεις</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Σφάλμα</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Βιβλίο εργασίας Excel (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>Αρχεία JSON (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Αναγνωριστικό</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Ώρα έναρξης</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Ώρα ολοκλήρωσης</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Ερωτώμενος</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Όνομα</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Βαθμολογία</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Απαντήσεις χωρίς αντιστοίχιση (ακατέργαστο JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (περικοπή: πολύ μεγάλο για κελί Excel)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Διακοπή της εκτέλεσης;</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>Μια σύγκριση ή επαλήθευση εκτελείται ακόμη. Το κλείσιμο αυτού του παραθύρου τη διακόπτει και δεν θα γραφτεί αναφορά. Να γίνει κλείσιμο παρ&apos; όλα αυτά;</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Κλείσιμο ενώ εργάζεται;</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Το εργαλείο εργάζεται ακόμη (σάρωση, αντιστοίχιση, σύνδεση ή εγγραφή πακέτων). Αν κλείσετε τώρα, θα διακοπεί. Να γίνει κλείσιμο παρ&apos; όλα αυτά;</value></data>
 </root>

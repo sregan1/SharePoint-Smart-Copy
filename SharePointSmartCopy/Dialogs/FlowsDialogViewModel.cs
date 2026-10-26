@@ -175,7 +175,7 @@ public partial class FlowsDialogViewModel : ObservableObject
     public bool ShowBack => CurrentStep is >= 1 and <= 5;
     public bool ShowNext => CurrentStep <= 4;
     public bool ShowStartOver => CurrentStep == 5;
-    public string NextButtonText => CurrentStep == 4 ? Loc.T("Flows_WriteButton") : Loc.T("Forms_Next");
+    public string NextButtonText => CurrentStep == 4 ? Loc.T("Flows_WriteButton") : Loc.T("Ui_Next");
     // Why Next is off on a step that checks the flows will work (empty = nothing in the way).
     [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext), nameof(HasBlockReason))] private string _blockReason = string.Empty;
     public bool HasBlockReason => BlockReason.Length > 0;

@@ -141,7 +141,7 @@ public partial class SharePointService
     // Returns the SharePoint folder UniqueId (GUID) for the library root folder.
     // Required for the SPMI manifest SPFolder entry — without it SPMI cannot resolve the
     // parent folder for files in newly created empty libraries ("Missing file info" error).
-    public async Task<string?> GetLibraryRootFolderUniqueIdAsync(string siteUrl, string libraryServerRelativeUrl)
+    public async Task<string?> GetLibraryRootFolderUniqueIdAsync(string siteUrl, string libraryServerRelativeUrl, CancellationToken ct = default)
     {
         // Use GetFolderByServerRelativePath(decodedurl=...) instead of ...ByServerRelativeUrl(...):
         // the Url variant mishandles special characters in folder names (e.g. '#', '%', '&') and
@@ -158,13 +158,13 @@ public partial class SharePointService
                 r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
                 return r;
-            }, siteUrl);
+            }, siteUrl, cancellationToken: ct);
             if (!response.IsSuccessStatusCode) return null;
-            var body = await response.Content.ReadAsStringAsync();
+            var body = await response.Content.ReadAsStringAsync(ct);
             using var doc = JsonDocument.Parse(body);
             return doc.RootElement.TryGetProperty("UniqueId", out var uid) ? uid.GetString() : null;
         }
-        catch { return null; }
+        catch (Exception ex) when (ex is not OperationCanceledException) { return null; }
     }
 
     public void Initialize()

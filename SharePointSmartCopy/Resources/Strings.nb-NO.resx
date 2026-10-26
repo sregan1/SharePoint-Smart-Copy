@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Vellykket ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Mislyktes ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Hoppet over ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Oppdatert</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Kunne ikke lese om kilden har egne tillatelser (struping eller tilgangsfeil) – tillatelser ble ikke kopiert for dette elementet. Kjør på nytt for å prøve igjen.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Den eksisterende målfilen ble fjernet for overskriving, men den nye kopien kunne ikke lastes opp ({0}). Filen mangler for øyeblikket i målet – kjør kopieringen på nytt for å gjenopprette den.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Et målbibliotek mislyktes ({0}). Filene er merket som mislyktes; de andre bibliotekene fortsetter.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: kildefilen ble endret under nedlastingen – starter nedlastingen på nytt.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint rapporterte ingen fremdrift for denne importen på {0} minutter, så den ble oppgitt. Filene er merket som mislyktes; kjør kopieringen på nytt for å prøve dem igjen.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Én leietaker</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Flere leietakere</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Kopier mellom to forskjellige Microsoft 365-leietakere. Du logger på kilden og målet hver for seg. Velg målets appregistrering i Innstillinger.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Målregistrering:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Modus med flere leietakere: appregistreringen som brukes til å logge på målleietakeren. «Samme som kilde» bruker kildens registrering på nytt, som da må være en app for flere leietakere.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Gjenoppta / kjør på nytt</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Kobler til igjen og kjører dette utvalget på nytt med Kopier hvis nyere, slik at filer som allerede er kopiert hoppes over og bare det som mangler eller er endret, overføres.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Denne kjøringen har ikke noe lagret utvalg å gjenoppta (bare kjøringer med filutvalg lagrer ett).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>En kopiering pågår allerede. Fullfør eller avbryt den først.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Kunne ikke gjenoppta: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} avbrutt(e) kjøring(er) gjenopprettet. Se Logg.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Gjenopptar: {0} element(er) gjenopprettet fra den tidligere kjøringen, med Kopier hvis nyere valgt. Se gjennom alternativene, og klikk deretter Neste. (Egendefinerte kolonnetilordninger gjenopprettes ikke.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>AVBRUTT – appen ble lukket før kjøringen var ferdig. Av elementene som var ferdige: {0} vellykket, {1} mislyktes, {2} hoppet over, {3} avbrutt  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Eksporter diagnostikk…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Lagrer en zip med nylige logger, systeminformasjon og innstillingene dine med organisasjonsdetaljer fjernet – som vedlegg til en feilrapport. Den inneholder ikke kopieringsrapporter eller filnavn.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Diagnostikk lagret i {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Kunne ikke lagre diagnostikk: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Innholdet er identisk (bare SharePoint-administrerte deler er forskjellige), men endringsdatoen ble ikke bevart.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Tillatelser ble ikke kopiert: kunne ikke løse opp elementets SharePoint-ID-er.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Tillatelser ble ikke kopiert: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Mappe «{0}»: {1} ble ikke brukt – {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>Flere mapper hadde problemer som ovenfor; senere er ikke oppført enkeltvis.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>tillatelser</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>datoer</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>forfatter / redigerer</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} beholdt – målet er allerede oppdatert)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>ADVARSEL: lesing av metadata fra kilden ({0}) mislyktes: {1}. Elementer herfra kan bli kopiert UTEN egendefinerte kolonneverdier eller unike tillatelser. Kjør på nytt når problemet er løst (Overskriv eller Hvis nyere bruker dem på nytt).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>ADVARSEL: fant ikke kildelisten for et bibliotek, så tillatelsene vil IKKE bli kopiert.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>SharePoint-verten &apos;{0}&apos; er ikke tilknyttet en tilkoblet leietaker. Koble til kilde- og målnettstedene på nytt og prøv igjen.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Kopiering på tvers av leietakere: verdier i kolonner for administrerte metadata (taksonomi) kopieres ikke, og OneNote-notatbøker / dokumentsett kan ikke kopieres mellom leietakere ennå. Identiteter tilordnes med innstillingene for identitetstilordning; alle som ikke kan løses opp i målet, hoppes over.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Identitetstilordning</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Identitetstilordning…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>List opp hver person (eller gruppe) i kildeleietakeren og hvem de er i målleietakeren – de to er forskjellige kontoer. Forfattere, redigerere, personkolonner og tillatelser skrives med denne tabellen. Alle som ikke er oppført, matches med domenebyttet hvis du har angitt ett; alle som fortsatt ikke finnes i målet, hoppes over og rapporteres.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Kildens e-postdomene</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Målets e-postdomene</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Overstyringer – ett «kilde,mål»-par per linje (brukere eller gruppenavn; # starter en kommentar)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Samme som kilde</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Kilde og mål er i samme leietaker. Bytt til modus med én leietaker for kopiering innen samme leietaker.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Intern mappekopiering (OneNote-notatbøker, dokumentsett) støttes ikke på tvers av leietakere ennå.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Stasjonen &apos;{0}&apos; er ikke tilknyttet en tilkoblet leietaker. Koble til kilde- og målnettstedene på nytt og prøv igjen.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Ingen appregistrering er konfigurert ennå. Åpne Innstillinger og legg til Azure-appregistreringen din (program-/klient-ID-en) før du kobler til.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Påloggingen ble avbrutt. Klikk Koble til for å prøve igjen.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>En administrator har ikke godkjent denne appen i denne leietakeren ennå. Be en global administrator om å gi administratorsamtykke for appregistreringen (se Oppsett i brukerveiledningen).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Appregistreringen ble ikke funnet i denne leietakeren. Kontroller klient-ID og leietaker-ID i Innstillinger.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Denne leietakeren ble ikke funnet. Kontroller leietaker-ID i Innstillinger (bruk domenet ditt, leietaker-GUID-en eller &apos;common&apos;).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>Appregistreringen mangler omdirigeringsadressen som denne appen bruker. Legg til omdirigerings-URI-en http://localhost under «Mobil- og skrivebordsprogrammer» i Azure.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Appregistreringen er ikke konfigurert for skrivebordspålogging. Slå på «Tillat flyter for offentlige klienter» for registreringen i Azure.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Denne kontoen har ikke lov til å bruke den appregistreringen. Logg på med en konto fra leietakeren som eier den, eller velg en annen registrering i Innstillinger.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint avviste påloggingen. Klikk Koble til for å logge på igjen.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>Du har ikke tilgang til dette nettstedet. Kontroller at kontoen din kan åpne det i en nettleser, og at appen har fått tillatelsen Sites.ReadWrite.All.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Dette nettstedet ble ikke funnet. Kontroller adressen – den bør se slik ut: https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Detaljer: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Koble til kildenettstedet for å fortsette.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Velg minst ett element (merk en avmerkingsboks) for å fortsette.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Koble til målnettstedet for å fortsette.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Velg en målmappe for å fortsette.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Velg en målliste for å fortsette.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Skriv inn et navn på den nye listen for å fortsette.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Ingenting er valgt for kopiering.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Venter på at kopieringen skal fullføres…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Kilde: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Mål: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Appregistreringen din ble endret, så du ble logget av begge nettstedene. Koble til igjen for å fortsette.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Stoppe kopieringen?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>En kopiering pågår. Hvis du stopper den nå, blir de gjenværende elementene ikke kopiert (du kan gjenoppta senere fra Logg). Stoppe kopieringen?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>En kopiering pågår fortsatt. Hvis du lukker appen, stoppes den og de gjenværende elementene blir ikke kopiert (du kan gjenoppta senere fra Logg). Lukke likevel?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Bytte tilkoblingsmodus?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Når du bytter mellom én leietaker og flere leietakere, kobles begge nettstedene fra, og du må koble til på nytt. Bytte likevel?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Tilkobling:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Kildens appregistrering</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Målets appregistrering</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Logger på målleietakeren med:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Endre</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Åpne Innstillinger</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Du må ha lesetilgang til kildenettstedssamlingen.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Konfigurer Microsoft Entra ID-appregistreringen din i Innstillinger før du kobler til.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Filalternativer</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Bibliotek- og filalternativer</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Kopierer filer…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Kopierer bibliotek…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Neste</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Start kopiering</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Vis rapport</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Skriv inn navnet på den nye listen som skal opprettes</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>Målnettstedets liste ble valgt i Mål-trinnet. Gå tilbake for å endre den.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Konfigurer en appregistrering først</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy logger på med en appregistrering som du oppretter i din egen Microsoft Entra ID (Azure)-leietaker. Åpne Innstillinger, legg til registreringens program-ID (klient-ID), og kom deretter tilbake hit for å koble til.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Mer informasjon</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Dra for å gjøre aktivitetsfeeden høyere eller lavere</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Klikk for å vise bare mislykkede elementer</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Klikk for å vise bare elementer som er hoppet over</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Kolonnetilordning</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Sammenlign kilde og mål</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Åpne Sammenlign-verktøyet for å kontrollere denne kopien mot kilden.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Åpne Logg</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Den valgte registreringen brukes for kilden – og for begge sider i modus med én leietaker.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Ny registrering</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Legg til minst én appregistrering.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validering</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Klient-ID er påkrevd for den valgte registreringen.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Logget av. Du blir bedt om å logge på ved neste tilkobling.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Logget av</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Avlogging mislyktes: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Logg av</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} tilordning(er) funnet.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} linje(r) kan ikke leses (linje {1}). Hver linje må se slik ut: kilde,mål.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Kilde- og måldomenene er like, så domenebyttet endrer ingenting.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Importer CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Noen overstyringslinjer kan ikke leses (linje {0}). Hver linje må være «kilde,mål». Rett eller fjern dem – eller start en linje med # for å gjøre den til en kommentar.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Kunne ikke lagre identitetstilordningen: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Kunne ikke lese den filen: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>På tvers av leietakere: {0} forfatter-/redigeringskonto(er) i dette biblioteket ble ikke funnet i målleietakeren og blir stående som kopieringskontoen. Etter kjøringen bruker du «Tilordne disse brukerne» i rapporten for å rette dem.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Skriv inn kildebrukeren eller -gruppen.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Skriv inn hvem dette er i målleietakeren – eller fjern raden.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Kilde og mål er like.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Denne kilden forekommer mer enn én gang.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Kilde (denne leietakeren)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Mål (annen leietaker)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Type</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>I målet?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Trengs for</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Bruker</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Gruppe</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Ikke kontrollert</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Kontrollerer…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Funnet</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Ikke funnet</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Legg til</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Fjern</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Fyll ut mål fra domenebytte</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>For rader uten mål ennå fylles adressen som domenebyttet ville gitt, inn.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Kontroller i mål</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Slår opp hver målbruker i målleietakeren. Dette legger dem også til i målnettstedets brukerliste, noe kopieringen gjør uansett før den kan angi dem som forfatter eller gi dem tilgang.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Koble først til et mål med flere leietakere: skriv inn målnettstedets URL i Mål-trinnet, og åpne deretter denne dialogboksen på nytt.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Eksporter CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Disse personene var nødvendige for kopieringen, men ble ikke funnet i målleietakeren. For hver av dem skriver du inn hvem de er i målet – eller fjerner raden for å la dem stå utilordnet.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} tilordning(er).</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} rad(er) trenger oppmerksomhet.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Kontrollert: {0} funnet, {1} ikke funnet{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} kunne ikke kontrolleres</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Kontrollerer {0} av {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Ingenting å kontrollere: ingen rad har en mål-e-postadresse.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Noen rader trenger oppmerksomhet (uthevet). Rett eller fjern dem, og lagre deretter.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Tilordningen er lagret. For å bruke den på filer som allerede er kopiert, kjør på nytt med Overskriv – Kopier hvis nyere hopper over filer som er oppdatert, så forfatterne deres endres ikke. Tillatelser oppdateres uansett.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>{0} person(er) fra kilden ble ikke funnet i målleietakeren og ble derfor utelatt: ikke gitt tilgang, ikke angitt som forfatter eller redigerer, eller fjernet fra personkolonner.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Tilordne disse brukerne…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Tilordne uløste brukere…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Åpner identitetstilordningen med personene denne kjøringen ikke fant i målet.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Denne kjøringen hadde ingen uløste brukere.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Kopier skjemaer</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Kopier Microsoft Forms til målkontoen, med alle spørsmål, forgreninger, innstillinger og tema. Svar kan eksporteres til Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Dette bruker Microsoft Forms-nett-API-et, som Microsoft ikke dokumenterer eller støtter. Det fungerer i dag, men kan endres uten varsel. Prøv noen få skjemaer først.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Last inn skjemaene mine</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Kildekonto: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Målkonto: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Mål: samme konto (én leietaker). Kopiene opprettes ved siden av originalene.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(du blir bedt om å logge på)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Skjema-ID-tilordning (brukes av Flyt-verktøyet): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Laster inn skjemaer…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>Lastet inn {0} skjemaer.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Velg minst ett skjema først.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Kopierer skjemaer…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Kopierer…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Kopiert</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Mislyktes (se loggen)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Kopierer &apos;{0}&apos;</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Kopieringen er ferdig: {0} kopiert, {1} mislyktes.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Velg en mappe for svareksportene</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Eksporterer svar…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>Eksporterte &apos;{0}&apos;: {1} svar til {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Eksporterte svar for {0} skjemaer til {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Skjemaet ble kopiert, men ID-en kunne ikke lagres for Flyt-verktøyet: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Kunne ikke eksportere &apos;{0}&apos;: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Eksporterte svar for {0} skjemaer til {2}; {1} mislyktes (se loggen).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Avbrutt.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Feil: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Tips: appregistreringen trenger den delegerte Microsoft Forms-tillatelsen, med samtykke. Legg den til under API-tillatelser (se brukerveiledningen), og prøv igjen.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Tips: Microsoft Forms avviste forespørselen. Kontroller at denne kontoen kan åpne forms.office.com og at appregistreringen har Microsoft Forms-tillatelsen.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{0} av {1} valgt</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Tittel</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Type</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Sist endret</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Resultat</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Legg til i kopierte titler:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (kopi)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Kopier valgte skjemaer</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Eksporter svar…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Kontroller en kopi mot kilden</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Andre verktøy</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Skjemaer</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Kopier Microsoft Forms og eksporter svarene</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Skjemaverktøy</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Skriv om flyter for målet</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Oppdater eksporterte Power Automate-pakker (.zip) slik at de peker til målet: nettsteder, lister, kolonner, kopierte skjemaer og e-postdomener. De opprinnelige pakkene endres aldri.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Velg eksporterte flytpakker</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Legg til flytpakkene (.zip) du eksporterte fra Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Legg til filer…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Legg til mappe…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Skann</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Flytpakker (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Legg til minst én flytpakke først.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Skanner pakker…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>Hoppet over {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} flyter funnet. De refererer til {1} nettsteder, {2} lister og {3} skjemaer.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Skanningen er fullført.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Tilordne nettsteder</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Hvor hver flyts SharePoint-nettsted flyttes til. I modus med flere leietakere logger du på målet, og den nye leietakerens adresse fylles ut for deg; endre alle rader der nettstedet har et annet navn. I modus med én leietaker skriver du inn målnettstedet for hver rad.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Nettsted i flytene (erstattes)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Målnettsted</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Ny leietakeradresse:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Fyll ut tomme mål, behold stier</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Skriv inn en fullstendig URL, for eksempel https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Fylte ut tomme mål med den verten og hvert nettsteds sti.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Match lister og kolonner</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Ett kort per liste flytene bruker, uansett hvor mange flyter som bruker den. Hvert kort viser listens navn og kolonner, listen den tilordnes til i målet (den med samme navn som standard; velg en annen fra nedtrekkslisten hvis navnet er forskjellig), og hvordan hver kolonne tilordnes. Kontroller kortene som er merket med en advarsel.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Match lister og kolonner</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Liste</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>Kildeliste-ID</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>Målliste-ID</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Kildekolonne</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Målkolonne</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Skann pakkene først.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Skriv inn minst ett målnettsted først.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Matcher lister og kolonner…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(ikke funnet)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Fant en liste med samme navn i målet</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Nettstedet denne listen ligger på, har ikke noe målnettsted (Nettsteder-trinnet)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Kunne ikke lese denne listen på kildenettstedet: den finnes kanskje ikke, kontoen mangler kanskje tilgang, eller nettstedet er i en annen leietaker enn kildetilkoblingen din</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Ingen liste med dette navnet på målnettstedet: velg en fra nedtrekkslisten</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Samme navn</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Gitt nytt navn i målet</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Ingen match: velg en kolonne</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} av {1} lister har en målliste. {2} kolonne(r) å kontrollere.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Skjemaer og e-post</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Skjemaer kopiert med Skjemaverktøyet fylles ut automatisk. For et skjema du har opprettet selv, limer du inn ID-en eller koblingen til redigeringssiden.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>Kildeskjema-ID</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>Skjema-ID (fylles ut av nedtrekkslisten, eller lim inn en)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Flytt e-postdomene:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Skriv de oppdaterte pakkene</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Velg en utdatamappe (ikke mappen med originalene). De oppdaterte pakkene og en rapport som viser hver endring, lagres der.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Skriv oppdaterte pakker</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Lagre tilordning…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Åpne utdatamappe</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Tilkoblinger kan ikke flyttes mellom leietakere. Etter at du har importert en pakke, oppretter du hver tilkobling på nytt i Power Automate og velger den på nytt.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Velg en utdatamappe først.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Skriver oppdaterte pakker…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Lagre den oppdaterte kopien av {0} (pakke {1} av {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Power Automate-pakke (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Du har allerede valgt det filnavnet for en annen pakke. Velg et annet navn.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>En pakke ville blitt lagret oppå en original (samme mappe, samme navn). Velg en annen utdatamappe, eller endre navnet i «Lagre som», slik at originalene forblir urørt.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Rapport for omskriving av flyter
+
+Originale pakker er urørt. Tilkoblinger migreres IKKE; opprett dem på nytt og velg dem på nytt ved import.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Rapport skrevet til {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} pakker skrevet, {1} erstatninger. {2} verdier peker fortsatt til kilden (se rapporten).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Tilordning lagret i {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Flyter</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Oppdater eksporterte Power Automate-flyter for målet</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Flytverktøy</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Hva disse flytene bruker</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Tjenestene som ble funnet i de skannede flytene, og hva dette verktøyet gjør med hver av dem.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Tjeneste</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Flyter</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Trinn</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Funnet</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Hva dette verktøyet gjør</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Skriver om det det finner</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>ID-er rapporteres; gjennomgå etter import</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Bare tilkobling (opprett den på nytt)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Kolonnetilordning</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>En kolonne vises her når en flyt skriver til den, filtrerer eller sorterer på den, eller leser den i et uttrykk, på en liste som ble matchet. Målkolonnen velges ved automatisk matching (samme navn, deretter samme visningsnavn, deretter et lignende navn). Du trenger bare å handle på rader merket «Lignende navn» eller «Ingen match»; endre en hvilken som helst rad fra nedtrekkslisten, eller velg «(la være uendret)» for å beholde kildenavnet. Innebygde kolonner som Title vises ikke fordi de finnes overalt.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(la være uendret)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Lignende navn: kontroller</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(ikke matchet ennå)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Målliste valgt av deg</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Skriv inn eller lim inn en målliste-ID, eller koblingen til listens innstillingsside, i kolonnen Målliste-ID for å velge en liste selv (for eksempel når navnet er forskjellig). Klikk deretter «Match på nytt» for å matche kolonnene.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Fant ingen liste-ID i &apos;{0}&apos;. Lim inn en GUID eller koblingen til listens innstillingsside.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Fant ingen skjema-ID i &apos;{0}&apos;. Lim inn skjema-ID-en eller koblingen til skjemaets redigeringsside.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Skjemaer</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Mål</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Kopier</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Resultater</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Velg skjemaene som skal kopieres</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Last inn skjemaer på nytt</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Klikk «Last inn skjemaene mine» for å se skjemaene dine.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>Ingen skjemaer ble funnet i denne kontoen.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Kopier {0} skjemaer</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Kopier flere skjemaer</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Velg hvor kopiene skal havne</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Én leietaker: kopiene opprettes i den samme kontoen du bruker, ved siden av originalene.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Flere leietakere: kopiene opprettes i målkontoen. Logg på den her; dette er adskilt fra påloggingen du brukte for SharePoint-nettstedene.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Målkonto</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Logger på med appregistreringen: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Logger på med målets appregistrering (angitt i Innstillinger).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Logg på målkontoen</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Logg på igjen</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Logger på målkontoen… et nettleservindu kan åpnes.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Tilkoblet som {0}. Tilgang til Microsoft Forms bekreftet ({1} skjemaer allerede i denne kontoen).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Kunne ikke koble til målkontoen: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Målkontoen er ikke tilkoblet ennå.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Klar. Klikk Kopier-knappen for å starte.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Klar: kopiene opprettes i {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Logg på målkontoen for å fortsette.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Alternativer</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} skjemaer kopieres fra {1} til {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>kildekontoen</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>målkontoen</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Kopierer skjemaer</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Starter…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Skjema {0} av {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Avbryter etter gjeldende skjema…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopieringen er ferdig: alle {0} skjemaer ble kopiert</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Kopiene dine ligger i {0}. Åpne Microsoft Forms for å se dem, eller bruk tabellen nedenfor.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopieringen er ferdig: {0} av {1} skjemaer ble kopiert, noen trenger oppmerksomhet</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Kopiene ligger i {0}. Skjemaer merket med en advarsel ble kopiert med problemer, og mislykkede skjemaer ble ikke opprettet. Se Detaljer-kolonnen.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopieringen er ferdig, men ingen skjemaer ble kopiert</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Se Detaljer-kolonnen for årsaken. Vanlige årsaker er en manglende Microsoft Forms-tillatelse på målregistreringen, eller en konto uten tilgang til Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopieringen ble avbrutt etter {0} av {1} skjemaer</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Skjemaene som er oppført nedenfor, ble fullført. Skjemaet som ble kopiert da du avbrøt, ble ikke ferdig og er ikke synlig.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Kopiert</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>Med advarsler</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Mislyktes</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Spørsmål</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Kildeskjema</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Kopi</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Spørsmål</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Detaljer</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Kopiert</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Kopiert med advarsler</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Mislyktes</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Åpne valgt kopi</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Åpne Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Eksporter resultater…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Vis skjema-ID-tilordning</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Velg et kopiert skjema i tabellen først.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Resultater lagret i {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Tips: appregistreringen har ingen samsvarende omdirigeringsadresse. Under Autentisering i Entra legger du til plattformen «Mobil- og skrivebordsprogrammer» med http://localhost, og prøver igjen.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Pakker</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Nettsteder</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Lister og kolonner</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Skjemaer og e-post</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Skriv</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Rapport</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Velg de eksporterte flytene dine</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>I Power Automate: åpne Mine flyter, velg en flyt, og velg deretter Eksporter → Pakke (.zip). Legg til de nedlastede .zip-filene her. Hver fil skannes så snart du legger den til.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Tøm</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Legg til de eksporterte flytpakkene for å begynne.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>Ingen flyter ble funnet i disse filene. Kontroller at de er pakker eksportert med Eksporter → Pakke (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Skanningen er fullført. Se gjennom hva flytene bruker, og klikk deretter Neste.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Velg målnettstedene</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Disse flytene bruker ikke SharePoint-nettsteder med faste adresser, så det er ingenting å tilordne her. Klikk Neste.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Deretter leser verktøyet hver liste via tilkoblingene dine og matcher den på målnettstedet.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Skriv inn målnettstedet for hvert kildenettsted, og klikk deretter Neste.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Match lister og kolonner</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Match på nytt</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Lister</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Disse flytene peker ikke til bestemte SharePoint-lister, så det er ingenting å matche.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Lister og kolonner matches når dette trinnet åpnes.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Skjemaer og e-post</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Kontroller skjemaene og e-posten, og klikk deretter Neste.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Disse flytene bruker ikke Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>E-postadresser</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>For å flytte alle adresser fra ett e-postdomene til et annet skriver du inn begge domenene. Adresser på andre domener er oppført i rapporten, ikke endret.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Skriv de oppdaterte pakkene</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Utdatamappe</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Velg utdatamappen, og klikk deretter Skriv oppdaterte pakker.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Klar til å skrive {0} pakke(r) med {1} flyt(er). Erstatter: {2} nettsted(er), {3} liste(r), {4} kolonnetilordning(er), {5} skjema(er).</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Skriv oppdaterte pakker</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Pakker skrevet</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Erstatninger</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Fortsatt kilden</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>Til gjennomgang</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Pakke</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Oppdatert</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} verdi(er) peker fortsatt til kilden</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Åpne rapport</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Start på nytt</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Ferdig: {0} pakke(r) skrevet</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Lagret i {0}. Ingenting ble stående og peke til kilden. Følg trinnene nedenfor for å importere dem.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Ferdig: {0} pakke(r) skrevet, noen elementer trenger gjennomgang</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Lagret i {0}. Åpne rapporten for å se verdier som fortsatt peker til kilden, og elementer verktøyet ikke skriver om (andre tjenester, umatchede lister eller kolonner).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Hva du gjør videre</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Åpne rapporten og kontroller «fortsatt peker til kilden» og alt som er merket for gjennomgang.
+2.  I Power Automate (målleietaker) åpner du Mine flyter → Importer → Importer pakke (eldre) og velger en skrevet pakke.
+3.  Under «Relaterte ressurser» klikker du «Velg under import» for hver tilkobling og velger eller oppretter en tilkobling i målleietakeren. Tilkoblinger kan ikke flyttes mellom leietakere.
+4.  Importer flyten. Behold den slått av, åpne den, rett alt den varsler om, og slå den deretter på.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Ingen endringer (ingenting i den samsvarte med tilordningen din)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Kopiert {0} til {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Kopiert tidligere</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Allerede kopiert</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …og {0} til</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Kopiere igjen?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>{0} av de valgte skjemaene ble allerede kopiert til denne kontoen:
+
+{1}
+
+Hvis du kopierer igjen, opprettes en ny kopi av hvert. Fortsette?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>En kopiering pågår fortsatt. Hvis du lukker nå, kan skjemaet som kopieres, bli stående halvferdig i målet. Stoppe og lukke?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Kopiering pågår</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Ingen svar kunne eksporteres (se loggen).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Filtrer etter tittel eller type</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Én arbeidsbok</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Eksporter alle valgte skjemaer til én enkelt Excel-fil med ett ark per skjema.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>E-postadresse</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Leietaker-ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Bibliotekssti</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Andre verdier</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Skriv inn en erstatning for hver verdi som skal endres. Rader som står tomme, endres ikke; de er oppført i rapporten hvis de fortsatt peker til kilden.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Slag</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>I flytene</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Erstatt med</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>ID-kontroll</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Ikke en skjema-ID eller redigeringssidekobling</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Samme som kildeskjemaet</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Dette skjemaet er i kildeleietakeren, ikke i målet</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Dette skjemaet er i en annen leietaker enn kilden</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>Fra Forms-kopien av {0} til {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Fra en tidligere Forms-kopi</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Last inn tilordning…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Fyll ut nettsteder, lister, kolonner, skjemaer og andre verdier fra en tilordning du lagret tidligere.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Kunne ikke laste inn tilordningen: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>Lastet inn {0}. Verdier som samsvarer med disse flytene, ble fylt ut; kontroller dem i de neste trinnene.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>Lastet inn {0}. Den brukes når du legger til flytpakker.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>Fylte ut {0} målnettsted(er). Kontroller dem nedenfor, og klikk deretter Neste.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Alle nettsteder har allerede et mål, så ingenting ble endret. Tøm en Mål-celle for å få den fylt ut.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Snarvei: skriv inn den nye leietakerens adresse, for eksempel https://fabrikam.sharepoint.com, og klikk på knappen. Hvert nettsted som ikke har noe mål ennå, får den adressen med samme sti som kilden: https://contoso.sharepoint.com/sites/HR blir https://fabrikam.sharepoint.com/sites/HR. OneDrive-nettsteder (contoso-my) går til den nye leietakerens -my-adresse. Mål du allerede har skrevet inn, berøres ikke. Nettstedene må allerede finnes i den nye leietakeren; dette verktøyet oppretter dem ikke. Hvis et nettsted har et annet navn der, skriver du inn adressen i Målnettsted-cellen i stedet.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Hvis du lar et Målnettsted stå tomt, blir nettstedet stående uendret: flytene peker fortsatt til det gamle nettstedet, listene og kolonnene matches eller skrives ikke om, og rapporten oppfører det under «Å gjøre etter import». Det er bare riktig for et nettsted som ikke flyttes til den nye leietakeren.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Hva som skjer</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Flyttes til målet</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Ikke endret (ingen mål)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Nettstedet {0} ble stående uendret (ingen mål angitt), så flytene peker fortsatt til det og listene ble ikke matchet. Greit hvis nettstedet ikke flyttes; ellers kjør på nytt med et mål.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Ingen kolonner å vise ennå: ingen liste er matchet, så det er ingenting å sammenligne. Rett listene ovenfor, og klikk deretter Match på nytt.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Ingen kolonner å tilordne, så du trenger ikke gjøre noe her. De matchede listene har ingen egendefinerte kolonner som flytene skriver til, filtrerer på eller leser på en måte verktøyet kan se. Aktivitetslisten nederst forteller hva som ble funnet for hver liste.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} kolonne(r) funnet: {1} har samme navn i målet, {2} ble gitt nytt navn og matchet, {3} ser like ut, {4} har ingen match.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Kontroller radene merket «Lignende navn», og velg en kolonne for radene merket «Ingen match». Rader merket «Samme navn» eller «Gitt nytt navn i målet» trenger ingenting.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Ingenting å gjøre her: alle kolonner samsvarer allerede. Klikk Neste.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Navn på de oppdaterte pakkene</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Hva de oppdaterte .zip-filene skal hete. Bruk {name} for det opprinnelige filnavnet: «{name} - Fabrikam» gjør «Onboarding.zip» til «Onboarding - Fabrikam.zip». Med én pakke kan du bare skrive inn hele navnet. La det stå som {name} for å beholde de opprinnelige navnene. Et navn som brukes to ganger, får (2), (3)… slik at ingenting overskrives.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Vil skrive: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>En flyt lagrer bare et skjemas ID, så skjemanavnene leses fra Microsoft Forms når dette trinnet åpnes: tittelen på hvert skjema i flytene dine (kildekonto) og skjemaene i målkontoen. Et skjema med en tittel som samsvarer med nøyaktig ett målskjema, matches for deg; ellers velger du det nye skjemaet fra nedtrekkslisten, eller limer inn ID-en eller redigeringssidekoblingen. Bruk Last inn skjemanavn på nytt for å lese dem igjen.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Last inn skjemaer fra målkontoen…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Laster inn målkontoens skjemaer… du kan bli bedt om å logge på.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Viser skjemaene eid av målkontoen {0} slik at du kan velge det nye skjemaet for hver flyt. Klikk Avbryt for å slutte å vente på en pålogging.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Mål: {0} skjema(er) funnet i {1}. Velg ett per rad, eller lim inn en ID.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Mål: ingen skjemaer funnet i {0}. Nedtrekkslisten viser bare skjemaer kontoen eier (ikke gruppeskjemaer), så kopier skjemaene med Skjemaverktøyet først, eller lim inn en ID.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Avbrutt. Klikk Last inn skjemanavn for å prøve igjen, eller lim inn skjema-ID-er.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Mål: kunne ikke laste inn skjemaene: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(ingen)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(skjema uten tittel)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Kildeskjema</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Velg blant målets skjemaer</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Velg et skjema fra målkontoen. Klikk først «Last inn skjemaer fra målkontoen».</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Fylt ut fra målpåloggingen ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Kildekontoen din, erstattet med målkontoen din</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Fylt ut fra påloggingene dine ({0} → {1}). Tøm begge boksene for å la e-postdomener stå uendret.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Et nettsted med tomt mål blir stående uendret: flytene peker fortsatt til det, og rapporten oppfører det.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Pålogget som {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Pålogget som {0}. Målleietakerens SharePoint-adresse er {1}; tomme målnettsteder ble fylt ut fra den.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Noen nettsteder i flytene er på {0}, som er målkontoens egen adresse. Enten peker disse pakkene allerede til målet (for eksempel pakker dette verktøyet skrev, eller flyter eksportert fra målet), så legg i stedet til de opprinnelige eksportene fra kilden; eller så er kilde og mål egentlig én leietaker, så bytt appen til modus med én leietaker (Innstillinger).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} er en pakke dette verktøyet skrev {1}: den inneholder allerede måladressene, så det er ingenting igjen å flytte. Legg i stedet til den opprinnelige eksporten fra kildeleietakeren (filen i Nedlastinger, ikke den i utdatamappen).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Nettstedene i disse flytene er på {0}, som er målleietakeren din, men kilden din er {1}. Hvis pakkene ble eksportert fra {0}, logger du på den leietakeren som kilde (Endre kilde…). Hvis dette verktøyet skrev dem tidligere, fjerner du dem og legger til de opprinnelige eksportene.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Pålogget. Fylte ut {0} målnettsted(er) fra {1}. Kontroller dem, og klikk deretter Neste.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Pålogget. Alle målnettsteder hadde allerede en verdi, så ingen ble endret.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Påloggingen ble ikke fullført, eller den nye leietakerens adresse kunne ikke leses (se Mål-linjen). Hvis du er pålogget, skriver du inn den nye leietakerens adresse nedenfor for å fylle ut målnettstedene.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} – tilkoblet som {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} – ikke pålogget ennå</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Endre mål…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Ingen målliste er valgt, så disse flytene ville fortsatt peke til en liste som ikke finnes i målet. Velg mållisten, eller opprett listen på målnettstedet først.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Flytene bruker kolonnen «{0}», men mållisten «{1}» har ingen kolonne for den. Velg målkolonnen i tabellen, eller legg til kolonnen i mållisten og klikk Kontroller på nytt.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>Mållisten «{0}» krever kolonnen «{1}», men «Create item»-trinnet «{3}» i flyten «{2}» angir den ikke, så importen ville mislykkes med «missing required property item/{1}». Skriv inn en verdi for den nedenfor, så legger verktøyet den til i det trinnet, eller gjør «{1}» valgfri i mållisten og klikk Kontroller på nytt.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>Mållisten «{0}» krever kolonnen «{1}», men «Create item»-trinnet «{3}» i flyten «{2}» angir den ikke, så importen ville mislykkes med «missing required property item/{1}». Gjør «{1}» valgfri i mållisten i SharePoint, og klikk deretter Kontroller på nytt.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Verdi som skal fylles ut for disse påkrevde kolonnene (legges til i hvert Create item-trinn som utelater dem):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Dette ville mislykkes ved import. Rett det for å fortsette:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Kontroller på nytt</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Vil mislykkes ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Logg på målet for å fortsette.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} pakke(r) ble skrevet av dette verktøyet og inneholder allerede målets verdier. Fjern dem (✕ i listen) og legg til de opprinnelige eksportene.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} nettsted(er) har ikke noe mål. Et nettsted som blir stående som det er, ville fortsatt peke til kildeleietakeren.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} liste(r) ville mislykkes ved import. Rett listene merket «Vil mislykkes» for å fortsette.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Listene er ikke matchet ennå. Gå ett trinn tilbake og frem igjen for å prøve på nytt.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} skjema(er) trenger en gyldig mål-skjema-ID for å fortsette.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Endre kilde…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Pålogget som {0}. Kildeleietakerens SharePoint-adresse er {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Kildetilkoblingen ble endret til {0}. Nettstedene som er oppført nedenfor, må være i denne leietakeren.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Kildepåloggingen ble ikke fullført, eller leietakerens adresse kunne ikke leses (se Kilde-linjen). Den forrige kildetilkoblingen beholdes hvis du avbrøt.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Noen nettsteder leses fra {0}, som ikke er leietakeren du er tilkoblet som kilde ({1}). Lesing av listene deres vil mislykkes. Endre «Les lister fra» for disse radene til adressen i kildeleietakeren din, eller klikk Endre kilde… og logg på med en konto fra den leietakeren.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Flytenes nettsteder er på {0}, men du er tilkoblet {1} som kilde. «Les lister fra» ble fylt ut med de samme nettstedene på {1}, så verktøyet leser listenavn og kolonner der. Kontroller at disse nettstedene finnes (rediger en hvilken som helst rad), eller klikk Endre kilde… hvis flytene egentlig kom fra {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Lister flytene bruker</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Klikk på en liste for å åpne eller lukke den. Lister som trenger en titt, kommer først og er åpne.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Åpne alle</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Lukk alle</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Brukt av:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Kilde:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Målliste</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>eller lim inn ID-en eller koblingen:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Kildekolonne</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Type</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Brukt</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Ikke brukt av flytene</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(ingen: la denne listen være uendret)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Ingen målliste valgt: flyter som bruker den, peker fortsatt til kildelisten</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} kolonne(r) å kontrollere</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ ingenting å kontrollere</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} kolonner i denne listen; flytene bruker {1}: {2} med samme navn i målet, {3} gitt nytt navn og matchet, {4} lignende (kontroller), {5} uten match (velg). De andre kolonnene vises for sammenhengens skyld og endres ikke.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} kolonner i denne listen; ingen brukes av flytene på en måte verktøyet kan se, så ingenting trenger tilordning.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Ingen kolonner kunne leses for denne listen (se merknadene ovenfor og aktivitetslisten).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Velg en målliste ovenfor for å se kolonnene og tilordne dem.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Mållistens kolonner kunne ikke leses, så ingen matcher kunne foreslås.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Flyten oppgir ikke hvilket nettsted denne listen er på (den bruker en parameter), så den kan ikke slås opp. Lim inn mållistens ID eller kobling.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Ingen målliste: denne listen blir stående uendret.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Leser kolonnene i mållisten for {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Liste &apos;{0}&apos;: du valgte en annen målliste. Leser kolonnene på {1} for å matche dem på nytt.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} – tilkoblet som {1} (hovedvinduets pålogging)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Les lister fra (kilde)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>«Nettsted i flytene» er adressen som er lagret i flytene; det er den som erstattes, så den kan ikke redigeres. «Les lister fra» er der verktøyet leser hver listes navn og kolonner på kildesiden; den starter som den samme adressen, så endre den når flytens adresse er gammel, har fått nytt navn eller er i en annen leietaker enn kildetilkoblingen din.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Hva disse flytene bruker</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** – {1} flyt(er), {2} trinn: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>skrevet om av dette verktøyet</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>gjennomgå manuelt</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>bare tilkobling</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>Å gjøre etter import</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Importer hver oppdaterte pakke i målmiljøet og opprett tilkoblingene på nytt (de kopieres aldri).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Løsningspakker: bare arbeidsflytdefinisjonene ble skrevet om. Miljøvariabelverdier og tilkoblingsreferanser i løsningen (customizations.xml) har fortsatt kildeverdier; angi dem etter import.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Flyteiere og brukere med bare kjøretilgang er ikke en del av pakken; del flytene med de rette personene etter import.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Ingen endringer (ingenting i tilordningen samsvarte).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} erstatninger</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Peker fortsatt til kildeverdier (utilordnet, gjennomgå før import)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Kobler til kildenettstedet {0} og målnettstedet {1}. Et påloggingsvindu åpnes hvis du ikke er pålogget ennå.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Tilkoblet {0} (kilde) og {1} (mål).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Leser listene og bibliotekene på målnettstedet {0}, slik at hver liste kan matches etter navn og tilbys i en nedtrekksliste.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>Fant {0} liste(r) og bibliotek på {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Leser navnet og kolonnene til listen {0} fra kildenettstedet {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Liste &apos;{0}&apos;: leter etter en liste med samme navn på målnettstedet {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Liste &apos;{0}&apos;: funnet i målet. Leser kolonnene i mållisten for å matche dem.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Liste &apos;{0}&apos;: kolonnene kunne ikke leses, eller den har ingen. Ingenting å tilordne for denne listen.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Liste &apos;{0}&apos;: {1} kolonne(r), ingen av dem brukt av flytene på en måte verktøyet kan se. Ingenting trenger tilordning.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Liste &apos;{0}&apos;: flytene bruker {1} kolonnenavn: {2} har samme navn i målet (ingen endring nødvendig), {3} ble gitt nytt navn og matchet, {4} ser like ut (kontroller), {5} har ingen match (ditt valg), {6} er innebygde kolonner (ingenting å tilordne).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>Listen {0} finnes ikke på kildenettstedet, men den finnes på målnettstedet som &apos;{1}&apos;: flyten peker allerede til målet.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Nettstedet &apos;{0}&apos; har ikke noe mål; lister på det ble ikke løst opp.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Avansert: les lister fra en annen adresse</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Kolonnetilordning: fra {0} til {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Ingen kolonner å vise for denne listen.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Ingen av listens kolonner brukes av flytene. Merk av for «Vis alle kolonner» for å se dem.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>Kildelisten kunne ikke leses, og flyten oppgir ingen kolonner, så det er ingenting å tilordne.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Liste</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(kunne ikke leses på kilden)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Leses fra:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Nettsted</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Denne flyten peker allerede til denne listen i målet. De {0} kolonnenavnene den bruker, vises mot målets kolonner; ingenting trenger å endres.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(listenavn utilgjengelig)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Allerede i målet</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Tilordnet etter flytens kolonnenavn</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Kan ikke lese kolonner</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Ingen målliste</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Ingenting å tilordne</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Klar</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Målkolonner kan ikke leses</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} å kontrollere</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Brukt av {0} flyt(er)</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} kolonnetilordning(er) trenger fortsatt en titt.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Alle kolonnetilordninger er avklart.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Tilkoblinger kopieres ikke mellom leietakere: opprett dem på nytt i Power Automate etter import.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>E-post: hver adresse på {0} blir {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} av {1} skjema(er) peker til et nytt skjema.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} av {1} liste(r) har en målliste.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Listene er ikke matchet ennå.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>E-postadresser endres ikke (ingen domene ble tilordnet).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Flytene bruker ikke Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Flytene bruker ingen bestemte lister.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Flytene nevner ingen SharePoint-nettsteder.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{0} pakke(r) med {1} flyt(er) skrives; originalene endres ikke.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0} av {1} nettsted(er) flyttes til et målnettsted; de andre blir som de er.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Tøm verdier som er fylt ut automatisk</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Fylt ut</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Skjema i flytene dine</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Fra (i flytene dine)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Lister</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Nettsteder</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>Til (mål)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Valgt av deg</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Latt være uendret</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(hovedvinduets pålogging)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>E-postdomene å flytte fra</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Flytt hver adresse på</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>til</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>E-postdomene å flytte til</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…eller dra .zip-filer (eller en mappe) til dette vinduet.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Kolonnen &apos;{0}&apos; i listen &apos;{1}&apos; har ingen match i mållisten.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>Listen &apos;{0}&apos; ({1}) på {2} har ingen målliste, så flyter som bruker den, peker fortsatt til kildelisten.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(tittel ikke kjent)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Gå til trinn</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Har du en lagret tilordning? Last den inn…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Egendefinert mønster…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Behold de opprinnelige navnene</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Legg til &apos; - migrated&apos; i hvert navn</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Åpne rapporten og kontroller det som er merket for gjennomgang.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>I Power Automate (målleietaker): Mine flyter, Importer, Importer pakke (eldre), og velg en skrevet pakke.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>Under Relaterte ressurser klikker du «Velg under import» for hver tilkobling og velger eller oppretter en i målleietakeren. Tilkoblinger kan ikke flyttes mellom leietakere.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Importer flyten, behold den slått av, åpne den, rett alt den varsler om, og slå den deretter på.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Åpne mappe</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Åpne Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Denne utdatamappen finnes ikke ennå; den opprettes når du skriver pakkene.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>KILDE</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>MÅL</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} flyt(er) funnet</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Ingen flyter funnet</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Allerede skrevet av dette verktøyet</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Kunne ikke leses</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Klar til å skrive?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Fjern denne pakken fra listen</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Rapport for omskriving av flyter</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Hva disse flytene bruker ({0} tjenester)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} pakke(r) kunne ikke skrives.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} verdi(er) i de skrevne pakkene peker fortsatt til kilden. Åpne rapporten for å se hvilke.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Vis alle {0} kolonner</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Vis bare kolonnene flytene bruker</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Hva betyr disse kolonnene?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>Denne listens ID finnes ikke på kildenettstedet, men det er listen &apos;{0}&apos; på målnettstedet: flyten peker allerede til målet, som i en pakke dette verktøyet allerede skrev.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Tilkoblet</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Problem</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Ikke pålogget</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Venter på pålogging…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} liste(r) · alle klare</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} liste(r) · {1} klare · {2} trenger en titt</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Tok {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>Til gjennomgang</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Legg til flytpakkene (.zip) du eksporterte fra kildeleietakeren. Hver skannes så snart du legger den til.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Si hvilket nettsted hver flyt flyttes til. Logg på målet, så fylles den nye leietakerens adresse ut for deg.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Hver liste flytene bruker, matches med en liste i målet, og kolonnene tilordnes. Kontroller alt som er merket som at det trenger en titt.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>La kopierte skjemaer peke til sine nye ID-er, og bestem hvordan e-postadresser og leietaker-ID endres.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Kontroller listen nedenfor, velg hvor de oppdaterte pakkene skal lagres, og skriv dem.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Hva som skjer her</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Verktøyet leser hver pakke på denne datamaskinen (ingenting sendes noe sted) for å finne nettstedene, listene, kolonnene og skjemaene flytene bruker. Legg til de OPPRINNELIGE eksportene fra kilden, ikke pakker dette verktøyet skrev tidligere: de inneholder allerede målets adresser.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Kolonnen &apos;{0}&apos; er tilordnet forskjellig i ulike lister ({1}). Hver listes trinn får sin egen tilordning; uttrykk andre steder i flyten beholder det opprinnelige navnet, så gjennomgå dem.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Last inn skjemanavn på nytt…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Laster inn skjemanavn… du kan bli bedt om å logge på.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Leser titlene på skjemaene i flytene dine fra kildekontoen {0}. Klikk Avbryt for å slutte å vente på en pålogging.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Kilde: fant tittelen på {0} av {1} skjema(er) ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Kilde: kunne ikke lese skjematitlene: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} skjema(er) ble matchet med målskjemaet med samme navn.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Ser ut som en gyldig skjema-ID</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Matchet etter navn</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>Kilden og målet er i samme leietaker ({0}). Bytt appen til modus med én leietaker (Innstillinger), eller logg på kilden og målet med kontoer fra forskjellige leietakere.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Fjern disse pakkene</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>Fjernet {0} pakke(r) som allerede peker til målet: {1}. Legg i stedet til de opprinnelige eksportene fra kildeleietakeren.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Disse pakkene ble fjernet. Legg til de opprinnelige eksportene fra kildeleietakeren.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Hver pakke lagres som en ny .zip i utdatamappen; originalene endres aldri. For å gi en nytt navn skriver du et annet navn i Lagre som.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Behold de opprinnelige navnene</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Legg til &apos; - migrated&apos; i hvert navn</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Opprinnelig pakke</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Lagre som</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Vil bli lagret som: {0} (du kan endre navnene nedenfor).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Kunne ikke leses; ingen utdata skrevet</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Avbrutt. Ingenting ble endret. I Nettsteder-trinnet bruker du Logg på for å prøve igjen (for eksempel i en annen nettleser); i Lister-trinnet bruker du Match på nytt.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Avbryter… det kan ta et øyeblikk før et påloggingsvindu lukkes.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Hva verktøyet gjør</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Tilkoblinger</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Flere leietakere: for å matche lister leser verktøyet hver listes navn og kolonner fra kildeleietakeren og leter etter den samme listen i målleietakeren. Det krever pålogging til hver. Logg på hver side her, eller klikk bare Neste, så blir du spurt da. Et nettleservindu åpnes; hvis det er feil nettleser, klikker du Avbryt og prøver igjen. Ingenting endres i noen av leietakerne.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Én leietaker: kilde og mål er samme leietaker, så verktøyet bruker kontoen du logget på med i Koble til-trinnet. Det er ingenting annet å logge på. Ingenting endres i leietakeren.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Kilde</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Mål</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Logg på kilden…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Logg på målet…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Avbryt</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Slutter å vente på påloggingsvinduet, slik at du kan prøve igjen, for eksempel i en annen nettleser.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Ikke pålogget ennå</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Bruker hovedvinduets pålogging: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Pålogget som {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Klar</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Venter på pålogging… et nettleservindu bør åpnes</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Pålogging avbrutt. Klikk Logg på for å prøve igjen.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Pålogget. Kontroller målnettstedene nedenfor, og klikk deretter Neste.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Det er ikke noe kildenettsted å logge på ennå. Legg først til flytpakker.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Skriv først inn minst ett målnettsted (eller bruk Fyll ut, behold stier); påloggingen går til målnettstedets leietaker.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Logger på kilden… et nettleservindu åpnes.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Logger på målet… et nettleservindu åpnes.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>kilde</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>mål</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Logger på kildeleietakeren. Et nettleservindu åpnes; klikk Avbryt for å slutte å vente (for eksempel for å prøve en annen nettleser). Påloggingen forteller også verktøyet hvilken leietaker kilden er.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Logger på målleietakeren. Et nettleservindu åpnes; klikk Avbryt for å slutte å vente (for eksempel for å prøve en annen nettleser). Påloggingen forteller også verktøyet den nye leietakerens SharePoint-adresse.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Tilkoblet {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Pålogging avbrutt av deg.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Leser {0} pakkefil(er) på denne datamaskinen for å finne nettstedene, listene, kolonnene og skjemaene flytene bruker. Ingenting sendes noe sted.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Leste {0}: {1} flyt(er).</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Matcher {0} liste(r): for hver spør verktøyet kildenettstedet om navnet, og leter deretter etter en liste med det navnet på målnettstedet.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Ferdig med matching. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Skriver {0} oppdaterte pakke(r) til {1}. Originalene endres ikke.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Skriver {0} med tilordningen din brukt.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Kontrollerer {0} for verdier som fortsatt peker til kilden.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Avbrutt av deg. Ingenting ble endret.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Stoppet: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Hver flyt lagrer adressen til SharePoint-nettstedet den leser fra eller skriver til. For å kjøre i den nye leietakeren må hver flyt peke til det tilsvarende nettstedet der, så fortell verktøyet hvilket nytt nettsted som erstatter hvert gamle. Dette redigerer bare kopier av pakkene dine; ingenting slås opp før du klikker Neste.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Hva som skjer her: for hver liste en flyt bruker, leser verktøyet listens navn og kolonner fra kildenettstedet, leter etter en liste med samme navn på målnettstedet, og leser kolonnene i den listen for å matche dem. Hvorfor: flyter refererer til lister og kolonner med ID eller internt navn, og de er forskjellige i den nye leietakeren, så verktøyet finner det tilsvarende. Dette trinnet leser bare; ingenting opprettes eller endres i noen av leietakerne. Du kan endre mållisten og alle kolonner på kortet.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Et kopiert skjema får en ny ID, så en flyt som bruker det, må peke til kopien. E-postadresser og leietaker-ID i en flyt kan også måtte endres for den nye organisasjonen. Ingenting slås opp her; du bestemmer erstatningene, og alt som står tomt, blir som det er.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Verktøyet skriver nye .zip-filer til utdatamappen med tilordningen din brukt, skanner dem på nytt for å finne alt som fortsatt peker til kilden, og skriver en rapport. De opprinnelige pakkene endres aldri, og ingenting sendes til noen av leietakerne. Du importerer de nye pakkene i Power Automate selv etterpå.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Pålogging avbrutt. Klikk på knappen for å prøve igjen, for eksempel i en annen nettleser.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Avbryt</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Feil: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Kunne ikke lese kildeskjemaet ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Kunne ikke opprette skjemaet i målet ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Avbrutt underveis. Et delvis skjema ble liggende i målet; slett det i Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Kopieringen stoppet underveis ({0}). Et delvis skjema ble liggende i målet; slett det i Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>bakgrunnsbilde</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>logo</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>toppbilde</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>{0} ble ikke kopiert (bilder støttes ikke ennå).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Poengberegning for quiz (riktige svar og poeng) er ikke verifisert; kontroller kopien.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Innstillingen &apos;{0}&apos; kunne ikke kopieres ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Spørsmålet &apos;{0}&apos; ble ikke kopiert ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(uten tittel)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Forgreningsregler kunne ikke kopieres ({0}); kontroller kopien.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>Kopien ble opprettet, men kunne ikke gjøres synlig i Microsoft Forms ({0}); den kan ligge i papirkurven.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>Kopien har {0} spørsmål, men kilden har {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Spørsmålet &apos;{0}&apos; ({1}) ble opprettet, men alternativene kunne ikke kopieres ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Resultater</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Kildeskjema</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>Kildeskjema-ID</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Kopitittel</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>Kopiskjema-ID</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Status</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Spørsmål kopiert</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Spørsmål i kilden</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Advarsler</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Merknader</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Feil</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Excel-arbeidsbok (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>JSON-filer (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Id</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Starttidspunkt</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Fullføringstidspunkt</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Respondent</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Navn</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Poengsum</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Utilordnede svar (rå JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (avkortet: for langt for en Excel-celle)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Stoppe kjøringen?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>En sammenligning eller verifisering pågår fortsatt. Hvis du lukker dette vinduet, stoppes den, og ingen rapport skrives. Lukke likevel?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Lukke mens det arbeides?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Verktøyet arbeider fortsatt (skanner, matcher, logger på eller skriver pakker). Hvis du lukker nå, stoppes det. Lukke likevel?</value></data>
 </root>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Réussis ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Échoués ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Ignorés ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>À jour</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Impossible de lire si la source possède ses propres autorisations (limitation ou erreur d&apos;accès) — les autorisations n&apos;ont pas été copiées pour cet élément. Relancez pour réessayer.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Le fichier cible existant a été supprimé pour le remplacement, mais la nouvelle copie n&apos;a pas pu être téléversée ({0}). Le fichier est actuellement absent de la cible — relancez la copie pour le restaurer.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Une bibliothèque cible a échoué ({0}). Ses fichiers sont marqués comme échoués ; les autres bibliothèques continuent.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1} : le fichier source a changé pendant son téléchargement — le téléchargement est relancé depuis le début.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint n&apos;a signalé aucune progression pour cette importation depuis {0} minutes ; elle a donc été abandonnée. Ses fichiers sont marqués comme échoués ; relancez la copie pour les réessayer.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Tenant unique</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Multi-tenant</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Copie entre deux tenants Microsoft 365 différents. Vous vous connectez séparément à la source et à la cible. Choisissez l&apos;inscription d&apos;application de la cible dans les Paramètres.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Inscription de la cible :</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Mode multi-tenant : l&apos;inscription d&apos;application utilisée pour se connecter au tenant cible. « Identique à la source » réutilise l&apos;inscription de la source, qui doit alors être une application multi-tenant.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Reprendre / relancer</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Se reconnecte et relance cette sélection avec Copier si plus récent : les fichiers déjà copiés sont ignorés et seuls ceux qui manquent ou ont changé sont transférés.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Cette exécution n&apos;a aucune sélection enregistrée à reprendre (seules les exécutions par sélection de fichiers en enregistrent une).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>Une copie est déjà en cours. Terminez-la ou annulez-la d&apos;abord.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Impossible de reprendre : {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} exécution(s) interrompue(s) récupérée(s). Voir l&apos;Historique.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Reprise : {0} élément(s) restauré(s) depuis l&apos;exécution précédente, avec Copier si plus récent sélectionné. Vérifiez les options, puis cliquez sur Suivant. (Les mappages de colonnes personnalisés ne sont pas restaurés.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>INTERROMPUE — l&apos;application s&apos;est fermée avant la fin de cette exécution. Parmi les éléments terminés : {0} réussis, {1} échoués, {2} ignorés, {3} annulés  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Exporter les diagnostics…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Enregistre un zip contenant les journaux récents, des informations système et vos paramètres sans les détails de l&apos;organisation — à joindre à un rapport de bogue. Il n&apos;inclut ni les rapports de copie ni les noms de fichiers.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Diagnostics enregistrés dans {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Impossible d&apos;enregistrer les diagnostics : {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Le contenu est identique (seules les parties gérées par SharePoint diffèrent), mais la date de modification n&apos;a pas été conservée.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Autorisations non copiées : impossible de résoudre les ID SharePoint de l&apos;élément.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Autorisations non copiées : {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Dossier « {0} » : {1} non appliqué(es) — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>D&apos;autres dossiers ont rencontré des problèmes similaires ; les suivants ne sont pas listés individuellement.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>autorisations</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>dates</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>auteur / éditeur</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} conservé(s) — cible déjà à jour)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>AVERTISSEMENT : la lecture des métadonnées depuis la source ({0}) a échoué : {1}. Les éléments concernés peuvent être copiés SANS leurs valeurs de colonnes personnalisées ni leurs autorisations uniques. Relancez une fois le problème résolu (Remplacer ou Si plus récent les réapplique).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>AVERTISSEMENT : la liste source d&apos;une bibliothèque est introuvable ; ses autorisations ne seront donc PAS copiées.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>L&apos;hôte SharePoint &apos;{0}&apos; n&apos;est associé à aucun tenant connecté. Reconnectez les sites source et cible, puis réessayez.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Copie entre tenants : les valeurs des colonnes de métadonnées gérées (taxonomie) ne sont pas copiées, et les blocs-notes OneNote / jeux de documents ne peuvent pas encore être copiés entre tenants. Les identités sont mappées selon vos paramètres de mappage d&apos;identités ; toute personne introuvable dans la cible est ignorée.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Mappage d&apos;identités</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Mappage d&apos;identités…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Listez chaque personne (ou groupe) du tenant source et son équivalent dans le tenant cible — il s&apos;agit de comptes différents. Les auteurs, éditeurs, colonnes de personnes et autorisations sont écrits à partir de ce tableau. Toute personne non listée est associée par échange de domaine si vous en avez défini un ; toute personne toujours introuvable dans la cible est ignorée et signalée.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Domaine de messagerie source</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Domaine de messagerie cible</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Remplacements — une paire « source,cible » par ligne (noms d&apos;utilisateurs ou de groupes ; # commence un commentaire)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Identique à la source</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>La source et la cible sont dans le même tenant. Passez en mode tenant unique pour les copies au sein d&apos;un même tenant.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>La copie native de dossiers (blocs-notes OneNote, jeux de documents) n&apos;est pas encore prise en charge entre tenants.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Le lecteur &apos;{0}&apos; n&apos;est associé à aucun tenant connecté. Reconnectez les sites source et cible, puis réessayez.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Aucune inscription d&apos;application n&apos;est encore configurée. Ouvrez les Paramètres et ajoutez votre inscription d&apos;application Azure (son ID d&apos;application/client) avant de vous connecter.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>La connexion a été annulée. Cliquez sur Se connecter pour réessayer.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Un administrateur n&apos;a pas encore approuvé cette application dans ce tenant. Demandez à un administrateur général d&apos;accorder le consentement administrateur pour l&apos;inscription d&apos;application (voir Configuration dans le Guide de l&apos;utilisateur).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>L&apos;inscription d&apos;application est introuvable dans ce tenant. Vérifiez l&apos;ID client et l&apos;ID de tenant dans les Paramètres.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Ce tenant est introuvable. Vérifiez l&apos;ID de tenant dans les Paramètres (utilisez votre domaine, le GUID du tenant ou &apos;common&apos;).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>L&apos;inscription d&apos;application ne contient pas l&apos;adresse de redirection utilisée par cette application. Dans Azure, ajoutez l&apos;URI de redirection http://localhost sous « Applications mobiles et de bureau ».</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>L&apos;inscription d&apos;application n&apos;est pas configurée pour la connexion de bureau. Dans Azure, activez « Autoriser les flux de clients publics » pour l&apos;inscription.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Ce compte n&apos;est pas autorisé à utiliser cette inscription d&apos;application. Connectez-vous avec un compte du tenant qui la possède, ou choisissez une autre inscription dans les Paramètres.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint a rejeté la connexion. Cliquez sur Se connecter pour vous reconnecter.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>Vous n&apos;avez pas accès à ce site. Vérifiez que votre compte peut l&apos;ouvrir dans un navigateur et que l&apos;autorisation Sites.ReadWrite.All a été accordée à l&apos;application.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Ce site est introuvable. Vérifiez l&apos;adresse — elle doit ressembler à https://contoso.sharepoint.com/sites/nom.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Détails : {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Connectez-vous au site source pour continuer.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Sélectionnez au moins un élément (cochez une case) pour continuer.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Connectez-vous au site cible pour continuer.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Choisissez un dossier de destination pour continuer.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Choisissez une liste de destination pour continuer.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Saisissez un nom pour la nouvelle liste pour continuer.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Rien n&apos;est sélectionné à copier.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>En attente de la fin de la copie…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Source : {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Cible : {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Votre inscription d&apos;application a changé ; vous avez donc été déconnecté des deux sites. Reconnectez-vous pour continuer.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Arrêter la copie ?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>Une copie est en cours. L&apos;arrêter maintenant laisse les éléments restants non copiés (vous pourrez reprendre plus tard depuis l&apos;Historique). Arrêter la copie ?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>Une copie est toujours en cours. Fermer l&apos;application l&apos;arrêtera et laissera les éléments restants non copiés (vous pourrez reprendre plus tard depuis l&apos;Historique). Fermer quand même ?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Changer de mode de connexion ?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Passer du mode tenant unique au mode multi-tenant (ou inversement) déconnecte les deux sites, et vous devrez vous reconnecter. Changer quand même ?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Connexion :</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Inscription d&apos;application source</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Inscription d&apos;application cible</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Se connecte au tenant cible avec :</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Modifier</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Ouvrir les Paramètres</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Vous devez avoir un accès en lecture à la collection de sites source.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Configurez votre inscription d&apos;application Microsoft Entra ID dans les Paramètres avant de vous connecter.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Options des fichiers</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Options des bibliothèques et fichiers</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Copie des fichiers…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Copie des bibliothèques…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Suivant</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Démarrer la copie</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Afficher le rapport</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Saisissez le nom de la nouvelle liste à créer</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>La liste de destination a été choisie à l&apos;étape Cible. Revenez en arrière pour la modifier.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Configurez d&apos;abord une inscription d&apos;application</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy se connecte avec une inscription d&apos;application que vous créez dans votre propre tenant Microsoft Entra ID (Azure). Ouvrez les Paramètres, ajoutez l&apos;ID d&apos;application (client) de votre inscription, puis revenez ici pour vous connecter.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Plus d&apos;informations</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Faites glisser pour agrandir ou réduire le fil d&apos;activité</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Cliquez pour n&apos;afficher que les éléments échoués</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Cliquez pour n&apos;afficher que les éléments ignorés</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Mappage des colonnes</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Comparer la source et la cible</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Ouvre l&apos;outil de comparaison pour vérifier cette copie par rapport à la source.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Ouvrir l&apos;Historique</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>L&apos;inscription sélectionnée est utilisée pour la source — et pour les deux côtés en mode tenant unique.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Nouvelle inscription</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Ajoutez au moins une inscription d&apos;application.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validation</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>L&apos;ID client est obligatoire pour l&apos;inscription sélectionnée.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Déconnecté. Vous devrez vous connecter lors de la prochaine connexion.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Déconnecté</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Échec de la déconnexion : {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Déconnexion</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} mappage(s) trouvé(s).</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} ligne(s) illisible(s) (ligne {1}). Chaque ligne doit être de la forme source,cible.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Les domaines source et cible sont identiques ; l&apos;échange de domaine ne changera donc rien.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Importer un CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Certaines lignes de remplacement sont illisibles (ligne {0}). Chaque ligne doit être « source,cible ». Corrigez-les ou supprimez-les — ou commencez une ligne par # pour en faire un commentaire.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Impossible d&apos;enregistrer le mappage d&apos;identités : {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Impossible de lire ce fichier : {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Entre tenants : {0} compte(s) d&apos;auteur/éditeur de cette bibliothèque sont introuvables dans le tenant cible et resteront attribués au compte qui copie. Après l&apos;exécution, utilisez « Mapper ces utilisateurs » dans le rapport pour les corriger.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Saisissez l&apos;utilisateur ou le groupe source.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Saisissez qui est cette personne dans le tenant cible — ou supprimez la ligne.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>La source et la cible sont identiques.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Cette source apparaît plusieurs fois.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Source (ce tenant)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Cible (autre tenant)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Type</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>Dans la cible ?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Nécessaire pour</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Utilisateur</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Groupe</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Non vérifié</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Vérification…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Trouvé</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Introuvable</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Ajouter</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Remplir les cibles par échange de domaine</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>Pour les lignes sans cible, renseigne l&apos;adresse que produirait l&apos;échange de domaine.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Vérifier dans la cible</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Recherche chaque utilisateur cible dans le tenant cible. Cela les ajoute aussi à la liste des utilisateurs du site cible, ce que la copie fait de toute façon avant de pouvoir les définir comme auteur ou de leur accorder l&apos;accès.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Connectez-vous d&apos;abord à une cible multi-tenant : saisissez l&apos;URL du site cible à l&apos;étape Cible, puis rouvrez cette boîte de dialogue.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Exporter en CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Ces personnes étaient nécessaires à la copie mais sont introuvables dans le tenant cible. Pour chacune, indiquez qui elle est dans la cible — ou supprimez la ligne pour la laisser non mappée.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} mappage(s).</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} ligne(s) nécessitent votre attention.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Vérifié : {0} trouvé(s), {1} introuvable(s){2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} n&apos;ont pas pu être vérifiés</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Vérification de {0} sur {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Rien à vérifier : aucune ligne n&apos;a d&apos;adresse e-mail cible.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Certaines lignes nécessitent votre attention (en surbrillance). Corrigez-les ou supprimez-les, puis enregistrez.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Mappage enregistré. Pour l&apos;appliquer aux fichiers déjà copiés, relancez avec Remplacer — Copier si plus récent ignore les fichiers à jour, leurs auteurs ne sont donc pas modifiés. Les autorisations sont actualisées dans les deux cas.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>{0} personne(s) de la source sont introuvables dans le tenant cible et ont donc été exclues : aucun accès accordé, non définies comme auteur ou éditeur, ou retirées des colonnes de personnes.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Mapper ces utilisateurs…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Mapper les utilisateurs non résolus…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Ouvre le mappage d&apos;identités avec les personnes que cette exécution n&apos;a pas trouvées dans la cible.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Cette exécution n&apos;a aucun utilisateur non résolu.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Copier des formulaires</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Copiez des Microsoft Forms vers le compte cible en conservant toutes les questions, le branchement, les paramètres et le thème. Les réponses peuvent être exportées vers Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Cet outil utilise l&apos;API web de Microsoft Forms, que Microsoft ne documente ni ne prend en charge. Elle fonctionne aujourd&apos;hui mais peut changer sans préavis. Essayez d&apos;abord quelques formulaires.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Charger mes formulaires</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Compte source : {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Compte cible : {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Cible : le même compte (tenant unique). Les copies sont créées à côté des originaux.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(vous serez invité à vous connecter)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Table des ID de formulaires (utilisée par l&apos;outil Flux) : {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Chargement des formulaires…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>{0} formulaires chargés.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Sélectionnez d&apos;abord au moins un formulaire.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Copie des formulaires…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Copie…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Copié</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Échec (voir le journal)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Copie de &apos;{0}&apos;</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Copie terminée : {0} copiés, {1} échoués.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Choisissez un dossier pour les exports de réponses</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Export des réponses…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>&apos;{0}&apos; exporté : {1} réponses vers {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Réponses de {0} formulaires exportées vers {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Le formulaire a été copié, mais son ID n&apos;a pas pu être enregistré pour l&apos;outil Flux : {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Impossible d&apos;exporter &apos;{0}&apos; : {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Réponses de {0} formulaires exportées vers {2} ; {1} ont échoué (voir le journal).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Annulé.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Erreur : {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Astuce : l&apos;inscription d&apos;application nécessite l&apos;autorisation déléguée Microsoft Forms, avec consentement. Ajoutez-la sous Autorisations d&apos;API (voir le Guide de l&apos;utilisateur), puis réessayez.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Astuce : Microsoft Forms a refusé la requête. Vérifiez que ce compte peut ouvrir forms.office.com et que l&apos;inscription d&apos;application dispose de l&apos;autorisation Microsoft Forms.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{0} sur {1} sélectionné(s)</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Titre</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Type</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Dernière modification</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Résultat</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Ajouter aux titres copiés :</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (copie)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Copier les formulaires sélectionnés</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Exporter les réponses…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Vérifier une copie par rapport à sa source</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Autres outils</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Formulaires</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Copier des Microsoft Forms et exporter leurs réponses</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Outil Formulaires</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Réécrire les flux pour la cible</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Mettez à jour les packages Power Automate exportés (.zip) pour qu&apos;ils pointent vers la cible : sites, listes, colonnes, formulaires copiés et domaines de messagerie. Vos packages d&apos;origine ne sont jamais modifiés.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Choisir les packages de flux exportés</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Ajoutez les packages de flux (.zip) que vous avez exportés depuis Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Ajouter des fichiers…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Ajouter un dossier…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Analyser</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Packages de flux (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Ajoutez d&apos;abord au moins un package de flux.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Analyse des packages…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>{0} ignoré : {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} flux trouvés. Ils référencent {1} sites, {2} listes et {3} formulaires.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Analyse terminée.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Mapper les sites</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Où se déplace le site SharePoint de chaque flux. En mode multi-tenant, connectez-vous à la cible et l&apos;adresse du nouveau tenant est renseignée pour vous ; modifiez toute ligne dont le site porte un nom différent. En mode tenant unique, saisissez le site cible de chaque ligne.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Site dans les flux (remplacé)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Site cible</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Adresse du nouveau tenant :</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Remplir les cibles vides en conservant les chemins</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Saisissez une URL complète telle que https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Cibles vides renseignées avec cet hôte et le chemin de chaque site.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Associer les listes et colonnes</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Une carte par liste utilisée par les flux, quel que soit le nombre de flux qui l&apos;utilisent. Chacune affiche le nom et les colonnes de la liste, la liste correspondante dans la cible (celle du même nom par défaut ; choisissez-en une autre dans la liste déroulante si le nom diffère) et le mappage de chaque colonne. Vérifiez les cartes marquées d&apos;un avertissement.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Associer les listes et colonnes</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Liste</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>ID de la liste source</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>ID de la liste cible</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Colonne source</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Colonne cible</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Analysez d&apos;abord les packages.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Saisissez d&apos;abord au moins un site cible.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Association des listes et colonnes…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(introuvable)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Liste du même nom trouvée dans la cible</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Le site de cette liste n&apos;a pas de site cible (étape Sites)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Impossible de lire cette liste sur le site source : elle n&apos;existe peut-être pas, ce compte n&apos;y a peut-être pas accès, ou le site se trouve dans un autre tenant que votre connexion source</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Aucune liste de ce nom sur le site cible : choisissez-en une dans la liste déroulante</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Même nom</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Renommée dans la cible</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Aucune correspondance : choisissez une colonne</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} listes sur {1} ont une liste cible. {2} colonne(s) à vérifier.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Formulaires et e-mail</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Les formulaires copiés avec l&apos;outil Formulaires sont renseignés automatiquement. Pour un formulaire que vous avez créé vous-même, collez son ID ou le lien de sa page de modification.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>ID du formulaire source</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>ID du formulaire (renseigné par la liste déroulante, ou collez-en un)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Déplacer le domaine de messagerie :</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Écrire les packages mis à jour</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Choisissez un dossier de sortie (pas celui qui contient les originaux). Les packages mis à jour et un rapport listant chaque modification y sont enregistrés.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Écrire les packages mis à jour</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Enregistrer le mappage…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Ouvrir le dossier de sortie</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Les connexions ne peuvent pas être déplacées entre tenants. Après l&apos;importation d&apos;un package, recréez chaque connexion dans Power Automate et sélectionnez-la à nouveau.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Choisissez d&apos;abord un dossier de sortie.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Écriture des packages mis à jour…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Enregistrer la copie mise à jour de {0} (package {1} sur {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Package Power Automate (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Vous avez déjà choisi ce nom de fichier pour un autre package. Choisissez un nom différent.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Un package serait enregistré par-dessus un original (même dossier, même nom). Choisissez un autre dossier de sortie, ou modifiez son nom dans « Enregistrer sous », afin que les originaux restent intacts.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Rapport de réécriture des flux
+
+Les packages d&apos;origine sont intacts. Les connexions ne sont PAS migrées ; recréez-les et sélectionnez-les à nouveau lors de l&apos;importation.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Rapport écrit dans {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} packages écrits, {1} remplacements. {2} valeurs pointent encore vers la source (voir le rapport).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Mappage enregistré dans {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Flux</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Mettre à jour les flux Power Automate exportés pour la cible</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Outil Flux</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Ce qu&apos;utilisent ces flux</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Les services trouvés dans les flux analysés, et ce que cet outil fait pour chacun.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Service</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Flux</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Étapes</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Trouvé</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Ce que fait cet outil</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Réécrit ce qu&apos;il trouve</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>ID signalés ; à vérifier après l&apos;importation</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Connexion uniquement (à recréer)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Mappage des colonnes</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Une colonne apparaît ici lorsqu&apos;un flux y écrit, la filtre ou la trie, ou la lit dans une expression, sur une liste qui a été associée. La colonne cible est choisie par association automatique (même nom, puis même nom d&apos;affichage, puis nom similaire). Vous n&apos;avez à agir que sur les lignes marquées « Nom similaire » ou « Aucune correspondance » ; modifiez n&apos;importe quelle ligne depuis sa liste déroulante, ou choisissez « (laisser inchangé) » pour conserver le nom source. Les colonnes intégrées comme Title ne sont pas listées car elles existent partout.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(laisser inchangé)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Nom similaire : veuillez vérifier</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(pas encore associé)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Liste cible choisie par vous</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Saisissez ou collez un ID de liste cible, ou le lien de sa page de paramètres de liste, dans la colonne ID de la liste cible pour choisir vous-même une liste (par exemple lorsque le nom diffère). Cliquez ensuite sur « Associer à nouveau » pour associer ses colonnes.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Aucun ID de liste trouvé dans &apos;{0}&apos;. Collez un GUID ou le lien de la page de paramètres de la liste.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Aucun ID de formulaire trouvé dans &apos;{0}&apos;. Collez l&apos;ID du formulaire ou le lien de sa page de modification.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Formulaires</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Cible</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Copie</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Résultats</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Choisissez les formulaires à copier</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Recharger les formulaires</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Cliquez sur « Charger mes formulaires » pour voir vos formulaires.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>Aucun formulaire trouvé dans ce compte.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Copier {0} formulaires</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Copier d&apos;autres formulaires</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Choisissez où vont les copies</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Tenant unique : les copies sont créées dans le même compte que celui que vous utilisez, à côté des originaux.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Multi-tenant : les copies sont créées dans le compte cible. Connectez-vous-y ici ; c&apos;est distinct de la connexion utilisée pour les sites SharePoint.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Compte cible</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Connexion avec l&apos;inscription d&apos;application : {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Connexion avec votre inscription d&apos;application cible (définie dans les Paramètres).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Se connecter au compte cible</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Se reconnecter</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Connexion au compte cible… une fenêtre de navigateur peut s&apos;ouvrir.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Connecté en tant que {0}. Accès à Microsoft Forms confirmé ({1} formulaires déjà dans ce compte).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Impossible de se connecter au compte cible : {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Le compte cible n&apos;est pas encore connecté.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Prêt. Cliquez sur le bouton Copier pour démarrer.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Prêt : les copies seront créées dans {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Connectez-vous au compte cible pour continuer.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Options</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} formulaires seront copiés de {1} vers {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>le compte source</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>le compte cible</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Copie des formulaires</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Démarrage…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Formulaire {0} sur {1} : {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Annulation après le formulaire en cours…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Copie terminée : les {0} formulaires ont été copiés</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Vos copies se trouvent dans {0}. Ouvrez Microsoft Forms pour les voir, ou utilisez le tableau ci-dessous.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Copie terminée : {0} formulaires sur {1} copiés, certains nécessitent votre attention</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Les copies se trouvent dans {0}. Les formulaires marqués d&apos;un avertissement ont été copiés avec des problèmes, et les formulaires échoués n&apos;ont pas été créés. Voir la colonne Détails.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Copie terminée, mais aucun formulaire n&apos;a été copié</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Voir la colonne Détails pour la raison. Les causes courantes sont une autorisation Microsoft Forms manquante sur l&apos;inscription cible, ou un compte sans accès à Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Copie annulée après {0} formulaires sur {1}</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Les formulaires listés ci-dessous sont terminés. Le formulaire en cours de copie lors de l&apos;annulation n&apos;a pas été terminé et n&apos;est pas visible.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Copiés</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>Avec avertissements</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Échoués</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Questions</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Formulaire source</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Copie</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Questions</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Détails</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Copié</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Copié avec avertissements</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Échoué</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Ouvrir la copie sélectionnée</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Ouvrir Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Exporter les résultats…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Afficher la table des ID de formulaires</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Sélectionnez d&apos;abord un formulaire copié dans le tableau.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Résultats enregistrés dans {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Astuce : l&apos;inscription d&apos;application n&apos;a pas d&apos;adresse de redirection correspondante. Dans Entra, sous Authentification, ajoutez la plateforme « Applications mobiles et de bureau » avec http://localhost, puis réessayez.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Packages</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Sites</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Listes et colonnes</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Formulaires et e-mail</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Écriture</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Rapport</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Choisissez vos flux exportés</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>Dans Power Automate : ouvrez Mes flux, choisissez un flux, puis Exporter → Package (.zip). Ajoutez ici les fichiers .zip téléchargés. Chaque fichier est analysé dès que vous l&apos;ajoutez.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Effacer</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Ajoutez les packages de flux exportés pour commencer.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>Aucun flux trouvé dans ces fichiers. Assurez-vous qu&apos;il s&apos;agit de packages exportés avec Exporter → Package (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Analyse terminée. Examinez ce qu&apos;utilisent les flux, puis cliquez sur Suivant.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Choisissez les sites cibles</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Ces flux n&apos;utilisent pas de sites SharePoint à adresse fixe ; il n&apos;y a donc rien à mapper ici. Cliquez sur Suivant.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Ensuite, l&apos;outil lit chaque liste via vos connexions et l&apos;associe sur le site cible.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Saisissez le site cible de chaque site source, puis cliquez sur Suivant.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Associer les listes et colonnes</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Associer à nouveau</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Listes</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Ces flux ne pointent vers aucune liste SharePoint précise ; il n&apos;y a donc rien à associer.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Les listes et colonnes sont associées à l&apos;ouverture de cette étape.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Formulaires et e-mail</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Vérifiez les formulaires et l&apos;e-mail, puis cliquez sur Suivant.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Ces flux n&apos;utilisent pas Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>Adresses e-mail</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Pour déplacer toutes les adresses d&apos;un domaine de messagerie vers un autre, saisissez les deux domaines. Les adresses d&apos;autres domaines sont listées dans le rapport, sans être modifiées.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Écrire les packages mis à jour</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Dossier de sortie</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Choisissez le dossier de sortie, puis cliquez sur Écrire les packages mis à jour.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Prêt à écrire {0} package(s) contenant {1} flux. Remplacement de : {2} site(s), {3} liste(s), {4} mappage(s) de colonnes, {5} formulaire(s).</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Écrire les packages mis à jour</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Packages écrits</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Remplacements</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Toujours la source</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>À vérifier</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Package</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Mis à jour</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} valeur(s) pointent encore vers la source</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Ouvrir le rapport</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Recommencer</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Terminé : {0} package(s) écrit(s)</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Enregistrés dans {0}. Rien ne pointe encore vers la source. Suivez les étapes ci-dessous pour les importer.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Terminé : {0} package(s) écrit(s), certains éléments nécessitent votre vérification</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Enregistrés dans {0}. Ouvrez le rapport pour voir les valeurs pointant encore vers la source et les éléments que l&apos;outil ne réécrit pas (autres services, listes ou colonnes non associées).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Que faire ensuite</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Ouvrez le rapport et vérifiez « pointant encore vers la source » ainsi que tout ce qui est marqué à vérifier.
+2.  Dans Power Automate (tenant cible), ouvrez Mes flux → Importer → Importer un package (hérité) et choisissez un package écrit.
+3.  Sous « Ressources associées », cliquez sur « Sélectionner lors de l&apos;importation » pour chaque connexion et choisissez ou créez une connexion dans le tenant cible. Les connexions ne peuvent pas être déplacées entre tenants.
+4.  Importez le flux. Laissez-le désactivé, ouvrez-le, corrigez ce qu&apos;il signale, puis activez-le.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Aucune modification (rien ne correspondait à votre mappage)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Copié le {0} vers {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Déjà copié</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Déjà copié</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …et {0} de plus</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Copier à nouveau ?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>{0} des formulaires sélectionnés ont déjà été copiés dans ce compte :
+
+{1}
+
+Une nouvelle copie crée un second exemplaire de chacun. Continuer ?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>Une copie est toujours en cours. Si vous fermez maintenant, le formulaire en cours de copie risque d&apos;être laissé à moitié construit dans la cible. Arrêter et fermer ?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Copie en cours</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Aucune réponse n&apos;a pu être exportée (voir le journal).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Filtrer par titre ou type</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Un seul classeur</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Exporte tous les formulaires sélectionnés dans un seul fichier Excel avec une feuille par formulaire.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>Adresse e-mail</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>ID de tenant</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Chemin de bibliothèque</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Autres valeurs</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Saisissez un remplacement pour toute valeur à modifier. Les lignes laissées vides ne sont pas modifiées ; elles sont listées dans le rapport si elles pointent encore vers la source.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Genre</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>Dans les flux</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Remplacer par</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Vérification de l&apos;ID</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Ce n&apos;est ni un ID de formulaire ni un lien de page de modification</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Identique au formulaire source</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Ce formulaire est dans le tenant source, pas dans la cible</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Ce formulaire est dans un autre tenant que la source</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>Issu de la copie Formulaires de {0} vers {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Issu d&apos;une copie Formulaires précédente</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Charger un mappage…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Renseigne les sites, listes, colonnes, formulaires et autres valeurs à partir d&apos;un mappage enregistré précédemment.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Impossible de charger le mappage : {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>{0} chargé. Les valeurs correspondant à ces flux ont été renseignées ; vérifiez-les aux étapes suivantes.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>{0} chargé. Il sera appliqué lorsque vous ajouterez des packages de flux.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>{0} site(s) cible(s) renseigné(s). Vérifiez-les ci-dessous, puis cliquez sur Suivant.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Chaque site a déjà une cible ; rien n&apos;a donc été modifié. Videz une cellule Cible pour qu&apos;elle soit renseignée.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Raccourci : saisissez l&apos;adresse du nouveau tenant, par exemple https://fabrikam.sharepoint.com, et cliquez sur le bouton. Chaque site sans cible reçoit cette adresse avec le même chemin que la source : https://contoso.sharepoint.com/sites/HR devient https://fabrikam.sharepoint.com/sites/HR. Les sites OneDrive (contoso-my) passent à l&apos;adresse -my du nouveau tenant. Les cibles déjà saisies ne sont pas modifiées. Les sites doivent déjà exister dans le nouveau tenant ; cet outil ne les crée pas. Si un site porte un nom différent là-bas, saisissez plutôt son adresse dans la cellule Site cible.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Si vous laissez un Site cible vide, ce site reste inchangé : les flux continuent de pointer vers l&apos;ancien site, ses listes et colonnes ne sont ni associées ni réécrites, et le rapport le liste sous « À faire après l&apos;importation ». Cela n&apos;est correct que pour un site qui ne passe pas dans le nouveau tenant.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Ce qui se passe</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Sera déplacé vers la cible</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Inchangé (aucune cible)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Le site {0} est resté inchangé (aucune cible saisie) ; les flux pointent donc toujours vers lui et ses listes n&apos;ont pas été associées. Sans problème si le site ne déménage pas ; sinon, relancez avec une cible.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Aucune colonne à afficher pour l&apos;instant : aucune liste n&apos;a été associée, il n&apos;y a donc rien à comparer. Corrigez les listes ci-dessus, puis cliquez sur Associer à nouveau.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Aucune colonne à mapper, vous n&apos;avez donc rien à faire ici. Les listes associées n&apos;ont aucune colonne personnalisée dans laquelle les flux écrivent, qu&apos;ils filtrent ou qu&apos;ils lisent d&apos;une manière que l&apos;outil peut détecter. La liste d&apos;activité en bas indique ce qui a été trouvé pour chaque liste.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} colonne(s) trouvée(s) : {1} ont le même nom dans la cible, {2} ont été renommées et associées, {3} semblent similaires, {4} n&apos;ont aucune correspondance.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Veuillez vérifier les lignes marquées « Nom similaire » et choisir une colonne pour les lignes marquées « Aucune correspondance ». Les lignes marquées « Même nom » ou « Renommée dans la cible » n&apos;exigent rien.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Rien à faire ici : chaque colonne correspond déjà. Cliquez sur Suivant.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Noms des packages mis à jour</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Comment nommer les fichiers .zip mis à jour. Utilisez {name} pour le nom de fichier d&apos;origine : « {name} - Fabrikam » transforme « Onboarding.zip » en « Onboarding - Fabrikam.zip ». Avec un seul package, vous pouvez simplement saisir le nom complet. Laissez {name} pour conserver les noms d&apos;origine. Un nom utilisé deux fois reçoit (2), (3)… afin que rien ne soit écrasé.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Écrira : {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Un flux ne stocke que l&apos;ID d&apos;un formulaire ; les noms des formulaires sont donc lus depuis Microsoft Forms à l&apos;ouverture de cette étape : le titre de chaque formulaire de vos flux (compte source) et les formulaires du compte cible. Un formulaire dont le titre correspond exactement à un seul formulaire cible est associé automatiquement ; sinon, choisissez le nouveau formulaire dans la liste déroulante, ou collez son ID ou le lien de sa page de modification. Utilisez Recharger les noms de formulaires pour les relire.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Charger les formulaires du compte cible…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Chargement des formulaires du compte cible… une connexion peut vous être demandée.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Liste des formulaires appartenant au compte cible {0} afin que vous puissiez choisir le nouveau formulaire de chaque flux. Cliquez sur Annuler pour arrêter d&apos;attendre une connexion.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Cible : {0} formulaire(s) trouvé(s) dans {1}. Choisissez-en un par ligne, ou collez un ID.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Cible : aucun formulaire trouvé dans {0}. La liste déroulante n&apos;affiche que les formulaires appartenant à ce compte (pas les formulaires de groupe) ; copiez donc d&apos;abord les formulaires avec l&apos;outil Formulaires, ou collez un ID.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Annulé. Cliquez sur Charger les noms de formulaires pour réessayer, ou collez des ID de formulaires.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Cible : impossible de charger les formulaires : {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(aucun)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(formulaire sans titre)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Formulaire source</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Choisir parmi les formulaires de la cible</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Choisissez un formulaire du compte cible. Cliquez d&apos;abord sur « Charger les formulaires du compte cible ».</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Renseigné à partir de la connexion cible ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Votre compte source, remplacé par votre compte cible</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Renseigné à partir de vos connexions ({0} → {1}). Videz les deux zones pour laisser les domaines de messagerie inchangés.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Un site dont la cible est vide reste inchangé : les flux continuent de pointer vers lui, et le rapport le liste.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Connecté en tant que {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Connecté en tant que {0}. L&apos;adresse SharePoint du tenant cible est {1} ; les sites cibles vides ont été renseignés à partir de celle-ci.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Certains sites des flux sont sur {0}, qui est l&apos;adresse propre du compte cible. Soit ces packages pointent déjà vers la cible (par exemple des packages écrits par cet outil, ou des flux exportés depuis la cible) : ajoutez alors plutôt les exports d&apos;origine de la source ; soit la source et la cible sont réellement un seul tenant : passez alors l&apos;application en mode Tenant unique (Paramètres).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} est un package écrit par cet outil le {1} : il contient déjà les adresses cibles, il n&apos;y a donc plus rien à déplacer. Ajoutez plutôt l&apos;export d&apos;origine du tenant source (le fichier de vos Téléchargements, pas celui du dossier de sortie).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Les sites de ces flux sont sur {0}, qui est votre tenant cible, mais votre source est {1}. Si les packages ont été exportés depuis {0}, connectez-vous à ce tenant comme source (Changer de source…). Si cet outil les a écrits précédemment, supprimez-les et ajoutez les exports d&apos;origine.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Connecté. {0} site(s) cible(s) renseigné(s) à partir de {1}. Vérifiez-les, puis cliquez sur Suivant.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Connecté. Chaque site cible avait déjà une valeur ; aucun n&apos;a été modifié.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>La connexion n&apos;a pas abouti, ou l&apos;adresse du nouveau tenant n&apos;a pas pu être lue (voir la ligne Cible). Si vous êtes connecté, saisissez ci-dessous l&apos;adresse du nouveau tenant pour renseigner les sites cibles.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — connecté en tant que {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — pas encore connecté</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Changer de cible…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Aucune liste cible n&apos;est choisie ; ces flux pointeraient donc toujours vers une liste absente de la cible. Choisissez la liste cible, ou créez d&apos;abord la liste sur le site cible.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Les flux utilisent la colonne « {0} », mais la liste cible « {1} » n&apos;a aucune colonne correspondante. Choisissez sa colonne cible dans le tableau, ou ajoutez la colonne à la liste cible puis cliquez sur Vérifier à nouveau.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>La liste cible « {0} » exige la colonne « {1} », mais l&apos;étape « Créer un élément » « {3} » du flux « {2} » ne la définit pas ; l&apos;importation échouerait donc avec « missing required property item/{1} ». Saisissez ci-dessous une valeur pour elle et l&apos;outil l&apos;ajoutera à cette étape, ou rendez « {1} » facultative dans la liste cible puis cliquez sur Vérifier à nouveau.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>La liste cible « {0} » exige la colonne « {1} », mais l&apos;étape « Créer un élément » « {3} » du flux « {2} » ne la définit pas ; l&apos;importation échouerait donc avec « missing required property item/{1} ». Rendez « {1} » facultative dans la liste cible dans SharePoint, puis cliquez sur Vérifier à nouveau.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Valeur à renseigner pour ces colonnes obligatoires (ajoutée à chaque étape Créer un élément qui les omet) :</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Cela échouerait à l&apos;importation. Corrigez pour continuer :</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Vérifier à nouveau</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Échouera ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Connectez-vous à la cible pour continuer.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} package(s) ont été écrits par cet outil et contiennent déjà les valeurs de la cible. Supprimez-les (le ✕ dans la liste) et ajoutez les exports d&apos;origine.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} site(s) n&apos;ont pas de cible. Un site laissé tel quel pointerait toujours vers le tenant source.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} liste(s) échoueraient à l&apos;importation. Corrigez les listes marquées « Échouera » pour continuer.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Les listes n&apos;ont pas encore été associées. Revenez d&apos;une étape puis avancez à nouveau pour réessayer.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} formulaire(s) nécessitent un ID de formulaire cible valide pour continuer.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Changer de source…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Connecté en tant que {0}. L&apos;adresse SharePoint du tenant source est {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Connexion source changée en {0}. Les sites listés ci-dessous doivent être dans ce tenant.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>La connexion source n&apos;a pas abouti, ou l&apos;adresse du tenant n&apos;a pas pu être lue (voir la ligne Source). La connexion source précédente est conservée si vous avez annulé.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Certains sites sont lus depuis {0}, qui n&apos;est pas le tenant auquel vous êtes connecté comme source ({1}). La lecture de leurs listes échouera. Modifiez « Lire les listes depuis » pour ces lignes avec l&apos;adresse de votre tenant source, ou cliquez sur Changer de source… et connectez-vous avec un compte de ce tenant.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Les sites des flux sont sur {0}, mais vous êtes connecté à {1} comme source. « Lire les listes depuis » a été renseigné avec les mêmes sites sur {1} ; l&apos;outil y lit donc les noms et colonnes des listes. Vérifiez que ces sites existent (modifiez n&apos;importe quelle ligne), ou cliquez sur Changer de source… si les flux proviennent réellement de {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Listes utilisées par les flux</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Cliquez sur une liste pour l&apos;ouvrir ou la fermer. Les listes à examiner sont en premier et ouvertes.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Tout ouvrir</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Tout fermer</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Utilisée par :</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Source :</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Liste cible</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>ou collez son ID ou son lien :</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Colonne source</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Type</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Utilisée</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Non utilisée par les flux</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(aucune : laisser cette liste inchangée)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Aucune liste cible choisie : les flux qui l&apos;utilisent pointent toujours vers la liste source</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} colonne(s) à vérifier</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ rien à vérifier</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} colonnes dans cette liste ; les flux en utilisent {1} : {2} avec le même nom dans la cible, {3} renommées et associées, {4} similaires (à vérifier), {5} sans correspondance (à choisir). Les autres colonnes sont affichées pour information et ne sont pas modifiées.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} colonnes dans cette liste ; aucune n&apos;est utilisée par les flux d&apos;une manière que l&apos;outil peut détecter ; rien n&apos;a donc besoin d&apos;être mappé.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Aucune colonne n&apos;a pu être lue pour cette liste (voir les notes ci-dessus et la liste d&apos;activité).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Choisissez une liste cible ci-dessus pour voir ses colonnes et les mapper.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Les colonnes de la liste cible n&apos;ont pas pu être lues ; aucune correspondance n&apos;a pu être proposée.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Le flux n&apos;indique pas sur quel site se trouve cette liste (il utilise un paramètre) ; elle ne peut donc pas être recherchée. Collez l&apos;ID ou le lien de la liste cible.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Aucune liste cible : cette liste reste inchangée.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Lecture des colonnes de la liste cible pour {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Liste &apos;{0}&apos; : vous avez choisi une autre liste cible. Lecture de ses colonnes sur {1} pour les associer à nouveau.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — connecté en tant que {1} (connexion de la fenêtre principale)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Lire les listes depuis (source)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>« Site dans les flux » est l&apos;adresse stockée dans les flux ; c&apos;est ce qui est remplacé, elle ne peut donc pas être modifiée. « Lire les listes depuis » est l&apos;endroit où l&apos;outil lit le nom et les colonnes de chaque liste côté source ; elle commence avec la même adresse, modifiez-la donc lorsque l&apos;adresse du flux est ancienne, renommée ou dans un autre tenant que votre connexion source.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Ce qu&apos;utilisent ces flux</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} flux, {2} étape(s) : {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>réécrit par cet outil</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>à vérifier manuellement</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>connexion uniquement</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>À faire après l&apos;importation</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Importez chaque package corrigé dans l&apos;environnement cible et recréez les connexions (elles ne sont jamais copiées).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0} : {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Packages de solution : seules les définitions de flux ont été réécrites. Les valeurs de variables d&apos;environnement et les références de connexion de la solution (customizations.xml) contiennent toujours les valeurs source ; définissez-les après l&apos;importation.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Les propriétaires de flux et les utilisateurs en exécution seule ne font pas partie du package ; partagez les flux avec les bonnes personnes après l&apos;importation.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Aucune modification (rien dans le mappage ne correspondait).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} remplacements</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Pointent encore vers des valeurs source (non mappées, à vérifier avant l&apos;importation)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Connexion au site source {0} et au site cible {1}. Une fenêtre de connexion s&apos;ouvre si vous n&apos;êtes pas encore connecté.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Connecté à {0} (source) et {1} (cible).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Lecture des listes et bibliothèques du site cible {0}, afin que chaque liste puisse être associée par nom et proposée dans une liste déroulante.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>{0} liste(s) et bibliothèque(s) trouvée(s) sur {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Lecture du nom et des colonnes de la liste {0} depuis le site source {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Liste &apos;{0}&apos; : recherche d&apos;une liste du même nom sur le site cible {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Liste &apos;{0}&apos; : trouvée dans la cible. Lecture des colonnes de la liste cible pour les associer.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Liste &apos;{0}&apos; : ses colonnes n&apos;ont pas pu être lues, ou elle n&apos;en a pas. Rien à mapper pour cette liste.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Liste &apos;{0}&apos; : {1} colonne(s), dont aucune n&apos;est utilisée par les flux d&apos;une manière que l&apos;outil peut détecter. Rien à mapper.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Liste &apos;{0}&apos; : les flux utilisent {1} nom(s) de colonne : {2} ont le même nom dans la cible (aucun changement nécessaire), {3} ont été renommées et associées, {4} semblent similaires (à vérifier), {5} n&apos;ont aucune correspondance (à votre choix), {6} sont des colonnes intégrées (rien à mapper).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>La liste {0} n&apos;est pas sur le site source, mais elle est sur le site cible sous le nom &apos;{1}&apos; : le flux pointe déjà vers la cible.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Le site &apos;{0}&apos; n&apos;a pas de cible ; les listes qu&apos;il contient n&apos;ont pas été résolues.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Avancé : lire les listes depuis une autre adresse</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Mappage des colonnes : de {0} vers {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Aucune colonne à afficher pour cette liste.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Aucune colonne de cette liste n&apos;est utilisée par les flux. Cochez « Afficher toutes les colonnes » pour les voir.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>La liste source n&apos;a pas pu être lue et le flux ne nomme aucune colonne ; il n&apos;y a donc rien à mapper.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Liste</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(illisible dans la source)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Lue depuis :</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Site</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Ce flux pointe déjà vers cette liste dans la cible. Les {0} nom(s) de colonne qu&apos;il utilise sont affichés face aux colonnes de la cible ; rien n&apos;a besoin d&apos;être modifié.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(nom de liste indisponible)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Déjà dans la cible</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Mappé selon les noms de colonnes du flux</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Colonnes illisibles</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Aucune liste cible</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Rien à mapper</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Prêt</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Colonnes cibles illisibles</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} à vérifier</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Utilisée par {0} flux</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} mappage(s) de colonnes à examiner encore.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Tous les mappages de colonnes sont réglés.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Les connexions ne sont pas copiées entre tenants : recréez-les dans Power Automate après l&apos;importation.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>E-mail : chaque adresse sur {0} devient {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} formulaire(s) sur {1} pointent vers un nouveau formulaire.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} liste(s) sur {1} ont une liste cible.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Les listes n&apos;ont pas encore été associées.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>Les adresses e-mail ne sont pas modifiées (aucun domaine n&apos;a été mappé).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Les flux n&apos;utilisent aucun Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Les flux n&apos;utilisent aucune liste précise.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Les flux ne nomment aucun site SharePoint.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{0} package(s) contenant {1} flux seront écrits ; les originaux ne sont pas modifiés.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0} site(s) sur {1} passeront à un site cible ; les autres restent tels quels.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Effacer les valeurs renseignées automatiquement</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Renseigné</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Formulaire dans vos flux</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>De (dans vos flux)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Listes</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Sites</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Statut</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>Vers (cible)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Choisie par vous</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Laissée inchangée</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(connexion de la fenêtre principale)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>Domaine de messagerie à déplacer depuis</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Déplacer chaque adresse de</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>vers</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>Domaine de messagerie vers lequel déplacer</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…ou faites glisser des fichiers .zip (ou un dossier) sur cette fenêtre.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>La colonne &apos;{0}&apos; de la liste &apos;{1}&apos; n&apos;a aucune correspondance dans la liste cible.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>La liste &apos;{0}&apos; ({1}) sur {2} n&apos;a pas de liste cible ; les flux qui l&apos;utilisent pointent donc toujours vers la liste source.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(titre inconnu)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Aller à l&apos;étape</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Vous avez un mappage enregistré ? Chargez-le…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Modèle personnalisé…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Conserver les noms d&apos;origine</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Ajouter &apos; - migrated&apos; à chaque nom</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Ouvrez le rapport et vérifiez ce qui est marqué à vérifier.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>Dans Power Automate (tenant cible) : Mes flux, Importer, Importer un package (hérité), puis choisissez un package écrit.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>Sous Ressources associées, cliquez sur « Sélectionner lors de l&apos;importation » pour chaque connexion et choisissez-en ou créez-en une dans le tenant cible. Les connexions ne peuvent pas être déplacées entre tenants.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Importez le flux, laissez-le désactivé, ouvrez-le, corrigez ce qu&apos;il signale, puis activez-le.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Ouvrir le dossier</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Ouvrir Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Ce dossier de sortie n&apos;existe pas encore ; il est créé lorsque vous écrivez les packages.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>SOURCE</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>CIBLE</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} flux trouvé(s)</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Aucun flux trouvé</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Déjà écrit par cet outil</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Illisible</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Prêt à écrire ?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Retirer ce package de la liste</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Rapport de réécriture des flux</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Ce qu&apos;utilisent ces flux ({0} services)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} package(s) n&apos;ont pas pu être écrits.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} valeur(s) dans les packages écrits pointent encore vers la source. Ouvrez le rapport pour voir lesquelles.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Afficher les {0} colonnes</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Afficher uniquement les colonnes utilisées par les flux</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Que signifient ces colonnes ?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>L&apos;ID de cette liste n&apos;est pas sur le site source, mais c&apos;est la liste &apos;{0}&apos; du site cible : le flux pointe déjà vers la cible, comme dans un package déjà écrit par cet outil.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Connecté</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Problème</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Non connecté</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>En attente de connexion…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} liste(s) · toutes prêtes</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} liste(s) · {1} prêtes · {2} à examiner</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Durée : {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>À vérifier</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Ajoutez les packages de flux (.zip) que vous avez exportés depuis le tenant source. Chacun est analysé dès que vous l&apos;ajoutez.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Indiquez vers quel site chaque flux se déplace. Connectez-vous à la cible et l&apos;adresse du nouveau tenant est renseignée pour vous.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Chaque liste utilisée par les flux est associée à une liste de la cible, et ses colonnes sont mappées. Vérifiez tout ce qui est marqué comme à examiner.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Faites pointer les formulaires copiés vers leurs nouveaux ID, et décidez comment changent les adresses e-mail et l&apos;ID de tenant.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Vérifiez la liste ci-dessous, choisissez où enregistrer les packages mis à jour, puis écrivez-les.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Ce qui se passe ici</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>L&apos;outil lit chaque package sur cet ordinateur (rien n&apos;est envoyé ailleurs) pour trouver les sites, listes, colonnes et formulaires utilisés par les flux. Ajoutez les exports D&apos;ORIGINE de la source, pas des packages écrits précédemment par cet outil : ils contiennent déjà les adresses de la cible.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>La colonne &apos;{0}&apos; est mappée différemment selon les listes ({1}). Les étapes de chaque liste reçoivent leur propre mappage ; les expressions ailleurs dans le flux conservent le nom d&apos;origine, vérifiez-les donc.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Recharger les noms de formulaires…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Chargement des noms de formulaires… une connexion peut vous être demandée.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Lecture des titres des formulaires de vos flux depuis le compte source {0}. Cliquez sur Annuler pour arrêter d&apos;attendre une connexion.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Source : titre trouvé pour {0} formulaire(s) sur {1} ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Source : impossible de lire les titres des formulaires : {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} formulaire(s) ont été associés au formulaire cible du même nom.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Semble être un ID de formulaire valide</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Associé par nom</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>La source et la cible sont dans le même tenant ({0}). Passez l&apos;application en mode Tenant unique (Paramètres), ou connectez-vous à la source et à la cible avec des comptes de tenants différents.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Supprimer ces packages</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>{0} package(s) pointant déjà vers la cible supprimé(s) : {1}. Ajoutez plutôt les exports d&apos;origine du tenant source.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Ces packages ont été supprimés. Ajoutez les exports d&apos;origine du tenant source.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Chaque package est enregistré comme nouveau .zip dans le dossier de sortie ; les originaux ne sont jamais modifiés. Pour en renommer un, saisissez un autre nom dans Enregistrer sous.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Conserver les noms d&apos;origine</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Ajouter &apos; - migrated&apos; à chaque nom</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Package d&apos;origine</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Enregistrer sous</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Sera enregistré sous : {0} (vous pouvez modifier les noms ci-dessous).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Illisible ; aucune sortie écrite</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Annulé. Rien n&apos;a été modifié. À l&apos;étape Sites, utilisez Se connecter pour réessayer (par exemple dans un autre navigateur) ; à l&apos;étape Listes, utilisez Associer à nouveau.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Annulation… la fermeture d&apos;une fenêtre de connexion peut prendre un moment.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Ce que fait l&apos;outil</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Connexions</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Multi-tenant : pour associer les listes, l&apos;outil lit le nom et les colonnes de chaque liste depuis le tenant source et cherche la même liste dans le tenant cible. Cela nécessite une connexion à chacun. Connectez-vous à chaque côté ici, ou cliquez simplement sur Suivant et on vous le demandera alors. Une fenêtre de navigateur s&apos;ouvre ; s&apos;il s&apos;agit du mauvais navigateur, cliquez sur Annuler et réessayez. Rien n&apos;est modifié dans l&apos;un ou l&apos;autre tenant.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Tenant unique : la source et la cible sont le même tenant ; l&apos;outil utilise donc le compte avec lequel vous vous êtes connecté à l&apos;étape Connexion. Il n&apos;y a rien d&apos;autre à connecter. Rien n&apos;est modifié dans le tenant.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Source</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Cible</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Se connecter à la source…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Se connecter à la cible…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Arrête d&apos;attendre la fenêtre de connexion, afin que vous puissiez réessayer, par exemple dans un autre navigateur.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Pas encore connecté</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Utilise la connexion de la fenêtre principale : {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Connecté en tant que {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Prêt</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>En attente de connexion… une fenêtre de navigateur devrait s&apos;ouvrir</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Connexion annulée. Cliquez sur Se connecter pour réessayer.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Connecté. Vérifiez les sites cibles ci-dessous, puis cliquez sur Suivant.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Il n&apos;y a pas encore de site source auquel se connecter. Ajoutez d&apos;abord des packages de flux.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Saisissez d&apos;abord au moins un site cible (ou utilisez Remplir en conservant les chemins) ; la connexion se fait au tenant du site cible.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Connexion à la source… une fenêtre de navigateur s&apos;ouvre.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Connexion à la cible… une fenêtre de navigateur s&apos;ouvre.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>source</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>cible</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Connexion au tenant source. Une fenêtre de navigateur s&apos;ouvre ; cliquez sur Annuler pour arrêter d&apos;attendre (par exemple pour essayer un autre navigateur). La connexion indique aussi à l&apos;outil quel est le tenant source.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Connexion au tenant cible. Une fenêtre de navigateur s&apos;ouvre ; cliquez sur Annuler pour arrêter d&apos;attendre (par exemple pour essayer un autre navigateur). La connexion indique aussi à l&apos;outil l&apos;adresse SharePoint du nouveau tenant.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Connecté à la {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Connexion annulée par vous.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Lecture de {0} fichier(s) de package sur cet ordinateur pour trouver les sites, listes, colonnes et formulaires utilisés par les flux. Rien n&apos;est envoyé ailleurs.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>{0} lu : {1} flux.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Association de {0} liste(s) : pour chacune, l&apos;outil demande son nom au site source, puis cherche une liste de ce nom sur le site cible.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Association terminée. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Écriture de {0} package(s) corrigé(s) dans {1}. Les originaux ne sont pas modifiés.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Écriture de {0} avec votre mappage appliqué.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Vérification de {0} à la recherche de valeurs pointant encore vers la source.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Annulé par vous. Rien n&apos;a été modifié.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Arrêté : {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Chaque flux stocke l&apos;adresse du site SharePoint dans lequel il lit ou écrit. Pour fonctionner dans le nouveau tenant, chaque flux doit pointer vers le site correspondant ; indiquez donc à l&apos;outil quel nouveau site remplace chaque ancien. Cela ne modifie que des copies de vos packages ; rien n&apos;est recherché avant que vous cliquiez sur Suivant.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Ce qui se passe ici : pour chaque liste qu&apos;utilise un flux, l&apos;outil lit le nom et les colonnes de la liste depuis le site source, cherche une liste du même nom sur le site cible et lit les colonnes de cette liste pour les associer. Pourquoi : les flux désignent les listes et colonnes par ID ou nom interne, qui diffèrent dans le nouveau tenant ; l&apos;outil trouve donc l&apos;équivalent. Cette étape ne fait que lire ; rien n&apos;est créé ni modifié dans l&apos;un ou l&apos;autre tenant. Vous pouvez changer la liste cible et n&apos;importe quelle colonne sur sa carte.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Un formulaire copié reçoit un nouvel ID ; un flux qui l&apos;utilise doit donc pointer vers la copie. Les adresses e-mail et l&apos;ID de tenant d&apos;un flux peuvent aussi devoir changer pour la nouvelle organisation. Rien n&apos;est recherché ici ; vous décidez des remplacements, et tout ce qui reste vide reste tel quel.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>L&apos;outil écrit de nouveaux fichiers .zip dans le dossier de sortie avec votre mappage appliqué, les réanalyse pour trouver tout ce qui pointe encore vers la source, et écrit un rapport. Vos packages d&apos;origine ne sont jamais modifiés, et rien n&apos;est envoyé à l&apos;un ou l&apos;autre tenant. Vous importez ensuite vous-même les nouveaux packages dans Power Automate.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Connexion annulée. Cliquez sur le bouton pour réessayer, par exemple dans un autre navigateur.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Erreur : {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Impossible de lire le formulaire source ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Impossible de créer le formulaire dans la cible ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Annulé en cours de route. Un formulaire partiel a été laissé dans la cible ; supprimez-le dans Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>La copie s&apos;est arrêtée en cours de route ({0}). Un formulaire partiel a été laissé dans la cible ; supprimez-le dans Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>image d&apos;arrière-plan</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>logo</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>image d&apos;en-tête</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>L&apos;élément {0} n&apos;a pas été copié (les images ne sont pas encore prises en charge).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>La notation du quiz (bonnes réponses et points) n&apos;est pas vérifiée ; veuillez vérifier la copie.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Le paramètre &apos;{0}&apos; n&apos;a pas pu être copié ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>La question &apos;{0}&apos; n&apos;a pas été copiée ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(sans titre)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Les règles de branchement n&apos;ont pas pu être copiées ({0}) ; veuillez vérifier la copie.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>La copie a été créée mais n&apos;a pas pu être rendue visible dans Microsoft Forms ({0}) ; elle se trouve peut-être dans la corbeille.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>La copie compte {0} questions alors que la source en compte {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>La question &apos;{0}&apos; ({1}) a été créée mais ses options n&apos;ont pas pu être copiées ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Résultats</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Formulaire source</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>ID du formulaire source</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Titre de la copie</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>ID du formulaire copié</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Statut</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Questions copiées</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Questions dans la source</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Avertissements</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Remarques</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Erreur</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Classeur Excel (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>Fichiers JSON (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>ID</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Heure de début</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Heure de fin</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Répondant</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Nom</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Score</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Réponses non mappées (JSON brut)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (tronqué : trop long pour une cellule Excel)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Arrêter l&apos;exécution ?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>Une comparaison ou une vérification est toujours en cours. Fermer cette fenêtre l&apos;arrête, et aucun rapport ne sera écrit. Fermer quand même ?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Fermer pendant le traitement ?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>L&apos;outil est toujours en cours de traitement (analyse, association, connexion ou écriture des packages). Fermer maintenant l&apos;arrête. Fermer quand même ?</value></data>
 </root>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>成功 ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>失敗 ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>已略過 ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>已是最新</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>無法讀取來源是否具有獨立權限(節流或存取錯誤)— 未複製此項目的權限。請重新執行以重試。</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>為覆寫而移除了目標中的現有檔案,但無法上傳新複本({0})。該檔案目前在目標中遺失 — 請重新執行複製以還原。</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>目標文件庫失敗({0})。其檔案已標示為失敗;其他文件庫將繼續。</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: 來源檔案在下載期間已變更 — 正在重新開始下載。</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint 在 {0} 分鐘內未回報此匯入的任何進度,因此已放棄該匯入。其檔案已標示為失敗;請重新執行複製以重試。</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>單一租用戶</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>多租用戶</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>在兩個不同的 Microsoft 365 租用戶之間複製。您需要分別登入來源與目標。請在「設定」中選擇目標的應用程式註冊。</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>目標註冊:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>多租用戶模式: 用於登入目標租用戶的應用程式註冊。「與來源相同」會重複使用來源註冊,此時它必須是多租用戶應用程式。</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>繼續 / 再次執行</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>重新連線並以「若較新則複製」重新執行此選取內容,因此已複製的檔案會被略過,只傳輸遺失或已變更的內容。</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>此次執行沒有可繼續的已儲存選取內容(只有檔案選取的執行才會記錄)。</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>已有複製正在執行。請先完成或取消它。</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>無法繼續: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>已復原 {0} 個中斷的執行。請參閱「記錄」。</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>正在繼續: 已從先前的執行還原 {0} 個項目,並已選取「若較新則複製」。請檢查選項,然後按一下「下一步」。(自訂欄對應不會還原。)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>已中斷 — 應用程式在此次執行完成前關閉。在已完成的項目中: {0} 成功,{1} 失敗,{2} 已略過,{3} 已取消  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>匯出診斷資訊…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>儲存一個 zip,內含最近的記錄檔、系統資訊,以及已移除組織詳細資料的設定 — 可附加到錯誤報告中。不包含複製報告或檔案名稱。</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>診斷資訊已儲存至 {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>無法儲存診斷資訊: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>內容完全相同(僅 SharePoint 管理的部分不同),但未保留修改日期。</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>未複製權限: 無法解析該項目的 SharePoint ID。</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>未複製權限: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>資料夾「{0}」: 未套用{1} — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>更多資料夾有與上述類似的問題;後面的不再逐一列出。</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>權限</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>日期</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>作者 / 編輯者</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> (保留 {0} 個 — 目標已是最新)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>警告: 從來源讀取中繼資料({0})失敗: {1}。其中的項目複製時可能沒有自訂欄值或獨特權限。問題排除後請重新執行(「覆寫」或「若較新」會重新套用它們)。</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>警告: 找不到某個文件庫的來源清單,因此不會複製其權限。</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>SharePoint 主機「{0}」未與已連線的租用戶建立關聯。請重新連線來源網站與目標網站,然後再試一次。</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>跨租用戶複製: 不會複製受管理中繼資料(分類)欄的值,且 OneNote 筆記本 / 文件集暫時無法在租用戶之間複製。身分會依據您的「身分對應」設定進行對應;在目標中無法解析的使用者將被略過。</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>身分對應</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>身分對應…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>列出來源租用戶中的每位人員(或群組)以及他們在目標租用戶中對應的身分 — 兩者是不同的帳戶。作者、編輯者、人員欄與權限都會依此表寫入。未列出的人員會依網域替換進行比對(若您已設定);在目標中仍找不到的人員將被略過並列入報告。</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>來源電子郵件網域</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>目標電子郵件網域</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>覆寫 — 每行一組「來源,目標」(使用者或群組名稱;以 # 開頭表示註解)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>與來源相同</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>來源與目標位於同一租用戶。同租用戶複製請切換為單一租用戶模式。</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>目前尚不支援跨租用戶的原生資料夾複製(OneNote 筆記本、文件集)。</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>磁碟機「{0}」未與已連線的租用戶建立關聯。請重新連線來源網站與目標網站,然後再試一次。</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>尚未設定應用程式註冊。請開啟「設定」,新增您的 Azure 應用程式註冊(其應用程式/用戶端 ID),然後再連線。</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>登入已取消。請按一下「連線」重試。</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>系統管理員尚未在此租用戶中核准此應用程式。請洽全域管理員為該應用程式註冊授與管理員同意(請參閱使用者指南中的「設定」)。</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>在此租用戶中找不到該應用程式註冊。請檢查「設定」中的用戶端 ID 與租用戶 ID。</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>找不到該租用戶。請檢查「設定」中的租用戶 ID(使用您的網域、租用戶 GUID 或「common」)。</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>應用程式註冊缺少此應用程式使用的重新導向位址。請在 Azure 的「行動和傳統型應用程式」下新增重新導向 URI http://localhost。</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>應用程式註冊尚未設定為傳統型登入。請在 Azure 中為該註冊開啟「允許公用用戶端流程」。</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>此帳戶不得使用該應用程式註冊。請使用擁有該註冊之租用戶的帳戶登入,或在「設定」中選擇其他註冊。</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint 拒絕了此次登入。請按一下「連線」重新登入。</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>您沒有此網站的存取權。請確認您的帳戶可在瀏覽器中開啟它,且已對應用程式授與 Sites.ReadWrite.All 權限。</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>找不到該網站。請檢查位址 — 它應類似 https://contoso.sharepoint.com/sites/name。</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(詳細資料: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>連線至來源網站以繼續。</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>至少選取一個項目(勾選核取方塊)以繼續。</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>連線至目標網站以繼續。</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>選擇目的地資料夾以繼續。</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>選擇目的地清單以繼續。</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>輸入新清單的名稱以繼續。</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>未選取任何要複製的內容。</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>正在等待複製完成…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>來源: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>目標: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>您的應用程式註冊已變更,因此已從兩個網站登出。請重新連線以繼續。</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>停止複製?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>複製正在進行。現在停止會使其餘項目不被複製(您之後可從「記錄」繼續)。要停止複製嗎?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>複製仍在執行。關閉應用程式會停止複製並使其餘項目不被複製(您之後可從「記錄」繼續)。仍要關閉嗎?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>切換連線模式?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>在單一租用戶與多租用戶之間切換會中斷兩個網站的連線,您需要重新連線。仍要切換嗎?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>連線:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>來源應用程式註冊</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>目標應用程式註冊</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>登入目標租用戶所使用的註冊:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>變更</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>開啟設定</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• 您必須具有來源網站集合的讀取權限。</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• 連線之前,請先在「設定」中設定您的 Microsoft Entra ID 應用程式註冊。</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>檔案選項</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>文件庫與檔案選項</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>正在複製檔案…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>正在複製文件庫…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>下一步</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>開始複製</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>檢視報告</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>輸入要建立的新清單名稱</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>目的地清單已在「目標」步驟中選擇。返回即可變更。</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>請先設定應用程式註冊</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy 使用您在自己的 Microsoft Entra ID (Azure) 租用戶中建立的應用程式註冊進行登入。請開啟「設定」,新增註冊的應用程式(用戶端)ID,然後回到這裡連線。</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>更多資訊</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>拖曳以調整活動摘要的高度</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>按一下即可只顯示失敗的項目</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>按一下即可只顯示已略過的項目</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>欄對應</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>比較來源與目標</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>開啟「比較」工具,對照來源檢查此次複製。</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>開啟記錄</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>所選註冊用於來源 — 在單一租用戶模式下也用於兩端。</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>新註冊</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>請至少新增一個應用程式註冊。</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>驗證</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>所選註冊需要用戶端 ID。</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>已登出。下次連線時將提示您登入。</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>已登出</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>登出失敗: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>登出</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>找到 {0} 個對應。</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>有 {0} 行無法讀取(第 {1} 行)。每行必須類似「來源,目標」。</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>來源與目標網域相同,因此網域替換不會有任何變更。</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>匯入 CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>部分覆寫行無法讀取(第 {0} 行)。每行必須是「來源,目標」。請修正或移除它們 — 或以 # 開頭使其成為註解。</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>無法儲存身分對應: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>無法讀取該檔案: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>跨租用戶: 此文件庫中有 {0} 個作者/編輯者帳戶在目標租用戶中找不到,將保留為執行複製的帳戶。執行結束後,請使用報告上的「對應這些使用者」進行修正。</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>請輸入來源使用者或群組。</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>請輸入此人在目標租用戶中的身分 — 或移除該列。</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>來源與目標相同。</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>此來源出現多次。</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>來源(此租用戶)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>目標(另一個租用戶)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>類型</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>在目標中?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>用途</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>使用者</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>群組</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>未檢查</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>正在檢查…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ 已找到</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ 找不到</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>新增</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>移除</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>依網域替換填入目標</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>對於尚無目標的列,填入網域替換所產生的位址。</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>在目標中檢查</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>在目標租用戶中查詢每位目標使用者。這也會將他們新增至目標網站的使用者清單;複製在將其設為作者或授與存取權之前本來就會這麼做。</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>請先連線至多租用戶目標: 在「目標」步驟中輸入目標網站 URL,然後重新開啟此對話方塊。</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>匯出 CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>複製需要這些人員,但在目標租用戶中找不到。請為每位人員輸入其在目標中的身分 — 或移除該列以保持未對應。</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} 個對應。</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} 列需要處理。</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>已檢查: 找到 {0} 個,找不到 {1} 個{2}。</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>,{0} 個無法檢查</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>正在檢查 {0} / {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>無需檢查: 沒有任何列具有目標電子郵件地址。</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>部分列需要處理(已醒目提示)。請修正或移除它們,然後儲存。</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>對應已儲存。若要將其套用至已複製的檔案,請使用「覆寫」再次執行 — 「若較新則複製」會略過已是最新的檔案,因此其作者不會變更。無論如何,權限都會重新整理。</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>來源中有 {0} 位人員在目標租用戶中找不到,因此被排除: 未授與存取權、未設為作者或編輯者,或已從人員欄中移除。</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>對應這些使用者…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>對應未解析的使用者…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>開啟身分對應,並列出此次執行在目標中找不到的人員。</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>此次執行沒有未解析的使用者。</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>複製表單</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>將 Microsoft Forms 複製到目標帳戶,保留所有問題、分支、設定與佈景主題。回應可匯出至 Excel。</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>此功能使用 Microsoft Forms 網頁 API,Microsoft 並未提供文件或支援。它目前可運作,但可能在不另行通知的情況下變更。請先試試幾個表單。</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>載入我的表單</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>來源帳戶: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>目標帳戶: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>目標: 同一個帳戶(單一租用戶)。複本會建立在原件旁邊。</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(系統會要求您登入)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>表單 ID 對應(供「流程」工具使用): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>正在載入表單…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>已載入 {0} 個表單。</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>請先至少選取一個表單。</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>正在複製表單…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>正在複製…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>已複製</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>失敗(請參閱記錄)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>正在複製「{0}」</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>複製完成: {0} 個已複製,{1} 個失敗。</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>選擇回應匯出的資料夾</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>正在匯出回應…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>已匯出「{0}」: {1} 筆回應至 {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>已將 {0} 個表單的回應匯出至 {1}。</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>表單已複製,但無法為「流程」工具儲存其 ID: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>無法匯出「{0}」: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>已將 {0} 個表單的回應匯出至 {2};{1} 個失敗(請參閱記錄)。</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>已取消。</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>錯誤: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>提示: 應用程式註冊需要委派的 Microsoft Forms 權限並經過同意。請在「API 權限」下新增(請參閱使用者指南),然後再試一次。</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>提示: Microsoft Forms 拒絕了要求。請檢查此帳戶是否可開啟 forms.office.com,以及應用程式註冊是否具有 Microsoft Forms 權限。</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>已選取 {0} / {1}</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>標題</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>類型</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>上次修改時間</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>結果</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>加入至複製的標題:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (複本)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>複製所選表單</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>匯出回應…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>對照來源檢查複本</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>其他工具</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>表單</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>複製 Microsoft Forms 並匯出其回應</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>表單工具</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>為目標重寫流程</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>更新匯出的 Power Automate 封裝 (.zip),使其指向目標: 網站、清單、欄、已複製的表單與電子郵件網域。您的原始封裝不會被變更。</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. 選擇匯出的流程封裝</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>新增您從 Power Automate 匯出的流程封裝 (.zip)。</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>新增檔案…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>新增資料夾…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>掃描</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>流程封裝 (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>請先至少新增一個流程封裝。</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>正在掃描封裝…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>已略過 {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>找到 {0} 個流程。它們參照了 {1} 個網站、{2} 個清單與 {3} 個表單。</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>掃描完成。</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. 對應網站</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>每個流程的 SharePoint 網站要遷移到哪裡。在多租用戶模式下,登入目標後會自動填入新租用戶的位址;若某列的網站名稱不同,請變更該列。在單一租用戶模式下,請為每列輸入目標網站。</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>流程中的網站(將被取代)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>目標網站</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>新租用戶位址:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>填入空白目標,保留路徑</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>請輸入完整 URL,例如 https://contoso.sharepoint.com。</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>已使用該主機與每個網站的路徑填入空白目標。</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. 比對清單與欄</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>流程使用的每個清單各有一張卡片,不論有多少流程使用它。每張卡片會顯示清單的名稱與欄、它在目標上對應的清單(預設為同名清單;若名稱不同,請從下拉式清單選擇其他清單),以及每一欄的對應方式。請檢查標有警告的卡片。</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>比對清單與欄</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>清單</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>來源清單 ID</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>目標清單 ID</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>來源欄</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>目標欄</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>請先掃描封裝。</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>請先至少輸入一個目標網站。</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>正在比對清單與欄…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(找不到)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>在目標上找到同名清單</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>此清單所在的網站沒有目標網站(「網站」步驟)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>無法在來源網站上讀取此清單: 它可能不存在、此帳戶可能沒有存取權,或該網站與您的來源連線位於不同租用戶</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>目標網站上沒有此名稱的清單: 請從下拉式清單選擇一個</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>名稱相同</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>在目標上已重新命名</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>無相符項目: 請選擇一欄</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{1} 個清單中有 {0} 個具有目標清單。{2} 欄需要檢查。</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. 表單與電子郵件</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>使用「表單」工具複製的表單會自動填入。對於您自己建立的表單,請貼上其 ID 或其編輯頁面的連結。</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>來源表單 ID</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>表單 ID(由下拉式清單填入,或貼上一個)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>移轉電子郵件網域:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. 寫入更新後的封裝</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>選擇輸出資料夾(不是存放原件的資料夾)。更新後的封裝以及列出所有變更的報告會儲存在那裡。</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>寫入更新後的封裝</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>儲存對應…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>開啟輸出資料夾</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>連線無法在租用戶之間移轉。匯入封裝後,請在 Power Automate 中重新建立每個連線並重新選取。</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>請先選擇輸出資料夾。</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>正在寫入更新後的封裝…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>儲存 {0} 的更新複本(第 {1} 個封裝,共 {2} 個)</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Power Automate 封裝 (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>您已為另一個封裝選擇了該檔案名稱。請選擇不同的名稱。</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>有一個封裝將儲存到原件之上(相同資料夾、相同名稱)。請選擇不同的輸出資料夾,或在「另存新檔」中變更其名稱,以保持原件不變。</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># 流程重寫報告
+
+原始封裝保持不變。連線不會移轉;請在匯入時重新建立並重新選取。
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>報告已寫入 {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>已寫入 {0} 個封裝,{1} 處取代。{2} 個值仍指向來源(請參閱報告)。</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>對應已儲存至 {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>流程</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>為目標更新匯出的 Power Automate 流程</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>流程工具</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>這些流程使用的內容</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>在已掃描的流程中發現的服務,以及此工具對每項服務的處理方式。</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>服務</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>流程</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>步驟</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>發現</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>此工具的處理方式</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>重寫所發現的內容</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>回報 ID;匯入後請檢查</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>僅連線(請重新建立)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>欄對應</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>當流程對已比對清單上的某一欄進行寫入、篩選或排序,或在運算式中讀取它時,該欄會顯示在此處。目標欄是透過自動比對選出(先依相同名稱,再依相同顯示名稱,然後依相似名稱)。您只需處理標示為「名稱相似」或「無相符項目」的列;可從下拉式清單變更任一列,或選擇「(保持不變)」以保留來源名稱。Title 等內建欄不會列出,因為它們在任何地方都存在。</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(保持不變)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>名稱相似: 請檢查</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(尚未比對)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>由您選擇的目標清單</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>在「目標清單 ID」欄中輸入或貼上目標清單 ID 或其清單設定頁面的連結,即可自行選擇清單(例如名稱不同時)。然後按一下「重新比對」以比對其欄。</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>在「{0}」中找不到清單 ID。請貼上 GUID 或清單設定頁面連結。</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>在「{0}」中找不到表單 ID。請貼上表單 ID 或表單編輯頁面的連結。</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>表單</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>目標</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>複製</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>結果</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>選擇要複製的表單</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>重新載入表單</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>按一下「載入我的表單」以檢視您的表單。</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>此帳戶中找不到表單。</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>複製 {0} 個表單</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>複製更多表單</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>選擇複本的去向</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>單一租用戶: 複本會建立在您正在使用的同一個帳戶中,位於原件旁邊。</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>多租用戶: 複本會建立在目標帳戶中。請在此登入;這與您用於 SharePoint 網站的登入是分開的。</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>目標帳戶</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>使用應用程式註冊登入: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>使用您的目標應用程式註冊登入(在「設定」中設定)。</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>登入目標帳戶</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>重新登入</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>正在登入目標帳戶… 可能會開啟瀏覽器視窗。</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>已以 {0} 身分連線。已確認 Microsoft Forms 存取權(此帳戶中已有 {1} 個表單)。</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>無法連線至目標帳戶: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>尚未連線至目標帳戶。</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>已就緒。按一下「複製」按鈕開始。</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>已就緒: 複本將建立在 {0} 中。</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>登入目標帳戶以繼續。</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>選項</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>將把 {0} 個表單從 {1} 複製到 {2}。</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>來源帳戶</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>目標帳戶</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>正在複製表單</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>正在開始…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>表單 {0} / {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>將在目前表單完成後取消…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>複製完成: 全部 {0} 個表單均已複製</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>您的複本位於 {0}。請開啟 Microsoft Forms 檢視,或使用下方的表格。</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>複製完成: 已複製 {1} 個表單中的 {0} 個,部分需要處理</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>複本位於 {0}。標有警告的表單已複製但有問題,失敗的表單未建立。請參閱「詳細資料」欄。</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>複製完成,但沒有複製任何表單</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>原因請參閱「詳細資料」欄。常見原因是目標註冊缺少 Microsoft Forms 權限,或帳戶沒有 Forms 存取權。</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>已在 {1} 個表單中的 {0} 個之後取消複製</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>下方列出的表單已完成。取消時正在複製的表單未完成,且看不到。</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>已複製</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>有警告</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>失敗</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>問題</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>來源表單</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>複本</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>問題</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>詳細資料</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>已複製</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>已複製,有警告</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>失敗</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>開啟所選複本</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>開啟 Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>匯出結果…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>顯示表單 ID 對應</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>請先在表格中選取一個已複製的表單。</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>結果已儲存至 {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>提示: 應用程式註冊沒有相符的重新導向位址。請在 Entra 的「驗證」下,新增平台「行動和傳統型應用程式」並使用 http://localhost,然後再試一次。</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>封裝</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>網站</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>清單與欄</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>表單與電子郵件</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>寫入</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>報告</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>選擇您匯出的流程</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>在 Power Automate 中: 開啟「我的流程」,選擇一個流程,然後選擇「匯出」→「封裝 (.zip)」。在此新增下載的 .zip 檔案。新增後會立即掃描每個檔案。</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>清除</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>新增匯出的流程封裝以開始。</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>在這些檔案中找不到流程。請確認它們是透過「匯出」→「封裝 (.zip)」匯出的封裝。</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>掃描完成。請檢視流程使用的內容,然後按一下「下一步」。</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>選擇目標網站</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>這些流程未使用具有固定位址的 SharePoint 網站,因此此處無需對應。請按一下「下一步」。</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>接下來,工具會透過您的連線讀取每個清單,並在目標網站上進行比對。</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>為每個來源網站輸入目標網站,然後按一下「下一步」。</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>比對清單與欄</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>重新比對</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>清單</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>這些流程未指向特定的 SharePoint 清單,因此無需比對。</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>開啟此步驟時會比對清單與欄。</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>表單與電子郵件</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>檢查表單與電子郵件,然後按一下「下一步」。</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>這些流程未使用 Microsoft Forms。</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>電子郵件地址</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>若要將某個電子郵件網域的所有地址移轉到另一個網域,請輸入兩個網域。其他網域的地址會列在報告中,但不會變更。</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>寫入更新後的封裝</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>輸出資料夾</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>選擇輸出資料夾,然後按一下「寫入更新後的封裝」。</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>準備寫入 {0} 個封裝,共包含 {1} 個流程。取代: {2} 個網站、{3} 個清單、{4} 個欄對應、{5} 個表單。</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>寫入更新後的封裝</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>已寫入的封裝</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>取代</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>仍為來源</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>待檢查</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>封裝</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>已更新</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} 個值仍指向來源</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>開啟報告</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>重新開始</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>完成: 已寫入 {0} 個封裝</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>已儲存在 {0}。沒有任何內容仍指向來源。請依照下方步驟匯入它們。</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>完成: 已寫入 {0} 個封裝,部分項目需要您檢查</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>已儲存在 {0}。請開啟報告,檢視仍指向來源的值,以及工具不重寫的項目(其他服務、未比對的清單或欄)。</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>後續操作</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  開啟報告,檢查「仍指向來源」的內容以及任何標示為待檢查的項目。
+2.  在 Power Automate(目標租用戶)中,開啟「我的流程」→「匯入」→「匯入封裝(舊版)」,然後選擇已寫入的封裝。
+3.  在「相關資源」下,為每個連線按一下「匯入時選取」,並在目標租用戶中選取或建立連線。連線無法在租用戶之間移轉。
+4.  匯入該流程。保持關閉狀態,開啟它,修正它標示的任何問題,然後將其開啟。</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>無變更(其中沒有內容與您的對應相符)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>已於 {0} 複製到 {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>先前已複製</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>已複製過</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …以及另外 {0} 個</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>再次複製?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>所選表單中有 {0} 個已複製到此帳戶:
+
+{1}
+
+再次複製會為每個表單建立第二個複本。要繼續嗎?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>複製仍在執行。若現在關閉,正在複製的表單可能會在目標中處於未完成狀態。要停止並關閉嗎?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>複製進行中</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>無法匯出任何回應(請參閱記錄)。</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>依標題或類型篩選</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>單一活頁簿</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>將所有所選表單匯出到單一 Excel 檔案中,每個表單一張工作表。</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>電子郵件地址</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>租用戶 ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>文件庫路徑</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>其他值</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>為任何需要變更的值輸入取代內容。留空的列不會變更;若它們仍指向來源,則會列在報告中。</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>種類</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>在流程中</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>取代為</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>ID 檢查</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>不是表單 ID 或編輯頁面連結</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>與來源表單相同</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>此表單位於來源租用戶,而不是目標租用戶</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>此表單所在的租用戶與來源不同</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>來自從 {0} 到 {1} 的表單複製</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>來自較早的表單複製</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>載入對應…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>根據您先前儲存的對應填入網站、清單、欄、表單與其他值。</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>無法載入對應: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>已載入 {0}。與這些流程相符的值已填入;請在後續步驟中檢查。</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>已載入 {0}。新增流程封裝時將套用它。</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>已填入 {0} 個目標網站。請在下方檢查,然後按一下「下一步」。</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>每個網站都已有目標,因此未做任何變更。清除「目標」儲存格即可讓其重新填入。</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>捷徑: 輸入新租用戶的位址,例如 https://fabrikam.sharepoint.com,然後按一下該按鈕。每個尚無目標的網站都會取得該位址並保持與來源相同的路徑: https://contoso.sharepoint.com/sites/HR 會變成 https://fabrikam.sharepoint.com/sites/HR。OneDrive 網站 (contoso-my) 會移至新租用戶的 -my 位址。您已輸入的目標不會被更動。這些網站必須已存在於新租用戶中;此工具不會建立它們。若網站在那裡的名稱不同,請改為在「目標網站」儲存格中輸入其位址。</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>若您將「目標網站」留空,則該網站保持不變: 流程仍指向舊網站,其清單與欄不會被比對或重寫,報告會將其列在「匯入後待辦事項」下。只有不遷移到新租用戶的網站才應這麼做。</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>結果</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ 將遷移到目標</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ 不變更(無目標)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>網站 {0} 保持不變(未輸入目標),因此流程仍指向它,其清單也未被比對。若該網站不遷移則沒有問題;否則請輸入目標後重新執行。</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>尚無可顯示的欄: 沒有已比對的清單,因此沒有可比較的內容。請修正上方的清單,然後按一下「重新比對」。</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>沒有需要對應的欄,因此您在此無需執行任何動作。已比對的清單沒有流程寫入、篩選或以工具可見的方式讀取的自訂欄。底部的活動清單說明了每個清單的發現情況。</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>找到 {0} 欄: {1} 欄在目標上名稱相同,{2} 欄已重新命名並比對,{3} 欄看起來相似,{4} 欄無相符項目。</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>請檢查標示為「名稱相似」的列,並為標示為「無相符項目」的列選擇一欄。標示為「名稱相同」或「在目標上已重新命名」的列無需處理。</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>此處無需處理: 每一欄都已相符。請按一下「下一步」。</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>更新後封裝的名稱</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>更新後的 .zip 檔案的命名方式。使用 {name} 代表原始檔案名稱:「{name} - Fabrikam」會將「Onboarding.zip」變成「Onboarding - Fabrikam.zip」。只有一個封裝時,您可以直接輸入完整名稱。保留為 {name} 則沿用原始名稱。重複使用的名稱會加上 (2)、(3)… 以免覆寫任何檔案。</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>將寫入: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>流程只儲存表單的 ID,因此開啟此步驟時會從 Microsoft Forms 讀取表單名稱: 您流程中每個表單的標題(來源帳戶)以及目標帳戶中的表單。標題與某個目標表單完全相符的表單會自動比對;否則請從下拉式清單選擇新表單,或貼上其 ID 或編輯頁面連結。使用「重新載入表單名稱」可再次讀取。</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>從目標帳戶載入表單…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>正在載入目標帳戶的表單… 可能會要求您登入。</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>正在列出目標帳戶 {0} 擁有的表單,以便您為每個流程選擇新表單。按一下「取消」可停止等待登入。</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>目標: 在 {1} 中找到 {0} 個表單。每列選擇一個,或貼上 ID。</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>目標: 在 {0} 中找不到表單。下拉式清單只列出該帳戶擁有的表單(不含群組表單),因此請先使用「表單」工具複製表單,或貼上 ID。</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>已取消。按一下「載入表單名稱」重試,或貼上表單 ID。</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>目標: 無法載入表單: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(無)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(未命名表單)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>來源表單</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>從目標的表單中選擇</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>從目標帳戶中選擇一個表單。請先按一下「從目標帳戶載入表單」。</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>根據目標登入填入({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>您的來源帳戶,已取代為您的目標帳戶</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>根據您的登入填入({0} → {1})。清除兩個方塊可保持電子郵件網域不變。</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>目標為空白的網站保持不變: 流程仍指向它,報告會列出它。</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ 已以 {0} 身分登入 · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>已以 {0} 身分登入。目標租用戶的 SharePoint 位址為 {1};空白的目標網站已據此填入。</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ 流程中的某些網站位於 {0},這是目標帳戶自己的位址。要麼這些封裝已經指向目標(例如此工具寫入的封裝,或從目標匯出的流程),此時請改為新增來自來源的原始匯出;要麼來源與目標確實是同一個租用戶,此時請將應用程式切換為單一租用戶模式(設定)。</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} 是此工具在 {1} 寫入的封裝: 它已包含目標位址,因此沒有需要遷移的內容。請改為新增來自來源租用戶的原始匯出(您「下載」資料夾中的檔案,而不是輸出資料夾中的檔案)。</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ 這些流程中的網站位於 {0},這是您的目標租用戶,但您的來源是 {1}。若這些封裝是從 {0} 匯出的,請以該租用戶作為來源登入(變更來源…)。若是此工具先前寫入的,請將其移除並新增原始匯出。</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>已登入。已根據 {1} 填入 {0} 個目標網站。請檢查,然後按一下「下一步」。</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>已登入。每個目標網站都已有值,因此未做變更。</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>登入未完成,或無法讀取新租用戶的位址(請參閱「目標」行)。若您已登入,請在下方輸入新租用戶的位址以填入目標網站。</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — 已以 {1} 身分連線</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — 尚未登入</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>變更目標…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>未選擇目標清單,因此這些流程仍會指向不在目標上的清單。請選擇目標清單,或先在目標網站上建立該清單。</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>流程使用了欄「{0}」,但目標清單「{1}」中沒有對應的欄。請在表格中選擇其目標欄,或將該欄新增至目標清單,然後按一下「重新檢查」。</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>目標清單「{0}」要求欄「{1}」,但流程「{2}」中的「建立項目」步驟「{3}」未設定它,因此匯入會失敗並顯示「missing required property item/{1}」。請在下方輸入其值,工具會將其加入該步驟,或在目標清單上將「{1}」設為選用,然後按一下「重新檢查」。</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>目標清單「{0}」要求欄「{1}」,但流程「{2}」中的「建立項目」步驟「{3}」未設定它,因此匯入會失敗並顯示「missing required property item/{1}」。請在 SharePoint 中將目標清單上的「{1}」設為選用,然後按一下「重新檢查」。</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>為這些必填欄填入的值(加入每個遺漏它們的「建立項目」步驟):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>這在匯入時會失敗。請修正後繼續:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>重新檢查</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>將失敗 ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ 登入目標以繼續。</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ 有 {0} 個封裝是由此工具寫入的,已包含目標的值。請移除它們(清單中的 ✕),然後新增原始匯出。</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ 有 {0} 個網站沒有目標。維持原樣的網站仍會指向來源租用戶。</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ 有 {0} 個清單在匯入時會失敗。請修正標示為「將失敗」的清單以繼續。</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ 清單尚未比對。請返回上一步再前進以重試。</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ 有 {0} 個表單需要有效的目標表單 ID 才能繼續。</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>變更來源…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>已以 {0} 身分登入。來源租用戶的 SharePoint 位址為 {1}。</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>來源連線已變更為 {0}。下方列出的網站必須位於此租用戶。</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>來源登入未完成,或無法讀取租用戶的位址(請參閱「來源」行)。若您已取消,將保留先前的來源連線。</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ 某些網站是從 {0} 讀取,而這不是您作為來源所連線的租用戶 ({1})。讀取其清單將失敗。請將這些列的「讀取清單來源」編輯為您來源租用戶上的位址,或按一下「變更來源…」並使用該租用戶的帳戶登入。</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>流程的網站位於 {0},但您作為來源連線的是 {1}。「讀取清單來源」已填入 {1} 上的相同網站,因此工具會在那裡讀取清單名稱與欄。請檢查這些網站是否存在(可編輯任一列),或者若流程確實來自 {0},請按一下「變更來源…」。</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>流程使用的清單</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>按一下清單可展開或摺疊。需要查看的清單排在最前並已展開。</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>全部展開</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>全部摺疊</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>使用者:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>來源:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>目標清單</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>或貼上其 ID 或連結:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>來源欄</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>類型</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>已使用</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>流程未使用</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(無: 保持此清單不變)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ 未選擇目標清單: 使用它的流程仍指向來源清單</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} 欄待檢查</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ 無需檢查</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>此清單有 {0} 欄;流程使用了其中 {1} 欄: {2} 欄在目標上名稱相同,{3} 欄已重新命名並比對,{4} 欄相似(請檢查),{5} 欄無相符項目(請選擇)。其他欄僅供參考,不會變更。</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>此清單有 {0} 欄;流程沒有以工具可見的方式使用其中任何一欄,因此無需對應。</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>無法讀取此清單的欄(請參閱上方的說明與活動清單)。</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>請在上方選擇目標清單,以檢視其欄並進行對應。</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>無法讀取目標清單的欄,因此無法提供比對建議。</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>流程中沒有說明此清單位於哪個網站(它使用了參數),因此無法查詢。請貼上目標清單的 ID 或連結。</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>無目標清單: 此清單保持不變。</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>正在讀取 {0} 的目標清單的欄…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>清單「{0}」: 您選擇了另一個目標清單。正在讀取其在 {1} 上的欄以重新比對。</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — 已以 {1} 身分連線(主視窗的登入)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>讀取清單來源(來源)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>「流程中的網站」是儲存在流程中的位址;它是將被取代的內容,因此無法編輯。「讀取清單來源」是工具在來源端讀取每個清單名稱與欄的位置;它最初是相同的位址,因此當流程的位址已過期、已重新命名或與您的來源連線位於不同租用戶時,請變更它。</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>這些流程使用的內容</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} 個流程,{2} 個步驟: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>由此工具重寫</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>手動檢查</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>僅連線</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>匯入後待辦事項</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>在目標環境中匯入每個已修補的封裝並重新建立連線(連線從不會被複製)。</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}。</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>解決方案封裝: 僅重寫了工作流程定義。解決方案中的環境變數值與連線參照 (customizations.xml) 仍保留來源的值;請在匯入後設定它們。</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>流程擁有者與僅執行使用者不屬於封裝的一部分;請在匯入後將流程共用給適當的人員。</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>無變更(對應中沒有內容相符)。</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} 處取代</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>仍指向來源的值(未對應,匯入前請檢查)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>正在連線至來源網站 {0} 與目標網站 {1}。若您尚未登入,將開啟登入視窗。</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>已連線至 {0}(來源)與 {1}(目標)。</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>正在讀取目標網站 {0} 上的清單與文件庫,以便依名稱比對每個清單並在下拉式清單中提供。</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>在 {1} 上找到 {0} 個清單與文件庫。</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>正在從來源網站 {1} 讀取清單 {0} 的名稱與欄。</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>清單「{0}」: 正在目標網站 {1} 上尋找同名清單。</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>清單「{0}」: 已在目標上找到。正在讀取目標清單的欄以進行比對。</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>清單「{0}」: 無法讀取其欄,或它沒有欄。此清單無需對應。</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>清單「{0}」: {1} 欄,流程沒有以工具可見的方式使用其中任何一欄。無需對應。</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>清單「{0}」: 流程使用了 {1} 個欄名: {2} 個在目標上名稱相同(無需變更),{3} 個已重新命名並比對,{4} 個看起來相似(請檢查),{5} 個無相符項目(由您選擇),{6} 個是內建欄(無需對應)。</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>清單 {0} 不在來源網站上,但它在目標網站上名為「{1}」: 流程已指向目標。</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>網站「{0}」沒有目標;其上的清單未被解析。</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>進階: 從其他位址讀取清單</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>欄對應: 從 {0} 到 {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>此清單沒有可顯示的欄。</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>流程未使用此清單的任何欄。勾選「顯示所有欄」可檢視它們。</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>無法讀取來源清單,且流程未指明任何欄,因此無需對應。</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>清單</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(無法在來源上讀取)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>讀取來源:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>網站</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>此流程已指向目標上的此清單。它使用的 {0} 個欄名與目標的欄對照顯示;無需變更。</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(清單名稱無法使用)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>已在目標上</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>依流程的欄名對應</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>無法讀取欄</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>無目標清單</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>無需對應</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>就緒</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>目標欄無法讀取</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} 項待檢查</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>被 {0} 個流程使用</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>仍有 {0} 個欄對應需要查看。</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>所有欄對應均已確定。</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>連線不會在租用戶之間複製: 匯入後請在 Power Automate 中重新建立。</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>電子郵件: {0} 上的每個地址都會變成 {1}。</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{1} 個表單中有 {0} 個指向新表單。</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{1} 個清單中有 {0} 個具有目標清單。</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>清單尚未比對。</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>電子郵件地址不會變更(未對應網域)。</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>這些流程未使用 Microsoft Forms。</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>這些流程未使用特定清單。</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>這些流程未指明任何 SharePoint 網站。</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>將寫入 {0} 個封裝,包含 {1} 個流程;原件不會變更。</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{1} 個網站中有 {0} 個將遷移到目標網站;其餘保持原樣。</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>清除自動填入的值</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>已填入</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>流程中的表單</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>從(在您的流程中)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>清單</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>網站</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>狀態</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>到(目標)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>由您選擇</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>保持不變</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(主視窗的登入)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>要移轉的來源電子郵件網域</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>移轉所有地址:從</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>到</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>要移轉到的電子郵件網域</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…或將 .zip 檔案(或資料夾)拖曳到此視窗上。</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>清單「{1}」上的欄「{0}」在目標清單中沒有相符項目。</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>{2} 上的清單「{0}」({1})沒有目標清單,因此使用它的流程仍指向來源清單。</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(標題未知)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>前往步驟</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>有已儲存的對應?載入它…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>自訂模式…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>保留原始名稱</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>為每個名稱加上「 - migrated」</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>開啟報告,檢查標示為待檢查的內容。</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>在 Power Automate(目標租用戶)中: 我的流程、匯入、匯入封裝(舊版),然後選擇已寫入的封裝。</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>在「相關資源」下,為每個連線按一下「匯入時選取」,並在目標租用戶中選取或建立一個。連線無法在租用戶之間移轉。</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>匯入該流程,保持關閉狀態,開啟它,修正它標示的任何問題,然後將其開啟。</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>開啟資料夾</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>開啟 Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>該輸出資料夾尚不存在;寫入封裝時會建立它。</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>來源</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>目標</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>找到 {0} 個流程</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>找不到流程</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>已由此工具寫入</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>無法讀取</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>準備寫入?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>從清單中移除此封裝</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>流程重寫報告</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>這些流程使用的內容({0} 項服務)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>有 {0} 個封裝無法寫入。</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>已寫入的封裝中有 {0} 個值仍指向來源。請開啟報告查看是哪些。</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>顯示全部 {0} 欄</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>只顯示流程使用的欄</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>這些欄是什麼意思?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>此清單的 ID 不在來源網站上,但它是目標網站上的清單「{0}」: 流程已指向目標,就像此工具已寫入的封裝一樣。</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>已連線</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>問題</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>未登入</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>正在等待登入…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} 個清單 · 全部就緒</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} 個清單 · {1} 個就緒 · {2} 個需要查看</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>耗時 {0}。</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>待檢查</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>新增您從來源租用戶匯出的流程封裝 (.zip)。新增後會立即掃描每個檔案。</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>指明每個流程遷移到哪個網站。登入目標後會自動填入新租用戶的位址。</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>流程使用的每個清單都會比對到目標上的清單,並對應其欄。請檢查任何標示為需要查看的內容。</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>將已複製的表單指向其新 ID,並決定電子郵件地址與租用戶 ID 如何變更。</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>檢查下方清單,選擇儲存更新後封裝的位置,然後寫入。</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>此處會發生什麼</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>工具會在此電腦上讀取每個封裝(不會向任何地方傳送內容),以找出流程使用的網站、清單、欄與表單。請新增來自來源的原始匯出,而不是此工具先前寫入的封裝: 它們已包含目標的位址。</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>欄「{0}」在不同清單上的對應不同({1})。每個清單的步驟使用各自的對應;流程中其他位置的運算式保留原名稱,因此請檢查它們。</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>重新載入表單名稱…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>正在載入表單名稱… 可能會要求您登入。</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>正在從來源帳戶 {0} 讀取您流程中表單的標題。按一下「取消」可停止等待登入。</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>來源: 已找到 {1} 個表單中 {0} 個的標題 ({2})。</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>來源: 無法讀取表單標題: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>有 {0} 個表單已比對到同名的目標表單。</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>看起來是有效的表單 ID</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>依名稱比對</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>來源與目標位於同一租用戶 ({0})。請將應用程式切換為單一租用戶模式(設定),或使用來自不同租用戶的帳戶登入來源與目標。</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>移除這些封裝</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>已移除 {0} 個已指向目標的封裝: {1}。請改為新增來自來源租用戶的原始匯出。</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>這些封裝已移除。請新增來自來源租用戶的原始匯出。</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>每個封裝都會以新的 .zip 儲存在輸出資料夾中;原件不會變更。若要重新命名某個封裝,請在「另存新檔」中輸入不同的名稱。</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>保留原始名稱</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>為每個名稱加上「 - migrated」</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>原始封裝</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>另存新檔</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>將儲存為: {0}(您可以在下方變更名稱)。</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>無法讀取;未寫入輸出</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>已取消。未做任何變更。在「網站」步驟中使用「登入」重試(例如在另一個瀏覽器中);在「清單」步驟中使用「重新比對」。</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>正在取消… 登入視窗可能需要一點時間才會關閉。</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>工具正在執行的動作</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>連線</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>多租用戶: 為了比對清單,工具會從來源租用戶讀取每個清單的名稱與欄,並在目標租用戶中尋找相同的清單。這需要分別登入兩者。您可以在此登入每一端,或直接按一下「下一步」,屆時會提示您。將開啟瀏覽器視窗;若瀏覽器不對,請按一下「取消」並重試。不會變更任何一個租用戶中的任何內容。</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>單一租用戶: 來源與目標是同一個租用戶,因此工具使用您在「連線」步驟中登入的帳戶。無需再登入其他任何內容。不會變更租用戶中的任何內容。</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>來源</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>目標</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>登入來源…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>登入目標…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>取消</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>停止等待登入視窗,以便您重試,例如在另一個瀏覽器中。</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>尚未登入</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>使用主視窗的登入: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ 已以 {0} 身分登入</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ 已就緒</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>正在等待登入… 應會開啟瀏覽器視窗</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>登入已取消。按一下「登入」重試。</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>已登入。請檢查下方的目標網站,然後按一下「下一步」。</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>尚無可登入的來源網站。請先新增流程封裝。</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>請先至少輸入一個目標網站(或使用「填入」,保留路徑);登入會前往目標網站所在的租用戶。</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>正在登入來源… 將開啟瀏覽器視窗。</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>正在登入目標… 將開啟瀏覽器視窗。</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>來源</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>目標</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>正在登入來源租用戶。將開啟瀏覽器視窗;按一下「取消」可停止等待(例如改用其他瀏覽器)。登入同時也會告知工具來源是哪個租用戶。</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>正在登入目標租用戶。將開啟瀏覽器視窗;按一下「取消」可停止等待(例如改用其他瀏覽器)。登入同時也會告知工具新租用戶的 SharePoint 位址。</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>已連線至{0}。</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>您已取消登入。</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>正在此電腦上讀取 {0} 個封裝檔案,以找出流程使用的網站、清單、欄與表單。不會向任何地方傳送內容。</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>已讀取 {0}: {1} 個流程。</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>正在比對 {0} 個清單: 對於每個清單,工具會向來源網站詢問其名稱,然後在目標網站上尋找該名稱的清單。</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>比對完成。{0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>正在將 {0} 個已修補的封裝寫入 {1}。原件不會變更。</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>正在寫入 {0},並套用您的對應。</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>正在檢查 {0} 中仍指向來源的值。</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>您已取消。未做任何變更。</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>已停止: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>每個流程都儲存了它所讀取或寫入的 SharePoint 網站的位址。若要在新租用戶中執行,每個流程都必須指向那裡相對應的網站,因此請告知工具哪個新網站取代哪個舊網站。這只會編輯您封裝的複本;在您按一下「下一步」之前不會查詢任何內容。</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>此處會發生什麼: 對於流程使用的每個清單,工具會從來源網站讀取該清單的名稱與欄,在目標網站上尋找同名清單,並讀取該清單的欄以進行比對。原因: 流程透過 ID 或內部名稱參照清單與欄,而它們在新租用戶中是不同的,因此工具會找到對應項。此步驟只讀取;不會在任何一個租用戶中建立或變更任何內容。您可以在其卡片上變更目標清單與任何欄。</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>已複製的表單會取得新的 ID,因此使用它的流程必須指向複本。流程中的電子郵件地址與租用戶 ID 也可能需要為新組織而變更。此處不會查詢任何內容;由您決定取代內容,留空的內容保持原樣。</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>工具會將套用了您對應的新 .zip 檔案寫入輸出資料夾,重新掃描它們以找出仍指向來源的內容,並寫入一份報告。您的原始封裝不會被變更,也不會向任何租用戶傳送任何內容。之後由您自己在 Power Automate 中匯入新封裝。</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>登入已取消。請按一下按鈕重試,例如在另一個瀏覽器中。</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>取消</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>錯誤: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>無法讀取來源表單({0})。</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>無法在目標中建立表單({0})。{1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>中途已取消。目標中遺留了一個不完整的表單;請在 Microsoft Forms 中刪除它。</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>複製中途停止({0})。目標中遺留了一個不完整的表單;請在 Microsoft Forms 中刪除它。</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>背景影像</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>標誌</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>標頭影像</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>{0}未被複製(目前尚不支援影像)。</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>測驗計分(正確答案與分數)未經驗證;請檢查複本。</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>無法複製設定「{0}」({1})。</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>問題「{0}」未被複製({1})。{2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(未命名)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>無法複製分支規則({0});請檢查複本。</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>複本已建立,但無法在 Microsoft Forms 中使其可見({0});它可能在資源回收筒中。</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>複本有 {0} 個問題,但來源有 {1} 個。</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>問題「{0}」({1})已建立,但無法複製其選項({2})。</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>結果</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>來源表單</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>來源表單 ID</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>複本標題</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>複本表單 ID</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>狀態</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>已複製的問題</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>來源中的問題</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>警告</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>備註</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>錯誤</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Excel 活頁簿 (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>JSON 檔案 (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>ID</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>開始時間</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>完成時間</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>回應者</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>名稱</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>分數</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>未對應的答案(原始 JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (已截斷: 對 Excel 儲存格而言太長)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>停止執行?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>比較或驗證仍在執行。關閉此視窗會停止它,且不會寫入報告。仍要關閉嗎?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>工作中關閉?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>工具仍在運作(掃描、比對、登入或寫入封裝)。現在關閉會停止它。仍要關閉嗎?</value></data>
 </root>

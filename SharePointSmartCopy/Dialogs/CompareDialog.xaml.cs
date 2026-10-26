@@ -53,6 +53,14 @@ public partial class CompareDialog : Window
     // large pair kept running headless after the dialog was gone (same reasoning as HistoryDialog).
     protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
     {
+        // Esc is bound to Close, so one stray key press used to throw away a comparison that may have run for hours.
+        if (CompareCancelButton.Visibility == Visibility.Visible && _compareCts is { IsCancellationRequested: false }
+            && MessageBox.Show(this, Loc.T("Dlg_StopRunBody"), Loc.T("Dlg_StopRunTitle"),
+                MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
+        {
+            e.Cancel = true;
+            return;
+        }
         _compareCts?.Cancel();
         base.OnClosing(e);
     }

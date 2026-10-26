@@ -235,6 +235,7 @@
   <data name="VM_CopyCancelled" xml:space="preserve"><value>Copy cancelled.</value></data>
   <data name="VM_CopyError" xml:space="preserve"><value>Copy error: {0}</value></data>
   <data name="VM_ItemLabel" xml:space="preserve"><value>Item {0}</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Up to date</value></data>
   <data name="VM_AlreadyExists" xml:space="preserve"><value>Already exists</value></data>
   <data name="VM_UpdatedFieldWarning" xml:space="preserve"><value>Updated (field warning: {0})</value></data>
   <data name="VM_Updated" xml:space="preserve"><value>Updated</value></data>
@@ -395,6 +396,7 @@
   <data name="Svc_Ver_DeepNoRun" xml:space="preserve"><value>Deep verify could not run — {0}. Status reflects the date/hash check only.</value></data>
   <data name="Svc_Ver_UnknownReason" xml:space="preserve"><value>unknown reason</value></data>
   <data name="Svc_Perm_NoRoleDefs" xml:space="preserve"><value>Target role definitions unavailable — permissions not copied (inheritance left unchanged); re-run to retry</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Could not read whether the source has its own permissions (throttling or access error) — permissions were not copied for this item. Re-run to retry.</value></data>
   <data name="Svc_Perm_NoSource" xml:space="preserve"><value>Could not read source permissions — permissions not copied (inheritance left unchanged); re-run to retry</value></data>
   <data name="Svc_Perm_BreakFailed" xml:space="preserve"><value>Break inheritance failed: {0}</value></data>
   <data name="Svc_Perm_NoRoleSuffix" xml:space="preserve"><value>{0} ({1}: no such role on target)</value></data>
@@ -490,6 +492,9 @@
   <data name="Svc_Mig_StillBlocked" xml:space="preserve"><value>, {0} still blocked</value></data>
   <data name="Svc_Mig_CouldNotRemoveThe" xml:space="preserve"><value>Could not remove the existing file before retry — re-run to try again.</value></data>
   <data name="Svc_Mig_RetrySkippedEveryConflicting" xml:space="preserve"><value>✗ {0}Retry skipped — every conflicting file is still blocked.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>The existing target file was removed for the overwrite, but the new copy could not be uploaded ({0}). The file is currently missing from the target — re-run the copy to restore it.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>A target library failed ({0}). Its files are marked Failed; the other libraries continue.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: the source file changed while it was being downloaded — starting the download over.</value></data>
   <data name="Svc_Mig_CouldNotRemoveThe2" xml:space="preserve"><value>Could not remove the existing file before overwrite (after retries) — skipped to avoid a duplicate-version import error. Re-run to retry.</value></data>
   <data name="Svc_Mig_PreFlightToCopy" xml:space="preserve"><value>{0}Pre-flight: {1} to copy, {2} already exist</value></data>
   <data name="Svc_Mig_AllFilesAlreadyExist" xml:space="preserve"><value>{0}All files already exist — nothing to copy</value></data>
@@ -575,6 +580,7 @@
   <data name="Svc_Sp_UnknownCSOMError2" xml:space="preserve"><value>Unknown CSOM error</value></data>
   <data name="Svc_Sp_FixGoToThe" xml:space="preserve"><value>Fix: go to the target site → Site Settings → Site Collection Administrators → add your account.</value></data>
   <data name="Svc_Sp_CouldNotFindJob" xml:space="preserve"><value>Could not find job ID GUID in ProcessQuery response: {0}</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint reported no progress for this import for {0} minutes, so it was given up on. Its files are marked Failed; re-run the copy to retry them.</value></data>
   <data name="Svc_Sp_MigrationJobProgressPolling" xml:space="preserve"><value>Migration job progress polling timed out 3 consecutive times — import outcome unknown</value></data>
   <data name="Svc_Sp_ListingFolderFilesFailed" xml:space="preserve"><value>Listing folder files failed: HTTP {0} for {1} —</value></data>
   <data name="Svc_Sp_RecycleReturnedNoBin" xml:space="preserve"><value>recycle returned no bin id ({0})</value></data>
@@ -832,7 +838,6 @@
   <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (copy)</value></data>
   <data name="Forms_CopySelected" xml:space="preserve"><value>Copy selected forms</value></data>
   <data name="Forms_ExportResponses" xml:space="preserve"><value>Export responses…</value></data>
-  <data name="Forms_Close" xml:space="preserve"><value>Close</value></data>
   <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Check a copy against its source</value></data>
   <data name="Ui_OtherTools" xml:space="preserve"><value>Other tools</value></data>
   <data name="Forms_TileTitle" xml:space="preserve"><value>Forms</value></data>
@@ -934,8 +939,6 @@ Original packages are untouched. Connections are NOT migrated; recreate and re-s
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Reload forms</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Click "Load my forms" to see your forms.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>No forms were found in this account.</value></data>
-  <data name="Forms_Next" xml:space="preserve"><value>Next</value></data>
-  <data name="Forms_Back" xml:space="preserve"><value>Back</value></data>
   <data name="Forms_CopyNForms" xml:space="preserve"><value>Copy {0} forms</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Copy more forms</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Choose where the copies go</value></data>
@@ -1353,4 +1356,45 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Forms_TargetCancelled" xml:space="preserve"><value>Sign-in cancelled. Click the button to try again, for example in another browser.</value></data>
   <data name="Forms_CancelSignIn" xml:space="preserve"><value>Cancel</value></data>
   <data name="Flows_Error" xml:space="preserve"><value>Error: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Could not read the source form ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Could not create the form in the target ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Cancelled part-way. A partial form was left in the target; delete it in Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>The copy stopped part-way ({0}). A partial form was left in the target; delete it in Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>background image</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>logo</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>header image</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>The {0} was not copied (images are not supported yet).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Quiz scoring (correct answers and points) is not verified; please check the copy.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Setting '{0}' could not be copied ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Question '{0}' was not copied ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(untitled)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Branching rules could not be copied ({0}); please check the copy.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>The copy was created but could not be made visible in Microsoft Forms ({0}); it may be in the recycle bin.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>The copy has {0} questions but the source has {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Question '{0}' ({1}) was created but its options could not be copied ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Results</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Source form</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>Source form ID</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Copy title</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>Copy form ID</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Status</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Questions copied</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Questions in source</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Warnings</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Notes</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Error</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Excel Workbook (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>JSON files (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Id</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Start time</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Completion time</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Responder</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Name</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Score</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Unmapped answers (raw JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (cut: too long for an Excel cell)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Stop the run?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>A comparison or verification is still running. Closing this window stops it, and no report will be written. Close anyway?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Close while working?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>The tool is still working (scanning, matching, signing in or writing packages). Closing now stops it. Close anyway?</value></data>
 </root>

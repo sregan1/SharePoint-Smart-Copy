@@ -20,14 +20,17 @@ public static class FormsIdMapStore
 
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
 
-    public static Dictionary<string, FormsMapEntry> Load(string? path = null)
+    public static Dictionary<string, FormsMapEntry> Load(string? path = null) => Read(path ?? DefaultPath, out _);
+
+    // damaged: the file exists but could not be read or parsed (as opposed to simply not being there yet).
+    private static Dictionary<string, FormsMapEntry> Read(string path, out bool damaged)
     {
-        path ??= DefaultPath;
+        damaged = false;
         var map = new Dictionary<string, FormsMapEntry>(StringComparer.Ordinal);
         try
         {
             if (!File.Exists(path)) return map;
-            if (JsonNode.Parse(File.ReadAllText(path)) is not JsonObject root) return map;
+            if (JsonNode.Parse(File.ReadAllText(path)) is not JsonObject root) { damaged = true; return map; }
             foreach (var (source, value) in root)
             {
                 // Old format: "sourceId": "newId". Current format: "sourceId": { newId, targetAccount, copiedAt }.
@@ -43,7 +46,8 @@ public static class FormsIdMapStore
         }
         catch (Exception ex) when (ex is JsonException or IOException or InvalidOperationException or FormatException)
         {
-            // a damaged map must never block copying; it is rebuilt as forms are copied
+            // a damaged map must never block copying; it is rebuilt as forms are copied (Record keeps the old file aside)
+            damaged = true;
         }
         return map;
     }
@@ -51,7 +55,14 @@ public static class FormsIdMapStore
     public static void Record(string sourceFormId, string newFormId, string? targetAccount = null, string? sourceTitle = null, string? path = null)
     {
         path ??= DefaultPath;
-        var map = Load(path);
+        var map = Read(path, out var damaged);
+        if (damaged)
+        {
+            // Rewriting from an empty map would wipe every earlier source -> copy entry (the Flows tool relies on them).
+            // Keep the unreadable file so it can be repaired by hand.
+            try { File.Move(path, path + ".corrupt-" + DateTime.Now.ToString("yyyyMMdd-HHmmss"), overwrite: true); }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { /* best effort */ }
+        }
         map[sourceFormId] = new FormsMapEntry(newFormId, targetAccount, DateTimeOffset.Now, sourceTitle);
 
         var root = new JsonObject();

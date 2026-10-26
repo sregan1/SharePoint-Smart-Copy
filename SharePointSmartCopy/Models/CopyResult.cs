@@ -19,7 +19,9 @@ public partial class CopyResult : ObservableObject
 {
     // Skip reason for Copy-if-newer: file exists at the target and is not older.
     // Compared against ErrorMessage to decide whether permissions still refresh.
-    public const string UpToDate = "Up to date";
+    // Shown in the Details column, so it is localized; the language is fixed for the whole session, so comparing against
+    // it elsewhere in the same run still works.
+    public static string UpToDate => SharePointSmartCopy.Localization.Loc.T("Res_UpToDate");
 
     // Exposed so ProcessDiagnostics can report the current BeginInvoke backlog — if background
     // threads enqueue UI updates faster than the dispatcher drains them, this grows unbounded

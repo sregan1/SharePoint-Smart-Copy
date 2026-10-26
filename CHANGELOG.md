@@ -19,6 +19,27 @@ All notable changes to SharePoint Smart Copy are documented here.
 - **Permissions by feature** — the README and User Guide now include a matrix showing which API permissions each feature needs (for example, Flows needs neither the Microsoft Forms permission nor `AllSites.FullControl`).
 - **Microsoft Forms permission** — the Forms tool needs the delegated Microsoft Forms permission on the app registration (see the User Guide). Existing features are unaffected without it.
 
+### Changed
+
+- **Translations complete** — all 741 strings that were English-only (the whole Forms and Flows tools, sign-in and consent errors, dialog text, the new Other tools row) are now translated into all 29 other languages. `Tools/CheckResxKeys.ps1` lists any key missing from a language and any `{0}`-style placeholder that differs from English, so a gap can no longer slip in unnoticed.
+- **CSV exports open correctly in Excel** — the copy report and the saved-run report are written as UTF-8 with a byte-order mark, so accented, Cyrillic, CJK, Arabic and Hebrew file names no longer turn into garbage. One shared writer now serves both.
+- **Dialog buttons are consistent** — Forms and Flows use the same **← Back** and **Close** labels as the rest of the app, and Esc closes them (it asks first if work is still running). The column mapping dialog also closes on Esc.
+- **Report summary tiles reachable by keyboard** — the Failed and Skipped tiles can be focused with Tab and activated with Enter or Space; Space on a tree checkbox now follows the same unchecked / all / items-only cycle as the mouse.
+- **Toast notifications stand out in the dark theme**, and "Up to date" / "Already exists" in the Details column are localized.
+- **Diagnostics export** no longer includes activity logs: those hold file names, site URLs and SharePoint's own error reports, which the export promised to leave out.
+
+### Fixed
+
+- **Migration API: a failure after overwrite deletes now says what happened** — the manifest upload shares the data upload's retry policy, and if preparing a batch still fails after existing target files were removed, those files report that they are missing from the target and need a re-run, instead of a bare network error.
+- **Migration API: one failing library no longer fails the rest** — a library-level error is contained to that library's files.
+- **Migration API: other hardening** — a job that reports no progress for two hours is given up on instead of being polled forever; a resumed download only continues if the source file is unchanged (ETag / If-Match), and starts over if it changed; throttle waits, connection resets and permanent errors (403/404/410) have separate retry budgets; a non-GET request is no longer repeated after a bare 503; download responses are released on errors; overwrite deletes run four at a time; cancel now reaches the folder lookup, delete and job-submit calls.
+- **Crash recovery** no longer records not-yet-started files as finished (they stayed "Pending" after a recovered run).
+- **List item permissions** are shown on the item's own row (every item used to overwrite the list's row), and a failure to read whether the source has its own permissions is reported on the item instead of silently skipping the permission copy.
+- **Flows: stale matches after changing a site target** — going back and changing a site's target now re-matches the lists on the new site.
+- **Flows: adding or removing a package keeps what you entered** (site targets, "read from" edits, form IDs, replacement values) instead of resetting every table; **Start over** also clears the email-domain mapping.
+- **Flows: rewrite accuracy** — renaming columns can no longer overwrite a value when one rename's new name is another's old name (and a clash is skipped and reported); bare column names in `$filter` are renamed only outside quoted values; `contoso.com` no longer matches inside `contoso.com.au`; a tenant-root site mapping no longer rewrites sub-sites; list IDs written as `%7B…%7D` are rewritten; an unwritable output folder or a package with an unexpected shape fails that package instead of the whole run.
+- **Forms: branching and cancel** — branching rules are applied after the questions exist; cancelling mid-copy lists the partial form (with its ID) in the results; a gateway error no longer retries the create or question POST (which could duplicate a form); a damaged ID-map file is kept aside as `.corrupt-<time>` instead of being overwritten; response export clips cells over Excel's size limit instead of failing.
+
 ---
 
 ## 4.0.2 — 2026-10-22

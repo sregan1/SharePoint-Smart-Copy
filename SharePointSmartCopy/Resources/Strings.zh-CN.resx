@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>成功 ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>失败 ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>已跳过 ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>已是最新</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>无法读取源是否具有独立权限(限流或访问错误)— 未复制此项目的权限。请重新运行以重试。</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>为覆盖而删除了目标中的现有文件,但无法上传新副本({0})。该文件目前在目标中缺失 — 请重新运行复制以恢复。</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>目标库失败({0})。其文件已标记为失败;其他库将继续。</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: 源文件在下载过程中发生了更改 — 正在重新开始下载。</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint 在 {0} 分钟内未报告此导入的任何进度,因此已放弃该导入。其文件已标记为失败;请重新运行复制以重试。</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>单租户</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>多租户</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>在两个不同的 Microsoft 365 租户之间复制。您需要分别登录源和目标。请在“设置”中选择目标的应用注册。</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>目标注册:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>多租户模式: 用于登录目标租户的应用注册。“与源相同”将重用源注册,此时它必须是多租户应用。</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>继续 / 再次运行</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>重新连接并使用“如果较新则复制”重新运行此选择,因此已复制的文件将被跳过,仅传输缺失或已更改的内容。</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>此次运行没有可恢复的已保存选择(只有文件选择运行才会记录)。</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>已有复制正在运行。请先完成或取消它。</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>无法继续: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>已恢复 {0} 个中断的运行。请参阅“历史记录”。</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>正在继续: 已从先前的运行中恢复 {0} 个项目,并已选择“如果较新则复制”。请检查选项,然后单击“下一步”。(自定义列映射不会恢复。)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>已中断 — 应用在此次运行完成前关闭。在已完成的项目中: {0} 成功,{1} 失败,{2} 已跳过,{3} 已取消  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>导出诊断信息…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>保存一个 zip,其中包含最近的日志、系统信息以及已删除组织详细信息的设置 — 可附加到错误报告中。不包含复制报告或文件名。</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>诊断信息已保存到 {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>无法保存诊断信息: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>内容完全相同(仅 SharePoint 管理的部分不同),但未保留修改日期。</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>未复制权限: 无法解析该项目的 SharePoint ID。</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>未复制权限: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>文件夹“{0}”: 未应用{1} — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>更多文件夹存在与上述类似的问题;后面的不再逐一列出。</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>权限</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>日期</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>作者 / 编辑者</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> (保留 {0} 个 — 目标已是最新)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>警告: 从源读取元数据({0})失败: {1}。其中的项目复制时可能没有自定义列值或独特权限。问题解决后请重新运行(“覆盖”或“如果较新”会重新应用它们)。</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>警告: 找不到某个库的源列表,因此不会复制其权限。</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>SharePoint 主机“{0}”未与已连接的租户关联。请重新连接源站点和目标站点,然后重试。</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>跨租户复制: 不会复制托管元数据(分类)列的值,并且 OneNote 笔记本 / 文档集暂时无法在租户之间复制。标识将根据您的“标识映射”设置进行映射;在目标中无法解析的用户将被跳过。</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>标识映射</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>标识映射…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>列出源租户中的每个人员(或组)以及他们在目标租户中对应的身份 — 两者是不同的帐户。作者、编辑者、人员列和权限都将按此表写入。未列出的人员将按域名替换进行匹配(如果您已设置);在目标中仍然找不到的人员将被跳过并在报告中列出。</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>源电子邮件域</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>目标电子邮件域</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>覆盖 — 每行一对“源,目标”(用户或组名称;# 开头表示注释)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>与源相同</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>源和目标位于同一租户。同租户复制请切换到单租户模式。</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>暂不支持跨租户的本机文件夹复制(OneNote 笔记本、文档集)。</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>驱动器“{0}”未与已连接的租户关联。请重新连接源站点和目标站点,然后重试。</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>尚未设置应用注册。请打开“设置”,添加您的 Azure 应用注册(其应用程序/客户端 ID),然后再连接。</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>登录已取消。请单击“连接”重试。</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>管理员尚未在此租户中批准此应用。请让全局管理员为该应用注册授予管理员同意(请参阅用户指南中的“安装”)。</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>在此租户中找不到该应用注册。请检查“设置”中的客户端 ID 和租户 ID。</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>找不到该租户。请检查“设置”中的租户 ID(使用您的域、租户 GUID 或“common”)。</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>应用注册缺少此应用使用的重定向地址。请在 Azure 的“移动和桌面应用程序”下添加重定向 URI http://localhost。</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>应用注册未设置为桌面登录。请在 Azure 中为该注册开启“允许公共客户端流”。</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>此帐户不允许使用该应用注册。请使用拥有该注册的租户中的帐户登录,或在“设置”中选择其他注册。</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint 拒绝了此次登录。请单击“连接”重新登录。</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>您无权访问此站点。请确保您的帐户可以在浏览器中打开它,并且已向应用授予 Sites.ReadWrite.All 权限。</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>找不到该站点。请检查地址 — 它应类似于 https://contoso.sharepoint.com/sites/name。</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(详细信息: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>连接到源站点以继续。</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>至少选择一个项目(勾选复选框)以继续。</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>连接到目标站点以继续。</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>选择目标文件夹以继续。</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>选择目标列表以继续。</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>输入新列表的名称以继续。</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>未选择要复制的内容。</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>正在等待复制完成…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>源: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>目标: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>您的应用注册已更改,因此已从两个站点注销。请重新连接以继续。</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>停止复制?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>复制正在进行。现在停止将使其余项目不被复制(您可以稍后从“历史记录”中继续)。停止复制?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>复制仍在运行。关闭应用将停止复制并使其余项目不被复制(您可以稍后从“历史记录”中继续)。仍要关闭?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>切换连接模式?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>在单租户和多租户之间切换会断开两个站点的连接,您需要重新连接。仍要切换?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>连接:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>源应用注册</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>目标应用注册</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>登录目标租户使用:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>更改</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>打开设置</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• 您必须对源网站集具有读取权限。</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• 连接之前,请在“设置”中设置您的 Microsoft Entra ID 应用注册。</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>文件选项</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>库和文件选项</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>正在复制文件…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>正在复制库…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>下一步</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>开始复制</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>查看报告</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>输入要创建的新列表的名称</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>目标列表已在“目标”步骤中选择。返回可更改。</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>请先设置应用注册</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy 使用您在自己的 Microsoft Entra ID (Azure) 租户中创建的应用注册进行登录。请打开“设置”,添加注册的应用程序(客户端)ID,然后返回此处连接。</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>更多信息</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>拖动以调整活动列表的高度</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>单击以仅显示失败的项目</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>单击以仅显示已跳过的项目</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>列映射</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>比较源和目标</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>打开“比较”工具,对照源检查此次复制。</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>打开历史记录</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>所选注册用于源 — 在单租户模式下也用于两端。</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>新注册</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>请至少添加一个应用注册。</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>验证</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>所选注册需要客户端 ID。</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>已注销。下次连接时将提示您登录。</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>已注销</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>注销失败: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>注销</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>找到 {0} 个映射。</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} 行无法读取(第 {1} 行)。每行必须类似于 源,目标。</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>源域和目标域相同,因此域名替换不会产生任何更改。</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>导入 CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>有些覆盖行无法读取(第 {0} 行)。每行必须是“源,目标”。请修复或删除它们 — 或以 # 开头使其成为注释。</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>无法保存标识映射: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>无法读取该文件: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>跨租户: 此库中有 {0} 个作者/编辑者帐户在目标租户中未找到,将保留为执行复制的帐户。运行结束后,请使用报告上的“映射这些用户”进行修复。</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>请输入源用户或组。</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>请输入此人在目标租户中的身份 — 或删除该行。</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>源和目标相同。</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>此源出现了多次。</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>源(此租户)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>目标(另一租户)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>类型</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>在目标中?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>用于</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>用户</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>组</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>未检查</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>正在检查…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ 已找到</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ 未找到</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>添加</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>删除</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>按域名替换填充目标</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>对于尚无目标的行,填入域名替换所生成的地址。</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>在目标中检查</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>在目标租户中查找每个目标用户。这也会将他们添加到目标站点的用户列表中;复制在将其设为作者或授予访问权限之前本来就会这样做。</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>请先连接到多租户目标: 在“目标”步骤中输入目标站点 URL,然后重新打开此对话框。</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>导出 CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>复制需要这些人员,但在目标租户中找不到。请为每个人员输入其在目标中的身份 — 或删除该行以保持未映射。</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} 个映射。</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} 行需要处理。</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>已检查: 找到 {0} 个,未找到 {1} 个{2}。</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>,{0} 个无法检查</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>正在检查 {0} / {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>无需检查: 没有行具有目标电子邮件地址。</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>有些行需要处理(已突出显示)。请修复或删除它们,然后保存。</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>映射已保存。要将其应用于已复制的文件,请使用“覆盖”再次运行 — “如果较新则复制”会跳过已是最新的文件,因此其作者不会更改。无论哪种方式,权限都会刷新。</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>源中有 {0} 个人员在目标租户中找不到,因此被排除: 未授予访问权限、未设为作者或编辑者,或已从人员列中删除。</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>映射这些用户…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>映射未解析的用户…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>打开标识映射,并列出此次运行在目标中找不到的人员。</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>此次运行没有未解析的用户。</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>复制表单</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>将 Microsoft Forms 复制到目标帐户,保留所有问题、分支、设置和主题。响应可导出到 Excel。</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>此功能使用 Microsoft Forms 网页 API,Microsoft 未对其提供文档或支持。它目前可用,但可能会在不另行通知的情况下更改。请先尝试几个表单。</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>加载我的表单</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>源帐户: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>目标帐户: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>目标: 同一帐户(单租户)。副本创建在原件旁边。</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(将提示您登录)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>表单 ID 映射(供“流”工具使用): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>正在加载表单…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>已加载 {0} 个表单。</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>请先至少选择一个表单。</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>正在复制表单…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>正在复制…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>已复制</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>失败(请参阅日志)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>正在复制“{0}”</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>复制完成: {0} 个已复制,{1} 个失败。</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>选择响应导出的文件夹</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>正在导出响应…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>已导出“{0}”: {1} 条响应到 {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>已将 {0} 个表单的响应导出到 {1}。</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>表单已复制,但无法为“流”工具保存其 ID: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>无法导出“{0}”: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>已将 {0} 个表单的响应导出到 {2};{1} 个失败(请参阅日志)。</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>已取消。</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>错误: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>提示: 应用注册需要委托的 Microsoft Forms 权限并经过同意。请在“API 权限”下添加(请参阅用户指南),然后重试。</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>提示: Microsoft Forms 拒绝了请求。请检查此帐户是否可以打开 forms.office.com,以及应用注册是否具有 Microsoft Forms 权限。</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>已选择 {0} / {1}</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>标题</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>类型</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>上次修改时间</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>结果</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>添加到复制的标题:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (副本)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>复制所选表单</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>导出响应…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>对照源检查副本</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>其他工具</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>表单</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>复制 Microsoft Forms 并导出其响应</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>表单工具</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>为目标重写流</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>更新导出的 Power Automate 包 (.zip),使其指向目标: 站点、列表、列、已复制的表单和电子邮件域。您的原始包不会被更改。</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. 选择导出的流包</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>添加您从 Power Automate 导出的流包 (.zip)。</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>添加文件…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>添加文件夹…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>扫描</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>流包 (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>请先至少添加一个流包。</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>正在扫描包…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>已跳过 {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>找到 {0} 个流。它们引用了 {1} 个站点、{2} 个列表和 {3} 个表单。</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>扫描完成。</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. 映射站点</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>每个流的 SharePoint 站点要迁移到哪里。在多租户模式下,登录目标后会自动填入新租户的地址;如果某行的站点名称不同,请更改该行。在单租户模式下,请为每行输入目标站点。</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>流中的站点(将被替换)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>目标站点</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>新租户地址:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>填充空目标,保留路径</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>请输入完整 URL,例如 https://contoso.sharepoint.com。</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>已使用该主机和每个站点的路径填充空目标。</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. 匹配列表和列</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>流使用的每个列表对应一张卡片,无论有多少个流使用它。每张卡片显示列表的名称和列、它在目标上映射到的列表(默认为同名列表;如果名称不同,请从下拉列表中选择其他列表),以及每一列的映射方式。请检查标有警告的卡片。</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>匹配列表和列</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>列表</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>源列表 ID</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>目标列表 ID</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>源列</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>目标列</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>请先扫描包。</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>请先至少输入一个目标站点。</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>正在匹配列表和列…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(未找到)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>在目标上找到同名列表</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>此列表所在的站点没有目标站点(“站点”步骤)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>无法在源站点上读取此列表: 它可能不存在、此帐户可能无权访问,或该站点与您的源连接位于不同的租户</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>目标站点上没有此名称的列表: 请从下拉列表中选择一个</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>名称相同</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>在目标上已重命名</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>无匹配: 请选择一列</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{1} 个列表中有 {0} 个具有目标列表。{2} 列需要检查。</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. 表单和电子邮件</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>使用“表单”工具复制的表单会自动填入。对于您自己创建的表单,请粘贴其 ID 或其编辑页面的链接。</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>源表单 ID</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>表单 ID(由下拉列表填入,或粘贴一个)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>迁移电子邮件域:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. 写入更新后的包</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>选择输出文件夹(不是存放原件的文件夹)。更新后的包以及列出所有更改的报告将保存在那里。</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>写入更新后的包</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>保存映射…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>打开输出文件夹</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>连接无法在租户之间迁移。导入包后,请在 Power Automate 中重新创建每个连接并重新选择。</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>请先选择输出文件夹。</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>正在写入更新后的包…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>保存 {0} 的更新副本(第 {1} 个包,共 {2} 个)</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Power Automate 包 (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>您已为另一个包选择了该文件名。请选择其他名称。</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>有一个包将保存到原件之上(相同文件夹、相同名称)。请选择其他输出文件夹,或在“另存为”中更改其名称,以保持原件不变。</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># 流重写报告
+
+原始包保持不变。连接不会迁移;请在导入时重新创建并重新选择。
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>报告已写入 {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>已写入 {0} 个包,{1} 处替换。{2} 个值仍指向源(请参阅报告)。</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>映射已保存到 {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>流</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>为目标更新导出的 Power Automate 流</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>流工具</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>这些流使用的内容</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>在已扫描的流中发现的服务,以及此工具对每项服务的处理方式。</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>服务</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>流</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>步骤</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>发现</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>此工具的处理方式</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>重写所发现的内容</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>报告 ID;导入后请检查</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>仅连接(请重新创建)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>列映射</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>当流对已匹配列表上的某一列进行写入、筛选或排序,或在表达式中读取它时,该列会显示在此处。目标列通过自动匹配选择(先按相同名称,再按相同显示名称,然后按相似名称)。您只需处理标记为“名称相似”或“无匹配”的行;可从下拉列表中更改任意行,或选择“(保持不变)”以保留源名称。Title 等内置列不会列出,因为它们在任何地方都存在。</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(保持不变)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>名称相似: 请检查</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(尚未匹配)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>由您选择的目标列表</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>在“目标列表 ID”列中输入或粘贴目标列表 ID 或其列表设置页面的链接,即可自行选择列表(例如名称不同时)。然后单击“重新匹配”以匹配其列。</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>在“{0}”中找不到列表 ID。请粘贴 GUID 或列表设置页面链接。</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>在“{0}”中找不到表单 ID。请粘贴表单 ID 或表单编辑页面的链接。</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>表单</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>目标</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>复制</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>结果</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>选择要复制的表单</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>重新加载表单</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>单击“加载我的表单”以查看您的表单。</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>此帐户中未找到表单。</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>复制 {0} 个表单</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>复制更多表单</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>选择副本的去向</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>单租户: 副本创建在您正在使用的同一帐户中,位于原件旁边。</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>多租户: 副本创建在目标帐户中。请在此登录;这与您用于 SharePoint 站点的登录是分开的。</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>目标帐户</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>使用应用注册登录: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>使用您的目标应用注册登录(在“设置”中设置)。</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>登录目标帐户</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>重新登录</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>正在登录目标帐户… 可能会打开浏览器窗口。</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>已以 {0} 身份连接。已确认 Microsoft Forms 访问权限(此帐户中已有 {1} 个表单)。</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>无法连接到目标帐户: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>尚未连接目标帐户。</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>已就绪。单击“复制”按钮开始。</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>已就绪: 副本将创建在 {0} 中。</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>登录目标帐户以继续。</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>选项</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>将把 {0} 个表单从 {1} 复制到 {2}。</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>源帐户</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>目标帐户</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>正在复制表单</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>正在开始…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>表单 {0} / {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>将在当前表单完成后取消…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>复制完成: 全部 {0} 个表单均已复制</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>您的副本位于 {0}。请打开 Microsoft Forms 查看,或使用下表。</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>复制完成: 已复制 {1} 个表单中的 {0} 个,部分需要处理</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>副本位于 {0}。标有警告的表单已复制但存在问题,失败的表单未创建。请参阅“详细信息”列。</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>复制完成,但没有复制任何表单</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>原因请参阅“详细信息”列。常见原因是目标注册缺少 Microsoft Forms 权限,或帐户没有 Forms 访问权限。</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>已在 {1} 个表单中的 {0} 个之后取消复制</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>下面列出的表单已完成。取消时正在复制的表单未完成,且不可见。</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>已复制</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>有警告</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>失败</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>问题</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>源表单</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>副本</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>问题</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>详细信息</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>已复制</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>已复制,有警告</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>失败</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>打开所选副本</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>打开 Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>导出结果…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>显示表单 ID 映射</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>请先在表中选择一个已复制的表单。</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>结果已保存到 {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>提示: 应用注册没有匹配的重定向地址。请在 Entra 的“身份验证”下,添加平台“移动和桌面应用程序”并使用 http://localhost,然后重试。</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>包</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>站点</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>列表和列</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>表单和电子邮件</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>写入</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>报告</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>选择您导出的流</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>在 Power Automate 中: 打开“我的流”,选择一个流,然后选择“导出”→“包 (.zip)”。在此添加下载的 .zip 文件。添加后会立即扫描每个文件。</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>清除</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>添加导出的流包以开始。</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>在这些文件中未找到流。请确保它们是通过“导出”→“包 (.zip)”导出的包。</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>扫描完成。请查看流使用的内容,然后单击“下一步”。</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>选择目标站点</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>这些流未使用具有固定地址的 SharePoint 站点,因此此处无需映射。请单击“下一步”。</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>接下来,工具会通过您的连接读取每个列表,并在目标站点上进行匹配。</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>为每个源站点输入目标站点,然后单击“下一步”。</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>匹配列表和列</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>重新匹配</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>列表</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>这些流未指向特定的 SharePoint 列表,因此无需匹配。</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>打开此步骤时会匹配列表和列。</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>表单和电子邮件</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>检查表单和电子邮件,然后单击“下一步”。</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>这些流未使用 Microsoft Forms。</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>电子邮件地址</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>要将一个电子邮件域的所有地址迁移到另一个域,请输入两个域。其他域上的地址会在报告中列出,但不会更改。</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>写入更新后的包</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>输出文件夹</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>选择输出文件夹,然后单击“写入更新后的包”。</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>准备写入 {0} 个包,共包含 {1} 个流。替换: {2} 个站点、{3} 个列表、{4} 个列映射、{5} 个表单。</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>写入更新后的包</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>已写入的包</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>替换</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>仍为源</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>待检查</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>包</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>已更新</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} 个值仍指向源</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>打开报告</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>重新开始</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>完成: 已写入 {0} 个包</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>已保存在 {0}。没有任何内容仍指向源。请按照下面的步骤导入它们。</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>完成: 已写入 {0} 个包,部分项目需要您检查</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>已保存在 {0}。请打开报告,查看仍指向源的值以及工具不重写的项目(其他服务、未匹配的列表或列)。</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>后续操作</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  打开报告,检查“仍指向源”的内容以及任何标记为待检查的项目。
+2.  在 Power Automate(目标租户)中,打开“我的流”→“导入”→“导入包(旧版)”,然后选择已写入的包。
+3.  在“相关资源”下,为每个连接单击“导入时选择”,并在目标租户中选择或创建连接。连接无法在租户之间迁移。
+4.  导入该流。保持关闭状态,打开它,修复它标记的任何问题,然后将其开启。</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>无更改(其中没有内容与您的映射匹配)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>已于 {0} 复制到 {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>之前已复制</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>已复制过</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …以及另外 {0} 个</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>再次复制?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>所选表单中有 {0} 个已复制到此帐户:
+
+{1}
+
+再次复制会为每个表单创建第二个副本。是否继续?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>复制仍在运行。如果现在关闭,正在复制的表单可能会在目标中处于未完成状态。停止并关闭?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>复制正在进行</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>无法导出任何响应(请参阅日志)。</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>按标题或类型筛选</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>单个工作簿</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>将所有所选表单导出到单个 Excel 文件中,每个表单一个工作表。</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>电子邮件地址</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>租户 ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>库路径</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>其他值</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>为任何需要更改的值输入替换内容。留空的行不会更改;如果它们仍指向源,则会在报告中列出。</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>种类</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>在流中</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>替换为</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>ID 检查</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>不是表单 ID 或编辑页面链接</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>与源表单相同</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>此表单位于源租户,而不是目标租户</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>此表单所在的租户与源不同</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>来自从 {0} 到 {1} 的表单复制</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>来自较早的表单复制</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>加载映射…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>根据您之前保存的映射填入站点、列表、列、表单和其他值。</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>无法加载映射: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>已加载 {0}。与这些流匹配的值已填入;请在后续步骤中检查。</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>已加载 {0}。添加流包时将应用它。</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>已填入 {0} 个目标站点。请在下面检查,然后单击“下一步”。</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>每个站点都已有目标,因此未做任何更改。清除“目标”单元格即可让其重新填入。</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>快捷方式: 输入新租户的地址,例如 https://fabrikam.sharepoint.com,然后单击该按钮。每个尚无目标的站点都会得到该地址并保持与源相同的路径: https://contoso.sharepoint.com/sites/HR 会变为 https://fabrikam.sharepoint.com/sites/HR。OneDrive 站点 (contoso-my) 会转到新租户的 -my 地址。您已输入的目标不会被改动。这些站点必须已存在于新租户中;此工具不会创建它们。如果站点在那里的名称不同,请改为在“目标站点”单元格中输入其地址。</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>如果您将“目标站点”留空,则该站点保持不变: 流仍指向旧站点,其列表和列不会被匹配或重写,报告会将其列在“导入后待办事项”下。只有不迁移到新租户的站点才应这样做。</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>结果</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ 将迁移到目标</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ 不更改(无目标)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>站点 {0} 保持不变(未输入目标),因此流仍指向它,其列表也未被匹配。如果该站点不迁移则没有问题;否则请输入目标后重新运行。</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>暂无可显示的列: 没有匹配的列表,因此没有可比较的内容。请修复上面的列表,然后单击“重新匹配”。</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>没有需要映射的列,因此您在此无需执行任何操作。已匹配的列表没有流写入、筛选或以工具可见的方式读取的自定义列。底部的活动列表说明了每个列表的发现情况。</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>找到 {0} 列: {1} 列在目标上名称相同,{2} 列已重命名并匹配,{3} 列看起来相似,{4} 列无匹配。</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>请检查标记为“名称相似”的行,并为标记为“无匹配”的行选择一列。标记为“名称相同”或“在目标上已重命名”的行无需处理。</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>此处无需处理: 每一列都已匹配。请单击“下一步”。</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>更新后的包的名称</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>更新后的 .zip 文件的命名方式。使用 {name} 代表原始文件名: “{name} - Fabrikam”会将“Onboarding.zip”变为“Onboarding - Fabrikam.zip”。只有一个包时,您可以直接输入完整名称。保留为 {name} 则沿用原始名称。重复使用的名称会加上 (2)、(3)… 以免覆盖任何文件。</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>将写入: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>流只存储表单的 ID,因此打开此步骤时会从 Microsoft Forms 读取表单名称: 您流中每个表单的标题(源帐户)以及目标帐户中的表单。标题与某个目标表单完全一致的表单会自动匹配;否则请从下拉列表中选择新表单,或粘贴其 ID 或编辑页面链接。使用“重新加载表单名称”可再次读取。</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>从目标帐户加载表单…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>正在加载目标帐户的表单… 可能会要求您登录。</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>正在列出目标帐户 {0} 拥有的表单,以便您为每个流选择新表单。单击“取消”可停止等待登录。</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>目标: 在 {1} 中找到 {0} 个表单。每行选择一个,或粘贴 ID。</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>目标: 在 {0} 中未找到表单。下拉列表仅列出该帐户拥有的表单(不含组表单),因此请先使用“表单”工具复制表单,或粘贴 ID。</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>已取消。单击“加载表单名称”重试,或粘贴表单 ID。</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>目标: 无法加载表单: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(无)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(无标题表单)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>源表单</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>从目标的表单中选择</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>从目标帐户中选择一个表单。请先单击“从目标帐户加载表单”。</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>根据目标登录填入({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>您的源帐户,已替换为您的目标帐户</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>根据您的登录填入({0} → {1})。清除两个框可保持电子邮件域不变。</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>目标为空的站点保持不变: 流仍指向它,报告会列出它。</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ 已以 {0} 身份登录 · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>已以 {0} 身份登录。目标租户的 SharePoint 地址为 {1};空的目标站点已据此填入。</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ 流中的某些站点位于 {0},这是目标帐户自己的地址。要么这些包已经指向目标(例如此工具写入的包,或从目标导出的流),此时请改为添加来自源的原始导出;要么源和目标确实是同一个租户,此时请将应用切换到单租户模式(设置)。</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} 是此工具在 {1} 写入的包: 它已包含目标地址,因此没有需要迁移的内容。请改为添加来自源租户的原始导出(您“下载”文件夹中的文件,而不是输出文件夹中的文件)。</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ 这些流中的站点位于 {0},这是您的目标租户,但您的源是 {1}。如果这些包是从 {0} 导出的,请以该租户作为源登录(更改源…)。如果是此工具之前写入的,请将其删除并添加原始导出。</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>已登录。已根据 {1} 填入 {0} 个目标站点。请检查,然后单击“下一步”。</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>已登录。每个目标站点都已有值,因此未做更改。</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>登录未完成,或无法读取新租户的地址(请参阅“目标”行)。如果您已登录,请在下方输入新租户的地址以填充目标站点。</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — 已以 {1} 身份连接</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — 尚未登录</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>更改目标…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>未选择目标列表,因此这些流仍会指向不在目标上的列表。请选择目标列表,或先在目标站点上创建该列表。</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>流使用了列“{0}”,但目标列表“{1}”中没有对应的列。请在表中选择其目标列,或将该列添加到目标列表,然后单击“重新检查”。</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>目标列表“{0}”要求列“{1}”,但流“{2}”中的“创建项目”步骤“{3}”未设置它,因此导入会失败并提示“missing required property item/{1}”。请在下面输入其值,工具会将其添加到该步骤,或在目标列表上将“{1}”设为可选,然后单击“重新检查”。</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>目标列表“{0}”要求列“{1}”,但流“{2}”中的“创建项目”步骤“{3}”未设置它,因此导入会失败并提示“missing required property item/{1}”。请在 SharePoint 中将目标列表上的“{1}”设为可选,然后单击“重新检查”。</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>为这些必填列填入的值(添加到每个遗漏它们的“创建项目”步骤):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>这在导入时会失败。请修复后继续:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>重新检查</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>将失败 ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ 登录目标以继续。</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ 有 {0} 个包是由此工具写入的,已包含目标的值。请删除它们(列表中的 ✕),然后添加原始导出。</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ 有 {0} 个站点没有目标。保持原样的站点仍会指向源租户。</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ 有 {0} 个列表在导入时会失败。请修复标记为“将失败”的列表以继续。</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ 列表尚未匹配。请返回上一步再前进以重试。</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ 有 {0} 个表单需要有效的目标表单 ID 才能继续。</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>更改源…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>已以 {0} 身份登录。源租户的 SharePoint 地址为 {1}。</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>源连接已更改为 {0}。下面列出的站点必须位于此租户。</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>源登录未完成,或无法读取租户的地址(请参阅“源”行)。如果您已取消,将保留之前的源连接。</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ 某些站点从 {0} 读取,而这不是您作为源所连接的租户 ({1})。读取其列表将失败。请将这些行的“读取列表来源”编辑为您源租户上的地址,或单击“更改源…”并使用该租户的帐户登录。</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>流的站点位于 {0},但您作为源连接到的是 {1}。“读取列表来源”已填入 {1} 上的相同站点,因此工具会在那里读取列表名称和列。请检查这些站点是否存在(可编辑任意行),或者如果流确实来自 {0},请单击“更改源…”。</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>流使用的列表</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>单击列表可展开或折叠。需要查看的列表排在最前并已展开。</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>全部展开</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>全部折叠</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>使用者:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>源:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>目标列表</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>或粘贴其 ID 或链接:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>源列</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>类型</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>已使用</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>流未使用</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(无: 保持此列表不变)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ 未选择目标列表: 使用它的流仍指向源列表</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} 列待检查</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ 无需检查</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>此列表有 {0} 列;流使用了其中 {1} 列: {2} 列在目标上名称相同,{3} 列已重命名并匹配,{4} 列相似(请检查),{5} 列无匹配(请选择)。其他列仅供参考,不会更改。</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>此列表有 {0} 列;流没有以工具可见的方式使用其中任何一列,因此无需映射。</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>无法读取此列表的列(请参阅上面的说明和活动列表)。</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>请在上面选择目标列表,以查看其列并进行映射。</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>无法读取目标列表的列,因此无法给出匹配建议。</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>流中没有说明此列表位于哪个站点(它使用了参数),因此无法查找。请粘贴目标列表的 ID 或链接。</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>无目标列表: 此列表保持不变。</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>正在读取 {0} 的目标列表的列…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>列表“{0}”: 您选择了另一个目标列表。正在读取其在 {1} 上的列以重新匹配。</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — 已以 {1} 身份连接(主窗口的登录)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>读取列表来源(源)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>“流中的站点”是存储在流中的地址;它是将被替换的内容,因此无法编辑。“读取列表来源”是工具在源端读取每个列表名称和列的位置;它最初是相同的地址,因此当流的地址已过期、已重命名或与您的源连接位于不同租户时,请更改它。</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>这些流使用的内容</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} 个流,{2} 个步骤: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>由此工具重写</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>手动检查</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>仅连接</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>导入后待办事项</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>在目标环境中导入每个已修补的包并重新创建连接(连接从不会被复制)。</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}。</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>解决方案包: 仅重写了工作流定义。解决方案中的环境变量值和连接引用 (customizations.xml) 仍保留源的值;请在导入后设置它们。</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>流所有者和仅运行用户不属于包的一部分;请在导入后将流共享给合适的人员。</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>无更改(映射中没有内容匹配)。</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} 处替换</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>仍指向源的值(未映射,导入前请检查)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>正在连接到源站点 {0} 和目标站点 {1}。如果您尚未登录,将打开登录窗口。</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>已连接到 {0}(源)和 {1}(目标)。</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>正在读取目标站点 {0} 上的列表和库,以便按名称匹配每个列表并在下拉列表中提供。</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>在 {1} 上找到 {0} 个列表和库。</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>正在从源站点 {1} 读取列表 {0} 的名称和列。</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>列表“{0}”: 正在目标站点 {1} 上查找同名列表。</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>列表“{0}”: 已在目标上找到。正在读取目标列表的列以进行匹配。</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>列表“{0}”: 无法读取其列,或它没有列。此列表无需映射。</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>列表“{0}”: {1} 列,流没有以工具可见的方式使用其中任何一列。无需映射。</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>列表“{0}”: 流使用了 {1} 个列名: {2} 个在目标上名称相同(无需更改),{3} 个已重命名并匹配,{4} 个看起来相似(请检查),{5} 个无匹配(由您选择),{6} 个是内置列(无需映射)。</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>列表 {0} 不在源站点上,但它在目标站点上名为“{1}”: 流已指向目标。</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>站点“{0}”没有目标;其上的列表未被解析。</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>高级: 从其他地址读取列表</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>列映射: 从 {0} 到 {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>此列表没有可显示的列。</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>流未使用此列表的任何列。勾选“显示所有列”可查看它们。</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>无法读取源列表,且流未指明任何列,因此无需映射。</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>列表</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(无法在源上读取)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>读取来源:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>站点</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>此流已指向目标上的此列表。它使用的 {0} 个列名与目标的列对照显示;无需更改。</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(列表名称不可用)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>已在目标上</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>按流的列名映射</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>无法读取列</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>无目标列表</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>无需映射</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>就绪</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>目标列不可读取</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} 项待检查</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>被 {0} 个流使用</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>仍有 {0} 个列映射需要查看。</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>所有列映射均已确定。</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>连接不会在租户之间复制: 导入后请在 Power Automate 中重新创建。</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>电子邮件: {0} 上的每个地址都变为 {1}。</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{1} 个表单中有 {0} 个指向新表单。</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{1} 个列表中有 {0} 个具有目标列表。</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>列表尚未匹配。</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>电子邮件地址不会更改(未映射域)。</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>这些流未使用 Microsoft Forms。</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>这些流未使用特定列表。</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>这些流未指明任何 SharePoint 站点。</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>将写入 {0} 个包,包含 {1} 个流;原件不会更改。</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{1} 个站点中有 {0} 个将迁移到目标站点;其余保持原样。</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>清除自动填入的值</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>已填入</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>流中的表单</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>从(在您的流中)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>列表</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>站点</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>状态</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>到(目标)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>由您选择</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>保持不变</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(主窗口的登录)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>要迁移的源电子邮件域</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>迁移所有地址:从</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>到</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>要迁移到的电子邮件域</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…或将 .zip 文件(或文件夹)拖到此窗口上。</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>列表“{1}”上的列“{0}”在目标列表中没有匹配项。</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>{2} 上的列表“{0}”({1})没有目标列表,因此使用它的流仍指向源列表。</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(标题未知)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>转到步骤</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>有已保存的映射?加载它…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>自定义模式…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>保留原始名称</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>为每个名称添加“ - migrated”</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>打开报告,检查标记为待检查的内容。</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>在 Power Automate(目标租户)中: 我的流、导入、导入包(旧版),然后选择已写入的包。</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>在“相关资源”下,为每个连接单击“导入时选择”,并在目标租户中选择或创建一个。连接无法在租户之间迁移。</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>导入该流,保持关闭状态,打开它,修复它标记的任何问题,然后将其开启。</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>打开文件夹</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>打开 Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>该输出文件夹尚不存在;写入包时会创建它。</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>源</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>目标</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>找到 {0} 个流</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>未找到流</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>已由此工具写入</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>无法读取</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>准备写入?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>从列表中删除此包</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>流重写报告</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>这些流使用的内容({0} 项服务)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>有 {0} 个包无法写入。</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>已写入的包中有 {0} 个值仍指向源。请打开报告查看具体是哪些。</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>显示全部 {0} 列</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>仅显示流使用的列</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>这些列是什么意思?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>此列表的 ID 不在源站点上,但它是目标站点上的列表“{0}”: 流已指向目标,就像此工具已写入的包一样。</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>已连接</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>问题</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>未登录</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>正在等待登录…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} 个列表 · 全部就绪</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} 个列表 · {1} 个就绪 · {2} 个需要查看</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>耗时 {0}。</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>待检查</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>添加您从源租户导出的流包 (.zip)。添加后会立即扫描每个文件。</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>指明每个流迁移到哪个站点。登录目标后会自动填入新租户的地址。</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>流使用的每个列表都会匹配到目标上的列表,并映射其列。请检查任何标记为需要查看的内容。</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>将已复制的表单指向其新 ID,并决定电子邮件地址和租户 ID 如何更改。</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>检查下面的列表,选择保存更新后的包的位置,然后写入。</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>此处会发生什么</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>工具会在此计算机上读取每个包(不会向任何地方发送内容),以找出流使用的站点、列表、列和表单。请添加来自源的原始导出,而不是此工具之前写入的包: 它们已包含目标的地址。</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>列“{0}”在不同列表上的映射不同({1})。每个列表的步骤使用各自的映射;流中其他位置的表达式保留原名称,因此请检查它们。</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>重新加载表单名称…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>正在加载表单名称… 可能会要求您登录。</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>正在从源帐户 {0} 读取您流中表单的标题。单击“取消”可停止等待登录。</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>源: 已找到 {1} 个表单中 {0} 个的标题 ({2})。</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>源: 无法读取表单标题: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>有 {0} 个表单已匹配到同名的目标表单。</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>看起来是有效的表单 ID</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>按名称匹配</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>源和目标位于同一租户 ({0})。请将应用切换到单租户模式(设置),或使用来自不同租户的帐户登录源和目标。</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>删除这些包</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>已删除 {0} 个已指向目标的包: {1}。请改为添加来自源租户的原始导出。</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>这些包已删除。请添加来自源租户的原始导出。</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>每个包都会作为新的 .zip 保存在输出文件夹中;原件不会更改。要重命名某个包,请在“另存为”中输入不同的名称。</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>保留原始名称</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>为每个名称添加“ - migrated”</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>原始包</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>另存为</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>将保存为: {0}(您可以在下面更改名称)。</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>无法读取;未写入输出</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>已取消。未做任何更改。在“站点”步骤中使用“登录”重试(例如在另一个浏览器中);在“列表”步骤中使用“重新匹配”。</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>正在取消… 登录窗口可能需要一点时间才能关闭。</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>工具正在执行的操作</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>连接</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>多租户: 为了匹配列表,工具会从源租户读取每个列表的名称和列,并在目标租户中查找相同的列表。这需要分别登录两者。您可以在此登录每一端,或直接单击“下一步”,届时会提示您。将打开浏览器窗口;如果浏览器不对,请单击“取消”并重试。不会更改任何一个租户中的任何内容。</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>单租户: 源和目标是同一个租户,因此工具使用您在“连接”步骤中登录的帐户。无需再登录其他任何内容。不会更改租户中的任何内容。</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>源</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>目标</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>登录源…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>登录目标…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>取消</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>停止等待登录窗口,以便您重试,例如在另一个浏览器中。</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>尚未登录</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>使用主窗口的登录: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ 已以 {0} 身份登录</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ 已就绪</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>正在等待登录… 应会打开浏览器窗口</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>登录已取消。单击“登录”重试。</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>已登录。请检查下面的目标站点,然后单击“下一步”。</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>尚无可登录的源站点。请先添加流包。</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>请先至少输入一个目标站点(或使用“填充”,保留路径);登录将转到目标站点所在的租户。</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>正在登录源… 将打开浏览器窗口。</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>正在登录目标… 将打开浏览器窗口。</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>源</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>目标</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>正在登录源租户。将打开浏览器窗口;单击“取消”可停止等待(例如改用其他浏览器)。登录同时也会告知工具源是哪个租户。</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>正在登录目标租户。将打开浏览器窗口;单击“取消”可停止等待(例如改用其他浏览器)。登录同时也会告知工具新租户的 SharePoint 地址。</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>已连接到{0}。</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>您已取消登录。</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>正在此计算机上读取 {0} 个包文件,以找出流使用的站点、列表、列和表单。不会向任何地方发送内容。</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>已读取 {0}: {1} 个流。</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>正在匹配 {0} 个列表: 对于每个列表,工具会向源站点询问其名称,然后在目标站点上查找该名称的列表。</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>匹配完成。{0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>正在将 {0} 个已修补的包写入 {1}。原件不会更改。</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>正在写入 {0},并应用您的映射。</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>正在检查 {0} 中仍指向源的值。</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>您已取消。未做任何更改。</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>已停止: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>每个流都存储了它所读取或写入的 SharePoint 站点的地址。要在新租户中运行,每个流都必须指向那里相应的站点,因此请告知工具哪个新站点替换哪个旧站点。这只会编辑您的包的副本;在您单击“下一步”之前不会查找任何内容。</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>此处会发生什么: 对于流使用的每个列表,工具会从源站点读取该列表的名称和列,在目标站点上查找同名列表,并读取该列表的列以进行匹配。原因: 流通过 ID 或内部名称引用列表和列,而它们在新租户中是不同的,因此工具会找到对应项。此步骤只读取;不会在任何一个租户中创建或更改任何内容。您可以在其卡片上更改目标列表和任何列。</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>已复制的表单会获得新的 ID,因此使用它的流必须指向副本。流中的电子邮件地址和租户 ID 也可能需要为新组织而更改。此处不会查找任何内容;由您决定替换内容,留空的内容保持原样。</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>工具会将应用了您的映射的新 .zip 文件写入输出文件夹,重新扫描它们以找出仍指向源的内容,并写入一份报告。您的原始包不会被更改,也不会向任何租户发送任何内容。之后由您自己在 Power Automate 中导入新包。</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>登录已取消。请单击按钮重试,例如在另一个浏览器中。</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>取消</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>错误: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>无法读取源表单({0})。</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>无法在目标中创建表单({0})。{1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>中途已取消。目标中遗留了一个不完整的表单;请在 Microsoft Forms 中删除它。</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>复制中途停止({0})。目标中遗留了一个不完整的表单;请在 Microsoft Forms 中删除它。</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>背景图片</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>徽标</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>页眉图片</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>{0}未被复制(暂不支持图片)。</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>测验评分(正确答案和分值)未经验证;请检查副本。</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>无法复制设置“{0}”({1})。</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>问题“{0}”未被复制({1})。{2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(无标题)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>无法复制分支规则({0});请检查副本。</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>副本已创建,但无法在 Microsoft Forms 中使其可见({0});它可能在回收站中。</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>副本有 {0} 个问题,但源有 {1} 个。</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>问题“{0}”({1})已创建,但无法复制其选项({2})。</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>结果</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>源表单</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>源表单 ID</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>副本标题</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>副本表单 ID</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>状态</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>已复制的问题</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>源中的问题</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>警告</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>备注</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>错误</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Excel 工作簿 (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>JSON 文件 (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>ID</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>开始时间</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>完成时间</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>答复者</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>名称</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>分数</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>未映射的答案(原始 JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (已截断: 对 Excel 单元格而言太长)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>停止运行?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>比较或验证仍在运行。关闭此窗口将停止它,并且不会写入报告。仍要关闭?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>工作中关闭?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>工具仍在工作(扫描、匹配、登录或写入包)。现在关闭将停止它。仍要关闭?</value></data>
 </root>

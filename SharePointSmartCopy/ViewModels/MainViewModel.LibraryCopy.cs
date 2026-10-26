@@ -95,7 +95,7 @@ public partial class MainViewModel : ObservableObject
                     {
                         try
                         {
-                            var srcHasUnique = await SpService.GetHasUniqueRoleAssignmentsAsync(
+                            var srcHasUnique = await SpService.TryGetHasUniqueRoleAssignmentsAsync(
                                 SourceUrl.TrimEnd('/'), $"web/lists('{srcListId}')", _copyCts.Token);
                             var perm = await _permissionCopyService.CopyObjectPermissionsAsync(
                                 SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'),
@@ -413,7 +413,7 @@ public partial class MainViewModel : ObservableObject
                         try
                         {
                             var newListId = await SpService.GetListIdByServerRelativeUrlAsync(TargetUrl.TrimEnd('/'), newServerRelUrl);
-                            var srcHasUnique = await SpService.GetHasUniqueRoleAssignmentsAsync(
+                            var srcHasUnique = await SpService.TryGetHasUniqueRoleAssignmentsAsync(
                                 SourceUrl.TrimEnd('/'), $"web/lists('{def.SourceListId}')", _copyCts.Token);
                             var perm = await _permissionCopyService.CopyObjectPermissionsAsync(
                                 SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'),
@@ -694,7 +694,7 @@ public partial class MainViewModel : ObservableObject
                     {
                         try
                         {
-                            var srcHasUnique = await SpService.GetHasUniqueRoleAssignmentsAsync(
+                            var srcHasUnique = await SpService.TryGetHasUniqueRoleAssignmentsAsync(
                                 SourceUrl.TrimEnd('/'), $"web/lists('{def.SourceListId}')", _copyCts.Token);
                             var perm = await _permissionCopyService.CopyObjectPermissionsAsync(
                                 SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'),

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>نجح ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>فشل ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>تم التخطي ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>محدّث</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>تعذّرت قراءة ما إذا كان للمصدر أذونات خاصة به (تقييد أو خطأ في الوصول) — لم يتم نسخ الأذونات لهذا العنصر. أعد التشغيل لإعادة المحاولة.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>تمت إزالة ملف الهدف الموجود من أجل الاستبدال، لكن تعذّر تحميل النسخة الجديدة ({0}). الملف مفقود حاليًا من الهدف — أعد تشغيل النسخ لاستعادته.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>فشلت مكتبة هدف ({0}). تم وضع علامة فشل على ملفاتها؛ وتستمر المكتبات الأخرى.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: تغيّر ملف المصدر أثناء تنزيله — جارٍ إعادة التنزيل من البداية.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>لم يُبلغ SharePoint عن أي تقدم في هذا الاستيراد لمدة {0} دقيقة، لذا تم التخلي عنه. تم وضع علامة فشل على ملفاته؛ أعد تشغيل النسخ لإعادة محاولتها.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>مستأجر واحد</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>عدة مستأجرين</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>النسخ بين مستأجرَي Microsoft 365 مختلفين. تسجّل الدخول بشكل منفصل إلى المصدر وإلى الهدف. اختر تسجيل تطبيق الهدف في الإعدادات.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>تسجيل الهدف:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>وضع عدة مستأجرين: تسجيل التطبيق المستخدم لتسجيل الدخول إلى مستأجر الهدف. يعيد &quot;مثل المصدر&quot; استخدام تسجيل المصدر، ويجب حينها أن يكون تطبيقًا متعدد المستأجرين.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>استئناف / تشغيل مرة أخرى</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>يعيد الاتصال ويعيد تشغيل هذا التحديد مع خيار النسخ إذا كان أحدث، بحيث يتم تخطي الملفات التي سبق نسخها ونقل ما هو مفقود أو متغيّر فقط.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>لا يحتوي هذا التشغيل على تحديد محفوظ للاستئناف (تسجّل ذلك عمليات تحديد الملفات فقط).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>هناك عملية نسخ قيد التشغيل بالفعل. أنهِها أو ألغِها أولاً.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>تعذّر الاستئناف: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>تمت استعادة {0} من عمليات التشغيل المقاطعة. راجع السجل.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>جارٍ الاستئناف: تمت استعادة {0} عنصر من التشغيل السابق، مع تحديد النسخ إذا كان أحدث. راجع الخيارات ثم انقر فوق التالي. (لا تتم استعادة تعيينات الأعمدة المخصصة.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>تمت المقاطعة — أُغلق التطبيق قبل انتهاء هذا التشغيل. من بين العناصر التي انتهت: {0} نجحت، {1} فشلت، {2} تم تخطيها، {3} أُلغيت  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>تصدير التشخيصات…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>يحفظ ملف zip يحتوي على السجلات الحديثة ومعلومات النظام وإعداداتك بعد إزالة تفاصيل المؤسسة — لإرفاقه بتقرير الأخطاء. لا يتضمن تقارير النسخ أو أسماء الملفات.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>تم حفظ التشخيصات في {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>تعذّر حفظ التشخيصات: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>المحتوى متطابق (تختلف فقط الأجزاء التي يديرها SharePoint)، لكن لم يتم الحفاظ على تاريخ التعديل.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>لم يتم نسخ الأذونات: تعذّر تحديد معرّفات SharePoint الخاصة بالعنصر.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>لم يتم نسخ الأذونات: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>المجلد &quot;{0}&quot;: لم يتم تطبيق {1} — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>واجهت مجلدات أخرى مشاكل مماثلة لما سبق؛ ولا يتم سرد المجلدات اللاحقة بشكل فردي.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>الأذونات</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>التواريخ</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>المؤلف / المحرر</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> (تم الإبقاء على {0} — الهدف محدّث بالفعل)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>تحذير: فشلت قراءة البيانات الوصفية من المصدر ({0}): {1}. قد يتم نسخ العناصر منه بدون قيم الأعمدة المخصصة أو الأذونات الفريدة. أعد التشغيل بعد زوال المشكلة (يعيد الاستبدال أو &quot;إذا كان أحدث&quot; تطبيقها).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>تحذير: تعذّر العثور على قائمة المصدر الخاصة بمكتبة، لذا لن يتم نسخ أذوناتها.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>مضيف SharePoint &apos;{0}&apos; غير مرتبط بمستأجر متصل. أعد الاتصال بموقعي المصدر والهدف وحاول مرة أخرى.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>النسخ بين المستأجرين: لا يتم نسخ قيم أعمدة البيانات الوصفية المُدارة (التصنيف)، ولا يمكن بعد نسخ دفاتر OneNote / مجموعات المستندات بين المستأجرين. يتم تعيين الهويات باستخدام إعدادات تعيين الهوية؛ ويتم تخطي أي شخص يتعذّر العثور عليه في الهدف.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>تعيين الهوية</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>تعيين الهوية…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>اذكر كل شخص (أو مجموعة) في مستأجر المصدر ومن يكون في مستأجر الهدف — فهما حسابان مختلفان. تتم كتابة المؤلفين والمحررين وأعمدة الأشخاص والأذونات باستخدام هذا الجدول. يتم مطابقة أي شخص غير مدرج بتبديل النطاق إن حددت واحدًا؛ ويتم تخطي أي شخص لا يزال يتعذّر العثور عليه في الهدف والإبلاغ عنه.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>نطاق البريد الإلكتروني للمصدر</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>نطاق البريد الإلكتروني للهدف</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>التجاوزات — زوج &quot;المصدر,الهدف&quot; واحد في كل سطر (أسماء المستخدمين أو المجموعات؛ # يبدأ تعليقًا)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>مثل المصدر</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>المصدر والهدف على المستأجر نفسه. انتقل إلى وضع المستأجر الواحد لعمليات النسخ داخل المستأجر نفسه.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>النسخ الأصلي للمجلدات (دفاتر OneNote، مجموعات المستندات) غير مدعوم بين المستأجرين بعد.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>المحرك &apos;{0}&apos; غير مرتبط بمستأجر متصل. أعد الاتصال بموقعي المصدر والهدف وحاول مرة أخرى.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>لم يتم إعداد أي تسجيل تطبيق بعد. افتح الإعدادات وأضف تسجيل تطبيق Azure (معرّف التطبيق/العميل) قبل الاتصال.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>تم إلغاء تسجيل الدخول. انقر فوق اتصال للمحاولة مرة أخرى.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>لم يوافق مسؤول على هذا التطبيق في هذا المستأجر بعد. اطلب من مسؤول عام منح موافقة المسؤول لتسجيل التطبيق (راجع الإعداد في دليل المستخدم).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>لم يتم العثور على تسجيل التطبيق في هذا المستأجر. تحقق من معرّف العميل ومعرّف المستأجر في الإعدادات.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>تعذّر العثور على ذلك المستأجر. تحقق من معرّف المستأجر في الإعدادات (استخدم نطاقك أو GUID للمستأجر أو &apos;common&apos;).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>تسجيل التطبيق يفتقد عنوان إعادة التوجيه الذي يستخدمه هذا التطبيق. في Azure، أضف URI إعادة التوجيه http://localhost ضمن &apos;تطبيقات الجوال وسطح المكتب&apos;.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>تسجيل التطبيق غير مُعدّ لتسجيل الدخول من سطح المكتب. في Azure، فعّل &apos;السماح بتدفقات العميل العام&apos; للتسجيل.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>لا يُسمح لهذا الحساب باستخدام تسجيل التطبيق ذلك. سجّل الدخول بحساب من المستأجر الذي يملكه، أو اختر تسجيلاً مختلفًا في الإعدادات.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>رفض SharePoint تسجيل الدخول. انقر فوق اتصال لتسجيل الدخول مرة أخرى.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>ليس لديك حق الوصول إلى هذا الموقع. تأكد من أن حسابك يستطيع فتحه في المتصفح، وأنه تم منح التطبيق الإذن Sites.ReadWrite.All.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>تعذّر العثور على ذلك الموقع. تحقق من العنوان — يجب أن يبدو مثل https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(التفاصيل: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>اتصل بموقع المصدر للمتابعة.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>حدد عنصرًا واحدًا على الأقل (ضع علامة في خانة اختيار) للمتابعة.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>اتصل بالموقع الهدف للمتابعة.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>اختر مجلد الوجهة للمتابعة.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>اختر قائمة الوجهة للمتابعة.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>أدخل اسمًا للقائمة الجديدة للمتابعة.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>لم يتم تحديد أي شيء للنسخ.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>في انتظار انتهاء النسخ…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>المصدر: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>الهدف: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>تغيّر تسجيل التطبيق، لذا تم تسجيل خروجك من الموقعين. اتصل مرة أخرى للمتابعة.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>إيقاف النسخ؟</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>عملية نسخ قيد التنفيذ. إيقافها الآن يترك العناصر المتبقية دون نسخ (يمكنك الاستئناف لاحقًا من السجل). هل تريد إيقاف النسخ؟</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>لا تزال عملية نسخ قيد التشغيل. سيؤدي إغلاق التطبيق إلى إيقافها وترك العناصر المتبقية دون نسخ (يمكنك الاستئناف لاحقًا من السجل). هل تريد الإغلاق على أي حال؟</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>تبديل وضع الاتصال؟</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>التبديل بين المستأجر الواحد وعدة مستأجرين يقطع الاتصال بالموقعين، وستحتاج إلى الاتصال مرة أخرى. هل تريد التبديل على أي حال؟</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>الاتصال:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>تسجيل تطبيق المصدر</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>تسجيل تطبيق الهدف</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>يسجّل الدخول إلى مستأجر الهدف باستخدام:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>تغيير</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>فتح الإعدادات</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• يجب أن تملك حق القراءة على مجموعة مواقع المصدر.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• أعدّ تسجيل تطبيق Microsoft Entra ID في الإعدادات قبل الاتصال.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>خيارات الملفات</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>خيارات المكتبة والملفات</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>جارٍ نسخ الملفات…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>جارٍ نسخ المكتبات…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>التالي</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>بدء النسخ</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>عرض التقرير</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>أدخل اسم القائمة الجديدة المراد إنشاؤها</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>تم اختيار قائمة الوجهة في خطوة الهدف. ارجع لتغييرها.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>أعدّ تسجيل تطبيق أولاً</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>يسجّل Smart Copy الدخول باستخدام تسجيل تطبيق تنشئه في مستأجر Microsoft Entra ID (Azure) الخاص بك. افتح الإعدادات وأضف معرّف التطبيق (العميل) لتسجيلك، ثم عد إلى هنا للاتصال.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>مزيد من المعلومات</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>اسحب لجعل موجز النشاط أطول أو أقصر</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>انقر لإظهار العناصر الفاشلة فقط</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>انقر لإظهار العناصر التي تم تخطيها فقط</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>تعيين الأعمدة</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>مقارنة المصدر والهدف</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>افتح أداة المقارنة للتحقق من هذه النسخة مقابل المصدر.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>فتح السجل</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>يُستخدم التسجيل المحدد للمصدر — ولكلا الجانبين في وضع المستأجر الواحد.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>تسجيل جديد</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>أضف تسجيل تطبيق واحدًا على الأقل.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>التحقق</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>معرّف العميل مطلوب للتسجيل المحدد.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>تم تسجيل الخروج. ستُطالَب بتسجيل الدخول عند الاتصال التالي.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>تم تسجيل الخروج</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>فشل تسجيل الخروج: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>تسجيل الخروج</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>تم العثور على {0} تعيين.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>تعذّرت قراءة {0} سطر (السطر {1}). يجب أن يبدو كل سطر مثل المصدر,الهدف.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>نطاقا المصدر والهدف متطابقان، لذا لن يغيّر تبديل النطاق شيئًا.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>استيراد CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>تعذّرت قراءة بعض أسطر التجاوز (السطر {0}). يجب أن يكون كل سطر &quot;المصدر,الهدف&quot;. أصلحها أو أزلها — أو ابدأ السطر بـ # ليصبح تعليقًا.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>تعذّر حفظ تعيين الهوية: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>تعذّرت قراءة ذلك الملف: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>بين المستأجرين: لم يتم العثور على {0} من حسابات المؤلف/المحرر في هذه المكتبة في مستأجر الهدف وسيتم تركها كحساب النسخ. بعد التشغيل، استخدم &quot;تعيين هؤلاء المستخدمين&quot; في التقرير لإصلاحها.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>أدخل مستخدم المصدر أو مجموعته.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>أدخل من يكون هذا في مستأجر الهدف — أو أزل الصف.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>المصدر والهدف متطابقان.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>يظهر هذا المصدر أكثر من مرة.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>المصدر (هذا المستأجر)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>الهدف (المستأجر الآخر)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>النوع</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>في الهدف؟</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>مطلوب لـ</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>مستخدم</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>مجموعة</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>لم يتم الفحص</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>جارٍ الفحص…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ تم العثور عليه</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ لم يتم العثور عليه</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>إضافة</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>إزالة</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>ملء الأهداف من تبديل النطاق</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>للصفوف التي لا هدف لها بعد، يملأ العنوان الذي كان سينتجه تبديل النطاق.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>الفحص في الهدف</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>يبحث عن كل مستخدم هدف في مستأجر الهدف. يضيفه ذلك أيضًا إلى قائمة مستخدمي موقع الهدف، وهو ما يفعله النسخ على أي حال قبل أن يتمكن من تعيينهم كمؤلف أو منحهم حق الوصول.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>اتصل بهدف متعدد المستأجرين أولاً: أدخل عنوان URL لموقع الهدف في خطوة الهدف، ثم أعد فتح هذا الحوار.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>تصدير CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>كان النسخ بحاجة إلى هؤلاء الأشخاص لكن تعذّر العثور عليهم في مستأجر الهدف. أدخل لكل منهم من يكون في الهدف — أو أزل الصف لتركه دون تعيين.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} تعيين.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} صف يحتاج إلى انتباه.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>تم الفحص: تم العثور على {0}، ولم يتم العثور على {1}{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>، تعذّر فحص {0}</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>جارٍ فحص {0} من {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>لا شيء للفحص: لا يوجد صف له عنوان بريد إلكتروني للهدف.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>تحتاج بعض الصفوف إلى انتباه (مميّزة). أصلحها أو أزلها ثم احفظ.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>تم حفظ التعيين. لتطبيقه على الملفات التي سبق نسخها، شغّل مرة أخرى مع الاستبدال — النسخ إذا كان أحدث يتخطى الملفات المحدّثة، لذا لا يتم تغيير مؤلفيها. يتم تحديث الأذونات في الحالتين.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>تعذّر العثور على {0} من الأشخاص من المصدر في مستأجر الهدف، لذا تم استبعادهم: لم يُمنحوا حق الوصول، ولم يُعيَّنوا كمؤلف أو محرر، أو تم حذفهم من أعمدة الأشخاص.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>تعيين هؤلاء المستخدمين…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>تعيين المستخدمين غير المحلولين…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>يفتح تعيين الهوية مع الأشخاص الذين تعذّر على هذا التشغيل العثور عليهم في الهدف.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>لم يكن في هذا التشغيل أي مستخدمين غير محلولين.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>نسخ النماذج</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>انسخ نماذج Microsoft Forms إلى حساب الهدف مع الاحتفاظ بجميع الأسئلة والتفرع والإعدادات والسمة. يمكن تصدير الردود إلى Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>يستخدم هذا واجهة Microsoft Forms البرمجية للويب، التي لا توثقها Microsoft ولا تدعمها. تعمل اليوم لكنها قد تتغير دون إشعار. جرّب بضعة نماذج أولاً.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>تحميل نماذجي</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>حساب المصدر: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>حساب الهدف: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>الهدف: الحساب نفسه (مستأجر واحد). تُنشأ النسخ بجانب الأصول.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(ستُطالَب بتسجيل الدخول)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>خريطة معرّفات النماذج (تستخدمها أداة التدفقات): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>جارٍ تحميل النماذج…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>تم تحميل {0} نموذج.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>حدد نموذجًا واحدًا على الأقل أولاً.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>جارٍ نسخ النماذج…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>جارٍ النسخ…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>تم النسخ</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>فشل (راجع السجل)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>جارٍ نسخ &apos;{0}&apos;</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>انتهى النسخ: تم نسخ {0}، وفشل {1}.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>اختر مجلدًا لتصدير الردود</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>جارٍ تصدير الردود…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>تم تصدير &apos;{0}&apos;: {1} ردًا إلى {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>تم تصدير ردود {0} نموذج إلى {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>تم نسخ النموذج، لكن تعذّر حفظ معرّفه لأداة التدفقات: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>تعذّر تصدير &apos;{0}&apos;: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>تم تصدير ردود {0} نموذج إلى {2}؛ وفشل {1} (راجع السجل).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>تم الإلغاء.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>خطأ: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>تلميح: يحتاج تسجيل التطبيق إلى إذن Microsoft Forms المفوّض، مع الموافقة. أضفه ضمن أذونات API (راجع دليل المستخدم) ثم حاول مرة أخرى.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>تلميح: رفض Microsoft Forms الطلب. تأكد من أن هذا الحساب يستطيع فتح forms.office.com وأن تسجيل التطبيق يملك إذن Microsoft Forms.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>تم تحديد {0} من {1}</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>العنوان</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>النوع</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>آخر تعديل</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>النتيجة</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>الإضافة إلى عناوين النسخ:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (نسخة)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>نسخ النماذج المحددة</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>تصدير الردود…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>التحقق من نسخة مقابل مصدرها</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>أدوات أخرى</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>النماذج</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>نسخ Microsoft Forms وتصدير ردودها</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>أداة النماذج</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>إعادة كتابة التدفقات للهدف</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>حدّث حزم Power Automate المصدّرة (.zip) لتشير إلى الهدف: المواقع والقوائم والأعمدة والنماذج المنسوخة ونطاقات البريد الإلكتروني. لا يتم تغيير حزمك الأصلية أبدًا.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. اختر حزم التدفقات المصدّرة</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>أضف حزم التدفقات (.zip) التي صدّرتها من Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>إضافة ملفات…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>إضافة مجلد…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>فحص</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>حزم التدفقات (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>أضف حزمة تدفق واحدة على الأقل أولاً.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>جارٍ فحص الحزم…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>تم تخطي {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>تم العثور على {0} تدفق. وهي تشير إلى {1} موقع و{2} قائمة و{3} نموذج.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>اكتمل الفحص.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. تعيين المواقع</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>المكان الذي ينتقل إليه موقع SharePoint الخاص بكل تدفق. في وضع عدة مستأجرين، سجّل الدخول إلى الهدف ويتم ملء عنوان المستأجر الجديد لك؛ غيّر أي صف يحمل موقعه اسمًا مختلفًا. في وضع المستأجر الواحد، اكتب موقع الهدف لكل صف.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>الموقع في التدفقات (يُستبدل)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>الموقع الهدف</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>عنوان المستأجر الجديد:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>ملء الأهداف الفارغة مع الاحتفاظ بالمسارات</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>أدخل عنوان URL كاملاً مثل https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>تم ملء الأهداف الفارغة باستخدام ذلك المضيف ومسار كل موقع.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. مطابقة القوائم والأعمدة</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>بطاقة واحدة لكل قائمة تستخدمها التدفقات، مهما كان عدد التدفقات التي تستخدمها. تعرض كل بطاقة اسم القائمة وأعمدتها، والقائمة المقابلة لها في الهدف (التي لها الاسم نفسه افتراضيًا؛ اختر قائمة أخرى من القائمة المنسدلة إذا اختلف الاسم)، وكيفية تعيين كل عمود. افحص البطاقات المميّزة بتحذير.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>مطابقة القوائم والأعمدة</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>القائمة</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>معرّف قائمة المصدر</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>معرّف قائمة الهدف</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>عمود المصدر</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>عمود الهدف</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>افحص الحزم أولاً.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>أدخل موقع هدف واحدًا على الأقل أولاً.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>جارٍ مطابقة القوائم والأعمدة…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(لم يتم العثور عليه)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>تم العثور على قائمة بالاسم نفسه في الهدف</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>الموقع الموجودة عليه هذه القائمة ليس له موقع هدف (خطوة المواقع)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>تعذّرت قراءة هذه القائمة في موقع المصدر: قد لا تكون موجودة، أو قد يفتقر هذا الحساب إلى حق الوصول، أو الموقع على مستأجر مختلف عن اتصال المصدر لديك</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>لا توجد قائمة بهذا الاسم في موقع الهدف: اختر واحدة من القائمة المنسدلة</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>الاسم نفسه</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>أُعيد تسميته في الهدف</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>لا توجد مطابقة: اختر عمودًا</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} من {1} قائمة لها قائمة هدف. {2} عمود للفحص.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. النماذج والبريد الإلكتروني</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>تُملأ النماذج المنسوخة بأداة النماذج تلقائيًا. بالنسبة لنموذج أنشأته بنفسك، الصق معرّفه أو رابط صفحة تحريره.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>معرّف نموذج المصدر</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>معرّف النموذج (يُملأ من القائمة المنسدلة، أو الصق واحدًا)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>نقل نطاق البريد الإلكتروني:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. كتابة الحزم المحدّثة</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>اختر مجلد إخراج (وليس المجلد الذي يحتوي على الأصول). تُحفظ هناك الحزم المحدّثة وتقرير يسرد كل تغيير.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>كتابة الحزم المحدّثة</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>حفظ التعيين…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>فتح مجلد الإخراج</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>لا يمكن نقل الاتصالات بين المستأجرين. بعد استيراد حزمة، أعد إنشاء كل اتصال في Power Automate وأعد تحديده.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>اختر مجلد إخراج أولاً.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>جارٍ كتابة الحزم المحدّثة…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>احفظ النسخة المحدّثة من {0} (الحزمة {1} من {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>حزمة Power Automate (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>لقد اخترت اسم الملف هذا بالفعل لحزمة أخرى. اختر اسمًا مختلفًا.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>ستُحفظ حزمة فوق أصل (المجلد نفسه والاسم نفسه). اختر مجلد إخراج مختلفًا، أو غيّر اسمها في &quot;حفظ باسم&quot;، لتبقى الأصول دون مساس.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># تقرير إعادة كتابة التدفقات
+
+الحزم الأصلية لم تُمس. لا يتم ترحيل الاتصالات؛ أعد إنشاءها وحدّدها عند الاستيراد.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>تمت كتابة التقرير في {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>تمت كتابة {0} حزمة، {1} استبدال. لا تزال {2} قيمة تشير إلى المصدر (راجع التقرير).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>تم حفظ التعيين في {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>التدفقات</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>تحديث تدفقات Power Automate المصدّرة للهدف</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>أداة التدفقات</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>ما تستخدمه هذه التدفقات</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>الخدمات الموجودة في التدفقات التي تم فحصها، وما تفعله هذه الأداة تجاه كل منها.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>الخدمة</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>التدفقات</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>الخطوات</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>تم العثور عليه</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>ما تفعله هذه الأداة</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>تعيد كتابة ما تجده</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>يتم الإبلاغ عن المعرّفات؛ راجعها بعد الاستيراد</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>اتصال فقط (أعد إنشاءه)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>تعيين الأعمدة</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>يظهر العمود هنا عندما يكتب إليه تدفق أو يرشّح أو يرتّب بحسبه أو يقرأه في تعبير، في قائمة تمت مطابقتها. يُختار عمود الهدف بالمطابقة التلقائية (الاسم نفسه، ثم اسم العرض نفسه، ثم اسم مشابه). تحتاج فقط إلى التصرف في الصفوف المميّزة بـ &quot;اسم مشابه&quot; أو &quot;لا توجد مطابقة&quot;؛ غيّر أي صف من قائمته المنسدلة، أو اختر &quot;(ترك دون تغيير)&quot; للاحتفاظ باسم المصدر. لا تُسرد الأعمدة المضمّنة مثل Title لأنها موجودة في كل مكان.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(ترك دون تغيير)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>اسم مشابه: يرجى الفحص</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(لم تتم المطابقة بعد)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>قائمة الهدف التي اخترتها</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>اكتب أو الصق معرّف قائمة الهدف، أو رابط صفحة إعدادات القائمة، في عمود معرّف قائمة الهدف لاختيار قائمة بنفسك (مثلاً عندما يختلف الاسم). ثم انقر فوق &quot;مطابقة مرة أخرى&quot; لمطابقة أعمدتها.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>تعذّر العثور على معرّف قائمة في &apos;{0}&apos;. الصق GUID أو رابط صفحة إعدادات القائمة.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>تعذّر العثور على معرّف نموذج في &apos;{0}&apos;. الصق معرّف النموذج أو رابط صفحة تحريره.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>النماذج</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>الهدف</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>نسخ</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>النتائج</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>اختر النماذج المراد نسخها</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>إعادة تحميل النماذج</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>انقر فوق &quot;تحميل نماذجي&quot; لعرض نماذجك.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>لم يتم العثور على نماذج في هذا الحساب.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>نسخ {0} نموذج</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>نسخ مزيد من النماذج</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>اختر مكان النسخ</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>مستأجر واحد: تُنشأ النسخ في الحساب نفسه الذي تستخدمه، بجانب الأصول.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>عدة مستأجرين: تُنشأ النسخ في حساب الهدف. سجّل الدخول إليه هنا؛ وهذا منفصل عن تسجيل الدخول الذي استخدمته لمواقع SharePoint.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>حساب الهدف</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>يسجّل الدخول بتسجيل التطبيق: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>يسجّل الدخول بتسجيل تطبيق الهدف الخاص بك (يُعيَّن في الإعدادات).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>تسجيل الدخول إلى حساب الهدف</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>تسجيل الدخول مرة أخرى</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>جارٍ تسجيل الدخول إلى حساب الهدف… قد تفتح نافذة متصفح.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>تم الاتصال باسم {0}. تم تأكيد الوصول إلى Microsoft Forms ({1} نموذج موجود بالفعل في هذا الحساب).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>تعذّر الاتصال بحساب الهدف: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>حساب الهدف غير متصل بعد.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>جاهز. انقر فوق زر النسخ للبدء.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>جاهز: ستُنشأ النسخ في {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>سجّل الدخول إلى حساب الهدف للمتابعة.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>الخيارات</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>سيتم نسخ {0} نموذج من {1} إلى {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>حساب المصدر</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>حساب الهدف</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>جارٍ نسخ النماذج</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>جارٍ البدء…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>النموذج {0} من {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>جارٍ الإلغاء بعد النموذج الحالي…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>انتهى النسخ: تم نسخ جميع النماذج ({0})</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>نسخك موجودة في {0}. افتح Microsoft Forms لعرضها، أو استخدم الجدول أدناه.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>انتهى النسخ: تم نسخ {0} من {1} نموذج، وبعضها يحتاج إلى انتباه</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>النسخ موجودة في {0}. النماذج المميّزة بتحذير نُسخت مع مشاكل، ولم تُنشأ النماذج الفاشلة. راجع عمود التفاصيل.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>انتهى النسخ، لكن لم يتم نسخ أي نموذج</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>راجع عمود التفاصيل لمعرفة السبب. من الأسباب الشائعة غياب إذن Microsoft Forms في تسجيل الهدف، أو حساب بلا وصول إلى Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>تم إلغاء النسخ بعد {0} من {1} نموذج</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>النماذج المدرجة أدناه اكتملت. النموذج الذي كان قيد النسخ عند الإلغاء لم يكتمل وهو غير مرئي.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>تم النسخ</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>مع تحذيرات</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>فشل</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>الأسئلة</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>نموذج المصدر</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>النسخة</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>الأسئلة</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>التفاصيل</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>تم النسخ</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>تم النسخ مع تحذيرات</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>فشل</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>فتح النسخة المحددة</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>فتح Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>تصدير النتائج…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>عرض خريطة معرّفات النماذج</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>حدد نموذجًا منسوخًا في الجدول أولاً.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>تم حفظ النتائج في {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>تلميح: لا يملك تسجيل التطبيق عنوان إعادة توجيه مطابقًا. في Entra، ضمن المصادقة، أضف النظام الأساسي &quot;تطبيقات الجوال وسطح المكتب&quot; مع http://localhost ثم حاول مرة أخرى.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>الحزم</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>المواقع</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>القوائم والأعمدة</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>النماذج والبريد الإلكتروني</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>كتابة</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>التقرير</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>اختر تدفقاتك المصدّرة</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>في Power Automate: افتح تدفقاتي، واختر تدفقًا، ثم تصدير ← حزمة (.zip). أضف ملفات .zip التي تم تنزيلها هنا. يتم فحص كل ملف فور إضافته.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>مسح</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>أضف حزم التدفقات المصدّرة للبدء.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>لم يتم العثور على تدفقات في تلك الملفات. تأكد من أنها حزم مصدّرة عبر تصدير ← حزمة (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>اكتمل الفحص. راجع ما تستخدمه التدفقات، ثم انقر فوق التالي.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>اختر مواقع الهدف</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>لا تستخدم هذه التدفقات مواقع SharePoint بعناوين ثابتة، لذا لا شيء للتعيين هنا. انقر فوق التالي.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>بعد ذلك، تقرأ الأداة كل قائمة عبر اتصالاتك وتطابقها في موقع الهدف.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>أدخل موقع الهدف لكل موقع مصدر، ثم انقر فوق التالي.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>مطابقة القوائم والأعمدة</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>مطابقة مرة أخرى</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>القوائم</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>لا تشير هذه التدفقات إلى قوائم SharePoint محددة، لذا لا شيء للمطابقة.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>تتم مطابقة القوائم والأعمدة عند فتح هذه الخطوة.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>النماذج والبريد الإلكتروني</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>افحص النماذج والبريد الإلكتروني، ثم انقر فوق التالي.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>لا تستخدم هذه التدفقات Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>عناوين البريد الإلكتروني</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>لنقل كل عنوان من نطاق بريد إلكتروني إلى آخر، أدخل النطاقين. تُسرد العناوين في النطاقات الأخرى في التقرير ولا تتغير.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>كتابة الحزم المحدّثة</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>مجلد الإخراج</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>اختر مجلد الإخراج، ثم انقر فوق كتابة الحزم المحدّثة.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>جاهز لكتابة {0} حزمة تحتوي على {1} تدفق. الاستبدال: {2} موقع، {3} قائمة، {4} تعيين أعمدة، {5} نموذج.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>كتابة الحزم المحدّثة</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>الحزم المكتوبة</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>الاستبدالات</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>لا تزال المصدر</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>للمراجعة</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>الحزمة</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>تم التحديث</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} قيمة لا تزال تشير إلى المصدر</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>فتح التقرير</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>البدء من جديد</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>تم: تمت كتابة {0} حزمة</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>تم الحفظ في {0}. لم يبقَ شيء يشير إلى المصدر. اتبع الخطوات أدناه لاستيرادها.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>تم: تمت كتابة {0} حزمة، وبعض العناصر تحتاج إلى مراجعتك</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>تم الحفظ في {0}. افتح التقرير لرؤية القيم التي لا تزال تشير إلى المصدر والعناصر التي لا تعيد الأداة كتابتها (خدمات أخرى، قوائم أو أعمدة غير مطابقة).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>ما العمل بعد ذلك</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  افتح التقرير وافحص &quot;لا تزال تشير إلى المصدر&quot; وأي شيء مميّز للمراجعة.
+2.  في Power Automate (مستأجر الهدف)، افتح تدفقاتي ← استيراد ← استيراد حزمة (قديم) واختر حزمة مكتوبة.
+3.  ضمن &quot;الموارد ذات الصلة&quot; انقر فوق &quot;تحديد أثناء الاستيراد&quot; لكل اتصال واختر اتصالاً أو أنشئ واحدًا في مستأجر الهدف. لا يمكن نقل الاتصالات بين المستأجرين.
+4.  استورد التدفق. أبقِه متوقفًا، وافتحه، وأصلح أي شيء ينبّه إليه، ثم شغّله.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>لا تغييرات (لا شيء فيها يطابق تعيينك)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>تم نسخ {0} إلى {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>نُسخ من قبل</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>منسوخ بالفعل</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …و{0} آخر</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>النسخ مرة أخرى؟</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>تم نسخ {0} من النماذج المحددة بالفعل إلى هذا الحساب:
+
+{1}
+
+يؤدي النسخ مرة أخرى إلى إنشاء نسخة ثانية من كل منها. هل تريد المتابعة؟</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>لا تزال عملية نسخ قيد التشغيل. إذا أغلقت الآن، فقد يُترك النموذج الذي يجري نسخه نصف مكتمل في الهدف. إيقاف وإغلاق؟</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>النسخ قيد التنفيذ</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>تعذّر تصدير أي ردود (راجع السجل).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>التصفية حسب العنوان أو النوع</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>مصنف واحد</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>تصدير جميع النماذج المحددة إلى ملف Excel واحد بورقة واحدة لكل نموذج.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>عنوان البريد الإلكتروني</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>معرّف المستأجر</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>مسار المكتبة</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>قيم أخرى</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>اكتب بديلاً لأي قيمة يجب أن تتغير. لا تتغير الصفوف المتروكة فارغة؛ وتُسرد في التقرير إذا كانت لا تزال تشير إلى المصدر.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>النوع</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>في التدفقات</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>الاستبدال بـ</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>فحص المعرّف</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>ليس معرّف نموذج أو رابط صفحة تحرير</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>مثل نموذج المصدر</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>هذا النموذج في مستأجر المصدر، وليس الهدف</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>هذا النموذج في مستأجر مختلف عن المصدر</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>من نسخ النماذج من {0} إلى {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>من نسخ نماذج سابق</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>تحميل التعيين…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>املأ المواقع والقوائم والأعمدة والنماذج والقيم الأخرى من تعيين حفظته سابقًا.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>تعذّر تحميل التعيين: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>تم تحميل {0}. تم ملء القيم المطابقة لهذه التدفقات؛ افحصها في الخطوات التالية.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>تم تحميل {0}. يتم تطبيقه عند إضافة حزم التدفقات.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>تم ملء {0} موقع هدف. افحصها أدناه، ثم انقر فوق التالي.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>لكل موقع هدف بالفعل، لذا لم يتغير شيء. امسح خلية الهدف ليتم ملؤها.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>اختصار: اكتب عنوان المستأجر الجديد، مثل https://fabrikam.sharepoint.com، وانقر فوق الزر. يحصل كل موقع بلا هدف بعد على ذلك العنوان مع مسار المصدر نفسه: يصبح https://contoso.sharepoint.com/sites/HR هو https://fabrikam.sharepoint.com/sites/HR. تنتقل مواقع OneDrive (contoso-my) إلى عنوان -my للمستأجر الجديد. لا تُمس الأهداف التي أدخلتها بالفعل. يجب أن تكون المواقع موجودة بالفعل في المستأجر الجديد؛ فهذه الأداة لا تنشئها. إذا كان للموقع اسم مختلف هناك، فاكتب عنوانه في خلية الموقع الهدف بدلاً من ذلك.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>إذا تركت الموقع الهدف فارغًا، يُترك ذلك الموقع دون تغيير: تظل التدفقات تشير إلى الموقع القديم، ولا تتم مطابقة قوائمه وأعمدته أو إعادة كتابتها، ويسرده التقرير ضمن &quot;المهام بعد الاستيراد&quot;. وهذا صحيح فقط لموقع لن ينتقل إلى المستأجر الجديد.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>ما الذي سيحدث</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ سينتقل إلى الهدف</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ لم يتغير (لا هدف)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>تُرك الموقع {0} دون تغيير (لم يُدخل هدف)، لذا لا تزال التدفقات تشير إليه ولم تتم مطابقة قوائمه. لا بأس إذا لم يكن الموقع سينتقل؛ وإلا أعد التشغيل مع هدف.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>لا توجد أعمدة للعرض بعد: لم تتم مطابقة أي قائمة، لذا لا شيء للمقارنة. أصلح القوائم أعلاه، ثم انقر فوق مطابقة مرة أخرى.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>لا توجد أعمدة للتعيين، لذا لا تحتاج إلى فعل أي شيء هنا. القوائم المطابقة لا تحتوي على أعمدة مخصصة تكتب إليها التدفقات أو ترشّح بحسبها أو تقرأها بطريقة تستطيع الأداة رؤيتها. تذكر قائمة النشاط في الأسفل ما تم العثور عليه لكل قائمة.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>تم العثور على {0} عمود: {1} لها الاسم نفسه في الهدف، و{2} أُعيدت تسميتها وتمت مطابقتها، و{3} تبدو مشابهة، و{4} بلا مطابقة.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>يرجى فحص الصفوف المميّزة بـ &quot;اسم مشابه&quot; واختيار عمود للصفوف المميّزة بـ &quot;لا توجد مطابقة&quot;. الصفوف المميّزة بـ &quot;الاسم نفسه&quot; أو &quot;أُعيد تسميته في الهدف&quot; لا تحتاج إلى شيء.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>لا شيء للقيام به هنا: كل عمود يتطابق بالفعل. انقر فوق التالي.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>أسماء الحزم المحدّثة</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>ما تُسمّى به ملفات .zip المحدّثة. استخدم {name} لاسم الملف الأصلي: &quot;{name} - Fabrikam&quot; يحوّل &quot;Onboarding.zip&quot; إلى &quot;Onboarding - Fabrikam.zip&quot;. مع حزمة واحدة يمكنك ببساطة كتابة الاسم الكامل. اتركه {name} للاحتفاظ بالأسماء الأصلية. الاسم المستخدم مرتين يحصل على (2) و(3)… بحيث لا يُستبدل شيء.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>ستتم كتابة: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>يخزّن التدفق معرّف النموذج فقط، لذا تُقرأ أسماء النماذج من Microsoft Forms عند فتح هذه الخطوة: عنوان كل نموذج في تدفقاتك (حساب المصدر) والنماذج في حساب الهدف. يتم تلقائيًا مطابقة النموذج الذي يطابق عنوانه نموذج هدف واحدًا بالضبط؛ وإلا اختر النموذج الجديد من القائمة المنسدلة، أو الصق معرّفه أو رابط صفحة تحريره. استخدم إعادة تحميل أسماء النماذج لقراءتها مرة أخرى.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>تحميل النماذج من حساب الهدف…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>جارٍ تحميل نماذج حساب الهدف… قد تُطالَب بتسجيل الدخول.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>جارٍ سرد النماذج التي يملكها حساب الهدف {0} لتتمكن من اختيار النموذج الجديد لكل تدفق. انقر فوق إلغاء لإيقاف انتظار تسجيل الدخول.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>الهدف: تم العثور على {0} نموذج في {1}. اختر واحدًا لكل صف، أو الصق معرّفًا.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>الهدف: لم يتم العثور على نماذج في {0}. تسرد القائمة المنسدلة فقط النماذج التي يملكها ذلك الحساب (وليس نماذج المجموعات)، لذا انسخ النماذج بأداة النماذج أولاً، أو الصق معرّفًا.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>تم الإلغاء. انقر فوق تحميل أسماء النماذج للمحاولة مرة أخرى، أو الصق معرّفات النماذج.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>الهدف: تعذّر تحميل النماذج: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(لا شيء)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(نموذج بلا عنوان)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>نموذج المصدر</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>اختر من نماذج الهدف</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>اختر نموذجًا من حساب الهدف. انقر فوق &quot;تحميل النماذج من حساب الهدف&quot; أولاً.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>تم الملء من تسجيل دخول الهدف ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>حساب المصدر الخاص بك، مستبدل بحساب الهدف الخاص بك</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>تم الملء من عمليات تسجيل الدخول لديك ({0} ← {1}). امسح المربعين لترك نطاقات البريد الإلكتروني دون تغيير.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>يُترك الموقع ذو الهدف الفارغ دون تغيير: تظل التدفقات تشير إليه، ويسرده التقرير.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ تم تسجيل الدخول باسم {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>تم تسجيل الدخول باسم {0}. عنوان SharePoint لمستأجر الهدف هو {1}؛ وتم ملء مواقع الهدف الفارغة منه.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ بعض المواقع في التدفقات موجودة على {0}، وهو عنوان حساب الهدف نفسه. إما أن هذه الحزم تشير بالفعل إلى الهدف (مثلاً حزم كتبتها هذه الأداة، أو تدفقات مصدّرة من الهدف)، لذا أضف عمليات التصدير الأصلية من المصدر بدلاً من ذلك؛ أو أن المصدر والهدف مستأجر واحد فعلاً، لذا انتقل بالتطبيق إلى وضع المستأجر الواحد (الإعدادات).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} حزمة كتبتها هذه الأداة في {1}: وهي تحتوي بالفعل على عناوين الهدف، لذا لم يتبقَّ شيء لنقله. أضف بدلاً من ذلك التصدير الأصلي من مستأجر المصدر (الملف في التنزيلات، وليس الموجود في مجلد الإخراج).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ المواقع في هذه التدفقات موجودة على {0}، وهو مستأجر الهدف لديك، لكن المصدر لديك هو {1}. إذا كانت الحزم مصدّرة من {0}، فسجّل الدخول إلى ذلك المستأجر كمصدر (تغيير المصدر…). وإذا كتبتها هذه الأداة سابقًا، فأزلها وأضف عمليات التصدير الأصلية.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>تم تسجيل الدخول. تم ملء {0} موقع هدف من {1}. افحصها، ثم انقر فوق التالي.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>تم تسجيل الدخول. كان لكل موقع هدف قيمة بالفعل، لذا لم يتغير شيء.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>لم يكتمل تسجيل الدخول، أو تعذّرت قراءة عنوان المستأجر الجديد (راجع سطر الهدف). إذا كنت قد سجّلت الدخول، فأدخل عنوان المستأجر الجديد أدناه لملء مواقع الهدف.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — متصل باسم {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — لم يتم تسجيل الدخول بعد</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>تغيير الهدف…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>لم يتم اختيار قائمة هدف، لذا ستظل هذه التدفقات تشير إلى قائمة غير موجودة في الهدف. اختر قائمة الهدف، أو أنشئ القائمة في موقع الهدف أولاً.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>تستخدم التدفقات العمود &quot;{0}&quot;، لكن قائمة الهدف &quot;{1}&quot; ليس لها عمود مقابل. اختر عمود الهدف الخاص به في الجدول، أو أضف العمود إلى قائمة الهدف وانقر فوق فحص مرة أخرى.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>تتطلب قائمة الهدف &quot;{0}&quot; العمود &quot;{1}&quot;، لكن خطوة &quot;إنشاء عنصر&quot; &quot;{3}&quot; في التدفق &quot;{2}&quot; لا تعيّنه، لذا سيفشل الاستيراد مع &quot;missing required property item/{1}&quot;. اكتب قيمة له أدناه وستضيفها الأداة إلى تلك الخطوة، أو اجعل &quot;{1}&quot; اختياريًا في قائمة الهدف وانقر فوق فحص مرة أخرى.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>تتطلب قائمة الهدف &quot;{0}&quot; العمود &quot;{1}&quot;، لكن خطوة &quot;إنشاء عنصر&quot; &quot;{3}&quot; في التدفق &quot;{2}&quot; لا تعيّنه، لذا سيفشل الاستيراد مع &quot;missing required property item/{1}&quot;. اجعل &quot;{1}&quot; اختياريًا في قائمة الهدف في SharePoint، ثم انقر فوق فحص مرة أخرى.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>القيمة المطلوب ملؤها لهذه الأعمدة المطلوبة (تُضاف إلى كل خطوة إنشاء عنصر تتركها):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>سيفشل هذا عند الاستيراد. أصلحه للمتابعة:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>فحص مرة أخرى</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>سيفشل ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ سجّل الدخول إلى الهدف للمتابعة.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ كتبت هذه الأداة {0} حزمة وهي تحتوي بالفعل على قيم الهدف. أزلها (علامة ✕ في القائمة) وأضف عمليات التصدير الأصلية.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} موقع بلا هدف. الموقع المتروك كما هو سيظل يشير إلى مستأجر المصدر.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ ستفشل {0} قائمة عند الاستيراد. أصلح القوائم المميّزة بـ &quot;سيفشل&quot; للمتابعة.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ لم تتم مطابقة القوائم بعد. ارجع خطوة ثم تقدّم مرة أخرى لإعادة المحاولة.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ يحتاج {0} نموذج إلى معرّف نموذج هدف صالح للمتابعة.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>تغيير المصدر…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>تم تسجيل الدخول باسم {0}. عنوان SharePoint لمستأجر المصدر هو {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>تم تغيير اتصال المصدر إلى {0}. يجب أن تكون المواقع المدرجة أدناه على هذا المستأجر.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>لم يكتمل تسجيل دخول المصدر، أو تعذّرت قراءة عنوان المستأجر (راجع سطر المصدر). يُحتفظ باتصال المصدر السابق إذا ألغيت.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ تُقرأ بعض المواقع من {0}، وهو ليس المستأجر المتصل به كمصدر ({1}). ستفشل قراءة قوائمها. عدّل &quot;قراءة القوائم من&quot; لتلك الصفوف إلى العنوان على مستأجر المصدر لديك، أو انقر فوق تغيير المصدر… وسجّل الدخول بحساب من ذلك المستأجر.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>مواقع التدفقات موجودة على {0}، لكنك متصل بـ {1} كمصدر. تم ملء &quot;قراءة القوائم من&quot; بالمواقع نفسها على {1}، لذا تقرأ الأداة أسماء القوائم والأعمدة هناك. تأكد من وجود تلك المواقع (عدّل أي صف)، أو انقر فوق تغيير المصدر… إذا كانت التدفقات قد جاءت فعلاً من {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>القوائم التي تستخدمها التدفقات</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>انقر فوق قائمة لفتحها أو إغلاقها. القوائم التي تحتاج إلى نظرة تأتي أولاً وتكون مفتوحة.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>فتح الكل</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>إغلاق الكل</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>يستخدمها:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>المصدر:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>قائمة الهدف</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>أو الصق معرّفها أو رابطها:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>عمود المصدر</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>النوع</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>مستخدم</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>لا تستخدمه التدفقات</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(لا شيء: ترك هذه القائمة دون تغيير)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ لم يتم اختيار قائمة هدف: التدفقات التي تستخدمها لا تزال تشير إلى قائمة المصدر</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>← {0} · ⚠ {1} عمود للفحص</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>← {0} · ✓ لا شيء للفحص</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} عمود في هذه القائمة؛ تستخدم التدفقات {1}: {2} بالاسم نفسه في الهدف، و{3} أُعيدت تسميتها وتمت مطابقتها، و{4} مشابهة (يرجى الفحص)، و{5} بلا مطابقة (يرجى الاختيار). تُعرض الأعمدة الأخرى للسياق ولا تتغير.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} عمود في هذه القائمة؛ لا تستخدم التدفقات أيًا منها بطريقة تستطيع الأداة رؤيتها، لذا لا حاجة إلى أي تعيين.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>تعذّرت قراءة أي أعمدة لهذه القائمة (راجع الملاحظات أعلاه وقائمة النشاط).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>اختر قائمة هدف أعلاه لعرض أعمدتها وتعيينها.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>تعذّرت قراءة أعمدة قائمة الهدف، لذا لم يمكن اقتراح أي مطابقات.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>لا يذكر التدفق الموقع الموجودة عليه هذه القائمة (يستخدم معاملاً)، لذا لا يمكن البحث عنها. الصق معرّف قائمة الهدف أو رابطها.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>لا توجد قائمة هدف: تُترك هذه القائمة دون تغيير.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>جارٍ قراءة أعمدة قائمة الهدف لـ {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>القائمة &apos;{0}&apos;: اخترت قائمة هدف أخرى. جارٍ قراءة أعمدتها في {1} لمطابقتها مرة أخرى.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — متصل باسم {1} (تسجيل دخول النافذة الرئيسية)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>قراءة القوائم من (المصدر)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>&quot;الموقع في التدفقات&quot; هو العنوان المخزّن في التدفقات؛ وهو ما يتم استبداله، لذا لا يمكن تحريره. &quot;قراءة القوائم من&quot; هو المكان الذي تقرأ منه الأداة اسم كل قائمة وأعمدتها في جانب المصدر؛ ويبدأ بالعنوان نفسه، لذا غيّره عندما يكون عنوان التدفق قديمًا أو أُعيدت تسميته أو على مستأجر غير مستأجر اتصال المصدر لديك.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>ما تستخدمه هذه التدفقات</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} تدفق، {2} خطوة: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>تعيد هذه الأداة كتابته</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>مراجعة يدوية</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>اتصال فقط</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>المهام بعد الاستيراد</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>استورد كل حزمة مُعدَّلة في بيئة الهدف وأعد إنشاء الاتصالات (لا تُنسخ أبدًا).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>حزم الحلول: أُعيدت كتابة تعريفات سير العمل فقط. لا تزال قيم متغيرات البيئة ومراجع الاتصال في الحل (customizations.xml) تحتوي على قيم المصدر؛ عيّنها بعد الاستيراد.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>مالكو التدفقات والمستخدمون للتشغيل فقط ليسوا جزءًا من الحزمة؛ شارك التدفقات مع الأشخاص المناسبين بعد الاستيراد.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>لا تغييرات (لا شيء في التعيين طابق).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} استبدال</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>لا تزال تشير إلى قيم المصدر (غير معيّنة، راجعها قبل الاستيراد)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>جارٍ الاتصال بموقع المصدر {0} وموقع الهدف {1}. تفتح نافذة تسجيل الدخول إذا لم تكن قد سجّلت الدخول بعد.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>تم الاتصال بـ {0} (المصدر) و{1} (الهدف).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>جارٍ قراءة القوائم والمكتبات في موقع الهدف {0}، ليمكن مطابقة كل قائمة بالاسم وعرضها في قائمة منسدلة.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>تم العثور على {0} قائمة ومكتبة في {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>جارٍ قراءة اسم القائمة {0} وأعمدتها من موقع المصدر {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>القائمة &apos;{0}&apos;: جارٍ البحث عن قائمة بالاسم نفسه في موقع الهدف {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>القائمة &apos;{0}&apos;: تم العثور عليها في الهدف. جارٍ قراءة أعمدة قائمة الهدف لمطابقتها.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>القائمة &apos;{0}&apos;: تعذّرت قراءة أعمدتها، أو لا أعمدة لها. لا شيء للتعيين لهذه القائمة.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>القائمة &apos;{0}&apos;: {1} عمود، لا تستخدم التدفقات أيًا منها بطريقة تستطيع الأداة رؤيتها. لا حاجة إلى أي تعيين.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>القائمة &apos;{0}&apos;: تستخدم التدفقات {1} اسم عمود: {2} لها الاسم نفسه في الهدف (لا حاجة إلى تغيير)، و{3} أُعيدت تسميتها وتمت مطابقتها، و{4} تبدو مشابهة (يرجى الفحص)، و{5} بلا مطابقة (اختيارك)، و{6} أعمدة مضمّنة (لا شيء للتعيين).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>القائمة {0} ليست في موقع المصدر، لكنها في موقع الهدف باسم &apos;{1}&apos;: التدفق يشير بالفعل إلى الهدف.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>الموقع &apos;{0}&apos; بلا هدف؛ لم تتم مطابقة القوائم الموجودة عليه.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>متقدم: قراءة القوائم من عنوان مختلف</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>← {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>تعيين الأعمدة: من {0} إلى {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>لا توجد أعمدة للعرض لهذه القائمة.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>لا تستخدم التدفقات أيًا من أعمدة هذه القائمة. ضع علامة على &quot;إظهار كل الأعمدة&quot; لرؤيتها.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>تعذّرت قراءة قائمة المصدر، ولا يذكر التدفق أي أعمدة، لذا لا شيء للتعيين.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>القائمة</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(تعذّرت قراءتها في المصدر)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>القراءة من:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>الموقع</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>يشير هذا التدفق بالفعل إلى هذه القائمة في الهدف. أسماء الأعمدة ({0}) التي يستخدمها معروضة مقابل أعمدة الهدف؛ لا حاجة إلى أي تغيير.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(اسم القائمة غير متاح)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>في الهدف بالفعل</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>معيّنة حسب أسماء أعمدة التدفق</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>تعذّرت قراءة الأعمدة</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>لا توجد قائمة هدف</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>لا شيء للتعيين</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>جاهز</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>أعمدة الهدف غير قابلة للقراءة</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} للفحص</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>يستخدمها {0} تدفق</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>لا يزال {0} تعيين أعمدة يحتاج إلى نظرة.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>تمت تسوية جميع تعيينات الأعمدة.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>لا تُنسخ الاتصالات بين المستأجرين: أعد إنشاءها في Power Automate بعد الاستيراد.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>البريد الإلكتروني: يصبح كل عنوان على {0} على {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} من {1} نموذج تشير إلى نموذج جديد.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} من {1} قائمة لها قائمة هدف.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>لم تتم مطابقة القوائم بعد.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>لا تتغير عناوين البريد الإلكتروني (لم يتم تعيين نطاق).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>لا تستخدم التدفقات أي Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>لا تستخدم التدفقات أي قوائم محددة.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>لا تذكر التدفقات أي مواقع SharePoint.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>ستتم كتابة {0} حزمة تحتوي على {1} تدفق؛ ولا تتغير الأصول.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>سينتقل {0} من {1} موقع إلى موقع هدف؛ وتبقى المواقع الأخرى كما هي.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>مسح القيم المملوءة تلقائيًا</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>تم الملء</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>النموذج في تدفقاتك</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>من (في تدفقاتك)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>القوائم</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>المواقع</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>الحالة</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>إلى (الهدف)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>اخترته أنت</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>تُرك دون تغيير</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(تسجيل دخول النافذة الرئيسية)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>نطاق البريد الإلكتروني المراد النقل منه</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>نقل كل عنوان على</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>إلى</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>نطاق البريد الإلكتروني المراد النقل إليه</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…أو اسحب ملفات .zip (أو مجلدًا) وأفلتها على هذه النافذة.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>العمود &apos;{0}&apos; في القائمة &apos;{1}&apos; ليس له مطابق في قائمة الهدف.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>القائمة &apos;{0}&apos; ({1}) على {2} ليس لها قائمة هدف، لذا فإن التدفقات التي تستخدمها لا تزال تشير إلى قائمة المصدر.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(العنوان غير معروف)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>الانتقال إلى الخطوة</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>هل لديك تعيين محفوظ؟ حمّله…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>نمط مخصص…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>الاحتفاظ بالأسماء الأصلية</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>إضافة &apos; - migrated&apos; إلى كل اسم</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>افتح التقرير وافحص ما هو مميّز للمراجعة.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>في Power Automate (مستأجر الهدف): تدفقاتي، استيراد، استيراد حزمة (قديم)، واختر حزمة مكتوبة.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>ضمن الموارد ذات الصلة انقر فوق &quot;تحديد أثناء الاستيراد&quot; لكل اتصال واختر واحدًا أو أنشئه في مستأجر الهدف. لا يمكن نقل الاتصالات بين المستأجرين.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>استورد التدفق، وأبقِه متوقفًا، وافتحه، وأصلح أي شيء ينبّه إليه، ثم شغّله.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>فتح المجلد</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>فتح Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>مجلد الإخراج هذا غير موجود بعد؛ يُنشأ عند كتابة الحزم.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>المصدر</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>الهدف</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>تم العثور على {0} تدفق</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>لم يتم العثور على تدفقات</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>كتبتها هذه الأداة بالفعل</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>تعذّرت قراءتها</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>جاهز للكتابة؟</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>إزالة هذه الحزمة من القائمة</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>تقرير إعادة كتابة التدفقات</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>ما تستخدمه هذه التدفقات ({0} خدمة)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>تعذّرت كتابة {0} حزمة.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>لا تزال {0} قيمة في الحزم المكتوبة تشير إلى المصدر. افتح التقرير لمعرفة أيها.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>إظهار كل الأعمدة ({0})</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>إظهار الأعمدة التي تستخدمها التدفقات فقط</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>ماذا تعني هذه الأعمدة؟</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>معرّف هذه القائمة ليس في موقع المصدر، لكنه القائمة &apos;{0}&apos; في موقع الهدف: التدفق يشير بالفعل إلى الهدف، كما في حزمة كتبتها هذه الأداة سابقًا.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>متصل</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>مشكلة</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>لم يتم تسجيل الدخول</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>في انتظار تسجيل الدخول…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} قائمة · الكل جاهز</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} قائمة · {1} جاهزة · {2} تحتاج إلى نظرة</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>استغرق {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>للمراجعة</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>أضف حزم التدفقات (.zip) التي صدّرتها من مستأجر المصدر. يتم فحص كل منها فور إضافته.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>حدّد الموقع الذي ينتقل إليه كل تدفق. سجّل الدخول إلى الهدف ويتم ملء عنوان المستأجر الجديد لك.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>تتم مطابقة كل قائمة تستخدمها التدفقات مع قائمة في الهدف، ويتم تعيين أعمدتها. افحص أي شيء مميّز بأنه يحتاج إلى نظرة.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>وجّه النماذج المنسوخة إلى معرّفاتها الجديدة، وقرّر كيف تتغير عناوين البريد الإلكتروني ومعرّف المستأجر.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>افحص القائمة أدناه، واختر مكان حفظ الحزم المحدّثة، ثم اكتبها.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>ما يحدث هنا</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>تقرأ الأداة كل حزمة على هذا الكمبيوتر (لا يُرسل شيء إلى أي مكان) للعثور على المواقع والقوائم والأعمدة والنماذج التي تستخدمها التدفقات. أضف عمليات التصدير الأصلية من المصدر، وليس الحزم التي كتبتها هذه الأداة سابقًا: فهي تحتوي بالفعل على عناوين الهدف.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>العمود &apos;{0}&apos; معيّن بشكل مختلف في قوائم مختلفة ({1}). تحصل خطوات كل قائمة على تعيينها الخاص؛ وتحتفظ التعبيرات في أماكن أخرى من التدفق بالاسم الأصلي، لذا راجعها.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>إعادة تحميل أسماء النماذج…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>جارٍ تحميل أسماء النماذج… قد تُطالَب بتسجيل الدخول.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>جارٍ قراءة عناوين النماذج في تدفقاتك من حساب المصدر {0}. انقر فوق إلغاء لإيقاف انتظار تسجيل الدخول.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>المصدر: تم العثور على عنوان {0} من {1} نموذج ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>المصدر: تعذّرت قراءة عناوين النماذج: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>تمت مطابقة {0} نموذج مع نموذج الهدف الذي له الاسم نفسه.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>يبدو كمعرّف نموذج صالح</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>تمت المطابقة بالاسم</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>المصدر والهدف على المستأجر نفسه ({0}). انتقل بالتطبيق إلى وضع المستأجر الواحد (الإعدادات)، أو سجّل الدخول إلى المصدر والهدف بحسابات من مستأجرين مختلفين.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>إزالة هذه الحزم</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>تمت إزالة {0} حزمة تشير بالفعل إلى الهدف: {1}. أضف بدلاً من ذلك عمليات التصدير الأصلية من مستأجر المصدر.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>تمت إزالة تلك الحزم. أضف عمليات التصدير الأصلية من مستأجر المصدر.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>تُحفظ كل حزمة كملف .zip جديد في مجلد الإخراج؛ ولا تتغير الأصول أبدًا. لإعادة تسمية إحداها، اكتب اسمًا مختلفًا في حفظ باسم.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>الاحتفاظ بالأسماء الأصلية</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>إضافة &apos; - migrated&apos; إلى كل اسم</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>الحزمة الأصلية</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>حفظ باسم</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>سيتم الحفظ باسم: {0} (يمكنك تغيير الأسماء أدناه).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>تعذّرت قراءتها؛ لم يُكتب أي إخراج</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>تم الإلغاء. لم يتغير شيء. في خطوة المواقع استخدم تسجيل الدخول للمحاولة مرة أخرى (مثلاً في متصفح آخر)؛ وفي خطوة القوائم استخدم مطابقة مرة أخرى.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>جارٍ الإلغاء… قد تستغرق نافذة تسجيل الدخول لحظة لتُغلق.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>ما تفعله الأداة</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>الاتصالات</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>عدة مستأجرين: لمطابقة القوائم، تقرأ الأداة اسم كل قائمة وأعمدتها من مستأجر المصدر وتبحث عن القائمة نفسها في مستأجر الهدف. يتطلب ذلك تسجيل الدخول إلى كل منهما. سجّل الدخول إلى كل جانب هنا، أو انقر فوق التالي فقط وستُطالَب حينها. تفتح نافذة متصفح؛ وإذا كان المتصفح خاطئًا، فانقر فوق إلغاء وحاول مرة أخرى. لا يتغير شيء في أي من المستأجرين.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>مستأجر واحد: المصدر والهدف هما المستأجر نفسه، لذا تستخدم الأداة الحساب الذي سجّلت به الدخول في خطوة الاتصال. لا شيء آخر لتسجيل الدخول إليه. لا يتغير شيء في المستأجر.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>المصدر</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>الهدف</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>تسجيل الدخول إلى المصدر…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>تسجيل الدخول إلى الهدف…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>يوقف انتظار نافذة تسجيل الدخول، لتتمكن من المحاولة مرة أخرى، مثلاً في متصفح آخر.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>لم يتم تسجيل الدخول بعد</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>يستخدم تسجيل دخول النافذة الرئيسية: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ تم تسجيل الدخول باسم {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ جاهز</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>في انتظار تسجيل الدخول… يجب أن تفتح نافذة متصفح</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>تم إلغاء تسجيل الدخول. انقر فوق تسجيل الدخول للمحاولة مرة أخرى.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>تم تسجيل الدخول. افحص مواقع الهدف أدناه، ثم انقر فوق التالي.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>لا يوجد موقع مصدر لتسجيل الدخول إليه بعد. أضف حزم التدفقات أولاً.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>أدخل موقع هدف واحدًا على الأقل أولاً (أو استخدم الملء مع الاحتفاظ بالمسارات)؛ يتجه تسجيل الدخول إلى مستأجر موقع الهدف.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>جارٍ تسجيل الدخول إلى المصدر… تفتح نافذة متصفح.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>جارٍ تسجيل الدخول إلى الهدف… تفتح نافذة متصفح.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>المصدر</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>الهدف</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>جارٍ تسجيل الدخول إلى مستأجر المصدر. تفتح نافذة متصفح؛ انقر فوق إلغاء لإيقاف الانتظار (مثلاً لتجربة متصفح آخر). كما يخبر تسجيل الدخول الأداة بالمستأجر الذي هو المصدر.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>جارٍ تسجيل الدخول إلى مستأجر الهدف. تفتح نافذة متصفح؛ انقر فوق إلغاء لإيقاف الانتظار (مثلاً لتجربة متصفح آخر). كما يخبر تسجيل الدخول الأداة بعنوان SharePoint للمستأجر الجديد.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>تم الاتصال بـ {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>ألغيت تسجيل الدخول.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>جارٍ قراءة {0} من ملفات الحزم على هذا الكمبيوتر للعثور على المواقع والقوائم والأعمدة والنماذج التي تستخدمها التدفقات. لا يُرسل شيء إلى أي مكان.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>تمت قراءة {0}: {1} تدفق.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>جارٍ مطابقة {0} قائمة: تسأل الأداة موقع المصدر عن اسم كل قائمة، ثم تبحث عن قائمة بذلك الاسم في موقع الهدف.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>انتهت المطابقة. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>جارٍ كتابة {0} حزمة مُعدَّلة في {1}. لا تتغير الأصول.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>جارٍ كتابة {0} مع تطبيق تعيينك.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>جارٍ فحص {0} بحثًا عن قيم لا تزال تشير إلى المصدر.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>ألغيت العملية. لم يتغير شيء.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>توقف: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>يخزّن كل تدفق عنوان موقع SharePoint الذي يقرأ منه أو يكتب إليه. للعمل في المستأجر الجديد، يجب أن يشير كل تدفق إلى الموقع المطابق هناك، لذا أخبر الأداة بالموقع الجديد الذي يحل محل كل موقع قديم. هذا يحرّر نسخًا من حزمك فقط؛ ولا يتم البحث عن شيء حتى تنقر فوق التالي.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>ما يحدث هنا: لكل قائمة يستخدمها تدفق، تقرأ الأداة اسم القائمة وأعمدتها من موقع المصدر، وتبحث عن قائمة بالاسم نفسه في موقع الهدف، وتقرأ أعمدة تلك القائمة لمطابقتها. السبب: تشير التدفقات إلى القوائم والأعمدة بالمعرّف أو الاسم الداخلي، وهي تختلف في المستأجر الجديد، لذا تجد الأداة المكافئ. هذه الخطوة تقرأ فقط؛ ولا يُنشأ أو يُغيَّر شيء في أي من المستأجرين. يمكنك تغيير قائمة الهدف وأي عمود في بطاقتها.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>يحصل النموذج المنسوخ على معرّف جديد، لذا يجب أن يشير التدفق الذي يستخدمه إلى النسخة. وقد تحتاج عناوين البريد الإلكتروني ومعرّف المستأجر في التدفق إلى التغيير أيضًا للمؤسسة الجديدة. لا يتم البحث عن شيء هنا؛ أنت تقرر البدائل، وأي شيء يُترك فارغًا يبقى كما هو.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>تكتب الأداة ملفات .zip جديدة في مجلد الإخراج مع تطبيق تعيينك، وتعيد فحصها للعثور على أي شيء لا يزال يشير إلى المصدر، وتكتب تقريرًا. لا تتغير حزمك الأصلية أبدًا، ولا يُرسل شيء إلى أي من المستأجرين. تستورد الحزم الجديدة في Power Automate بنفسك بعد ذلك.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>تم إلغاء تسجيل الدخول. انقر فوق الزر للمحاولة مرة أخرى، مثلاً في متصفح آخر.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>إلغاء</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>خطأ: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>تعذّرت قراءة نموذج المصدر ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>تعذّر إنشاء النموذج في الهدف ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>أُلغي في منتصف العملية. تُرك نموذج جزئي في الهدف؛ احذفه في Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>توقف النسخ في منتصف العملية ({0}). تُرك نموذج جزئي في الهدف؛ احذفه في Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>صورة الخلفية</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>الشعار</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>صورة الرأس</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>لم يتم نسخ {0} (الصور غير مدعومة بعد).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>لم يتم التحقق من درجات الاختبار (الإجابات الصحيحة والنقاط)؛ يرجى فحص النسخة.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>تعذّر نسخ الإعداد &apos;{0}&apos; ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>لم يتم نسخ السؤال &apos;{0}&apos; ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(بلا عنوان)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>تعذّر نسخ قواعد التفرع ({0})؛ يرجى فحص النسخة.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>تم إنشاء النسخة لكن تعذّر إظهارها في Microsoft Forms ({0})؛ قد تكون في سلة المحذوفات.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>تحتوي النسخة على {0} سؤال بينما يحتوي المصدر على {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>تم إنشاء السؤال &apos;{0}&apos; ({1}) لكن تعذّر نسخ خياراته ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>النتائج</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>نموذج المصدر</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>معرّف نموذج المصدر</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>عنوان النسخة</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>معرّف نموذج النسخة</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>الحالة</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>الأسئلة المنسوخة</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>الأسئلة في المصدر</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>التحذيرات</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>ملاحظات</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>خطأ</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>مصنف Excel (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>ملفات JSON (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>المعرّف</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>وقت البدء</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>وقت الإكمال</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>المجيب</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>الاسم</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>الدرجة</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>إجابات غير معيّنة (JSON خام)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (تم القطع: طويل جدًا لخلية Excel)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>إيقاف التشغيل؟</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>لا تزال مقارنة أو عملية تحقق قيد التشغيل. إغلاق هذه النافذة يوقفها، ولن يتم كتابة أي تقرير. هل تريد الإغلاق على أي حال؟</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>الإغلاق أثناء العمل؟</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>لا تزال الأداة تعمل (فحص أو مطابقة أو تسجيل دخول أو كتابة حزم). الإغلاق الآن يوقفها. هل تريد الإغلاق على أي حال؟</value></data>
 </root>

@@ -128,7 +128,7 @@
         <!-- Buttons -->
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
             <Button Content="{loc:Loc Ui_AutoMatch}" Style="{StaticResource SecondaryBtn}" Click="AutoMatch_Click" Margin="0,0,8,0"/>
-            <Button Content="{loc:Loc Ui_Cancel}" Style="{StaticResource SecondaryBtn}" Click="Cancel_Click" Margin="0,0,8,0"/>
+            <Button Content="{loc:Loc Ui_Cancel}" Style="{StaticResource SecondaryBtn}" IsCancel="True" Click="Cancel_Click" Margin="0,0,8,0"/>
             <Button Content="{loc:Loc Ui_SaveMappings}" Style="{StaticResource PrimaryBtn}" Click="Save_Click"/>
         </StackPanel>
     </Grid>

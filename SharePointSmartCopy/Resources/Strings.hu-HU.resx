@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Sikeres ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Sikertelen ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Kihagyott ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Naprakész</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Nem sikerült megállapítani, hogy a forrásnak vannak-e saját engedélyei (szabályozás vagy hozzáférési hiba) – az engedélyek nem lettek átmásolva ennél az elemnél. Az újrapróbálkozáshoz futtassa újra.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>A meglévő célfájl el lett távolítva a felülíráshoz, de az új másolatot nem sikerült feltölteni ({0}). A fájl jelenleg hiányzik a célból – a visszaállításhoz futtassa újra a másolást.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Egy célkönyvtár hibát jelzett ({0}). A fájljai Sikertelen állapotúak; a többi könyvtár folytatódik.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: a forrásfájl megváltozott a letöltés közben – a letöltés újraindul.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>A SharePoint {0} percig nem jelzett előrehaladást ennél az importálásnál, ezért fel lett adva. A fájljai Sikertelen állapotúak; az újrapróbálkozáshoz futtassa újra a másolást.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Egyetlen bérlő</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Több bérlő</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Másolás két különböző Microsoft 365-bérlő között. Külön jelentkezik be a forrásba és a célba. A cél alkalmazásregisztrációját a Beállításokban válassza ki.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Célregisztráció:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Többbérlős mód: a célbérlőbe való bejelentkezéshez használt alkalmazásregisztráció. A „Megegyezik a forrással” a forrásregisztrációt használja újra, amelynek ilyenkor többbérlős alkalmazásnak kell lennie.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Folytatás / futtatás újra</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Újracsatlakozik, és újra futtatja ezt a kijelölést a Másolás, ha újabb beállítással, így a már átmásolt fájlok kimaradnak, és csak a hiányzó vagy módosult elemek kerülnek átvitelre.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Ehhez a futtatáshoz nincs mentett kijelölés a folytatáshoz (csak a fájlkijelölésű futtatások rögzítenek ilyet).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>Már fut egy másolás. Fejezze be vagy szakítsa meg először.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>A folytatás nem sikerült: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} megszakadt futtatás helyreállítva. Lásd az Előzményeket.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Folytatás: {0} elem visszaállítva a korábbi futtatásból, a Másolás, ha újabb beállítással. Tekintse át a beállításokat, majd kattintson a Tovább gombra. (Az egyéni oszlopleképezések nem állíthatók vissza.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>MEGSZAKADT – az alkalmazás bezárult, mielőtt a futtatás befejeződött volna. A befejezett elemek közül: {0} sikeres, {1} sikertelen, {2} kihagyott, {3} megszakított  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Diagnosztika exportálása…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Elment egy zip-fájlt a legutóbbi naplókkal, rendszerinformációkkal és a beállításaival, a szervezeti adatok eltávolításával – hibajelentéshez csatolható. Nem tartalmaz másolási jelentéseket vagy fájlneveket.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>A diagnosztika elmentve ide: {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>A diagnosztika mentése nem sikerült: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>A tartalom azonos (csak a SharePoint által kezelt részek különböznek), de a módosítás dátuma nem maradt meg.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Az engedélyek nem lettek átmásolva: az elem SharePoint-azonosítóit nem sikerült feloldani.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Az engedélyek nem lettek átmásolva: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>„{0}” mappa: {1} nem lett alkalmazva – {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>További mappáknál is voltak a fentiekhez hasonló problémák; a későbbiek nincsenek külön felsorolva.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>engedélyek</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>dátumok</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>szerző / szerkesztő</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} megtartva – a cél már naprakész)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>FIGYELMEZTETÉS: a metaadatok olvasása a forrásból ({0}) nem sikerült: {1}. Az elemek az egyéni oszlopértékeik vagy egyedi engedélyeik NÉLKÜL is átmásolódhatnak. Futtassa újra, ha a probléma megszűnt (a Felülírás vagy a Ha újabb újra alkalmazza őket).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>FIGYELMEZTETÉS: egy könyvtárhoz nem található a forráslista, ezért az engedélyei NEM lesznek átmásolva.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>A(z) „{0}” SharePoint-gazdagép nincs társítva csatlakoztatott bérlőhöz. Csatlakoztassa újra a forrás- és a célwebhelyet, majd próbálja újra.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Bérlők közötti másolás: a felügyelt metaadat- (taxonómia-) oszlopok értékei nem másolódnak, az OneNote-jegyzetfüzeteket és dokumentumkészleteket pedig még nem lehet bérlők között másolni. Az identitások leképezése az Identitásleképezés beállításai alapján történik; akit a célban nem sikerül feloldani, az kimarad.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Identitásleképezés</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Identitásleképezés…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Sorolja fel a forrásbérlő minden személyét (vagy csoportját), és hogy kik ők a célbérlőben – a kettő különböző fiók. A szerzők, szerkesztők, személyoszlopok és engedélyek ez alapján a táblázat alapján íródnak. Akit nem sorolt fel, azt a tartománycsere alapján párosítjuk, ha beállított ilyet; akit így sem találunk a célban, az kimarad és megjelenik a jelentésben.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Forrás e-mail-tartomány</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Cél e-mail-tartomány</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Felülbírálások – soronként egy „forrás,cél” pár (felhasználók vagy csoportnevek; a # megjegyzést kezd)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Megegyezik a forrással</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>A forrás és a cél ugyanazon a bérlőn van. Az ugyanazon bérlőn belüli másoláshoz váltson egybérlős módra.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>A natív mappamásolás (OneNote-jegyzetfüzetek, dokumentumkészletek) bérlők között még nem támogatott.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>A(z) „{0}” meghajtó nincs társítva csatlakoztatott bérlőhöz. Csatlakoztassa újra a forrás- és a célwebhelyet, majd próbálja újra.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Még nincs beállítva alkalmazásregisztráció. A csatlakozás előtt nyissa meg a Beállításokat, és adja hozzá az Azure-alkalmazásregisztrációját (az Application/Client ID-t).</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>A bejelentkezés meg lett szakítva. Az újrapróbálkozáshoz kattintson a Csatlakozás gombra.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Egy rendszergazda még nem hagyta jóvá ezt az alkalmazást ebben a bérlőben. Kérjen meg egy Global Administratort, hogy adjon rendszergazdai hozzájárulást az alkalmazásregisztrációhoz (lásd a Telepítést a Felhasználói útmutatóban).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Az alkalmazásregisztráció nem található ebben a bérlőben. Ellenőrizze a Client ID-t és a Tenant ID-t a Beállításokban.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>A bérlő nem található. Ellenőrizze a Tenant ID-t a Beállításokban (használja a tartományát, a bérlő GUID-ját vagy a „common” értéket).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>Az alkalmazásregisztrációból hiányzik az alkalmazás által használt átirányítási cím. Az Azure-ban adja hozzá a http://localhost átirányítási URI-t a „Mobile and desktop applications” alatt.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Az alkalmazásregisztráció nincs beállítva asztali bejelentkezésre. Az Azure-ban kapcsolja be az „Allow public client flows” beállítást a regisztrációhoz.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Ez a fiók nem használhatja ezt az alkalmazásregisztrációt. Jelentkezzen be a regisztrációt birtokló bérlő egyik fiókjával, vagy válasszon másik regisztrációt a Beállításokban.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>A SharePoint elutasította a bejelentkezést. Az újbóli bejelentkezéshez kattintson a Csatlakozás gombra.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>Nincs hozzáférése ehhez a webhelyhez. Győződjön meg arról, hogy a fiókja megnyithatja böngészőben, és hogy az alkalmazás megkapta a Sites.ReadWrite.All engedélyt.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>A webhely nem található. Ellenőrizze a címet – így kell kinéznie: https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Részletek: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>A folytatáshoz csatlakozzon a forráswebhelyhez.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>A folytatáshoz jelöljön ki legalább egy elemet (jelölje be a jelölőnégyzetet).</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>A folytatáshoz csatlakozzon a célwebhelyhez.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>A folytatáshoz válasszon célmappát.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>A folytatáshoz válasszon céllistát.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>A folytatáshoz adja meg az új lista nevét.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Nincs kijelölve másolandó elem.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Várakozás a másolás befejezésére…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Forrás: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Cél: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Az alkalmazásregisztrációja megváltozott, ezért mindkét webhelyről kijelentkezett. A folytatáshoz csatlakozzon újra.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Leállítja a másolást?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>Másolás van folyamatban. Ha most leállítja, a hátralévő elemek nem lesznek átmásolva (később folytathatja az Előzményekből). Leállítja a másolást?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>Még fut egy másolás. Az alkalmazás bezárása leállítja, és a hátralévő elemek nem lesznek átmásolva (később folytathatja az Előzményekből). Mégis bezárja?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Váltja a kapcsolati módot?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Az egybérlős és a többbérlős mód közötti váltás megszakítja mindkét webhely kapcsolatát, és újra kell csatlakoznia. Mégis vált?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Kapcsolat:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Forrás alkalmazásregisztrációja</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Cél alkalmazásregisztrációja</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>A célbérlőbe ezzel jelentkezik be:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Módosítás</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Beállítások megnyitása</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Olvasási hozzáféréssel kell rendelkeznie a forrás-webhelygyűjteményhez.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• A csatlakozás előtt állítsa be a Microsoft Entra ID-alkalmazásregisztrációját a Beállításokban.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Fájlbeállítások</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Könyvtár- és fájlbeállítások</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Fájlok másolása…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Könyvtárak másolása…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Tovább</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Másolás indítása</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Jelentés megtekintése</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Adja meg a létrehozandó új lista nevét</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>A céllistát a Cél lépésben választotta ki. A módosításhoz lépjen vissza.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Először állítson be alkalmazásregisztrációt</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>A Smart Copy egy olyan alkalmazásregisztrációval jelentkezik be, amelyet Ön hoz létre a saját Microsoft Entra ID- (Azure-) bérlőjében. Nyissa meg a Beállításokat, adja hozzá a regisztráció Application (client) ID-jét, majd térjen vissza ide a csatlakozáshoz.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>További információ</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Húzással növelheti vagy csökkentheti a tevékenységfolyam magasságát</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Kattintson, hogy csak a sikertelen elemek jelenjenek meg</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Kattintson, hogy csak a kihagyott elemek jelenjenek meg</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Oszlopleképezés</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Forrás és cél összehasonlítása</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Megnyitja az Összehasonlítás eszközt, hogy ellenőrizze ezt a másolatot a forráshoz képest.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Előzmények megnyitása</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>A kiválasztott regisztrációt a forrás használja – egybérlős módban mindkét oldal.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Új regisztráció</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Adjon hozzá legalább egy alkalmazásregisztrációt.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Érvényesítés</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>A kiválasztott regisztrációhoz kötelező a Client ID.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Kijelentkezett. A következő csatlakozáskor bejelentkezést kérünk.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Kijelentkezett</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>A kijelentkezés nem sikerült: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Kijelentkezés</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} leképezés található.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} sor nem olvasható ({1}. sor). Minden sornak a forrás,cél formátumúnak kell lennie.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>A forrás- és a céltartomány megegyezik, ezért a tartománycsere nem változtat semmin.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>CSV importálása…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Néhány felülbírálási sor nem olvasható ({0}. sor). Minden sornak „forrás,cél” formátumúnak kell lennie. Javítsa vagy távolítsa el őket – vagy kezdje a sort #-tel, hogy megjegyzés legyen.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Az identitásleképezés mentése nem sikerült: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>A fájl nem olvasható: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Bérlők közötti másolás: ebben a könyvtárban {0} szerzői/szerkesztői fiók nem található a célbérlőben, ezért a másoló fiók marad náluk. A futtatás után a jelentésben a „Felhasználók leképezése” paranccsal javíthatja őket.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Adja meg a forrásfelhasználót vagy -csoportot.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Adja meg, kicsoda ez a célbérlőben – vagy távolítsa el a sort.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>A forrás és a cél megegyezik.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Ez a forrás többször szerepel.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Forrás (ez a bérlő)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Cél (másik bérlő)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Típus</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>A célban?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Mihez szükséges</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Felhasználó</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Csoport</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Nincs ellenőrizve</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Ellenőrzés…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Megtalálva</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Nem található</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Hozzáadás</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Eltávolítás</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Célok kitöltése tartománycserével</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>Azoknál a soroknál, amelyeknek még nincs céljuk, kitölti azt a címet, amelyet a tartománycsere előállítana.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Ellenőrzés a célban</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Mindegyik célfelhasználót megkeresi a célbérlőben. Ez hozzáadja őket a célwebhely felhasználólistájához is, amit a másolás amúgy is megtesz, mielőtt szerzőként beállíthatná őket vagy hozzáférést adhatna nekik.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Először csatlakozzon egy többbérlős célhoz: adja meg a célwebhely URL-jét a Cél lépésben, majd nyissa meg újra ezt a párbeszédpanelt.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>CSV exportálása…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Ezekre a személyekre szüksége volt a másolásnak, de nem találhatók a célbérlőben. Mindegyiknél adja meg, kicsoda a célban – vagy távolítsa el a sort, hogy leképezetlenül maradjon.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} leképezés.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} sor figyelmet igényel.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Ellenőrizve: {0} megtalálva, {1} nem található{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} nem ellenőrizhető</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Ellenőrzés: {0}/{1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Nincs mit ellenőrizni: egyik sorhoz sincs célként megadott e-mail-cím.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Néhány sor figyelmet igényel (kiemelve). Javítsa vagy távolítsa el őket, majd mentsen.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>A leképezés elmentve. Ha a már átmásolt fájlokra is alkalmazni szeretné, futtassa újra Felülírással – a Másolás, ha újabb kihagyja a naprakész fájlokat, így a szerzőik nem változnak. Az engedélyek mindkét esetben frissülnek.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>A forrás {0} személye nem található a célbérlőben, ezért kimaradtak: nem kaptak hozzáférést, nem lettek szerzőnek vagy szerkesztőnek beállítva, illetve ki lettek hagyva a személyoszlopokból.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Ezek a felhasználók leképezése…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Feloldatlan felhasználók leképezése…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Megnyitja az identitásleképezést azokkal a személyekkel, akiket ez a futtatás nem talált meg a célban.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Ebben a futtatásban nem volt feloldatlan felhasználó.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Űrlapok másolása</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Microsoft Forms-űrlapok másolása a célfiókba, az összes kérdés, elágazás, beállítás és téma megtartásával. A válaszok exportálhatók Excelbe.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Ez a Microsoft Forms webes API-ját használja, amelyet a Microsoft nem dokumentál és nem támogat. Ma működik, de előzetes értesítés nélkül megváltozhat. Próbáljon ki először néhány űrlapot.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Saját űrlapok betöltése</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Forrásfiók: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Célfiók: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Cél: ugyanaz a fiók (egy bérlő). A másolatok az eredetik mellett jönnek létre.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(bejelentkezést kérünk)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Űrlapazonosító-leképezés (a Folyamatok eszköz használja): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Űrlapok betöltése…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>{0} űrlap betöltve.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Előbb jelöljön ki legalább egy űrlapot.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Űrlapok másolása…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Másolás…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Átmásolva</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Sikertelen (lásd a naplót)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>„{0}” másolása</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>A másolás befejeződött: {0} átmásolva, {1} sikertelen.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Válasszon mappát a válaszexportokhoz</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Válaszok exportálása…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>„{0}” exportálva: {1} válasz ide: {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>{0} űrlap válaszai exportálva ide: {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Az űrlap átmásolódott, de az azonosítóját nem sikerült elmenteni a Folyamatok eszköz számára: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>„{0}” nem exportálható: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>{0} űrlap válaszai exportálva ide: {2}; {1} sikertelen (lásd a naplót).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Megszakítva.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Hiba: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Tipp: az alkalmazásregisztrációhoz szükség van a delegált Microsoft Forms-engedélyre, hozzájárulással. Adja hozzá az API permissions alatt (lásd a Felhasználói útmutatót), majd próbálja újra.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Tipp: a Microsoft Forms elutasította a kérést. Ellenőrizze, hogy ez a fiók megnyithatja a forms.office.com oldalt, és hogy az alkalmazásregisztrációnak van Microsoft Forms-engedélye.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{0}/{1} kijelölve</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Cím</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Típus</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Utoljára módosítva</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Eredmény</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Hozzáadás a másolt címekhez:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (másolat)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Kijelölt űrlapok másolása</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Válaszok exportálása…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Másolat ellenőrzése a forrással szemben</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Egyéb eszközök</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Űrlapok</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Microsoft Forms-űrlapok másolása és válaszaik exportálása</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Űrlapok eszköz</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Folyamatok átírása a célhoz</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Exportált Power Automate-csomagok (.zip) frissítése, hogy a célra mutassanak: webhelyek, listák, oszlopok, átmásolt űrlapok és e-mail-tartományok. Az eredeti csomagok sosem változnak.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Exportált folyamatcsomagok kiválasztása</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Adja hozzá a Power Automate-ből exportált folyamatcsomagokat (.zip).</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Fájlok hozzáadása…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Mappa hozzáadása…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Vizsgálat</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Folyamatcsomagok (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Előbb adjon hozzá legalább egy folyamatcsomagot.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Csomagok vizsgálata…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>Kihagyva: {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} folyamat található. {1} webhelyre, {2} listára és {3} űrlapra hivatkoznak.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>A vizsgálat befejeződött.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Webhelyek leképezése</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Hová kerül az egyes folyamatok SharePoint-webhelye. Többbérlős módban jelentkezzen be a célba, és az új bérlő címe automatikusan kitöltődik; módosítsa azt a sort, amelynek webhelye más nevű. Egybérlős módban sorról sorra írja be a célwebhelyet.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Webhely a folyamatokban (lecserélődik)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Célwebhely</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Új bérlő címe:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Üres célok kitöltése, az elérési utak megtartásával</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Adjon meg teljes URL-t, például: https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Az üres célok kitöltve ezzel a gazdával és az egyes webhelyek elérési útjával.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Listák és oszlopok párosítása</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Egy kártya jár minden, a folyamatok által használt listához, akárhány folyamat használja. Mindegyik megmutatja a lista nevét és oszlopait, azt a listát, amelyre a célon leképeződik (alapértelmezés szerint az azonos nevűre; ha a név eltér, válasszon másikat a legördülő listából), és hogy az egyes oszlopok hogyan képeződnek le. Ellenőrizze a figyelmeztetéssel jelölt kártyákat.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Listák és oszlopok párosítása</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Lista</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>Forráslista azonosítója</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>Céllista azonosítója</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Forrásoszlop</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Céloszlop</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Előbb vizsgálja meg a csomagokat.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Előbb adjon meg legalább egy célwebhelyet.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Listák és oszlopok párosítása…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(nem található)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Azonos nevű lista található a célon</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Annak a webhelynek, amelyen ez a lista van, nincs célwebhelye (Webhelyek lépés)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Ez a lista nem olvasható a forráswebhelyen: lehet, hogy nem létezik, a fióknak nincs hozzáférése, vagy a webhely más bérlőn van, mint a forráskapcsolata</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Nincs ilyen nevű lista a célwebhelyen: válasszon egyet a legördülő listából</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Azonos név</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Átnevezve a célon</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Nincs egyezés: válasszon oszlopot</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{1} listából {0}-nak van céllistája. Ellenőrizendő oszlop: {2}.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Űrlapok és e-mail</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Az Űrlapok eszközzel átmásolt űrlapok automatikusan kitöltődnek. A saját maga létrehozott űrlaphoz illessze be az azonosítóját vagy a szerkesztőoldalának hivatkozását.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>Forrásűrlap azonosítója</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>Űrlapazonosító (a legördülő listából kitöltve, vagy illesszen be egyet)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Áthelyezendő e-mail-tartomány:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. A frissített csomagok írása</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Válasszon kimeneti mappát (nem az eredeti fájlokat tartalmazó mappát). A frissített csomagok és az összes módosítást felsoroló jelentés ide kerülnek.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Frissített csomagok írása</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Leképezés mentése…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Kimeneti mappa megnyitása</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>A kapcsolatok nem helyezhetők át bérlők között. A csomag importálása után hozza létre újra az egyes kapcsolatokat a Power Automate-ben, és válassza ki őket újra.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Előbb válasszon kimeneti mappát.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Frissített csomagok írása…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>A(z) {0} frissített másolatának mentése ({1}/{2}. csomag)</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Power Automate-csomag (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Ezt a fájlnevet már kiválasztotta egy másik csomaghoz. Válasszon másik nevet.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Egy csomag egy eredeti fölé lenne mentve (azonos mappa, azonos név). Válasszon másik kimeneti mappát, vagy módosítsa a nevét a „Mentés másként” mezőben, hogy az eredetik érintetlenek maradjanak.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Folyamat-átírási jelentés
+
+Az eredeti csomagok érintetlenek. A kapcsolatok NEM kerülnek áttelepítésre; importáláskor hozza létre őket újra, és válassza ki őket.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>A jelentés ide lett írva: {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} csomag megírva, {1} csere. {2} érték még mindig a forrásra mutat (lásd a jelentést).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>A leképezés elmentve ide: {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Folyamatok</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Exportált Power Automate-folyamatok frissítése a célhoz</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Folyamatok eszköz</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Mit használnak ezek a folyamatok</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>A vizsgált folyamatokban talált szolgáltatások, és hogy az eszköz mit tesz mindegyikkel.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Szolgáltatás</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Folyamatok</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Lépések</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Talált</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Mit tesz az eszköz</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Átírja, amit talál</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>Az azonosítók jelentve vannak; importálás után ellenőrizze</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Csak kapcsolat (hozza létre újra)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Oszlopleképezés</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Egy oszlop akkor jelenik meg itt, ha egy folyamat ír bele, szűr vagy rendez rá, vagy kifejezésben olvassa egy párosított listán. A céloszlopot automatikus párosítás választja ki (azonos név, majd azonos megjelenített név, majd hasonló név). Csak a „Hasonló név” vagy „Nincs egyezés” jelölésű soroknál kell tennie valamit; bármelyik sort módosíthatja a legördülő listából, vagy válassza a „(változatlanul hagyás)” lehetőséget a forrásnév megtartásához. A beépített oszlopok, például a Title nincsenek felsorolva, mert mindenhol léteznek.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(változatlanul hagyás)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Hasonló név: kérjük, ellenőrizze</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(még nincs párosítva)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>A céllistát Ön választotta</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Ha saját maga szeretne listát választani (például ha a név eltér), írja vagy illessze be a céllista azonosítóját vagy a listabeállítások oldalának hivatkozását a Céllista azonosítója oszlopba. Ezután kattintson az „Újrapárosítás” gombra az oszlopai párosításához.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Nem található listaazonosító ebben: „{0}”. Illesszen be egy GUID-ot vagy a listabeállítások oldalának hivatkozását.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Nem található űrlapazonosító ebben: „{0}”. Illessze be az űrlap azonosítóját vagy a szerkesztőoldalának hivatkozását.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Űrlapok</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Cél</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Másolás</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Eredmények</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Válassza ki a másolandó űrlapokat</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Űrlapok újratöltése</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Az űrlapok megtekintéséhez kattintson a „Saját űrlapok betöltése” gombra.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>Ebben a fiókban nem található űrlap.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} űrlap másolása</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>További űrlapok másolása</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Válassza ki, hová kerüljenek a másolatok</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Egy bérlő: a másolatok ugyanabban a fiókban jönnek létre, amelyet használ, az eredetik mellett.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Több bérlő: a másolatok a célfiókban jönnek létre. Jelentkezzen be ide; ez különbözik a SharePoint-webhelyekhez használt bejelentkezéstől.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Célfiók</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Bejelentkezés az alkalmazásregisztrációval: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Bejelentkezés a célalkalmazás-regisztrációval (a Beállításokban megadva).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Bejelentkezés a célfiókba</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Bejelentkezés újra</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Bejelentkezés a célfiókba… megnyílhat egy böngészőablak.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Csatlakozva mint {0}. A Microsoft Forms-hozzáférés megerősítve ({1} űrlap már van ebben a fiókban).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Nem sikerült csatlakozni a célfiókhoz: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>A célfiók még nincs csatlakoztatva.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Kész. Kattintson a Másolás gombra az indításhoz.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Kész: a másolatok ide jönnek létre: {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>A folytatáshoz jelentkezzen be a célfiókba.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Beállítások</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} űrlap lesz átmásolva innen: {1}, ide: {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>a forrásfiók</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>a célfiók</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Űrlapok másolása</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Indítás…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>{0}/{1}. űrlap: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Megszakítás az aktuális űrlap után…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>A másolás befejeződött: mind a(z) {0} űrlap átmásolva</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>A másolatok itt vannak: {0}. Nyissa meg a Microsoft Forms-ot a megtekintésükhöz, vagy használja az alábbi táblázatot.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>A másolás befejeződött: {1} űrlapból {0} átmásolva, néhány figyelmet igényel</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>A másolatok itt vannak: {0}. A figyelmeztetéssel jelölt űrlapok problémákkal másolódtak át, a sikertelen űrlapok pedig nem jöttek létre. Lásd a Részletek oszlopot.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>A másolás befejeződött, de egyetlen űrlap sem lett átmásolva</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Az okot lásd a Részletek oszlopban. Gyakori ok a célregisztráció hiányzó Microsoft Forms-engedélye, vagy a Forms-hozzáférés nélküli fiók.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>A másolás megszakítva {1} űrlapból {0} után</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Az alább felsorolt űrlapok elkészültek. A megszakításkor másolt űrlap nem készült el, és nem látható.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Átmásolva</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>Figyelmeztetésekkel</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Sikertelen</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Kérdések</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Forrásűrlap</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Másolat</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Kérdések</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Részletek</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Átmásolva</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Átmásolva figyelmeztetésekkel</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Sikertelen</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Kijelölt másolat megnyitása</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Microsoft Forms megnyitása</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Eredmények exportálása…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Űrlapazonosító-leképezés megjelenítése</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Előbb jelöljön ki egy átmásolt űrlapot a táblázatban.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Az eredmények elmentve ide: {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Tipp: az alkalmazásregisztrációnak nincs megfelelő átirányítási címe. Az Entrában az Authentication alatt adja hozzá a „Mobile and desktop applications” platformot a http://localhost címmel, majd próbálja újra.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Csomagok</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Webhelyek</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Listák és oszlopok</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Űrlapok és e-mail</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Írás</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Jelentés</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Válassza ki az exportált folyamatokat</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>A Power Automate-ben: nyissa meg a My flows részt, válasszon egy folyamatot, majd Export → Package (.zip). Adja hozzá ide a letöltött .zip fájlokat. Mindegyik fájl a hozzáadás pillanatában megvizsgálásra kerül.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Törlés</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>A kezdéshez adja hozzá az exportált folyamatcsomagokat.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>Ezekben a fájlokban nem található folyamat. Győződjön meg arról, hogy az Export → Package (.zip) paranccsal exportált csomagok.</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>A vizsgálat befejeződött. Tekintse át, mit használnak a folyamatok, majd kattintson a Tovább gombra.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Válassza ki a célwebhelyeket</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Ezek a folyamatok nem használnak rögzített című SharePoint-webhelyeket, így itt nincs mit leképezni. Kattintson a Tovább gombra.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Ezután az eszköz a kapcsolatain keresztül beolvassa az egyes listákat, és párosítja őket a célwebhelyen.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Adja meg az egyes forráswebhelyekhez a célwebhelyet, majd kattintson a Tovább gombra.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Listák és oszlopok párosítása</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Újrapárosítás</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Listák</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Ezek a folyamatok nem mutatnak konkrét SharePoint-listákra, így nincs mit párosítani.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>A listák és oszlopok párosítása a lépés megnyitásakor történik.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Űrlapok és e-mail</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Ellenőrizze az űrlapokat és az e-mailt, majd kattintson a Tovább gombra.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Ezek a folyamatok nem használnak Microsoft Forms-ot.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>E-mail-címek</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Ha minden címet át szeretne helyezni egyik e-mail-tartományból a másikba, adja meg mindkét tartományt. A többi tartomány címei a jelentésben szerepelnek, nem változnak.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>A frissített csomagok írása</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Kimeneti mappa</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Válassza ki a kimeneti mappát, majd kattintson a Frissített csomagok írása gombra.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Készen áll {0} csomag írására, amely {1} folyamatot tartalmaz. Cserék: {2} webhely, {3} lista, {4} oszlopleképezés, {5} űrlap.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Frissített csomagok írása</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Megírt csomagok</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Cserék</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Még mindig a forrás</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>Ellenőrizendő</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Csomag</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Frissítve</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} érték még mindig a forrásra mutat</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Jelentés megnyitása</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Újrakezdés</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Kész: {0} csomag megírva</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Elmentve ide: {0}. Semmi sem maradt a forrásra mutatva. Az importáláshoz kövesse az alábbi lépéseket.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Kész: {0} csomag megírva, néhány elem ellenőrzést igényel</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Elmentve ide: {0}. Nyissa meg a jelentést, hogy lássa a még a forrásra mutató értékeket és azokat az elemeket, amelyeket az eszköz nem ír át (más szolgáltatások, nem párosított listák vagy oszlopok).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Mi a teendő ezután</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Nyissa meg a jelentést, és ellenőrizze a „még a forrásra mutat” elemeket és mindent, ami ellenőrzésre van jelölve.
+2.  A Power Automate-ben (célbérlő) nyissa meg a My flows → Import → Import Package (Legacy) részt, és válasszon egy megírt csomagot.
+3.  A „Related resources” alatt kattintson a „Select during import” gombra az egyes kapcsolatoknál, és válasszon vagy hozzon létre egy kapcsolatot a célbérlőben. A kapcsolatok nem helyezhetők át bérlők között.
+4.  Importálja a folyamatot. Hagyja kikapcsolva, nyissa meg, javítsa, amit jelez, majd kapcsolja be.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Nincs változás (semmi sem egyezett a leképezéssel)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Átmásolva: {0}, ide: {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Korábban átmásolva</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Már átmásolva</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …és még {0}</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>A kijelölt űrlapok közül {0} már át lett másolva ebbe a fiókba:
+
+{1}
+
+Az ismételt másolás mindegyikből második másolatot hoz létre. Folytatja?</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Újra másol?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>Még fut egy másolás. Ha most bezárja, a másolt űrlap félkészen maradhat a célban. Leállítja és bezárja?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Másolás folyamatban</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Egyetlen válasz sem exportálható (lásd a naplót).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Szűrés cím vagy típus szerint</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Egy munkafüzet</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Az összes kijelölt űrlap exportálása egyetlen Excel-fájlba, űrlaponként egy munkalappal.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>E-mail-cím</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Tenant ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Könyvtár elérési útja</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Egyéb értékek</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Írja be a cserét minden olyan értékhez, amelynek változnia kell. Az üresen hagyott sorok nem változnak; ha még a forrásra mutatnak, a jelentésben szerepelnek.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Fajta</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>A folyamatokban</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Csere erre</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Azonosító-ellenőrzés</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Nem űrlapazonosító vagy szerkesztőoldal-hivatkozás</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Megegyezik a forrásűrlappal</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Ez az űrlap a forrásbérlőben van, nem a célban</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Ez az űrlap a forrástól eltérő bérlőben van</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>A(z) {0} → {1} Űrlapok-másolatból</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Korábbi Űrlapok-másolatból</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Leképezés betöltése…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Webhelyek, listák, oszlopok, űrlapok és egyéb értékek kitöltése egy korábban mentett leképezésből.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>A leképezés betöltése nem sikerült: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>{0} betöltve. A folyamatokhoz illő értékek kitöltődtek; ellenőrizze őket a következő lépésekben.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>{0} betöltve. A folyamatcsomagok hozzáadásakor lesz alkalmazva.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>{0} célwebhely kitöltve. Ellenőrizze őket lent, majd kattintson a Tovább gombra.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Minden webhelynek van már célja, ezért semmi sem változott. Törölje a Cél cellát, hogy kitöltődjön.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Gyorsparancs: írja be az új bérlő címét, például https://fabrikam.sharepoint.com, és kattintson a gombra. Minden webhely, amelynek még nincs célja, ezt a címet kapja a forrással azonos elérési úttal: a https://contoso.sharepoint.com/sites/HR címből https://fabrikam.sharepoint.com/sites/HR lesz. Az OneDrive-webhelyek (contoso-my) az új bérlő -my címére kerülnek. A már megadott célokhoz nem nyúl. A webhelyeknek már léteznie kell az új bérlőben; ez az eszköz nem hozza létre őket. Ha egy webhely neve ott eltér, írja be a címét a Célwebhely cellába.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Ha egy Célwebhely mezőt üresen hagy, az a webhely változatlan marad: a folyamatok a régi webhelyre mutatnak tovább, a listái és oszlopai nem lesznek párosítva vagy átírva, és a jelentés az „Importálás utáni teendők” alatt felsorolja. Ez csak olyan webhelynél helyes, amely nem költözik az új bérlőbe.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Mi történik</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Átkerül a célra</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Változatlan (nincs cél)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>A(z) {0} webhely változatlan maradt (nincs megadva cél), így a folyamatok még mindig rá mutatnak, és a listái nem lettek párosítva. Ez rendben van, ha a webhely nem költözik; egyébként futtassa újra céllal.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Még nincs megjeleníthető oszlop: egyetlen lista sincs párosítva, így nincs mit összehasonlítani. Javítsa a fenti listákat, majd kattintson az Újrapárosítás gombra.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Nincs leképezendő oszlop, így itt nincs teendője. A párosított listáknak nincs olyan egyéni oszlopa, amelybe a folyamatok írnak, amelyre szűrnek, vagy amelyet az eszköz számára látható módon olvasnak. Az alul lévő tevékenységlista megmondja, mit találtunk az egyes listáknál.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} oszlop található: {1} azonos nevű a célon, {2} át lett nevezve és párosítva, {3} hasonlónak tűnik, {4}-nek nincs egyezése.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Kérjük, ellenőrizze a „Hasonló név” jelölésű sorokat, és válasszon oszlopot a „Nincs egyezés” jelölésű sorokhoz. Az „Azonos név” vagy „Átnevezve a célon” jelölésű sorokkal nincs teendő.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Itt nincs teendő: minden oszlop már egyezik. Kattintson a Tovább gombra.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>A frissített csomagok nevei</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Hogyan nevezze el a frissített .zip fájl(oka)t. Az eredeti fájlnévhez használja a {name} jelölőt: a „{name} - Fabrikam” az „Onboarding.zip” fájlból „Onboarding - Fabrikam.zip” fájlt készít. Egy csomagnál egyszerűen beírhatja a teljes nevet. Hagyja {name}-ként az eredeti nevek megtartásához. A kétszer használt névhez (2), (3)… kerül, hogy semmi se íródjon felül.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Ez lesz megírva: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>A folyamat csak az űrlap azonosítóját tárolja, ezért az űrlapnevek a lépés megnyitásakor a Microsoft Forms-ból kerülnek beolvasásra: a folyamatokban lévő űrlapok címe (forrásfiók) és a célfiók űrlapjai. Az az űrlap, amelynek címe pontosan egy célűrlapéval egyezik, automatikusan párosítva lesz; egyébként válassza ki az új űrlapot a legördülő listából, vagy illessze be az azonosítóját vagy a szerkesztőoldalának hivatkozását. Az Űrlapnevek újratöltése paranccsal olvashatja be őket újra.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Űrlapok betöltése a célfiókból…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>A célfiók űrlapjainak betöltése… bejelentkezést kérhetünk.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>A(z) {0} célfiók tulajdonában lévő űrlapok listázása, hogy minden folyamathoz kiválaszthassa az új űrlapot. A bejelentkezésre várakozás leállításához kattintson a Mégse gombra.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Cél: {0} űrlap található itt: {1}. Soronként válasszon egyet, vagy illesszen be azonosítót.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Cél: nem található űrlap itt: {0}. A legördülő lista csak a fiók tulajdonában lévő űrlapokat sorolja fel (a csoportűrlapokat nem), ezért először másolja át az űrlapokat az Űrlapok eszközzel, vagy illesszen be azonosítót.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Megszakítva. Az újrapróbálkozáshoz kattintson az Űrlapnevek betöltése gombra, vagy illesszen be űrlapazonosítókat.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Cél: az űrlapok betöltése nem sikerült: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(nincs)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(cím nélküli űrlap)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Forrásűrlap</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Választás a cél űrlapjai közül</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Válasszon egy űrlapot a célfiókból. Előbb kattintson az „Űrlapok betöltése a célfiókból” gombra.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>A célbejelentkezésből kitöltve ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>A forrásfiókja, lecserélve a célfiókjára</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>A bejelentkezéseiből kitöltve ({0} → {1}). Törölje mindkét mezőt, hogy az e-mail-tartományok változatlanok maradjanak.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Az üres célú webhely változatlan marad: a folyamatok továbbra is rá mutatnak, és a jelentés felsorolja.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Bejelentkezve mint {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Bejelentkezve mint {0}. A célbérlő SharePoint-címe: {1}; az üres célwebhelyek ebből lettek kitöltve.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ A folyamatok néhány webhelye a(z) {0} címen van, ami a célfiók saját címe. Vagy ezek a csomagok már a célra mutatnak (például ez az eszköz írta őket, vagy a célból exportált folyamatok), ekkor inkább az eredeti exportokat adja hozzá a forrásból; vagy a forrás és a cél valóban egy bérlő, ekkor váltson az alkalmazásban egybérlős módra (Beállítások).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>A(z) {0} egy olyan csomag, amelyet ez az eszköz írt ekkor: {1}: már a cél címeit tartalmazza, így nincs mit áthelyezni. Inkább az eredeti exportot adja hozzá a forrásbérlőből (a Letöltések mappában lévő fájlt, nem a kimeneti mappában lévőt).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Ezeknek a folyamatoknak a webhelyei a(z) {0} címen vannak, ami az Ön célbérlője, de a forrása a(z) {1}. Ha a csomagokat innen exportálták: {0}, jelentkezzen be abba a bérlőbe forrásként (Forrás módosítása…). Ha ez az eszköz írta őket korábban, távolítsa el őket, és adja hozzá az eredeti exportokat.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Bejelentkezve. {0} célwebhely kitöltve innen: {1}. Ellenőrizze őket, majd kattintson a Tovább gombra.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Bejelentkezve. Minden célwebhelynek már volt értéke, így egyik sem változott.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>A bejelentkezés nem fejeződött be, vagy az új bérlő címe nem olvasható (lásd a Cél sort). Ha be van jelentkezve, adja meg lent az új bérlő címét a célwebhelyek kitöltéséhez.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} – csatlakozva mint {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} – még nincs bejelentkezve</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Cél módosítása…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Nincs céllista kiválasztva, ezért ezek a folyamatok még mindig olyan listára mutatnának, amely nincs a célon. Válassza ki a céllistát, vagy előbb hozza létre a listát a célwebhelyen.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>A folyamatok a(z) „{0}” oszlopot használják, de a(z) „{1}” céllistának nincs hozzá oszlopa. Válassza ki a céloszlopát a táblázatban, vagy adja hozzá az oszlopot a céllistához, és kattintson az Újraellenőrzés gombra.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>A(z) „{0}” céllista megköveteli a(z) „{1}” oszlopot, de a(z) „{2}” folyamat „{3}” „Create item” lépése nem állítja be, ezért az importálás a „missing required property item/{1}” hibával meghiúsulna. Írjon be alább egy értéket hozzá, és az eszköz hozzáadja ahhoz a lépéshez, vagy tegye a(z) „{1}” oszlopot opcionálissá a céllistán, és kattintson az Újraellenőrzés gombra.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>A(z) „{0}” céllista megköveteli a(z) „{1}” oszlopot, de a(z) „{2}” folyamat „{3}” „Create item” lépése nem állítja be, ezért az importálás a „missing required property item/{1}” hibával meghiúsulna. Tegye a(z) „{1}” oszlopot opcionálissá a céllistán a SharePointban, majd kattintson az Újraellenőrzés gombra.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Kitöltendő érték ezekhez a kötelező oszlopokhoz (minden olyan Create item lépéshez hozzáadódik, amely kihagyja őket):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Ez meghiúsulna az importáláskor. A folytatáshoz javítsa:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Újraellenőrzés</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Meghiúsul ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ A folytatáshoz jelentkezzen be a célba.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} csomagot ez az eszköz írt, és már a cél értékeit tartalmazzák. Távolítsa el őket (a ✕ a listában), és adja hozzá az eredeti exportokat.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} webhelynek nincs célja. A változatlanul hagyott webhely még mindig a forrásbérlőre mutatna.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} lista meghiúsulna az importáláskor. A folytatáshoz javítsa a „Meghiúsul” jelölésű listákat.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ A listák még nincsenek párosítva. Lépjen vissza egy lépést, majd előre, hogy újrapróbálja.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} űrlaphoz érvényes célűrlap-azonosító szükséges a folytatáshoz.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Forrás módosítása…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Bejelentkezve mint {0}. A forrásbérlő SharePoint-címe: {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>A forráskapcsolat módosítva erre: {0}. Az alább felsorolt webhelyeknek ezen a bérlőn kell lenniük.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>A forrásbejelentkezés nem fejeződött be, vagy a bérlő címe nem olvasható (lásd a Forrás sort). Megszakítás esetén az előző forráskapcsolat megmarad.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Néhány webhely a(z) {0} címről lesz olvasva, ami nem az a bérlő, amelyhez forrásként csatlakozott ({1}). A listáik olvasása sikertelen lesz. Módosítsa a „Listák olvasása innen” értéket ezeknél a soroknál a forrásbérlője címére, vagy kattintson a Forrás módosítása… gombra, és jelentkezzen be egy ahhoz a bérlőhöz tartozó fiókkal.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>A folyamatok webhelyei a(z) {0} címen vannak, de Ön forrásként a(z) {1} bérlőhöz csatlakozott. A „Listák olvasása innen” értéke ugyanezekkel a webhelyekkel lett kitöltve a(z) {1} címen, így az eszköz ott olvassa a listaneveket és oszlopokat. Ellenőrizze, hogy léteznek-e ezek a webhelyek (bármelyik sort szerkesztheti), vagy kattintson a Forrás módosítása… gombra, ha a folyamatok valóban a(z) {0} bérlőről származnak.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>A folyamatok által használt listák</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Kattintson egy listára a megnyitásához vagy bezárásához. A megtekintést igénylő listák elöl vannak és nyitva.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Összes megnyitása</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Összes bezárása</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Használja:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Forrás:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Céllista</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>vagy illessze be az azonosítóját vagy hivatkozását:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Forrásoszlop</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Típus</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Használt</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>A folyamatok nem használják</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(nincs: a lista változatlan marad)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Nincs céllista kiválasztva: az ezt használó folyamatok még mindig a forráslistára mutatnak</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} oszlop ellenőrizendő</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ nincs mit ellenőrizni</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} oszlop van ezen a listán; a folyamatok {1}-et használnak: {2} azonos nevű a célon, {3} átnevezve és párosítva, {4} hasonló (kérjük, ellenőrizze), {5}-nek nincs egyezése (kérjük, válasszon). A többi oszlop a környezet kedvéért látható, és nem változik.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} oszlop van ezen a listán; egyet sem használnak a folyamatok az eszköz számára látható módon, így nincs mit leképezni.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Ennél a listánál nem olvasható oszlop (lásd a fenti megjegyzéseket és a tevékenységlistát).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Az oszlopainak megtekintéséhez és leképezéséhez válasszon fent céllistát.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>A céllista oszlopai nem olvashatók, ezért nem javasolható egyezés.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>A folyamat nem mondja meg, melyik webhelyen van ez a lista (paramétert használ), ezért nem kereshető meg. Illessze be a céllista azonosítóját vagy hivatkozását.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Nincs céllista: ez a lista változatlan marad.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>A céllista oszlopainak olvasása ehhez: {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>„{0}” lista: másik céllistát választott. Az oszlopainak olvasása itt: {1}, az újrapárosításhoz.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} – csatlakozva mint {1} (a főablak bejelentkezése)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Listák olvasása innen (forrás)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>A „Webhely a folyamatokban” a folyamatokban tárolt cím; ez az, ami lecserélődik, ezért nem szerkeszthető. A „Listák olvasása innen” az, ahonnan az eszköz a forrásoldalon beolvassa az egyes listák nevét és oszlopait; ugyanazzal a címmel indul, ezért módosítsa, ha a folyamat címe régi, át lett nevezve, vagy a forráskapcsolatától eltérő bérlőn van.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Mit használnak ezek a folyamatok</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** – {1} folyamat, {2} lépés: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>az eszköz átírja</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>kézi ellenőrzés</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>csak kapcsolat</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>Importálás utáni teendők</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Importálja az egyes javított csomagokat a célkörnyezetbe, és hozza létre újra a kapcsolatokat (azok sosem másolódnak).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Megoldáscsomagok: csak a munkafolyamat-definíciók lettek átírva. A megoldásban (customizations.xml) lévő környezeti változók értékei és kapcsolati hivatkozások még a forrás értékeit tartalmazzák; importálás után állítsa be őket.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>A folyamattulajdonosok és a csak futtató felhasználók nem részei a csomagnak; importálás után ossza meg a folyamatokat a megfelelő személyekkel.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Nincs változás (a leképezésben semmi sem egyezett).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} csere</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Még mindig a forrás értékeire mutat (leképezetlen, importálás előtt ellenőrizze)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Csatlakozás a(z) {0} forráswebhelyhez és a(z) {1} célwebhelyhez. Ha még nincs bejelentkezve, megnyílik egy bejelentkezési ablak.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Csatlakozva ide: {0} (forrás) és {1} (cél).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>A(z) {0} célwebhely listáinak és könyvtárainak olvasása, hogy az egyes listák név szerint párosíthatók és legördülő listában felkínálhatók legyenek.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>{0} lista és könyvtár található itt: {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>A(z) {0} lista nevének és oszlopainak olvasása a(z) {1} forráswebhelyről.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>„{0}” lista: azonos nevű lista keresése a(z) {1} célwebhelyen.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>„{0}” lista: megtalálva a célon. A céllista oszlopainak olvasása a párosításhoz.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>„{0}” lista: az oszlopai nem olvashatók, vagy nincsenek. Ennél a listánál nincs mit leképezni.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>„{0}” lista: {1} oszlop, egyiket sem használják a folyamatok az eszköz számára látható módon. Nincs mit leképezni.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>„{0}” lista: a folyamatok {1} oszlopnevet használnak: {2} azonos nevű a célon (nincs szükség változtatásra), {3} át lett nevezve és párosítva, {4} hasonlónak tűnik (kérjük, ellenőrizze), {5}-nek nincs egyezése (az Ön döntése), {6} beépített oszlop (nincs mit leképezni).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>A(z) {0} lista nincs a forráswebhelyen, de a célwebhelyen megvan „{1}” néven: a folyamat már a célra mutat.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>A(z) „{0}” webhelynek nincs célja; a rajta lévő listák nem lettek feloldva.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Speciális: listák olvasása másik címről</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Oszlopleképezés: {0} → {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Ehhez a listához nincs megjeleníthető oszlop.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>A lista egyetlen oszlopát sem használják a folyamatok. A megtekintéséhez jelölje be a „Minden oszlop megjelenítése” jelölőnégyzetet.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>A forráslista nem olvasható, és a folyamat nem nevez meg oszlopokat, így nincs mit leképezni.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Lista</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(nem olvasható a forráson)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Olvasás innen:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Webhely</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Ez a folyamat már erre a listára mutat a célon. Az általa használt {0} oszlopnév a cél oszlopai mellett látható; nincs mit módosítani.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(a lista neve nem érhető el)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Már a célon</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>A folyamat oszlopnevei alapján leképezve</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Az oszlopok nem olvashatók</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Nincs céllista</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Nincs mit leképezni</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Kész</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>A céloszlopok nem olvashatók</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} ellenőrizendő</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>{0} folyamat használja</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} oszlopleképezés még átnézést igényel.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Minden oszlopleképezés rendezett.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>A kapcsolatok nem másolódnak bérlők között: importálás után hozza létre őket újra a Power Automate-ben.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>E-mail: a(z) {0} tartomány minden címe {1} lesz.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{1} űrlapból {0} új űrlapra mutat.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{1} listából {0}-nak van céllistája.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>A listák még nincsenek párosítva.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>Az e-mail-címek nem változnak (nincs tartomány leképezve).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>A folyamatok nem használnak Microsoft Forms-ot.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>A folyamatok nem használnak konkrét listákat.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>A folyamatok nem neveznek meg SharePoint-webhelyeket.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{0} csomag lesz megírva {1} folyamattal; az eredetik nem változnak.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{1} webhelyből {0} célwebhelyre kerül; a többi változatlan marad.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Automatikusan kitöltött értékek törlése</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Kitöltve</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Űrlap a folyamataiban</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Innen (a folyamataiban)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Listák</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Webhelyek</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Állapot</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>Ide (cél)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Ön választotta</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Változatlanul hagyva</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(a főablak bejelentkezése)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>Innen áthelyezendő e-mail-tartomány</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Minden cím áthelyezése innen:</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>ide:</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>Ide áthelyezendő e-mail-tartomány</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…vagy húzza a .zip fájlokat (vagy egy mappát) erre az ablakra.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>A(z) „{0}” oszlopnak a(z) „{1}” listán nincs egyezése a céllistában.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>A(z) „{0}” listának ({1}) itt: {2} nincs céllistája, így az azt használó folyamatok még mindig a forráslistára mutatnak.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(a cím nem ismert)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Ugrás a lépéshez</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Van mentett leképezése? Töltse be…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Egyéni minta…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Az eredeti nevek megtartása</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>„ - migrated” hozzáadása minden névhez</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Nyissa meg a jelentést, és ellenőrizze, mi van ellenőrzésre jelölve.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>A Power Automate-ben (célbérlő): My flows, Import, Import Package (Legacy), és válasszon egy megírt csomagot.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>A Related resources alatt kattintson a „Select during import” gombra az egyes kapcsolatoknál, és válasszon vagy hozzon létre egyet a célbérlőben. A kapcsolatok nem helyezhetők át bérlők között.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Importálja a folyamatot, hagyja kikapcsolva, nyissa meg, javítsa, amit jelez, majd kapcsolja be.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Mappa megnyitása</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Power Automate megnyitása</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Ez a kimeneti mappa még nem létezik; a csomagok írásakor jön létre.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>FORRÁS</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>CÉL</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} folyamat található</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Nem található folyamat</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Ez az eszköz már megírta</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Nem olvasható</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Készen áll az írásra?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>A csomag eltávolítása a listából</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Folyamat-átírási jelentés</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Mit használnak ezek a folyamatok ({0} szolgáltatás)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} csomag megírása nem sikerült.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>A megírt csomagokban {0} érték még mindig a forrásra mutat. A jelentésben látható, melyek.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Mind a(z) {0} oszlop megjelenítése</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Csak a folyamatok által használt oszlopok megjelenítése</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Mit jelentenek ezek az oszlopok?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>Ennek a listának az azonosítója nincs a forráswebhelyen, de ez a(z) „{0}” lista a célwebhelyen: a folyamat már a célra mutat, mint egy olyan csomagban, amelyet ez az eszköz már megírt.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Csatlakoztatva</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Probléma</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Nincs bejelentkezve</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Várakozás a bejelentkezésre…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} lista · mind kész</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} lista · {1} kész · {2} átnézést igényel</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>{0} alatt.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>Ellenőrizendő</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Adja hozzá a forrásbérlőből exportált folyamatcsomagokat (.zip). Mindegyik a hozzáadás pillanatában megvizsgálásra kerül.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Adja meg, hogy az egyes folyamatok melyik webhelyre kerülnek. Jelentkezzen be a célba, és az új bérlő címe automatikusan kitöltődik.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>A folyamatok által használt minden lista párosítva lesz egy célon lévő listával, és az oszlopai leképezésre kerülnek. Ellenőrizzen mindent, ami átnézést igénylőként van jelölve.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Irányítsa az átmásolt űrlapokat az új azonosítóikra, és döntse el, hogyan változzanak az e-mail-címek és a bérlőazonosító.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Ellenőrizze az alábbi listát, válassza ki, hová menti a frissített csomagokat, majd írja meg őket.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Mi történik itt</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Az eszköz ezen a számítógépen olvassa be az egyes csomagokat (semmi sem kerül sehová elküldésre), hogy megtalálja a folyamatok által használt webhelyeket, listákat, oszlopokat és űrlapokat. Az EREDETI exportokat adja hozzá a forrásból, ne olyan csomagokat, amelyeket ez az eszköz írt korábban: azok már a cél címeit tartalmazzák.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>A(z) „{0}” oszlop eltérően van leképezve a különböző listákon ({1}). Minden lista lépései saját leképezést kapnak; a folyamat más helyén lévő kifejezések megtartják az eredeti nevet, ezért ellenőrizze őket.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Űrlapnevek újratöltése…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Űrlapnevek betöltése… bejelentkezést kérhetünk.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>A folyamataiban lévő űrlapok címének olvasása a(z) {0} forrásfiókból. A bejelentkezésre várakozás leállításához kattintson a Mégse gombra.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Forrás: {1} űrlapból {0} címe megtalálva ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Forrás: az űrlapcímek nem olvashatók: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} űrlap párosítva lett az azonos nevű célűrlappal.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Érvényes űrlapazonosítónak tűnik</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Név alapján párosítva</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>A forrás és a cél ugyanazon a bérlőn van ({0}). Váltson az alkalmazásban egybérlős módra (Beállítások), vagy jelentkezzen be a forrásba és a célba különböző bérlők fiókjaival.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Ezek a csomagok eltávolítása</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>{0} csomag eltávolítva, amely már a célra mutat: {1}. Inkább az eredeti exportokat adja hozzá a forrásbérlőből.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Ezek a csomagok el lettek távolítva. Adja hozzá az eredeti exportokat a forrásbérlőből.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Minden csomag új .zip fájlként kerül mentésre a kimeneti mappába; az eredetik sosem változnak. Átnevezéshez írjon be más nevet a Mentés másként mezőbe.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Az eredeti nevek megtartása</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>„ - migrated” hozzáadása minden névhez</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Eredeti csomag</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Mentés másként</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Mentés ezen a néven: {0} (a neveket lent módosíthatja).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Nem olvasható; nem íródott kimenet</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Megszakítva. Semmi sem változott. A Webhelyek lépésben az újrapróbálkozáshoz használja a Bejelentkezés gombot (például másik böngészőben); a Listák lépésben az Újrapárosítást.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Megszakítás… a bejelentkezési ablak bezárása eltarthat egy ideig.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Mit csinál az eszköz</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Kapcsolatok</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Több bérlő: a listák párosításához az eszköz beolvassa az egyes listák nevét és oszlopait a forrásbérlőből, és megkeresi ugyanazt a listát a célbérlőben. Ehhez mindkettőbe be kell jelentkezni. Jelentkezzen be itt mindkét oldalra, vagy egyszerűen kattintson a Tovább gombra, és akkor kérjük. Megnyílik egy böngészőablak; ha rossz böngésző, kattintson a Mégse gombra, és próbálja újra. Egyik bérlőben sem változik semmi.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Egy bérlő: a forrás és a cél ugyanaz a bérlő, ezért az eszköz azt a fiókot használja, amellyel a Csatlakozás lépésben bejelentkezett. Máshová nem kell bejelentkezni. A bérlőben nem változik semmi.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Forrás</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Cél</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Bejelentkezés a forrásba…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Bejelentkezés a célba…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Mégse</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Leállítja a bejelentkezési ablakra várakozást, hogy újra próbálkozhasson, például másik böngészőben.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Még nincs bejelentkezve</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>A főablak bejelentkezését használja: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Bejelentkezve mint {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Kész</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Várakozás a bejelentkezésre… meg kell nyílnia egy böngészőablaknak</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>A bejelentkezés megszakítva. Az újrapróbálkozáshoz kattintson a Bejelentkezés gombra.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Bejelentkezve. Ellenőrizze lent a célwebhelyeket, majd kattintson a Tovább gombra.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Még nincs forráswebhely, amelybe be lehetne jelentkezni. Előbb adjon hozzá folyamatcsomagokat.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Előbb adjon meg legalább egy célwebhelyet (vagy használja a Kitöltés, elérési utak megtartásával lehetőséget); a bejelentkezés a célwebhely bérlőjébe történik.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Bejelentkezés a forrásba… megnyílik egy böngészőablak.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Bejelentkezés a célba… megnyílik egy böngészőablak.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>forrás</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>cél</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Bejelentkezés a forrásbérlőbe. Megnyílik egy böngészőablak; a várakozás leállításához kattintson a Mégse gombra (például másik böngésző kipróbálásához). A bejelentkezés azt is megmondja az eszköznek, hogy melyik bérlő a forrás.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Bejelentkezés a célbérlőbe. Megnyílik egy böngészőablak; a várakozás leállításához kattintson a Mégse gombra (például másik böngésző kipróbálásához). A bejelentkezés azt is megmondja az eszköznek, mi az új bérlő SharePoint-címe.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Csatlakozva ide: {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>A bejelentkezést Ön szakította meg.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>{0} csomagfájl beolvasása ezen a számítógépen a folyamatok által használt webhelyek, listák, oszlopok és űrlapok megtalálásához. Semmi sem kerül sehová elküldésre.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Beolvasva: {0}: {1} folyamat.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>{0} lista párosítása: az eszköz mindegyiknél lekéri a nevét a forráswebhelytől, majd megkeres egy ilyen nevű listát a célwebhelyen.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>A párosítás befejeződött. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>{0} javított csomag írása ide: {1}. Az eredetik nem változnak.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>{0} írása a leképezés alkalmazásával.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>{0} ellenőrzése a még a forrásra mutató értékekre.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Ön megszakította. Semmi sem változott.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Leállt: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Minden folyamat tárolja annak a SharePoint-webhelynek a címét, amelyből olvas vagy amelybe ír. Az új bérlőben való futáshoz minden folyamatnak az ottani megfelelő webhelyre kell mutatnia, ezért mondja meg az eszköznek, hogy melyik új webhely váltja fel az egyes régieket. Ez csak a csomagjai másolatait szerkeszti; a Tovább gombra kattintásig semmit sem keres meg.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Mi történik itt: a folyamat által használt minden listánál az eszköz beolvassa a lista nevét és oszlopait a forráswebhelyről, megkeres egy azonos nevű listát a célwebhelyen, és beolvassa annak oszlopait a párosításhoz. Miért: a folyamatok azonosítóval vagy belső névvel hivatkoznak a listákra és oszlopokra, és ezek az új bérlőben eltérnek, ezért az eszköz megkeresi az egyenértékűt. Ez a lépés csak olvas; egyik bérlőben sem jön létre vagy változik semmi. A céllistát és bármelyik oszlopot módosíthatja a kártyáján.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Az átmásolt űrlap új azonosítót kap, ezért az azt használó folyamatnak a másolatra kell mutatnia. Az e-mail-címeknek és a bérlőazonosítónak is változnia kell az új szervezethez. Itt semmit sem keres meg; Ön dönt a cserékről, és ami üresen marad, az változatlan.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Az eszköz új .zip fájlokat ír a kimeneti mappába a leképezés alkalmazásával, újra megvizsgálja őket, hogy megtalálja, mi mutat még a forrásra, és jelentést ír. Az eredeti csomagok sosem változnak, és semmi sem kerül elküldésre egyik bérlőnek sem. Az új csomagokat utána Ön importálja a Power Automate-ben.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>A bejelentkezés megszakítva. Az újrapróbálkozáshoz kattintson a gombra, például másik böngészőben.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Mégse</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Hiba: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>A forrásűrlap nem olvasható ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Az űrlap nem hozható létre a célban ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Menet közben megszakítva. Egy részleges űrlap maradt a célban; törölje a Microsoft Forms-ban.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>A másolás menet közben leállt ({0}). Egy részleges űrlap maradt a célban; törölje a Microsoft Forms-ban.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>háttérkép</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>logó</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>fejléckép</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>A(z) {0} nem lett átmásolva (a képek még nem támogatottak).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>A kvíz pontozása (helyes válaszok és pontok) nincs ellenőrizve; kérjük, ellenőrizze a másolatot.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>A(z) „{0}” beállítás nem másolható ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>A(z) „{0}” kérdés nem lett átmásolva ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(cím nélküli)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Az elágazási szabályok nem másolhatók ({0}); kérjük, ellenőrizze a másolatot.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>A másolat létrejött, de nem tehető láthatóvá a Microsoft Forms-ban ({0}); lehet, hogy a Lomtárban van.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>A másolatnak {0} kérdése van, a forrásnak viszont {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>A(z) „{0}” kérdés ({1}) létrejött, de a beállításai nem másolhatók ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Eredmények</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Forrásűrlap</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>Forrásűrlap azonosítója</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Másolat címe</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>Másolatűrlap azonosítója</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Állapot</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Átmásolt kérdések</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Kérdések a forrásban</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Figyelmeztetések</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Megjegyzések</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Hiba</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Excel-munkafüzet (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>JSON-fájlok (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Azonosító</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Kezdési idő</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Befejezési idő</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Válaszoló</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Név</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Pontszám</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Leképezetlen válaszok (nyers JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (levágva: túl hosszú egy Excel-cellához)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Leállítja a futtatást?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>Összehasonlítás vagy ellenőrzés még fut. Az ablak bezárása leállítja, és nem készül jelentés. Mégis bezárja?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Bezárja munka közben?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Az eszköz még dolgozik (vizsgálat, párosítás, bejelentkezés vagy csomagírás). A bezárás most leállítja. Mégis bezárja?</value></data>
 </root>

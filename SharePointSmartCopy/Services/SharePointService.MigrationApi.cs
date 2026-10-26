@@ -147,7 +147,7 @@ public partial class SharePointService
     public async Task<string> CreateMigrationJobEncryptedAsync(
         string siteUrl, string gWebId,
         string dataContainerUri, string metadataContainerUri,
-        byte[] encryptionKey)
+        byte[] encryptionKey, CancellationToken ct = default)
     {
         // AllSites.FullControl is required: Sites.ReadWrite.All caps effective privilege below
         // site-collection-admin level in SP's OAuth permission model, causing CreateMigrationJobEncrypted
@@ -207,8 +207,8 @@ public partial class SharePointService
             r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
             return r;
-        }, siteUrl, "AllSites.FullControl");
-        var body = await response.Content.ReadAsStringAsync();
+        }, siteUrl, "AllSites.FullControl", ct);
+        var body = await response.Content.ReadAsStringAsync(ct);
         if (!response.IsSuccessStatusCode)
             throw new Exception($"CreateMigrationJobEncrypted HTTP {(int)response.StatusCode}: {body}");
 
@@ -260,9 +260,15 @@ public partial class SharePointService
         int pollCount  = 0;
         int consecutiveTimeouts = 0;
         var pollDelay  = TimeSpan.FromSeconds(2);
+        // A job that never emits JobEnd (stuck in SharePoint's queue, or its log evicted) would otherwise be polled forever,
+        // pinning one of the few import workers until the whole run stalls. Give up after a long stretch with no event.
+        var lastEventUtc = DateTime.UtcNow;
+        var stallLimit   = TimeSpan.FromHours(2);
 
         while (!cancellationToken.IsCancellationRequested)
         {
+            if (DateTime.UtcNow - lastEventUtc > stallLimit)
+                throw new TimeoutException(Loc.T("Svc_Sp_MigrationJobStalled", (int)stallLimit.TotalMinutes));
             // Poll immediately on the first pass (the previous fixed 3 s pre-delay added latency to
             // every batch); then back off for long-running jobs to reduce API noise:
             // 2 s for the first ~1 min → 10 s for the next ~6 min → 30 s thereafter.
@@ -366,6 +372,7 @@ public partial class SharePointService
                             continue;
 
                         if (!evtObj.TryGetProperty("Event", out var evtName)) continue;
+                        lastEventUtc = DateTime.UtcNow;
                         yield return evtObj;
                         if (evtName.GetString() == "JobEnd")
                         {

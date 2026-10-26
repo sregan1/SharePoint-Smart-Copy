@@ -1508,7 +1508,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     if (srcIds.HasValue && tgtIds.HasValue)
                     {
                         var srcApiPath = $"web/lists('{srcIds.Value.listId}')/items({srcIds.Value.listItemId})";
-                        var hasUnique  = await spService.GetHasUniqueRoleAssignmentsAsync(job.SourceSiteUrl, srcApiPath, ct);
+                        var hasUnique  = await spService.TryGetHasUniqueRoleAssignmentsAsync(job.SourceSiteUrl, srcApiPath, ct);
                         var perm = await permissionService.CopyObjectPermissionsAsync(
                             job.SourceSiteUrl, job.TargetSiteUrl,
                             srcApiPath,
@@ -1600,7 +1600,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         if (srcIds.HasValue && tgtIds.HasValue)
                         {
                             var srcApiPath = $"web/lists('{srcIds.Value.listId}')/items({srcIds.Value.listItemId})";
-                            var hasUnique  = await spService.GetHasUniqueRoleAssignmentsAsync(job.SourceSiteUrl, srcApiPath, innerCt);
+                            var hasUnique  = await spService.TryGetHasUniqueRoleAssignmentsAsync(job.SourceSiteUrl, srcApiPath, innerCt);
                             var perm = await permissionService.CopyObjectPermissionsAsync(
                                 job.SourceSiteUrl, job.TargetSiteUrl,
                                 srcApiPath,

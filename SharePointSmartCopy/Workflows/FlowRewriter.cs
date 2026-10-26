@@ -115,18 +115,44 @@ public static partial class FlowRewriter
 
     private static void RenameColumnKeys(JsonObject prm, List<KeyValuePair<string, string>> cols, Action<string, string, string, int> hit)
     {
-        foreach (var key in prm.Select(kv => kv.Key).Where(k => k.StartsWith("item/", StringComparison.Ordinal)).ToList())
+        var keys = prm.Select(kv => kv.Key).Where(k => k.StartsWith("item/", StringComparison.Ordinal)).ToList();
+        // Plan every rename first, then apply them together: moving keys one at a time let A->B overwrite a step's own
+        // B value, and a chain A->B, B->C moved A's value on to C.
+        var plan = new Dictionary<string, (string NewKey, string Col, string NewCol)>(StringComparer.Ordinal);
+        foreach (var key in keys)
         {
             var rest = key["item/".Length..];
             var slash = rest.IndexOf('/');
             var col = slash > 0 ? rest[..slash] : rest;
             var map = cols.FirstOrDefault(c => c.Key == col);
             if (map.Key is null) continue;
-            var newKey = "item/" + map.Value + (slash > 0 ? rest[slash..] : "");
-            var value = prm[key];
-            prm.Remove(key);
-            prm[newKey] = value;   // JsonObject keeps insertion order; moved to the end, which is harmless for parameters
-            hit("Column", col, map.Value, 1);
+            plan[key] = ("item/" + map.Value + (slash > 0 ? rest[slash..] : ""), col, map.Value);
+        }
+        // A rename whose new key is already taken (by a key that stays, or by another rename) would overwrite a value:
+        // leave that key alone and say so. Repeat, because leaving one key in place can block another rename.
+        bool changed;
+        do
+        {
+            changed = false;
+            var staying = keys.Where(k => !plan.ContainsKey(k)).ToHashSet(StringComparer.Ordinal);
+            var claimed = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var (oldKey, p) in plan.ToList())
+            {
+                if (staying.Contains(p.NewKey) || !claimed.Add(p.NewKey))
+                {
+                    plan.Remove(oldKey);
+                    hit("Column (not renamed: the new name is already used in this step)", p.Col, p.NewCol, 1);
+                    changed = true;
+                }
+            }
+        } while (changed);
+
+        var values = plan.Keys.ToDictionary(k => k, k => prm[k], StringComparer.Ordinal);
+        foreach (var k in plan.Keys) prm.Remove(k);
+        foreach (var (oldKey, p) in plan)
+        {
+            prm[p.NewKey] = values[oldKey];   // JsonObject keeps insertion order; moved to the end, which is harmless for parameters
+            hit("Column", p.Col, p.NewCol, 1);
         }
     }
 
@@ -162,16 +188,33 @@ public static partial class FlowRewriter
         if (cols.Count == 0) return s => s;
         var lookup = cols.GroupBy(c => c.Key, StringComparer.Ordinal).ToDictionary(g => g.Key, g => g.First().Value, StringComparer.Ordinal);
         var names = string.Join("|", lookup.Keys.OrderByDescending(k => k.Length).Select(Regex.Escape));
-        var rx = new Regex(queryWords
-            ? $@"(?<=body/)(?<n>{names})(?=['/])|(?<![\w])(?<n>{names})(?![\w])"
-            : $@"(?<=body/)(?<n>{names})(?=['/])");
-        return s => rx.Replace(s, m =>
+        var rxBody = new Regex($@"(?<=body/)(?<n>{names})(?=['/])");
+        var rxWords = queryWords ? new Regex($@"(?<=body/)(?<n>{names})(?=['/])|(?<![\w])(?<n>{names})(?![\w])") : rxBody;
+        string Sub(Regex rx, string text) => rx.Replace(text, m =>
         {
             var from = m.Groups["n"].Value;
             var to = lookup[from];
             hit("Column", from, to, 1);
             return to;
         });
+        if (!queryWords) return s => Sub(rxBody, s);
+        // OData text: a bare word is a column only OUTSIDE single-quoted literals ("Category eq 'Approval'" must keep its
+        // value). The 'body/<Column>' form is safe everywhere, so quoted stretches still get that one.
+        return s =>
+        {
+            var sb = new System.Text.StringBuilder(s.Length);
+            var inQuote = false;
+            var segStart = 0;
+            for (var i = 0; i < s.Length; i++)
+            {
+                if (s[i] != '\'') continue;
+                sb.Append(Sub(inQuote ? rxBody : rxWords, s[segStart..i])).Append('\'');
+                segStart = i + 1;
+                inQuote = !inQuote;
+            }
+            sb.Append(Sub(inQuote ? rxBody : rxWords, s[segStart..]));
+            return sb.ToString();
+        };
     }
 
     private sealed record ValueRule(string Category, string From, string To);
@@ -191,17 +234,19 @@ public static partial class FlowRewriter
                 entries.Add((new ValueRule(cat, from, to), pattern(Regex.Escape(from))));
         }
 
-        Add("Site", map.Sites, e => $@"(?i:{e})(?![A-Za-z0-9_~-])");
-        Add("List", map.Lists, e => $@"(?<![0-9A-Fa-f-])(?i:{e})(?![0-9A-Fa-f-])");
+        // A tenant-root site (no path) must not also rewrite the sub-sites under it (/sites/X, /teams/X) that have their own row.
+        Add("Site", map.Sites, e => $@"(?i:{e})(?![A-Za-z0-9_~-]){(e.IndexOf('/', e.IndexOf("//", StringComparison.Ordinal) + 2) < 0 ? "(?!/(?i:sites|teams)/)" : "")}");
+        // The GUID is also found URL-encoded in a link ("%7B<guid>%7D"), where the "B" of "%7B" is a hex digit.
+        Add("List", map.Lists, e => $@"(?:(?<![0-9A-Fa-f-])|(?<=%7[Bb]))(?i:{e})(?![0-9A-Fa-f-])");
         Add("Form", map.Forms, e => $@"(?<![A-Za-z0-9_-]){e}(?![A-Za-z0-9_-])");
-        Add("Email", map.Emails, e => $@"(?<![\w.%+-])(?i:{e})(?![\w-])");
+        Add("Email", map.Emails, e => $@"(?<![\w.%+-])(?i:{e})(?![\w-]|\.[\w-])");
         Add("Text", map.Text, e => e);
         Add("Tenant", map.TenantIds, e => $@"(?<![0-9A-Fa-f-])(?i:{e})(?![0-9A-Fa-f-])");
         // The tenant GUID also appears without dashes in resource paths (e.g. .../resourceGroups/<tenant>-<user>).
         Add("Tenant (no dashes)", FlowMapping.Active(map.TenantIds)
                 .ToDictionary(kv => kv.Key.Replace("-", ""), kv => kv.Value.Replace("-", "")),
             e => $@"(?<![0-9A-Fa-f])(?i:{e})(?![0-9A-Fa-f])");
-        Add("EmailDomain", map.EmailDomains, e => $@"(?<=@)(?i:{e})(?![\w-])");
+        Add("EmailDomain", map.EmailDomains, e => $@"(?<=@)(?i:{e})(?![\w-]|\.[\w-])");   // not contoso.com.au for contoso.com
 
         if (entries.Count == 0) return (null, []);
         var ordered = entries.OrderByDescending(x => x.Rule.From.Length).ToList();

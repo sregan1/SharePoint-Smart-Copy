@@ -232,7 +232,7 @@ public partial class SharePointService
     // Returns the SharePoint UniqueId (AllDocs GUID) for a file by its server-relative URL.
     // Works via REST (not Graph) so it finds zombie files — SPFile blobs without a list item
     // that Graph returns 404 for. Returns null if the file doesn't exist.
-    public async Task<string?> GetFileUniqueIdAsync(string siteUrl, string serverRelativeUrl)
+    public async Task<string?> GetFileUniqueIdAsync(string siteUrl, string serverRelativeUrl, CancellationToken ct = default)
     {
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativePath({ServerRelativePathArg(serverRelativeUrl)})/UniqueId";
         try
@@ -243,16 +243,16 @@ public partial class SharePointService
                 r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
                 return r;
-            }, siteUrl);
+            }, siteUrl, cancellationToken: ct);
 
             if (!response.IsSuccessStatusCode) return null;
-            var body = await response.Content.ReadAsStringAsync();
+            var body = await response.Content.ReadAsStringAsync(ct);
             using var doc = JsonDocument.Parse(body);
             return doc.RootElement.ValueKind == JsonValueKind.String
                 ? doc.RootElement.GetString()
                 : doc.RootElement.TryGetProperty("value", out var v) ? v.GetString() : null;
         }
-        catch { return null; }
+        catch (Exception ex) when (ex is not OperationCanceledException) { return null; }
     }
 
     // Permanently deletes a file by recycling it then immediately purging the recycle bin entry.
@@ -275,7 +275,7 @@ public partial class SharePointService
     // Debug.WriteLine calls are compiled out unless a debugger is attached), and it's what finally
     // showed the delete "succeeding" while the file survived.
     public async Task<bool> PermanentlyDeleteFileAsync(
-        string siteUrl, string serverRelativeUrl, Action<string>? onFail = null, Action<string>? onTrace = null)
+        string siteUrl, string serverRelativeUrl, Action<string>? onFail = null, Action<string>? onTrace = null, CancellationToken ct = default)
     {
         const int maxAttempts = 4;
         var baseUrl = siteUrl.TrimEnd('/');
@@ -289,7 +289,7 @@ public partial class SharePointService
             return ok;
         }
 
-        var uniqueId = await GetFileUniqueIdAsync(siteUrl, serverRelativeUrl);
+        var uniqueId = await GetFileUniqueIdAsync(siteUrl, serverRelativeUrl, ct);
         if (string.IsNullOrEmpty(uniqueId)) { Trace("resolve=null(gone)"); return Done(true); }
         Trace($"id={uniqueId}");
 
@@ -310,9 +310,9 @@ public partial class SharePointService
                     r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
                     r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
                     return r;
-                }, siteUrl);
+                }, siteUrl, cancellationToken: ct);
 
-                var body = await recycleResponse.Content.ReadAsStringAsync();
+                var body = await recycleResponse.Content.ReadAsStringAsync(ct);
                 Trace($"recycle={(int)recycleResponse.StatusCode}");
 
                 if (!recycleResponse.IsSuccessStatusCode)
@@ -322,10 +322,10 @@ public partial class SharePointService
                     // deleteObject by ID, which removes the row at the AllDocs level directly.
                     if (lastAttempt)
                     {
-                        var (delOk, delReason) = await TryDeleteObjectByIdAsync(siteUrl, uniqueId, Trace);
+                        var (delOk, delReason) = await TryDeleteObjectByIdAsync(siteUrl, uniqueId, Trace, ct);
                         return Done(delOk, delReason ?? lastReason);
                     }
-                    await Task.Delay(TimeSpan.FromSeconds(3 * (attempt + 1)));
+                    await Task.Delay(TimeSpan.FromSeconds(3 * (attempt + 1)), ct);
                     continue;
                 }
 
@@ -335,11 +335,11 @@ public partial class SharePointService
                     : doc.RootElement.TryGetProperty("value", out var v) ? v.GetString() : null;
                 break;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 lastReason = $"recycle exception: {ex.Message}";
                 if (lastAttempt) return Done(false);
-                await Task.Delay(TimeSpan.FromSeconds(3 * (attempt + 1)));
+                await Task.Delay(TimeSpan.FromSeconds(3 * (attempt + 1)), ct);
             }
         }
 
@@ -364,11 +364,11 @@ public partial class SharePointService
                     r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
                     r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
                     return r;
-                }, siteUrl);
+                }, siteUrl, cancellationToken: ct);
                 Trace($"purge[{scope}]={(int)purgeResponse.StatusCode}");
                 if (purgeResponse.IsSuccessStatusCode) return Done(true);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 Trace($"purge[{scope}]=ex");
                 lastReason = $"purge exception: {ex.Message}";
@@ -386,7 +386,7 @@ public partial class SharePointService
             ? s[..Math.Min(s.Length, 200)] : Loc.T("Svc_Sp_EmptyBody");
 
     private async Task<(bool ok, string? reason)> TryDeleteObjectByIdAsync(
-        string siteUrl, string uniqueId, Action<string>? trace = null)
+        string siteUrl, string uniqueId, Action<string>? trace = null, CancellationToken ct = default)
     {
         const int maxAttempts = 4;
         var deleteUrl = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileById('{uniqueId}')/deleteObject";
@@ -402,19 +402,19 @@ public partial class SharePointService
                     r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
                     r.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
                     return r;
-                }, siteUrl);
-                var body = await response.Content.ReadAsStringAsync();
+                }, siteUrl, cancellationToken: ct);
+                var body = await response.Content.ReadAsStringAsync(ct);
                 trace?.Invoke($"deleteObject={(int)response.StatusCode}");
                 if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NotFound)
                     return (true, null);
                 lastReason = $"deleteObject HTTP {(int)response.StatusCode}: {Trim(body)}";
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 lastReason = $"deleteObject exception: {ex.Message}";
             }
             if (attempt < maxAttempts - 1)
-                await Task.Delay(TimeSpan.FromSeconds(3 * (attempt + 1)));
+                await Task.Delay(TimeSpan.FromSeconds(3 * (attempt + 1)), ct);
         }
         return (false, lastReason);
     }
@@ -795,8 +795,12 @@ public partial class SharePointService
                 continue;
             }
 
-            bool throttled = response.StatusCode is System.Net.HttpStatusCode.TooManyRequests
-                                                 or System.Net.HttpStatusCode.ServiceUnavailable;
+            // A 429, or a 503 that carries Retry-After, is SharePoint saying "not processed, come back later", safe for any
+            // method. A bare 503 on a non-GET (job submit, role assignment, item create) may be a gateway that already
+            // forwarded the request, and repeating it would submit the migration job or create the item twice.
+            bool throttled = response.StatusCode == System.Net.HttpStatusCode.TooManyRequests
+                          || (response.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable
+                              && (req.Method == HttpMethod.Get || response.Headers.RetryAfter is not null));
             if (throttled && attempt < maxThrottleRetries)
             {
                 // Retry-After can arrive as a delta or an absolute date.

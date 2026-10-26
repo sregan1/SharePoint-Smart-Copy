@@ -395,7 +395,7 @@
                                Foreground="{DynamicResource TextSecondaryBrush}"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Forms_Back}" Click="Back_Click" Margin="0,0,8,0"
+                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Ui_Back}" Click="Back_Click" Margin="0,0,8,0"
                             Visibility="{Binding ShowBack, Converter={StaticResource BoolToVis}}"
                             IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
                     <Button x:Name="NextButton" Style="{StaticResource PrimaryBtn}" Content="{Binding NextButtonText}" Click="Next_Click" Margin="0,0,8,0"
@@ -405,7 +405,7 @@
                             Visibility="{Binding ShowCancel, Converter={StaticResource BoolToVis}}"/>
                     <Button Style="{StaticResource PrimaryBtn}" Content="{loc:Loc Forms_CopyMore}" Click="CopyMore_Click" Margin="0,0,8,0"
                             Visibility="{Binding ShowCopyMore, Converter={StaticResource BoolToVis}}"/>
-                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Forms_Close}" Click="Close_Click"/>
+                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Ui_Close}" IsCancel="True" Click="Close_Click"/>
                 </StackPanel>
             </Grid>
         </Border>

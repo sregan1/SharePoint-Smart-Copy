@@ -23,7 +23,10 @@ public partial class SharePointService
 
     // Checks whether a single SP object has unique (broken) permissions.
     // apiPath examples: "web/lists('{guid}')", "web"
-    public async Task<bool> GetHasUniqueRoleAssignmentsAsync(
+    // Returns null when the answer could not be read (throttling that outlasted the retries, a 401/403, a network
+    // error) so the caller can tell "inherits" from "we could not find out". Reporting false there silently skipped
+    // the permission copy under load. Cancellation is never swallowed.
+    public async Task<bool?> TryGetHasUniqueRoleAssignmentsAsync(
         string siteUrl, string apiPath, CancellationToken ct = default)
     {
         var url = $"{siteUrl.TrimEnd('/')}/_api/{apiPath}?$select=HasUniqueRoleAssignments";
@@ -36,13 +39,18 @@ public partial class SharePointService
                 r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
                 return r;
             }, siteUrl, cancellationToken: ct);
-            if (!resp.IsSuccessStatusCode) return false;
+            if (!resp.IsSuccessStatusCode) return null;
             var body = await resp.Content.ReadAsStringAsync(ct);
             using var doc = JsonDocument.Parse(body);
-            return doc.RootElement.TryGetProperty("HasUniqueRoleAssignments", out var v) && v.GetBoolean();
+            return doc.RootElement.TryGetProperty("HasUniqueRoleAssignments", out var v) ? v.GetBoolean() : null;
         }
-        catch { return false; }
+        catch (Exception ex) when (ex is not OperationCanceledException) { return null; }
     }
+
+    // Kept for callers that only need a yes/no and treat "unknown" as "no".
+    public async Task<bool> GetHasUniqueRoleAssignmentsAsync(
+        string siteUrl, string apiPath, CancellationToken ct = default)
+        => await TryGetHasUniqueRoleAssignmentsAsync(siteUrl, apiPath, ct) == true;
 
     // Returns null on a genuine READ failure (distinct from a real empty list) so the caller can
     // tell "this item truly has no unique role assignments" from "we couldn't find out" — the two

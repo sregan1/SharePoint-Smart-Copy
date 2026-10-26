@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Başarılı ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Başarısız ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Atlandı ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Güncel</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Kaynağın kendine ait izinleri olup olmadığı okunamadı (kısıtlama veya erişim hatası) — bu öğe için izinler kopyalanmadı. Yeniden denemek için tekrar çalıştırın.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Mevcut hedef dosya üzerine yazmak için kaldırıldı, ancak yeni kopya yüklenemedi ({0}). Dosya şu anda hedefte yok — geri yüklemek için kopyalamayı yeniden çalıştırın.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Bir hedef kitaplık başarısız oldu ({0}). Dosyaları Başarısız olarak işaretlendi; diğer kitaplıklar devam ediyor.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: kaynak dosya indirilirken değişti — indirme baştan başlatılıyor.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint bu içe aktarma için {0} dakikadır ilerleme bildirmedi, bu nedenle vazgeçildi. Dosyaları Başarısız olarak işaretlendi; yeniden denemek için kopyalamayı tekrar çalıştırın.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Tek kiracı</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Çok kiracılı</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>İki farklı Microsoft 365 kiracısı arasında kopyalayın. Kaynakta ve hedefte ayrı ayrı oturum açarsınız. Hedefin uygulama kaydını Ayarlar&apos;dan seçin.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Hedef kaydı:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Çok kiracılı mod: hedef kiracıda oturum açmak için kullanılan uygulama kaydı. &quot;Kaynakla aynı&quot; kaynak kaydını yeniden kullanır; bu durumda kaydın çok kiracılı bir uygulama olması gerekir.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Devam et / yeniden çalıştır</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Yeniden bağlanır ve bu seçimi Daha yeniyse kopyala ile yeniden çalıştırır; böylece önceden kopyalanmış dosyalar atlanır ve yalnızca eksik veya değişen öğeler aktarılır.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Bu çalıştırmada devam ettirilecek kayıtlı bir seçim yok (yalnızca dosya seçimi çalıştırmaları seçim kaydeder).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>Bir kopyalama zaten çalışıyor. Önce bitirin veya iptal edin.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Devam edilemedi: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} yarıda kalan çalıştırma kurtarıldı. Geçmiş&apos;e bakın.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Devam ediliyor: önceki çalıştırmadan {0} öğe geri yüklendi, Daha yeniyse kopyala seçili. Seçenekleri gözden geçirin, ardından İleri&apos;ye tıklayın. (Özel sütun eşlemeleri geri yüklenmez.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>YARIDA KALDI — uygulama bu çalıştırma bitmeden kapandı. Tamamlanan öğelerden: {0} başarılı, {1} başarısız, {2} atlandı, {3} iptal edildi  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Tanılamayı dışa aktar…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Son günlükleri, sistem bilgilerini ve kuruluş ayrıntıları çıkarılmış ayarlarınızı içeren bir zip kaydeder — hata raporuna eklemek için. Kopyalama raporlarını veya dosya adlarını içermez.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Tanılama şuraya kaydedildi: {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Tanılama kaydedilemedi: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>İçerik aynı (yalnızca SharePoint tarafından yönetilen kısımlar farklı), ancak Değiştirilme tarihi korunmadı.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>İzinler kopyalanmadı: öğenin SharePoint kimlikleri çözümlenemedi.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>İzinler kopyalanmadı: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Klasör &quot;{0}&quot;: {1} uygulanmadı — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>Daha fazla klasörde yukarıdakine benzer sorunlar oldu; sonrakiler tek tek listelenmiyor.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>izinler</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>tarihler</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>yazar / düzenleyen</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} korundu — hedef zaten güncel)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>UYARI: kaynaktan meta veri okuma ({0}) başarısız oldu: {1}. Buradaki öğeler özel sütun değerleri veya benzersiz izinleri OLMADAN kopyalanabilir. Sorun giderildikten sonra yeniden çalıştırın (Üzerine yaz veya Daha yeniyse bunları yeniden uygular).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>UYARI: bir kitaplığın kaynak listesi bulunamadı, bu nedenle izinleri KOPYALANMAYACAK.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>SharePoint ana bilgisayarı &apos;{0}&apos; bağlı bir kiracıyla ilişkilendirilmemiş. Kaynak ve hedef siteleri yeniden bağlayıp tekrar deneyin.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Kiracılar arası kopyalama: yönetilen meta veri (taksonomi) sütun değerleri kopyalanmaz; OneNote not defterleri / belge kümeleri henüz kiracılar arasında kopyalanamaz. Kimlikler Kimlik eşleme ayarlarınıza göre eşlenir; hedefte çözümlenemeyen kişiler atlanır.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Kimlik eşleme</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Kimlik eşleme…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Kaynak kiracıdaki her kişiyi (veya grubu) ve hedef kiracıda kim olduklarını listeleyin — bunlar farklı hesaplardır. Yazarlar, düzenleyenler, kişi sütunları ve izinler bu tabloya göre yazılır. Listede olmayanlar, ayarladıysanız etki alanı değişimiyle eşleştirilir; hedefte yine de bulunamayanlar atlanır ve raporlanır.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Kaynak e-posta etki alanı</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Hedef e-posta etki alanı</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Geçersiz kılmalar — her satıra bir &quot;kaynak,hedef&quot; çifti (kullanıcı veya grup adları; # yorum başlatır)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Kaynakla aynı</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Kaynak ve hedef aynı kiracıda. Aynı kiracı içi kopyalamalar için tek kiracı moduna geçin.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Yerel klasör kopyalama (OneNote not defterleri, belge kümeleri) henüz kiracılar arasında desteklenmiyor.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>&apos;{0}&apos; sürücüsü bağlı bir kiracıyla ilişkilendirilmemiş. Kaynak ve hedef siteleri yeniden bağlayıp tekrar deneyin.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Henüz bir uygulama kaydı ayarlanmamış. Bağlanmadan önce Ayarlar&apos;ı açıp Azure uygulama kaydınızı (Uygulama/İstemci Kimliği) ekleyin.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Oturum açma iptal edildi. Yeniden denemek için Bağlan&apos;a tıklayın.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Bir yönetici bu uygulamayı bu kiracıda henüz onaylamadı. Genel Yönetici&apos;den uygulama kaydı için yönetici onayı vermesini isteyin (Kullanım Kılavuzu&apos;ndaki Kurulum bölümüne bakın).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Uygulama kaydı bu kiracıda bulunamadı. Ayarlar&apos;daki İstemci Kimliği ve Kiracı Kimliği&apos;ni kontrol edin.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Bu kiracı bulunamadı. Ayarlar&apos;daki Kiracı Kimliği&apos;ni kontrol edin (etki alanınızı, kiracı GUID&apos;ini veya &apos;common&apos; kullanın).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>Uygulama kaydında bu uygulamanın kullandığı yönlendirme adresi eksik. Azure&apos;da &apos;Mobil ve masaüstü uygulamaları&apos; altına http://localhost yönlendirme URI&apos;sini ekleyin.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Uygulama kaydı masaüstü oturum açma için ayarlanmamış. Azure&apos;da kayıt için &apos;Ortak istemci akışlarına izin ver&apos; seçeneğini açın.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Bu hesabın bu uygulama kaydını kullanmasına izin verilmiyor. Kaydın sahibi olan kiracıdan bir hesapla oturum açın veya Ayarlar&apos;dan farklı bir kayıt seçin.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint oturum açmayı reddetti. Yeniden oturum açmak için Bağlan&apos;a tıklayın.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>Bu siteye erişiminiz yok. Hesabınızın siteyi tarayıcıda açabildiğinden ve uygulamaya Sites.ReadWrite.All izni verildiğinden emin olun.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Bu site bulunamadı. Adresi kontrol edin — https://contoso.sharepoint.com/sites/name gibi görünmelidir.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Ayrıntılar: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Devam etmek için kaynak siteye bağlanın.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Devam etmek için en az bir öğe seçin (bir onay kutusunu işaretleyin).</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Devam etmek için hedef siteye bağlanın.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Devam etmek için bir hedef klasör seçin.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Devam etmek için bir hedef liste seçin.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Devam etmek için yeni liste için bir ad girin.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Kopyalanacak hiçbir şey seçilmedi.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Kopyalamanın bitmesi bekleniyor…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Kaynak: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Hedef: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Uygulama kaydınız değiştiği için her iki sitedeki oturumunuz kapatıldı. Devam etmek için yeniden bağlanın.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Kopyalama durdurulsun mu?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>Bir kopyalama sürüyor. Şimdi durdurursanız kalan öğeler kopyalanmaz (daha sonra Geçmiş&apos;ten devam edebilirsiniz). Kopyalama durdurulsun mu?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>Bir kopyalama hâlâ çalışıyor. Uygulamayı kapatmak kopyalamayı durdurur ve kalan öğeler kopyalanmaz (daha sonra Geçmiş&apos;ten devam edebilirsiniz). Yine de kapatılsın mı?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Bağlantı modu değiştirilsin mi?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Tek kiracı ile çok kiracılı mod arasında geçiş yapmak her iki sitenin bağlantısını keser ve yeniden bağlanmanız gerekir. Yine de geçilsin mi?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Bağlantı:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Kaynak uygulama kaydı</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Hedef uygulama kaydı</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Hedef kiracıda şununla oturum açar:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Değiştir</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Ayarlar&apos;ı Aç</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Kaynak site koleksiyonunda okuma erişiminiz olmalıdır.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Bağlanmadan önce Ayarlar&apos;da Microsoft Entra ID uygulama kaydınızı ayarlayın.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Dosya Seçenekleri</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Kitaplık ve Dosya Seçenekleri</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Dosyalar Kopyalanıyor…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Kitaplıklar Kopyalanıyor…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>İleri</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Kopyalamayı Başlat</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Raporu Görüntüle</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Oluşturulacak yeni listenin adını girin</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>Hedef liste Hedef adımında seçildi. Değiştirmek için geri dönün.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Önce bir uygulama kaydı ayarlayın</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy, kendi Microsoft Entra ID (Azure) kiracınızda oluşturduğunuz bir uygulama kaydıyla oturum açar. Ayarlar&apos;ı açın, kaydınızın Uygulama (istemci) Kimliği&apos;ni ekleyin, ardından bağlanmak için buraya dönün.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Daha fazla bilgi</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Etkinlik akışını uzatmak veya kısaltmak için sürükleyin</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Yalnızca başarısız öğeleri göstermek için tıklayın</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Yalnızca atlanan öğeleri göstermek için tıklayın</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Sütun eşleme</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Kaynağı ve hedefi karşılaştır</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Bu kopyayı kaynakla karşılaştırmak için Karşılaştır aracını açın.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Geçmiş&apos;i Aç</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Seçili kayıt kaynak için kullanılır — tek kiracı modunda ise her iki taraf için.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Yeni Kayıt</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>En az bir uygulama kaydı ekleyin.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Doğrulama</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Seçili kayıt için İstemci Kimliği gereklidir.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Oturum kapatıldı. Sonraki bağlantıda oturum açmanız istenecek.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Oturum kapatıldı</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Oturum kapatılamadı: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Oturumu kapat</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} eşleme bulundu.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} satır okunamıyor (satır {1}). Her satır kaynak,hedef biçiminde olmalıdır.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Kaynak ve hedef etki alanları aynı, bu nedenle etki alanı değişimi hiçbir şeyi değiştirmez.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>CSV&apos;yi içe aktar…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Bazı geçersiz kılma satırları okunamıyor (satır {0}). Her satır &quot;kaynak,hedef&quot; biçiminde olmalıdır. Düzeltin veya kaldırın — ya da yorum yapmak için satırı # ile başlatın.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Kimlik eşleme kaydedilemedi: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Bu dosya okunamadı: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Kiracılar arası: bu kitaplıktaki {0} yazar/düzenleyen hesabı hedef kiracıda bulunamadı ve kopyalayan hesap olarak bırakılacak. Çalıştırmadan sonra bunları düzeltmek için raporda &quot;Bu kullanıcıları eşle&quot;yi kullanın.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Kaynak kullanıcıyı veya grubu girin.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Bunun hedef kiracıda kim olduğunu girin — veya satırı kaldırın.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Kaynak ve hedef aynı.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Bu kaynak birden fazla kez görünüyor.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Kaynak (bu kiracı)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Hedef (diğer kiracı)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Tür</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>Hedefte var mı?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Gerekli olduğu yer</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Kullanıcı</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Grup</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Denetlenmedi</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Denetleniyor…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Bulundu</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Bulunamadı</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Ekle</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Kaldır</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Hedefleri etki alanı değişiminden doldur</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>Henüz hedefi olmayan satırlar için, etki alanı değişiminin üreteceği adresi doldurur.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Hedefte denetle</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Her hedef kullanıcıyı hedef kiracıda arar. Bu, kullanıcıları hedef sitenin kullanıcı listesine de ekler; kopyalama, onları yazar olarak ayarlamadan veya erişim vermeden önce zaten bunu yapar.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Önce çok kiracılı bir hedefe bağlanın: Hedef adımında hedef site URL&apos;sini girin, ardından bu iletişim kutusunu yeniden açın.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>CSV&apos;yi dışa aktar…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Bu kişiler kopyalama için gerekliydi ancak hedef kiracıda bulunamadı. Her biri için hedefte kim olduklarını girin — veya eşlenmemiş bırakmak için satırı kaldırın.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} eşleme.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} satır dikkat gerektiriyor.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Denetlendi: {0} bulundu, {1} bulunamadı{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} denetlenemedi</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>{1} içinden {0} denetleniyor…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Denetlenecek bir şey yok: hiçbir satırda hedef e-posta adresi yok.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Bazı satırlar dikkat gerektiriyor (vurgulanmış). Düzeltin veya kaldırın, ardından kaydedin.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Eşleme kaydedildi. Zaten kopyalanmış dosyalara uygulamak için Üzerine yaz ile yeniden çalıştırın — Daha yeniyse kopyala güncel dosyaları atlar, dolayısıyla yazarları değişmez. İzinler her iki durumda da yenilenir.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>Kaynaktaki {0} kişi hedef kiracıda bulunamadı, bu nedenle dışarıda bırakıldı: erişim verilmedi, yazar veya düzenleyen olarak ayarlanmadı ya da kişi sütunlarından çıkarıldı.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Bu kullanıcıları eşle…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Çözümlenemeyen kullanıcıları eşle…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Kimlik eşlemeyi, bu çalıştırmanın hedefte bulamadığı kişilerle açar.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Bu çalıştırmada çözümlenemeyen kullanıcı yoktu.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Formları Kopyala</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Microsoft Forms formlarını tüm sorular, dallanma, ayarlar ve temayı koruyarak hedef hesaba kopyalayın. Yanıtlar Excel&apos;e aktarılabilir.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Bu, Microsoft&apos;un belgelemediği ve desteklemediği Microsoft Forms web API&apos;sini kullanır. Bugün çalışıyor ancak haber verilmeden değişebilir. Önce birkaç formla deneyin.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Formlarımı yükle</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Kaynak hesap: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Hedef hesap: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Hedef: aynı hesap (tek kiracı). Kopyalar orijinallerin yanında oluşturulur.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(oturum açmanız istenecek)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Form kimliği eşlemesi (Akışlar aracı tarafından kullanılır): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Formlar yükleniyor…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>{0} form yüklendi.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Önce en az bir form seçin.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Formlar kopyalanıyor…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Kopyalanıyor…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Kopyalandı</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Başarısız (günlüğe bakın)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>&apos;{0}&apos; kopyalanıyor</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Kopyalama bitti: {0} kopyalandı, {1} başarısız.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Yanıt dışa aktarımları için bir klasör seçin</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Yanıtlar dışa aktarılıyor…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>&apos;{0}&apos; dışa aktarıldı: {1} yanıt, {2} konumuna</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>{0} formun yanıtları {1} konumuna aktarıldı.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Form kopyalandı, ancak kimliği Akışlar aracı için kaydedilemedi: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>&apos;{0}&apos; dışa aktarılamadı: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>{0} formun yanıtları {2} konumuna aktarıldı; {1} başarısız oldu (günlüğe bakın).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>İptal edildi.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Hata: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>İpucu: uygulama kaydının onaylı, atanmış Microsoft Forms iznine ihtiyacı var. Bunu API izinleri altında ekleyin (Kullanım Kılavuzu&apos;na bakın), ardından yeniden deneyin.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>İpucu: Microsoft Forms isteği reddetti. Bu hesabın forms.office.com&apos;u açabildiğinden ve uygulama kaydında Microsoft Forms izni olduğundan emin olun.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{1} içinden {0} seçili</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Başlık</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Tür</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Son değiştirilme</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Sonuç</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Kopyalanan başlıklara ekle:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (kopya)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Seçili formları kopyala</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Yanıtları dışa aktar…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Bir kopyayı kaynağıyla karşılaştırın</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Diğer araçlar</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Formlar</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Microsoft Forms formlarını kopyalayın ve yanıtlarını dışa aktarın</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Formlar aracı</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Akışları Hedef İçin Yeniden Yaz</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Dışa aktarılan Power Automate paketlerini (.zip) hedefi gösterecek şekilde güncelleyin: siteler, listeler, sütunlar, kopyalanan formlar ve e-posta etki alanları. Orijinal paketleriniz asla değiştirilmez.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Dışa aktarılan akış paketlerini seçin</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Power Automate&apos;ten dışa aktardığınız akış paketlerini (.zip) ekleyin.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Dosya ekle…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Klasör ekle…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Tara</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Akış paketleri (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Önce en az bir akış paketi ekleyin.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Paketler taranıyor…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>{0} atlandı: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} akış bulundu. {1} siteye, {2} listeye ve {3} forma başvuruyorlar.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Tarama tamamlandı.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Siteleri eşle</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Her akışın SharePoint sitesinin nereye taşındığı. Çok kiracılı modda hedefte oturum açın; yeni kiracının adresi sizin için doldurulur. Sitesinin adı farklı olan satırı değiştirin. Tek kiracı modunda her satır için hedef siteyi yazın.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Akışlardaki site (değiştirilir)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Hedef site</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Yeni kiracı adresi:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Boş hedefleri doldur, yolları koru</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>https://contoso.sharepoint.com gibi tam bir URL girin.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Boş hedefler bu ana bilgisayar ve her sitenin yolu kullanılarak dolduruldu.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Listeleri ve sütunları eşleştir</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Akışların kullandığı her liste için bir kart, kaç akış kullanırsa kullansın. Her kart listenin adını ve sütunlarını, hedefte eşlendiği listeyi (varsayılan olarak aynı ada sahip olan; ad farklıysa açılır listeden başka birini seçin) ve her sütunun nasıl eşlendiğini gösterir. Uyarı işaretli kartları kontrol edin.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Listeleri ve sütunları eşleştir</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Liste</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>Kaynak liste kimliği</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>Hedef liste kimliği</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Kaynak sütun</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Hedef sütun</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Önce paketleri tarayın.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Önce en az bir hedef site girin.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Listeler ve sütunlar eşleştiriliyor…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(bulunamadı)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Hedefte aynı ada sahip bir liste bulundu</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Bu listenin bulunduğu sitenin hedef sitesi yok (Siteler adımı)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Bu liste kaynak sitede okunamadı: mevcut olmayabilir, bu hesabın erişimi olmayabilir veya site kaynak bağlantınızdan farklı bir kiracıda olabilir</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Hedef sitede bu ada sahip liste yok: açılır listeden birini seçin</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Aynı ad</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Hedefte yeniden adlandırıldı</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Eşleşme yok: bir sütun seçin</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{1} listeden {0} tanesinin hedef listesi var. Denetlenecek {2} sütun.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Formlar ve e-posta</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Formlar aracıyla kopyalanan formlar otomatik doldurulur. Kendi oluşturduğunuz bir form için kimliğini veya düzenleme sayfasının bağlantısını yapıştırın.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>Kaynak form kimliği</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>Form kimliği (açılır listeden doldurulur veya bir tane yapıştırın)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>E-posta etki alanını taşı:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Güncellenmiş paketleri yaz</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Bir çıktı klasörü seçin (orijinallerin bulunduğu klasör olmasın). Güncellenmiş paketler ve her değişikliği listeleyen bir rapor oraya kaydedilir.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Güncellenmiş paketleri yaz</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Eşlemeyi kaydet…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Çıktı klasörünü aç</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Bağlantılar kiracılar arasında taşınamaz. Bir paketi içe aktardıktan sonra her bağlantıyı Power Automate&apos;te yeniden oluşturun ve yeniden seçin.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Önce bir çıktı klasörü seçin.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Güncellenmiş paketler yazılıyor…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>{0} dosyasının güncellenmiş kopyasını kaydedin (paket {1}/{2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Power Automate paketi (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Bu dosya adını zaten başka bir paket için seçtiniz. Farklı bir ad seçin.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Bir paket orijinalin üzerine kaydedilecek (aynı klasör, aynı ad). Orijinaller değişmeden kalsın diye farklı bir çıktı klasörü seçin veya &quot;Farklı kaydet&quot; içinde adını değiştirin.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Akış yeniden yazma raporu
+
+Orijinal paketlere dokunulmadı. Bağlantılar taşınmaz; içe aktarırken yeniden oluşturup yeniden seçin.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Rapor {0} konumuna yazıldı</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} paket yazıldı, {1} değiştirme. {2} değer hâlâ kaynağı gösteriyor (rapora bakın).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Eşleme {0} konumuna kaydedildi</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Akışlar</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Dışa aktarılan Power Automate akışlarını hedef için güncelleyin</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Akışlar aracı</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Bu akışların kullandıkları</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Taranan akışlarda bulunan hizmetler ve bu aracın her biri için ne yaptığı.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Hizmet</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Akışlar</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Adımlar</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Bulunan</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Bu aracın yaptığı</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Bulduklarını yeniden yazar</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>Kimlikler raporlanır; içe aktarmadan sonra gözden geçirin</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Yalnızca bağlantı (yeniden oluşturun)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Sütun eşleme</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Bir sütun, eşleşen bir listede bir akış ona yazdığında, ona göre filtrelediğinde veya sıraladığında ya da bir ifadede okuduğunda burada görünür. Hedef sütun otomatik eşleştirmeyle seçilir (aynı ad, sonra aynı görünen ad, sonra benzer ad). Yalnızca &quot;Benzer ad&quot; veya &quot;Eşleşme yok&quot; işaretli satırlar için işlem yapmanız gerekir; herhangi bir satırı açılır listesinden değiştirin veya kaynak adı korumak için &quot;(değiştirme)&quot; seçin. Title gibi yerleşik sütunlar her yerde bulunduğu için listelenmez.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(değiştirme)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Benzer ad: lütfen kontrol edin</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(henüz eşleştirilmedi)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Hedef liste sizin tarafınızdan seçildi</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Bir listeyi kendiniz seçmek için (örneğin ad farklıysa) Hedef liste kimliği sütununa bir hedef liste kimliği veya liste ayarları sayfasının bağlantısını yazın ya da yapıştırın. Ardından sütunlarını eşleştirmek için &quot;Yeniden eşleştir&quot;e tıklayın.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>&apos;{0}&apos; içinde bir liste kimliği bulunamadı. Bir GUID&apos;i veya liste ayarları sayfası bağlantısını yapıştırın.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>&apos;{0}&apos; içinde bir form kimliği bulunamadı. Form kimliğini veya formun düzenleme sayfası bağlantısını yapıştırın.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Formlar</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Hedef</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Kopyala</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Sonuçlar</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Kopyalanacak formları seçin</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Formları yeniden yükle</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Formlarınızı görmek için &quot;Formlarımı yükle&quot;ye tıklayın.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>Bu hesapta form bulunamadı.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} formu kopyala</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Daha fazla form kopyala</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Kopyaların nereye gideceğini seçin</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Tek kiracı: kopyalar kullandığınız hesapta, orijinallerin yanında oluşturulur.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Çok kiracılı: kopyalar hedef hesapta oluşturulur. Burada oturum açın; bu, SharePoint siteleri için kullandığınız oturumdan ayrıdır.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Hedef hesap</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Şu uygulama kaydıyla oturum açar: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Hedef uygulama kaydınızla oturum açar (Ayarlar&apos;da belirlenir).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Hedef hesapta oturum aç</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Yeniden oturum aç</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Hedef hesapta oturum açılıyor… bir tarayıcı penceresi açılabilir.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>{0} olarak bağlandı. Microsoft Forms erişimi doğrulandı (bu hesapta zaten {1} form var).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Hedef hesaba bağlanılamadı: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Hedef hesap henüz bağlı değil.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Hazır. Başlamak için Kopyala düğmesine tıklayın.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Hazır: kopyalar {0} hesabında oluşturulacak.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Devam etmek için hedef hesapta oturum açın.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Seçenekler</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} form {1} hesabından {2} hesabına kopyalanacak.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>kaynak hesap</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>hedef hesap</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Formlar kopyalanıyor</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Başlatılıyor…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Form {0}/{1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Geçerli formdan sonra iptal ediliyor…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopyalama bitti: {0} formun tamamı kopyalandı</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Kopyalarınız {0} içinde. Görmek için Microsoft Forms&apos;u açın veya aşağıdaki tabloyu kullanın.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopyalama bitti: {1} formdan {0} tanesi kopyalandı, bazıları dikkat gerektiriyor</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Kopyalar {0} içinde. Uyarı işaretli formlar sorunlarla kopyalandı, başarısız formlar oluşturulmadı. Ayrıntılar sütununa bakın.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopyalama bitti, ancak hiçbir form kopyalanmadı</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Nedeni için Ayrıntılar sütununa bakın. Yaygın nedenler, hedef kayıtta Microsoft Forms izninin eksik olması veya Forms erişimi olmayan bir hesaptır.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopyalama {1} formdan {0} tanesinden sonra iptal edildi</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Aşağıda listelenen formlar tamamlandı. İptal ettiğinizde kopyalanmakta olan form bitirilmedi ve görünmez.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Kopyalandı</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>Uyarılarla</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Başarısız</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Sorular</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Kaynak form</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Kopya</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Sorular</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Ayrıntılar</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Kopyalandı</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Uyarılarla kopyalandı</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Başarısız</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Seçili kopyayı aç</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Microsoft Forms&apos;u aç</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Sonuçları dışa aktar…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Form kimliği eşlemesini göster</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Önce tablodan kopyalanmış bir form seçin.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Sonuçlar {0} konumuna kaydedildi</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>İpucu: uygulama kaydında eşleşen bir yönlendirme adresi yok. Entra&apos;da Kimlik Doğrulama altında &quot;Mobil ve masaüstü uygulamaları&quot; platformunu http://localhost ile ekleyin, ardından yeniden deneyin.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Paketler</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Siteler</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Listeler ve sütunlar</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Formlar ve e-posta</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Yaz</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Rapor</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Dışa aktarılan akışlarınızı seçin</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>Power Automate&apos;te: Akışlarım&apos;ı açın, bir akış seçin, ardından Dışa aktar → Paket (.zip). İndirilen .zip dosyalarını buraya ekleyin. Her dosya eklenir eklenmez taranır.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Temizle</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Başlamak için dışa aktarılan akış paketlerini ekleyin.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>Bu dosyalarda akış bulunamadı. Bunların Dışa aktar → Paket (.zip) ile dışa aktarılmış paketler olduğundan emin olun.</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Tarama tamamlandı. Akışların kullandıklarını gözden geçirin, ardından İleri&apos;ye tıklayın.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Hedef siteleri seçin</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Bu akışlar sabit adresli SharePoint sitelerini kullanmıyor, bu nedenle burada eşlenecek bir şey yok. İleri&apos;ye tıklayın.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Ardından araç, bağlantılarınız üzerinden her listeyi okur ve hedef sitede eşleştirir.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Her kaynak site için hedef siteyi girin, ardından İleri&apos;ye tıklayın.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Listeleri ve sütunları eşleştir</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Yeniden eşleştir</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Listeler</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Bu akışlar belirli SharePoint listelerine başvurmuyor, bu nedenle eşleştirilecek bir şey yok.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Listeler ve sütunlar bu adım açıldığında eşleştirilir.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Formlar ve e-posta</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Formları ve e-postayı kontrol edin, ardından İleri&apos;ye tıklayın.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Bu akışlar Microsoft Forms kullanmıyor.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>E-posta adresleri</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Bir e-posta etki alanındaki tüm adresleri başka bir etki alanına taşımak için her iki etki alanını girin. Diğer etki alanlarındaki adresler değiştirilmez, raporda listelenir.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Güncellenmiş paketleri yaz</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Çıktı klasörü</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Çıktı klasörünü seçin, ardından Güncellenmiş paketleri yaz&apos;a tıklayın.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>{1} akış içeren {0} paket yazılmaya hazır. Değiştirilecek: {2} site, {3} liste, {4} sütun eşlemesi, {5} form.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Güncellenmiş paketleri yaz</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Yazılan paketler</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Değiştirmeler</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Hâlâ kaynak</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>Gözden geçirilecek</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Paket</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Güncellendi</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} değer hâlâ kaynağı gösteriyor</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Raporu aç</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Baştan başla</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Bitti: {0} paket yazıldı</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>{0} konumuna kaydedildi. Hiçbir şey kaynağı göstermiyor. İçe aktarmak için aşağıdaki adımları izleyin.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Bitti: {0} paket yazıldı, bazı öğeler gözden geçirmenizi gerektiriyor</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>{0} konumuna kaydedildi. Hâlâ kaynağı gösteren değerleri ve aracın yeniden yazmadığı öğeleri (diğer hizmetler, eşleşmeyen listeler veya sütunlar) görmek için raporu açın.</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Sonraki adımlar</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Raporu açın ve &quot;hâlâ kaynağı gösteren&quot; değerleri ve gözden geçirme için işaretlenen her şeyi kontrol edin.
+2.  Power Automate&apos;te (hedef kiracı) Akışlarım → İçe aktar → Paketi İçe Aktar (Eski) seçeneğini açın ve yazılan bir paketi seçin.
+3.  &quot;İlgili kaynaklar&quot; altında her bağlantı için &quot;İçe aktarma sırasında seç&quot;e tıklayın ve hedef kiracıda bir bağlantı seçin veya oluşturun. Bağlantılar kiracılar arasında taşınamaz.
+4.  Akışı içe aktarın. Kapalı tutun, açın, işaretlediği her şeyi düzeltin, ardından açın.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Değişiklik yok (içinde eşlemenizle eşleşen bir şey yok)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>{0} tarihinde {1} hesabına kopyalandı</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Daha önce kopyalandı</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Zaten kopyalandı</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …ve {0} tane daha</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Yeniden kopyalansın mı?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>Seçili formların {0} tanesi bu hesaba zaten kopyalandı:
+
+{1}
+
+Yeniden kopyalamak her birinin ikinci bir kopyasını oluşturur. Devam edilsin mi?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>Bir kopyalama hâlâ çalışıyor. Şimdi kapatırsanız kopyalanmakta olan form hedefte yarım kalabilir. Durdurulup kapatılsın mı?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Kopyalama sürüyor</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Hiçbir yanıt dışa aktarılamadı (günlüğe bakın).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Başlığa veya türe göre filtrele</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Tek çalışma kitabı</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Seçili tüm formları, her form için bir sayfa olacak şekilde tek bir Excel dosyasına aktarın.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>E-posta adresi</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Kiracı Kimliği</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Kitaplık yolu</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Diğer değerler</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Değişmesi gereken her değer için bir yedek yazın. Boş bırakılan satırlar değiştirilmez; hâlâ kaynağı gösteriyorlarsa raporda listelenirler.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Tür</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>Akışlarda</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Şununla değiştir</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Kimlik denetimi</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Form kimliği veya düzenleme sayfası bağlantısı değil</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Kaynak formla aynı</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Bu form hedefte değil, kaynak kiracıda</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Bu form kaynaktan farklı bir kiracıda</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>{0} hesabından {1} hesabına Formlar kopyasından</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Daha önceki bir Formlar kopyasından</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Eşlemeyi yükle…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Siteleri, listeleri, sütunları, formları ve diğer değerleri daha önce kaydettiğiniz bir eşlemeden doldurun.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Eşleme yüklenemedi: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>{0} yüklendi. Bu akışlarla eşleşen değerler dolduruldu; sonraki adımlarda kontrol edin.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>{0} yüklendi. Akış paketleri eklediğinizde uygulanır.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>{0} hedef site dolduruldu. Aşağıda kontrol edin, ardından İleri&apos;ye tıklayın.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Her sitenin zaten bir hedefi var, bu nedenle hiçbir şey değiştirilmedi. Doldurulması için bir Hedef hücresini temizleyin.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Kısayol: yeni kiracının adresini yazın (örneğin https://fabrikam.sharepoint.com) ve düğmeye tıklayın. Henüz hedefi olmayan her site, kaynakla aynı yola sahip bu adresi alır: https://contoso.sharepoint.com/sites/HR, https://fabrikam.sharepoint.com/sites/HR olur. OneDrive siteleri (contoso-my) yeni kiracının -my adresine gider. Zaten girdiğiniz hedeflere dokunulmaz. Sitelerin yeni kiracıda zaten var olması gerekir; bu araç onları oluşturmaz. Bir sitenin orada farklı bir adı varsa bunun yerine adresini Hedef site hücresine yazın.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Bir Hedef site boş bırakılırsa o site değişmeden kalır: akışlar eski siteyi göstermeye devam eder, listeleri ve sütunları eşleştirilmez veya yeniden yazılmaz ve rapor onu &quot;İçe aktarmadan sonra yapılacaklar&quot; altında listeler. Bu yalnızca yeni kiracıya taşınmayan bir site için doğrudur.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Ne olur</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Hedefe taşınacak</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Değiştirilmedi (hedef yok)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>{0} sitesi değişmeden bırakıldı (hedef girilmedi), bu nedenle akışlar hâlâ onu gösteriyor ve listeleri eşleştirilmedi. Site taşınmıyorsa sorun yok; aksi hâlde bir hedefle yeniden çalıştırın.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Henüz gösterilecek sütun yok: hiçbir liste eşleştirilmedi, bu nedenle karşılaştırılacak bir şey yok. Yukarıdaki listeleri düzeltin, ardından Yeniden eşleştir&apos;e tıklayın.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Eşlenecek sütun yok, bu nedenle burada bir şey yapmanız gerekmiyor. Eşleşen listelerde akışların yazdığı, filtrelediği veya aracın görebileceği şekilde okuduğu özel sütun yok. Alttaki etkinlik listesi her liste için bulunanları söyler.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} sütun bulundu: {1} tanesi hedefte aynı ada sahip, {2} tanesi yeniden adlandırılıp eşleştirildi, {3} tanesi benzer görünüyor, {4} tanesinin eşleşmesi yok.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Lütfen &quot;Benzer ad&quot; işaretli satırları kontrol edin ve &quot;Eşleşme yok&quot; işaretli satırlar için bir sütun seçin. &quot;Aynı ad&quot; veya &quot;Hedefte yeniden adlandırıldı&quot; işaretli satırlar için bir şey gerekmez.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Burada yapılacak bir şey yok: her sütun zaten eşleşiyor. İleri&apos;ye tıklayın.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Güncellenmiş paketlerin adları</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Güncellenmiş .zip dosyalarının adı ne olsun. Orijinal dosya adı için {name} kullanın: &quot;{name} - Fabrikam&quot;, &quot;Onboarding.zip&quot; dosyasını &quot;Onboarding - Fabrikam.zip&quot; yapar. Tek paketle tam adı yazabilirsiniz. Orijinal adları korumak için {name} olarak bırakın. İki kez kullanılan ad (2), (3)… alır, böylece hiçbir şeyin üzerine yazılmaz.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Yazılacak: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Bir akış yalnızca formun kimliğini saklar, bu nedenle form adları bu adım açıldığında Microsoft Forms&apos;tan okunur: akışlarınızdaki her formun başlığı (kaynak hesap) ve hedef hesaptaki formlar. Başlığı tam olarak bir hedef formla eşleşen form sizin için eşleştirilir; aksi hâlde yeni formu açılır listeden seçin veya kimliğini ya da düzenleme sayfası bağlantısını yapıştırın. Yeniden okumak için Form adlarını yeniden yükle&apos;yi kullanın.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Hedef hesaptan formları yükle…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Hedef hesabın formları yükleniyor… oturum açmanız istenebilir.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Her akış için yeni formu seçebilmeniz için {0} hedef hesabının sahip olduğu formlar listeleniyor. Oturum açma beklemesini durdurmak için İptal&apos;e tıklayın.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Hedef: {1} içinde {0} form bulundu. Satır başına bir tane seçin veya bir kimlik yapıştırın.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Hedef: {0} içinde form bulunamadı. Açılır liste yalnızca o hesabın sahip olduğu formları (grup formlarını değil) listeler; bu nedenle önce formları Formlar aracıyla kopyalayın veya bir kimlik yapıştırın.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>İptal edildi. Yeniden denemek için Form adlarını yükle&apos;ye tıklayın veya form kimliklerini yapıştırın.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Hedef: formlar yüklenemedi: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(yok)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(başlıksız form)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Kaynak form</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Hedefin formlarından seçin</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Hedef hesaptan bir form seçin. Önce &quot;Hedef hesaptan formları yükle&quot;ye tıklayın.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Hedef oturum açmadan dolduruldu ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Kaynak hesabınız, hedef hesabınızla değiştirildi</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Oturum açmalarınızdan dolduruldu ({0} → {1}). E-posta etki alanlarını değiştirmemek için her iki kutuyu da temizleyin.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Hedefi boş olan site değişmeden bırakılır: akışlar onu göstermeye devam eder ve rapor onu listeler.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ {0} olarak oturum açıldı · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>{0} olarak oturum açıldı. Hedef kiracının SharePoint adresi {1}; boş hedef siteler bundan dolduruldu.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Akışlardaki bazı siteler, hedef hesabın kendi adresi olan {0} üzerinde. Ya bu paketler zaten hedefi gösteriyor (örneğin bu aracın yazdığı paketler veya hedeften dışa aktarılan akışlar), bu durumda bunun yerine kaynaktan orijinal dışa aktarımları ekleyin; ya da kaynak ve hedef gerçekten tek bir kiracı, bu durumda uygulamayı Tek kiracı moduna geçirin (Ayarlar).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0}, bu aracın {1} tarihinde yazdığı bir paket: hedef adreslerini zaten içeriyor, bu nedenle taşınacak bir şey kalmadı. Bunun yerine kaynak kiracıdan orijinal dışa aktarımı ekleyin (çıktı klasöründeki değil, İndirilenler&apos;deki dosya).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Bu akışlardaki siteler hedef kiracınız olan {0} üzerinde, ancak kaynağınız {1}. Paketler {0} üzerinden dışa aktarıldıysa kaynak olarak o kiracıda oturum açın (Kaynağı değiştir…). Bu araç onları daha önce yazdıysa kaldırın ve orijinal dışa aktarımları ekleyin.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Oturum açıldı. {1} adresinden {0} hedef site dolduruldu. Kontrol edin, ardından İleri&apos;ye tıklayın.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Oturum açıldı. Her hedef sitenin zaten bir değeri vardı, bu nedenle hiçbiri değiştirilmedi.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Oturum açma tamamlanmadı veya yeni kiracının adresi okunamadı (Hedef satırına bakın). Oturum açtıysanız hedef siteleri doldurmak için aşağıya yeni kiracının adresini girin.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — {1} olarak bağlı</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — henüz oturum açılmadı</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Hedefi değiştir…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Hedef liste seçilmedi, bu nedenle bu akışlar hedefte bulunmayan bir listeyi göstermeye devam eder. Hedef listeyi seçin veya önce hedef sitede listeyi oluşturun.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Akışlar &quot;{0}&quot; sütununu kullanıyor, ancak &quot;{1}&quot; hedef listesinde bunun için bir sütun yok. Tabloda hedef sütununu seçin veya sütunu hedef listeye ekleyip Yeniden denetle&apos;ye tıklayın.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>&quot;{0}&quot; hedef listesi &quot;{1}&quot; sütununu gerektiriyor, ancak &quot;{2}&quot; akışındaki &quot;{3}&quot; &quot;Öğe oluştur&quot; adımı bunu ayarlamıyor, bu nedenle içe aktarma &quot;missing required property item/{1}&quot; hatasıyla başarısız olur. Aşağıya bir değer yazın; araç onu o adıma ekler, veya hedef listede &quot;{1}&quot; sütununu isteğe bağlı yapıp Yeniden denetle&apos;ye tıklayın.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>&quot;{0}&quot; hedef listesi &quot;{1}&quot; sütununu gerektiriyor, ancak &quot;{2}&quot; akışındaki &quot;{3}&quot; &quot;Öğe oluştur&quot; adımı bunu ayarlamıyor, bu nedenle içe aktarma &quot;missing required property item/{1}&quot; hatasıyla başarısız olur. SharePoint&apos;te hedef listede &quot;{1}&quot; sütununu isteğe bağlı yapın, ardından Yeniden denetle&apos;ye tıklayın.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Bu gerekli sütunlar için doldurulacak değer (bunları atlayan her Öğe oluştur adımına eklenir):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Bu, içe aktarmada başarısız olur. Devam etmek için düzeltin:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Yeniden denetle</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Başarısız olacak ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Devam etmek için hedefte oturum açın.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} paket bu araç tarafından yazılmış ve hedefin değerlerini zaten içeriyor. Bunları kaldırın (listedeki ✕) ve orijinal dışa aktarımları ekleyin.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} sitenin hedefi yok. Olduğu gibi bırakılan bir site hâlâ kaynak kiracıyı gösterir.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} liste içe aktarmada başarısız olur. Devam etmek için &quot;Başarısız olacak&quot; işaretli listeleri düzeltin.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Listeler henüz eşleştirilmedi. Yeniden denemek için bir adım geri gidip tekrar ileri gelin.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ Devam etmek için {0} formun geçerli bir hedef form kimliğine ihtiyacı var.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Kaynağı değiştir…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>{0} olarak oturum açıldı. Kaynak kiracının SharePoint adresi {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Kaynak bağlantısı {0} olarak değiştirildi. Aşağıda listelenen siteler bu kiracıda olmalıdır.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Kaynak oturum açma tamamlanmadı veya kiracının adresi okunamadı (Kaynak satırına bakın). İptal ettiyseniz önceki kaynak bağlantısı korunur.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Bazı siteler, kaynak olarak bağlı olduğunuz kiracı ({1}) olmayan {0} üzerinden okunuyor. Listelerini okumak başarısız olur. Bu satırlar için &quot;Listeleri şuradan oku&quot; değerini kaynak kiracınızdaki adrese düzenleyin veya Kaynağı değiştir…&apos;e tıklayıp o kiracıdan bir hesapla oturum açın.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Akışların siteleri {0} üzerinde, ancak kaynak olarak {1} kiracısına bağlısınız. &quot;Listeleri şuradan oku&quot; aynı sitelerle {1} üzerinde dolduruldu, böylece araç liste adlarını ve sütunlarını oradan okur. Bu sitelerin var olduğunu kontrol edin (herhangi bir satırı düzenleyin) veya akışlar gerçekten {0} kiracısından geldiyse Kaynağı değiştir…&apos;e tıklayın.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Akışların kullandığı listeler</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Bir listeyi açmak veya kapatmak için tıklayın. İncelenmesi gereken listeler başta ve açık.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Tümünü aç</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Tümünü kapat</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Kullanan:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Kaynak:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Hedef liste</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>veya kimliğini ya da bağlantısını yapıştırın:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Kaynak sütun</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Tür</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Kullanılan</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Akışlar tarafından kullanılmıyor</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(yok: bu listeyi değiştirme)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Hedef liste seçilmedi: onu kullanan akışlar hâlâ kaynak listeyi gösteriyor</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} sütun denetlenecek</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ denetlenecek bir şey yok</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>Bu listede {0} sütun var; akışlar {1} tanesini kullanıyor: {2} tanesi hedefte aynı ada sahip, {3} tanesi yeniden adlandırılıp eşleştirildi, {4} tanesi benzer (lütfen kontrol edin), {5} tanesinin eşleşmesi yok (lütfen seçin). Diğer sütunlar bağlam için gösterilir ve değiştirilmez.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>Bu listede {0} sütun var; hiçbiri akışlar tarafından aracın görebileceği şekilde kullanılmıyor, bu nedenle eşlenecek bir şey yok.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Bu liste için sütun okunamadı (yukarıdaki notlara ve etkinlik listesine bakın).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Sütunlarını görmek ve eşlemek için yukarıdan bir hedef liste seçin.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Hedef listenin sütunları okunamadı, bu nedenle eşleşme önerilemedi.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Akış, bu listenin hangi sitede olduğunu belirtmiyor (bir parametre kullanıyor), bu nedenle aranamaz. Hedef listenin kimliğini veya bağlantısını yapıştırın.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Hedef liste yok: bu liste değiştirilmeden bırakılır.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>{0} için hedef listenin sütunları okunuyor…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>&apos;{0}&apos; listesi: başka bir hedef liste seçtiniz. Yeniden eşleştirmek için {1} üzerindeki sütunları okunuyor.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — {1} olarak bağlı (ana pencerenin oturumu)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Listeleri şuradan oku (kaynak)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>&quot;Akışlardaki site&quot; akışlarda saklanan adrestir; değiştirilen budur, bu nedenle düzenlenemez. &quot;Listeleri şuradan oku&quot;, aracın kaynak tarafta her listenin adını ve sütunlarını okuduğu yerdir; aynı adres olarak başlar, bu nedenle akışın adresi eskiyse, yeniden adlandırılmışsa veya kaynak bağlantınızdan farklı bir kiracıdaysa değiştirin.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Bu akışların kullandıkları</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} akış, {2} adım: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>bu araç tarafından yeniden yazıldı</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>elle gözden geçirin</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>yalnızca bağlantı</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>İçe aktarmadan sonra yapılacaklar</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Yamalanan her paketi hedef ortamda içe aktarın ve bağlantıları yeniden oluşturun (hiçbir zaman kopyalanmazlar).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Çözüm paketleri: yalnızca iş akışı tanımları yeniden yazıldı. Çözümdeki ortam değişkeni değerleri ve bağlantı başvuruları (customizations.xml) hâlâ kaynak değerlerini içeriyor; içe aktarmadan sonra bunları ayarlayın.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Akış sahipleri ve yalnızca çalıştırabilen kullanıcılar paketin parçası değildir; içe aktarmadan sonra akışları doğru kişilerle paylaşın.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Değişiklik yok (eşlemede hiçbir şey eşleşmedi).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} değiştirme</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Hâlâ kaynak değerlerini gösteriyor (eşlenmemiş, içe aktarmadan önce gözden geçirin)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>{0} kaynak sitesine ve {1} hedef sitesine bağlanılıyor. Henüz oturum açmadıysanız bir oturum açma penceresi açılır.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>{0} (kaynak) ve {1} (hedef) sitelerine bağlanıldı.</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>{0} hedef sitesindeki listeler ve kitaplıklar okunuyor; böylece her liste ada göre eşleştirilebilir ve açılır listede sunulabilir.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>{1} üzerinde {0} liste ve kitaplık bulundu.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>{0} listesinin adı ve sütunları {1} kaynak sitesinden okunuyor.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>&apos;{0}&apos; listesi: {1} hedef sitesinde aynı ada sahip bir liste aranıyor.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>&apos;{0}&apos; listesi: hedefte bulundu. Eşleştirmek için hedef listenin sütunları okunuyor.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>&apos;{0}&apos; listesi: sütunları okunamadı veya hiç yok. Bu liste için eşlenecek bir şey yok.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>&apos;{0}&apos; listesi: {1} sütun, hiçbiri akışlar tarafından aracın görebileceği şekilde kullanılmıyor. Eşlenecek bir şey yok.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>&apos;{0}&apos; listesi: akışlar {1} sütun adı kullanıyor: {2} tanesi hedefte aynı ada sahip (değişiklik gerekmez), {3} tanesi yeniden adlandırılıp eşleştirildi, {4} tanesi benzer görünüyor (lütfen kontrol edin), {5} tanesinin eşleşmesi yok (sizin seçiminiz), {6} tanesi yerleşik sütun (eşlenecek bir şey yok).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>{0} listesi kaynak sitede değil, ancak hedef sitede &apos;{1}&apos; olarak var: akış zaten hedefi gösteriyor.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>&apos;{0}&apos; sitesinin hedefi yok; üzerindeki listeler çözümlenmedi.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Gelişmiş: listeleri farklı bir adresten oku</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Sütun eşleme: {0} listesinden {1} listesine</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Bu liste için gösterilecek sütun yok.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Bu listenin hiçbir sütunu akışlar tarafından kullanılmıyor. Görmek için &quot;Tüm sütunları göster&quot;i işaretleyin.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>Kaynak liste okunamadı ve akış hiçbir sütun adlandırmıyor, bu nedenle eşlenecek bir şey yok.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Liste</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(kaynakta okunamadı)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Okunan yer:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Site</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Bu akış zaten hedefteki bu listeyi gösteriyor. Kullandığı {0} sütun adı hedefin sütunlarıyla birlikte gösterilir; hiçbir şeyin değişmesi gerekmez.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(liste adı kullanılamıyor)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Zaten hedefte</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Akışın sütun adlarına göre eşlendi</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Sütunlar okunamıyor</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Hedef liste yok</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Eşlenecek bir şey yok</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Hazır</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Hedef sütunlar okunamıyor</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} denetlenecek</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>{0} akış kullanıyor</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} sütun eşlemesi hâlâ incelenmeli.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Tüm sütun eşlemeleri kesinleşti.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Bağlantılar kiracılar arasında kopyalanmaz: içe aktardıktan sonra Power Automate&apos;te yeniden oluşturun.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>E-posta: {0} üzerindeki her adres {1} olur.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{1} formdan {0} tanesi yeni bir formu gösteriyor.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{1} listeden {0} tanesinin hedef listesi var.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Listeler henüz eşleştirilmedi.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>E-posta adresleri değiştirilmez (hiçbir etki alanı eşlenmedi).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Akışlar Microsoft Forms kullanmıyor.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Akışlar belirli bir liste kullanmıyor.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Akışlar hiçbir SharePoint sitesi belirtmiyor.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{1} akış içeren {0} paket yazılacak; orijinaller değiştirilmez.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{1} siteden {0} tanesi bir hedef siteye taşınacak; diğerleri olduğu gibi kalır.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Otomatik doldurulan değerleri temizle</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Doldurulan</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Akışlarınızdaki form</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Kaynak (akışlarınızda)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Listeler</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Siteler</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Durum</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>Hedef</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Sizin seçtiğiniz</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Değiştirilmedi</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(ana pencerenin oturumu)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>Taşınacak e-posta etki alanı (kaynak)</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Şu etki alanındaki her adresi taşı:</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>hedef:</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>Taşınacak e-posta etki alanı (hedef)</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…veya .zip dosyalarını (ya da bir klasörü) bu pencereye sürükleyin.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>&apos;{1}&apos; listesindeki &apos;{0}&apos; sütununun hedef listede eşleşmesi yok.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>{2} üzerindeki &apos;{0}&apos; ({1}) listesinin hedef listesi yok, bu nedenle onu kullanan akışlar hâlâ kaynak listeyi gösteriyor.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(başlık bilinmiyor)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Adıma git</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Kayıtlı bir eşlemeniz mi var? Yükleyin…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Özel desen…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Orijinal adları koru</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Her ada &apos; - migrated&apos; ekle</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Raporu açın ve gözden geçirme için işaretlenenleri kontrol edin.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>Power Automate&apos;te (hedef kiracı): Akışlarım, İçe aktar, Paketi İçe Aktar (Eski) seçeneğini açın ve yazılan bir paketi seçin.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>İlgili kaynaklar altında her bağlantı için &quot;İçe aktarma sırasında seç&quot;e tıklayın ve hedef kiracıda bir bağlantı seçin veya oluşturun. Bağlantılar kiracılar arasında taşınamaz.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Akışı içe aktarın, kapalı tutun, açın, işaretlediği her şeyi düzeltin, ardından açın.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Klasörü aç</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Power Automate&apos;i aç</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Bu çıktı klasörü henüz yok; paketleri yazdığınızda oluşturulur.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>KAYNAK</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>HEDEF</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} akış bulundu</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Akış bulunamadı</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Bu araç tarafından zaten yazılmış</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Okunamadı</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Yazmaya hazır mı?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Bu paketi listeden kaldır</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Akış yeniden yazma raporu</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Bu akışların kullandıkları ({0} hizmet)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} paket yazılamadı.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>Yazılan paketlerdeki {0} değer hâlâ kaynağı gösteriyor. Hangileri olduğunu görmek için raporu açın.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Tüm {0} sütunu göster</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Yalnızca akışların kullandığı sütunları göster</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Bu sütunlar ne anlama geliyor?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>Bu listenin kimliği kaynak sitede yok, ancak hedef sitedeki &apos;{0}&apos; listesi: akış, bu aracın zaten yazdığı bir pakette olduğu gibi hedefi zaten gösteriyor.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Bağlı</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Sorun</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Oturum açılmadı</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Oturum açma bekleniyor…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} liste · hepsi hazır</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} liste · {1} hazır · {2} inceleme bekliyor</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>{0} sürdü.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>Gözden geçirilecek</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Kaynak kiracıdan dışa aktardığınız akış paketlerini (.zip) ekleyin. Her biri eklenir eklenmez taranır.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Her akışın hangi siteye taşındığını belirtin. Hedefte oturum açın; yeni kiracının adresi sizin için doldurulur.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Akışların kullandığı her liste hedefteki bir listeyle eşleştirilir ve sütunları eşlenir. İnceleme gerektiği işaretlenen her şeyi kontrol edin.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Kopyalanan formları yeni kimliklerine yönlendirin ve e-posta adreslerinin ile kiracı kimliğinin nasıl değişeceğine karar verin.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Aşağıdaki listeyi kontrol edin, güncellenmiş paketlerin nereye kaydedileceğini seçin, ardından yazın.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Burada ne olur</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Araç, akışların kullandığı siteleri, listeleri, sütunları ve formları bulmak için her paketi bu bilgisayarda okur (hiçbir şey herhangi bir yere gönderilmez). Bu aracın daha önce yazdığı paketleri değil, kaynaktan ORİJİNAL dışa aktarımları ekleyin: onlar hedefin adreslerini zaten içerir.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>&apos;{0}&apos; sütunu farklı listelerde farklı eşlenmiş ({1}). Her listenin adımları kendi eşlemesini alır; akıştaki diğer ifadeler orijinal adı korur, bu nedenle onları gözden geçirin.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Form adlarını yeniden yükle…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Form adları yükleniyor… oturum açmanız istenebilir.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Akışlarınızdaki formların başlıkları {0} kaynak hesabından okunuyor. Oturum açma beklemesini durdurmak için İptal&apos;e tıklayın.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Kaynak: {1} formdan {0} tanesinin başlığı bulundu ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Kaynak: form başlıkları okunamadı: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} form, aynı ada sahip hedef formla eşleştirildi.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Geçerli bir form kimliğine benziyor</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Ada göre eşleştirildi</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>Kaynak ve hedef aynı kiracıda ({0}). Uygulamayı Tek kiracı moduna geçirin (Ayarlar) veya kaynakta ve hedefte farklı kiracılardaki hesaplarla oturum açın.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Bu paketleri kaldır</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>Zaten hedefi gösteren {0} paket kaldırıldı: {1}. Bunun yerine kaynak kiracıdan orijinal dışa aktarımları ekleyin.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Bu paketler kaldırıldı. Kaynak kiracıdan orijinal dışa aktarımları ekleyin.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Her paket çıktı klasörüne yeni bir .zip olarak kaydedilir; orijinaller asla değiştirilmez. Birini yeniden adlandırmak için Farklı kaydet alanına başka bir ad yazın.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Orijinal adları koru</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Her ada &apos; - migrated&apos; ekle</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Orijinal paket</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Farklı kaydet</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Şu adla kaydedilecek: {0} (adları aşağıda değiştirebilirsiniz).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Okunamadı; çıktı yazılmadı</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>İptal edildi. Hiçbir şey değiştirilmedi. Siteler adımında yeniden denemek için Oturum aç&apos;ı (örneğin başka bir tarayıcıda), Listeler adımında Yeniden eşleştir&apos;i kullanın.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>İptal ediliyor… bir oturum açma penceresinin kapanması biraz sürebilir.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Aracın yaptıkları</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Bağlantılar</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Çok kiracılı: listeleri eşleştirmek için araç her listenin adını ve sütunlarını kaynak kiracıdan okur ve hedef kiracıda aynı listeyi arar. Bunun için her ikisinde de oturum açmak gerekir. Her tarafta burada oturum açın veya yalnızca İleri&apos;ye tıklayın, o zaman sorulur. Bir tarayıcı penceresi açılır; yanlış tarayıcıysa İptal&apos;e tıklayıp yeniden deneyin. Hiçbir kiracıda hiçbir şey değiştirilmez.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Tek kiracı: kaynak ve hedef aynı kiracı olduğundan araç, Bağlan adımında oturum açtığınız hesabı kullanır. Oturum açılacak başka bir şey yok. Kiracıda hiçbir şey değiştirilmez.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Kaynak</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Hedef</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Kaynakta oturum aç…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Hedefte oturum aç…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>İptal</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Oturum açma penceresini beklemeyi durdurur; böylece örneğin başka bir tarayıcıda yeniden deneyebilirsiniz.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Henüz oturum açılmadı</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Ana pencerenin oturumunu kullanır: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ {0} olarak oturum açıldı</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Hazır</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Oturum açma bekleniyor… bir tarayıcı penceresi açılmalı</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Oturum açma iptal edildi. Yeniden denemek için Oturum aç&apos;a tıklayın.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Oturum açıldı. Aşağıdaki hedef siteleri kontrol edin, ardından İleri&apos;ye tıklayın.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Henüz oturum açılacak bir kaynak site yok. Önce akış paketleri ekleyin.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Önce en az bir hedef site girin (veya Doldur, yolları koru seçeneğini kullanın); oturum açma hedef sitenin kiracısına gider.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Kaynakta oturum açılıyor… bir tarayıcı penceresi açılır.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Hedefte oturum açılıyor… bir tarayıcı penceresi açılır.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>kaynak</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>hedef</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Kaynak kiracıda oturum açılıyor. Bir tarayıcı penceresi açılır; beklemeyi durdurmak için (örneğin başka bir tarayıcı denemek için) İptal&apos;e tıklayın. Oturum açma ayrıca araca kaynağın hangi kiracı olduğunu söyler.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Hedef kiracıda oturum açılıyor. Bir tarayıcı penceresi açılır; beklemeyi durdurmak için (örneğin başka bir tarayıcı denemek için) İptal&apos;e tıklayın. Oturum açma ayrıca araca yeni kiracının SharePoint adresini söyler.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>{0} tarafına bağlanıldı.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Oturum açma sizin tarafınızdan iptal edildi.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Akışların kullandığı siteleri, listeleri, sütunları ve formları bulmak için bu bilgisayardaki {0} paket dosyası okunuyor. Hiçbir şey herhangi bir yere gönderilmez.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>{0} okundu: {1} akış.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>{0} liste eşleştiriliyor: araç her biri için kaynak siteden adını ister, ardından hedef sitede bu ada sahip bir liste arar.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Eşleştirme bitti. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>{0} yamalanmış paket {1} konumuna yazılıyor. Orijinaller değiştirilmez.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>{0} eşlemeniz uygulanarak yazılıyor.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>{0} içinde hâlâ kaynağı gösteren değerler denetleniyor.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Sizin tarafınızdan iptal edildi. Hiçbir şey değiştirilmedi.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Durduruldu: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Her akış, okuduğu veya yazdığı SharePoint sitesinin adresini saklar. Yeni kiracıda çalışmak için her akışın oradaki eşleşen siteyi göstermesi gerekir, bu nedenle araca her eski sitenin yerine hangi yeni sitenin geçtiğini söyleyin. Bu yalnızca paketlerinizin kopyalarını düzenler; İleri&apos;ye tıklayana kadar hiçbir şey aranmaz.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Burada olanlar: araç, bir akışın kullandığı her liste için listenin adını ve sütunlarını kaynak siteden okur, hedef sitede aynı ada sahip bir liste arar ve sütunlarını eşleştirmek için o listenin sütunlarını okur. Neden: akışlar listelere ve sütunlara kimlikle veya iç adla başvurur ve bunlar yeni kiracıda farklıdır, bu nedenle araç karşılığını bulur. Bu adım yalnızca okur; hiçbir kiracıda hiçbir şey oluşturulmaz veya değiştirilmez. Hedef listeyi ve herhangi bir sütunu kartından değiştirebilirsiniz.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Kopyalanan bir form yeni bir kimlik alır, bu nedenle onu kullanan bir akışın kopyayı göstermesi gerekir. Bir akıştaki e-posta adreslerinin ve kiracı kimliğinin de yeni kuruluş için değişmesi gerekebilir. Burada hiçbir şey aranmaz; yedekleri siz belirlersiniz ve boş bırakılan her şey olduğu gibi kalır.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Araç, eşlemeniz uygulanmış yeni .zip dosyalarını çıktı klasörüne yazar, hâlâ kaynağı gösteren bir şey olup olmadığını bulmak için bunları yeniden tarar ve bir rapor yazar. Orijinal paketleriniz asla değiştirilmez ve hiçbir kiracıya hiçbir şey gönderilmez. Yeni paketleri daha sonra Power Automate&apos;te kendiniz içe aktarırsınız.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Oturum açma iptal edildi. Yeniden denemek için (örneğin başka bir tarayıcıda) düğmeye tıklayın.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>İptal</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Hata: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Kaynak form okunamadı ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Form hedefte oluşturulamadı ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Yarıda iptal edildi. Hedefte yarım bir form kaldı; Microsoft Forms&apos;ta silin.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Kopyalama yarıda durdu ({0}). Hedefte yarım bir form kaldı; Microsoft Forms&apos;ta silin.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>arka plan resmi</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>logo</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>üst bilgi resmi</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>{0} kopyalanmadı (resimler henüz desteklenmiyor).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Sınav puanlaması (doğru yanıtlar ve puanlar) doğrulanmadı; lütfen kopyayı kontrol edin.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>&apos;{0}&apos; ayarı kopyalanamadı ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>&apos;{0}&apos; sorusu kopyalanmadı ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(başlıksız)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Dallanma kuralları kopyalanamadı ({0}); lütfen kopyayı kontrol edin.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>Kopya oluşturuldu ancak Microsoft Forms&apos;ta görünür yapılamadı ({0}); geri dönüşüm kutusunda olabilir.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>Kopyada {0} soru var, ancak kaynakta {1} soru var.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>&apos;{0}&apos; sorusu ({1}) oluşturuldu ancak seçenekleri kopyalanamadı ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Sonuçlar</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Kaynak form</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>Kaynak form kimliği</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Kopya başlığı</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>Kopya form kimliği</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Durum</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Kopyalanan sorular</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Kaynaktaki sorular</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Uyarılar</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Notlar</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Hata</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Excel Çalışma Kitabı (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>JSON dosyaları (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Kimlik</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Başlangıç zamanı</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Tamamlanma zamanı</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Yanıtlayan</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Ad</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Puan</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Eşlenmemiş yanıtlar (ham JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (kesildi: Excel hücresi için çok uzun)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Çalıştırma durdurulsun mu?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>Bir karşılaştırma veya doğrulama hâlâ çalışıyor. Bu pencereyi kapatmak onu durdurur ve rapor yazılmaz. Yine de kapatılsın mı?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Çalışırken kapatılsın mı?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Araç hâlâ çalışıyor (tarama, eşleştirme, oturum açma veya paket yazma). Şimdi kapatmak onu durdurur. Yine de kapatılsın mı?</value></data>
 </root>

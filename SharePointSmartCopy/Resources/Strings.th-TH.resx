@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>สำเร็จ ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>ล้มเหลว ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>ข้าม ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>เป็นปัจจุบัน</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>ไม่สามารถอ่านได้ว่าต้นทางมีสิทธิ์เฉพาะของตัวเองหรือไม่ (ถูกจำกัดอัตราหรือเกิดข้อผิดพลาดในการเข้าถึง) — ไม่ได้คัดลอกสิทธิ์สำหรับรายการนี้ เรียกใช้อีกครั้งเพื่อลองใหม่</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>ไฟล์ปลายทางที่มีอยู่ถูกลบเพื่อเขียนทับ แต่ไม่สามารถอัปโหลดสำเนาใหม่ได้ ({0}) ขณะนี้ไม่มีไฟล์ในปลายทาง — เรียกใช้การคัดลอกอีกครั้งเพื่อกู้คืน</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>ไลบรารีปลายทางล้มเหลว ({0}) ไฟล์ของไลบรารีนั้นถูกทำเครื่องหมายเป็นล้มเหลว ไลบรารีอื่นยังทำงานต่อไป</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: ไฟล์ต้นทางมีการเปลี่ยนแปลงระหว่างดาวน์โหลด — เริ่มดาวน์โหลดใหม่</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint ไม่รายงานความคืบหน้าของการนำเข้านี้เป็นเวลา {0} นาที จึงยกเลิกการนำเข้า ไฟล์ของการนำเข้านี้ถูกทำเครื่องหมายเป็นล้มเหลว เรียกใช้การคัดลอกอีกครั้งเพื่อลองใหม่</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>ผู้เช่าเดียว</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>หลายผู้เช่า</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>คัดลอกระหว่างผู้เช่า Microsoft 365 สองรายที่แตกต่างกัน คุณลงชื่อเข้าใช้ต้นทางและปลายทางแยกกัน เลือกการลงทะเบียนแอปของปลายทางในการตั้งค่า</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>การลงทะเบียนปลายทาง:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>โหมดหลายผู้เช่า: การลงทะเบียนแอปที่ใช้ลงชื่อเข้าใช้ผู้เช่าปลายทาง “เหมือนต้นทาง” จะใช้การลงทะเบียนของต้นทางซ้ำ ซึ่งต้องเป็นแอปแบบหลายผู้เช่า</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>ดำเนินการต่อ / เรียกใช้อีกครั้ง</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>เชื่อมต่อใหม่และเรียกใช้การเลือกนี้อีกครั้งด้วย คัดลอกถ้าใหม่กว่า ไฟล์ที่คัดลอกแล้วจะถูกข้าม และจะโอนย้ายเฉพาะสิ่งที่ขาดหายหรือมีการเปลี่ยนแปลง</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>การเรียกใช้นี้ไม่มีรายการที่เลือกซึ่งบันทึกไว้เพื่อดำเนินการต่อ (มีเพียงการเรียกใช้ที่เลือกไฟล์เท่านั้นที่บันทึกไว้)</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>มีการคัดลอกกำลังทำงานอยู่แล้ว ให้ทำให้เสร็จหรือยกเลิกก่อน</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>ไม่สามารถดำเนินการต่อได้: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>กู้คืนการเรียกใช้ที่ถูกขัดจังหวะแล้ว {0} รายการ ดูที่ประวัติ</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>กำลังดำเนินการต่อ: กู้คืนรายการ {0} รายการจากการเรียกใช้ก่อนหน้า โดยเลือก คัดลอกถ้าใหม่กว่า ไว้ ตรวจสอบตัวเลือก แล้วคลิก ถัดไป (ไม่กู้คืนการแมปคอลัมน์แบบกำหนดเอง)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>ถูกขัดจังหวะ — แอปปิดก่อนที่การเรียกใช้นี้จะเสร็จสิ้น จากรายการที่เสร็จแล้ว: สำเร็จ {0}, ล้มเหลว {1}, ข้าม {2}, ยกเลิก {3}  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>ส่งออกข้อมูลวินิจฉัย…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>บันทึกไฟล์ zip ที่มีบันทึกล่าสุด ข้อมูลระบบ และการตั้งค่าของคุณโดยลบรายละเอียดขององค์กรออกแล้ว — เพื่อแนบไปกับรายงานข้อบกพร่อง ไม่รวมรายงานการคัดลอกหรือชื่อไฟล์</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>บันทึกข้อมูลวินิจฉัยไปที่ {0} แล้ว</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>ไม่สามารถบันทึกข้อมูลวินิจฉัยได้: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>เนื้อหาเหมือนกัน (ต่างกันเฉพาะส่วนที่ SharePoint จัดการ) แต่ไม่ได้คงวันที่แก้ไขไว้</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>ไม่ได้คัดลอกสิทธิ์: ไม่สามารถระบุ ID SharePoint ของรายการได้</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>ไม่ได้คัดลอกสิทธิ์: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>โฟลเดอร์ “{0}”: ไม่ได้ใช้{1} — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>มีโฟลเดอร์อื่นที่พบปัญหาแบบเดียวกับข้างต้น โฟลเดอร์ที่เหลือจะไม่แสดงเป็นรายการแยก</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>สิทธิ์</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>วันที่</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>ผู้สร้าง / ผู้แก้ไข</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> (คงไว้ {0} — ปลายทางเป็นปัจจุบันอยู่แล้ว)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>คำเตือน: การอ่านเมทาดาทาจากต้นทาง ({0}) ล้มเหลว: {1} รายการจากต้นทางอาจถูกคัดลอกโดยไม่มีค่าคอลัมน์แบบกำหนดเองหรือสิทธิ์เฉพาะ เรียกใช้อีกครั้งเมื่อปัญหาหมดไป (เขียนทับ หรือ ถ้าใหม่กว่า จะนำค่าเหล่านั้นไปใช้ใหม่)</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>คำเตือน: ไม่พบรายการต้นทางของไลบรารี จึงจะไม่คัดลอกสิทธิ์ของไลบรารีนั้น</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>โฮสต์ SharePoint ‘{0}’ ไม่ได้เชื่อมโยงกับผู้เช่าที่เชื่อมต่ออยู่ เชื่อมต่อไซต์ต้นทางและปลายทางอีกครั้งแล้วลองใหม่</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>การคัดลอกข้ามผู้เช่า: ไม่คัดลอกค่าคอลัมน์เมทาดาทาที่มีการจัดการ (อนุกรมวิธาน) และยังไม่สามารถคัดลอกสมุดบันทึก OneNote / ชุดเอกสารระหว่างผู้เช่าได้ ระบบแมปข้อมูลประจำตัวโดยใช้การตั้งค่าการแมปข้อมูลประจำตัวของคุณ ผู้ที่ไม่สามารถระบุได้ในปลายทางจะถูกข้าม</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>การแมปข้อมูลประจำตัว</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>การแมปข้อมูลประจำตัว…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>ระบุแต่ละบุคคล (หรือกลุ่ม) ในผู้เช่าต้นทางและบุคคลนั้นคือใครในผู้เช่าปลายทาง — เป็นบัญชีที่ต่างกัน ผู้สร้าง ผู้แก้ไข คอลัมน์บุคคล และสิทธิ์จะถูกเขียนโดยใช้ตารางนี้ ผู้ที่ไม่อยู่ในรายการจะถูกจับคู่ด้วยการสลับโดเมนหากคุณตั้งค่าไว้ ผู้ที่ยังคงไม่พบในปลายทางจะถูกข้ามและรายงานไว้</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>โดเมนอีเมลต้นทาง</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>โดเมนอีเมลปลายทาง</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>การแทนที่ — หนึ่งคู่ “ต้นทาง,ปลายทาง” ต่อบรรทัด (ผู้ใช้หรือชื่อกลุ่ม; # เริ่มความคิดเห็น)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>เหมือนต้นทาง</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>ต้นทางและปลายทางอยู่ในผู้เช่าเดียวกัน ให้สลับไปใช้โหมดผู้เช่าเดียวสำหรับการคัดลอกภายในผู้เช่าเดียวกัน</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>ยังไม่รองรับการคัดลอกโฟลเดอร์แบบเนทีฟ (สมุดบันทึก OneNote, ชุดเอกสาร) ข้ามผู้เช่า</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>ไดรฟ์ ‘{0}’ ไม่ได้เชื่อมโยงกับผู้เช่าที่เชื่อมต่ออยู่ เชื่อมต่อไซต์ต้นทางและปลายทางอีกครั้งแล้วลองใหม่</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>ยังไม่ได้ตั้งค่าการลงทะเบียนแอป เปิดการตั้งค่าและเพิ่มการลงทะเบียนแอป Azure ของคุณ (Application/Client ID) ก่อนเชื่อมต่อ</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>ยกเลิกการลงชื่อเข้าใช้แล้ว คลิก เชื่อมต่อ เพื่อลองอีกครั้ง</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>ผู้ดูแลระบบยังไม่ได้อนุมัติแอปนี้ในผู้เช่านี้ ขอให้ Global Administrator ให้ความยินยอมของผู้ดูแลระบบสำหรับการลงทะเบียนแอป (ดู การตั้งค่า ในคู่มือผู้ใช้)</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>ไม่พบการลงทะเบียนแอปในผู้เช่านี้ ตรวจสอบ Client ID และ Tenant ID ในการตั้งค่า</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>ไม่พบผู้เช่านั้น ตรวจสอบ Tenant ID ในการตั้งค่า (ใช้โดเมนของคุณ GUID ของผู้เช่า หรือ ‘common’)</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>การลงทะเบียนแอปไม่มีที่อยู่การเปลี่ยนเส้นทางที่แอปนี้ใช้ ใน Azure ให้เพิ่ม redirect URI http://localhost ใต้ ‘แอปพลิเคชันมือถือและเดสก์ท็อป’</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>การลงทะเบียนแอปไม่ได้ตั้งค่าสำหรับการลงชื่อเข้าใช้บนเดสก์ท็อป ใน Azure ให้เปิด ‘Allow public client flows’ สำหรับการลงทะเบียน</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>บัญชีนี้ไม่ได้รับอนุญาตให้ใช้การลงทะเบียนแอปนั้น ลงชื่อเข้าใช้ด้วยบัญชีจากผู้เช่าที่เป็นเจ้าของ หรือเลือกการลงทะเบียนอื่นในการตั้งค่า</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint ปฏิเสธการลงชื่อเข้าใช้ คลิก เชื่อมต่อ เพื่อลงชื่อเข้าใช้อีกครั้ง</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>คุณไม่มีสิทธิ์เข้าถึงไซต์นี้ ตรวจสอบให้แน่ใจว่าบัญชีของคุณเปิดไซต์ได้ในเบราว์เซอร์ และแอปได้รับสิทธิ์ Sites.ReadWrite.All</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>ไม่พบไซต์นั้น ตรวจสอบที่อยู่ — ควรมีลักษณะดังนี้ https://contoso.sharepoint.com/sites/name</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(รายละเอียด: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>เชื่อมต่อกับไซต์ต้นทางเพื่อดำเนินการต่อ</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>เลือกอย่างน้อยหนึ่งรายการ (ทำเครื่องหมายในช่อง) เพื่อดำเนินการต่อ</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>เชื่อมต่อกับไซต์ปลายทางเพื่อดำเนินการต่อ</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>เลือกโฟลเดอร์ปลายทางเพื่อดำเนินการต่อ</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>เลือกรายการปลายทางเพื่อดำเนินการต่อ</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>ป้อนชื่อสำหรับรายการใหม่เพื่อดำเนินการต่อ</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>ไม่ได้เลือกสิ่งใดเพื่อคัดลอก</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>กำลังรอให้การคัดลอกเสร็จสิ้น…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>ต้นทาง: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>ปลายทาง: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>การลงทะเบียนแอปของคุณมีการเปลี่ยนแปลง คุณจึงถูกลงชื่อออกจากทั้งสองไซต์ เชื่อมต่ออีกครั้งเพื่อดำเนินการต่อ</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>หยุดการคัดลอกหรือไม่</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>กำลังคัดลอกอยู่ หากหยุดตอนนี้ รายการที่เหลือจะไม่ถูกคัดลอก (คุณสามารถดำเนินการต่อภายหลังได้จากประวัติ) หยุดการคัดลอกหรือไม่</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>ยังมีการคัดลอกกำลังทำงานอยู่ การปิดแอปจะหยุดการคัดลอกและทำให้รายการที่เหลือไม่ถูกคัดลอก (คุณสามารถดำเนินการต่อภายหลังได้จากประวัติ) ปิดต่อไปหรือไม่</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>สลับโหมดการเชื่อมต่อหรือไม่</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>การสลับระหว่างผู้เช่าเดียวและหลายผู้เช่าจะตัดการเชื่อมต่อทั้งสองไซต์ และคุณจะต้องเชื่อมต่ออีกครั้ง สลับต่อไปหรือไม่</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>การเชื่อมต่อ:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>การลงทะเบียนแอปของต้นทาง</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>การลงทะเบียนแอปของปลายทาง</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>ลงชื่อเข้าใช้ผู้เช่าปลายทางด้วย:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>เปลี่ยน</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>เปิดการตั้งค่า</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• คุณต้องมีสิทธิ์อ่านคอลเลกชันไซต์ต้นทาง</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• ตั้งค่าการลงทะเบียนแอป Microsoft Entra ID ของคุณในการตั้งค่าก่อนเชื่อมต่อ</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>ตัวเลือกไฟล์</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>ตัวเลือกไลบรารีและไฟล์</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>กำลังคัดลอกไฟล์…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>กำลังคัดลอกไลบรารี…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>ถัดไป</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>เริ่มคัดลอก</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>ดูรายงาน</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>ป้อนชื่อของรายการใหม่ที่จะสร้าง</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>รายการปลายทางถูกเลือกในขั้นตอนปลายทางแล้ว ย้อนกลับเพื่อเปลี่ยน</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>ตั้งค่าการลงทะเบียนแอปก่อน</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy ลงชื่อเข้าใช้ด้วยการลงทะเบียนแอปที่คุณสร้างในผู้เช่า Microsoft Entra ID (Azure) ของคุณเอง เปิดการตั้งค่า เพิ่ม Application (client) ID ของการลงทะเบียนของคุณ แล้วกลับมาที่นี่เพื่อเชื่อมต่อ</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>ข้อมูลเพิ่มเติม</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>ลากเพื่อทำให้ฟีดกิจกรรมสูงขึ้นหรือเตี้ยลง</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>คลิกเพื่อแสดงเฉพาะรายการที่ล้มเหลว</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>คลิกเพื่อแสดงเฉพาะรายการที่ข้าม</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>การแมปคอลัมน์</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>เปรียบเทียบต้นทางและปลายทาง</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>เปิดเครื่องมือเปรียบเทียบเพื่อตรวจสอบสำเนานี้กับต้นทาง</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>เปิดประวัติ</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>การลงทะเบียนที่เลือกใช้สำหรับต้นทาง — และสำหรับทั้งสองฝั่งในโหมดผู้เช่าเดียว</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>การลงทะเบียนใหม่</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>เพิ่มการลงทะเบียนแอปอย่างน้อยหนึ่งรายการ</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>การตรวจสอบความถูกต้อง</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>ต้องระบุ Client ID สำหรับการลงทะเบียนที่เลือก</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>ลงชื่อออกแล้ว ระบบจะแจ้งให้คุณลงชื่อเข้าใช้ในการเชื่อมต่อครั้งถัดไป</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>ลงชื่อออกแล้ว</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>การลงชื่อออกล้มเหลว: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>ลงชื่อออก</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>พบการแมป {0} รายการ</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>ไม่สามารถอ่าน {0} บรรทัด (บรรทัด {1}) แต่ละบรรทัดต้องมีลักษณะเป็น ต้นทาง,ปลายทาง</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>โดเมนต้นทางและปลายทางเหมือนกัน การสลับโดเมนจึงไม่เปลี่ยนแปลงสิ่งใด</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>นำเข้า CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>ไม่สามารถอ่านบางบรรทัดของการแทนที่ (บรรทัด {0}) แต่ละบรรทัดต้องเป็น “ต้นทาง,ปลายทาง” แก้ไขหรือลบ — หรือขึ้นต้นบรรทัดด้วย # เพื่อทำให้เป็นความคิดเห็น</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>ไม่สามารถบันทึกการแมปข้อมูลประจำตัวได้: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>ไม่สามารถอ่านไฟล์นั้นได้: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>ข้ามผู้เช่า: ไม่พบบัญชีผู้สร้าง/ผู้แก้ไข {0} บัญชีในไลบรารีนี้ในผู้เช่าปลายทาง และจะคงเป็นบัญชีที่ใช้คัดลอก หลังการเรียกใช้ ให้ใช้ “แมปผู้ใช้เหล่านี้” ในรายงานเพื่อแก้ไข</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>ป้อนผู้ใช้หรือกลุ่มต้นทาง</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>ป้อนว่าบุคคลนี้คือใครในผู้เช่าปลายทาง — หรือลบแถวนี้</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>ต้นทางและปลายทางเหมือนกัน</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>ต้นทางนี้ปรากฏมากกว่าหนึ่งครั้ง</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>ต้นทาง (ผู้เช่านี้)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>ปลายทาง (ผู้เช่าอื่น)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>ประเภท</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>อยู่ในปลายทางหรือไม่</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>จำเป็นสำหรับ</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>ผู้ใช้</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>กลุ่ม</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>ยังไม่ได้ตรวจสอบ</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>กำลังตรวจสอบ…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ พบ</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ ไม่พบ</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>เพิ่ม</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>ลบ</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>เติมปลายทางจากการสลับโดเมน</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>สำหรับแถวที่ยังไม่มีปลายทาง จะเติมที่อยู่ที่การสลับโดเมนจะสร้างขึ้น</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>ตรวจสอบในปลายทาง</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>ค้นหาผู้ใช้ปลายทางแต่ละรายในผู้เช่าปลายทาง วิธีนี้ยังเพิ่มผู้ใช้เหล่านั้นลงในรายการผู้ใช้ของไซต์ปลายทางด้วย ซึ่งการคัดลอกจะทำอยู่แล้วก่อนที่จะตั้งเป็นผู้สร้างหรือให้สิทธิ์เข้าถึงได้</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>เชื่อมต่อกับปลายทางแบบหลายผู้เช่าก่อน: ป้อน URL ของไซต์ปลายทางในขั้นตอนปลายทาง แล้วเปิดกล่องโต้ตอบนี้อีกครั้ง</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>ส่งออก CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>การคัดลอกต้องใช้บุคคลเหล่านี้ แต่ไม่พบในผู้เช่าปลายทาง สำหรับแต่ละคน ให้ป้อนว่าเป็นใครในปลายทาง — หรือลบแถวเพื่อปล่อยไว้โดยไม่แมป</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>การแมป {0} รายการ</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} แถวต้องได้รับการตรวจสอบ</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>ตรวจสอบแล้ว: พบ {0}, ไม่พบ {1}{2}</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, ไม่สามารถตรวจสอบ {0}</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>กำลังตรวจสอบ {0} จาก {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>ไม่มีอะไรให้ตรวจสอบ: ไม่มีแถวใดมีที่อยู่อีเมลปลายทาง</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>บางแถวต้องได้รับการตรวจสอบ (ไฮไลต์ไว้) แก้ไขหรือลบ แล้วบันทึก</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>บันทึกการแมปแล้ว หากต้องการนำไปใช้กับไฟล์ที่คัดลอกไปแล้ว ให้เรียกใช้อีกครั้งด้วย เขียนทับ — คัดลอกถ้าใหม่กว่า จะข้ามไฟล์ที่เป็นปัจจุบัน ผู้สร้างของไฟล์เหล่านั้นจึงไม่เปลี่ยน สิทธิ์จะได้รับการรีเฟรชไม่ว่าจะเลือกแบบใด</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>ไม่พบบุคคล {0} รายจากต้นทางในผู้เช่าปลายทาง จึงถูกละไว้: ไม่ได้รับสิทธิ์เข้าถึง ไม่ได้ตั้งเป็นผู้สร้างหรือผู้แก้ไข หรือถูกตัดออกจากคอลัมน์บุคคล</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>แมปผู้ใช้เหล่านี้…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>แมปผู้ใช้ที่ยังไม่ได้ระบุ…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>เปิดการแมปข้อมูลประจำตัวพร้อมบุคคลที่การเรียกใช้นี้ไม่พบในปลายทาง</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>การเรียกใช้นี้ไม่มีผู้ใช้ที่ยังไม่ได้ระบุ</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>คัดลอกฟอร์ม</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>คัดลอก Microsoft Forms ไปยังบัญชีปลายทางโดยคงคำถาม การแตกสาขา การตั้งค่า และธีมทั้งหมดไว้ สามารถส่งออกการตอบกลับไปยัง Excel ได้</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>ใช้ Web API ของ Microsoft Forms ซึ่ง Microsoft ไม่ได้จัดทำเอกสารหรือให้การสนับสนุน ปัจจุบันยังใช้งานได้แต่อาจเปลี่ยนแปลงโดยไม่แจ้งล่วงหน้า ลองใช้กับฟอร์มสองสามรายการก่อน</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>โหลดฟอร์มของฉัน</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>บัญชีต้นทาง: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>บัญชีปลายทาง: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>ปลายทาง: บัญชีเดียวกัน (ผู้เช่าเดียว) สำเนาจะถูกสร้างไว้ข้างฉบับต้นฉบับ</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(ระบบจะแจ้งให้คุณลงชื่อเข้าใช้)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>แผนที่ ID ฟอร์ม (ใช้โดยเครื่องมือโฟลว์): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>กำลังโหลดฟอร์ม…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>โหลดฟอร์มแล้ว {0} รายการ</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>เลือกอย่างน้อยหนึ่งฟอร์มก่อน</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>กำลังคัดลอกฟอร์ม…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>กำลังคัดลอก…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>คัดลอกแล้ว</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>ล้มเหลว (ดูบันทึก)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>กำลังคัดลอก ‘{0}’</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>คัดลอกเสร็จสิ้น: คัดลอกแล้ว {0}, ล้มเหลว {1}</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>เลือกโฟลเดอร์สำหรับการส่งออกการตอบกลับ</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>กำลังส่งออกการตอบกลับ…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>ส่งออก ‘{0}’ แล้ว: การตอบกลับ {1} รายการไปที่ {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>ส่งออกการตอบกลับของ {0} ฟอร์มไปที่ {1} แล้ว</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>คัดลอกฟอร์มแล้ว แต่ไม่สามารถบันทึก ID ของฟอร์มสำหรับเครื่องมือโฟลว์ได้: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>ไม่สามารถส่งออก ‘{0}’ ได้: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>ส่งออกการตอบกลับของ {0} ฟอร์มไปที่ {2} แล้ว; ล้มเหลว {1} (ดูบันทึก)</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>ยกเลิกแล้ว</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>ข้อผิดพลาด: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>คำแนะนำ: การลงทะเบียนแอปต้องมีสิทธิ์ Microsoft Forms แบบมอบสิทธิ์ พร้อมความยินยอม เพิ่มสิทธิ์นี้ใต้สิทธิ์ API (ดูคู่มือผู้ใช้) แล้วลองอีกครั้ง</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>คำแนะนำ: Microsoft Forms ปฏิเสธคำขอ ตรวจสอบว่าบัญชีนี้เปิด forms.office.com ได้ และการลงทะเบียนแอปมีสิทธิ์ Microsoft Forms</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>เลือกแล้ว {0} จาก {1}</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>ชื่อเรื่อง</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>ประเภท</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>แก้ไขล่าสุด</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>ผลลัพธ์</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>เพิ่มต่อท้ายชื่อเรื่องที่คัดลอก:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (สำเนา)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>คัดลอกฟอร์มที่เลือก</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>ส่งออกการตอบกลับ…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>ตรวจสอบสำเนากับต้นทาง</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>เครื่องมืออื่น</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>ฟอร์ม</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>คัดลอก Microsoft Forms และส่งออกการตอบกลับ</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>เครื่องมือฟอร์ม</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>เขียนโฟลว์ใหม่สำหรับปลายทาง</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>อัปเดตแพ็กเกจ Power Automate (.zip) ที่ส่งออกให้ชี้ไปยังปลายทาง: ไซต์ รายการ คอลัมน์ ฟอร์มที่คัดลอก และโดเมนอีเมล แพ็กเกจต้นฉบับของคุณจะไม่ถูกเปลี่ยนแปลง</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. เลือกแพ็กเกจโฟลว์ที่ส่งออก</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>เพิ่มแพ็กเกจโฟลว์ (.zip) ที่คุณส่งออกจาก Power Automate</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>เพิ่มไฟล์…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>เพิ่มโฟลเดอร์…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>สแกน</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>แพ็กเกจโฟลว์ (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>เพิ่มแพ็กเกจโฟลว์อย่างน้อยหนึ่งรายการก่อน</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>กำลังสแกนแพ็กเกจ…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>ข้าม {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>พบโฟลว์ {0} รายการ อ้างอิงถึง {1} ไซต์, {2} รายการ และ {3} ฟอร์ม</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>สแกนเสร็จสมบูรณ์</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. แมปไซต์</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>ไซต์ SharePoint ของแต่ละโฟลว์จะย้ายไปที่ใด ในโหมดหลายผู้เช่า ให้ลงชื่อเข้าใช้ปลายทาง แล้วระบบจะเติมที่อยู่ของผู้เช่าใหม่ให้ แก้ไขแถวใดก็ตามที่ไซต์มีชื่อต่างกัน ในโหมดผู้เช่าเดียว ให้พิมพ์ไซต์ปลายทางของแต่ละแถว</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>ไซต์ในโฟลว์ (จะถูกแทนที่)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>ไซต์ปลายทาง</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>ที่อยู่ผู้เช่าใหม่:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>เติมปลายทางที่ว่าง โดยคงพาธไว้</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>ป้อน URL แบบเต็ม เช่น https://contoso.sharepoint.com</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>เติมปลายทางที่ว่างโดยใช้โฮสต์นั้นและพาธของแต่ละไซต์แล้ว</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. จับคู่รายการและคอลัมน์</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>หนึ่งการ์ดต่อหนึ่งรายการที่โฟลว์ใช้ ไม่ว่าจะมีกี่โฟลว์ที่ใช้รายการนั้น แต่ละการ์ดแสดงชื่อและคอลัมน์ของรายการ รายการที่แมปไปในปลายทาง (ค่าเริ่มต้นคือรายการที่ชื่อเดียวกัน เลือกรายการอื่นจากรายการแบบเลื่อนลงหากชื่อต่างกัน) และวิธีแมปแต่ละคอลัมน์ ตรวจสอบการ์ดที่มีเครื่องหมายคำเตือน</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>จับคู่รายการและคอลัมน์</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>รายการ</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>ID รายการต้นทาง</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>ID รายการปลายทาง</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>คอลัมน์ต้นทาง</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>คอลัมน์ปลายทาง</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>สแกนแพ็กเกจก่อน</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>ป้อนไซต์ปลายทางอย่างน้อยหนึ่งไซต์ก่อน</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>กำลังจับคู่รายการและคอลัมน์…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(ไม่พบ)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>พบรายการที่ชื่อเดียวกันในปลายทาง</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>ไซต์ที่รายการนี้อยู่ไม่มีไซต์ปลายทาง (ขั้นตอนไซต์)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>ไม่สามารถอ่านรายการนี้บนไซต์ต้นทางได้: อาจไม่มีอยู่ บัญชีนี้อาจไม่มีสิทธิ์เข้าถึง หรือไซต์อยู่ในผู้เช่าที่ต่างจากการเชื่อมต่อต้นทางของคุณ</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>ไม่มีรายการชื่อนี้บนไซต์ปลายทาง: เลือกจากรายการแบบเลื่อนลง</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>ชื่อเดียวกัน</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>เปลี่ยนชื่อในปลายทาง</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>ไม่มีรายการที่ตรงกัน: เลือกคอลัมน์</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} จาก {1} รายการมีรายการปลายทาง {2} คอลัมน์ที่ต้องตรวจสอบ</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. ฟอร์มและอีเมล</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>ฟอร์มที่คัดลอกด้วยเครื่องมือฟอร์มจะถูกเติมให้อัตโนมัติ สำหรับฟอร์มที่คุณสร้างเอง ให้วาง ID หรือลิงก์ของหน้าแก้ไข</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>ID ฟอร์มต้นทาง</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>ID ฟอร์ม (เติมจากรายการแบบเลื่อนลง หรือวางเอง)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>ย้ายโดเมนอีเมล:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. เขียนแพ็กเกจที่อัปเดต</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>เลือกโฟลเดอร์เอาต์พุต (ไม่ใช่โฟลเดอร์ที่เก็บต้นฉบับ) แพ็กเกจที่อัปเดตและรายงานที่แสดงทุกการเปลี่ยนแปลงจะถูกบันทึกไว้ที่นั่น</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>เขียนแพ็กเกจที่อัปเดต</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>บันทึกการแมป…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>เปิดโฟลเดอร์เอาต์พุต</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>ไม่สามารถย้ายการเชื่อมต่อข้ามผู้เช่าได้ หลังนำเข้าแพ็กเกจ ให้สร้างการเชื่อมต่อแต่ละรายการใหม่ใน Power Automate และเลือกอีกครั้ง</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>เลือกโฟลเดอร์เอาต์พุตก่อน</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>กำลังเขียนแพ็กเกจที่อัปเดต…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>บันทึกสำเนาที่อัปเดตของ {0} (แพ็กเกจ {1} จาก {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>แพ็กเกจ Power Automate (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>คุณเลือกชื่อไฟล์นั้นสำหรับแพ็กเกจอื่นแล้ว เลือกชื่ออื่น</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>แพ็กเกจจะถูกบันทึกทับต้นฉบับ (โฟลเดอร์เดียวกัน ชื่อเดียวกัน) เลือกโฟลเดอร์เอาต์พุตอื่น หรือเปลี่ยนชื่อใน “บันทึกเป็น” เพื่อให้ต้นฉบับไม่ถูกแตะต้อง</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># รายงานการเขียนโฟลว์ใหม่
+
+แพ็กเกจต้นฉบับไม่ถูกแตะต้อง ไม่มีการย้ายการเชื่อมต่อ ให้สร้างใหม่และเลือกอีกครั้งเมื่อนำเข้า
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>เขียนรายงานไปที่ {0} แล้ว</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>เขียนแพ็กเกจแล้ว {0} รายการ, แทนที่ {1} รายการ ยังมี {2} ค่าที่ชี้ไปยังต้นทาง (ดูรายงาน)</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>บันทึกการแมปไปที่ {0} แล้ว</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>โฟลว์</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>อัปเดตโฟลว์ Power Automate ที่ส่งออกสำหรับปลายทาง</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>เครื่องมือโฟลว์</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>สิ่งที่โฟลว์เหล่านี้ใช้</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>บริการที่พบในโฟลว์ที่สแกน และสิ่งที่เครื่องมือนี้ทำกับแต่ละบริการ</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>บริการ</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>โฟลว์</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>ขั้นตอน</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>ที่พบ</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>สิ่งที่เครื่องมือนี้ทำ</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>เขียนสิ่งที่พบใหม่</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>รายงาน ID ให้ ตรวจสอบหลังนำเข้า</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>การเชื่อมต่อเท่านั้น (สร้างใหม่)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>การแมปคอลัมน์</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>คอลัมน์จะปรากฏที่นี่เมื่อโฟลว์เขียนลงในคอลัมน์นั้น กรองหรือเรียงลำดับตามคอลัมน์นั้น หรืออ่านคอลัมน์นั้นในนิพจน์ ในรายการที่จับคู่แล้ว คอลัมน์ปลายทางถูกเลือกด้วยการจับคู่อัตโนมัติ (ชื่อเดียวกัน จากนั้นชื่อที่แสดงเดียวกัน จากนั้นชื่อที่คล้ายกัน) คุณต้องดำเนินการเฉพาะแถวที่ทำเครื่องหมาย “ชื่อคล้ายกัน” หรือ “ไม่มีรายการที่ตรงกัน” เปลี่ยนแถวใดก็ได้จากรายการแบบเลื่อนลง หรือเลือก “(ปล่อยไว้ไม่เปลี่ยนแปลง)” เพื่อคงชื่อต้นทาง คอลัมน์ในตัว เช่น Title ไม่แสดงเพราะมีอยู่ทุกที่</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(ปล่อยไว้ไม่เปลี่ยนแปลง)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>ชื่อคล้ายกัน: โปรดตรวจสอบ</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(ยังไม่ได้จับคู่)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>รายการปลายทางที่คุณเลือก</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>พิมพ์หรือวาง ID รายการปลายทาง หรือลิงก์ของหน้าการตั้งค่ารายการ ในคอลัมน์ ID รายการปลายทาง เพื่อเลือกรายการเอง (เช่น เมื่อชื่อต่างกัน) จากนั้นคลิก “จับคู่อีกครั้ง” เพื่อจับคู่คอลัมน์ของรายการนั้น</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>ไม่พบ ID รายการใน ‘{0}’ วาง GUID หรือลิงก์ของหน้าการตั้งค่ารายการ</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>ไม่พบ ID ฟอร์มใน ‘{0}’ วาง ID ฟอร์มหรือลิงก์ของหน้าแก้ไขของฟอร์ม</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>ฟอร์ม</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>ปลายทาง</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>คัดลอก</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>ผลลัพธ์</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>เลือกฟอร์มที่จะคัดลอก</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>โหลดฟอร์มใหม่</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>คลิก “โหลดฟอร์มของฉัน” เพื่อดูฟอร์มของคุณ</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>ไม่พบฟอร์มในบัญชีนี้</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>คัดลอก {0} ฟอร์ม</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>คัดลอกฟอร์มเพิ่มเติม</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>เลือกตำแหน่งที่จะวางสำเนา</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>ผู้เช่าเดียว: สำเนาจะถูกสร้างในบัญชีเดียวกับที่คุณใช้อยู่ ข้างฉบับต้นฉบับ</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>หลายผู้เช่า: สำเนาจะถูกสร้างในบัญชีปลายทาง ลงชื่อเข้าใช้บัญชีนั้นที่นี่ ซึ่งแยกจากการลงชื่อเข้าใช้ที่คุณใช้สำหรับไซต์ SharePoint</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>บัญชีปลายทาง</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>ลงชื่อเข้าใช้ด้วยการลงทะเบียนแอป: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>ลงชื่อเข้าใช้ด้วยการลงทะเบียนแอปปลายทางของคุณ (ตั้งค่าในการตั้งค่า)</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>ลงชื่อเข้าใช้บัญชีปลายทาง</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>ลงชื่อเข้าใช้อีกครั้ง</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>กำลังลงชื่อเข้าใช้บัญชีปลายทาง… หน้าต่างเบราว์เซอร์อาจเปิดขึ้น</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>เชื่อมต่อในชื่อ {0} ยืนยันการเข้าถึง Microsoft Forms แล้ว (มี {1} ฟอร์มในบัญชีนี้อยู่แล้ว)</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>ไม่สามารถเชื่อมต่อกับบัญชีปลายทางได้: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>ยังไม่ได้เชื่อมต่อบัญชีปลายทาง</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>พร้อมแล้ว คลิกปุ่มคัดลอกเพื่อเริ่ม</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>พร้อมแล้ว: สำเนาจะถูกสร้างใน {0}</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>ลงชื่อเข้าใช้บัญชีปลายทางเพื่อดำเนินการต่อ</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>ตัวเลือก</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>จะคัดลอก {0} ฟอร์มจาก {1} ไปยัง {2}</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>บัญชีต้นทาง</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>บัญชีปลายทาง</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>กำลังคัดลอกฟอร์ม</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>กำลังเริ่ม…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>ฟอร์ม {0} จาก {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>กำลังยกเลิกหลังจากฟอร์มปัจจุบัน…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>คัดลอกเสร็จสิ้น: คัดลอกครบทั้ง {0} ฟอร์ม</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>สำเนาของคุณอยู่ใน {0} เปิด Microsoft Forms เพื่อดู หรือใช้ตารางด้านล่าง</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>คัดลอกเสร็จสิ้น: คัดลอกแล้ว {0} จาก {1} ฟอร์ม บางรายการต้องได้รับการตรวจสอบ</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>สำเนาอยู่ใน {0} ฟอร์มที่มีเครื่องหมายคำเตือนคัดลอกแล้วแต่มีปัญหา และฟอร์มที่ล้มเหลวไม่ได้ถูกสร้าง ดูคอลัมน์รายละเอียด</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>คัดลอกเสร็จสิ้น แต่ไม่ได้คัดลอกฟอร์มใดเลย</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>ดูเหตุผลในคอลัมน์รายละเอียด สาเหตุที่พบบ่อยคือการลงทะเบียนปลายทางไม่มีสิทธิ์ Microsoft Forms หรือบัญชีไม่มีสิทธิ์เข้าถึง Forms</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>ยกเลิกการคัดลอกหลังจาก {0} จาก {1} ฟอร์ม</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>ฟอร์มที่แสดงด้านล่างเสร็จสมบูรณ์แล้ว ฟอร์มที่กำลังคัดลอกเมื่อคุณยกเลิกยังไม่เสร็จและมองไม่เห็น</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>คัดลอกแล้ว</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>มีคำเตือน</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>ล้มเหลว</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>คำถาม</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>ฟอร์มต้นทาง</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>สำเนา</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>คำถาม</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>รายละเอียด</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>คัดลอกแล้ว</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>คัดลอกแล้วพร้อมคำเตือน</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>ล้มเหลว</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>เปิดสำเนาที่เลือก</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>เปิด Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>ส่งออกผลลัพธ์…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>แสดงแผนที่ ID ฟอร์ม</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>เลือกฟอร์มที่คัดลอกในตารางก่อน</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>บันทึกผลลัพธ์ไปที่ {0} แล้ว</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>คำแนะนำ: การลงทะเบียนแอปไม่มีที่อยู่การเปลี่ยนเส้นทางที่ตรงกัน ใน Entra ใต้ Authentication ให้เพิ่มแพลตฟอร์ม “แอปพลิเคชันมือถือและเดสก์ท็อป” พร้อม http://localhost แล้วลองอีกครั้ง</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>แพ็กเกจ</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>ไซต์</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>รายการและคอลัมน์</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>ฟอร์มและอีเมล</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>เขียน</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>รายงาน</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>เลือกโฟลว์ที่คุณส่งออก</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>ใน Power Automate: เปิด โฟลว์ของฉัน เลือกโฟลว์ จากนั้น ส่งออก → แพ็กเกจ (.zip) เพิ่มไฟล์ .zip ที่ดาวน์โหลดมาที่นี่ ไฟล์แต่ละไฟล์จะถูกสแกนทันทีที่คุณเพิ่ม</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>ล้าง</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>เพิ่มแพ็กเกจโฟลว์ที่ส่งออกเพื่อเริ่มต้น</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>ไม่พบโฟลว์ในไฟล์เหล่านั้น ตรวจสอบให้แน่ใจว่าเป็นแพ็กเกจที่ส่งออกด้วย ส่งออก → แพ็กเกจ (.zip)</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>สแกนเสร็จสมบูรณ์ ตรวจสอบสิ่งที่โฟลว์ใช้ แล้วคลิก ถัดไป</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>เลือกไซต์ปลายทาง</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>โฟลว์เหล่านี้ไม่ได้ใช้ไซต์ SharePoint ที่มีที่อยู่คงที่ จึงไม่มีอะไรให้แมปที่นี่ คลิก ถัดไป</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>ต่อไป เครื่องมือจะอ่านแต่ละรายการผ่านการเชื่อมต่อของคุณและจับคู่บนไซต์ปลายทาง</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>ป้อนไซต์ปลายทางสำหรับแต่ละไซต์ต้นทาง แล้วคลิก ถัดไป</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>จับคู่รายการและคอลัมน์</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>จับคู่อีกครั้ง</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>รายการ</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>โฟลว์เหล่านี้ไม่ได้ชี้ไปยังรายการ SharePoint เฉพาะ จึงไม่มีอะไรให้จับคู่</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>รายการและคอลัมน์จะถูกจับคู่เมื่อขั้นตอนนี้เปิดขึ้น</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>ฟอร์มและอีเมล</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>ตรวจสอบฟอร์มและอีเมล แล้วคลิก ถัดไป</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>โฟลว์เหล่านี้ไม่ได้ใช้ Microsoft Forms</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>ที่อยู่อีเมล</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>หากต้องการย้ายทุกที่อยู่จากโดเมนอีเมลหนึ่งไปอีกโดเมนหนึ่ง ให้ป้อนทั้งสองโดเมน ที่อยู่ในโดเมนอื่นจะแสดงในรายงานและไม่ถูกเปลี่ยนแปลง</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>เขียนแพ็กเกจที่อัปเดต</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>โฟลเดอร์เอาต์พุต</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>เลือกโฟลเดอร์เอาต์พุต แล้วคลิก เขียนแพ็กเกจที่อัปเดต</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>พร้อมเขียน {0} แพ็กเกจที่มี {1} โฟลว์ กำลังแทนที่: {2} ไซต์, {3} รายการ, {4} การแมปคอลัมน์, {5} ฟอร์ม</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>เขียนแพ็กเกจที่อัปเดต</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>แพ็กเกจที่เขียนแล้ว</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>การแทนที่</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>ยังคงเป็นต้นทาง</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>ที่ต้องตรวจสอบ</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>แพ็กเกจ</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>อัปเดตแล้ว</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} ค่ายังชี้ไปยังต้นทาง</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>เปิดรายงาน</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>เริ่มใหม่</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>เสร็จสิ้น: เขียนแพ็กเกจแล้ว {0} รายการ</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>บันทึกไว้ใน {0} ไม่มีสิ่งใดเหลือที่ชี้ไปยังต้นทาง ทำตามขั้นตอนด้านล่างเพื่อนำเข้า</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>เสร็จสิ้น: เขียนแพ็กเกจแล้ว {0} รายการ บางรายการต้องให้คุณตรวจสอบ</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>บันทึกไว้ใน {0} เปิดรายงานเพื่อดูค่าที่ยังชี้ไปยังต้นทางและรายการที่เครื่องมือไม่ได้เขียนใหม่ (บริการอื่น รายการหรือคอลัมน์ที่ไม่ได้จับคู่)</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>สิ่งที่ต้องทำต่อไป</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  เปิดรายงานและตรวจสอบ “ยังชี้ไปยังต้นทาง” และรายการที่ทำเครื่องหมายให้ตรวจสอบ
+2.  ใน Power Automate (ผู้เช่าปลายทาง) เปิด โฟลว์ของฉัน → นำเข้า → นำเข้าแพ็กเกจ (แบบเดิม) แล้วเลือกแพ็กเกจที่เขียนไว้
+3.  ใต้ “ทรัพยากรที่เกี่ยวข้อง” คลิก “เลือกระหว่างการนำเข้า” สำหรับแต่ละการเชื่อมต่อ แล้วเลือกหรือสร้างการเชื่อมต่อในผู้เช่าปลายทาง ไม่สามารถย้ายการเชื่อมต่อข้ามผู้เช่าได้
+4.  นำเข้าโฟลว์ ปล่อยให้ปิดอยู่ เปิดโฟลว์ แก้ไขสิ่งที่ระบบแจ้ง แล้วเปิดใช้งาน</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>ไม่มีการเปลี่ยนแปลง (ไม่มีสิ่งใดในแพ็กเกจตรงกับการแมปของคุณ)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>คัดลอก {0} ไปที่ {1} แล้ว</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>เคยคัดลอกแล้ว</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>คัดลอกแล้ว</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …และอีก {0}</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>คัดลอกอีกครั้งหรือไม่</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>ฟอร์มที่เลือก {0} รายการถูกคัดลอกไปยังบัญชีนี้แล้ว:
+
+{1}
+
+การคัดลอกซ้ำจะสร้างสำเนาที่สองของแต่ละฟอร์ม ดำเนินการต่อหรือไม่</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>ยังมีการคัดลอกกำลังทำงานอยู่ หากปิดตอนนี้ ฟอร์มที่กำลังคัดลอกอาจถูกสร้างไม่สมบูรณ์ในปลายทาง หยุดและปิดหรือไม่</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>กำลังคัดลอก</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>ไม่สามารถส่งออกการตอบกลับใดได้ (ดูบันทึก)</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>กรองตามชื่อเรื่องหรือประเภท</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>เวิร์กบุ๊กเดียว</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>ส่งออกฟอร์มที่เลือกทั้งหมดเป็นไฟล์ Excel ไฟล์เดียวโดยมีหนึ่งชีตต่อฟอร์ม</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>ที่อยู่อีเมล</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Tenant ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>พาธไลบรารี</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>ค่าอื่น</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>พิมพ์ค่าที่จะแทนที่สำหรับค่าใดก็ตามที่ควรเปลี่ยน แถวที่เว้นว่างไว้จะไม่ถูกเปลี่ยน และจะแสดงในรายงานหากยังชี้ไปยังต้นทาง</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>ชนิด</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>ในโฟลว์</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>แทนที่ด้วย</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>การตรวจสอบ ID</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>ไม่ใช่ ID ฟอร์มหรือลิงก์หน้าแก้ไข</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>เหมือนฟอร์มต้นทาง</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>ฟอร์มนี้อยู่ในผู้เช่าต้นทาง ไม่ใช่ปลายทาง</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>ฟอร์มนี้อยู่ในผู้เช่าที่ต่างจากต้นทาง</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>จากการคัดลอกฟอร์มของ {0} ไปที่ {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>จากการคัดลอกฟอร์มก่อนหน้า</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>โหลดการแมป…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>เติมไซต์ รายการ คอลัมน์ ฟอร์ม และค่าอื่นจากการแมปที่คุณบันทึกไว้ก่อนหน้า</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>ไม่สามารถโหลดการแมปได้: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>โหลด {0} แล้ว เติมค่าที่ตรงกับโฟลว์เหล่านี้แล้ว ตรวจสอบในขั้นตอนถัดไป</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>โหลด {0} แล้ว จะนำไปใช้เมื่อคุณเพิ่มแพ็กเกจโฟลว์</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>เติมไซต์ปลายทางแล้ว {0} ไซต์ ตรวจสอบด้านล่าง แล้วคลิก ถัดไป</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>ทุกไซต์มีปลายทางอยู่แล้ว จึงไม่มีการเปลี่ยนแปลง ล้างเซลล์ปลายทางเพื่อให้เติมให้</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>ทางลัด: พิมพ์ที่อยู่ของผู้เช่าใหม่ เช่น https://fabrikam.sharepoint.com แล้วคลิกปุ่ม ทุกไซต์ที่ยังไม่มีปลายทางจะได้ที่อยู่นั้นพร้อมพาธเดียวกับต้นทาง: https://contoso.sharepoint.com/sites/HR จะกลายเป็น https://fabrikam.sharepoint.com/sites/HR ไซต์ OneDrive (contoso-my) จะไปที่ที่อยู่ -my ของผู้เช่าใหม่ ปลายทางที่คุณป้อนไว้แล้วจะไม่ถูกแตะต้อง ไซต์ต้องมีอยู่ในผู้เช่าใหม่แล้ว เครื่องมือนี้ไม่สร้างไซต์ หากไซต์มีชื่อต่างกันที่นั่น ให้พิมพ์ที่อยู่ในเซลล์ไซต์ปลายทางแทน</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>หากเว้นไซต์ปลายทางว่างไว้ ไซต์นั้นจะไม่เปลี่ยนแปลง: โฟลว์จะยังชี้ไปยังไซต์เดิม รายการและคอลัมน์ของไซต์จะไม่ถูกจับคู่หรือเขียนใหม่ และรายงานจะแสดงไว้ภายใต้ “สิ่งที่ต้องทำหลังนำเข้า” ซึ่งเหมาะเฉพาะไซต์ที่ไม่ได้ย้ายไปยังผู้เช่าใหม่</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>สิ่งที่จะเกิดขึ้น</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ จะย้ายไปยังปลายทาง</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ ไม่เปลี่ยนแปลง (ไม่มีปลายทาง)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>ไซต์ {0} ไม่ถูกเปลี่ยนแปลง (ไม่ได้ป้อนปลายทาง) โฟลว์จึงยังชี้ไปที่ไซต์นั้นและไม่ได้จับคู่รายการของไซต์ ไม่เป็นไรหากไซต์ไม่ได้ย้าย มิฉะนั้นให้เรียกใช้อีกครั้งพร้อมระบุปลายทาง</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>ยังไม่มีคอลัมน์ให้แสดง: ยังไม่ได้จับคู่รายการใด จึงไม่มีอะไรให้เปรียบเทียบ แก้ไขรายการด้านบน แล้วคลิก จับคู่อีกครั้ง</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>ไม่มีคอลัมน์ให้แมป คุณจึงไม่ต้องทำอะไรที่นี่ รายการที่จับคู่แล้วไม่มีคอลัมน์แบบกำหนดเองที่โฟลว์เขียนลง กรอง หรืออ่านในลักษณะที่เครื่องมือมองเห็นได้ รายการกิจกรรมด้านล่างระบุสิ่งที่พบสำหรับแต่ละรายการ</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>พบ {0} คอลัมน์: {1} มีชื่อเดียวกันในปลายทาง, {2} เปลี่ยนชื่อและจับคู่แล้ว, {3} ดูคล้ายกัน, {4} ไม่มีรายการที่ตรงกัน</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>โปรดตรวจสอบแถวที่ทำเครื่องหมาย “ชื่อคล้ายกัน” และเลือกคอลัมน์สำหรับแถวที่ทำเครื่องหมาย “ไม่มีรายการที่ตรงกัน” แถวที่ทำเครื่องหมาย “ชื่อเดียวกัน” หรือ “เปลี่ยนชื่อในปลายทาง” ไม่ต้องทำอะไร</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>ไม่ต้องทำอะไรที่นี่: ทุกคอลัมน์ตรงกันแล้ว คลิก ถัดไป</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>ชื่อของแพ็กเกจที่อัปเดต</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>ชื่อที่จะตั้งให้ไฟล์ .zip ที่อัปเดต ใช้ {name} แทนชื่อไฟล์เดิม: “{name} - Fabrikam” จะเปลี่ยน “Onboarding.zip” เป็น “Onboarding - Fabrikam.zip” หากมีแพ็กเกจเดียว คุณพิมพ์ชื่อเต็มได้เลย ปล่อยเป็น {name} เพื่อคงชื่อเดิม ชื่อที่ใช้ซ้ำจะได้ (2), (3)… เพื่อไม่ให้มีสิ่งใดถูกเขียนทับ</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>จะเขียน: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>โฟลว์เก็บเฉพาะ ID ของฟอร์ม ชื่อฟอร์มจึงถูกอ่านจาก Microsoft Forms เมื่อขั้นตอนนี้เปิดขึ้น: ชื่อเรื่องของแต่ละฟอร์มในโฟลว์ของคุณ (บัญชีต้นทาง) และฟอร์มในบัญชีปลายทาง ฟอร์มที่ชื่อเรื่องตรงกับฟอร์มปลายทางเพียงฟอร์มเดียวจะถูกจับคู่ให้ มิฉะนั้นให้เลือกฟอร์มใหม่จากรายการแบบเลื่อนลง หรือวาง ID หรือลิงก์หน้าแก้ไข ใช้ โหลดชื่อฟอร์มใหม่ เพื่ออ่านอีกครั้ง</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>โหลดฟอร์มจากบัญชีปลายทาง…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>กำลังโหลดฟอร์มของบัญชีปลายทาง… ระบบอาจแจ้งให้คุณลงชื่อเข้าใช้</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>กำลังแสดงรายการฟอร์มที่บัญชีปลายทาง {0} เป็นเจ้าของ เพื่อให้คุณเลือกฟอร์มใหม่สำหรับแต่ละโฟลว์ คลิก ยกเลิก เพื่อหยุดรอการลงชื่อเข้าใช้</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>ปลายทาง: พบ {0} ฟอร์มใน {1} เลือกหนึ่งฟอร์มต่อแถว หรือวาง ID</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>ปลายทาง: ไม่พบฟอร์มใน {0} รายการแบบเลื่อนลงแสดงเฉพาะฟอร์มที่บัญชีนั้นเป็นเจ้าของ (ไม่ใช่ฟอร์มของกลุ่ม) ดังนั้นให้คัดลอกฟอร์มด้วยเครื่องมือฟอร์มก่อน หรือวาง ID</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>ยกเลิกแล้ว คลิก โหลดชื่อฟอร์ม เพื่อลองอีกครั้ง หรือวาง ID ฟอร์ม</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>ปลายทาง: ไม่สามารถโหลดฟอร์มได้: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(ไม่มี)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(ฟอร์มที่ไม่มีชื่อเรื่อง)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>ฟอร์มต้นทาง</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>เลือกจากฟอร์มของปลายทาง</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>เลือกฟอร์มจากบัญชีปลายทาง คลิก “โหลดฟอร์มจากบัญชีปลายทาง” ก่อน</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>เติมจากการลงชื่อเข้าใช้ปลายทาง ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>บัญชีต้นทางของคุณ ถูกแทนที่ด้วยบัญชีปลายทางของคุณ</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>เติมจากการลงชื่อเข้าใช้ของคุณ ({0} → {1}) ล้างทั้งสองช่องเพื่อไม่เปลี่ยนโดเมนอีเมล</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>ไซต์ที่ไม่มีปลายทางจะไม่เปลี่ยนแปลง: โฟลว์จะยังชี้ไปที่ไซต์นั้น และรายงานจะแสดงไว้</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ ลงชื่อเข้าใช้ในชื่อ {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>ลงชื่อเข้าใช้ในชื่อ {0} ที่อยู่ SharePoint ของผู้เช่าปลายทางคือ {1} เติมไซต์ปลายทางที่ว่างจากที่อยู่นี้แล้ว</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ บางไซต์ในโฟลว์อยู่บน {0} ซึ่งเป็นที่อยู่ของบัญชีปลายทางเอง อาจเป็นเพราะแพ็กเกจเหล่านี้ชี้ไปยังปลายทางอยู่แล้ว (เช่น แพ็กเกจที่เครื่องมือนี้เขียน หรือโฟลว์ที่ส่งออกจากปลายทาง) ให้เพิ่มต้นฉบับที่ส่งออกจากต้นทางแทน หรือเป็นเพราะต้นทางและปลายทางเป็นผู้เช่าเดียวกันจริง ๆ ให้สลับแอปเป็นโหมดผู้เช่าเดียว (การตั้งค่า)</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} เป็นแพ็กเกจที่เครื่องมือนี้เขียนเมื่อ {1}: มีที่อยู่ปลายทางอยู่แล้ว จึงไม่มีอะไรเหลือให้ย้าย ให้เพิ่มต้นฉบับที่ส่งออกจากผู้เช่าต้นทางแทน (ไฟล์ในโฟลเดอร์ดาวน์โหลดของคุณ ไม่ใช่ไฟล์ในโฟลเดอร์เอาต์พุต)</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ ไซต์ในโฟลว์เหล่านี้อยู่บน {0} ซึ่งเป็นผู้เช่าปลายทางของคุณ แต่ต้นทางของคุณคือ {1} หากแพ็กเกจถูกส่งออกจาก {0} ให้ลงชื่อเข้าใช้ผู้เช่านั้นเป็นต้นทาง (เปลี่ยนต้นทาง…) หากเครื่องมือนี้เขียนไว้ก่อนหน้า ให้ลบออกแล้วเพิ่มต้นฉบับที่ส่งออก</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>ลงชื่อเข้าใช้แล้ว เติมไซต์ปลายทาง {0} ไซต์จาก {1} ตรวจสอบ แล้วคลิก ถัดไป</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>ลงชื่อเข้าใช้แล้ว ทุกไซต์ปลายทางมีค่าอยู่แล้ว จึงไม่มีการเปลี่ยนแปลง</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>การลงชื่อเข้าใช้ไม่เสร็จสมบูรณ์ หรือไม่สามารถอ่านที่อยู่ของผู้เช่าใหม่ได้ (ดูบรรทัดปลายทาง) หากลงชื่อเข้าใช้แล้ว ให้ป้อนที่อยู่ของผู้เช่าใหม่ด้านล่างเพื่อเติมไซต์ปลายทาง</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — เชื่อมต่อในชื่อ {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — ยังไม่ได้ลงชื่อเข้าใช้</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>เปลี่ยนปลายทาง…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>ยังไม่ได้เลือกรายการปลายทาง โฟลว์เหล่านี้จึงยังชี้ไปยังรายการที่ไม่มีในปลายทาง เลือกรายการปลายทาง หรือสร้างรายการบนไซต์ปลายทางก่อน</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>โฟลว์ใช้คอลัมน์ “{0}” แต่รายการปลายทาง “{1}” ไม่มีคอลัมน์สำหรับคอลัมน์นั้น เลือกคอลัมน์ปลายทางในตาราง หรือเพิ่มคอลัมน์ในรายการปลายทางแล้วคลิก ตรวจสอบอีกครั้ง</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>รายการปลายทาง “{0}” ต้องมีคอลัมน์ “{1}” แต่ขั้นตอน “สร้างรายการ” “{3}” ในโฟลว์ “{2}” ไม่ได้ตั้งค่าไว้ การนำเข้าจึงล้มเหลวด้วย “missing required property item/{1}” พิมพ์ค่าสำหรับคอลัมน์นี้ด้านล่างแล้วเครื่องมือจะเพิ่มลงในขั้นตอนนั้น หรือทำให้ “{1}” เป็นตัวเลือกในรายการปลายทางแล้วคลิก ตรวจสอบอีกครั้ง</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>รายการปลายทาง “{0}” ต้องมีคอลัมน์ “{1}” แต่ขั้นตอน “สร้างรายการ” “{3}” ในโฟลว์ “{2}” ไม่ได้ตั้งค่าไว้ การนำเข้าจึงล้มเหลวด้วย “missing required property item/{1}” ทำให้ “{1}” เป็นตัวเลือกในรายการปลายทางใน SharePoint แล้วคลิก ตรวจสอบอีกครั้ง</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>ค่าที่จะเติมสำหรับคอลัมน์ที่จำเป็นเหล่านี้ (เพิ่มลงในทุกขั้นตอนสร้างรายการที่ไม่ได้ระบุไว้):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>สิ่งนี้จะล้มเหลวเมื่อนำเข้า แก้ไขเพื่อดำเนินการต่อ:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>ตรวจสอบอีกครั้ง</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>จะล้มเหลว ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ ลงชื่อเข้าใช้ปลายทางเพื่อดำเนินการต่อ</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ แพ็กเกจ {0} รายการถูกเขียนโดยเครื่องมือนี้และมีค่าของปลายทางอยู่แล้ว ลบออก (✕ ในรายการ) แล้วเพิ่มต้นฉบับที่ส่งออก</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} ไซต์ไม่มีปลายทาง ไซต์ที่ปล่อยไว้ตามเดิมจะยังชี้ไปยังผู้เช่าต้นทาง</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} รายการจะล้มเหลวเมื่อนำเข้า แก้ไขรายการที่ทำเครื่องหมาย “จะล้มเหลว” เพื่อดำเนินการต่อ</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ ยังไม่ได้จับคู่รายการ ย้อนกลับหนึ่งขั้นตอนแล้วไปข้างหน้าอีกครั้งเพื่อลองใหม่</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} ฟอร์มต้องมี ID ฟอร์มปลายทางที่ถูกต้องเพื่อดำเนินการต่อ</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>เปลี่ยนต้นทาง…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>ลงชื่อเข้าใช้ในชื่อ {0} ที่อยู่ SharePoint ของผู้เช่าต้นทางคือ {1}</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>เปลี่ยนการเชื่อมต่อต้นทางเป็น {0} แล้ว ไซต์ที่แสดงด้านล่างต้องอยู่ในผู้เช่านี้</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>การลงชื่อเข้าใช้ต้นทางไม่เสร็จสมบูรณ์ หรือไม่สามารถอ่านที่อยู่ของผู้เช่าได้ (ดูบรรทัดต้นทาง) หากคุณยกเลิก จะคงการเชื่อมต่อต้นทางเดิมไว้</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ บางไซต์ถูกอ่านจาก {0} ซึ่งไม่ใช่ผู้เช่าที่คุณเชื่อมต่อเป็นต้นทาง ({1}) การอ่านรายการของไซต์เหล่านั้นจะล้มเหลว แก้ไข “อ่านรายการจาก” สำหรับแถวเหล่านั้นเป็นที่อยู่ในผู้เช่าต้นทางของคุณ หรือคลิก เปลี่ยนต้นทาง… แล้วลงชื่อเข้าใช้ด้วยบัญชีจากผู้เช่านั้น</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>ไซต์ของโฟลว์อยู่บน {0} แต่คุณเชื่อมต่อกับ {1} เป็นต้นทาง “อ่านรายการจาก” ถูกเติมด้วยไซต์เดียวกันบน {1} เครื่องมือจึงอ่านชื่อรายการและคอลัมน์จากที่นั่น ตรวจสอบว่าไซต์เหล่านั้นมีอยู่ (แก้ไขแถวใดก็ได้) หรือคลิก เปลี่ยนต้นทาง… หากโฟลว์มาจาก {0} จริง ๆ</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>รายการที่โฟลว์ใช้</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>คลิกรายการเพื่อเปิดหรือปิด รายการที่ต้องตรวจสอบจะอยู่ก่อนและเปิดอยู่</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>เปิดทั้งหมด</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>ปิดทั้งหมด</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>ใช้โดย:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>ต้นทาง:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>รายการปลายทาง</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>หรือวาง ID หรือลิงก์ของรายการ:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>คอลัมน์ต้นทาง</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>ประเภท</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>ใช้แล้ว</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>โฟลว์ไม่ได้ใช้</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(ไม่มี: ปล่อยรายการนี้ไว้ไม่เปลี่ยนแปลง)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ ไม่ได้เลือกรายการปลายทาง: โฟลว์ที่ใช้รายการนี้ยังชี้ไปยังรายการต้นทาง</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} คอลัมน์ที่ต้องตรวจสอบ</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ ไม่มีอะไรต้องตรวจสอบ</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>รายการนี้มี {0} คอลัมน์ โฟลว์ใช้ {1}: {2} มีชื่อเดียวกันในปลายทาง, {3} เปลี่ยนชื่อและจับคู่แล้ว, {4} คล้ายกัน (โปรดตรวจสอบ), {5} ไม่มีรายการที่ตรงกัน (โปรดเลือก) คอลัมน์อื่นแสดงไว้เพื่อให้เห็นบริบทและจะไม่ถูกเปลี่ยนแปลง</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>รายการนี้มี {0} คอลัมน์ โฟลว์ไม่ได้ใช้คอลัมน์ใดในลักษณะที่เครื่องมือมองเห็นได้ จึงไม่ต้องแมปอะไร</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>ไม่สามารถอ่านคอลัมน์ของรายการนี้ได้ (ดูหมายเหตุด้านบนและรายการกิจกรรม)</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>เลือกรายการปลายทางด้านบนเพื่อดูคอลัมน์และแมป</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>ไม่สามารถอ่านคอลัมน์ของรายการปลายทางได้ จึงแนะนำรายการที่ตรงกันไม่ได้</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>โฟลว์ไม่ได้ระบุว่ารายการนี้อยู่ในไซต์ใด (ใช้พารามิเตอร์) จึงค้นหาไม่ได้ วาง ID หรือลิงก์ของรายการปลายทาง</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>ไม่มีรายการปลายทาง: รายการนี้ไม่เปลี่ยนแปลง</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>กำลังอ่านคอลัมน์ของรายการปลายทางสำหรับ {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>รายการ ‘{0}’: คุณเลือกรายการปลายทางอื่น กำลังอ่านคอลัมน์บน {1} เพื่อจับคู่อีกครั้ง</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — เชื่อมต่อในชื่อ {1} (การลงชื่อเข้าใช้ของหน้าต่างหลัก)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>อ่านรายการจาก (ต้นทาง)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>“ไซต์ในโฟลว์” คือที่อยู่ที่เก็บไว้ในโฟลว์ ซึ่งเป็นสิ่งที่จะถูกแทนที่ จึงแก้ไขไม่ได้ “อ่านรายการจาก” คือที่ที่เครื่องมืออ่านชื่อและคอลัมน์ของแต่ละรายการฝั่งต้นทาง ค่าเริ่มต้นเป็นที่อยู่เดียวกัน จึงให้เปลี่ยนเมื่อที่อยู่ในโฟลว์เก่า ถูกเปลี่ยนชื่อ หรืออยู่ในผู้เช่าอื่นที่ไม่ใช่การเชื่อมต่อต้นทางของคุณ</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>สิ่งที่โฟลว์เหล่านี้ใช้</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} โฟลว์, {2} ขั้นตอน: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>เขียนใหม่โดยเครื่องมือนี้</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>ตรวจสอบด้วยตนเอง</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>การเชื่อมต่อเท่านั้น</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>สิ่งที่ต้องทำหลังนำเข้า</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>นำเข้าแพ็กเกจที่แก้ไขแต่ละรายการในสภาพแวดล้อมปลายทางและสร้างการเชื่อมต่อใหม่ (ไม่มีการคัดลอกการเชื่อมต่อ)</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>แพ็กเกจโซลูชัน: เขียนใหม่เฉพาะนิยามเวิร์กโฟลว์เท่านั้น ค่าตัวแปรสภาพแวดล้อมและการอ้างอิงการเชื่อมต่อในโซลูชัน (customizations.xml) ยังเป็นค่าของต้นทาง ให้ตั้งค่าหลังนำเข้า</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>เจ้าของโฟลว์และผู้ใช้ที่เรียกใช้ได้อย่างเดียวไม่ได้เป็นส่วนของแพ็กเกจ ให้แชร์โฟลว์กับบุคคลที่เหมาะสมหลังนำเข้า</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>ไม่มีการเปลี่ยนแปลง (ไม่มีสิ่งใดในการแมปที่ตรงกัน)</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>แทนที่ {0} รายการ</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>ยังชี้ไปยังค่าของต้นทาง (ไม่ได้แมป ตรวจสอบก่อนนำเข้า)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>กำลังเชื่อมต่อกับไซต์ต้นทาง {0} และไซต์ปลายทาง {1} หน้าต่างลงชื่อเข้าใช้จะเปิดขึ้นหากคุณยังไม่ได้ลงชื่อเข้าใช้</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>เชื่อมต่อกับ {0} (ต้นทาง) และ {1} (ปลายทาง) แล้ว</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>กำลังอ่านรายการและไลบรารีบนไซต์ปลายทาง {0} เพื่อให้จับคู่แต่ละรายการตามชื่อได้และเสนอในรายการแบบเลื่อนลง</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>พบรายการและไลบรารี {0} รายการบน {1}</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>กำลังอ่านชื่อและคอลัมน์ของรายการ {0} จากไซต์ต้นทาง {1}</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>รายการ ‘{0}’: กำลังค้นหารายการที่ชื่อเดียวกันบนไซต์ปลายทาง {1}</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>รายการ ‘{0}’: พบในปลายทาง กำลังอ่านคอลัมน์ของรายการปลายทางเพื่อจับคู่</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>รายการ ‘{0}’: ไม่สามารถอ่านคอลัมน์ได้ หรือไม่มีคอลัมน์ ไม่มีอะไรให้แมปสำหรับรายการนี้</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>รายการ ‘{0}’: {1} คอลัมน์ โฟลว์ไม่ได้ใช้คอลัมน์ใดในลักษณะที่เครื่องมือมองเห็นได้ ไม่ต้องแมปอะไร</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>รายการ ‘{0}’: โฟลว์ใช้ชื่อคอลัมน์ {1} ชื่อ: {2} มีชื่อเดียวกันในปลายทาง (ไม่ต้องเปลี่ยน), {3} เปลี่ยนชื่อและจับคู่แล้ว, {4} ดูคล้ายกัน (โปรดตรวจสอบ), {5} ไม่มีรายการที่ตรงกัน (คุณเลือกเอง), {6} เป็นคอลัมน์ในตัว (ไม่ต้องแมป)</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>รายการ {0} ไม่ได้อยู่บนไซต์ต้นทาง แต่อยู่บนไซต์ปลายทางในชื่อ ‘{1}’: โฟลว์ชี้ไปยังปลายทางอยู่แล้ว</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>ไซต์ ‘{0}’ ไม่มีปลายทาง รายการบนไซต์นั้นไม่ได้ถูกระบุ</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>ขั้นสูง: อ่านรายการจากที่อยู่อื่น</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>การแมปคอลัมน์: จาก {0} ไปยัง {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>ไม่มีคอลัมน์ให้แสดงสำหรับรายการนี้</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>โฟลว์ไม่ได้ใช้คอลัมน์ใดของรายการนี้ ทำเครื่องหมาย “แสดงทุกคอลัมน์” เพื่อดู</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>ไม่สามารถอ่านรายการต้นทางได้ และโฟลว์ไม่ได้ระบุคอลัมน์ใด จึงไม่มีอะไรให้แมป</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>รายการ</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(ไม่สามารถอ่านในต้นทางได้)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>อ่านจาก:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>ไซต์</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>โฟลว์นี้ชี้ไปยังรายการนี้ในปลายทางอยู่แล้ว ชื่อคอลัมน์ {0} ชื่อที่ใช้แสดงเทียบกับคอลัมน์ของปลายทาง ไม่ต้องเปลี่ยนอะไร</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(ไม่มีชื่อรายการ)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>อยู่ในปลายทางแล้ว</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>แมปตามชื่อคอลัมน์ของโฟลว์</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>ไม่สามารถอ่านคอลัมน์</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>ไม่มีรายการปลายทาง</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>ไม่มีอะไรให้แมป</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>พร้อม</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>อ่านคอลัมน์ปลายทางไม่ได้</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} ที่ต้องตรวจสอบ</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>ใช้โดย {0} โฟลว์</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>การแมปคอลัมน์ {0} รายการยังต้องตรวจสอบ</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>การแมปคอลัมน์ทั้งหมดเรียบร้อยแล้ว</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>ไม่มีการคัดลอกการเชื่อมต่อข้ามผู้เช่า: สร้างใหม่ใน Power Automate หลังนำเข้า</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>อีเมล: ทุกที่อยู่บน {0} จะกลายเป็น {1}</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} จาก {1} ฟอร์มชี้ไปยังฟอร์มใหม่</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} จาก {1} รายการมีรายการปลายทาง</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>ยังไม่ได้จับคู่รายการ</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>ไม่มีการเปลี่ยนที่อยู่อีเมล (ไม่ได้แมปโดเมน)</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>โฟลว์ไม่ได้ใช้ Microsoft Forms</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>โฟลว์ไม่ได้ใช้รายการเฉพาะ</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>โฟลว์ไม่ได้ระบุไซต์ SharePoint</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>จะเขียน {0} แพ็กเกจที่มี {1} โฟลว์ ต้นฉบับไม่ถูกเปลี่ยนแปลง</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0} จาก {1} ไซต์จะย้ายไปยังไซต์ปลายทาง ไซต์อื่นคงเดิม</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>ล้างค่าที่เติมอัตโนมัติ</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>เติมแล้ว</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>ฟอร์มในโฟลว์ของคุณ</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>จาก (ในโฟลว์ของคุณ)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>รายการ</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>ไซต์</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>สถานะ</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>ไปยัง (ปลายทาง)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>คุณเลือกเอง</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>ปล่อยไว้ไม่เปลี่ยนแปลง</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(การลงชื่อเข้าใช้ของหน้าต่างหลัก)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>โดเมนอีเมลที่จะย้ายจาก</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>ย้ายทุกที่อยู่บน</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>ไปที่</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>โดเมนอีเมลที่จะย้ายไปที่</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…หรือลากไฟล์ .zip (หรือโฟลเดอร์) มาวางบนหน้าต่างนี้</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>คอลัมน์ ‘{0}’ ในรายการ ‘{1}’ ไม่มีรายการที่ตรงกันในรายการปลายทาง</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>รายการ ‘{0}’ ({1}) บน {2} ไม่มีรายการปลายทาง โฟลว์ที่ใช้รายการนี้จึงยังชี้ไปยังรายการต้นทาง</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(ไม่ทราบชื่อเรื่อง)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>ไปที่ขั้นตอน</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>มีการแมปที่บันทึกไว้ใช่ไหม โหลดเลย…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>รูปแบบกำหนดเอง…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>คงชื่อเดิม</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>เพิ่ม ‘ - migrated’ ต่อท้ายทุกชื่อ</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>เปิดรายงานและตรวจสอบสิ่งที่ทำเครื่องหมายให้ตรวจสอบ</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>ใน Power Automate (ผู้เช่าปลายทาง): โฟลว์ของฉัน, นำเข้า, นำเข้าแพ็กเกจ (แบบเดิม) แล้วเลือกแพ็กเกจที่เขียนไว้</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>ใต้ ทรัพยากรที่เกี่ยวข้อง คลิก “เลือกระหว่างการนำเข้า” สำหรับแต่ละการเชื่อมต่อ แล้วเลือกหรือสร้างการเชื่อมต่อในผู้เช่าปลายทาง ไม่สามารถย้ายการเชื่อมต่อข้ามผู้เช่าได้</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>นำเข้าโฟลว์ ปล่อยให้ปิดอยู่ เปิดโฟลว์ แก้ไขสิ่งที่ระบบแจ้ง แล้วเปิดใช้งาน</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>เปิดโฟลเดอร์</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>เปิด Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>ยังไม่มีโฟลเดอร์เอาต์พุตนั้น จะสร้างขึ้นเมื่อคุณเขียนแพ็กเกจ</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>ต้นทาง</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>ปลายทาง</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>พบ {0} โฟลว์</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>ไม่พบโฟลว์</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>เขียนโดยเครื่องมือนี้แล้ว</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>ไม่สามารถอ่านได้</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>พร้อมเขียนหรือยัง</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>ลบแพ็กเกจนี้ออกจากรายการ</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>รายงานการเขียนโฟลว์ใหม่</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>สิ่งที่โฟลว์เหล่านี้ใช้ ({0} บริการ)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>ไม่สามารถเขียนแพ็กเกจ {0} รายการ</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} ค่าในแพ็กเกจที่เขียนยังชี้ไปยังต้นทาง เปิดรายงานเพื่อดูว่าค่าใด</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>แสดงทั้งหมด {0} คอลัมน์</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>แสดงเฉพาะคอลัมน์ที่โฟลว์ใช้</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>คอลัมน์เหล่านี้หมายถึงอะไร</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>ID ของรายการนี้ไม่ได้อยู่บนไซต์ต้นทาง แต่เป็นรายการ ‘{0}’ บนไซต์ปลายทาง: โฟลว์ชี้ไปยังปลายทางอยู่แล้ว เช่นเดียวกับแพ็กเกจที่เครื่องมือนี้เขียนไว้ก่อนหน้า</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>เชื่อมต่อแล้ว</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>มีปัญหา</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>ยังไม่ได้ลงชื่อเข้าใช้</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>กำลังรอการลงชื่อเข้าใช้…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} รายการ · พร้อมทั้งหมด</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} รายการ · พร้อม {1} · ต้องตรวจสอบ {2}</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>ใช้เวลา {0}</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>ที่ต้องตรวจสอบ</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>เพิ่มแพ็กเกจโฟลว์ (.zip) ที่คุณส่งออกจากผู้เช่าต้นทาง แต่ละไฟล์จะถูกสแกนทันทีที่คุณเพิ่ม</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>ระบุว่าไซต์ของแต่ละโฟลว์จะย้ายไปที่ใด ลงชื่อเข้าใช้ปลายทางแล้วระบบจะเติมที่อยู่ของผู้เช่าใหม่ให้</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>แต่ละรายการที่โฟลว์ใช้จะถูกจับคู่กับรายการในปลายทาง และแมปคอลัมน์ ตรวจสอบสิ่งที่ทำเครื่องหมายว่าต้องตรวจสอบ</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>ชี้ฟอร์มที่คัดลอกไปยัง ID ใหม่ และตัดสินใจว่าจะเปลี่ยนที่อยู่อีเมลและ Tenant ID อย่างไร</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>ตรวจสอบรายการด้านล่าง เลือกตำแหน่งที่จะบันทึกแพ็กเกจที่อัปเดต แล้วเขียน</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>สิ่งที่เกิดขึ้นที่นี่</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>เครื่องมืออ่านแต่ละแพ็กเกจบนคอมพิวเตอร์เครื่องนี้ (ไม่มีการส่งข้อมูลไปที่ใด) เพื่อค้นหาไซต์ รายการ คอลัมน์ และฟอร์มที่โฟลว์ใช้ ให้เพิ่มต้นฉบับที่ส่งออกจากต้นทาง ไม่ใช่แพ็กเกจที่เครื่องมือนี้เขียนไว้ก่อนหน้า เพราะแพ็กเกจเหล่านั้นมีที่อยู่ของปลายทางอยู่แล้ว</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>คอลัมน์ ‘{0}’ ถูกแมปต่างกันในรายการต่าง ๆ ({1}) ขั้นตอนของแต่ละรายการจะได้การแมปของตัวเอง นิพจน์ที่อื่นในโฟลว์จะคงชื่อเดิม จึงควรตรวจสอบ</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>โหลดชื่อฟอร์มใหม่…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>กำลังโหลดชื่อฟอร์ม… ระบบอาจแจ้งให้คุณลงชื่อเข้าใช้</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>กำลังอ่านชื่อเรื่องของฟอร์มในโฟลว์ของคุณจากบัญชีต้นทาง {0} คลิก ยกเลิก เพื่อหยุดรอการลงชื่อเข้าใช้</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>ต้นทาง: พบชื่อเรื่อง {0} จาก {1} ฟอร์ม ({2})</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>ต้นทาง: ไม่สามารถอ่านชื่อเรื่องของฟอร์มได้: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>จับคู่ {0} ฟอร์มกับฟอร์มปลายทางที่ชื่อเดียวกัน</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>ดูเหมือน ID ฟอร์มที่ถูกต้อง</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>จับคู่ตามชื่อ</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>ต้นทางและปลายทางอยู่ในผู้เช่าเดียวกัน ({0}) สลับแอปเป็นโหมดผู้เช่าเดียว (การตั้งค่า) หรือลงชื่อเข้าใช้ต้นทางและปลายทางด้วยบัญชีจากผู้เช่าที่ต่างกัน</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>ลบแพ็กเกจเหล่านี้</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>ลบ {0} แพ็กเกจที่ชี้ไปยังปลายทางอยู่แล้ว: {1} ให้เพิ่มต้นฉบับที่ส่งออกจากผู้เช่าต้นทางแทน</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>ลบแพ็กเกจเหล่านั้นแล้ว เพิ่มต้นฉบับที่ส่งออกจากผู้เช่าต้นทาง</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>แต่ละแพ็กเกจจะถูกบันทึกเป็นไฟล์ .zip ใหม่ในโฟลเดอร์เอาต์พุต ต้นฉบับจะไม่ถูกเปลี่ยนแปลง หากต้องการเปลี่ยนชื่อ ให้พิมพ์ชื่ออื่นใน บันทึกเป็น</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>คงชื่อเดิม</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>เพิ่ม ‘ - migrated’ ต่อท้ายทุกชื่อ</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>แพ็กเกจต้นฉบับ</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>บันทึกเป็น</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>จะบันทึกเป็น: {0} (คุณเปลี่ยนชื่อได้ด้านล่าง)</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>ไม่สามารถอ่านได้ ไม่มีการเขียนเอาต์พุต</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>ยกเลิกแล้ว ไม่มีการเปลี่ยนแปลง ในขั้นตอนไซต์ ให้ใช้ ลงชื่อเข้าใช้ เพื่อลองอีกครั้ง (เช่น ในเบราว์เซอร์อื่น) ในขั้นตอนรายการ ให้ใช้ จับคู่อีกครั้ง</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>กำลังยกเลิก… หน้าต่างลงชื่อเข้าใช้อาจใช้เวลาสักครู่ในการปิด</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>สิ่งที่เครื่องมือกำลังทำ</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>การเชื่อมต่อ</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>หลายผู้เช่า: เพื่อจับคู่รายการ เครื่องมืออ่านชื่อและคอลัมน์ของแต่ละรายการจากผู้เช่าต้นทางและค้นหารายการเดียวกันในผู้เช่าปลายทาง ซึ่งต้องลงชื่อเข้าใช้ทั้งสองฝั่ง ลงชื่อเข้าใช้แต่ละฝั่งที่นี่ หรือคลิก ถัดไป แล้วระบบจะถามในตอนนั้น หน้าต่างเบราว์เซอร์จะเปิดขึ้น หากเป็นเบราว์เซอร์ที่ผิด ให้คลิก ยกเลิก แล้วลองอีกครั้ง ไม่มีสิ่งใดเปลี่ยนแปลงในผู้เช่าทั้งสอง</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>ผู้เช่าเดียว: ต้นทางและปลายทางเป็นผู้เช่าเดียวกัน เครื่องมือจึงใช้บัญชีที่คุณลงชื่อเข้าใช้ในขั้นตอนเชื่อมต่อ ไม่ต้องลงชื่อเข้าใช้ที่อื่นอีก ไม่มีสิ่งใดเปลี่ยนแปลงในผู้เช่า</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>ต้นทาง</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>ปลายทาง</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>ลงชื่อเข้าใช้ต้นทาง…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>ลงชื่อเข้าใช้ปลายทาง…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>ยกเลิก</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>หยุดรอหน้าต่างลงชื่อเข้าใช้ เพื่อให้คุณลองอีกครั้งได้ เช่น ในเบราว์เซอร์อื่น</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>ยังไม่ได้ลงชื่อเข้าใช้</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>ใช้การลงชื่อเข้าใช้ของหน้าต่างหลัก: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ ลงชื่อเข้าใช้ในชื่อ {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ พร้อม</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>กำลังรอการลงชื่อเข้าใช้… หน้าต่างเบราว์เซอร์ควรเปิดขึ้น</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>ยกเลิกการลงชื่อเข้าใช้แล้ว คลิก ลงชื่อเข้าใช้ เพื่อลองอีกครั้ง</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>ลงชื่อเข้าใช้แล้ว ตรวจสอบไซต์ปลายทางด้านล่าง แล้วคลิก ถัดไป</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>ยังไม่มีไซต์ต้นทางให้ลงชื่อเข้าใช้ เพิ่มแพ็กเกจโฟลว์ก่อน</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>ป้อนไซต์ปลายทางอย่างน้อยหนึ่งไซต์ก่อน (หรือใช้ เติม โดยคงพาธไว้) การลงชื่อเข้าใช้จะไปที่ผู้เช่าของไซต์ปลายทาง</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>กำลังลงชื่อเข้าใช้ต้นทาง… หน้าต่างเบราว์เซอร์จะเปิดขึ้น</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>กำลังลงชื่อเข้าใช้ปลายทาง… หน้าต่างเบราว์เซอร์จะเปิดขึ้น</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>ต้นทาง</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>ปลายทาง</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>กำลังลงชื่อเข้าใช้ผู้เช่าต้นทาง หน้าต่างเบราว์เซอร์จะเปิดขึ้น คลิก ยกเลิก เพื่อหยุดรอ (เช่น เพื่อลองเบราว์เซอร์อื่น) การลงชื่อเข้าใช้ยังบอกเครื่องมือด้วยว่าต้นทางคือผู้เช่าใด</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>กำลังลงชื่อเข้าใช้ผู้เช่าปลายทาง หน้าต่างเบราว์เซอร์จะเปิดขึ้น คลิก ยกเลิก เพื่อหยุดรอ (เช่น เพื่อลองเบราว์เซอร์อื่น) การลงชื่อเข้าใช้ยังบอกเครื่องมือถึงที่อยู่ SharePoint ของผู้เช่าใหม่ด้วย</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>เชื่อมต่อกับ{0}แล้ว</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>คุณยกเลิกการลงชื่อเข้าใช้</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>กำลังอ่านไฟล์แพ็กเกจ {0} ไฟล์บนคอมพิวเตอร์เครื่องนี้เพื่อค้นหาไซต์ รายการ คอลัมน์ และฟอร์มที่โฟลว์ใช้ ไม่มีการส่งข้อมูลไปที่ใด</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>อ่าน {0}: {1} โฟลว์</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>กำลังจับคู่ {0} รายการ: สำหรับแต่ละรายการ เครื่องมือจะถามชื่อจากไซต์ต้นทาง แล้วค้นหารายการที่ชื่อนั้นบนไซต์ปลายทาง</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>จับคู่เสร็จสิ้น {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>กำลังเขียนแพ็กเกจที่แก้ไข {0} รายการไปที่ {1} ต้นฉบับไม่ถูกเปลี่ยนแปลง</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>กำลังเขียน {0} โดยใช้การแมปของคุณ</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>กำลังตรวจสอบ {0} เพื่อหาค่าที่ยังชี้ไปยังต้นทาง</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>คุณยกเลิกแล้ว ไม่มีการเปลี่ยนแปลง</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>หยุดแล้ว: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>แต่ละโฟลว์เก็บที่อยู่ของไซต์ SharePoint ที่อ่านหรือเขียน หากต้องการทำงานในผู้เช่าใหม่ ทุกโฟลว์ต้องชี้ไปยังไซต์ที่ตรงกันที่นั่น จึงต้องบอกเครื่องมือว่าไซต์ใหม่ใดแทนที่ไซต์เก่าแต่ละไซต์ วิธีนี้แก้ไขเฉพาะสำเนาของแพ็กเกจของคุณ จะไม่มีการค้นหาจนกว่าคุณจะคลิก ถัดไป</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>สิ่งที่เกิดขึ้นที่นี่: สำหรับแต่ละรายการที่โฟลว์ใช้ เครื่องมือจะอ่านชื่อและคอลัมน์ของรายการจากไซต์ต้นทาง ค้นหารายการที่ชื่อเดียวกันบนไซต์ปลายทาง และอ่านคอลัมน์ของรายการนั้นเพื่อจับคู่ เหตุผล: โฟลว์อ้างอิงรายการและคอลัมน์ด้วย ID หรือชื่อภายใน ซึ่งต่างกันในผู้เช่าใหม่ เครื่องมือจึงหารายการที่เทียบเท่า ขั้นตอนนี้อ่านอย่างเดียว ไม่มีการสร้างหรือเปลี่ยนแปลงสิ่งใดในผู้เช่าทั้งสอง คุณเปลี่ยนรายการปลายทางและคอลัมน์ใดก็ได้บนการ์ดของรายการ</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>ฟอร์มที่คัดลอกจะได้ ID ใหม่ โฟลว์ที่ใช้ฟอร์มนั้นจึงต้องชี้ไปที่สำเนา ที่อยู่อีเมลและ Tenant ID ในโฟลว์อาจต้องเปลี่ยนสำหรับองค์กรใหม่ด้วย ไม่มีการค้นหาที่นี่ คุณเป็นผู้กำหนดการแทนที่ และสิ่งที่เว้นว่างไว้จะคงเดิม</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>เครื่องมือเขียนไฟล์ .zip ใหม่ลงในโฟลเดอร์เอาต์พุตโดยใช้การแมปของคุณ สแกนไฟล์อีกครั้งเพื่อหาสิ่งที่ยังชี้ไปยังต้นทาง และเขียนรายงาน แพ็กเกจต้นฉบับของคุณจะไม่ถูกเปลี่ยนแปลง และไม่มีสิ่งใดถูกส่งไปยังผู้เช่าทั้งสอง คุณนำเข้าแพ็กเกจใหม่ใน Power Automate เองในภายหลัง</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>ยกเลิกการลงชื่อเข้าใช้แล้ว คลิกปุ่มเพื่อลองอีกครั้ง เช่น ในเบราว์เซอร์อื่น</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>ยกเลิก</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>ข้อผิดพลาด: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>ไม่สามารถอ่านฟอร์มต้นทางได้ ({0})</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>ไม่สามารถสร้างฟอร์มในปลายทางได้ ({0}) {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>ยกเลิกระหว่างทาง ฟอร์มที่ไม่สมบูรณ์ถูกทิ้งไว้ในปลายทาง ให้ลบใน Microsoft Forms</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>การคัดลอกหยุดระหว่างทาง ({0}) ฟอร์มที่ไม่สมบูรณ์ถูกทิ้งไว้ในปลายทาง ให้ลบใน Microsoft Forms</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>รูปภาพพื้นหลัง</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>โลโก้</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>รูปภาพส่วนหัว</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>ไม่ได้คัดลอก{0} (ยังไม่รองรับรูปภาพ)</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>ไม่ได้ตรวจสอบการให้คะแนนแบบทดสอบ (คำตอบที่ถูกต้องและคะแนน) โปรดตรวจสอบสำเนา</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>ไม่สามารถคัดลอกการตั้งค่า ‘{0}’ ได้ ({1})</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>ไม่ได้คัดลอกคำถาม ‘{0}’ ({1}) {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(ไม่มีชื่อเรื่อง)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>ไม่สามารถคัดลอกกฎการแตกสาขาได้ ({0}) โปรดตรวจสอบสำเนา</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>สร้างสำเนาแล้วแต่ไม่สามารถทำให้มองเห็นได้ใน Microsoft Forms ({0}) อาจอยู่ในถังรีไซเคิล</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>สำเนามี {0} คำถาม แต่ต้นทางมี {1}</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>สร้างคำถาม ‘{0}’ ({1}) แล้ว แต่ไม่สามารถคัดลอกตัวเลือกได้ ({2})</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>ผลลัพธ์</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>ฟอร์มต้นทาง</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>ID ฟอร์มต้นทาง</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>ชื่อเรื่องของสำเนา</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>ID ฟอร์มของสำเนา</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>สถานะ</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>คำถามที่คัดลอก</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>คำถามในต้นทาง</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>คำเตือน</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>หมายเหตุ</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>ข้อผิดพลาด</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>สมุดงาน Excel (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>ไฟล์ JSON (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Id</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>เวลาเริ่มต้น</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>เวลาที่เสร็จสิ้น</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>ผู้ตอบ</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>ชื่อ</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>คะแนน</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>คำตอบที่ไม่ได้แมป (JSON ดิบ)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (ตัดทอน: ยาวเกินไปสำหรับเซลล์ Excel)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>หยุดการเรียกใช้หรือไม่</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>การเปรียบเทียบหรือการตรวจสอบยังทำงานอยู่ การปิดหน้าต่างนี้จะหยุดการทำงานและจะไม่มีการเขียนรายงาน ปิดต่อไปหรือไม่</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>ปิดขณะกำลังทำงานหรือไม่</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>เครื่องมือยังทำงานอยู่ (สแกน จับคู่ ลงชื่อเข้าใช้ หรือเขียนแพ็กเกจ) การปิดตอนนี้จะหยุดการทำงาน ปิดต่อไปหรือไม่</value></data>
 </root>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Успешно ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Сбой ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Пропущено ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Актуально</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Не удалось определить, есть ли у источника собственные разрешения (ограничение скорости или ошибка доступа) — разрешения для этого элемента не скопированы. Повторите запуск.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Существующий файл в целевом расположении был удален для перезаписи, но новую копию не удалось отправить ({0}). Сейчас файл в целевом расположении отсутствует — повторите копирование, чтобы восстановить его.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Сбой целевой библиотеки ({0}). Ее файлы помечены как «Сбой»; остальные библиотеки продолжают обрабатываться.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: исходный файл изменился во время скачивания — скачивание начинается заново.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint не сообщал о ходе этого импорта в течение {0} мин., поэтому он был прекращен. Его файлы помечены как «Сбой»; повторите копирование, чтобы попробовать снова.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Один клиент</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Несколько клиентов</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Копирование между двумя разными клиентами Microsoft 365. Вход в источник и в назначение выполняется отдельно. Регистрация приложения для назначения выбирается в разделе «Параметры».</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Регистрация назначения:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Режим нескольких клиентов: регистрация приложения, используемая для входа в целевой клиент. Вариант «Как у источника» использует регистрацию источника, которая в этом случае должна быть мультиклиентским приложением.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Продолжить / запустить снова</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Повторно подключается и заново запускает этот выбор с режимом «Копировать, если новее»: уже скопированные файлы пропускаются, передается только то, чего не хватает или что изменилось.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Для этого запуска нет сохраненного выбора для продолжения (его записывают только запуски с выбором файлов).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>Копирование уже выполняется. Сначала завершите или отмените его.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Не удалось продолжить: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>Восстановлено прерванных запусков: {0}. См. раздел «История».</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Продолжение: элементов восстановлено из предыдущего запуска — {0}, выбран режим «Копировать, если новее». Проверьте параметры и нажмите «Далее». (Пользовательские сопоставления столбцов не восстанавливаются.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>ПРЕРВАНО — приложение было закрыто до завершения этого запуска. Из завершенных элементов: успешно — {0}, сбой — {1}, пропущено — {2}, отменено — {3}  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Экспорт диагностики…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Сохраняет zip-архив с последними журналами, сведениями о системе и вашими параметрами без данных об организации — для вложения в отчет об ошибке. Отчеты о копировании и имена файлов не включаются.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Диагностика сохранена в {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Не удалось сохранить диагностику: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Содержимое идентично (отличаются только части, управляемые SharePoint), но дата изменения не была сохранена.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Разрешения не скопированы: не удалось определить идентификаторы SharePoint для элемента.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Разрешения не скопированы: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Папка «{0}»: {1} не применено — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>У других папок были аналогичные проблемы; последующие по отдельности не перечисляются.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>разрешения</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>даты</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>автор / редактор</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> (сохранено: {0} — назначение уже актуально)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>ВНИМАНИЕ: не удалось прочитать метаданные из источника ({0}): {1}. Его элементы могут быть скопированы БЕЗ значений пользовательских столбцов или уникальных разрешений. Повторите запуск после устранения проблемы (режимы «Перезаписать» или «Если новее» применят их заново).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>ВНИМАНИЕ: не удалось найти исходный список для библиотеки, поэтому ее разрешения НЕ будут скопированы.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>Узел SharePoint «{0}» не связан с подключенным клиентом. Повторно подключите исходный и целевой сайты и повторите попытку.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Копирование между клиентами: значения столбцов управляемых метаданных (таксономии) не копируются, а записные книжки OneNote и наборы документов пока нельзя копировать между клиентами. Удостоверения сопоставляются по параметрам сопоставления удостоверений; пользователи, которых не удалось найти в назначении, пропускаются.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Сопоставление удостоверений</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Сопоставление удостоверений…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Перечислите каждого пользователя (или группу) исходного клиента и укажите, кто это в целевом клиенте — это разные учетные записи. По этой таблице записываются авторы, редакторы, столбцы типа «Пользователь» и разрешения. Тех, кого нет в списке, сопоставляет замена домена, если она задана; кого все равно не удалось найти в назначении, пропускают и указывают в отчете.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Домен электронной почты источника</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Домен электронной почты назначения</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Переопределения — одна пара «источник,назначение» в строке (пользователи или имена групп; # начинает комментарий)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Как у источника</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Источник и назначение находятся в одном клиенте. Для копирования в пределах одного клиента переключитесь в режим одного клиента.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Встроенное копирование папок (записные книжки OneNote, наборы документов) между клиентами пока не поддерживается.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Диск «{0}» не связан с подключенным клиентом. Повторно подключите исходный и целевой сайты и повторите попытку.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Регистрация приложения еще не настроена. Откройте «Параметры» и добавьте регистрацию приложения Azure (ее идентификатор приложения/клиента) перед подключением.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Вход отменен. Нажмите «Подключиться», чтобы повторить попытку.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Администратор еще не одобрил это приложение в данном клиенте. Попросите глобального администратора предоставить согласие администратора для регистрации приложения (см. раздел «Настройка» в руководстве пользователя).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Регистрация приложения не найдена в этом клиенте. Проверьте идентификатор клиента (Client ID) и Tenant ID в параметрах.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Не удалось найти этот клиент. Проверьте Tenant ID в параметрах (используйте домен, GUID клиента или «common»).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>В регистрации приложения отсутствует адрес перенаправления, который использует это приложение. В Azure добавьте URI перенаправления http://localhost в разделе «Мобильные приложения и приложения для настольных компьютеров».</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Регистрация приложения не настроена для входа с компьютера. В Azure включите для регистрации параметр «Разрешить потоки общедоступных клиентов».</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Этой учетной записи не разрешено использовать данную регистрацию приложения. Войдите с учетной записью из клиента, которому она принадлежит, или выберите другую регистрацию в параметрах.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint отклонил вход. Нажмите «Подключиться», чтобы войти снова.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>У вас нет доступа к этому сайту. Убедитесь, что ваша учетная запись может открыть его в браузере и что приложению предоставлено разрешение Sites.ReadWrite.All.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Не удалось найти этот сайт. Проверьте адрес — он должен выглядеть так: https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Подробности: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Чтобы продолжить, подключитесь к сайту-источнику.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Чтобы продолжить, выберите хотя бы один элемент (установите флажок).</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Чтобы продолжить, подключитесь к целевому сайту.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Чтобы продолжить, выберите папку назначения.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Чтобы продолжить, выберите список назначения.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Чтобы продолжить, введите имя нового списка.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Для копирования ничего не выбрано.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Ожидание завершения копирования…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Источник: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Назначение: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Регистрация вашего приложения изменилась, поэтому вы вышли из обоих сайтов. Чтобы продолжить, подключитесь снова.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Остановить копирование?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>Выполняется копирование. Если остановить его сейчас, оставшиеся элементы не будут скопированы (позже можно продолжить из раздела «История»). Остановить копирование?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>Копирование все еще выполняется. При закрытии приложения оно будет остановлено, а оставшиеся элементы не будут скопированы (позже можно продолжить из раздела «История»). Все равно закрыть?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Сменить режим подключения?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>При переключении между режимами одного и нескольких клиентов оба сайта отключаются, и потребуется подключиться снова. Все равно переключить?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Подключение:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Регистрация приложения источника</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Регистрация приложения назначения</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Вход в целевой клиент выполняется с помощью:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Изменить</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Открыть параметры</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• У вас должен быть доступ на чтение к семейству сайтов источника.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Перед подключением настройте регистрацию приложения Microsoft Entra ID в параметрах.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Параметры файлов</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Параметры библиотек и файлов</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Копирование файлов…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Копирование библиотек…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Далее</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Начать копирование</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Просмотреть отчет</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Введите имя создаваемого списка</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>Список назначения выбран на шаге «Назначение». Вернитесь назад, чтобы изменить его.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Сначала настройте регистрацию приложения</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy выполняет вход с помощью регистрации приложения, которую вы создаете в своем клиенте Microsoft Entra ID (Azure). Откройте «Параметры», добавьте идентификатор приложения (клиента) вашей регистрации, затем вернитесь сюда и подключитесь.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Дополнительные сведения</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Перетащите, чтобы сделать ленту действий выше или ниже</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Нажмите, чтобы показать только элементы со сбоем</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Нажмите, чтобы показать только пропущенные элементы</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Сопоставление столбцов</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Сравнить источник и назначение</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Откройте средство сравнения, чтобы проверить эту копию по сравнению с источником.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Открыть историю</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Выбранная регистрация используется для источника — а в режиме одного клиента и для обеих сторон.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Новая регистрация</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Добавьте хотя бы одну регистрацию приложения.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Проверка</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Для выбранной регистрации требуется Client ID.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Выход выполнен. При следующем подключении вам будет предложено войти.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Выход выполнен</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Не удалось выйти: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Выход</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>Найдено сопоставлений: {0}.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>Не удается прочитать строк: {0} (строка {1}). Каждая строка должна иметь вид источник,назначение.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Домены источника и назначения совпадают, поэтому замена домена ничего не изменит.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Импорт CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Не удается прочитать некоторые строки переопределений (строка {0}). Каждая строка должна иметь вид «источник,назначение». Исправьте или удалите их — либо начните строку с #, чтобы сделать ее комментарием.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Не удалось сохранить сопоставление удостоверений: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Не удалось прочитать этот файл: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Копирование между клиентами: учетные записи авторов/редакторов в этой библиотеке ({0}) не найдены в целевом клиенте и будут заменены учетной записью, выполняющей копирование. После запуска исправьте их с помощью кнопки «Сопоставить этих пользователей» в отчете.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Введите пользователя или группу источника.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Укажите, кто это в целевом клиенте — или удалите строку.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Источник и назначение совпадают.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Этот источник встречается более одного раза.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Источник (этот клиент)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Назначение (другой клиент)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Тип</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>В назначении?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Требуется для</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Пользователь</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Группа</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Не проверено</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Проверка…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Найден</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Не найден</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Добавить</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Заполнить назначения заменой домена</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>Для строк без назначения подставляет адрес, который получился бы при замене домена.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Проверить в назначении</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Ищет каждого целевого пользователя в целевом клиенте. Это также добавляет его в список пользователей целевого сайта — копирование все равно делает это, прежде чем назначить его автором или предоставить ему доступ.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Сначала подключитесь к целевому клиенту в режиме нескольких клиентов: введите URL целевого сайта на шаге «Назначение», затем снова откройте это диалоговое окно.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Экспорт CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Эти пользователи были нужны для копирования, но не найдены в целевом клиенте. Для каждого укажите, кто это в назначении, — или удалите строку, чтобы оставить без сопоставления.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>Сопоставлений: {0}.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>Строк, требующих внимания: {0}.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Проверено: найдено — {0}, не найдено — {1}{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, не удалось проверить: {0}</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Проверка {0} из {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Проверять нечего: ни в одной строке нет адреса электронной почты назначения.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Некоторые строки требуют внимания (выделены). Исправьте или удалите их, затем сохраните.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Сопоставление сохранено. Чтобы применить его к уже скопированным файлам, запустите снова с режимом «Перезаписать» — режим «Копировать, если новее» пропускает актуальные файлы, поэтому их авторы не меняются. Разрешения обновляются в любом случае.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>Пользователей из источника, не найденных в целевом клиенте: {0}. Они исключены: им не предоставлен доступ, они не назначены авторами или редакторами либо удалены из столбцов типа «Пользователь».</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Сопоставить этих пользователей…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Сопоставить ненайденных пользователей…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Открывает сопоставление удостоверений с пользователями, которых этот запуск не нашел в назначении.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>В этом запуске не было ненайденных пользователей.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Копирование форм</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Копирование Microsoft Forms в целевую учетную запись с сохранением всех вопросов, ветвления, параметров и темы. Ответы можно экспортировать в Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Используется веб-API Microsoft Forms, который Microsoft не документирует и не поддерживает. Сейчас он работает, но может измениться без уведомления. Сначала попробуйте несколько форм.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Загрузить мои формы</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Исходная учетная запись: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Целевая учетная запись: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Назначение: та же учетная запись (один клиент). Копии создаются рядом с оригиналами.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(вам будет предложено войти)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Карта идентификаторов форм (используется средством «Потоки»): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Загрузка форм…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>Загружено форм: {0}.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Сначала выберите хотя бы одну форму.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Копирование форм…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Копирование…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Скопировано</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Сбой (см. журнал)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Копирование «{0}»</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Копирование завершено: скопировано — {0}, сбоев — {1}.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Выберите папку для экспорта ответов</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Экспорт ответов…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>Экспортировано «{0}»: ответов — {1}, в {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Ответы для форм ({0}) экспортированы в {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Форма скопирована, но ее идентификатор не удалось сохранить для средства «Потоки»: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Не удалось экспортировать «{0}»: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Ответы для форм ({0}) экспортированы в {2}; сбоев — {1} (см. журнал).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Отменено.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Ошибка: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Подсказка: регистрации приложения требуется делегированное разрешение Microsoft Forms с согласием. Добавьте его в разделе «Разрешения API» (см. руководство пользователя) и повторите попытку.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Подсказка: Microsoft Forms отклонил запрос. Убедитесь, что эта учетная запись может открыть forms.office.com и что у регистрации приложения есть разрешение Microsoft Forms.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>Выбрано {0} из {1}</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Название</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Тип</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Последнее изменение</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Результат</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Добавлять к названиям копий:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (копия)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Копировать выбранные формы</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Экспорт ответов…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Проверка копии по сравнению с источником</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Другие средства</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Формы</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Копирование Microsoft Forms и экспорт их ответов</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Средство «Формы»</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Перезапись потоков для назначения</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Обновление экспортированных пакетов Power Automate (.zip), чтобы они указывали на назначение: сайты, списки, столбцы, скопированные формы и домены электронной почты. Ваши исходные пакеты никогда не изменяются.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Выберите экспортированные пакеты потоков</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Добавьте пакеты потоков (.zip), экспортированные из Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Добавить файлы…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Добавить папку…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Сканировать</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Пакеты потоков (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Сначала добавьте хотя бы один пакет потока.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Сканирование пакетов…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>Пропущено {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>Найдено потоков: {0}. Они ссылаются на сайтов — {1}, списков — {2}, форм — {3}.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Сканирование завершено.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Сопоставьте сайты</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Куда переезжает сайт SharePoint каждого потока. В режиме нескольких клиентов войдите в назначение — адрес нового клиента будет подставлен автоматически; измените любую строку, если у сайта другое имя. В режиме одного клиента введите целевой сайт для каждой строки.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Сайт в потоках (заменяется)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Целевой сайт</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Адрес нового клиента:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Заполнить пустые назначения, сохранив пути</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Введите полный URL, например https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Пустые назначения заполнены с использованием этого узла и пути каждого сайта.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Сопоставьте списки и столбцы</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Одна карточка на каждый список, используемый потоками, независимо от числа потоков. В ней показаны имя и столбцы списка, список назначения, с которым он сопоставлен (по умолчанию — с тем же именем; если имя отличается, выберите другой из раскрывающегося списка), и сопоставление каждого столбца. Проверьте карточки с предупреждением.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Сопоставить списки и столбцы</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Список</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>ID исходного списка</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>ID целевого списка</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Исходный столбец</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Целевой столбец</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Сначала просканируйте пакеты.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Сначала введите хотя бы один целевой сайт.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Сопоставление списков и столбцов…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(не найдено)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Найден список с таким же именем в назначении</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Для сайта, на котором находится этот список, не задан целевой сайт (шаг «Сайты»)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Не удалось прочитать этот список на сайте-источнике: возможно, он не существует, у этой учетной записи нет доступа или сайт находится в другом клиенте, чем ваше исходное подключение</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>На целевом сайте нет списка с таким именем: выберите его в раскрывающемся списке</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>То же имя</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Переименован в назначении</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Нет совпадения: выберите столбец</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>Целевой список есть у {0} из {1} списков. Столбцов для проверки: {2}.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Формы и электронная почта</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Формы, скопированные средством «Формы», заполняются автоматически. Для формы, созданной вами самостоятельно, вставьте ее ID или ссылку на страницу редактирования.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>ID исходной формы</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>ID формы (выберите из списка или вставьте)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Перенести домен электронной почты:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Запишите обновленные пакеты</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Выберите выходную папку (не ту, где лежат оригиналы). Туда будут сохранены обновленные пакеты и отчет со списком всех изменений.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Записать обновленные пакеты</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Сохранить сопоставление…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Открыть выходную папку</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Подключения нельзя перенести между клиентами. После импорта пакета заново создайте каждое подключение в Power Automate и выберите его снова.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Сначала выберите выходную папку.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Запись обновленных пакетов…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Сохранить обновленную копию {0} (пакет {1} из {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Пакет Power Automate (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Вы уже выбрали это имя файла для другого пакета. Выберите другое имя.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Пакет был бы сохранен поверх оригинала (та же папка, то же имя). Выберите другую выходную папку или измените имя в поле «Сохранить как», чтобы оригиналы остались нетронутыми.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Отчет о перезаписи потоков
+
+Исходные пакеты не затронуты. Подключения НЕ переносятся; создайте их заново и выберите снова при импорте.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Отчет записан в {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>Записано пакетов: {0}, замен: {1}. Значений, все еще указывающих на источник: {2} (см. отчет).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Сопоставление сохранено в {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Потоки</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Обновление экспортированных потоков Power Automate для назначения</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Средство «Потоки»</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Что используют эти потоки</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Службы, найденные в просканированных потоках, и что это средство делает с каждой из них.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Служба</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Потоки</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Шаги</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Найдено</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Что делает это средство</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Перезаписывает найденное</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>ID указываются в отчете; проверьте после импорта</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Только подключение (создайте его заново)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Сопоставление столбцов</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Столбец появляется здесь, если поток записывает в него данные, фильтрует или сортирует по нему либо читает его в выражении, в сопоставленном списке. Целевой столбец выбирается автоматическим сопоставлением (то же имя, затем то же отображаемое имя, затем похожее имя). Действовать нужно только для строк с пометкой «Похожее имя» или «Нет совпадения»; измените любую строку в ее раскрывающемся списке или выберите «(оставить без изменений)», чтобы сохранить исходное имя. Встроенные столбцы, например Title, не перечисляются, так как они есть везде.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(оставить без изменений)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Похожее имя: проверьте</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(еще не сопоставлено)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Целевой список выбран вами</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Введите или вставьте ID целевого списка либо ссылку на страницу его параметров в столбце «ID целевого списка», чтобы выбрать список самостоятельно (например, если имя отличается). Затем нажмите «Сопоставить снова», чтобы сопоставить его столбцы.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Не удалось найти ID списка в «{0}». Вставьте GUID или ссылку на страницу параметров списка.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Не удалось найти ID формы в «{0}». Вставьте ID формы или ссылку на страницу ее редактирования.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Формы</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Назначение</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Копирование</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Результаты</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Выберите формы для копирования</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Перезагрузить формы</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Нажмите «Загрузить мои формы», чтобы увидеть свои формы.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>В этой учетной записи формы не найдены.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Копировать формы: {0}</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Копировать другие формы</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Выберите, куда поместить копии</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Один клиент: копии создаются в той же учетной записи, которую вы используете, рядом с оригиналами.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Несколько клиентов: копии создаются в целевой учетной записи. Войдите в нее здесь; это отдельно от входа, который вы использовали для сайтов SharePoint.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Целевая учетная запись</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Вход с регистрацией приложения: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Вход с вашей регистрацией приложения назначения (задается в параметрах).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Войти в целевую учетную запись</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Войти снова</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Вход в целевую учетную запись… может открыться окно браузера.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Подключено как {0}. Доступ к Microsoft Forms подтвержден (форм в этой учетной записи: {1}).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Не удалось подключиться к целевой учетной записи: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Целевая учетная запись еще не подключена.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Готово. Нажмите кнопку «Копировать», чтобы начать.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Готово: копии будут созданы в {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Чтобы продолжить, войдите в целевую учетную запись.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Параметры</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>Форм будет скопировано: {0}, из {1} в {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>исходной учетной записи</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>целевую учетную запись</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Копирование форм</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Запуск…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Форма {0} из {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Отмена после текущей формы…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Копирование завершено: все формы скопированы ({0})</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Ваши копии находятся в {0}. Откройте Microsoft Forms, чтобы увидеть их, или воспользуйтесь таблицей ниже.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Копирование завершено: скопировано форм — {0} из {1}, некоторые требуют внимания</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Копии находятся в {0}. Формы с предупреждением скопированы с проблемами, а формы со сбоем не созданы. См. столбец «Подробности».</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Копирование завершено, но ни одна форма не скопирована</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Причину см. в столбце «Подробности». Частые причины — отсутствие разрешения Microsoft Forms у регистрации назначения или учетная запись без доступа к Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Копирование отменено после {0} из {1} форм</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Перечисленные ниже формы были завершены. Форма, которая копировалась в момент отмены, не была завершена и не отображается.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Скопировано</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>С предупреждениями</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Сбой</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Вопросы</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Исходная форма</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Копия</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Вопросы</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Подробности</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Скопировано</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Скопировано с предупреждениями</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Сбой</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Открыть выбранную копию</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Открыть Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Экспорт результатов…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Показать карту ID форм</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Сначала выберите скопированную форму в таблице.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Результаты сохранены в {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Подсказка: у регистрации приложения нет подходящего адреса перенаправления. В Entra в разделе «Проверка подлинности» добавьте платформу «Мобильные приложения и приложения для настольных компьютеров» с http://localhost и повторите попытку.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Пакеты</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Сайты</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Списки и столбцы</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Формы и почта</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Запись</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Отчет</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Выберите экспортированные потоки</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>В Power Automate: откройте «Мои потоки», выберите поток, затем «Экспорт» → «Пакет (.zip)». Добавьте скачанные .zip-файлы сюда. Каждый файл сканируется сразу после добавления.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Очистить</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Чтобы начать, добавьте экспортированные пакеты потоков.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>В этих файлах потоки не найдены. Убедитесь, что это пакеты, экспортированные командой «Экспорт» → «Пакет (.zip)».</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Сканирование завершено. Просмотрите, что используют потоки, затем нажмите «Далее».</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Выберите целевые сайты</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Эти потоки не используют сайты SharePoint с фиксированными адресами, поэтому сопоставлять здесь нечего. Нажмите «Далее».</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Далее средство прочитает каждый список через ваши подключения и сопоставит его на целевом сайте.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Введите целевой сайт для каждого исходного сайта, затем нажмите «Далее».</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Сопоставление списков и столбцов</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Сопоставить снова</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Списки</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Эти потоки не указывают на конкретные списки SharePoint, поэтому сопоставлять нечего.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Списки и столбцы сопоставляются при открытии этого шага.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Формы и электронная почта</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Проверьте формы и электронную почту, затем нажмите «Далее».</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Эти потоки не используют Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>Адреса электронной почты</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Чтобы заменить в каждом адресе один домен электронной почты на другой, введите оба домена. Адреса в других доменах перечисляются в отчете и не изменяются.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Запись обновленных пакетов</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Выходная папка</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Выберите выходную папку, затем нажмите «Записать обновленные пакеты».</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Готово к записи: пакетов — {0}, содержащих потоков — {1}. Замены: сайтов — {2}, списков — {3}, сопоставлений столбцов — {4}, форм — {5}.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Записать обновленные пакеты</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Записано пакетов</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Замены</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Все еще источник</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>К проверке</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Пакет</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Обновлено</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>Значений, все еще указывающих на источник: {0}</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Открыть отчет</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Начать заново</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Готово: записано пакетов — {0}</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Сохранено в {0}. Ничего не осталось указывающим на источник. Выполните шаги ниже, чтобы импортировать их.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Готово: записано пакетов — {0}, некоторые элементы требуют вашей проверки</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Сохранено в {0}. Откройте отчет, чтобы увидеть значения, все еще указывающие на источник, и элементы, которые средство не перезаписывает (другие службы, несопоставленные списки или столбцы).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Что делать дальше</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Откройте отчет и проверьте раздел «все еще указывает на источник» и все, что помечено для проверки.
+2.  В Power Automate (целевой клиент) откройте «Мои потоки» → «Импорт» → «Импорт пакета (прежняя версия)» и выберите записанный пакет.
+3.  В разделе «Связанные ресурсы» нажмите «Выбрать при импорте» для каждого подключения и выберите или создайте подключение в целевом клиенте. Подключения нельзя перенести между клиентами.
+4.  Импортируйте поток. Оставьте его выключенным, откройте его, исправьте все, на что он указывает, затем включите.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Без изменений (ничто в нем не совпало с вашим сопоставлением)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Скопировано {0} в {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Скопировано ранее</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Уже скопировано</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …и еще {0}</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Скопировать снова?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>Выбранных форм, уже скопированных в эту учетную запись: {0}:
+
+{1}
+
+При повторном копировании создается вторая копия каждой формы. Продолжить?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>Копирование все еще выполняется. Если закрыть окно сейчас, копируемая форма может остаться в целевой учетной записи недостроенной. Остановить и закрыть?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Выполняется копирование</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Не удалось экспортировать ни одного ответа (см. журнал).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Фильтр по названию или типу</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Одна книга</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Экспорт всех выбранных форм в один файл Excel с отдельным листом для каждой формы.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>Адрес электронной почты</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Tenant ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Путь к библиотеке</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Другие значения</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Введите замену для любого значения, которое должно измениться. Пустые строки не изменяются; если они все еще указывают на источник, они перечисляются в отчете.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Вид</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>В потоках</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Заменить на</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Проверка ID</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Это не ID формы и не ссылка на страницу редактирования</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Совпадает с исходной формой</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Эта форма находится в исходном клиенте, а не в целевом</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Эта форма находится в клиенте, отличном от исходного</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>Из копирования форм: {0} в {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Из предыдущего копирования форм</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Загрузить сопоставление…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Заполнить сайты, списки, столбцы, формы и другие значения из ранее сохраненного сопоставления.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Не удалось загрузить сопоставление: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>Загружено: {0}. Значения, соответствующие этим потокам, заполнены; проверьте их на следующих шагах.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>Загружено: {0}. Оно будет применено при добавлении пакетов потоков.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>Заполнено целевых сайтов: {0}. Проверьте их ниже, затем нажмите «Далее».</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>У каждого сайта уже есть назначение, поэтому ничего не изменено. Очистите ячейку «Целевой сайт», чтобы она была заполнена.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Быстрый способ: введите адрес нового клиента, например https://fabrikam.sharepoint.com, и нажмите кнопку. Каждый сайт, у которого еще нет назначения, получит этот адрес с тем же путем, что и в источнике: https://contoso.sharepoint.com/sites/HR станет https://fabrikam.sharepoint.com/sites/HR. Сайты OneDrive (contoso-my) переходят на адрес -my нового клиента. Уже введенные назначения не затрагиваются. Сайты должны уже существовать в новом клиенте; это средство их не создает. Если у сайта там другое имя, введите его адрес в ячейке «Целевой сайт».</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Если оставить «Целевой сайт» пустым, этот сайт остается без изменений: потоки продолжают указывать на старый сайт, его списки и столбцы не сопоставляются и не перезаписываются, а отчет перечисляет его в разделе «Что сделать после импорта». Это верно только для сайта, который не переезжает в новый клиент.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Что произойдет</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Будет перенесен в назначение</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Не изменяется (нет назначения)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Сайт {0} оставлен без изменений (назначение не введено), поэтому потоки по-прежнему указывают на него, а его списки не сопоставлены. Это нормально, если сайт не переезжает; иначе запустите снова, указав назначение.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Столбцов для показа пока нет: ни один список не сопоставлен, поэтому сравнивать нечего. Исправьте списки выше, затем нажмите «Сопоставить снова».</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Столбцов для сопоставления нет, так что здесь ничего делать не нужно. В сопоставленных списках нет пользовательских столбцов, в которые потоки записывают данные, по которым фильтруют или которые читают способом, видимым для средства. Список действий внизу показывает, что найдено для каждого списка.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>Найдено столбцов: {0}; с тем же именем в назначении — {1}, переименованы и сопоставлены — {2}, похожи — {3}, без совпадения — {4}.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Проверьте строки с пометкой «Похожее имя» и выберите столбец для строк с пометкой «Нет совпадения». Строки с пометкой «То же имя» или «Переименован в назначении» не требуют действий.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Здесь ничего делать не нужно: все столбцы уже сопоставлены. Нажмите «Далее».</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Имена обновленных пакетов</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Как назвать обновленные .zip-файлы. Используйте {name} для исходного имени файла: «{name} - Fabrikam» превращает «Onboarding.zip» в «Onboarding - Fabrikam.zip». Для одного пакета можно просто ввести полное имя. Оставьте {name}, чтобы сохранить исходные имена. К повторяющемуся имени добавляется (2), (3)…, чтобы ничего не было перезаписано.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Будет записано: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Поток хранит только ID формы, поэтому названия форм считываются из Microsoft Forms при открытии этого шага: название каждой формы в ваших потоках (исходная учетная запись) и формы в целевой учетной записи. Форма, название которой точно совпадает с одной целевой формой, сопоставляется автоматически; иначе выберите новую форму в раскрывающемся списке либо вставьте ее ID или ссылку на страницу редактирования. Используйте «Перезагрузить названия форм», чтобы считать их снова.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Загрузить формы из целевой учетной записи…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Загрузка форм целевой учетной записи… вам может быть предложено войти.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Получение списка форм, принадлежащих целевой учетной записи {0}, чтобы вы могли выбрать новую форму для каждого потока. Нажмите «Отмена», чтобы не ждать входа.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Назначение: найдено форм — {0} в {1}. Выберите по одной на строку или вставьте ID.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Назначение: формы в {0} не найдены. В раскрывающемся списке показаны только формы, принадлежащие этой учетной записи (не групповые), поэтому сначала скопируйте формы средством «Формы» или вставьте ID.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Отменено. Нажмите «Загрузить названия форм», чтобы повторить попытку, или вставьте ID форм.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Назначение: не удалось загрузить формы: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(нет)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(форма без названия)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Исходная форма</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Выбрать из форм назначения</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Выберите форму из целевой учетной записи. Сначала нажмите «Загрузить формы из целевой учетной записи».</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Заполнено по входу в назначение ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Ваша исходная учетная запись, замененная вашей целевой учетной записью</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Заполнено по вашим входам ({0} → {1}). Очистите оба поля, чтобы не менять домены электронной почты.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Сайт с пустым назначением остается без изменений: потоки продолжают указывать на него, и отчет его перечисляет.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Выполнен вход как {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Выполнен вход как {0}. Адрес SharePoint целевого клиента — {1}; пустые целевые сайты заполнены на его основе.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Некоторые сайты в потоках находятся на {0} — это собственный адрес целевой учетной записи. Либо эти пакеты уже указывают на назначение (например, пакеты, записанные этим средством, или потоки, экспортированные из назначения) — тогда добавьте исходные экспорты из источника; либо источник и назначение на самом деле один клиент — тогда переключите приложение в режим одного клиента (Параметры).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} — пакет, записанный этим средством {1}: в нем уже содержатся адреса назначения, поэтому переносить больше нечего. Вместо него добавьте исходный экспорт из исходного клиента (файл из папки «Загрузки», а не из выходной папки).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Сайты в этих потоках находятся на {0} — это ваш целевой клиент, но ваш источник — {1}. Если пакеты были экспортированы из {0}, войдите в этот клиент как в источник (Изменить источник…). Если их ранее записало это средство, удалите их и добавьте исходные экспорты.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Вход выполнен. Заполнено целевых сайтов: {0} (из {1}). Проверьте их, затем нажмите «Далее».</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Вход выполнен. У каждого целевого сайта уже было значение, поэтому ничего не изменено.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Вход не завершен, либо не удалось прочитать адрес нового клиента (см. строку «Назначение»). Если вход выполнен, введите ниже адрес нового клиента, чтобы заполнить целевые сайты.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — подключено как {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — вход еще не выполнен</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Изменить назначение…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Целевой список не выбран, поэтому эти потоки по-прежнему указывали бы на список, которого нет в назначении. Выберите целевой список или сначала создайте список на целевом сайте.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Потоки используют столбец «{0}», но в целевом списке «{1}» для него нет столбца. Выберите его целевой столбец в таблице или добавьте столбец в целевой список и нажмите «Проверить снова».</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>Целевой список «{0}» требует столбец «{1}», но шаг «Создать элемент» «{3}» в потоке «{2}» его не задает, поэтому импорт завершился бы ошибкой «missing required property item/{1}». Введите для него значение ниже, и средство добавит его в этот шаг, либо сделайте «{1}» необязательным в целевом списке и нажмите «Проверить снова».</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>Целевой список «{0}» требует столбец «{1}», но шаг «Создать элемент» «{3}» в потоке «{2}» его не задает, поэтому импорт завершился бы ошибкой «missing required property item/{1}». Сделайте «{1}» необязательным в целевом списке в SharePoint, затем нажмите «Проверить снова».</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Значение для этих обязательных столбцов (добавляется в каждый шаг «Создать элемент», где они пропущены):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Импорт завершился бы ошибкой. Исправьте это, чтобы продолжить:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Проверить снова</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Будет сбой ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Чтобы продолжить, войдите в назначение.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ Пакетов, записанных этим средством и уже содержащих значения назначения: {0}. Удалите их (значок ✕ в списке) и добавьте исходные экспорты.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ У сайтов без назначения: {0}. Сайт, оставленный как есть, по-прежнему указывал бы на исходный клиент.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ Списков, при импорте которых будет сбой: {0}. Чтобы продолжить, исправьте списки с пометкой «Будет сбой».</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Списки еще не сопоставлены. Вернитесь на шаг назад и снова вперед, чтобы повторить.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ Форм, которым нужен допустимый ID целевой формы: {0}. Чтобы продолжить, укажите их.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Изменить источник…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Выполнен вход как {0}. Адрес SharePoint исходного клиента — {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Исходное подключение изменено на {0}. Перечисленные ниже сайты должны находиться в этом клиенте.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Вход в источник не завершен, либо не удалось прочитать адрес клиента (см. строку «Источник»). Предыдущее исходное подключение сохраняется, если вы отменили вход.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Некоторые сайты читаются с {0}, а это не тот клиент, к которому вы подключены как к источнику ({1}). Чтение их списков завершится ошибкой. Измените «Читать списки из» для этих строк на адрес в вашем исходном клиенте либо нажмите «Изменить источник…» и войдите с учетной записью из этого клиента.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Сайты потоков находятся на {0}, но вы подключены к {1} как к источнику. Поле «Читать списки из» заполнено теми же сайтами на {1}, поэтому средство читает имена и столбцы списков там. Проверьте, что эти сайты существуют (измените любую строку), либо нажмите «Изменить источник…», если потоки действительно происходят из {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Списки, используемые потоками</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Нажмите на список, чтобы открыть или закрыть его. Списки, требующие внимания, идут первыми и открыты.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Открыть все</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Закрыть все</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Используется в:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Источник:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Целевой список</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>или вставьте его ID или ссылку:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Исходный столбец</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Тип</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Используется</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Не используется потоками</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(нет: оставить этот список без изменений)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Целевой список не выбран: потоки, которые его используют, по-прежнему указывают на исходный список</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ столбцов для проверки: {1}</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ проверять нечего</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>Столбцов в этом списке: {0}; потоки используют {1}: с тем же именем в назначении — {2}, переименованы и сопоставлены — {3}, похожи (проверьте) — {4}, без совпадения (выберите) — {5}. Остальные столбцы показаны для контекста и не изменяются.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>Столбцов в этом списке: {0}; потоки не используют ни один из них способом, видимым для средства, поэтому сопоставлять нечего.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Не удалось прочитать столбцы этого списка (см. примечания выше и список действий).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Выберите целевой список выше, чтобы увидеть его столбцы и сопоставить их.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Не удалось прочитать столбцы целевого списка, поэтому предложить совпадения нельзя.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Поток не указывает, на каком сайте находится этот список (используется параметр), поэтому найти его нельзя. Вставьте ID или ссылку целевого списка.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Нет целевого списка: этот список остается без изменений.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Чтение столбцов целевого списка для {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Список «{0}»: вы выбрали другой целевой список. Чтение его столбцов на {1} для повторного сопоставления.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — подключено как {1} (вход главного окна)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Читать списки из (источник)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>«Сайт в потоках» — это адрес, сохраненный в потоках; именно он заменяется, поэтому его нельзя изменить. «Читать списки из» — это место, откуда средство читает имя и столбцы каждого списка на стороне источника; сначала там тот же адрес, поэтому измените его, если адрес в потоке устарел, переименован или находится в другом клиенте, чем ваше исходное подключение.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Что используют эти потоки</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — потоков: {1}, шагов: {2}: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>перезаписывается этим средством</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>проверить вручную</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>только подключение</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>Что сделать после импорта</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Импортируйте каждый исправленный пакет в целевую среду и заново создайте подключения (они никогда не копируются).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Пакеты решений: перезаписаны только определения рабочих процессов. Значения переменных среды и ссылки на подключения в решении (customizations.xml) по-прежнему содержат значения источника; задайте их после импорта.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Владельцы потоков и пользователи только для запуска не входят в пакет; после импорта предоставьте доступ к потокам нужным людям.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Без изменений (ничто в сопоставлении не совпало).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>Замен: {0}</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>По-прежнему указывают на значения источника (не сопоставлены, проверьте перед импортом)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Подключение к сайту-источнику {0} и целевому сайту {1}. Если вход еще не выполнен, откроется окно входа.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Подключено к {0} (источник) и {1} (назначение).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Чтение списков и библиотек на целевом сайте {0}, чтобы каждый список можно было сопоставить по имени и предложить в раскрывающемся списке.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>Найдено списков и библиотек: {0} на {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Чтение имени и столбцов списка {0} с сайта-источника {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Список «{0}»: поиск списка с таким же именем на целевом сайте {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Список «{0}»: найден в назначении. Чтение столбцов целевого списка для сопоставления.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Список «{0}»: не удалось прочитать его столбцы, либо их нет. Для этого списка сопоставлять нечего.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Список «{0}»: столбцов — {1}, потоки не используют ни один из них способом, видимым для средства. Сопоставлять нечего.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Список «{0}»: потоки используют имен столбцов — {1}: с тем же именем в назначении — {2} (изменений не требуется), переименованы и сопоставлены — {3}, похожи (проверьте) — {4}, без совпадения (на ваш выбор) — {5}, встроенных столбцов — {6} (сопоставлять нечего).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>Список {0} отсутствует на сайте-источнике, но есть на целевом сайте как «{1}»: поток уже указывает на назначение.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>У сайта «{0}» нет назначения; его списки не сопоставлены.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Дополнительно: читать списки с другого адреса</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Сопоставление столбцов: из {0} в {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Для этого списка нет столбцов для показа.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Потоки не используют ни один столбец этого списка. Установите флажок «Показать все столбцы», чтобы увидеть их.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>Не удалось прочитать исходный список, а поток не называет столбцов, поэтому сопоставлять нечего.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Список</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(не удалось прочитать в источнике)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Читать из:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Сайт</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Этот поток уже указывает на этот список в назначении. Используемые им имена столбцов ({0}) показаны напротив столбцов назначения; ничего менять не нужно.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(имя списка недоступно)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Уже в назначении</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Сопоставлено по именам столбцов потока</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Не удается прочитать столбцы</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Нет целевого списка</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Сопоставлять нечего</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Готово</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Столбцы назначения нечитаемы</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>Проверить: {0}</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Используется потоками: {0}</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>Сопоставлений столбцов, требующих внимания: {0}.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Все сопоставления столбцов определены.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Подключения не копируются между клиентами: после импорта создайте их заново в Power Automate.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>Электронная почта: каждый адрес в {0} становится {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>Форм, указывающих на новую форму: {0} из {1}.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>Целевой список есть у {0} из {1} списков.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Списки еще не сопоставлены.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>Адреса электронной почты не изменяются (домен не сопоставлен).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Потоки не используют Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Потоки не используют конкретные списки.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Потоки не указывают сайты SharePoint.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>Будет записано пакетов: {0}, потоков в них: {1}; оригиналы не изменяются.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>На целевой сайт будут перенесены сайты: {0} из {1}; остальные остаются как есть.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Очистить автоматически заполненные значения</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Заполнено</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Форма в ваших потоках</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Из (в ваших потоках)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Списки</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Сайты</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Состояние</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>В (назначение)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Выбрано вами</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Оставлено без изменений</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(вход главного окна)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>Домен электронной почты, с которого переносить</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Заменить каждый адрес в</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>на</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>Домен электронной почты, на который переносить</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…или перетащите .zip-файлы (или папку) в это окно.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Столбцу «{0}» списка «{1}» нет совпадения в целевом списке.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>У списка «{0}» ({1}) на {2} нет целевого списка, поэтому потоки, которые его используют, по-прежнему указывают на исходный список.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(название неизвестно)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Перейти к шагу</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Есть сохраненное сопоставление? Загрузить…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Свой шаблон…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Сохранить исходные имена</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Добавить к каждому имени &apos; - migrated&apos;</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Откройте отчет и проверьте то, что помечено для проверки.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>В Power Automate (целевой клиент): «Мои потоки», «Импорт», «Импорт пакета (прежняя версия)» и выберите записанный пакет.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>В разделе «Связанные ресурсы» нажмите «Выбрать при импорте» для каждого подключения и выберите или создайте подключение в целевом клиенте. Подключения нельзя перенести между клиентами.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Импортируйте поток, оставьте его выключенным, откройте его, исправьте все, на что он указывает, затем включите.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Открыть папку</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Открыть Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Эта выходная папка еще не существует; она создается при записи пакетов.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>ИСТОЧНИК</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>НАЗНАЧЕНИЕ</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>Найдено потоков: {0}</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Потоки не найдены</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Уже записан этим средством</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Не удалось прочитать</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Готово к записи?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Удалить этот пакет из списка</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Отчет о перезаписи потоков</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Что используют эти потоки (служб: {0})</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>Не удалось записать пакетов: {0}.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>Значений в записанных пакетах, все еще указывающих на источник: {0}. Откройте отчет, чтобы увидеть, каких именно.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Показать все столбцы ({0})</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Показать только столбцы, используемые потоками</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Что означают эти столбцы?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>ID этого списка отсутствует на сайте-источнике, но это список «{0}» на целевом сайте: поток уже указывает на назначение, как в пакете, ранее записанном этим средством.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Подключено</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Проблема</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Вход не выполнен</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Ожидание входа…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>Списков: {0} · все готовы</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>Списков: {0} · готовы: {1} · требуют внимания: {2}</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Заняло {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>К проверке</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Добавьте пакеты потоков (.zip), экспортированные из исходного клиента. Каждый сканируется сразу после добавления.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Укажите, куда переезжает сайт каждого потока. Войдите в назначение — адрес нового клиента будет подставлен автоматически.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Каждый список, используемый потоками, сопоставляется со списком в назначении, а его столбцы сопоставляются. Проверьте все, что помечено как требующее внимания.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Укажите для скопированных форм их новые ID и решите, как изменяются адреса электронной почты и Tenant ID.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Проверьте список ниже, выберите, куда сохранить обновленные пакеты, затем запишите их.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Что здесь происходит</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Средство читает каждый пакет на этом компьютере (ничто никуда не отправляется), чтобы найти сайты, списки, столбцы и формы, используемые потоками. Добавляйте ИСХОДНЫЕ экспорты из источника, а не пакеты, ранее записанные этим средством: в них уже содержатся адреса назначения.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Столбец «{0}» сопоставлен по-разному в разных списках ({1}). Шаги каждого списка получают собственное сопоставление; выражения в других местах потока сохраняют исходное имя, поэтому проверьте их.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Перезагрузить названия форм…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Загрузка названий форм… вам может быть предложено войти.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Чтение названий форм из ваших потоков из исходной учетной записи {0}. Нажмите «Отмена», чтобы не ждать входа.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Источник: найдено названий — {0} из {1} форм ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Источник: не удалось прочитать названия форм: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>Форм, сопоставленных с целевой формой с тем же именем: {0}.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Похоже на допустимый ID формы</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Сопоставлено по имени</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>Источник и назначение находятся в одном клиенте ({0}). Переключите приложение в режим одного клиента (Параметры) или войдите в источник и назначение с учетными записями из разных клиентов.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Удалить эти пакеты</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>Удалено пакетов, уже указывающих на назначение: {0}: {1}. Вместо них добавьте исходные экспорты из исходного клиента.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Эти пакеты удалены. Добавьте исходные экспорты из исходного клиента.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Каждый пакет сохраняется как новый .zip в выходной папке; оригиналы никогда не изменяются. Чтобы переименовать один из них, введите другое имя в поле «Сохранить как».</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Сохранить исходные имена</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Добавить &apos; - migrated&apos; к каждому имени</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Исходный пакет</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Сохранить как</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Будет сохранено как: {0} (имена можно изменить ниже).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Не удалось прочитать; вывод не записан</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Отменено. Ничего не изменено. На шаге «Сайты» используйте «Войти», чтобы повторить попытку (например, в другом браузере); на шаге «Списки» — «Сопоставить снова».</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Отмена… закрытие окна входа может занять некоторое время.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Что делает средство</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Подключения</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Несколько клиентов: чтобы сопоставить списки, средство читает имя и столбцы каждого списка из исходного клиента и ищет тот же список в целевом клиенте. Для этого нужен вход в каждый из них. Войдите в каждый здесь либо просто нажмите «Далее», и вход будет запрошен тогда. Откроется окно браузера; если это не тот браузер, нажмите «Отмена» и повторите попытку. Ни в одном из клиентов ничего не изменяется.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Один клиент: источник и назначение — один и тот же клиент, поэтому средство использует учетную запись, с которой вы вошли на шаге «Подключение». Входить больше никуда не нужно. В клиенте ничего не изменяется.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Источник</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Назначение</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Войти в источник…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Войти в назначение…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Прекращает ожидание окна входа, чтобы можно было повторить попытку, например в другом браузере.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Вход еще не выполнен</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Используется вход главного окна: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Выполнен вход как {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Готово</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Ожидание входа… должно открыться окно браузера</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Вход отменен. Нажмите «Войти», чтобы повторить попытку.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Вход выполнен. Проверьте целевые сайты ниже, затем нажмите «Далее».</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Пока нет исходного сайта для входа. Сначала добавьте пакеты потоков.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Сначала введите хотя бы один целевой сайт (или используйте «Заполнить, сохранив пути»); вход выполняется в клиент целевого сайта.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Вход в источник… откроется окно браузера.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Вход в назначение… откроется окно браузера.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>источник</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>назначение</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Вход в исходный клиент. Откроется окно браузера; нажмите «Отмена», чтобы не ждать (например, чтобы попробовать другой браузер). Вход также сообщает средству, какой клиент является источником.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Вход в целевой клиент. Откроется окно браузера; нажмите «Отмена», чтобы не ждать (например, чтобы попробовать другой браузер). Вход также сообщает средству адрес SharePoint нового клиента.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Подключено: {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Вход отменен вами.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Чтение файлов пакетов ({0}) на этом компьютере для поиска сайтов, списков, столбцов и форм, используемых потоками. Ничто никуда не отправляется.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Прочитано {0}: потоков — {1}.</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Сопоставление списков ({0}): для каждого средство запрашивает у исходного сайта его имя, затем ищет список с этим именем на целевом сайте.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Сопоставление завершено. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Запись исправленных пакетов ({0}) в {1}. Оригиналы не изменяются.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Запись {0} с примененным сопоставлением.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Проверка {0} на значения, все еще указывающие на источник.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Отменено вами. Ничего не изменено.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Остановлено: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Каждый поток хранит адрес сайта SharePoint, из которого он читает или в который записывает. Чтобы работать в новом клиенте, каждый поток должен указывать на соответствующий сайт там, поэтому сообщите средству, какой новый сайт заменяет каждый старый. Это изменяет только копии ваших пакетов; ничего не запрашивается, пока вы не нажмете «Далее».</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Что здесь происходит: для каждого списка, используемого потоком, средство читает имя и столбцы списка с исходного сайта, ищет список с таким же именем на целевом сайте и читает столбцы этого списка, чтобы сопоставить их. Зачем: потоки ссылаются на списки и столбцы по ID или внутреннему имени, а в новом клиенте они отличаются, поэтому средство находит эквивалент. Этот шаг только читает; ничего не создается и не изменяется ни в одном из клиентов. Целевой список и любой столбец можно изменить в его карточке.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Скопированная форма получает новый ID, поэтому использующий ее поток должен указывать на копию. Адреса электронной почты и Tenant ID в потоке для новой организации тоже может понадобиться изменить. Здесь ничего не запрашивается; замены определяете вы, а все, что оставлено пустым, остается как есть.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Средство записывает новые .zip-файлы в выходную папку с примененным сопоставлением, повторно сканирует их, чтобы найти все, что все еще указывает на источник, и записывает отчет. Ваши исходные пакеты никогда не изменяются, и ничего не отправляется ни в один клиент. Новые пакеты вы затем импортируете в Power Automate самостоятельно.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Вход отменен. Нажмите кнопку, чтобы повторить попытку, например в другом браузере.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Ошибка: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Не удалось прочитать исходную форму ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Не удалось создать форму в назначении ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Отменено на середине. В назначении осталась частичная форма; удалите ее в Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Копирование остановлено на середине ({0}). В назначении осталась частичная форма; удалите ее в Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>фоновое изображение</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>логотип</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>изображение заголовка</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>Элемент «{0}» не скопирован (изображения пока не поддерживаются).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Подсчет баллов в тесте (правильные ответы и баллы) не проверен; проверьте копию.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Параметр «{0}» не удалось скопировать ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Вопрос «{0}» не скопирован ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(без названия)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Не удалось скопировать правила ветвления ({0}); проверьте копию.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>Копия создана, но не может быть показана в Microsoft Forms ({0}); возможно, она в корзине.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>В копии вопросов: {0}, а в источнике: {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Вопрос «{0}» ({1}) создан, но его варианты не удалось скопировать ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Результаты</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Исходная форма</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>ID исходной формы</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Название копии</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>ID формы-копии</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Состояние</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Скопировано вопросов</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Вопросов в источнике</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Предупреждения</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Примечания</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Книга Excel (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>Файлы JSON (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Id</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Время начала</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Время завершения</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Респондент</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Имя</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Баллы</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Несопоставленные ответы (необработанный JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (обрезано: слишком длинно для ячейки Excel)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Остановить выполнение?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>Сравнение или проверка все еще выполняется. Закрытие этого окна остановит его, и отчет не будет записан. Все равно закрыть?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Закрыть во время работы?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Средство все еще работает (сканирование, сопоставление, вход или запись пакетов). Если закрыть сейчас, оно будет остановлено. Все равно закрыть?</value></data>
 </root>

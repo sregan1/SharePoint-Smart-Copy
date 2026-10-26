@@ -26,16 +26,9 @@ public partial class MainViewModel : ObservableObject
         };
         if (dlg.ShowDialog() != true) return;
 
-        static string Csv(string? s) => $"\"{(s ?? "").Replace("\"", "\"\"")}\"";
-        var sb = new StringBuilder();
-        sb.AppendLine(Loc.T("VM_CsvHeader"));
-        foreach (var r in CopyResults.Where(r => !r.IsPermissionResult))
-        {
-            sb.AppendLine($"{Csv(r.FileName)},{Csv(r.SourcePath)},{Csv(r.TargetPath)}," +
-                          $"{r.Status},{r.VersionsCopied},{Csv(r.ErrorMessage)}," +
-                          $"{r.PermissionStatus?.ToString() ?? ""},{Csv(r.PermissionDetails)}");
-        }
-        System.IO.File.WriteAllText(dlg.FileName, sb.ToString());
+        CsvReportExport.Save(dlg.FileName, Loc.T("VM_CsvHeader"),
+            CopyResults.Where(r => !r.IsPermissionResult).Select(r => CsvReportExport.Row(
+                r.FileName, r.SourcePath, r.TargetPath, r.Status, r.VersionsCopied, r.ErrorMessage, r.PermissionStatus, r.PermissionDetails)));
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
     }
 
@@ -307,7 +300,9 @@ public partial class MainViewModel : ObservableObject
         var finished = new List<SavedReportItem>();
         foreach (var r in CopyResults)
         {
-            if (r.Status == CopyStatus.Copying) continue;
+            // Final states only: Pending rows have not started (most of a large run for a long time), and once
+            // journaled a row is never written again, so a Pending entry would stay Pending in a recovered run.
+            if (r.Status is CopyStatus.Copying or CopyStatus.Pending) continue;
             if (_journaledResults.Add(r)) finished.Add(ToSavedItem(r));
         }
         if (finished.Count > 0) _journal.Append(finished);

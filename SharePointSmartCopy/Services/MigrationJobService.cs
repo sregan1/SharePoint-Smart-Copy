@@ -278,6 +278,10 @@ public class MigrationJobService(SharePointService spService)
             foreach (var driveGroup in driveGroups)
             {
                 var groupTasks = driveGroup.ToList();
+                // One library failing (list-ID lookup, folder creation, ...) must not mark every OTHER library's files
+                // Failed without ever trying them: contain the failure to this group and carry on with the next.
+                try
+                {
                 // Full pre-skip task list: folder metadata (dates + Author/Editor) must cover EVERY
                 // folder in the selection, not just folders of files that still need copying —
                 // otherwise an up-to-date re-run can never repair folder metadata (the exact
@@ -1064,7 +1068,7 @@ public class MigrationJobService(SharePointService spService)
                             if (conflictSet.Contains(result))
                             {
                                 result.Status       = CopyStatus.Skipped;
-                                result.ErrorMessage = "Already exists";
+                                result.ErrorMessage = Loc.T("VM_AlreadyExists");
                             }
                             else if (result.Status == CopyStatus.Failed)
                             {
@@ -1274,6 +1278,16 @@ public class MigrationJobService(SharePointService spService)
                 // both are patched via REST after the imports complete.
                 await CorrectFolderMetadataAsync();
                 await CorrectProgIdAsync();
+                }
+                catch (Exception groupEx) when (groupEx is not OperationCanceledException)
+                {
+                    activityLog?.Report(Loc.T("Svc_Mig_LibraryGroupFailed", groupEx.Message));
+                    foreach (var (_, result) in groupTasks.Where(t => t.result.Status == CopyStatus.Copying))
+                    {
+                        result.Status       = CopyStatus.Failed;
+                        result.ErrorMessage = groupEx.Message;
+                    }
+                }
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -1302,6 +1316,12 @@ public class MigrationJobService(SharePointService spService)
             try { await heartbeatTask; } catch (OperationCanceledException) { }
         }
     }
+
+    // A 4xx the server will give again (access denied, not found, gone, bad request) — retrying only burns time. 401 (an
+    // expired token), 408 and 429 can clear and stay retriable.
+    private static bool IsPermanentHttpError(System.Net.Http.HttpRequestException ex) =>
+        ex.StatusCode is { } sc && (int)sc is >= 400 and < 500 && sc is not (System.Net.HttpStatusCode.Unauthorized
+            or System.Net.HttpStatusCode.RequestTimeout or System.Net.HttpStatusCode.TooManyRequests);
 
     private async Task RunHeartbeatAsync(IProgress<string> activityLog, CancellationToken ct)
     {
@@ -1401,6 +1421,10 @@ public class MigrationJobService(SharePointService spService)
         IReadOnlyDictionary<string, FileMetadata>? folderMetadata = null)
     {
         var pfx = string.IsNullOrEmpty(batchLabel) ? "" : $"[{batchLabel}] ";
+        // Files whose existing target was permanently deleted for an overwrite. If preparation fails after that
+        // point (manifest build/upload), these are the files that now exist on neither side, and the failure
+        // message must say so instead of a bare network error.
+        var removedTargets = new System.Collections.Concurrent.ConcurrentBag<CopyResult>();
         try
         {
             // Step 2: pre-flight — determine what needs copying (and delete stale targets for
@@ -1516,7 +1540,7 @@ public class MigrationJobService(SharePointService spService)
                             // Zombie blob (AllDocs row without SPListItem) — delete via deleteObject,
                             // which bypasses the SPListItem requirement that recycleObject needs.
                             // Guard: if the folder is empty, no prior SPMI import ran here so no zombies exist.
-                            deleteOk = await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl);
+                            deleteOk = await spService.PermanentlyDeleteFileAsync(targetSiteUrl, fileServerRelUrl, ct: cancellationToken);
                         }
                         if (!deleteOk) failDeleteConflict();
                         else existingFileIds[fileServerRelUrl] = null;
@@ -2134,15 +2158,19 @@ public class MigrationJobService(SharePointService spService)
             // the delete can still drop a file from the manifest if it fails. Only files that are
             // still on track to import lose their target; a file that already Failed (download,
             // size limit, packaging, upload) or was Cancelled keeps its existing target untouched.
-            foreach (var (result, url) in deferredDeletes)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                if (result.Status != CopyStatus.Copying) continue;
-                if (await spService.PermanentlyDeleteFileAsync(targetSiteUrl, url)) continue;
-                result.Status       = CopyStatus.Failed;
-                result.ErrorMessage = Loc.T("Svc_Mig_CouldNotRemoveThe2");
-                if (entryByResult.TryGetValue(result, out var failedEntry)) failedEntry.Failed = true;
-            }
+            // Bounded parallelism: each delete is several REST round-trips, and up to 250 per batch ran one after another,
+            // which dominated the prep time of an Overwrite re-run. Four at a time stays well inside SharePoint's throttling.
+            await Parallel.ForEachAsync(deferredDeletes.ToList(),
+                new ParallelOptions { MaxDegreeOfParallelism = 4, CancellationToken = cancellationToken },
+                async (item, token) =>
+                {
+                    var (result, url) = item;
+                    if (result.Status != CopyStatus.Copying) return;
+                    if (await spService.PermanentlyDeleteFileAsync(targetSiteUrl, url, ct: token)) { removedTargets.Add(result); return; }
+                    result.Status       = CopyStatus.Failed;
+                    result.ErrorMessage = Loc.T("Svc_Mig_CouldNotRemoveThe2");
+                    if (entryByResult.TryGetValue(result, out var failedEntry)) failedEntry.Failed = true;
+                });
 
             // IfNewer behaves like overwrite from SPMI's perspective: stale targets are deleted just
             // above, so surviving imports must be allowed to replace.
@@ -2153,7 +2181,7 @@ public class MigrationJobService(SharePointService spService)
                 $" rootFolderGuid={rootFolderGuid ?? "(null)"} overwrite={spmiOverwrite}");
 
             activityLog?.Report(Loc.T("Svc_Mig_BuildingAndUploadingSPMI", pfx));
-            var metadataClient = new BlobContainerClient(new Uri(metadataUri));
+            var metadataClient = new BlobContainerClient(new Uri(metadataUri), blobOptions);   // same tuned retries as the data container
             var manifests = builder.BuildManifestXml(
                 siteId, webId, listId,
                 targetSiteUrl, webRelUrl, libraryTitle, libraryServerRelUrl,
@@ -2188,10 +2216,11 @@ public class MigrationJobService(SharePointService spService)
         }
         catch (Exception ex)
         {
+            var removed = removedTargets.ToHashSet();
             foreach (var (_, result) in fileTasks.Where(t => t.result.Status == CopyStatus.Copying))
             {
                 result.Status       = CopyStatus.Failed;
-                result.ErrorMessage = ex.Message;
+                result.ErrorMessage = removed.Contains(result) ? Loc.T("Svc_Mig_TargetRemovedPrepFailed", ex.Message) : ex.Message;
             }
         }
         // Prep failed (or was cancelled): return a sentinel with nothing to submit so the pipeline
@@ -2228,7 +2257,7 @@ public class MigrationJobService(SharePointService spService)
 
             // Step 6: submit the migration job
             var jobId = await spService.CreateMigrationJobEncryptedAsync(
-                targetSiteUrl, webId, batch.DataUri, batch.MetadataUri, batch.EncryptionKey);
+                targetSiteUrl, webId, batch.DataUri, batch.MetadataUri, batch.EncryptionKey, cancellationToken);
             System.Diagnostics.Debug.WriteLine($"[Migration] submitted job: {jobId}");
             activityLog?.Report(Loc.T("Svc_Mig_SubmittedToSharePointWaiting", pfx));
 
@@ -2583,6 +2612,11 @@ public class MigrationJobService(SharePointService spService)
                         : new MemoryStream();
                 try
                 {
+                // Separate budgets: a throttle is expected to clear (patient), a connection reset gets a few short retries, and a
+                // permanent HTTP error (403/404/410...) is not retried at all. They used to share one counter, so three
+                // throttle waits left a single reset as fatal, and a 404 was retried three times for nothing.
+                int throttleWaits = 0, resetRetries = 0;
+                string? etag = null;   // identifies the version of the file the buffered bytes came from
                 for (int attempt = 0; ; attempt++)
                 {
                     // RESUME, don't restart: a reset partway through a multi-GB scan used to discard
@@ -2596,7 +2630,20 @@ public class MigrationJobService(SharePointService spService)
                     try
                     {
                         var content = await spService.DownloadContentRangeAsync(
-                            job.SourceDriveId, job.SourceItemId, isLast ? null : version.Id, resumeFrom, ct);
+                            job.SourceDriveId, job.SourceItemId, isLast ? null : version.Id, resumeFrom, ct,
+                            ifMatchETag: resumeFrom > 0 ? etag : null);
+
+                        // The file changed between the reset and the resume (a different ETag): the buffered bytes belong to the
+                        // old content, so start over instead of splicing two versions together.
+                        if (resumeFrom > 0 && etag is not null && content.ETag is not null && content.ETag != etag)
+                        {
+                            await content.Content.DisposeAsync();
+                            ms.SetLength(0);
+                            etag = null;
+                            activityLog?.Report(Loc.T("Svc_Mig_SourceChangedRestart", pfxLabel, job.SourceName));
+                            continue;
+                        }
+                        etag ??= content.ETag;
 
                         // Some intermediary in the redirect chain can ignore the Range header and
                         // return the WHOLE file from byte 0 (200, not 206) — appending that to bytes
@@ -2621,11 +2668,19 @@ public class MigrationJobService(SharePointService spService)
                     // and retry MORE patiently than a reset — a throttle is expected to clear, so failing
                     // the file after 3 short waits (the reset budget below) would abandon it needlessly
                     // under sustained throttling. Resumes from bytes already buffered.
-                    catch (SharePointService.DownloadThrottledException tex) when (attempt < 6)
+                    // 412 on the resume: the If-Match above says the source changed since the first bytes — start over.
+                    catch (System.Net.Http.HttpRequestException pre) when (pre.StatusCode == System.Net.HttpStatusCode.PreconditionFailed && ms.Length > 0)
                     {
+                        ms.SetLength(0);
+                        etag = null;
+                        activityLog?.Report(Loc.T("Svc_Mig_SourceChangedRestart", pfxLabel, job.SourceName));
+                    }
+                    catch (SharePointService.DownloadThrottledException tex) when (throttleWaits < 6)
+                    {
+                        throttleWaits++;
                         var wait = tex.RetryAfter > TimeSpan.Zero ? tex.RetryAfter : TimeSpan.FromSeconds(10);
                         var resumeNote = ms.Length > 0 ? Loc.T("Svc_Mig_ResumingFromMB", ms.Length / (1024.0 * 1024)) : "";
-                        activityLog?.Report(Loc.T("Svc_Mig_DownloadThrottledWaitingS", pfxLabel, job.SourceName, wait.TotalSeconds, attempt + 1, resumeNote));
+                        activityLog?.Report(Loc.T("Svc_Mig_DownloadThrottledWaitingS", pfxLabel, job.SourceName, wait.TotalSeconds, throttleWaits, resumeNote));
                         await Task.Delay(wait, ct);
                     }
                     // A MemoryStream past int.MaxValue is a hard size limit, not a transient network
@@ -2640,11 +2695,14 @@ public class MigrationJobService(SharePointService spService)
                     // stalled connection surfaces as OperationCanceledException from the client's own
                     // 30-minute request timeout (ruled out as real cancellation above) and deserves the
                     // same retry, not silent treatment as a cancel that then stalls the whole batch.
-                    catch (Exception ex) when (attempt < 3 && (ex is System.IO.IOException || ex is System.Net.Http.HttpRequestException || ex is OperationCanceledException))
+                    catch (Exception ex) when (resetRetries < 3 && (ex is System.IO.IOException
+                                                              || (ex is System.Net.Http.HttpRequestException hre && !IsPermanentHttpError(hre))
+                                                              || ex is OperationCanceledException))
                     {
-                        int waitsecs = (attempt + 1) * 5;
+                        resetRetries++;
+                        int waitsecs = resetRetries * 5;
                         var resumeNote = ms.Length > 0 ? Loc.T("Svc_Mig_ResumingFromMB", ms.Length / (1024.0 * 1024)) : "";
-                        activityLog?.Report(Loc.T("Svc_Mig_ConnectionRetryingInS", pfxLabel, job.SourceName, (ex is OperationCanceledException ? Loc.T("Svc_Mig_TimedOut") : Loc.T("Svc_Mig_Reset")), waitsecs, attempt + 1, resumeNote));
+                        activityLog?.Report(Loc.T("Svc_Mig_ConnectionRetryingInS", pfxLabel, job.SourceName, (ex is OperationCanceledException ? Loc.T("Svc_Mig_TimedOut") : Loc.T("Svc_Mig_Reset")), waitsecs, resetRetries, resumeNote));
                         await Task.Delay(TimeSpan.FromSeconds(waitsecs), ct);
                     }
                 }
@@ -2689,7 +2747,7 @@ public class MigrationJobService(SharePointService spService)
         for (int attempt = 0; attempt < maxAttempts; attempt++)
         {
             ct.ThrowIfCancellationRequested();
-            var guid = await spService.GetLibraryRootFolderUniqueIdAsync(siteUrl, folderServerRelativeUrl);
+            var guid = await spService.GetLibraryRootFolderUniqueIdAsync(siteUrl, folderServerRelativeUrl, ct);
             if (!string.IsNullOrEmpty(guid)) return guid;
             if (attempt < maxAttempts - 1)
                 await Task.Delay(TimeSpan.FromSeconds(Math.Min(30, 5 * (attempt + 1))), ct);

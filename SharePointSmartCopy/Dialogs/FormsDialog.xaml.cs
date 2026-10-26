@@ -306,7 +306,7 @@ public partial class FormsDialog : Window
     {
         var dlg = new SaveFileDialog
         {
-            Filter = "Excel (*.xlsx)|*.xlsx",
+            Filter = Loc.T("Dlg_FilterXlsx"),
             FileName = $"Forms-copy-results-{DateTime.Now:yyyyMMdd-HHmm}.xlsx",
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
         };
@@ -314,8 +314,8 @@ public partial class FormsDialog : Window
         try
         {
             using var wb = new XLWorkbook();
-            var ws = wb.AddWorksheet("Results");
-            string[] headers = ["Source form", "Source form ID", "Copy title", "Copy form ID", "Status", "Questions copied", "Questions in source", "Warnings", "Notes", "Error"];
+            var ws = wb.AddWorksheet(Loc.T("Forms_Exp_Sheet"));
+            string[] headers = Enumerable.Range(1, 10).Select(i => Loc.T("Forms_Exp_H" + i)).ToArray();
             for (var c = 0; c < headers.Length; c++) ws.Cell(1, c + 1).Value = headers[c];
             var r = 2;
             foreach (var row in _vm.Results)
@@ -405,7 +405,7 @@ public partial class FormsDialog : Window
     {
         var dlg = new SaveFileDialog
         {
-            Filter = "Excel (*.xlsx)|*.xlsx",
+            Filter = Loc.T("Dlg_FilterXlsx"),
             FileName = $"Forms-responses-{DateTime.Now:yyyyMMdd-HHmm}.xlsx",
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
         };
@@ -632,7 +632,7 @@ public partial class FormsDialogViewModel : ObservableObject
     public bool ShowCancel => CurrentStep == 2 || IsBusy;
     public bool ShowCopyMore => CurrentStep == 3;
     public bool ShowExportResponses => CurrentStep == 0;
-    public string NextButtonText => CurrentStep == 1 ? Loc.T("Forms_CopyNForms", SelectedCount) : Loc.T("Forms_Next");
+    public string NextButtonText => CurrentStep == 1 ? Loc.T("Forms_CopyNForms", SelectedCount) : Loc.T("Ui_Next");
     public bool CanNext => !IsBusy && CurrentStep switch
     {
         0 => SelectedCount > 0,

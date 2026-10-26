@@ -129,6 +129,21 @@ public partial class MainWindow : Window
     private void SkippedTile_Click(object sender, MouseButtonEventArgs e)
         => VM.FileResultFilter = ResultFilterKind.Skipped;
 
+    // The summary tiles are Borders, so they need their own keyboard activation (Tab reaches them via Focusable).
+    private void FailedTile_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key is not (Key.Enter or Key.Space)) return;
+        VM.FileResultFilter = ResultFilterKind.Failed;
+        e.Handled = true;
+    }
+
+    private void SkippedTile_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key is not (Key.Enter or Key.Space)) return;
+        VM.FileResultFilter = ResultFilterKind.Skipped;
+        e.Handled = true;
+    }
+
     // Drag handle under the live activity feed: make it taller or shorter.
     private void ActivityResize_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
     {
@@ -324,6 +339,22 @@ public partial class MainWindow : Window
     {
         if ((sender as CheckBox)?.DataContext is not SharePointNode node)
             return;
+        CycleSourceCheck(node);
+        e.Handled = true;
+    }
+
+    // Space does the same as the mouse: WPF's own three-state cycle would otherwise leave a file or item in the
+    // indeterminate state (and skip the items-only step on lists and folders).
+    private void SourceCheckBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Space || (sender as CheckBox)?.DataContext is not SharePointNode node)
+            return;
+        CycleSourceCheck(node);
+        e.Handled = true;
+    }
+
+    private void CycleSourceCheck(SharePointNode node)
+    {
         bool isFolder = node.Type is NodeType.Folder or NodeType.Library;
         node.IsChecked = (node.IsCustomList || isFolder)
             ? node.IsChecked switch
@@ -333,7 +364,6 @@ public partial class MainWindow : Window
                   _     => false   // indeterminate → all deselected
               }
             : node.IsChecked != true;
-        e.Handled = true;
         VM.NotifySelectionChanged();
     }
 

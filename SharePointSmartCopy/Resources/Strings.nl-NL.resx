@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Geslaagd ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Mislukt ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Overgeslagen ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Up-to-date</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Kan niet bepalen of de bron eigen machtigingen heeft (beperking of toegangsfout) – machtigingen zijn niet gekopieerd voor dit item. Voer opnieuw uit om het nogmaals te proberen.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Het bestaande doelbestand is verwijderd voor het overschrijven, maar de nieuwe kopie kon niet worden geüpload ({0}). Het bestand ontbreekt momenteel in het doel – voer de kopie opnieuw uit om het te herstellen.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Een doelbibliotheek is mislukt ({0}). De bestanden zijn gemarkeerd als mislukt; de andere bibliotheken gaan door.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: het bronbestand is gewijzigd tijdens het downloaden – de download wordt opnieuw gestart.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint heeft {0} minuten lang geen voortgang gemeld voor deze import, dus is deze opgegeven. De bestanden zijn gemarkeerd als mislukt; voer de kopie opnieuw uit om ze opnieuw te proberen.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Eén tenant</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Meerdere tenants</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Kopieer tussen twee verschillende Microsoft 365-tenants. U meldt zich afzonderlijk aan bij de bron en bij het doel. Kies de app-registratie van het doel in Instellingen.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Doelregistratie:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Modus met meerdere tenants: de app-registratie waarmee u zich aanmeldt bij de doeltenant. &quot;Hetzelfde als bron&quot; gebruikt de bronregistratie opnieuw, die dan een app voor meerdere tenants moet zijn.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Hervatten / opnieuw uitvoeren</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Maakt opnieuw verbinding en voert deze selectie opnieuw uit met Kopiëren indien nieuwer, zodat bestanden die al zijn gekopieerd worden overgeslagen en alleen wat ontbreekt of gewijzigd is wordt overgedragen.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Voor deze uitvoering is geen opgeslagen selectie om te hervatten (alleen uitvoeringen met bestandsselectie leggen er een vast).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>Er wordt al een kopie uitgevoerd. Voltooi of annuleer die eerst.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Hervatten mislukt: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} onderbroken uitvoering(en) hersteld. Zie Geschiedenis.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Hervatten: {0} item(s) hersteld uit de eerdere uitvoering, met Kopiëren indien nieuwer geselecteerd. Controleer de opties en klik op Volgende. (Aangepaste kolomtoewijzingen worden niet hersteld.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>ONDERBROKEN – de app is afgesloten voordat deze uitvoering klaar was. Van de items die klaar waren: {0} geslaagd, {1} mislukt, {2} overgeslagen, {3} geannuleerd  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Diagnostische gegevens exporteren…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Slaat een zip op met recente logboeken, systeeminformatie en uw instellingen zonder organisatiegegevens – om bij te voegen aan een bugrapport. Bevat geen kopieerrapporten of bestandsnamen.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Diagnostische gegevens opgeslagen in {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Diagnostische gegevens opslaan mislukt: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>De inhoud is identiek (alleen door SharePoint beheerde onderdelen verschillen), maar de wijzigingsdatum is niet behouden.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Machtigingen niet gekopieerd: de SharePoint-ID&apos;s van het item konden niet worden omgezet.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Machtigingen niet gekopieerd: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Map &quot;{0}&quot;: {1} niet toegepast – {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>Meer mappen hadden problemen zoals hierboven; latere worden niet afzonderlijk vermeld.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>machtigingen</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>datums</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>auteur / editor</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} behouden – doel is al up-to-date)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>WAARSCHUWING: het lezen van metagegevens uit de bron ({0}) is mislukt: {1}. Items hieruit kunnen worden gekopieerd ZONDER hun aangepaste kolomwaarden of unieke machtigingen. Voer opnieuw uit zodra het probleem is opgelost (Overschrijven of Indien nieuwer past ze opnieuw toe).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>WAARSCHUWING: de bronlijst van een bibliotheek is niet gevonden, dus de machtigingen worden NIET gekopieerd.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>De SharePoint-host &apos;{0}&apos; is niet gekoppeld aan een verbonden tenant. Verbind de bron- en doelsites opnieuw en probeer het nogmaals.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Kopie tussen tenants: waarden van kolommen met beheerde metagegevens (taxonomie) worden niet gekopieerd, en OneNote-notitieblokken / documentensets kunnen nog niet tussen tenants worden gekopieerd. Identiteiten worden toegewezen met uw instellingen voor identiteitstoewijzing; iedereen die in het doel niet kan worden gevonden, wordt overgeslagen.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Identiteitstoewijzing</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Identiteitstoewijzing…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Vermeld elke persoon (of groep) in de brontenant en wie ze zijn in de doeltenant – het zijn verschillende accounts. Auteurs, editors, personenkolommen en machtigingen worden met deze tabel geschreven. Iedereen die niet is vermeld, wordt gekoppeld via de domeinwissel als u er een hebt ingesteld; iedereen die nog steeds niet in het doel wordt gevonden, wordt overgeslagen en gerapporteerd.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>E-maildomein van bron</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>E-maildomein van doel</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Overschrijvingen – één paar &quot;bron,doel&quot; per regel (gebruikers of groepsnamen; # start een opmerking)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Hetzelfde als bron</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Bron en doel bevinden zich in dezelfde tenant. Schakel over naar de modus met één tenant voor kopieën binnen dezelfde tenant.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Systeemeigen mapkopie (OneNote-notitieblokken, documentensets) wordt nog niet ondersteund tussen tenants.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Station &apos;{0}&apos; is niet gekoppeld aan een verbonden tenant. Verbind de bron- en doelsites opnieuw en probeer het nogmaals.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Er is nog geen app-registratie ingesteld. Open Instellingen en voeg uw Azure-app-registratie toe (de toepassings-/client-ID) voordat u verbinding maakt.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Aanmelden is geannuleerd. Klik op Verbinden om het opnieuw te proberen.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Een beheerder heeft deze app nog niet goedgekeurd in deze tenant. Vraag een globale beheerder om beheerderstoestemming te verlenen voor de app-registratie (zie Installatie in de gebruikershandleiding).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>De app-registratie is niet gevonden in deze tenant. Controleer de client-ID en tenant-ID in Instellingen.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Die tenant is niet gevonden. Controleer de tenant-ID in Instellingen (gebruik uw domein, de tenant-GUID of &apos;common&apos;).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>De app-registratie mist het omleidingsadres dat deze app gebruikt. Voeg in Azure de omleidings-URI http://localhost toe onder &apos;Mobiele en bureaubladtoepassingen&apos;.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>De app-registratie is niet ingesteld voor aanmelden op het bureaublad. Schakel in Azure &apos;Openbare clientstromen toestaan&apos; in voor de registratie.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Dit account mag die app-registratie niet gebruiken. Meld u aan met een account van de tenant die eigenaar is, of kies een andere registratie in Instellingen.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint heeft de aanmelding geweigerd. Klik op Verbinden om u opnieuw aan te melden.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>U hebt geen toegang tot deze site. Controleer of uw account de site in een browser kan openen en of de app de machtiging Sites.ReadWrite.All heeft gekregen.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Die site is niet gevonden. Controleer het adres – het hoort er zo uit te zien: https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Details: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Maak verbinding met de bronsite om door te gaan.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Selecteer ten minste één item (vink een selectievakje aan) om door te gaan.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Maak verbinding met de doelsite om door te gaan.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Kies een doelmap om door te gaan.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Kies een doellijst om door te gaan.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Voer een naam in voor de nieuwe lijst om door te gaan.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Er is niets geselecteerd om te kopiëren.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Wachten tot het kopiëren is voltooid…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Bron: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Doel: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Uw app-registratie is gewijzigd, dus u bent van beide sites afgemeld. Maak opnieuw verbinding om door te gaan.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Kopiëren stoppen?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>Er wordt een kopie uitgevoerd. Als u nu stopt, worden de resterende items niet gekopieerd (u kunt later hervatten vanuit Geschiedenis). Kopiëren stoppen?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>Er wordt nog een kopie uitgevoerd. Als u de app sluit, wordt die gestopt en worden de resterende items niet gekopieerd (u kunt later hervatten vanuit Geschiedenis). Toch sluiten?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Verbindingsmodus wisselen?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Als u wisselt tussen één tenant en meerdere tenants, wordt de verbinding met beide sites verbroken en moet u opnieuw verbinden. Toch wisselen?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Verbinding:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>App-registratie van bron</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>App-registratie van doel</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Meldt zich aan bij de doeltenant met:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Wijzigen</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Instellingen openen</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• U moet leestoegang hebben tot de bronsitecollectie.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Stel uw Microsoft Entra ID-app-registratie in via Instellingen voordat u verbinding maakt.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Bestandsopties</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Bibliotheek- &amp; bestandsopties</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Bestanden kopiëren…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Bibliotheken kopiëren…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Volgende</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Kopiëren starten</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Rapport weergeven</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Voer de naam in van de nieuwe lijst die moet worden gemaakt</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>De doellijst is gekozen in de stap Doel. Ga terug om die te wijzigen.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Stel eerst een app-registratie in</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy meldt zich aan met een app-registratie die u maakt in uw eigen Microsoft Entra ID-tenant (Azure). Open Instellingen, voeg de toepassings-ID (client-ID) van uw registratie toe en kom dan hier terug om verbinding te maken.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Meer informatie</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Sleep om de activiteitenfeed hoger of lager te maken</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Klik om alleen de mislukte items te tonen</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Klik om alleen de overgeslagen items te tonen</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Kolomtoewijzing</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Bron &amp; doel vergelijken</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Open het hulpmiddel Vergelijken om deze kopie met de bron te controleren.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Geschiedenis openen</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>De geselecteerde registratie wordt gebruikt voor de bron – en voor beide zijden in de modus met één tenant.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Nieuwe registratie</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Voeg ten minste één app-registratie toe.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validatie</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Client-ID is vereist voor de geselecteerde registratie.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Afgemeld. U wordt gevraagd u aan te melden bij de volgende verbinding.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Afgemeld</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Afmelden mislukt: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Afmelden</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} toewijzing(en) gevonden.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} regel(s) kunnen niet worden gelezen (regel {1}). Elke regel moet er zo uitzien: bron,doel.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Het bron- en doeldomein zijn hetzelfde, dus de domeinwissel verandert niets.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>CSV importeren…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Sommige overschrijvingsregels kunnen niet worden gelezen (regel {0}). Elke regel moet &quot;bron,doel&quot; zijn. Herstel of verwijder ze – of begin een regel met # om er een opmerking van te maken.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>De identiteitstoewijzing kon niet worden opgeslagen: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Dat bestand kon niet worden gelezen: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Tussen tenants: {0} auteurs-/editoraccount(s) in deze bibliotheek zijn niet gevonden in de doeltenant en blijven het kopieeraccount. Gebruik na de uitvoering &quot;Deze gebruikers toewijzen&quot; in het rapport om ze te herstellen.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Voer de brongebruiker of -groep in.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Voer in wie dit is in de doeltenant – of verwijder de rij.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Bron en doel zijn hetzelfde.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Deze bron komt meer dan eens voor.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Bron (deze tenant)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Doel (andere tenant)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Type</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>In doel?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Nodig voor</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Gebruiker</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Groep</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Niet gecontroleerd</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Controleren…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Gevonden</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Niet gevonden</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Toevoegen</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Verwijderen</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Doelen invullen via domeinwissel</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>Vult voor rijen zonder doel het adres in dat de domeinwissel zou opleveren.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Controleren in doel</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Zoekt elke doelgebruiker op in de doeltenant. Hierdoor worden ze ook toegevoegd aan de gebruikerslijst van de doelsite, wat het kopiëren sowieso doet voordat het ze als auteur kan instellen of toegang kan verlenen.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Verbind eerst met een doel met meerdere tenants: voer de URL van de doelsite in bij de stap Doel en open dit dialoogvenster daarna opnieuw.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>CSV exporteren…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Deze personen waren nodig voor de kopie maar zijn niet gevonden in de doeltenant. Voer voor elk in wie ze zijn in het doel – of verwijder de rij om ze niet toe te wijzen.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} toewijzing(en).</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} rij(en) vereisen aandacht.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Gecontroleerd: {0} gevonden, {1} niet gevonden{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} kon(den) niet worden gecontroleerd</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>{0} van {1} controleren…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Niets te controleren: geen enkele rij heeft een e-mailadres voor het doel.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Sommige rijen vereisen aandacht (gemarkeerd). Herstel of verwijder ze en sla daarna op.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Toewijzing opgeslagen. Om deze toe te passen op bestanden die al zijn gekopieerd, voert u opnieuw uit met Overschrijven – Kopiëren indien nieuwer slaat bestanden over die up-to-date zijn, dus hun auteurs worden niet gewijzigd. Machtigingen worden hoe dan ook vernieuwd.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>{0} persoon/personen uit de bron zijn niet gevonden in de doeltenant en zijn daarom weggelaten: geen toegang verleend, niet ingesteld als auteur of editor, of verwijderd uit personenkolommen.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Deze gebruikers toewijzen…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Onopgeloste gebruikers toewijzen…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Opent de identiteitstoewijzing met de personen die deze uitvoering niet in het doel kon vinden.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Deze uitvoering had geen onopgeloste gebruikers.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Formulieren kopiëren</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Kopieer Microsoft Forms naar het doelaccount, met behoud van alle vragen, vertakkingen, instellingen en thema. Antwoorden kunnen worden geëxporteerd naar Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Dit gebruikt de Microsoft Forms-web-API, die Microsoft niet documenteert of ondersteunt. Het werkt nu, maar kan zonder voorafgaande kennisgeving veranderen. Probeer eerst enkele formulieren.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Mijn formulieren laden</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Bronaccount: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Doelaccount: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Doel: hetzelfde account (één tenant). Kopieën worden naast de originelen gemaakt.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(u wordt gevraagd u aan te melden)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Formulier-ID-toewijzing (gebruikt door het hulpmiddel Flows): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Formulieren laden…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>{0} formulieren geladen.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Selecteer eerst ten minste één formulier.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Formulieren kopiëren…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Kopiëren…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Gekopieerd</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Mislukt (zie logboek)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>&apos;{0}&apos; kopiëren</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Kopiëren voltooid: {0} gekopieerd, {1} mislukt.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Kies een map voor de antwoordexports</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Antwoorden exporteren…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>&apos;{0}&apos; geëxporteerd: {1} antwoorden naar {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Antwoorden voor {0} formulieren geëxporteerd naar {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Het formulier is gekopieerd, maar de ID kon niet worden opgeslagen voor het hulpmiddel Flows: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>&apos;{0}&apos; kon niet worden geëxporteerd: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Antwoorden voor {0} formulieren geëxporteerd naar {2}; {1} mislukt (zie het logboek).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Geannuleerd.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Fout: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Tip: de app-registratie heeft de gedelegeerde Microsoft Forms-machtiging nodig, met toestemming. Voeg die toe onder API-machtigingen (zie de gebruikershandleiding) en probeer het opnieuw.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Tip: Microsoft Forms heeft het verzoek geweigerd. Controleer of dit account forms.office.com kan openen en of de app-registratie de Microsoft Forms-machtiging heeft.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{0} van {1} geselecteerd</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Titel</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Type</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Laatst gewijzigd</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Resultaat</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Toevoegen aan gekopieerde titels:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (kopie)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Geselecteerde formulieren kopiëren</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Antwoorden exporteren…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Controleer een kopie ten opzichte van de bron</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Andere hulpmiddelen</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Formulieren</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Kopieer Microsoft Forms en exporteer de antwoorden</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Hulpmiddel Formulieren</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Flows herschrijven voor het doel</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Werk geëxporteerde Power Automate-pakketten (.zip) bij zodat ze naar het doel verwijzen: sites, lijsten, kolommen, gekopieerde formulieren en e-maildomeinen. Uw oorspronkelijke pakketten worden nooit gewijzigd.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Geëxporteerde flowpakketten kiezen</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Voeg de flowpakketten (.zip) toe die u hebt geëxporteerd uit Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Bestanden toevoegen…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Map toevoegen…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Scannen</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Flowpakketten (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Voeg eerst ten minste één flowpakket toe.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Pakketten scannen…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>{0} overgeslagen: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} flows gevonden. Ze verwijzen naar {1} sites, {2} lijsten en {3} formulieren.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Scan voltooid.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Sites toewijzen</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Waarheen de SharePoint-site van elke flow verhuist. In de modus met meerdere tenants meldt u zich aan bij het doel en wordt het adres van de nieuwe tenant voor u ingevuld; wijzig elke rij waarvan de site een andere naam heeft. In de modus met één tenant typt u voor elke rij de doelsite.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Site in de flows (wordt vervangen)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Doelsite</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Adres van nieuwe tenant:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Lege doelen invullen, paden behouden</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Voer een volledige URL in, zoals https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Lege doelen ingevuld met die host en het pad van elke site.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Lijsten en kolommen koppelen</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Eén kaart per lijst die de flows gebruiken, ongeacht hoeveel flows ervan gebruikmaken. Elke kaart toont de naam en kolommen van de lijst, de lijst waaraan deze in het doel is gekoppeld (standaard die met dezelfde naam; kies een andere in de vervolgkeuzelijst als de naam verschilt) en hoe elke kolom is toegewezen. Controleer de kaarten die met een waarschuwing zijn gemarkeerd.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Lijsten en kolommen koppelen</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Lijst</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>Bronlijst-ID</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>Doellijst-ID</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Bronkolom</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Doelkolom</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Scan eerst de pakketten.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Voer eerst ten minste één doelsite in.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Lijsten en kolommen koppelen…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(niet gevonden)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Een lijst met dezelfde naam gevonden in het doel</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>De site waarop deze lijst staat, heeft geen doelsite (stap Sites)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Kan deze lijst niet lezen op de bronsite: deze bestaat mogelijk niet, dit account heeft mogelijk geen toegang, of de site staat in een andere tenant dan uw bronverbinding</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Geen lijst met deze naam op de doelsite: kies er een in de vervolgkeuzelijst</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Dezelfde naam</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Hernoemd in doel</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Geen overeenkomst: kies een kolom</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} van {1} lijsten hebben een doellijst. {2} kolom(men) te controleren.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Formulieren en e-mail</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Formulieren die met het hulpmiddel Formulieren zijn gekopieerd, worden automatisch ingevuld. Plak voor een formulier dat u zelf hebt gemaakt de ID of de koppeling naar de bewerkingspagina.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>Bronformulier-ID</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>Formulier-ID (ingevuld via de vervolgkeuzelijst, of plak er een)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>E-maildomein verplaatsen:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. De bijgewerkte pakketten schrijven</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Kies een uitvoermap (niet de map met de originelen). De bijgewerkte pakketten en een rapport met elke wijziging worden daar opgeslagen.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Bijgewerkte pakketten schrijven</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Toewijzing opslaan…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Uitvoermap openen</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Verbindingen kunnen niet tussen tenants worden verplaatst. Maak na het importeren van een pakket elke verbinding opnieuw in Power Automate en selecteer deze opnieuw.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Kies eerst een uitvoermap.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Bijgewerkte pakketten schrijven…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>De bijgewerkte kopie van {0} opslaan (pakket {1} van {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Power Automate-pakket (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>U hebt die bestandsnaam al gekozen voor een ander pakket. Kies een andere naam.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Een pakket zou over een origineel heen worden opgeslagen (dezelfde map, dezelfde naam). Kies een andere uitvoermap of wijzig de naam in &quot;Opslaan als&quot;, zodat de originelen onaangetast blijven.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Rapport flowherschrijving
+
+Oorspronkelijke pakketten zijn onaangetast. Verbindingen worden NIET gemigreerd; maak ze opnieuw en selecteer ze opnieuw bij het importeren.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Rapport geschreven naar {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} pakketten geschreven, {1} vervangingen. {2} waarden verwijzen nog naar de bron (zie het rapport).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Toewijzing opgeslagen in {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Flows</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Werk geëxporteerde Power Automate-flows bij voor het doel</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Hulpmiddel Flows</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Wat deze flows gebruiken</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>De services die in de gescande flows zijn gevonden en wat dit hulpmiddel met elk daarvan doet.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Service</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Flows</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Stappen</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Gevonden</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Wat dit hulpmiddel doet</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Herschrijft wat het vindt</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>ID&apos;s gerapporteerd; controleer na het importeren</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Alleen verbinding (opnieuw maken)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Kolomtoewijzing</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>Een kolom verschijnt hier wanneer een flow ernaar schrijft, erop filtert of sorteert, of deze in een expressie leest, op een lijst die is gekoppeld. De doelkolom wordt gekozen via automatische koppeling (dezelfde naam, dan dezelfde weergavenaam, dan een vergelijkbare naam). U hoeft alleen actie te ondernemen voor rijen die zijn gemarkeerd met &quot;Vergelijkbare naam&quot; of &quot;Geen overeenkomst&quot;; wijzig elke rij via de vervolgkeuzelijst, of kies &quot;(ongewijzigd laten)&quot; om de bronnaam te behouden. Ingebouwde kolommen zoals Title worden niet getoond omdat ze overal bestaan.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(ongewijzigd laten)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Vergelijkbare naam: controleer</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(nog niet gekoppeld)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Doellijst door u gekozen</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Typ of plak een doellijst-ID, of de koppeling naar de instellingenpagina van de lijst, in de kolom Doellijst-ID om zelf een lijst te kiezen (bijvoorbeeld als de naam verschilt). Klik daarna op &quot;Opnieuw koppelen&quot; om de kolommen te koppelen.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Kan geen lijst-ID vinden in &apos;{0}&apos;. Plak een GUID of de koppeling naar de instellingenpagina van de lijst.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Kan geen formulier-ID vinden in &apos;{0}&apos;. Plak de formulier-ID of de koppeling naar de bewerkingspagina van het formulier.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Formulieren</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Doel</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Kopiëren</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Resultaten</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Kies de te kopiëren formulieren</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Formulieren opnieuw laden</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Klik op &quot;Mijn formulieren laden&quot; om uw formulieren te zien.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>Er zijn geen formulieren gevonden in dit account.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} formulieren kopiëren</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Meer formulieren kopiëren</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Kies waar de kopieën naartoe gaan</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Eén tenant: de kopieën worden gemaakt in hetzelfde account dat u gebruikt, naast de originelen.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Meerdere tenants: de kopieën worden gemaakt in het doelaccount. Meld u hier bij dat account aan; dit staat los van de aanmelding die u voor de SharePoint-sites hebt gebruikt.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Doelaccount</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Meldt zich aan met de app-registratie: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Meldt zich aan met uw doel-app-registratie (ingesteld in Instellingen).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Aanmelden bij het doelaccount</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Opnieuw aanmelden</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Aanmelden bij het doelaccount… er kan een browservenster openen.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Verbonden als {0}. Toegang tot Microsoft Forms bevestigd ({1} formulieren al in dit account).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Kan geen verbinding maken met het doelaccount: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Het doelaccount is nog niet verbonden.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Gereed. Klik op de knop Kopiëren om te starten.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Gereed: kopieën worden gemaakt in {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Meld u aan bij het doelaccount om door te gaan.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Opties</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} formulieren worden gekopieerd van {1} naar {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>het bronaccount</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>het doelaccount</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Formulieren kopiëren</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Starten…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Formulier {0} van {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Annuleren na het huidige formulier…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopiëren voltooid: alle {0} formulieren zijn gekopieerd</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Uw kopieën staan in {0}. Open Microsoft Forms om ze te bekijken, of gebruik de onderstaande tabel.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopiëren voltooid: {0} van {1} formulieren zijn gekopieerd, sommige vereisen aandacht</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>De kopieën staan in {0}. Formulieren met een waarschuwing zijn met problemen gekopieerd en mislukte formulieren zijn niet gemaakt. Zie de kolom Details.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopiëren voltooid, maar er zijn geen formulieren gekopieerd</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Zie de kolom Details voor de reden. Veelvoorkomende oorzaken zijn een ontbrekende Microsoft Forms-machtiging voor de doelregistratie, of een account zonder toegang tot Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopiëren geannuleerd na {0} van {1} formulieren</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>De hieronder vermelde formulieren zijn voltooid. Het formulier dat werd gekopieerd toen u annuleerde, is niet afgemaakt en is niet zichtbaar.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Gekopieerd</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>Met waarschuwingen</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Mislukt</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Vragen</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Bronformulier</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Kopie</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Vragen</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Details</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Gekopieerd</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Gekopieerd met waarschuwingen</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Mislukt</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Geselecteerde kopie openen</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Microsoft Forms openen</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Resultaten exporteren…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Formulier-ID-toewijzing weergeven</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Selecteer eerst een gekopieerd formulier in de tabel.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Resultaten opgeslagen in {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Tip: de app-registratie heeft geen overeenkomend omleidingsadres. Voeg in Entra, onder Verificatie, het platform &quot;Mobiele en bureaubladtoepassingen&quot; toe met http://localhost en probeer het opnieuw.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Pakketten</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Sites</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Lijsten en kolommen</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Formulieren en e-mail</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Schrijven</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Rapport</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Kies uw geëxporteerde flows</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>In Power Automate: open Mijn flows, kies een flow en kies dan Exporteren → Pakket (.zip). Voeg de gedownloade .zip-bestanden hier toe. Elk bestand wordt gescand zodra u het toevoegt.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Wissen</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Voeg de geëxporteerde flowpakketten toe om te beginnen.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>Er zijn geen flows gevonden in die bestanden. Controleer of het pakketten zijn die zijn geëxporteerd met Exporteren → Pakket (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Scan voltooid. Bekijk wat de flows gebruiken en klik daarna op Volgende.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Kies de doelsites</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Deze flows gebruiken geen SharePoint-sites met vaste adressen, dus er valt hier niets toe te wijzen. Klik op Volgende.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Vervolgens leest het hulpmiddel elke lijst via uw verbindingen en koppelt deze op de doelsite.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Voer voor elke bronsite de doelsite in en klik daarna op Volgende.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Lijsten en kolommen koppelen</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Opnieuw koppelen</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Lijsten</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Deze flows verwijzen niet naar specifieke SharePoint-lijsten, dus er valt niets te koppelen.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Lijsten en kolommen worden gekoppeld wanneer deze stap opent.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Formulieren en e-mail</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Controleer de formulieren en e-mail en klik daarna op Volgende.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Deze flows gebruiken geen Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>E-mailadressen</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Om alle adressen van het ene e-maildomein naar het andere te verplaatsen, voert u beide domeinen in. Adressen op andere domeinen worden in het rapport vermeld, niet gewijzigd.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>De bijgewerkte pakketten schrijven</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Uitvoermap</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Kies de uitvoermap en klik daarna op Bijgewerkte pakketten schrijven.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Klaar om {0} pakket(ten) met {1} flow(s) te schrijven. Vervangt: {2} site(s), {3} lijst(en), {4} kolomtoewijzing(en), {5} formulier(en).</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Bijgewerkte pakketten schrijven</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Pakketten geschreven</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Vervangingen</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Nog steeds de bron</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>Te controleren</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Pakket</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Bijgewerkt</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} waarde(n) verwijzen nog naar de bron</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Rapport openen</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Opnieuw beginnen</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Klaar: {0} pakket(ten) geschreven</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Opgeslagen in {0}. Niets verwijst nog naar de bron. Volg de onderstaande stappen om ze te importeren.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Klaar: {0} pakket(ten) geschreven, sommige items vereisen uw controle</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Opgeslagen in {0}. Open het rapport om waarden te zien die nog naar de bron verwijzen en items die het hulpmiddel niet herschrijft (andere services, niet-gekoppelde lijsten of kolommen).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Wat u hierna doet</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Open het rapport en controleer &quot;verwijst nog naar de bron&quot; en alles wat is gemarkeerd voor controle.
+2.  Open in Power Automate (doeltenant) Mijn flows → Importeren → Pakket importeren (verouderd) en kies een geschreven pakket.
+3.  Klik onder &quot;Gerelateerde bronnen&quot; voor elke verbinding op &quot;Selecteren tijdens importeren&quot; en kies of maak een verbinding in de doeltenant. Verbindingen kunnen niet tussen tenants worden verplaatst.
+4.  Importeer de flow. Laat deze uitgeschakeld, open hem, los alles op wat wordt gemeld en schakel hem daarna in.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Geen wijzigingen (niets erin kwam overeen met uw toewijzing)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>{0} gekopieerd naar {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Eerder gekopieerd</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Al gekopieerd</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …en nog {0}</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Opnieuw kopiëren?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>{0} van de geselecteerde formulieren zijn al naar dit account gekopieerd:
+
+{1}
+
+Opnieuw kopiëren maakt van elk een tweede kopie. Doorgaan?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>Er wordt nog een kopie uitgevoerd. Als u nu sluit, kan het formulier dat wordt gekopieerd half afgebouwd in het doel achterblijven. Stoppen en sluiten?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Kopiëren bezig</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Er konden geen antwoorden worden geëxporteerd (zie het logboek).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Filteren op titel of type</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Eén werkmap</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Exporteer alle geselecteerde formulieren naar één Excel-bestand met één blad per formulier.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>E-mailadres</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Tenant-ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Bibliotheekpad</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Andere waarden</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Typ een vervanging voor elke waarde die moet veranderen. Rijen die leeg blijven, worden niet gewijzigd; ze worden in het rapport vermeld als ze nog naar de bron verwijzen.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Soort</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>In de flows</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Vervangen door</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>ID-controle</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Geen formulier-ID of koppeling naar bewerkingspagina</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Hetzelfde als het bronformulier</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Dit formulier staat in de brontenant, niet in het doel</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Dit formulier staat in een andere tenant dan de bron</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>Van de Forms-kopie van {0} naar {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Van een eerdere Forms-kopie</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Toewijzing laden…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Vul sites, lijsten, kolommen, formulieren en andere waarden in vanuit een eerder opgeslagen toewijzing.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>De toewijzing kon niet worden geladen: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>{0} geladen. Waarden die overeenkomen met deze flows zijn ingevuld; controleer ze in de volgende stappen.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>{0} geladen. Wordt toegepast wanneer u flowpakketten toevoegt.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>{0} doelsite(s) ingevuld. Controleer ze hieronder en klik daarna op Volgende.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Elke site heeft al een doel, dus er is niets gewijzigd. Wis een cel Doel om die te laten invullen.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Snelkoppeling: typ het adres van de nieuwe tenant, bijvoorbeeld https://fabrikam.sharepoint.com, en klik op de knop. Elke site die nog geen doel heeft, krijgt dat adres met hetzelfde pad als de bron: https://contoso.sharepoint.com/sites/HR wordt https://fabrikam.sharepoint.com/sites/HR. OneDrive-sites (contoso-my) gaan naar het -my-adres van de nieuwe tenant. Doelen die u al hebt ingevoerd, blijven ongemoeid. De sites moeten al bestaan in de nieuwe tenant; dit hulpmiddel maakt ze niet aan. Als een site daar een andere naam heeft, typt u in plaats daarvan het adres in de cel Doelsite.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Als u een Doelsite leeg laat, blijft die site ongewijzigd: de flows blijven naar de oude site verwijzen, de lijsten en kolommen ervan worden niet gekoppeld of herschreven en het rapport vermeldt de site onder &quot;Te doen na het importeren&quot;. Dat is alleen juist voor een site die niet naar de nieuwe tenant verhuist.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Wat er gebeurt</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Wordt verplaatst naar het doel</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Niet gewijzigd (geen doel)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Site {0} is ongewijzigd gelaten (geen doel ingevoerd), dus de flows verwijzen er nog naar en de lijsten ervan zijn niet gekoppeld. Prima als de site niet verhuist; voer anders opnieuw uit met een doel.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Nog geen kolommen om te tonen: er is geen lijst gekoppeld, dus er valt niets te vergelijken. Herstel de lijsten hierboven en klik daarna op Opnieuw koppelen.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Geen kolommen om toe te wijzen, dus u hoeft hier niets te doen. De gekoppelde lijsten hebben geen aangepaste kolommen waarnaar de flows schrijven, waarop ze filteren of die ze lezen op een manier die het hulpmiddel kan zien. De activiteitenlijst onderaan zegt wat er voor elke lijst is gevonden.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} kolom(men) gevonden: {1} hebben dezelfde naam in het doel, {2} zijn hernoemd en gekoppeld, {3} lijken op elkaar, {4} hebben geen overeenkomst.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Controleer de rijen die zijn gemarkeerd met &quot;Vergelijkbare naam&quot; en kies een kolom voor de rijen met &quot;Geen overeenkomst&quot;. Rijen met &quot;Dezelfde naam&quot; of &quot;Hernoemd in doel&quot; hebben niets nodig.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Hier valt niets te doen: elke kolom komt al overeen. Klik op Volgende.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Namen van de bijgewerkte pakketten</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Hoe de bijgewerkte .zip-bestanden moeten heten. Gebruik {name} voor de oorspronkelijke bestandsnaam: &quot;{name} - Fabrikam&quot; maakt van &quot;Onboarding.zip&quot; &quot;Onboarding - Fabrikam.zip&quot;. Bij één pakket kunt u gewoon de volledige naam typen. Laat het staan als {name} om de oorspronkelijke namen te behouden. Een naam die twee keer wordt gebruikt, krijgt (2), (3)… zodat niets wordt overschreven.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Wordt geschreven: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Een flow slaat alleen de ID van een formulier op, dus de formuliernamen worden gelezen uit Microsoft Forms wanneer deze stap opent: de titel van elk formulier in uw flows (bronaccount) en de formulieren in het doelaccount. Een formulier waarvan de titel overeenkomt met precies één doelformulier, wordt voor u gekoppeld; kies anders het nieuwe formulier in de vervolgkeuzelijst, of plak de ID of de koppeling naar de bewerkingspagina. Gebruik Formuliernamen opnieuw laden om ze opnieuw te lezen.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Formulieren laden uit het doelaccount…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Formulieren van het doelaccount laden… u wordt mogelijk gevraagd u aan te melden.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>De formulieren van het doelaccount {0} worden weergegeven zodat u het nieuwe formulier voor elke flow kunt kiezen. Klik op Annuleren om niet langer op een aanmelding te wachten.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Doel: {0} formulier(en) gevonden in {1}. Kies er één per rij of plak een ID.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Doel: geen formulieren gevonden in {0}. De vervolgkeuzelijst toont alleen formulieren die dat account bezit (geen groepsformulieren), dus kopieer eerst de formulieren met het hulpmiddel Formulieren, of plak een ID.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Geannuleerd. Klik op Formuliernamen laden om het opnieuw te proberen, of plak formulier-ID&apos;s.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Doel: kan de formulieren niet laden: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(geen)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(naamloos formulier)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Bronformulier</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Kies uit de formulieren van het doel</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Kies een formulier uit het doelaccount. Klik eerst op &quot;Formulieren laden uit het doelaccount&quot;.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Ingevuld vanuit de doelaanmelding ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Uw bronaccount, vervangen door uw doelaccount</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Ingevuld vanuit uw aanmeldingen ({0} → {1}). Wis beide vakken om e-maildomeinen ongewijzigd te laten.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Een site met een leeg doel blijft ongewijzigd: de flows blijven ernaar verwijzen en het rapport vermeldt de site.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Aangemeld als {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Aangemeld als {0}. Het SharePoint-adres van de doeltenant is {1}; lege doelsites zijn daarmee ingevuld.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Sommige sites in de flows staan op {0}, het eigen adres van het doelaccount. Ofwel verwijzen deze pakketten al naar het doel (bijvoorbeeld pakketten die dit hulpmiddel heeft geschreven, of flows geëxporteerd uit het doel), voeg dan in plaats daarvan de oorspronkelijke exports uit de bron toe; ofwel zijn bron en doel echt één tenant, schakel de app dan over naar de modus met één tenant (Instellingen).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} is een pakket dat dit hulpmiddel op {1} heeft geschreven: het bevat al de doeladressen, dus er valt niets meer te verplaatsen. Voeg in plaats daarvan de oorspronkelijke export uit de brontenant toe (het bestand in Downloads, niet dat in de uitvoermap).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ De sites in deze flows staan op {0}, uw doeltenant, maar uw bron is {1}. Als de pakketten zijn geëxporteerd uit {0}, meld u dan als bron aan bij die tenant (Bron wijzigen…). Als dit hulpmiddel ze eerder heeft geschreven, verwijder ze dan en voeg de oorspronkelijke exports toe.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Aangemeld. {0} doelsite(s) ingevuld vanuit {1}. Controleer ze en klik daarna op Volgende.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Aangemeld. Elke doelsite had al een waarde, dus er is niets gewijzigd.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Het aanmelden is niet voltooid, of het adres van de nieuwe tenant kon niet worden gelezen (zie de regel Doel). Als u bent aangemeld, voert u hieronder het adres van de nieuwe tenant in om de doelsites in te vullen.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} – verbonden als {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} – nog niet aangemeld</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Doel wijzigen…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Er is geen doellijst gekozen, dus deze flows zouden nog steeds verwijzen naar een lijst die niet in het doel staat. Kies de doellijst, of maak de lijst eerst aan op de doelsite.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>De flows gebruiken de kolom &quot;{0}&quot;, maar de doellijst &quot;{1}&quot; heeft er geen kolom voor. Kies de doelkolom ervoor in de tabel, of voeg de kolom toe aan de doellijst en klik op Opnieuw controleren.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>De doellijst &quot;{0}&quot; vereist de kolom &quot;{1}&quot;, maar de stap &quot;Create item&quot; &quot;{3}&quot; in de flow &quot;{2}&quot; stelt deze niet in, dus importeren zou mislukken met &quot;missing required property item/{1}&quot;. Typ hieronder een waarde ervoor en het hulpmiddel voegt die toe aan die stap, of maak &quot;{1}&quot; optioneel in de doellijst en klik op Opnieuw controleren.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>De doellijst &quot;{0}&quot; vereist de kolom &quot;{1}&quot;, maar de stap &quot;Create item&quot; &quot;{3}&quot; in de flow &quot;{2}&quot; stelt deze niet in, dus importeren zou mislukken met &quot;missing required property item/{1}&quot;. Maak &quot;{1}&quot; optioneel in de doellijst in SharePoint en klik daarna op Opnieuw controleren.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Waarde om in te vullen voor deze vereiste kolommen (toegevoegd aan elke stap Create item die ze weglaat):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Dit zou mislukken bij het importeren. Herstel het om door te gaan:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Opnieuw controleren</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Mislukt ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Meld u aan bij het doel om door te gaan.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} pakket(ten) zijn door dit hulpmiddel geschreven en bevatten al de waarden van het doel. Verwijder ze (de ✕ in de lijst) en voeg de oorspronkelijke exports toe.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} site(s) hebben geen doel. Een site die ongewijzigd blijft, zou nog steeds naar de brontenant verwijzen.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} lijst(en) zouden mislukken bij het importeren. Herstel de lijsten die zijn gemarkeerd met &quot;Mislukt&quot; om door te gaan.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ De lijsten zijn nog niet gekoppeld. Ga één stap terug en weer vooruit om het opnieuw te proberen.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} formulier(en) hebben een geldige doelformulier-ID nodig om door te gaan.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Bron wijzigen…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Aangemeld als {0}. Het SharePoint-adres van de brontenant is {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Bronverbinding gewijzigd in {0}. De hieronder vermelde sites moeten in deze tenant staan.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Het aanmelden bij de bron is niet voltooid, of het adres van de tenant kon niet worden gelezen (zie de regel Bron). De vorige bronverbinding blijft behouden als u hebt geannuleerd.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Sommige sites worden gelezen van {0}, wat niet de tenant is waarmee u als bron bent verbonden ({1}). Het lezen van hun lijsten zal mislukken. Wijzig &quot;Lijsten lezen van&quot; voor die rijen in het adres in uw brontenant, of klik op Bron wijzigen… en meld u aan met een account van die tenant.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>De sites van de flows staan op {0}, maar u bent als bron verbonden met {1}. &quot;Lijsten lezen van&quot; is ingevuld met dezelfde sites op {1}, dus het hulpmiddel leest daar lijstnamen en kolommen. Controleer of die sites bestaan (wijzig een willekeurige rij), of klik op Bron wijzigen… als de flows echt van {0} kwamen.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Lijsten die de flows gebruiken</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Klik op een lijst om deze te openen of te sluiten. Lijsten die aandacht nodig hebben staan eerst en zijn geopend.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Alles openen</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Alles sluiten</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Gebruikt door:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Bron:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Doellijst</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>of plak de ID of koppeling:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Bronkolom</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Type</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Gebruikt</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Niet gebruikt door de flows</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(geen: deze lijst ongewijzigd laten)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Geen doellijst gekozen: flows die deze gebruiken, verwijzen nog naar de bronlijst</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} kolom(men) te controleren</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ niets te controleren</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} kolommen in deze lijst; de flows gebruiken er {1}: {2} met dezelfde naam in het doel, {3} hernoemd en gekoppeld, {4} vergelijkbaar (controleer), {5} zonder overeenkomst (kies). De andere kolommen worden ter context getoond en niet gewijzigd.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} kolommen in deze lijst; geen ervan wordt door de flows gebruikt op een manier die het hulpmiddel kan zien, dus er hoeft niets te worden toegewezen.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Er konden geen kolommen voor deze lijst worden gelezen (zie de opmerkingen hierboven en de activiteitenlijst).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Kies hierboven een doellijst om de kolommen te zien en toe te wijzen.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>De kolommen van de doellijst konden niet worden gelezen, dus er konden geen overeenkomsten worden voorgesteld.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>De flow geeft niet aan op welke site deze lijst staat (er wordt een parameter gebruikt), dus de lijst kan niet worden opgezocht. Plak de ID of koppeling van de doellijst.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Geen doellijst: deze lijst blijft ongewijzigd.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>De kolommen van de doellijst voor {0} lezen…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Lijst &apos;{0}&apos;: u hebt een andere doellijst gekozen. De kolommen ervan op {1} lezen om ze opnieuw te koppelen.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} – verbonden als {1} (de aanmelding van het hoofdvenster)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Lijsten lezen van (bron)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>&quot;Site in de flows&quot; is het adres dat in de flows is opgeslagen; dat wordt vervangen en kan dus niet worden bewerkt. &quot;Lijsten lezen van&quot; is waar het hulpmiddel de naam en kolommen van elke lijst aan de bronzijde leest; het begint als hetzelfde adres, dus wijzig het als het adres van de flow oud is, hernoemd is of in een andere tenant staat dan uw bronverbinding.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Wat deze flows gebruiken</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** – {1} flow(s), {2} stap(pen): {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>herschreven door dit hulpmiddel</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>handmatig controleren</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>alleen verbinding</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>Te doen na het importeren</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Importeer elk aangepast pakket in de doelomgeving en maak de verbindingen opnieuw (ze worden nooit gekopieerd).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Oplossingspakketten: alleen de werkstroomdefinities zijn herschreven. Waarden van omgevingsvariabelen en verbindingsverwijzingen in de oplossing (customizations.xml) bevatten nog bronwaarden; stel ze in na het importeren.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Flow-eigenaren en gebruikers met alleen uitvoerrechten maken geen deel uit van het pakket; deel de flows na het importeren met de juiste personen.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Geen wijzigingen (niets in de toewijzing kwam overeen).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} vervangingen</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Verwijst nog naar bronwaarden (niet toegewezen, controleer vóór het importeren)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Verbinden met de bronsite {0} en de doelsite {1}. Er opent een aanmeldvenster als u nog niet bent aangemeld.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Verbonden met {0} (bron) en {1} (doel).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>De lijsten en bibliotheken op de doelsite {0} lezen, zodat elke lijst op naam kan worden gekoppeld en in een vervolgkeuzelijst kan worden aangeboden.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>{0} lijst(en) en bibliotheek/bibliotheken gevonden op {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>De naam en kolommen van lijst {0} lezen van de bronsite {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Lijst &apos;{0}&apos;: zoeken naar een lijst met dezelfde naam op de doelsite {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Lijst &apos;{0}&apos;: gevonden in het doel. De kolommen van de doellijst lezen om ze te koppelen.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Lijst &apos;{0}&apos;: de kolommen konden niet worden gelezen, of er zijn er geen. Niets toe te wijzen voor deze lijst.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Lijst &apos;{0}&apos;: {1} kolom(men), geen ervan wordt door de flows gebruikt op een manier die het hulpmiddel kan zien. Er hoeft niets te worden toegewezen.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Lijst &apos;{0}&apos;: de flows gebruiken {1} kolomna(a)m(en): {2} hebben dezelfde naam in het doel (geen wijziging nodig), {3} zijn hernoemd en gekoppeld, {4} lijken op elkaar (controleer), {5} hebben geen overeenkomst (uw keuze), {6} zijn ingebouwde kolommen (niets toe te wijzen).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>Lijst {0} staat niet op de bronsite, maar wel op de doelsite als &apos;{1}&apos;: de flow verwijst al naar het doel.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Site &apos;{0}&apos; heeft geen doel; lijsten erop zijn niet opgelost.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Geavanceerd: lijsten lezen van een ander adres</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Kolomtoewijzing: van {0} naar {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Geen kolommen om te tonen voor deze lijst.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Geen van de kolommen van deze lijst wordt door de flows gebruikt. Vink &quot;Alle kolommen tonen&quot; aan om ze te zien.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>De bronlijst kon niet worden gelezen en de flow noemt geen kolommen, dus er valt niets toe te wijzen.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Lijst</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(kon niet worden gelezen in de bron)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Gelezen van:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Site</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Deze flow verwijst al naar deze lijst in het doel. De {0} kolomna(a)m(en) die de flow gebruikt, worden getoond naast de kolommen van het doel; er hoeft niets te worden gewijzigd.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(lijstnaam niet beschikbaar)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Al in doel</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Toegewezen op basis van kolomnamen van de flow</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Kan kolommen niet lezen</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Geen doellijst</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Niets toe te wijzen</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Gereed</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Doelkolommen onleesbaar</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} te controleren</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Gebruikt door {0} flow(s)</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} kolomtoewijzing(en) vereisen nog aandacht.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Alle kolomtoewijzingen zijn afgehandeld.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Verbindingen worden niet tussen tenants gekopieerd: maak ze na het importeren opnieuw in Power Automate.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>E-mail: elk adres op {0} wordt {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} van {1} formulier(en) verwijzen naar een nieuw formulier.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} van {1} lijst(en) hebben een doellijst.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>De lijsten zijn nog niet gekoppeld.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>E-mailadressen worden niet gewijzigd (er is geen domein toegewezen).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>De flows gebruiken geen Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>De flows gebruiken geen specifieke lijsten.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>De flows noemen geen SharePoint-sites.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{0} pakket(ten) met {1} flow(s) worden geschreven; de originelen worden niet gewijzigd.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0} van {1} site(s) verhuizen naar een doelsite; de andere blijven zoals ze zijn.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Automatisch ingevulde waarden wissen</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Ingevuld</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Formulier in uw flows</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Van (in uw flows)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Lijsten</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Sites</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>Naar (doel)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Door u gekozen</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Ongewijzigd gelaten</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(de aanmelding van het hoofdvenster)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>E-maildomein om vanaf te verplaatsen</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Verplaats elk adres op</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>naar</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>E-maildomein om naartoe te verplaatsen</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…of sleep .zip-bestanden (of een map) naar dit venster.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Kolom &apos;{0}&apos; in lijst &apos;{1}&apos; heeft geen overeenkomst in de doellijst.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>Lijst &apos;{0}&apos; ({1}) op {2} heeft geen doellijst, dus flows die deze gebruiken, verwijzen nog naar de bronlijst.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(titel onbekend)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Ga naar stap</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Een opgeslagen toewijzing? Laad deze…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Aangepast patroon…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>De oorspronkelijke namen behouden</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>&apos; - migrated&apos; toevoegen aan elke naam</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Open het rapport en controleer wat is gemarkeerd voor controle.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>In Power Automate (doeltenant): Mijn flows, Importeren, Pakket importeren (verouderd) en kies een geschreven pakket.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>Klik onder Gerelateerde bronnen voor elke verbinding op &quot;Selecteren tijdens importeren&quot; en kies of maak er een in de doeltenant. Verbindingen kunnen niet tussen tenants worden verplaatst.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Importeer de flow, laat deze uitgeschakeld, open hem, los alles op wat wordt gemeld en schakel hem daarna in.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Map openen</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Power Automate openen</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Die uitvoermap bestaat nog niet; deze wordt gemaakt wanneer u de pakketten schrijft.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>BRON</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>DOEL</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} flow(s) gevonden</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Geen flows gevonden</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Al geschreven door dit hulpmiddel</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Kon niet worden gelezen</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Klaar om te schrijven?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Dit pakket uit de lijst verwijderen</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Rapport flowherschrijving</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Wat deze flows gebruiken ({0} services)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} pakket(ten) konden niet worden geschreven.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} waarde(n) in de geschreven pakketten verwijzen nog naar de bron. Open het rapport om te zien welke.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Alle {0} kolommen tonen</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Alleen de kolommen tonen die de flows gebruiken</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Wat betekenen deze kolommen?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>De ID van deze lijst staat niet op de bronsite, maar het is de lijst &apos;{0}&apos; op de doelsite: de flow verwijst al naar het doel, zoals in een pakket dat dit hulpmiddel al heeft geschreven.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Verbonden</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Probleem</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Niet aangemeld</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Wachten op aanmelding…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} lijst(en) · allemaal gereed</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} lijst(en) · {1} gereed · {2} hebben aandacht nodig</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Duurde {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>Te controleren</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Voeg de flowpakketten (.zip) toe die u uit de brontenant hebt geëxporteerd. Elk wordt gescand zodra u het toevoegt.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Geef aan naar welke site elke flow verhuist. Meld u aan bij het doel en het adres van de nieuwe tenant wordt voor u ingevuld.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Elke lijst die de flows gebruiken, wordt gekoppeld aan een lijst in het doel en de kolommen worden toegewezen. Controleer alles wat is gemarkeerd als aandacht nodig hebbend.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Laat gekopieerde formulieren naar hun nieuwe ID&apos;s verwijzen en bepaal hoe e-mailadressen en de tenant-ID veranderen.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Controleer de lijst hieronder, kies waar de bijgewerkte pakketten worden opgeslagen en schrijf ze daarna.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Wat hier gebeurt</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Het hulpmiddel leest elk pakket op deze computer (er wordt niets ergens naartoe verzonden) om de sites, lijsten, kolommen en formulieren te vinden die de flows gebruiken. Voeg de ORIGINELE exports uit de bron toe, niet pakketten die dit hulpmiddel eerder heeft geschreven: die bevatten al de adressen van het doel.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Kolom &apos;{0}&apos; is op verschillende lijsten verschillend toegewezen ({1}). De stappen van elke lijst krijgen hun eigen toewijzing; expressies elders in de flow behouden de oorspronkelijke naam, dus controleer ze.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Formuliernamen opnieuw laden…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Formuliernamen laden… u wordt mogelijk gevraagd u aan te melden.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>De titels van de formulieren in uw flows worden gelezen uit het bronaccount {0}. Klik op Annuleren om niet langer op een aanmelding te wachten.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Bron: titel van {0} van {1} formulier(en) gevonden ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Bron: kan de formuliertitels niet lezen: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} formulier(en) zijn gekoppeld aan het doelformulier met dezelfde naam.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Lijkt op een geldige formulier-ID</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Op naam gekoppeld</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>De bron en het doel staan in dezelfde tenant ({0}). Schakel de app over naar de modus met één tenant (Instellingen), of meld u bij de bron en het doel aan met accounts uit verschillende tenants.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Deze pakketten verwijderen</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>{0} pakket(ten) verwijderd die al naar het doel verwijzen: {1}. Voeg in plaats daarvan de oorspronkelijke exports uit de brontenant toe.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Die pakketten zijn verwijderd. Voeg de oorspronkelijke exports uit de brontenant toe.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Elk pakket wordt opgeslagen als een nieuw .zip-bestand in de uitvoermap; de originelen worden nooit gewijzigd. Om er een te hernoemen, typt u een andere naam bij Opslaan als.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>De oorspronkelijke namen behouden</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>&apos; - migrated&apos; toevoegen aan elke naam</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Oorspronkelijk pakket</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Opslaan als</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Wordt opgeslagen als: {0} (u kunt de namen hieronder wijzigen).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Kon niet worden gelezen; geen uitvoer geschreven</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Geannuleerd. Er is niets gewijzigd. Gebruik in de stap Sites Aanmelden om het opnieuw te proberen (bijvoorbeeld in een andere browser); gebruik in de stap Lijsten Opnieuw koppelen.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Annuleren… het sluiten van een aanmeldvenster kan even duren.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Wat het hulpmiddel doet</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Verbindingen</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Meerdere tenants: om lijsten te koppelen leest het hulpmiddel de naam en kolommen van elke lijst uit de brontenant en zoekt het dezelfde lijst in de doeltenant. Daarvoor is een aanmelding bij elk nodig. Meld u hier aan bij elke zijde, of klik gewoon op Volgende en u wordt het dan gevraagd. Er opent een browservenster; als het de verkeerde browser is, klik dan op Annuleren en probeer het opnieuw. Er wordt niets gewijzigd in beide tenants.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Eén tenant: bron en doel zijn dezelfde tenant, dus het hulpmiddel gebruikt het account waarmee u zich hebt aangemeld in de stap Verbinden. Er is verder niets om u bij aan te melden. Er wordt niets gewijzigd in de tenant.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Bron</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Doel</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Aanmelden bij bron…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Aanmelden bij doel…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Annuleren</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Stopt met wachten op het aanmeldvenster, zodat u het opnieuw kunt proberen, bijvoorbeeld in een andere browser.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Nog niet aangemeld</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Gebruikt de aanmelding van het hoofdvenster: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Aangemeld als {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Gereed</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Wachten op aanmelding… er zou een browservenster moeten openen</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Aanmelden geannuleerd. Klik op Aanmelden om het opnieuw te proberen.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Aangemeld. Controleer de doelsites hieronder en klik daarna op Volgende.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Er is nog geen bronsite om u bij aan te melden. Voeg eerst flowpakketten toe.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Voer eerst ten minste één doelsite in (of gebruik Invullen, paden behouden); het aanmelden gaat naar de tenant van de doelsite.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Aanmelden bij de bron… er opent een browservenster.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Aanmelden bij het doel… er opent een browservenster.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>bron</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>doel</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Aanmelden bij de brontenant. Er opent een browservenster; klik op Annuleren om niet langer te wachten (bijvoorbeeld om een andere browser te proberen). Door de aanmelding weet het hulpmiddel ook welke tenant de bron is.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Aanmelden bij de doeltenant. Er opent een browservenster; klik op Annuleren om niet langer te wachten (bijvoorbeeld om een andere browser te proberen). Door de aanmelding weet het hulpmiddel ook het SharePoint-adres van de nieuwe tenant.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Verbonden met {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Aanmelden door u geannuleerd.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>{0} pakketbestand(en) op deze computer lezen om de sites, lijsten, kolommen en formulieren te vinden die de flows gebruiken. Er wordt niets ergens naartoe verzonden.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>{0} gelezen: {1} flow(s).</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>{0} lijst(en) koppelen: voor elke vraagt het hulpmiddel de bronsite om de naam en zoekt daarna een lijst met die naam op de doelsite.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Koppelen voltooid. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>{0} aangepaste pakket(ten) schrijven naar {1}. De originelen worden niet gewijzigd.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>{0} schrijven met uw toewijzing toegepast.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>{0} controleren op waarden die nog naar de bron verwijzen.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Door u geannuleerd. Er is niets gewijzigd.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Gestopt: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Elke flow slaat het adres op van de SharePoint-site waaruit deze leest of waarnaar deze schrijft. Om in de nieuwe tenant te werken, moet elke flow naar de overeenkomstige site daar verwijzen, dus geef het hulpmiddel aan welke nieuwe site elke oude vervangt. Dit bewerkt alleen kopieën van uw pakketten; er wordt niets opgezocht totdat u op Volgende klikt.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Wat hier gebeurt: voor elke lijst die een flow gebruikt, leest het hulpmiddel de naam en kolommen van de lijst van de bronsite, zoekt het een lijst met dezelfde naam op de doelsite en leest het de kolommen van die lijst om ze te koppelen. Waarom: flows verwijzen naar lijsten en kolommen via ID of interne naam, en die verschillen in de nieuwe tenant, dus het hulpmiddel zoekt het equivalent. Deze stap leest alleen; er wordt niets gemaakt of gewijzigd in beide tenants. U kunt de doellijst en elke kolom op de kaart wijzigen.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Een gekopieerd formulier krijgt een nieuwe ID, dus een flow die het gebruikt, moet naar de kopie verwijzen. E-mailadressen en de tenant-ID in een flow moeten mogelijk ook veranderen voor de nieuwe organisatie. Hier wordt niets opgezocht; u bepaalt de vervangingen en alles wat leeg blijft, blijft zoals het is.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Het hulpmiddel schrijft nieuwe .zip-bestanden naar de uitvoermap met uw toewijzing toegepast, scant ze opnieuw om te vinden wat nog naar de bron verwijst en schrijft een rapport. Uw oorspronkelijke pakketten worden nooit gewijzigd en er wordt niets naar een van beide tenants verzonden. U importeert de nieuwe pakketten daarna zelf in Power Automate.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Aanmelden geannuleerd. Klik op de knop om het opnieuw te proberen, bijvoorbeeld in een andere browser.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Annuleren</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Fout: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Kan het bronformulier niet lezen ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Kan het formulier niet maken in het doel ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Halverwege geannuleerd. Er is een gedeeltelijk formulier in het doel achtergebleven; verwijder het in Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Het kopiëren is halverwege gestopt ({0}). Er is een gedeeltelijk formulier in het doel achtergebleven; verwijder het in Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>achtergrondafbeelding</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>logo</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>koptekstafbeelding</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>De {0} is niet gekopieerd (afbeeldingen worden nog niet ondersteund).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Quizscore (juiste antwoorden en punten) is niet geverifieerd; controleer de kopie.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Instelling &apos;{0}&apos; kon niet worden gekopieerd ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Vraag &apos;{0}&apos; is niet gekopieerd ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(naamloos)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Vertakkingsregels konden niet worden gekopieerd ({0}); controleer de kopie.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>De kopie is gemaakt maar kon niet zichtbaar worden gemaakt in Microsoft Forms ({0}); mogelijk staat deze in de prullenbak.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>De kopie heeft {0} vragen maar de bron heeft er {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Vraag &apos;{0}&apos; ({1}) is gemaakt maar de opties konden niet worden gekopieerd ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Resultaten</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Bronformulier</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>Bronformulier-ID</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Titel van kopie</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>Formulier-ID van kopie</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Status</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Gekopieerde vragen</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Vragen in bron</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Waarschuwingen</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Opmerkingen</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Fout</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Excel-werkmap (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>JSON-bestanden (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Id</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Begintijd</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Voltooiingstijd</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Respondent</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Naam</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Score</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Niet-toegewezen antwoorden (ruwe JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (afgekapt: te lang voor een Excel-cel)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>De uitvoering stoppen?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>Er wordt nog een vergelijking of verificatie uitgevoerd. Als u dit venster sluit, wordt deze gestopt en wordt er geen rapport geschreven. Toch sluiten?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Sluiten tijdens het werk?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Het hulpmiddel is nog bezig (scannen, koppelen, aanmelden of pakketten schrijven). Als u nu sluit, wordt het gestopt. Toch sluiten?</value></data>
 </root>

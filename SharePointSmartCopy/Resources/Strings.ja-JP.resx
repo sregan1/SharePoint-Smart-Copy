@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>成功 ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>失敗 ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>スキップ ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>最新</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>コピー元に固有のアクセス許可があるかどうかを読み取れませんでした (調整またはアクセス エラー)。この項目のアクセス許可はコピーされませんでした。再実行して再試行してください。</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>上書きのため既存のコピー先ファイルを削除しましたが、新しいコピーをアップロードできませんでした ({0})。現在コピー先にファイルがありません。コピーを再実行して復元してください。</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>コピー先のライブラリが失敗しました ({0})。そのファイルは失敗としてマークされます。他のライブラリは続行されます。</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: ダウンロード中にコピー元ファイルが変更されました。ダウンロードをやり直します。</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint がこのインポートの進行を {0} 分間報告しなかったため、中止されました。そのファイルは失敗としてマークされます。コピーを再実行して再試行してください。</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>シングルテナント</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>マルチテナント</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>2 つの異なる Microsoft 365 テナント間でコピーします。コピー元とコピー先に別々にサインインします。コピー先のアプリの登録は [設定] で選択します。</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>コピー先の登録:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>マルチテナント モード: コピー先テナントへのサインインに使用するアプリの登録です。「コピー元と同じ」を選ぶとコピー元の登録を再利用します。その場合、コピー元の登録はマルチテナント アプリである必要があります。</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>再開 / 再実行</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>再接続し、この選択内容を「新しい場合のみコピー」で再実行します。コピー済みのファイルはスキップされ、不足または変更されたものだけが転送されます。</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>この実行には再開できる保存済みの選択内容がありません (選択内容が記録されるのはファイル選択の実行のみです)。</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>すでにコピーが実行中です。先に完了するかキャンセルしてください。</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>再開できませんでした: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>中断された実行を {0} 件回復しました。履歴を参照してください。</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>再開中: 以前の実行から {0} 件の項目を復元し、「新しい場合のみコピー」を選択しました。オプションを確認し、[次へ] をクリックしてください。(カスタム列マッピングは復元されません。)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>中断 - この実行が完了する前にアプリが閉じられました。完了済みの項目のうち、成功 {0} 件、失敗 {1} 件、スキップ {2} 件、キャンセル {3} 件  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>診断情報をエクスポート…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>最近のログ、システム情報、組織の詳細を除いた設定を含む zip を保存します。バグ報告に添付してください。コピー レポートやファイル名は含まれません。</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>診断情報を {0} に保存しました</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>診断情報を保存できませんでした: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>内容は同一です (SharePoint が管理する部分のみ異なります) が、更新日時は保持されませんでした。</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>アクセス許可はコピーされませんでした: 項目の SharePoint ID を解決できませんでした。</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>アクセス許可はコピーされませんでした: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>フォルダー &quot;{0}&quot;: {1} は適用されませんでした - {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>上記と同様の問題が他のフォルダーにもありました。以降のものは個別には表示されません。</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>アクセス許可</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>日付</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>作成者 / 更新者</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} 件を保持 - コピー先はすでに最新)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>警告: コピー元 ({0}) からのメタデータの読み取りに失敗しました: {1}。そこからの項目は、カスタム列の値や固有のアクセス許可なしでコピーされる可能性があります。問題が解消したら再実行してください (「上書き」または「新しい場合」で再適用されます)。</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>警告: ライブラリのコピー元リストが見つからなかったため、そのアクセス許可はコピーされません。</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>SharePoint ホスト &apos;{0}&apos; は接続済みのテナントに関連付けられていません。コピー元とコピー先のサイトを再接続して、もう一度お試しください。</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>テナント間コピー: マネージド メタデータ (分類) 列の値はコピーされません。また、OneNote ノートブックやドキュメント セットはまだテナント間でコピーできません。ID は [ID マッピング] の設定に従ってマッピングされます。コピー先で解決できないユーザーはスキップされます。</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>ID マッピング</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>ID マッピング…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>コピー元テナントの各ユーザー (またはグループ) と、コピー先テナントでの対応先を一覧にします (2 つは別のアカウントです)。作成者、更新者、ユーザー列、アクセス許可はこの表に基づいて書き込まれます。一覧にないユーザーは、ドメイン置換が設定されていればそれで照合されます。それでもコピー先で見つからないユーザーはスキップされ、報告されます。</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>コピー元のメール ドメイン</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>コピー先のメール ドメイン</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>オーバーライド - 1 行に「コピー元,コピー先」を 1 組 (ユーザー名またはグループ名。# で始まる行はコメント)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>コピー元と同じ</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>コピー元とコピー先が同じテナントです。同じテナント内のコピーにはシングルテナント モードに切り替えてください。</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>ネイティブ フォルダー コピー (OneNote ノートブック、ドキュメント セット) は、まだテナント間ではサポートされていません。</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>ドライブ &apos;{0}&apos; は接続済みのテナントに関連付けられていません。コピー元とコピー先のサイトを再接続して、もう一度お試しください。</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>アプリの登録がまだ設定されていません。接続する前に [設定] を開き、Azure アプリの登録 (そのアプリケーション ID / クライアント ID) を追加してください。</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>サインインがキャンセルされました。[接続] をクリックして再試行してください。</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>このテナントでは、管理者がまだこのアプリを承認していません。グローバル管理者にアプリの登録に対する管理者の同意を付与するよう依頼してください (ユーザー ガイドの「セットアップ」を参照)。</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>このテナントでアプリの登録が見つかりませんでした。[設定] のクライアント ID とテナント ID を確認してください。</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>そのテナントが見つかりませんでした。[設定] のテナント ID を確認してください (ドメイン、テナントの GUID、または &apos;common&apos; を使用します)。</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>アプリの登録に、このアプリが使用するリダイレクト アドレスがありません。Azure で、「モバイル アプリケーションとデスクトップ アプリケーション」の下にリダイレクト URI http://localhost を追加してください。</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>アプリの登録がデスクトップ サインイン用に設定されていません。Azure で、その登録の「パブリック クライアント フローを許可する」をオンにしてください。</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>このアカウントはそのアプリの登録を使用できません。登録を所有するテナントのアカウントでサインインするか、[設定] で別の登録を選択してください。</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint がサインインを拒否しました。[接続] をクリックして再度サインインしてください。</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>このサイトにアクセスできません。お使いのアカウントでブラウザーからサイトを開けること、およびアプリに Sites.ReadWrite.All アクセス許可が付与されていることを確認してください。</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>そのサイトが見つかりませんでした。アドレスを確認してください。https://contoso.sharepoint.com/sites/name のような形式になります。</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(詳細: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>続行するには、コピー元サイトに接続してください。</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>続行するには、少なくとも 1 つの項目を選択してください (チェック ボックスをオンにします)。</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>続行するには、コピー先サイトに接続してください。</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>続行するには、コピー先フォルダーを選択してください。</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>続行するには、コピー先リストを選択してください。</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>続行するには、新しいリストの名前を入力してください。</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>コピーする項目が選択されていません。</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>コピーの完了を待機中…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>コピー元: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>コピー先: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>アプリの登録が変更されたため、両方のサイトからサインアウトされました。続行するには再度接続してください。</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>コピーを停止しますか?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>コピーが進行中です。今停止すると、残りの項目はコピーされません (後で履歴から再開できます)。コピーを停止しますか?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>コピーがまだ実行中です。アプリを閉じるとコピーが停止し、残りの項目はコピーされません (後で履歴から再開できます)。閉じますか?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>接続モードを切り替えますか?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>シングルテナントとマルチテナントを切り替えると、両方のサイトが切断され、再度接続する必要があります。切り替えますか?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>接続:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>コピー元のアプリの登録</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>コピー先のアプリの登録</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>コピー先テナントへのサインインに使用:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>変更</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>設定を開く</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• コピー元サイト コレクションへの読み取りアクセス権が必要です。</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• 接続する前に、[設定] で Microsoft Entra ID アプリの登録を設定してください。</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>ファイル オプション</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>ライブラリとファイルのオプション</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>ファイルをコピー中…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>ライブラリをコピー中…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>次へ</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>コピーを開始</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>レポートを表示</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>作成する新しいリストの名前を入力してください</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>コピー先リストは [コピー先] の手順で選択されました。変更するには戻ってください。</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>最初にアプリの登録を設定してください</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy は、ご自身の Microsoft Entra ID (Azure) テナントで作成したアプリの登録を使ってサインインします。[設定] を開き、登録のアプリケーション (クライアント) ID を追加してから、ここに戻って接続してください。</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>詳細情報</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>ドラッグしてアクティビティ フィードの高さを変更します</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>クリックすると失敗した項目のみ表示します</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>クリックするとスキップした項目のみ表示します</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>列マッピング</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>コピー元とコピー先を比較</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>比較ツールを開き、このコピーをコピー元と照合します。</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>履歴を開く</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>選択した登録は、コピー元に使用されます。シングルテナント モードでは両側に使用されます。</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>新しい登録</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>アプリの登録を少なくとも 1 つ追加してください。</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>検証</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>選択した登録にはクライアント ID が必要です。</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>サインアウトしました。次回の接続時にサインインを求められます。</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>サインアウトしました</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>サインアウトに失敗しました: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>サインアウト</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} 件のマッピングが見つかりました。</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} 行を読み取れません (行 {1})。各行は「コピー元,コピー先」の形式にしてください。</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>コピー元とコピー先のドメインが同じため、ドメイン置換では何も変更されません。</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>CSV をインポート…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>読み取れないオーバーライド行があります (行 {0})。各行は「コピー元,コピー先」の形式にしてください。修正または削除するか、行頭に # を付けてコメントにしてください。</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>ID マッピングを保存できませんでした: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>そのファイルを読み取れませんでした: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>テナント間: このライブラリの作成者/更新者アカウント {0} 件がコピー先テナントで見つからず、コピーを実行したアカウントのままになります。実行後、レポートの「これらのユーザーをマッピング」を使って修正してください。</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>コピー元のユーザーまたはグループを入力してください。</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>コピー先テナントでの対応先を入力するか、行を削除してください。</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>コピー元とコピー先が同じです。</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>このコピー元が複数回表示されています。</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>コピー元 (このテナント)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>コピー先 (別のテナント)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>種類</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>コピー先に存在?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>必要な用途</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>ユーザー</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>グループ</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>未確認</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>確認中…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ 見つかりました</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ 見つかりません</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>追加</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>削除</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>ドメイン置換からコピー先を入力</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>コピー先が未入力の行に、ドメイン置換で生成されるアドレスを入力します。</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>コピー先で確認</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>各コピー先ユーザーをコピー先テナントで検索します。これにより、コピー先サイトのユーザー リストにも追加されます。これは、コピーが作成者として設定したりアクセスを付与したりする前に、どのみち行う処理です。</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>最初にマルチテナントのコピー先に接続してください。[コピー先] の手順でコピー先サイトの URL を入力してから、このダイアログを開き直します。</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>CSV をエクスポート…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>コピーに必要でしたが、コピー先テナントで見つからなかったユーザーです。それぞれ、コピー先での対応先を入力するか、行を削除してマッピングなしのままにしてください。</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} 件のマッピング。</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} 行に対処が必要です。</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>確認結果: {0} 件見つかりました、{1} 件見つかりません{2}。</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>、{0} 件は確認できませんでした</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>{1} 件中 {0} 件を確認中…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>確認するものがありません: コピー先のメール アドレスがある行がありません。</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>対処が必要な行があります (強調表示)。修正または削除してから保存してください。</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>マッピングを保存しました。コピー済みのファイルに適用するには、「上書き」で再実行してください。「新しい場合のみコピー」では最新のファイルがスキップされるため、作成者は変更されません。アクセス許可はどちらの場合も更新されます。</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>コピー元の {0} 人がコピー先テナントで見つからなかったため除外されました: アクセス権の付与、作成者または更新者としての設定がされず、ユーザー列からも削除されます。</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>これらのユーザーをマッピング…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>未解決のユーザーをマッピング…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>この実行でコピー先に見つからなかったユーザーとともに ID マッピングを開きます。</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>この実行には未解決のユーザーはありません。</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>フォームのコピー</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Microsoft Forms を、すべての質問、分岐、設定、テーマを維持したままコピー先アカウントにコピーします。回答は Excel にエクスポートできます。</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>これは Microsoft が文書化もサポートもしていない Microsoft Forms の Web API を使用します。現在は動作しますが、予告なく変更される可能性があります。まず数件のフォームで試してください。</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>自分のフォームを読み込む</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>コピー元アカウント: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>コピー先アカウント: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>コピー先: 同じアカウント (シングルテナント)。コピーは元のフォームの隣に作成されます。</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(サインインを求められます)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>フォーム ID マップ (フロー ツールで使用): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>フォームを読み込み中…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>{0} 件のフォームを読み込みました。</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>最初に少なくとも 1 つのフォームを選択してください。</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>フォームをコピー中…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>コピー中…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>コピー済み</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>失敗 (ログを参照)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>&apos;{0}&apos; をコピー中</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>コピーが完了しました: {0} 件コピー、{1} 件失敗。</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>回答のエクスポート先フォルダーを選択</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>回答をエクスポート中…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>&apos;{0}&apos; をエクスポートしました: 回答 {1} 件を {2} に出力</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>{0} 件のフォームの回答を {1} にエクスポートしました。</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>フォームはコピーされましたが、フロー ツール用にその ID を保存できませんでした: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>&apos;{0}&apos; をエクスポートできませんでした: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>{0} 件のフォームの回答を {2} にエクスポートしました。{1} 件は失敗しました (ログを参照)。</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>キャンセルしました。</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>エラー: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>ヒント: アプリの登録には、同意付きの委任された Microsoft Forms アクセス許可が必要です。API のアクセス許可で追加し (ユーザー ガイドを参照)、もう一度お試しください。</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>ヒント: Microsoft Forms が要求を拒否しました。このアカウントで forms.office.com を開けること、およびアプリの登録に Microsoft Forms アクセス許可があることを確認してください。</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{1} 件中 {0} 件を選択</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>タイトル</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>種類</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>最終更新</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>結果</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>コピーしたタイトルに追加:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (コピー)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>選択したフォームをコピー</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>回答をエクスポート…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>コピーをコピー元と照合します</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>その他のツール</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>フォーム</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Microsoft Forms をコピーし、その回答をエクスポートします</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>フォーム ツール</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>コピー先向けにフローを書き換え</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>エクスポートした Power Automate パッケージ (.zip) を、サイト、リスト、列、コピーしたフォーム、メール ドメインがコピー先を指すように更新します。元のパッケージは変更されません。</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. エクスポートしたフロー パッケージを選択</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Power Automate からエクスポートしたフロー パッケージ (.zip) を追加します。</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>ファイルを追加…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>フォルダーを追加…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>スキャン</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>フロー パッケージ (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>最初にフロー パッケージを少なくとも 1 つ追加してください。</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>パッケージをスキャン中…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>{0} をスキップしました: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} 件のフローが見つかりました。{1} 件のサイト、{2} 件のリスト、{3} 件のフォームを参照しています。</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>スキャンが完了しました。</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. サイトをマッピング</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>各フローの SharePoint サイトの移動先です。マルチテナント モードでは、コピー先にサインインすると新しいテナントのアドレスが自動入力されます。サイト名が異なる行は変更してください。シングルテナント モードでは、各行のコピー先サイトを入力します。</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>フロー内のサイト (置換対象)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>コピー先サイト</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>新しいテナントのアドレス:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>空のコピー先をパスを維持して入力</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>https://contoso.sharepoint.com のような完全な URL を入力してください。</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>そのホストと各サイトのパスを使って、空のコピー先を入力しました。</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. リストと列を照合</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>フローが使用するリストごとに 1 枚のカードを表示します (使用しているフローの数は問いません)。各カードには、リストの名前と列、コピー先で対応するリスト (既定では同じ名前のリスト。名前が異なる場合はドロップダウンから別のリストを選択)、および各列のマッピングが表示されます。警告が付いたカードを確認してください。</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>リストと列を照合</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>リスト</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>コピー元リスト ID</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>コピー先リスト ID</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>コピー元の列</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>コピー先の列</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>最初にパッケージをスキャンしてください。</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>最初にコピー先サイトを少なくとも 1 つ入力してください。</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>リストと列を照合中…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(見つかりません)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>コピー先で同じ名前のリストが見つかりました</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>このリストのあるサイトにコピー先サイトがありません ([サイト] の手順)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>コピー元サイトでこのリストを読み取れませんでした。リストが存在しない、このアカウントにアクセス権がない、またはサイトがコピー元の接続とは別のテナントにある可能性があります</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>コピー先サイトにこの名前のリストがありません。ドロップダウンから選択してください</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>同じ名前</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>コピー先で名前変更</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>一致なし: 列を選択してください</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{1} 件中 {0} 件のリストにコピー先リストがあります。確認する列: {2} 件。</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. フォームとメール</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>フォーム ツールでコピーしたフォームは自動的に入力されます。ご自身で作成したフォームの場合は、その ID または編集ページのリンクを貼り付けてください。</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>コピー元フォーム ID</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>フォーム ID (ドロップダウンから入力、または貼り付け)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>移動するメール ドメイン:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. 更新したパッケージを書き込み</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>出力フォルダーを選択します (元のパッケージがあるフォルダー以外)。更新されたパッケージと、すべての変更を一覧にしたレポートがそこに保存されます。</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>更新したパッケージを書き込む</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>マッピングを保存…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>出力フォルダーを開く</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>接続はテナント間で移動できません。パッケージをインポートした後、Power Automate で各接続を作り直して再選択してください。</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>最初に出力フォルダーを選択してください。</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>更新したパッケージを書き込み中…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>{0} の更新済みコピーを保存 (パッケージ {1}/{2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Power Automate パッケージ (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>そのファイル名はすでに別のパッケージに選択されています。別の名前を選んでください。</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>パッケージが元のファイルの上に保存されてしまいます (同じフォルダー、同じ名前)。元のファイルが変更されないよう、別の出力フォルダーを選ぶか、「名前を付けて保存」で名前を変更してください。</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># フロー書き換えレポート
+
+元のパッケージは変更されていません。接続は移行されません。インポート時に作り直して再選択してください。
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>レポートを {0} に書き込みました</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} 件のパッケージを書き込みました。置換 {1} 件。{2} 件の値がまだコピー元を指しています (レポートを参照)。</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>マッピングを {0} に保存しました</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>フロー</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>エクスポートした Power Automate フローをコピー先向けに更新します</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>フロー ツール</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>これらのフローが使用するもの</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>スキャンしたフローで見つかったサービスと、それぞれに対してこのツールが行う処理です。</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>サービス</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>フロー</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>ステップ</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>検出数</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>このツールの処理</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>見つかったものを書き換えます</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>ID を報告します。インポート後に確認してください</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>接続のみ (作り直してください)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>列マッピング</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>照合されたリストで、フローが列に書き込む、列でフィルターまたは並べ替えを行う、または式で列を読み取る場合に、その列がここに表示されます。コピー先の列は自動照合 (同じ名前、次に同じ表示名、次に似た名前) で選択されます。対処が必要なのは「似た名前」または「一致なし」の行だけです。行ごとにドロップダウンから変更するか、「(変更しない)」を選んでコピー元の名前を維持できます。Title などの組み込み列は、どこにでも存在するため表示されません。</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(変更しない)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>似た名前: 確認してください</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(未照合)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>ユーザーが選択したコピー先リスト</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>ご自身でリストを選択する場合 (たとえば名前が異なるとき) は、[コピー先リスト ID] 列にコピー先リストの ID またはリスト設定ページのリンクを入力または貼り付けます。その後、「再照合」をクリックして列を照合します。</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>&apos;{0}&apos; からリスト ID が見つかりませんでした。GUID またはリスト設定ページのリンクを貼り付けてください。</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>&apos;{0}&apos; からフォーム ID が見つかりませんでした。フォーム ID またはフォームの編集ページのリンクを貼り付けてください。</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>フォーム</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>コピー先</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>コピー</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>結果</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>コピーするフォームを選択</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>フォームを再読み込み</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>「自分のフォームを読み込む」をクリックしてフォームを表示します。</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>このアカウントにフォームが見つかりませんでした。</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} 件のフォームをコピー</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>さらにフォームをコピー</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>コピーの保存先を選択</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>シングルテナント: コピーは、使用中の同じアカウントに元のフォームの隣に作成されます。</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>マルチテナント: コピーはコピー先アカウントに作成されます。ここでサインインしてください。これは SharePoint サイトに使用したサインインとは別です。</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>コピー先アカウント</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>サインインに使用するアプリの登録: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>コピー先のアプリの登録 ([設定] で指定) でサインインします。</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>コピー先アカウントにサインイン</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>再度サインイン</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>コピー先アカウントにサインイン中… ブラウザー ウィンドウが開くことがあります。</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>{0} として接続しました。Microsoft Forms へのアクセスを確認しました (このアカウントには既に {1} 件のフォームがあります)。</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>コピー先アカウントに接続できませんでした: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>コピー先アカウントはまだ接続されていません。</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>準備完了です。[コピー] ボタンをクリックして開始してください。</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>準備完了: コピーは {0} に作成されます。</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>続行するには、コピー先アカウントにサインインしてください。</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>オプション</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} 件のフォームを {1} から {2} にコピーします。</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>コピー元アカウント</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>コピー先アカウント</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>フォームをコピー中</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>開始中…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>フォーム {0}/{1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>現在のフォームの完了後にキャンセルします…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>コピーが完了しました: {0} 件のフォームすべてをコピーしました</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>コピーは {0} にあります。Microsoft Forms を開くか、下の表で確認してください。</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>コピーが完了しました: {1} 件中 {0} 件のフォームをコピーしました。対処が必要なものがあります</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>コピーは {0} にあります。警告が付いたフォームは問題ありでコピーされ、失敗したフォームは作成されませんでした。[詳細] 列を参照してください。</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>コピーは完了しましたが、コピーされたフォームはありません</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>理由は [詳細] 列を参照してください。よくある原因は、コピー先の登録に Microsoft Forms アクセス許可がないこと、またはアカウントに Forms へのアクセス権がないことです。</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>{1} 件中 {0} 件のフォームのコピー後にキャンセルしました</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>下に表示されているフォームは完了しています。キャンセル時にコピー中だったフォームは完了しておらず、表示されません。</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>コピー済み</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>警告あり</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>失敗</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>質問</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>コピー元フォーム</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>コピー</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>質問</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>詳細</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>コピー済み</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>警告ありでコピー済み</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>失敗</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>選択したコピーを開く</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Microsoft Forms を開く</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>結果をエクスポート…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>フォーム ID マップを表示</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>最初に表でコピーしたフォームを選択してください。</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>結果を {0} に保存しました</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>ヒント: アプリの登録に一致するリダイレクト アドレスがありません。Entra の [認証] で、プラットフォーム「モバイル アプリケーションとデスクトップ アプリケーション」を http://localhost で追加し、もう一度お試しください。</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>パッケージ</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>サイト</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>リストと列</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>フォームとメール</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>書き込み</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>レポート</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>エクスポートしたフローを選択</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>Power Automate で、[マイ フロー] を開いてフローを選び、[エクスポート] → [パッケージ (.zip)] を選択します。ダウンロードした .zip ファイルをここに追加してください。各ファイルは追加するとすぐにスキャンされます。</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>クリア</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>開始するには、エクスポートしたフロー パッケージを追加してください。</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>それらのファイルにフローが見つかりませんでした。[エクスポート] → [パッケージ (.zip)] でエクスポートしたパッケージであることを確認してください。</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>スキャンが完了しました。フローが使用するものを確認し、[次へ] をクリックしてください。</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>コピー先サイトを選択</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>これらのフローは固定アドレスの SharePoint サイトを使用していないため、ここでマッピングするものはありません。[次へ] をクリックしてください。</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>次に、ツールが接続を通じて各リストを読み取り、コピー先サイトで照合します。</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>コピー元サイトごとにコピー先サイトを入力し、[次へ] をクリックしてください。</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>リストと列を照合</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>再照合</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>リスト</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>これらのフローは特定の SharePoint リストを指していないため、照合するものはありません。</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>この手順を開くと、リストと列が照合されます。</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>フォームとメール</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>フォームとメールを確認し、[次へ] をクリックしてください。</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>これらのフローは Microsoft Forms を使用していません。</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>メール アドレス</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>あるメール ドメインのすべてのアドレスを別のドメインに移動するには、両方のドメインを入力します。他のドメインのアドレスはレポートに一覧表示され、変更されません。</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>更新したパッケージを書き込み</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>出力フォルダー</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>出力フォルダーを選択し、[更新したパッケージを書き込む] をクリックしてください。</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>{1} 件のフローを含む {0} 件のパッケージを書き込む準備ができました。置換: サイト {2} 件、リスト {3} 件、列マッピング {4} 件、フォーム {5} 件。</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>更新したパッケージを書き込む</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>書き込んだパッケージ</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>置換</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>コピー元のまま</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>要確認</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>パッケージ</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>更新済み</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} 件の値がまだコピー元を指しています</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>レポートを開く</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>最初からやり直す</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>完了: {0} 件のパッケージを書き込みました</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>{0} に保存しました。コピー元を指したままのものはありません。以下の手順に従ってインポートしてください。</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>完了: {0} 件のパッケージを書き込みました。確認が必要な項目があります</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>{0} に保存しました。レポートを開いて、まだコピー元を指している値と、ツールが書き換えない項目 (他のサービス、照合されなかったリストや列) を確認してください。</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>次の手順</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  レポートを開き、「コピー元を指したまま」の項目と、確認対象としてマークされた項目を確認します。
+2.  Power Automate (コピー先テナント) で、[マイ フロー] → [インポート] → [パッケージのインポート (レガシ)] を開き、書き込んだパッケージを選択します。
+3.  「関連リソース」で、各接続の「インポート時に選択」をクリックし、コピー先テナントの接続を選択または作成します。接続はテナント間で移動できません。
+4.  フローをインポートします。オフのままにして開き、指摘された問題を修正してから、オンにします。</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>変更なし (マッピングに一致するものがありませんでした)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>{0} を {1} にコピーしました</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>以前にコピー済み</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>コピー済み</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …ほか {0} 件</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>もう一度コピーしますか?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>選択したフォームのうち {0} 件は、すでにこのアカウントにコピーされています:
+
+{1}
+
+もう一度コピーすると、それぞれの 2 つ目のコピーが作成されます。続行しますか?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>コピーがまだ実行中です。今閉じると、コピー中のフォームがコピー先で中途半端な状態で残る可能性があります。停止して閉じますか?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>コピー中</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>エクスポートできる回答がありませんでした (ログを参照)。</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>タイトルまたは種類で絞り込み</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>1 つのブック</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>選択したすべてのフォームを、フォームごとに 1 シートの単一の Excel ファイルにエクスポートします。</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>メール アドレス</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>テナント ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>ライブラリのパス</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>その他の値</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>変更したい値には置換後の値を入力します。空のままの行は変更されません。まだコピー元を指している場合は、レポートに一覧表示されます。</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>種類</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>フロー内</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>置換後</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>ID チェック</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>フォーム ID でも編集ページのリンクでもありません</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>コピー元フォームと同じ</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>このフォームはコピー先ではなくコピー元テナントにあります</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>このフォームはコピー元とは別のテナントにあります</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>{0} から {1} へのフォーム コピーより</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>以前のフォーム コピーより</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>マッピングを読み込む…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>以前に保存したマッピングから、サイト、リスト、列、フォーム、その他の値を入力します。</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>マッピングを読み込めませんでした: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>{0} を読み込みました。これらのフローに一致する値が入力されました。次の手順で確認してください。</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>{0} を読み込みました。フロー パッケージを追加すると適用されます。</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>{0} 件のコピー先サイトを入力しました。以下で確認し、[次へ] をクリックしてください。</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>すべてのサイトにすでにコピー先があるため、何も変更されませんでした。入力させたい場合は、[コピー先] セルをクリアしてください。</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>ショートカット: 新しいテナントのアドレス (例: https://fabrikam.sharepoint.com) を入力してボタンをクリックします。コピー先がまだないすべてのサイトに、コピー元と同じパスでそのアドレスが設定されます (https://contoso.sharepoint.com/sites/HR は https://fabrikam.sharepoint.com/sites/HR になります)。OneDrive サイト (contoso-my) は新しいテナントの -my アドレスになります。すでに入力したコピー先は変更されません。サイトは新しいテナントにあらかじめ存在している必要があります。このツールは作成しません。向こうでサイト名が異なる場合は、代わりに [コピー先サイト] セルにそのアドレスを入力してください。</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>[コピー先サイト] を空にすると、そのサイトは変更されません。フローは古いサイトを指したままになり、そのリストと列は照合も書き換えもされず、レポートの「インポート後の作業」に一覧表示されます。これが正しいのは、新しいテナントに移動しないサイトの場合だけです。</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>動作</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ コピー先に移動します</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ 変更なし (コピー先なし)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>サイト {0} は変更されませんでした (コピー先が入力されていません)。そのため、フローは引き続きそのサイトを指しており、そのリストは照合されていません。サイトを移動しない場合は問題ありません。それ以外の場合は、コピー先を指定して再実行してください。</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>まだ表示できる列がありません。照合されたリストがないため、比較するものがありません。上のリストを修正してから、[再照合] をクリックしてください。</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>マッピングする列がないため、ここで行う操作はありません。照合されたリストには、フローが書き込む、フィルターする、またはツールが認識できる方法で読み取るカスタム列がありません。下部のアクティビティ リストに、各リストで見つかった内容が表示されます。</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} 件の列が見つかりました: コピー先で同じ名前が {1} 件、名前変更して照合が {2} 件、似た名前が {3} 件、一致なしが {4} 件。</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>「似た名前」の行を確認し、「一致なし」の行には列を選択してください。「同じ名前」または「コピー先で名前変更」の行は対処不要です。</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>ここで行う操作はありません。すべての列がすでに一致しています。[次へ] をクリックしてください。</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>更新したパッケージの名前</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>更新した .zip ファイルの名前を指定します。元のファイル名には {name} を使用します。&quot;{name} - Fabrikam&quot; とすると &quot;Onboarding.zip&quot; は &quot;Onboarding - Fabrikam.zip&quot; になります。パッケージが 1 つの場合は、完全な名前をそのまま入力できます。元の名前を維持するには {name} のままにします。同じ名前が複数ある場合は (2)、(3)… が付くため、上書きされることはありません。</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>書き込み名: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>フローにはフォームの ID しか保存されないため、この手順を開くとフォーム名が Microsoft Forms から読み取られます。フロー内の各フォームのタイトル (コピー元アカウント) と、コピー先アカウントのフォームです。タイトルがコピー先の 1 つのフォームとまったく同じ場合は自動的に照合されます。それ以外は、ドロップダウンから新しいフォームを選択するか、その ID または編集ページのリンクを貼り付けてください。もう一度読み取るには、「フォーム名を再読み込み」を使用します。</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>コピー先アカウントからフォームを読み込む…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>コピー先アカウントのフォームを読み込み中… サインインを求められることがあります。</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>各フローの新しいフォームを選択できるよう、コピー先アカウント {0} が所有するフォームを一覧表示しています。サインインの待機を中止するには、[キャンセル] をクリックしてください。</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>コピー先: {1} で {0} 件のフォームが見つかりました。行ごとに 1 つ選択するか、ID を貼り付けてください。</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>コピー先: {0} にフォームが見つかりません。ドロップダウンにはそのアカウントが所有するフォームのみ (グループ フォームは除く) が表示されます。先にフォーム ツールでフォームをコピーするか、ID を貼り付けてください。</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>キャンセルしました。[フォーム名を読み込む] をクリックして再試行するか、フォーム ID を貼り付けてください。</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>コピー先: フォームを読み込めませんでした: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(なし)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(無題のフォーム)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>コピー元フォーム</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>コピー先のフォームから選択</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>コピー先アカウントのフォームを選択します。先に「コピー先アカウントからフォームを読み込む」をクリックしてください。</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>コピー先のサインイン ({0}) から入力</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>コピー元アカウントをコピー先アカウントに置換</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>サインイン ({0} → {1}) から入力しました。メール ドメインを変更しない場合は、両方のボックスをクリアしてください。</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>コピー先が空のサイトは変更されません。フローはそのサイトを指したままになり、レポートに一覧表示されます。</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ {0} としてサインイン済み · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>{0} としてサインインしました。コピー先テナントの SharePoint アドレスは {1} です。空のコピー先サイトはこれをもとに入力されました。</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ フロー内の一部のサイトは {0} にあり、これはコピー先アカウント自身のアドレスです。これらのパッケージがすでにコピー先を指している (たとえば、このツールが書き込んだパッケージや、コピー先からエクスポートしたフロー) 場合は、代わりにコピー元の元のエクスポートを追加してください。または、コピー元とコピー先が実際に同じテナントである場合は、アプリをシングルテナント モード ([設定]) に切り替えてください。</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} は、このツールが {1} に書き込んだパッケージです。すでにコピー先のアドレスが含まれているため、移動するものは残っていません。代わりにコピー元テナントの元のエクスポート (出力フォルダーのものではなく、ダウンロード フォルダーのファイル) を追加してください。</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ これらのフローのサイトはコピー先テナントである {0} にありますが、コピー元は {1} です。パッケージを {0} からエクスポートした場合は、そのテナントにコピー元としてサインインしてください (コピー元を変更…)。このツールが以前に書き込んだものである場合は、削除して元のエクスポートを追加してください。</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>サインインしました。{1} から {0} 件のコピー先サイトを入力しました。確認して、[次へ] をクリックしてください。</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>サインインしました。すべてのコピー先サイトにすでに値があったため、変更はありません。</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>サインインが完了しなかったか、新しいテナントのアドレスを読み取れませんでした ([コピー先] の行を参照)。サインイン済みの場合は、以下に新しいテナントのアドレスを入力してコピー先サイトを入力してください。</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — {1} として接続済み</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — まだサインインしていません</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>コピー先を変更…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>コピー先リストが選択されていないため、これらのフローはコピー先に存在しないリストを指したままになります。コピー先リストを選択するか、先にコピー先サイトにリストを作成してください。</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>フローは列 &quot;{0}&quot; を使用していますが、コピー先リスト &quot;{1}&quot; にはそれに対応する列がありません。表でコピー先の列を選択するか、コピー先リストに列を追加して、[再確認] をクリックしてください。</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>コピー先リスト &quot;{0}&quot; には列 &quot;{1}&quot; が必須ですが、フロー &quot;{2}&quot; の &quot;アイテムの作成&quot; ステップ &quot;{3}&quot; ではそれが設定されていないため、インポートは &quot;missing required property item/{1}&quot; で失敗します。下に値を入力するとツールがそのステップに追加します。または、コピー先リストで &quot;{1}&quot; を省略可能にして、[再確認] をクリックしてください。</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>コピー先リスト &quot;{0}&quot; には列 &quot;{1}&quot; が必須ですが、フロー &quot;{2}&quot; の &quot;アイテムの作成&quot; ステップ &quot;{3}&quot; ではそれが設定されていないため、インポートは &quot;missing required property item/{1}&quot; で失敗します。SharePoint のコピー先リストで &quot;{1}&quot; を省略可能にしてから、[再確認] をクリックしてください。</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>これらの必須列に入力する値 (それらを省略しているすべての &quot;アイテムの作成&quot; ステップに追加されます):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>これはインポート時に失敗します。続行するには修正してください:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>再確認</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>失敗します ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ 続行するには、コピー先にサインインしてください。</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} 件のパッケージはこのツールによって書き込まれたもので、すでにコピー先の値が含まれています。削除して (一覧の ✕)、元のエクスポートを追加してください。</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} 件のサイトにコピー先がありません。そのままにしたサイトは、引き続きコピー元テナントを指します。</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} 件のリストはインポート時に失敗します。続行するには、「失敗します」とマークされたリストを修正してください。</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ リストはまだ照合されていません。1 つ前の手順に戻ってから進み、再試行してください。</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ 続行するには、{0} 件のフォームに有効なコピー先フォーム ID が必要です。</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>コピー元を変更…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>{0} としてサインインしました。コピー元テナントの SharePoint アドレスは {1} です。</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>コピー元の接続を {0} に変更しました。以下に表示されるサイトはこのテナントにある必要があります。</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>コピー元のサインインが完了しなかったか、テナントのアドレスを読み取れませんでした ([コピー元] の行を参照)。キャンセルした場合は、以前のコピー元の接続が維持されます。</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ 一部のサイトは {0} から読み取られますが、これはコピー元として接続しているテナント ({1}) ではありません。それらのリストの読み取りは失敗します。それらの行の「リストの読み取り元」をコピー元テナントのアドレスに編集するか、[コピー元を変更…] をクリックしてそのテナントのアカウントでサインインしてください。</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>フローのサイトは {0} にありますが、コピー元として {1} に接続しています。「リストの読み取り元」には {1} 上の同じサイトが入力されたため、ツールはそこでリスト名と列を読み取ります。それらのサイトが存在することを確認する (任意の行を編集) か、フローが実際に {0} からのものである場合は [コピー元を変更…] をクリックしてください。</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>フローが使用するリスト</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>リストをクリックすると開閉します。確認が必要なリストが先頭に開いた状態で表示されます。</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>すべて開く</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>すべて閉じる</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>使用元:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>コピー元:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>コピー先リスト</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>または ID かリンクを貼り付け:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>コピー元の列</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>種類</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>使用</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>フローでは使用されていません</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(なし: このリストは変更しません)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ コピー先リストが選択されていません: このリストを使用するフローはコピー元リストを指したままです</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ 確認する列 {1} 件</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ 確認の必要なし</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>このリストの列は {0} 件、フローが使用するのは {1} 件です: コピー先で同じ名前が {2} 件、名前変更して照合が {3} 件、似た名前が {4} 件 (要確認)、一致なしが {5} 件 (要選択)。その他の列は参考として表示されるもので、変更されません。</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>このリストの列は {0} 件です。ツールが認識できる方法でフローが使用しているものはないため、マッピングは不要です。</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>このリストの列を読み取れませんでした (上の注記とアクティビティ リストを参照)。</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>上でコピー先リストを選択すると、その列が表示され、マッピングできます。</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>コピー先リストの列を読み取れなかったため、一致候補を提示できませんでした。</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>フローにこのリストのあるサイトが指定されていないため (パラメーターを使用)、検索できません。コピー先リストの ID またはリンクを貼り付けてください。</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>コピー先リストなし: このリストは変更されません。</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>{0} のコピー先リストの列を読み取り中…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>リスト &apos;{0}&apos;: 別のコピー先リストを選択しました。再照合するため、{1} でその列を読み取っています。</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — {1} として接続済み (メイン ウィンドウのサインイン)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>リストの読み取り元 (コピー元)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>「フロー内のサイト」はフローに保存されているアドレスで、置換される対象のため編集できません。「リストの読み取り元」は、ツールがコピー元側で各リストの名前と列を読み取る場所です。最初は同じアドレスですが、フローのアドレスが古い、名前が変更された、またはコピー元の接続とは別のテナントにある場合は変更してください。</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>これらのフローが使用するもの</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — フロー {1} 件、ステップ {2} 件: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>このツールが書き換え</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>手動で確認</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>接続のみ</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>インポート後の作業</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>修正した各パッケージをコピー先の環境にインポートし、接続を作り直してください (接続はコピーされません)。</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}。</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>ソリューション パッケージ: ワークフロー定義のみが書き換えられました。ソリューション内の環境変数の値と接続参照 (customizations.xml) にはコピー元の値が残っています。インポート後に設定してください。</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>フローの所有者と実行のみのユーザーはパッケージに含まれません。インポート後に、適切なユーザーとフローを共有してください。</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>変更なし (マッピングに一致するものがありませんでした)。</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>置換 {0} 件</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>まだコピー元の値を指しています (未マッピング、インポート前に確認してください)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>コピー元サイト {0} とコピー先サイト {1} に接続中です。まだサインインしていない場合は、サインイン ウィンドウが開きます。</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>{0} (コピー元) と {1} (コピー先) に接続しました。</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>コピー先サイト {0} のリストとライブラリを読み取り中です。各リストを名前で照合し、ドロップダウンで選択できるようにします。</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>{1} でリストとライブラリが {0} 件見つかりました。</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>コピー元サイト {1} からリスト {0} の名前と列を読み取り中です。</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>リスト &apos;{0}&apos;: コピー先サイト {1} で同じ名前のリストを探しています。</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>リスト &apos;{0}&apos;: コピー先で見つかりました。照合するためコピー先リストの列を読み取り中です。</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>リスト &apos;{0}&apos;: 列を読み取れなかったか、列がありません。このリストにマッピングするものはありません。</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>リスト &apos;{0}&apos;: 列は {1} 件で、ツールが認識できる方法でフローが使用しているものはありません。マッピングは不要です。</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>リスト &apos;{0}&apos;: フローは {1} 件の列名を使用しています。コピー先で同じ名前が {2} 件 (変更不要)、名前変更して照合が {3} 件、似た名前が {4} 件 (要確認)、一致なしが {5} 件 (選択が必要)、組み込み列が {6} 件 (マッピング不要) です。</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>リスト {0} はコピー元サイトにはありませんが、コピー先サイトに &apos;{1}&apos; として存在します。フローはすでにコピー先を指しています。</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>サイト &apos;{0}&apos; にはコピー先がないため、そのリストは解決されませんでした。</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>詳細設定: 別のアドレスからリストを読み取る</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>列マッピング: {0} から {1} へ</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>このリストに表示する列がありません。</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>このリストの列はフローで使用されていません。表示するには「すべての列を表示」をオンにしてください。</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>コピー元リストを読み取れず、フローにも列名がないため、マッピングするものがありません。</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>リスト</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(コピー元で読み取れませんでした)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>読み取り元:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>サイト</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>このフローはすでにコピー先のこのリストを指しています。使用している {0} 件の列名がコピー先の列と対比して表示されます。変更は不要です。</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(リスト名を取得できません)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>すでにコピー先</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>フローの列名でマッピング</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>列を読み取れません</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>コピー先リストなし</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>マッピング不要</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>準備完了</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>コピー先の列を読み取れません</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} 件要確認</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>{0} 件のフローが使用</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} 件の列マッピングにまだ確認が必要です。</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>すべての列マッピングが確定しています。</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>接続はテナント間でコピーされません。インポート後に Power Automate で作り直してください。</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>メール: {0} のすべてのアドレスが {1} になります。</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{1} 件中 {0} 件のフォームが新しいフォームを指します。</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{1} 件中 {0} 件のリストにコピー先リストがあります。</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>リストはまだ照合されていません。</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>メール アドレスは変更されません (ドメインがマッピングされていません)。</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>フローは Microsoft Forms を使用していません。</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>フローは特定のリストを使用していません。</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>フローに SharePoint サイトの指定がありません。</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{1} 件のフローを含む {0} 件のパッケージが書き込まれます。元のパッケージは変更されません。</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{1} 件中 {0} 件のサイトがコピー先サイトに移動します。その他はそのままです。</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>自動入力された値をクリア</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>入力済み</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>フロー内のフォーム</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>変更前 (フロー内)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>リスト</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>サイト</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>状態</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>変更後 (コピー先)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>ユーザーが選択</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>変更なし</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(メイン ウィンドウのサインイン)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>移動元のメール ドメイン</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>次のドメインのすべてのアドレスを移動:</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>移動先</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>移動先のメール ドメイン</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…または、.zip ファイル (またはフォルダー) をこのウィンドウにドラッグします。</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>リスト &apos;{1}&apos; の列 &apos;{0}&apos; は、コピー先リストに一致するものがありません。</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>{2} のリスト &apos;{0}&apos; ({1}) にはコピー先リストがないため、それを使用するフローはコピー元リストを指したままです。</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(タイトル不明)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>手順へ移動</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>保存したマッピングがありますか? 読み込む…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>カスタム パターン…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>元の名前を維持</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>各名前に &apos; - migrated&apos; を追加</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>レポートを開き、確認対象としてマークされた項目を確認します。</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>Power Automate (コピー先テナント) で、[マイ フロー]、[インポート]、[パッケージのインポート (レガシ)] の順に選択し、書き込んだパッケージを選択します。</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>「関連リソース」で、各接続の「インポート時に選択」をクリックし、コピー先テナントの接続を選択または作成します。接続はテナント間で移動できません。</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>フローをインポートし、オフのままにして開き、指摘された問題を修正してから、オンにします。</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>フォルダーを開く</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Power Automate を開く</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>その出力フォルダーはまだ存在しません。パッケージを書き込むときに作成されます。</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>コピー元</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>コピー先</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} 件のフローが見つかりました</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>フローが見つかりません</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>すでにこのツールで書き込み済み</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>読み取れませんでした</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>書き込みの準備はできましたか?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>このパッケージを一覧から削除</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>フロー書き換えレポート</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>これらのフローが使用するもの ({0} 件のサービス)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} 件のパッケージを書き込めませんでした。</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>書き込んだパッケージの {0} 件の値がまだコピー元を指しています。レポートを開いて確認してください。</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>{0} 件のすべての列を表示</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>フローが使用する列のみ表示</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>これらの列の意味</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>このリストの ID はコピー元サイトにはありませんが、コピー先サイトのリスト &apos;{0}&apos; です。このツールがすでに書き込んだパッケージと同様に、フローはすでにコピー先を指しています。</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>接続済み</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>問題</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>未サインイン</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>サインイン待機中…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} 件のリスト · すべて準備完了</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} 件のリスト · {1} 件準備完了 · {2} 件要確認</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>所要時間: {0}。</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>要確認</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>コピー元テナントからエクスポートしたフロー パッケージ (.zip) を追加します。各パッケージは追加するとすぐにスキャンされます。</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>各フローの移動先サイトを指定します。コピー先にサインインすると、新しいテナントのアドレスが自動入力されます。</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>フローが使用する各リストがコピー先のリストと照合され、その列がマッピングされます。確認が必要とマークされたものをチェックしてください。</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>コピーしたフォームを新しい ID に向け、メール アドレスとテナント ID をどう変更するかを決めます。</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>下の一覧を確認し、更新したパッケージの保存先を選んで、書き込みます。</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>この手順の内容</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>ツールはこのコンピューター上で各パッケージを読み取り (何も送信されません)、フローが使用するサイト、リスト、列、フォームを検出します。このツールが以前に書き込んだパッケージではなく、コピー元の元のエクスポートを追加してください。後者にはすでにコピー先のアドレスが含まれています。</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>列 &apos;{0}&apos; は、リストごとに異なるマッピングになっています ({1})。各リストのステップにはそれぞれのマッピングが適用されます。フロー内の他の場所の式は元の名前のままなので、確認してください。</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>フォーム名を再読み込み…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>フォーム名を読み込み中… サインインを求められることがあります。</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>フロー内のフォームのタイトルを、コピー元アカウント {0} から読み取っています。サインインの待機を中止するには、[キャンセル] をクリックしてください。</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>コピー元: {1} 件中 {0} 件のフォームのタイトルが見つかりました ({2})。</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>コピー元: フォームのタイトルを読み取れませんでした: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} 件のフォームが、同じ名前のコピー先フォームと照合されました。</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>有効なフォーム ID のようです</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>名前で照合</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>コピー元とコピー先が同じテナント ({0}) にあります。アプリをシングルテナント モード ([設定]) に切り替えるか、コピー元とコピー先に別のテナントのアカウントでサインインしてください。</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>これらのパッケージを削除</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>すでにコピー先を指している {0} 件のパッケージを削除しました: {1}。代わりにコピー元テナントの元のエクスポートを追加してください。</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>それらのパッケージを削除しました。コピー元テナントの元のエクスポートを追加してください。</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>各パッケージは出力フォルダーに新しい .zip として保存されます。元のパッケージは変更されません。名前を変更するには、[名前を付けて保存] に別の名前を入力します。</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>元の名前を維持</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>すべての名前に &apos; - migrated&apos; を追加</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>元のパッケージ</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>名前を付けて保存</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>次の名前で保存されます: {0} (名前は下で変更できます)。</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>読み取れませんでした。出力は書き込まれていません</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>キャンセルしました。何も変更されていません。[サイト] の手順では [サインイン] を使って再試行してください (たとえば別のブラウザーで)。[リスト] の手順では [再照合] を使用してください。</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>キャンセル中… サインイン ウィンドウが閉じるまで少し時間がかかることがあります。</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>ツールの動作状況</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>接続</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>マルチテナント: リストを照合するため、ツールはコピー元テナントから各リストの名前と列を読み取り、コピー先テナントで同じリストを探します。そのためには両方へのサインインが必要です。ここで各側にサインインするか、[次へ] をクリックするとそのときに求められます。ブラウザー ウィンドウが開きます。別のブラウザーが開いた場合は、[キャンセル] をクリックしてやり直してください。どちらのテナントでも何も変更されません。</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>シングルテナント: コピー元とコピー先は同じテナントのため、ツールは [接続] の手順でサインインしたアカウントを使用します。他にサインインするものはありません。テナントでは何も変更されません。</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>コピー元</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>コピー先</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>コピー元にサインイン…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>コピー先にサインイン…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>サインイン ウィンドウの待機を中止し、たとえば別のブラウザーで再試行できるようにします。</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>まだサインインしていません</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>メイン ウィンドウのサインインを使用: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ {0} としてサインイン済み</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ 準備完了</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>サインイン待機中… ブラウザー ウィンドウが開くはずです</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>サインインがキャンセルされました。[サインイン] をクリックして再試行してください。</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>サインインしました。以下のコピー先サイトを確認し、[次へ] をクリックしてください。</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>サインインするコピー元サイトがまだありません。先にフロー パッケージを追加してください。</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>先にコピー先サイトを少なくとも 1 つ入力してください (または「空のコピー先をパスを維持して入力」を使用)。サインインはコピー先サイトのテナントに対して行われます。</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>コピー元にサインイン中… ブラウザー ウィンドウが開きます。</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>コピー先にサインイン中… ブラウザー ウィンドウが開きます。</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>コピー元</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>コピー先</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>コピー元テナントにサインイン中です。ブラウザー ウィンドウが開きます。待機を中止するには (たとえば別のブラウザーを試すには) [キャンセル] をクリックしてください。このサインインにより、コピー元がどのテナントかもツールに伝わります。</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>コピー先テナントにサインイン中です。ブラウザー ウィンドウが開きます。待機を中止するには (たとえば別のブラウザーを試すには) [キャンセル] をクリックしてください。このサインインにより、新しいテナントの SharePoint アドレスもツールに伝わります。</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>{0}に接続しました。</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>サインインがユーザーによりキャンセルされました。</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>このコンピューター上の {0} 件のパッケージ ファイルを読み取り、フローが使用するサイト、リスト、列、フォームを検出しています。何も送信されません。</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>{0} を読み取りました: {1} 件のフロー。</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>{0} 件のリストを照合中: 各リストについて、ツールがコピー元サイトに名前を問い合わせ、コピー先サイトでその名前のリストを探します。</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>照合が完了しました。{0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>修正した {0} 件のパッケージを {1} に書き込んでいます。元のパッケージは変更されません。</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>マッピングを適用して {0} を書き込んでいます。</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>{0} に、まだコピー元を指している値がないか確認しています。</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>ユーザーによりキャンセルされました。何も変更されていません。</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>停止しました: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>各フローには、読み取りまたは書き込みを行う SharePoint サイトのアドレスが保存されています。新しいテナントで実行するには、すべてのフローがそこの対応するサイトを指す必要があるため、どの新しいサイトがどの古いサイトに置き換わるかをツールに伝えます。編集されるのはパッケージのコピーのみで、[次へ] をクリックするまで何も検索されません。</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>この手順の内容: フローが使用する各リストについて、ツールはコピー元サイトからリストの名前と列を読み取り、コピー先サイトで同じ名前のリストを探し、そのリストの列を読み取って照合します。理由: フローは ID または内部名でリストと列を参照しますが、新しいテナントではそれらが異なるため、ツールが対応するものを探します。この手順は読み取りのみで、どちらのテナントでも何も作成または変更されません。コピー先リストと任意の列は、そのカードで変更できます。</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>コピーしたフォームには新しい ID が付くため、それを使用するフローはコピーを指す必要があります。フロー内のメール アドレスとテナント ID も、新しい組織向けに変更が必要な場合があります。ここでは何も検索されません。置換内容はユーザーが決め、空のままのものはそのままになります。</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>ツールはマッピングを適用した新しい .zip ファイルを出力フォルダーに書き込み、それらを再スキャンしてまだコピー元を指しているものを検出し、レポートを書き込みます。元のパッケージは変更されず、どちらのテナントにも何も送信されません。新しいパッケージは、その後ご自身で Power Automate にインポートします。</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>サインインがキャンセルされました。ボタンをクリックして再試行してください (たとえば別のブラウザーで)。</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>エラー: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>コピー元フォームを読み取れませんでした ({0})。</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>コピー先でフォームを作成できませんでした ({0})。{1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>途中でキャンセルされました。不完全なフォームがコピー先に残っています。Microsoft Forms で削除してください。</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>コピーが途中で停止しました ({0})。不完全なフォームがコピー先に残っています。Microsoft Forms で削除してください。</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>背景画像</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>ロゴ</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>ヘッダー画像</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>{0}はコピーされませんでした (画像はまだサポートされていません)。</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>クイズの採点 (正解と配点) は検証されていません。コピーを確認してください。</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>設定 &apos;{0}&apos; をコピーできませんでした ({1})。</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>質問 &apos;{0}&apos; はコピーされませんでした ({1})。{2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(無題)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>分岐ルールをコピーできませんでした ({0})。コピーを確認してください。</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>コピーは作成されましたが、Microsoft Forms で表示できませんでした ({0})。ごみ箱に入っている可能性があります。</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>コピーの質問数は {0} 件ですが、コピー元は {1} 件です。</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>質問 &apos;{0}&apos; ({1}) は作成されましたが、その選択肢をコピーできませんでした ({2})。</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>結果</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>コピー元フォーム</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>コピー元フォーム ID</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>コピーのタイトル</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>コピーのフォーム ID</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>状態</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>コピーした質問数</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>コピー元の質問数</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>警告</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>メモ</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>エラー</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Excel ブック (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>JSON ファイル (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>ID</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>開始時刻</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>完了時刻</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>回答者</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>名前</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>スコア</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>マッピングされなかった回答 (生の JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (切り詰め: Excel のセルには長すぎます)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>実行を停止しますか?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>比較または検証がまだ実行中です。このウィンドウを閉じると停止し、レポートは書き込まれません。閉じますか?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>処理中に閉じますか?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>ツールはまだ処理中です (スキャン、照合、サインイン、またはパッケージの書き込み)。今閉じると停止します。閉じますか?</value></data>
 </root>

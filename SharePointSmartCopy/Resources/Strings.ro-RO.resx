@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Reușite ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Eșuate ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Omise ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Actualizat</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Nu s-a putut citi dacă sursa are permisiuni proprii (limitare sau eroare de acces) — permisiunile nu au fost copiate pentru acest element. Rulați din nou pentru a reîncerca.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Fișierul existent din destinație a fost eliminat pentru suprascriere, dar noua copie nu a putut fi încărcată ({0}). Fișierul lipsește momentan din destinație — rulați din nou copierea pentru a-l restaura.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>O bibliotecă din destinație a eșuat ({0}). Fișierele ei au fost marcate ca Eșuate; celelalte biblioteci continuă.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: fișierul sursă s-a modificat în timpul descărcării — descărcarea reîncepe.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint nu a raportat niciun progres pentru acest import timp de {0} minute, așa că a fost abandonat. Fișierele lui au fost marcate ca Eșuate; rulați din nou copierea pentru a le reîncerca.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>Tenant unic</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Multi-tenant</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Copiați între două tenanturi Microsoft 365 diferite. Vă autentificați separat la sursă și la destinație. Alegeți înregistrarea aplicației pentru destinație în Setări.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Înregistrarea destinației:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Mod multi-tenant: înregistrarea aplicației folosită pentru autentificarea în tenantul destinație. „La fel ca sursa” reutilizează înregistrarea sursei, care trebuie să fie atunci o aplicație multi-tenant.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Reluare / rulare din nou</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Se reconectează și rulează din nou această selecție cu Copiere dacă este mai nou, astfel încât fișierele deja copiate sunt omise și se transferă doar ce lipsește sau s-a modificat.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Această rulare nu are o selecție salvată de reluat (doar rulările cu selecție de fișiere o înregistrează).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>O copiere rulează deja. Finalizați-o sau anulați-o mai întâi.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Nu s-a putut relua: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} rulare/rulări întrerupte au fost recuperate. Consultați Istoricul.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Se reia: {0} element(e) restaurate din rularea anterioară, cu Copiere dacă este mai nou selectat. Verificați opțiunile, apoi faceți clic pe Următorul. (Mapările personalizate de coloane nu sunt restaurate.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>ÎNTRERUPTĂ — aplicația s-a închis înainte ca această rulare să se termine. Dintre elementele finalizate: {0} reușite, {1} eșuate, {2} omise, {3} anulate  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Exportați diagnosticarea…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Salvează un zip cu jurnale recente, informații despre sistem și setările dvs., fără detaliile organizației — pentru a-l atașa la un raport de eroare. Nu include rapoarte de copiere sau nume de fișiere.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Diagnosticarea a fost salvată în {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Nu s-a putut salva diagnosticarea: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Conținutul este identic (diferă doar părțile gestionate de SharePoint), dar data modificării nu a fost păstrată.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Permisiuni necopiate: nu s-au putut rezolva ID-urile SharePoint ale elementului.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Permisiuni necopiate: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Folderul „{0}”: {1} neaplicat(e) — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>Mai multe foldere au avut probleme ca cele de mai sus; cele următoare nu sunt listate individual.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>permisiuni</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>date</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>autor / editor</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} păstrat(e) — destinația este deja actualizată)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>AVERTISMENT: citirea metadatelor din sursă ({0}) a eșuat: {1}. Elementele din ea pot fi copiate FĂRĂ valorile coloanelor personalizate sau permisiunile unice. Rulați din nou după ce problema dispare (Suprascriere sau Dacă este mai nou le reaplică).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>AVERTISMENT: nu s-a găsit lista sursă a unei biblioteci, deci permisiunile ei NU vor fi copiate.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>Gazda SharePoint „{0}” nu este asociată cu un tenant conectat. Reconectați site-urile sursă și destinație și încercați din nou.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Copiere între tenanturi: valorile coloanelor de metadate gestionate (taxonomie) nu se copiază, iar blocnotesurile OneNote / seturile de documente nu pot fi încă copiate între tenanturi. Identitățile sunt mapate folosind setările dvs. de Mapare identități; cine nu poate fi rezolvat în destinație este omis.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Mapare identități</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Mapare identități…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Listați fiecare persoană (sau grup) din tenantul sursă și cine este în tenantul destinație — sunt conturi diferite. Autorii, editorii, coloanele de tip persoană și permisiunile sunt scrise folosind acest tabel. Cine nu este listat este potrivit prin schimbul de domeniu, dacă ați stabilit unul; cine tot nu este găsit în destinație este omis și raportat.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Domeniul de e-mail al sursei</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Domeniul de e-mail al destinației</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Suprascrieri — o pereche „sursă,destinație” pe linie (utilizatori sau nume de grupuri; # începe un comentariu)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>La fel ca sursa</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Sursa și destinația sunt în același tenant. Treceți la modul tenant unic pentru copieri în același tenant.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Copierea nativă a folderelor (blocnotesuri OneNote, seturi de documente) nu este încă acceptată între tenanturi.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Unitatea „{0}” nu este asociată cu un tenant conectat. Reconectați site-urile sursă și destinație și încercați din nou.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Nu este configurată încă nicio înregistrare de aplicație. Deschideți Setări și adăugați înregistrarea aplicației Azure (ID-ul aplicației/clientului) înainte de conectare.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Autentificarea a fost anulată. Faceți clic pe Conectare pentru a încerca din nou.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>Un administrator nu a aprobat încă această aplicație în acest tenant. Rugați un Administrator global să acorde consimțământul administratorului pentru înregistrarea aplicației (consultați Configurarea în Ghidul utilizatorului).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Înregistrarea aplicației nu a fost găsită în acest tenant. Verificați ID-ul clientului și ID-ul tenantului în Setări.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Tenantul respectiv nu a fost găsit. Verificați ID-ul tenantului în Setări (folosiți domeniul dvs., GUID-ul tenantului sau „common”).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>Înregistrării aplicației îi lipsește adresa de redirecționare folosită de această aplicație. În Azure, adăugați URI-ul de redirecționare http://localhost la „Aplicații mobile și desktop”.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Înregistrarea aplicației nu este configurată pentru autentificare pe desktop. În Azure, activați „Permite fluxurile de client public” pentru înregistrare.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Acest cont nu are voie să folosească acea înregistrare de aplicație. Autentificați-vă cu un cont din tenantul care o deține sau alegeți altă înregistrare în Setări.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint a respins autentificarea. Faceți clic pe Conectare pentru a vă autentifica din nou.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>Nu aveți acces la acest site. Asigurați-vă că contul dvs. îl poate deschide într-un browser și că aplicației i s-a acordat permisiunea Sites.ReadWrite.All.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Site-ul respectiv nu a fost găsit. Verificați adresa — ar trebui să arate ca https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Detalii: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Conectați-vă la site-ul sursă pentru a continua.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Selectați cel puțin un element (bifați o casetă) pentru a continua.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Conectați-vă la site-ul destinație pentru a continua.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Alegeți un folder de destinație pentru a continua.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Alegeți o listă de destinație pentru a continua.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Introduceți un nume pentru lista nouă pentru a continua.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Nu este selectat nimic pentru copiere.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Se așteaptă finalizarea copierii…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Sursă: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Destinație: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Înregistrarea aplicației dvs. s-a schimbat, așa că ați fost deconectat de la ambele site-uri. Conectați-vă din nou pentru a continua.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Opriți copierea?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>O copiere este în curs. Oprirea acum lasă elementele rămase necopiate (puteți relua mai târziu din Istoric). Opriți copierea?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>O copiere încă rulează. Închiderea aplicației o va opri și va lăsa elementele rămase necopiate (puteți relua mai târziu din Istoric). Închideți oricum?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Schimbați modul de conectare?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>Trecerea între tenant unic și multi-tenant deconectează ambele site-uri, iar va trebui să vă conectați din nou. Schimbați oricum?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Conexiune:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Înregistrarea aplicației sursă</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Înregistrarea aplicației destinație</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Se autentifică în tenantul destinație cu:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Modificare</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Deschideți Setări</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Trebuie să aveți acces de citire la colecția de site-uri sursă.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Configurați înregistrarea aplicației Microsoft Entra ID în Setări înainte de conectare.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Opțiuni fișier</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Opțiuni bibliotecă și fișier</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Se copiază fișierele…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Se copiază bibliotecile…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Următorul</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Începeți copierea</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Vizualizați raportul</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Introduceți numele noii liste de creat</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>Lista de destinație a fost aleasă la pasul Destinație. Reveniți pentru a o modifica.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Configurați mai întâi o înregistrare de aplicație</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy se autentifică cu o înregistrare de aplicație pe care o creați în propriul tenant Microsoft Entra ID (Azure). Deschideți Setări, adăugați ID-ul aplicației (clientului) din înregistrare, apoi reveniți aici pentru a vă conecta.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Mai multe informații</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Trageți pentru a mări sau micșora înălțimea fluxului de activitate</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Faceți clic pentru a afișa doar elementele eșuate</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Faceți clic pentru a afișa doar elementele omise</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Mapare coloane</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Comparați sursa și destinația</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Deschide instrumentul Comparare pentru a verifica această copie față de sursă.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Deschideți Istoricul</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Înregistrarea selectată este folosită pentru sursă — și pentru ambele părți în modul tenant unic.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Înregistrare nouă</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Adăugați cel puțin o înregistrare de aplicație.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validare</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>ID-ul clientului este obligatoriu pentru înregistrarea selectată.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Ați fost deconectat. Vi se va cere să vă autentificați la următoarea conectare.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Deconectat</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Deconectarea a eșuat: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Deconectare</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} mapare/mapări găsite.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} linie/linii nu pot fi citite (linia {1}). Fiecare linie trebuie să arate ca sursă,destinație.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Domeniile sursei și ale destinației sunt aceleași, deci schimbul de domeniu nu va modifica nimic.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Importați CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Unele linii de suprascriere nu pot fi citite (linia {0}). Fiecare linie trebuie să fie „sursă,destinație”. Corectați-le sau eliminați-le — sau începeți o linie cu # pentru a o transforma în comentariu.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Nu s-a putut salva maparea identităților: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Nu s-a putut citi fișierul respectiv: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Între tenanturi: {0} cont/conturi de autor/editor din această bibliotecă nu au fost găsite în tenantul destinație și vor rămâne contul care copiază. După rulare, folosiți „Mapați acești utilizatori” din raport pentru a le corecta.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Introduceți utilizatorul sau grupul sursă.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Introduceți cine este această persoană în tenantul destinație — sau eliminați rândul.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Sursa și destinația sunt la fel.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Această sursă apare de mai multe ori.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Sursă (acest tenant)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Destinație (alt tenant)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Tip</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>În destinație?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Necesar pentru</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Utilizator</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Grup</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Neverificat</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Se verifică…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Găsit</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Negăsit</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Adăugare</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Eliminare</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Completați destinațiile din schimbul de domeniu</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>Pentru rândurile fără destinație, completează adresa pe care ar produce-o schimbul de domeniu.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Verificați în destinație</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Caută fiecare utilizator destinație în tenantul destinație. Astfel îi adaugă și în lista de utilizatori a site-ului destinație, lucru pe care copierea îl face oricum înainte de a-i putea seta ca autor sau de a le acorda acces.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Conectați-vă mai întâi la o destinație multi-tenant: introduceți URL-ul site-ului destinație la pasul Destinație, apoi redeschideți această casetă de dialog.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Exportați CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>Aceste persoane au fost necesare pentru copiere, dar nu au fost găsite în tenantul destinație. Pentru fiecare, introduceți cine este în destinație — sau eliminați rândul pentru a o lăsa nemapată.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} mapare/mapări.</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} rând/rânduri necesită atenție.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Verificat: {0} găsite, {1} negăsite{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} nu au putut fi verificate</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Se verifică {0} din {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Nimic de verificat: niciun rând nu are adresă de e-mail destinație.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Unele rânduri necesită atenție (evidențiate). Corectați-le sau eliminați-le, apoi salvați.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Maparea a fost salvată. Pentru a o aplica fișierelor deja copiate, rulați din nou cu Suprascriere — Copiere dacă este mai nou omite fișierele actualizate, deci autorii lor nu se schimbă. Permisiunile sunt reîmprospătate oricum.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>{0} persoană/persoane din sursă nu au fost găsite în tenantul destinație, așa că au fost lăsate deoparte: fără acces acordat, nesetate ca autor sau editor, sau eliminate din coloanele de tip persoană.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Mapați acești utilizatori…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Mapați utilizatorii nerezolvați…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Deschide maparea identităților cu persoanele pe care această rulare nu le-a găsit în destinație.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Această rulare nu a avut utilizatori nerezolvați.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Copiere formulare</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Copiați Microsoft Forms în contul destinație, păstrând toate întrebările, ramificările, setările și tema. Răspunsurile pot fi exportate în Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Aceasta folosește API-ul web Microsoft Forms, pe care Microsoft nu îl documentează și nu îl acceptă. Funcționează astăzi, dar se poate schimba fără notificare. Încercați mai întâi câteva formulare.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Încărcați formularele mele</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Cont sursă: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Cont destinație: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Destinație: același cont (tenant unic). Copiile sunt create lângă originale.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(vi se va cere să vă autentificați)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Harta ID-urilor de formulare (folosită de instrumentul Fluxuri): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Se încarcă formularele…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>{0} formulare încărcate.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Selectați mai întâi cel puțin un formular.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Se copiază formularele…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Se copiază…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Copiat</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Eșuat (consultați jurnalul)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Se copiază „{0}”</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Copiere finalizată: {0} copiate, {1} eșuate.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Alegeți un folder pentru exporturile de răspunsuri</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Se exportă răspunsurile…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>„{0}” exportat: {1} răspunsuri în {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Răspunsuri exportate pentru {0} formulare în {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Formularul a fost copiat, dar ID-ul lui nu a putut fi salvat pentru instrumentul Fluxuri: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Nu s-a putut exporta „{0}”: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Răspunsuri exportate pentru {0} formulare în {2}; {1} eșuate (consultați jurnalul).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Anulat.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Eroare: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Sugestie: înregistrarea aplicației are nevoie de permisiunea delegată Microsoft Forms, cu consimțământ. Adăugați-o la Permisiuni API (consultați Ghidul utilizatorului), apoi încercați din nou.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Sugestie: Microsoft Forms a refuzat solicitarea. Verificați că acest cont poate deschide forms.office.com și că înregistrarea aplicației are permisiunea Microsoft Forms.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{0} din {1} selectate</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Titlu</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Tip</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Ultima modificare</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Rezultat</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Adăugați la titlurile copiate:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (copie)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Copiați formularele selectate</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Exportați răspunsurile…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Verificați o copie față de sursa ei</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Alte instrumente</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Formulare</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Copiați Microsoft Forms și exportați răspunsurile lor</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Instrumentul Formulare</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Rescrierea fluxurilor pentru destinație</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Actualizați pachetele Power Automate exportate (.zip) astfel încât să indice spre destinație: site-uri, liste, coloane, formulare copiate și domenii de e-mail. Pachetele dvs. originale nu sunt niciodată modificate.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Alegeți pachetele de fluxuri exportate</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Adăugați pachetele de fluxuri (.zip) pe care le-ați exportat din Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Adăugați fișiere…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Adăugați folder…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Scanare</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Pachete de fluxuri (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Adăugați mai întâi cel puțin un pachet de fluxuri.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Se scanează pachetele…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>{0} omis: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} fluxuri găsite. Ele fac referire la {1} site-uri, {2} liste și {3} formulare.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Scanare finalizată.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Mapați site-urile</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Unde se mută site-ul SharePoint al fiecărui flux. În modul Multi-tenant, autentificați-vă în destinație și adresa noului tenant este completată pentru dvs.; modificați orice rând al cărui site are alt nume. În modul Tenant unic, introduceți site-ul destinație pentru fiecare rând.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Site din fluxuri (înlocuit)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Site destinație</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Adresa noului tenant:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Completați destinațiile goale, păstrând căile</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Introduceți un URL complet, cum ar fi https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Destinațiile goale au fost completate folosind acea gazdă și calea fiecărui site.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Potriviți listele și coloanele</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Un card pentru fiecare listă folosită de fluxuri, indiferent câte fluxuri o folosesc. Fiecare arată numele și coloanele listei, lista cu care se mapează în destinație (cea cu același nume, implicit; alegeți alta din lista verticală dacă numele diferă) și cum se mapează fiecare coloană. Verificați cardurile marcate cu un avertisment.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Potriviți listele și coloanele</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Listă</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>ID listă sursă</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>ID listă destinație</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Coloană sursă</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Coloană destinație</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Scanați mai întâi pachetele.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Introduceți mai întâi cel puțin un site destinație.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Se potrivesc listele și coloanele…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(negăsit)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>S-a găsit o listă cu același nume în destinație</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Site-ul în care se află această listă nu are site destinație (pasul Site-uri)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Nu s-a putut citi această listă pe site-ul sursă: poate nu există, acest cont poate să nu aibă acces sau site-ul este într-un alt tenant decât conexiunea dvs. sursă</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Nicio listă cu acest nume pe site-ul destinație: alegeți una din lista verticală</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Același nume</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Redenumită în destinație</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Fără potrivire: alegeți o coloană</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} din {1} liste au o listă destinație. {2} coloană/coloane de verificat.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Formulare și e-mail</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Formularele copiate cu instrumentul Formulare sunt completate automat. Pentru un formular creat de dvs., lipiți ID-ul lui sau linkul paginii sale de editare.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>ID formular sursă</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>ID formular (completat din lista verticală, sau lipiți unul)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Mutați domeniul de e-mail:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Scrieți pachetele actualizate</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Alegeți un folder de ieșire (nu folderul care conține originalele). Pachetele actualizate și un raport care listează fiecare modificare sunt salvate acolo.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Scrieți pachetele actualizate</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Salvați maparea…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Deschideți folderul de ieșire</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Conexiunile nu pot fi mutate între tenanturi. După importul unui pachet, recreați fiecare conexiune în Power Automate și selectați-o din nou.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Alegeți mai întâi un folder de ieșire.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Se scriu pachetele actualizate…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Salvați copia actualizată a {0} (pachetul {1} din {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Pachet Power Automate (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Ați ales deja acel nume de fișier pentru alt pachet. Alegeți un nume diferit.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Un pachet ar fi salvat peste un original (același folder, același nume). Alegeți alt folder de ieșire sau schimbați numele în „Salvare ca”, astfel încât originalele să rămână neatinse.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Raport de rescriere a fluxurilor
+
+Pachetele originale sunt neatinse. Conexiunile NU sunt migrate; recreați-le și selectați-le din nou la import.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Raport scris în {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} pachete scrise, {1} înlocuiri. {2} valori încă indică spre sursă (consultați raportul).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Maparea a fost salvată în {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Fluxuri</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Actualizați fluxurile Power Automate exportate pentru destinație</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Instrumentul Fluxuri</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Ce folosesc aceste fluxuri</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Serviciile găsite în fluxurile scanate și ce face acest instrument pentru fiecare.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Serviciu</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Fluxuri</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Pași</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Găsit</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Ce face acest instrument</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Rescrie ce găsește</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>ID-uri raportate; verificați după import</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Doar conexiune (recreați-o)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Mapare coloane</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>O coloană apare aici când un flux scrie în ea, filtrează sau sortează după ea ori o citește într-o expresie, pe o listă care a fost potrivită. Coloana destinație este aleasă prin potrivire automată (același nume, apoi același nume afișat, apoi un nume similar). Trebuie să acționați doar asupra rândurilor marcate „Nume similar” sau „Fără potrivire”; modificați orice rând din lista verticală sau alegeți „(lăsați neschimbat)” pentru a păstra numele sursei. Coloanele încorporate, precum Titlu, nu sunt listate deoarece există peste tot.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(lăsați neschimbat)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Nume similar: verificați</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(încă nepotrivit)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Listă destinație aleasă de dvs.</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Introduceți sau lipiți un ID de listă destinație, ori linkul paginii ei de setări, în coloana ID listă destinație pentru a alege singur o listă (de exemplu când numele diferă). Apoi faceți clic pe „Potriviți din nou” pentru a-i potrivi coloanele.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Nu s-a găsit un ID de listă în „{0}”. Lipiți un GUID sau linkul paginii de setări a listei.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Nu s-a găsit un ID de formular în „{0}”. Lipiți ID-ul formularului sau linkul paginii lui de editare.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Formulare</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Destinație</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Copiere</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Rezultate</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Alegeți formularele de copiat</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Reîncărcați formularele</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Faceți clic pe „Încărcați formularele mele” pentru a vă vedea formularele.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>Nu s-au găsit formulare în acest cont.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Copiați {0} formulare</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Copiați mai multe formulare</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Alegeți unde merg copiile</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Tenant unic: copiile sunt create în același cont pe care îl folosiți, lângă originale.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Multi-tenant: copiile sunt create în contul destinație. Autentificați-vă în el aici; aceasta este separată de autentificarea folosită pentru site-urile SharePoint.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Cont destinație</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Se autentifică cu înregistrarea aplicației: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Se autentifică cu înregistrarea aplicației destinație (stabilită în Setări).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Autentificați-vă în contul destinație</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Autentificați-vă din nou</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Se face autentificarea în contul destinație… se poate deschide o fereastră de browser.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Conectat ca {0}. Acces la Microsoft Forms confirmat ({1} formulare deja în acest cont).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Nu s-a putut face conectarea la contul destinație: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Contul destinație nu este încă conectat.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Gata. Faceți clic pe butonul Copiere pentru a începe.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Gata: copiile vor fi create în {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Autentificați-vă în contul destinație pentru a continua.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Opțiuni</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} formulare vor fi copiate din {1} în {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>contul sursă</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>contul destinație</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Se copiază formularele</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Se pornește…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Formularul {0} din {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Se anulează după formularul curent…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Copiere finalizată: toate cele {0} formulare au fost copiate</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Copiile dvs. sunt în {0}. Deschideți Microsoft Forms pentru a le vedea sau folosiți tabelul de mai jos.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Copiere finalizată: {0} din {1} formulare au fost copiate, unele necesită atenție</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Copiile sunt în {0}. Formularele marcate cu un avertisment au fost copiate cu probleme, iar formularele eșuate nu au fost create. Consultați coloana Detalii.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Copiere finalizată, dar niciun formular nu a fost copiat</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Consultați coloana Detalii pentru motiv. Cauze frecvente sunt lipsa permisiunii Microsoft Forms în înregistrarea destinației sau un cont fără acces la Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Copiere anulată după {0} din {1} formulare</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Formularele listate mai jos au fost finalizate. Formularul care se copia când ați anulat nu a fost terminat și nu este vizibil.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Copiate</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>Cu avertismente</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Eșuate</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Întrebări</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Formular sursă</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Copie</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Întrebări</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Detalii</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Copiat</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Copiat cu avertismente</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Eșuat</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Deschideți copia selectată</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Deschideți Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Exportați rezultatele…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Afișați harta ID-urilor de formulare</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Selectați mai întâi un formular copiat în tabel.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Rezultatele au fost salvate în {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Sugestie: înregistrarea aplicației nu are o adresă de redirecționare potrivită. În Entra, la Autentificare, adăugați platforma „Aplicații mobile și desktop” cu http://localhost, apoi încercați din nou.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Pachete</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Site-uri</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Liste și coloane</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Formulare și e-mail</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Scriere</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Raport</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Alegeți fluxurile exportate</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>În Power Automate: deschideți Fluxurile mele, alegeți un flux, apoi Export → Pachet (.zip). Adăugați aici fișierele .zip descărcate. Fiecare fișier este scanat imediat ce îl adăugați.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Golire</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Adăugați pachetele de fluxuri exportate pentru a începe.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>Nu s-au găsit fluxuri în acele fișiere. Asigurați-vă că sunt pachete exportate cu Export → Pachet (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Scanare finalizată. Verificați ce folosesc fluxurile, apoi faceți clic pe Următorul.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Alegeți site-urile destinație</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>Aceste fluxuri nu folosesc site-uri SharePoint cu adrese fixe, deci nu există nimic de mapat aici. Faceți clic pe Următorul.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>În continuare, instrumentul citește fiecare listă prin conexiunile dvs. și o potrivește pe site-ul destinație.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Introduceți site-ul destinație pentru fiecare site sursă, apoi faceți clic pe Următorul.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Potriviți listele și coloanele</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Potriviți din nou</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Liste</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>Aceste fluxuri nu indică spre liste SharePoint specifice, deci nu există nimic de potrivit.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Listele și coloanele sunt potrivite la deschiderea acestui pas.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Formulare și e-mail</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Verificați formularele și e-mailul, apoi faceți clic pe Următorul.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>Aceste fluxuri nu folosesc Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>Adrese de e-mail</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Pentru a muta toate adresele de la un domeniu de e-mail la altul, introduceți ambele domenii. Adresele din alte domenii sunt listate în raport, nu sunt modificate.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Scrieți pachetele actualizate</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Folder de ieșire</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Alegeți folderul de ieșire, apoi faceți clic pe Scrieți pachetele actualizate.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Gata de scris {0} pachet(e) care conțin {1} flux(uri). Se înlocuiesc: {2} site-uri, {3} liste, {4} mapări de coloane, {5} formulare.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Scrieți pachetele actualizate</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Pachete scrise</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Înlocuiri</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Încă la sursă</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>De verificat</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Pachet</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Actualizat</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} valoare/valori încă indică spre sursă</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Deschideți raportul</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Reluați de la început</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Terminat: {0} pachet(e) scrise</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Salvate în {0}. Nimic nu a rămas indicând spre sursă. Urmați pașii de mai jos pentru a le importa.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Terminat: {0} pachet(e) scrise, unele elemente necesită verificarea dvs.</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Salvate în {0}. Deschideți raportul pentru a vedea valorile care încă indică spre sursă și elementele pe care instrumentul nu le rescrie (alte servicii, liste sau coloane nepotrivite).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Ce faceți în continuare</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Deschideți raportul și verificați „încă indică spre sursă” și tot ce este marcat pentru verificare.
+2.  În Power Automate (tenantul destinație), deschideți Fluxurile mele → Import → Import pachet (Moștenit) și alegeți un pachet scris.
+3.  La „Resurse asociate” faceți clic pe „Selectare în timpul importului” pentru fiecare conexiune și alegeți sau creați o conexiune în tenantul destinație. Conexiunile nu pot fi mutate între tenanturi.
+4.  Importați fluxul. Păstrați-l dezactivat, deschideți-l, remediați ce semnalează, apoi activați-l.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Nicio modificare (nimic din el nu s-a potrivit cu maparea dvs.)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Copiat pe {0} în {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Copiat anterior</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Deja copiat</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …și încă {0}</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Copiați din nou?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>{0} dintre formularele selectate au fost deja copiate în acest cont:
+
+{1}
+
+Copierea din nou creează o a doua copie a fiecăruia. Continuați?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>O copiere încă rulează. Dacă închideți acum, formularul care se copiază poate rămâne pe jumătate construit în destinație. Opriți și închideți?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Copiere în curs</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Niciun răspuns nu a putut fi exportat (consultați jurnalul).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Filtrare după titlu sau tip</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>Un singur registru</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Exportă toate formularele selectate într-un singur fișier Excel, cu o foaie pentru fiecare formular.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>Adresă de e-mail</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>ID tenant</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Calea bibliotecii</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Alte valori</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Introduceți o înlocuire pentru orice valoare care trebuie să se schimbe. Rândurile lăsate goale nu sunt modificate; sunt listate în raport dacă încă indică spre sursă.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Fel</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>În fluxuri</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Înlocuiți cu</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>Verificare ID</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Nu este un ID de formular sau un link de pagină de editare</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>La fel ca formularul sursă</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Acest formular este în tenantul sursă, nu în cel destinație</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Acest formular este într-un tenant diferit de cel sursă</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>Din copia Forms de la {0} la {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Dintr-o copie Forms anterioară</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Încărcați maparea…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Completați site-uri, liste, coloane, formulare și alte valori dintr-o mapare salvată anterior.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Nu s-a putut încărca maparea: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>{0} încărcat. Valorile care se potrivesc cu aceste fluxuri au fost completate; verificați-le la pașii următori.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>{0} încărcat. Se aplică atunci când adăugați pachete de fluxuri.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>{0} site-uri destinație completate. Verificați-le mai jos, apoi faceți clic pe Următorul.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Fiecare site are deja o destinație, deci nu s-a modificat nimic. Goliți o celulă Destinație pentru a fi completată.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Scurtătură: introduceți adresa noului tenant, de exemplu https://fabrikam.sharepoint.com, și faceți clic pe buton. Fiecare site care nu are încă destinație primește acea adresă cu aceeași cale ca sursa: https://contoso.sharepoint.com/sites/HR devine https://fabrikam.sharepoint.com/sites/HR. Site-urile OneDrive (contoso-my) merg la adresa -my a noului tenant. Destinațiile pe care le-ați introdus deja nu sunt atinse. Site-urile trebuie să existe deja în noul tenant; acest instrument nu le creează. Dacă un site are acolo alt nume, introduceți adresa lui în celula Site destinație.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Dacă lăsați un Site destinație gol, acel site rămâne neschimbat: fluxurile continuă să indice spre site-ul vechi, listele și coloanele lui nu sunt potrivite sau rescrise, iar raportul îl listează la „De făcut după import”. Este corect doar pentru un site care nu se mută în noul tenant.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Ce se întâmplă</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Se va muta în destinație</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Neschimbat (fără destinație)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Site-ul {0} a fost lăsat neschimbat (nicio destinație introdusă), deci fluxurile încă indică spre el, iar listele lui nu au fost potrivite. Este în regulă dacă site-ul nu se mută; altfel, rulați din nou cu o destinație.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Nu există încă coloane de afișat: nicio listă nu a fost potrivită, deci nu există nimic de comparat. Remediați listele de mai sus, apoi faceți clic pe Potriviți din nou.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Nu există coloane de mapat, deci nu aveți nimic de făcut aici. Listele potrivite nu au coloane personalizate în care fluxurile să scrie, după care să filtreze sau pe care să le citească într-un mod pe care instrumentul îl poate vedea. Lista de activitate de jos arată ce s-a găsit pentru fiecare listă.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} coloană/coloane găsite: {1} au același nume în destinație, {2} au fost redenumite și potrivite, {3} par similare, {4} nu au potrivire.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Verificați rândurile marcate „Nume similar” și alegeți o coloană pentru rândurile marcate „Fără potrivire”. Rândurile marcate „Același nume” sau „Redenumită în destinație” nu necesită nimic.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Nimic de făcut aici: fiecare coloană se potrivește deja. Faceți clic pe Următorul.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Numele pachetelor actualizate</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Cum să se numească fișierele .zip actualizate. Folosiți {name} pentru numele original al fișierului: „{name} - Fabrikam” transformă „Onboarding.zip” în „Onboarding - Fabrikam.zip”. Cu un singur pachet puteți introduce pur și simplu numele complet. Lăsați {name} pentru a păstra numele originale. Un nume folosit de două ori primește (2), (3)… ca nimic să nu fie suprascris.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Se va scrie: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Un flux stochează doar ID-ul unui formular, așa că numele formularelor sunt citite din Microsoft Forms la deschiderea acestui pas: titlul fiecărui formular din fluxurile dvs. (contul sursă) și formularele din contul destinație. Un formular al cărui titlu se potrivește exact cu un formular destinație este potrivit pentru dvs.; altfel, alegeți noul formular din lista verticală sau lipiți ID-ul ori linkul lui de editare. Folosiți Reîncărcați numele formularelor pentru a le citi din nou.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Încărcați formulare din contul destinație…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Se încarcă formularele contului destinație… vi se poate cere să vă autentificați.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Se listează formularele deținute de contul destinație {0}, pentru a putea alege noul formular pentru fiecare flux. Faceți clic pe Anulare pentru a nu mai aștepta autentificarea.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Destinație: {0} formular(e) găsite în {1}. Alegeți unul pe rând sau lipiți un ID.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Destinație: nu s-au găsit formulare în {0}. Lista verticală afișează doar formularele deținute de acel cont (nu formularele de grup), deci copiați mai întâi formularele cu instrumentul Formulare sau lipiți un ID.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Anulat. Faceți clic pe Încărcați numele formularelor pentru a încerca din nou sau lipiți ID-uri de formulare.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Destinație: nu s-au putut încărca formularele: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(niciunul)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(formular fără titlu)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Formular sursă</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Alegeți din formularele destinației</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Alegeți un formular din contul destinație. Faceți clic mai întâi pe „Încărcați formulare din contul destinație”.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Completat din autentificarea în destinație ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Contul dvs. sursă, înlocuit cu contul dvs. destinație</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Completat din autentificările dvs. ({0} → {1}). Goliți ambele casete pentru a lăsa domeniile de e-mail neschimbate.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>Un site cu destinație goală rămâne neschimbat: fluxurile continuă să indice spre el, iar raportul îl listează.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Autentificat ca {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Autentificat ca {0}. Adresa SharePoint a tenantului destinație este {1}; site-urile destinație goale au fost completate din ea.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Unele site-uri din fluxuri sunt pe {0}, care este adresa contului destinație. Fie aceste pachete indică deja spre destinație (de exemplu pachete scrise de acest instrument sau fluxuri exportate din destinație), așa că adăugați exporturile originale din sursă; fie sursa și destinația sunt într-adevăr un singur tenant, așa că treceți aplicația în modul Tenant unic (Setări).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} este un pachet scris de acest instrument la {1}: conține deja adresele destinației, deci nu mai e nimic de mutat. Adăugați în schimb exportul original din tenantul sursă (fișierul din Descărcări, nu cel din folderul de ieșire).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Site-urile din aceste fluxuri sunt pe {0}, care este tenantul dvs. destinație, dar sursa dvs. este {1}. Dacă pachetele au fost exportate din {0}, autentificați-vă în acel tenant ca sursă (Schimbați sursa…). Dacă le-a scris acest instrument mai devreme, eliminați-le și adăugați exporturile originale.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Autentificat. {0} site-uri destinație completate din {1}. Verificați-le, apoi faceți clic pe Următorul.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Autentificat. Fiecare site destinație avea deja o valoare, deci niciunul nu a fost modificat.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Autentificarea nu s-a încheiat sau adresa noului tenant nu a putut fi citită (consultați linia Destinație). Dacă sunteți autentificat, introduceți mai jos adresa noului tenant pentru a completa site-urile destinație.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — conectat ca {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — încă neautentificat</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Schimbați destinația…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Nu este aleasă nicio listă destinație, deci aceste fluxuri ar indica în continuare spre o listă care nu este în destinație. Alegeți lista destinație sau creați mai întâi lista pe site-ul destinație.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Fluxurile folosesc coloana „{0}”, dar lista destinație „{1}” nu are o coloană pentru ea. Alegeți coloana destinație din tabel sau adăugați coloana la lista destinație și faceți clic pe Verificați din nou.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>Lista destinație „{0}” necesită coloana „{1}”, dar pasul „Creare element” „{3}” din fluxul „{2}” nu o setează, deci importul ar eșua cu „missing required property item/{1}”. Introduceți mai jos o valoare pentru ea și instrumentul o adaugă la acel pas, sau faceți „{1}” opțională în lista destinație și faceți clic pe Verificați din nou.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>Lista destinație „{0}” necesită coloana „{1}”, dar pasul „Creare element” „{3}” din fluxul „{2}” nu o setează, deci importul ar eșua cu „missing required property item/{1}”. Faceți „{1}” opțională în lista destinație din SharePoint, apoi faceți clic pe Verificați din nou.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Valoare de completat pentru aceste coloane obligatorii (adăugată la fiecare pas Creare element care le omite):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Aceasta ar eșua la import. Remediați pentru a continua:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Verificați din nou</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Va eșua ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Autentificați-vă în destinație pentru a continua.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} pachet(e) au fost scrise de acest instrument și conțin deja valorile destinației. Eliminați-le (✕ din listă) și adăugați exporturile originale.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} site-uri nu au destinație. Un site lăsat ca atare ar indica în continuare spre tenantul sursă.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} liste ar eșua la import. Remediați listele marcate „Va eșua” pentru a continua.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Listele nu au fost încă potrivite. Reveniți un pas și mergeți din nou înainte pentru a reîncerca.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} formulare au nevoie de un ID de formular destinație valid pentru a continua.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Schimbați sursa…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Autentificat ca {0}. Adresa SharePoint a tenantului sursă este {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Conexiunea sursă a fost schimbată la {0}. Site-urile listate mai jos trebuie să fie în acest tenant.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Autentificarea la sursă nu s-a încheiat sau adresa tenantului nu a putut fi citită (consultați linia Sursă). Conexiunea sursă anterioară este păstrată dacă ați anulat.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Unele site-uri sunt citite de la {0}, care nu este tenantul la care sunteți conectat ca sursă ({1}). Citirea listelor lor va eșua. Modificați „Citiți listele de la” pentru acele rânduri la adresa din tenantul sursă sau faceți clic pe Schimbați sursa… și autentificați-vă cu un cont din acel tenant.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Site-urile fluxurilor sunt pe {0}, dar sunteți conectat la {1} ca sursă. „Citiți listele de la” a fost completat cu aceleași site-uri de pe {1}, astfel încât instrumentul citește acolo numele listelor și coloanele. Verificați că acele site-uri există (modificați orice rând) sau faceți clic pe Schimbați sursa… dacă fluxurile provin într-adevăr de la {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Listele folosite de fluxuri</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Faceți clic pe o listă pentru a o deschide sau închide. Listele care necesită atenție sunt primele și deschise.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Deschideți tot</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Închideți tot</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Folosită de:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Sursă:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Listă destinație</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>sau lipiți ID-ul ori linkul ei:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Coloană sursă</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Tip</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Folosită</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Nefolosită de fluxuri</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(niciuna: lăsați această listă neschimbată)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Nicio listă destinație aleasă: fluxurile care o folosesc încă indică spre lista sursă</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} coloană/coloane de verificat</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ nimic de verificat</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} coloane în această listă; fluxurile folosesc {1}: {2} cu același nume în destinație, {3} redenumite și potrivite, {4} similare (verificați), {5} fără potrivire (alegeți). Celelalte coloane sunt afișate pentru context și nu sunt modificate.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} coloane în această listă; niciuna nu este folosită de fluxuri într-un mod pe care instrumentul îl poate vedea, deci nu e nimic de mapat.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Nu s-a putut citi nicio coloană pentru această listă (consultați notele de mai sus și lista de activitate).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Alegeți mai sus o listă destinație pentru a-i vedea coloanele și a le mapa.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Coloanele listei destinație nu au putut fi citite, deci nu s-au putut sugera potriviri.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Fluxul nu spune pe ce site se află această listă (folosește un parametru), deci nu poate fi căutată. Lipiți ID-ul sau linkul listei destinație.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Nicio listă destinație: această listă este lăsată neschimbată.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Se citesc coloanele listei destinație pentru {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Lista „{0}”: ați ales altă listă destinație. Se citesc coloanele ei de pe {1} pentru a le potrivi din nou.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — conectat ca {1} (autentificarea ferestrei principale)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Citiți listele de la (sursă)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>„Site din fluxuri” este adresa stocată în fluxuri; aceasta este înlocuită, deci nu poate fi editată. „Citiți listele de la” este locul de unde instrumentul citește numele și coloanele fiecărei liste de pe partea sursă; începe ca aceeași adresă, deci modificați-o când adresa fluxului este veche, redenumită sau într-un alt tenant decât conexiunea dvs. sursă.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Ce folosesc aceste fluxuri</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} flux(uri), {2} pas(i): {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>rescris de acest instrument</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>verificare manuală</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>doar conexiune</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>De făcut după import</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Importați fiecare pachet corectat în mediul destinație și recreați conexiunile (nu sunt niciodată copiate).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Pachete de soluții: doar definițiile fluxurilor de lucru au fost rescrise. Valorile variabilelor de mediu și referințele de conexiune din soluție (customizations.xml) conțin încă valori din sursă; setați-le după import.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Proprietarii fluxurilor și utilizatorii doar cu drept de rulare nu fac parte din pachet; partajați fluxurile cu persoanele potrivite după import.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Nicio modificare (nimic din mapare nu s-a potrivit).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} înlocuiri</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Încă indică spre valori din sursă (nemapate, verificați înainte de import)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Conectare la site-ul sursă {0} și la site-ul destinație {1}. Se deschide o fereastră de autentificare dacă nu sunteți încă autentificat.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Conectat la {0} (sursă) și {1} (destinație).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Se citesc listele și bibliotecile de pe site-ul destinație {0}, pentru ca fiecare listă să poată fi potrivită după nume și oferită într-o listă verticală.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>S-au găsit {0} liste și biblioteci pe {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Se citesc numele și coloanele listei {0} de pe site-ul sursă {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Lista „{0}”: se caută o listă cu același nume pe site-ul destinație {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Lista „{0}”: găsită în destinație. Se citesc coloanele listei destinație pentru a le potrivi.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Lista „{0}”: coloanele ei nu au putut fi citite sau nu are niciuna. Nimic de mapat pentru această listă.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Lista „{0}”: {1} coloană/coloane, niciuna folosită de fluxuri într-un mod pe care instrumentul îl poate vedea. Nu e nimic de mapat.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Lista „{0}”: fluxurile folosesc {1} nume de coloane: {2} au același nume în destinație (nu e necesară nicio modificare), {3} au fost redenumite și potrivite, {4} par similare (verificați), {5} nu au potrivire (alegerea dvs.), {6} sunt coloane încorporate (nimic de mapat).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>Lista {0} nu este pe site-ul sursă, dar este pe site-ul destinație ca „{1}”: fluxul indică deja spre destinație.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Site-ul „{0}” nu are destinație; listele de pe el nu au fost rezolvate.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Avansat: citiți listele de la o altă adresă</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Mapare coloane: de la {0} la {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Nicio coloană de afișat pentru această listă.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Niciuna dintre coloanele acestei liste nu este folosită de fluxuri. Bifați „Afișați toate coloanele” pentru a le vedea.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>Lista sursă nu a putut fi citită, iar fluxul nu numește coloane, deci nu e nimic de mapat.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Listă</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(nu a putut fi citită în sursă)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Citită de la:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Site</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Acest flux indică deja spre această listă din destinație. Cele {0} nume de coloane pe care le folosește sunt afișate față de coloanele destinației; nu e nevoie de nicio modificare.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(numele listei indisponibil)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Deja în destinație</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Mapat după numele coloanelor din flux</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Coloanele nu pot fi citite</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Nicio listă destinație</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Nimic de mapat</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Gata</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Coloanele destinației nu pot fi citite</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} de verificat</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Folosită de {0} flux(uri)</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} mapare/mapări de coloane necesită încă atenție.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Toate mapările de coloane sunt rezolvate.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Conexiunile nu sunt copiate între tenanturi: recreați-le în Power Automate după import.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>E-mail: fiecare adresă de pe {0} devine {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} din {1} formulare indică spre un formular nou.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} din {1} liste au o listă destinație.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Listele nu au fost încă potrivite.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>Adresele de e-mail nu sunt modificate (nu a fost mapat niciun domeniu).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Fluxurile nu folosesc Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Fluxurile nu folosesc liste specifice.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Fluxurile nu menționează site-uri SharePoint.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{0} pachet(e) cu {1} flux(uri) vor fi scrise; originalele nu sunt modificate.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0} din {1} site-uri se vor muta pe un site destinație; celelalte rămân ca atare.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Goliți valorile completate automat</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Completat</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Formular în fluxurile dvs.</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>De la (în fluxurile dvs.)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Liste</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Site-uri</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Stare</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>La (destinație)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Aleasă de dvs.</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Lăsată neschimbată</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(autentificarea ferestrei principale)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>Domeniul de e-mail de la care se mută</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Mutați fiecare adresă de pe</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>la</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>Domeniul de e-mail la care se mută</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…sau trageți fișiere .zip (sau un folder) pe această fereastră.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Coloana „{0}” din lista „{1}” nu are potrivire în lista destinație.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>Lista „{0}” ({1}) de pe {2} nu are listă destinație, deci fluxurile care o folosesc încă indică spre lista sursă.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(titlu necunoscut)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Salt la pasul</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Aveți o mapare salvată? Încărcați-o…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Model personalizat…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Păstrați numele originale</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Adăugați „ - migrated” la fiecare nume</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Deschideți raportul și verificați ce este marcat pentru verificare.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>În Power Automate (tenantul destinație): Fluxurile mele, Import, Import pachet (Moștenit) și alegeți un pachet scris.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>La Resurse asociate, faceți clic pe „Selectare în timpul importului” pentru fiecare conexiune și alegeți sau creați una în tenantul destinație. Conexiunile nu pot fi mutate între tenanturi.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Importați fluxul, păstrați-l dezactivat, deschideți-l, remediați ce semnalează, apoi activați-l.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Deschideți folderul</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Deschideți Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Acel folder de ieșire nu există încă; este creat când scrieți pachetele.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>SURSĂ</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>DESTINAȚIE</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} flux(uri) găsite</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Niciun flux găsit</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Deja scris de acest instrument</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Nu a putut fi citit</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Gata de scris?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Eliminați acest pachet din listă</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Raport de rescriere a fluxurilor</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Ce folosesc aceste fluxuri ({0} servicii)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} pachet(e) nu au putut fi scrise.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} valoare/valori din pachetele scrise încă indică spre sursă. Deschideți raportul pentru a vedea care.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Afișați toate cele {0} coloane</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Afișați doar coloanele folosite de fluxuri</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Ce înseamnă aceste coloane?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>ID-ul acestei liste nu este pe site-ul sursă, dar este lista „{0}” de pe site-ul destinație: fluxul indică deja spre destinație, ca într-un pachet scris deja de acest instrument.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Conectat</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Problemă</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Neautentificat</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Se așteaptă autentificarea…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} listă/liste · toate gata</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} listă/liste · {1} gata · {2} necesită atenție</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>A durat {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>De verificat</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Adăugați pachetele de fluxuri (.zip) pe care le-ați exportat din tenantul sursă. Fiecare este scanat imediat ce îl adăugați.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Spuneți unde se mută fiecare flux. Autentificați-vă în destinație și adresa noului tenant este completată pentru dvs.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Fiecare listă folosită de fluxuri este potrivită cu o listă din destinație, iar coloanele ei sunt mapate. Verificați tot ce este marcat ca necesitând atenție.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Indicați formularele copiate spre noile lor ID-uri și decideți cum se schimbă adresele de e-mail și ID-ul tenantului.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Verificați lista de mai jos, alegeți unde să salvați pachetele actualizate, apoi scrieți-le.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Ce se întâmplă aici</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Instrumentul citește fiecare pachet pe acest computer (nimic nu este trimis nicăieri) pentru a găsi site-urile, listele, coloanele și formularele folosite de fluxuri. Adăugați exporturile ORIGINALE din sursă, nu pachete scrise mai devreme de acest instrument: acestea conțin deja adresele destinației.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Coloana „{0}” este mapată diferit în liste diferite ({1}). Pașii fiecărei liste primesc propria mapare; expresiile din alte părți ale fluxului păstrează numele original, deci verificați-le.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Reîncărcați numele formularelor…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Se încarcă numele formularelor… vi se poate cere să vă autentificați.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Se citesc titlurile formularelor din fluxurile dvs. din contul sursă {0}. Faceți clic pe Anulare pentru a nu mai aștepta autentificarea.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Sursă: s-a găsit titlul pentru {0} din {1} formulare ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Sursă: nu s-au putut citi titlurile formularelor: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} formulare au fost potrivite cu formularul destinație cu același nume.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Pare un ID de formular valid</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Potrivit după nume</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>Sursa și destinația sunt în același tenant ({0}). Treceți aplicația în modul Tenant unic (Setări) sau autentificați-vă la sursă și la destinație cu conturi din tenanturi diferite.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Eliminați aceste pachete</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>{0} pachet(e) care indică deja spre destinație au fost eliminate: {1}. Adăugați în schimb exporturile originale din tenantul sursă.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Acele pachete au fost eliminate. Adăugați exporturile originale din tenantul sursă.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Fiecare pachet este salvat ca un .zip nou în folderul de ieșire; originalele nu sunt niciodată modificate. Pentru a redenumi unul, introduceți alt nume în Salvare ca.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Păstrați numele originale</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Adăugați „ - migrated” la toate numele</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Pachet original</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Salvare ca</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Va fi salvat ca: {0} (puteți modifica numele mai jos).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Nu a putut fi citit; nicio ieșire scrisă</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Anulat. Nimic nu a fost modificat. La pasul Site-uri folosiți Autentificare pentru a reîncerca (de exemplu într-un alt browser); la pasul Liste folosiți Potriviți din nou.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Se anulează… o fereastră de autentificare poate dura puțin să se închidă.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Ce face instrumentul</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Conexiuni</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Multi-tenant: pentru a potrivi listele, instrumentul citește numele și coloanele fiecărei liste din tenantul sursă și caută aceeași listă în tenantul destinație. Pentru aceasta este nevoie de o autentificare în fiecare. Autentificați-vă aici în fiecare parte sau faceți clic pe Următorul și vi se va cere atunci. Se deschide o fereastră de browser; dacă este browserul greșit, faceți clic pe Anulare și încercați din nou. Nimic nu este modificat în niciunul dintre tenanturi.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>Tenant unic: sursa și destinația sunt același tenant, deci instrumentul folosește contul cu care v-ați autentificat la pasul Conectare. Nu mai este nimic în care să vă autentificați. Nimic nu este modificat în tenant.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Sursă</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Destinație</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Autentificare la sursă…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Autentificare la destinație…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Anulare</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Nu mai așteaptă fereastra de autentificare, ca să puteți reîncerca, de exemplu într-un alt browser.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Încă neautentificat</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Folosește autentificarea ferestrei principale: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Autentificat ca {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Gata</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Se așteaptă autentificarea… ar trebui să se deschidă o fereastră de browser</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Autentificare anulată. Faceți clic pe Autentificare pentru a reîncerca.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Autentificat. Verificați site-urile destinație de mai jos, apoi faceți clic pe Următorul.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Nu există încă un site sursă la care să vă autentificați. Adăugați mai întâi pachete de fluxuri.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Introduceți mai întâi cel puțin un site destinație (sau folosiți Completare, păstrând căile); autentificarea merge la tenantul site-ului destinație.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Se face autentificarea la sursă… se deschide o fereastră de browser.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Se face autentificarea la destinație… se deschide o fereastră de browser.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>sursă</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>destinație</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Autentificare în tenantul sursă. Se deschide o fereastră de browser; faceți clic pe Anulare pentru a nu mai aștepta (de exemplu pentru a încerca alt browser). Autentificarea îi spune instrumentului și care este tenantul sursă.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Autentificare în tenantul destinație. Se deschide o fereastră de browser; faceți clic pe Anulare pentru a nu mai aștepta (de exemplu pentru a încerca alt browser). Autentificarea îi spune instrumentului și adresa SharePoint a noului tenant.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Conectat la {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Autentificare anulată de dvs.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Se citesc {0} fișier(e) de pachet de pe acest computer pentru a găsi site-urile, listele, coloanele și formularele folosite de fluxuri. Nimic nu este trimis nicăieri.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Citit {0}: {1} flux(uri).</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Se potrivesc {0} liste: pentru fiecare, instrumentul cere site-ului sursă numele ei, apoi caută o listă cu acel nume pe site-ul destinație.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Potrivire finalizată. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Se scriu {0} pachet(e) corectate în {1}. Originalele nu sunt modificate.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Se scrie {0} cu maparea dvs. aplicată.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Se verifică {0} pentru valori care încă indică spre sursă.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Anulat de dvs. Nimic nu a fost modificat.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Oprit: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Fiecare flux stochează adresa site-ului SharePoint din care citește sau în care scrie. Pentru a rula în noul tenant, fiecare flux trebuie să indice spre site-ul corespunzător de acolo, deci spuneți instrumentului ce site nou îl înlocuiește pe fiecare vechi. Aceasta editează doar copii ale pachetelor dvs.; nimic nu este căutat până nu faceți clic pe Următorul.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Ce se întâmplă aici: pentru fiecare listă folosită de un flux, instrumentul citește numele și coloanele listei de pe site-ul sursă, caută o listă cu același nume pe site-ul destinație și citește coloanele acelei liste pentru a le potrivi. De ce: fluxurile se referă la liste și coloane după ID sau nume intern, iar acestea diferă în noul tenant, deci instrumentul găsește echivalentul. Acest pas doar citește; nimic nu este creat sau modificat în niciunul dintre tenanturi. Puteți schimba lista destinație și orice coloană pe cardul ei.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Un formular copiat primește un ID nou, deci un flux care îl folosește trebuie să indice spre copie. Adresele de e-mail și ID-ul tenantului dintr-un flux pot, de asemenea, să trebuiască schimbate pentru noua organizație. Nimic nu este căutat aici; decideți dvs. înlocuirile, iar tot ce rămâne gol rămâne ca atare.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Instrumentul scrie fișiere .zip noi în folderul de ieșire cu maparea dvs. aplicată, le scanează din nou pentru a găsi ce încă indică spre sursă și scrie un raport. Pachetele dvs. originale nu sunt niciodată modificate și nimic nu este trimis în niciunul dintre tenanturi. Importați dvs. pachetele noi în Power Automate după aceea.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Autentificare anulată. Faceți clic pe buton pentru a reîncerca, de exemplu într-un alt browser.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Anulare</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Eroare: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Nu s-a putut citi formularul sursă ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Nu s-a putut crea formularul în destinație ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Anulat pe parcurs. Un formular parțial a fost lăsat în destinație; ștergeți-l în Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Copierea s-a oprit pe parcurs ({0}). Un formular parțial a fost lăsat în destinație; ștergeți-l în Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>imaginea de fundal</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>sigla</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>imaginea de antet</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>Elementul {0} nu a fost copiat (imaginile nu sunt încă acceptate).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Punctajul testului (răspunsuri corecte și puncte) nu este verificat; verificați copia.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Setarea „{0}” nu a putut fi copiată ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Întrebarea „{0}” nu a fost copiată ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(fără titlu)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Regulile de ramificare nu au putut fi copiate ({0}); verificați copia.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>Copia a fost creată, dar nu a putut fi făcută vizibilă în Microsoft Forms ({0}); poate fi în Coșul de reciclare.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>Copia are {0} întrebări, dar sursa are {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Întrebarea „{0}” ({1}) a fost creată, dar opțiunile ei nu au putut fi copiate ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Rezultate</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Formular sursă</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>ID formular sursă</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Titlul copiei</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>ID formular copie</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Stare</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Întrebări copiate</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Întrebări în sursă</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Avertismente</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Note</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Eroare</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Registru Excel (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>Fișiere JSON (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>ID</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Ora de început</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Ora de finalizare</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Respondent</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Nume</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Punctaj</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Răspunsuri nemapate (JSON brut)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (tăiat: prea lung pentru o celulă Excel)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Opriți rularea?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>O comparare sau verificare încă rulează. Închiderea acestei ferestre o oprește și niciun raport nu va fi scris. Închideți oricum?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Închideți în timpul lucrului?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Instrumentul încă lucrează (scanează, potrivește, se autentifică sau scrie pachete). Închiderea acum îl oprește. Închideți oricum?</value></data>
 </root>

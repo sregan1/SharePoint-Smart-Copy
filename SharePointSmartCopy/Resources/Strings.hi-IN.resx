@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>सफल ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>विफल ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>छोड़े गए ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>अप-टू-डेट</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>यह पढ़ा नहीं जा सका कि स्रोत की अपनी परमिशन हैं या नहीं (थ्रॉटलिंग या एक्सेस त्रुटि) — इस आइटम की परमिशन कॉपी नहीं की गईं। दोबारा प्रयास करने के लिए फिर से चलाएँ।</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>ओवरराइट के लिए मौजूदा लक्ष्य फ़ाइल हटा दी गई, लेकिन नई कॉपी अपलोड नहीं हो सकी ({0})। फ़ाइल अभी लक्ष्य से गायब है — उसे बहाल करने के लिए कॉपी फिर से चलाएँ।</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>एक लक्ष्य लाइब्रेरी विफल रही ({0})। उसकी फ़ाइलें विफल चिह्नित की गई हैं; अन्य लाइब्रेरी जारी रहती हैं।</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: डाउनलोड के दौरान स्रोत फ़ाइल बदल गई — डाउनलोड फिर से शुरू किया जा रहा है।</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint ने इस इम्पोर्ट के लिए {0} मिनट तक कोई प्रगति नहीं बताई, इसलिए उसे छोड़ दिया गया। उसकी फ़ाइलें विफल चिह्नित की गई हैं; उन्हें फिर से आज़माने के लिए कॉपी दोबारा चलाएँ।</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>सिंगल टेनेंट</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>मल्टी-टेनेंट</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>दो अलग-अलग Microsoft 365 टेनेंट के बीच कॉपी करें। आप स्रोत और लक्ष्य में अलग-अलग साइन इन करते हैं। सेटिंग्स में लक्ष्य का ऐप रजिस्ट्रेशन चुनें।</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>लक्ष्य रजिस्ट्रेशन:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>मल्टी-टेनेंट मोड: लक्ष्य टेनेंट में साइन इन करने के लिए उपयोग किया जाने वाला ऐप रजिस्ट्रेशन। &quot;स्रोत के समान&quot; स्रोत रजिस्ट्रेशन का ही उपयोग करता है, जो तब मल्टी-टेनेंट ऐप होना चाहिए।</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>फिर से शुरू करें / दोबारा चलाएँ</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>फिर से कनेक्ट होकर इस चयन को &quot;यदि नया हो तो कॉपी करें&quot; के साथ दोबारा चलाता है, ताकि पहले से कॉपी की गई फ़ाइलें छोड़ दी जाएँ और केवल जो गायब या बदला हुआ है वही ट्रांसफ़र हो।</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>इस रन में फिर से शुरू करने के लिए कोई सहेजा गया चयन नहीं है (केवल फ़ाइल-चयन वाले रन ही चयन रिकॉर्ड करते हैं)।</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>एक कॉपी पहले से चल रही है। पहले उसे पूरा करें या रद्द करें।</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>फिर से शुरू नहीं किया जा सका: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} बाधित रन पुनर्प्राप्त किए गए। इतिहास देखें।</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>फिर से शुरू किया जा रहा है: पिछले रन से {0} आइटम बहाल किए गए, &quot;यदि नया हो तो कॉपी करें&quot; चयनित है। विकल्प देखें, फिर अगला पर क्लिक करें। (कस्टम कॉलम मैपिंग बहाल नहीं की जातीं।)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>बाधित — यह रन पूरा होने से पहले ऐप बंद हो गया। जो आइटम पूरे हो चुके थे उनमें से: {0} सफल, {1} विफल, {2} छोड़े गए, {3} रद्द  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>डायग्नोस्टिक्स निर्यात करें…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>हाल के लॉग, सिस्टम जानकारी और संगठन विवरण हटाई गई आपकी सेटिंग्स के साथ एक zip सहेजता है — बग रिपोर्ट के साथ संलग्न करने के लिए। इसमें कॉपी रिपोर्ट या फ़ाइल नाम शामिल नहीं होते।</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>डायग्नोस्टिक्स {0} में सहेजे गए</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>डायग्नोस्टिक्स सहेजे नहीं जा सके: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>सामग्री समान है (केवल SharePoint-प्रबंधित भाग अलग हैं), लेकिन संशोधन तिथि सुरक्षित नहीं रखी जा सकी।</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>परमिशन कॉपी नहीं की गईं: आइटम के SharePoint ID हल नहीं हो सके।</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>परमिशन कॉपी नहीं की गईं: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>फ़ोल्डर &quot;{0}&quot;: {1} लागू नहीं हुआ — {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>और फ़ोल्डरों में ऊपर जैसी समस्याएँ थीं; बाद वाले अलग-अलग सूचीबद्ध नहीं हैं।</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>परमिशन</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>तिथियाँ</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>लेखक / संपादक</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} रखे गए — लक्ष्य पहले से अप-टू-डेट है)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>चेतावनी: स्रोत ({0}) से मेटाडेटा पढ़ना विफल रहा: {1}। इससे आइटम उनके कस्टम कॉलम मान या विशिष्ट परमिशन के बिना कॉपी हो सकते हैं। समस्या ठीक होने पर दोबारा चलाएँ (ओवरराइट या यदि नया हो उन्हें फिर से लागू करता है)।</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>चेतावनी: किसी लाइब्रेरी की स्रोत सूची नहीं मिल सकी, इसलिए उसकी परमिशन कॉपी नहीं की जाएँगी।</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>SharePoint होस्ट &apos;{0}&apos; किसी कनेक्टेड टेनेंट से संबद्ध नहीं है। स्रोत और लक्ष्य साइट फिर से कनेक्ट करें और पुनः प्रयास करें।</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>क्रॉस-टेनेंट कॉपी: मैनेज्ड-मेटाडेटा (टैक्सोनॉमी) कॉलम मान कॉपी नहीं किए जाते, और OneNote नोटबुक / डॉक्यूमेंट सेट अभी टेनेंट के बीच कॉपी नहीं किए जा सकते। पहचानों को आपकी पहचान मैपिंग सेटिंग्स से मैप किया जाता है; जिसे लक्ष्य में हल नहीं किया जा सकता उसे छोड़ दिया जाता है।</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>पहचान मैपिंग</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>पहचान मैपिंग…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>स्रोत टेनेंट के हर व्यक्ति (या समूह) को सूचीबद्ध करें और बताएँ कि लक्ष्य टेनेंट में वे कौन हैं — दोनों अलग-अलग खाते हैं। लेखक, संपादक, व्यक्ति कॉलम और परमिशन इस तालिका के अनुसार लिखे जाते हैं। जो सूचीबद्ध नहीं है उसे, यदि आपने डोमेन स्वैप सेट किया है, तो डोमेन स्वैप से मिलाया जाता है; जो फिर भी लक्ष्य में नहीं मिलता उसे छोड़कर रिपोर्ट किया जाता है।</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>स्रोत ईमेल डोमेन</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>लक्ष्य ईमेल डोमेन</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>ओवरराइड — प्रति पंक्ति एक &quot;स्रोत,लक्ष्य&quot; जोड़ी (उपयोगकर्ता या समूह नाम; # से टिप्पणी शुरू होती है)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>स्रोत के समान</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>स्रोत और लक्ष्य एक ही टेनेंट पर हैं। उसी टेनेंट में कॉपी के लिए सिंगल-टेनेंट मोड पर स्विच करें।</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>नेटिव फ़ोल्डर कॉपी (OneNote नोटबुक, डॉक्यूमेंट सेट) अभी टेनेंट के बीच समर्थित नहीं है।</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>ड्राइव &apos;{0}&apos; किसी कनेक्टेड टेनेंट से संबद्ध नहीं है। स्रोत और लक्ष्य साइट फिर से कनेक्ट करें और पुनः प्रयास करें।</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>अभी कोई ऐप रजिस्ट्रेशन सेट नहीं है। कनेक्ट करने से पहले सेटिंग्स खोलें और अपना Azure ऐप रजिस्ट्रेशन (उसका Application/Client ID) जोड़ें।</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>साइन इन रद्द कर दिया गया। फिर से प्रयास करने के लिए कनेक्ट करें पर क्लिक करें।</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>किसी व्यवस्थापक ने अभी तक इस टेनेंट में इस ऐप को स्वीकृत नहीं किया है। किसी Global Administrator से ऐप रजिस्ट्रेशन के लिए एडमिन सहमति देने को कहें (यूज़र गाइड में सेटअप देखें)।</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>इस टेनेंट में ऐप रजिस्ट्रेशन नहीं मिला। सेटिंग्स में Client ID और Tenant ID जाँचें।</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>वह टेनेंट नहीं मिल सका। सेटिंग्स में Tenant ID जाँचें (अपना डोमेन, टेनेंट GUID या &apos;common&apos; उपयोग करें)।</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>ऐप रजिस्ट्रेशन में वह रीडायरेक्ट पता नहीं है जिसे यह ऐप उपयोग करता है। Azure में &apos;Mobile and desktop applications&apos; के अंतर्गत रीडायरेक्ट URI http://localhost जोड़ें।</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>ऐप रजिस्ट्रेशन डेस्कटॉप साइन-इन के लिए सेट नहीं है। Azure में रजिस्ट्रेशन के लिए &apos;Allow public client flows&apos; चालू करें।</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>इस खाते को उस ऐप रजिस्ट्रेशन का उपयोग करने की अनुमति नहीं है। उस टेनेंट के खाते से साइन इन करें जो उसका स्वामी है, या सेटिंग्स में कोई दूसरा रजिस्ट्रेशन चुनें।</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint ने साइन-इन अस्वीकार कर दिया। फिर से साइन इन करने के लिए कनेक्ट करें पर क्लिक करें।</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>आपके पास इस साइट तक पहुँच नहीं है। सुनिश्चित करें कि आपका खाता इसे ब्राउज़र में खोल सकता है, और ऐप को Sites.ReadWrite.All परमिशन दी गई है।</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>वह साइट नहीं मिल सकी। पता जाँचें — वह https://contoso.sharepoint.com/sites/name जैसा दिखना चाहिए।</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(विवरण: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>जारी रखने के लिए स्रोत साइट से कनेक्ट करें।</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>जारी रखने के लिए कम से कम एक आइटम चुनें (चेकबॉक्स पर टिक करें)।</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>जारी रखने के लिए लक्ष्य साइट से कनेक्ट करें।</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>जारी रखने के लिए गंतव्य फ़ोल्डर चुनें।</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>जारी रखने के लिए गंतव्य सूची चुनें।</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>जारी रखने के लिए नई सूची का नाम दर्ज करें।</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>कॉपी करने के लिए कुछ भी चयनित नहीं है।</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>कॉपी पूरी होने की प्रतीक्षा है…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>स्रोत: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>लक्ष्य: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>आपका ऐप रजिस्ट्रेशन बदल गया, इसलिए आप दोनों साइटों से साइन आउट हो गए। जारी रखने के लिए फिर से कनेक्ट करें।</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>कॉपी रोकें?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>एक कॉपी प्रगति पर है। इसे अभी रोकने पर शेष आइटम कॉपी नहीं होंगे (आप बाद में इतिहास से फिर शुरू कर सकते हैं)। कॉपी रोकें?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>एक कॉपी अभी चल रही है। ऐप बंद करने पर वह रुक जाएगी और शेष आइटम कॉपी नहीं होंगे (आप बाद में इतिहास से फिर शुरू कर सकते हैं)। फिर भी बंद करें?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>कनेक्शन मोड बदलें?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>सिंगल-टेनेंट और मल्टी-टेनेंट के बीच स्विच करने से दोनों साइटें डिस्कनेक्ट हो जाती हैं, और आपको फिर से कनेक्ट करना होगा। फिर भी स्विच करें?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>कनेक्शन:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>स्रोत ऐप रजिस्ट्रेशन</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>लक्ष्य ऐप रजिस्ट्रेशन</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>लक्ष्य टेनेंट में इससे साइन इन होता है:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>बदलें</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>सेटिंग्स खोलें</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• आपके पास स्रोत साइट कलेक्शन की रीड एक्सेस होनी चाहिए।</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• कनेक्ट करने से पहले सेटिंग्स में अपना Microsoft Entra ID ऐप रजिस्ट्रेशन सेट करें।</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>फ़ाइल विकल्प</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>लाइब्रेरी और फ़ाइल विकल्प</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>फ़ाइलें कॉपी हो रही हैं…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>लाइब्रेरी कॉपी हो रही हैं…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>अगला</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>कॉपी शुरू करें</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>रिपोर्ट देखें</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>बनाई जाने वाली नई सूची का नाम दर्ज करें</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>गंतव्य सूची लक्ष्य चरण में चुनी गई थी। बदलने के लिए वापस जाएँ।</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>पहले ऐप रजिस्ट्रेशन सेट करें</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy ऐसे ऐप रजिस्ट्रेशन से साइन इन करता है जिसे आप अपने Microsoft Entra ID (Azure) टेनेंट में बनाते हैं। सेटिंग्स खोलें, अपने रजिस्ट्रेशन का Application (client) ID जोड़ें, फिर कनेक्ट करने के लिए यहाँ लौटें।</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>अधिक जानकारी</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>गतिविधि फ़ीड को ऊँचा या छोटा करने के लिए खींचें</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>केवल विफल आइटम दिखाने के लिए क्लिक करें</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>केवल छोड़े गए आइटम दिखाने के लिए क्लिक करें</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>कॉलम मैपिंग</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>स्रोत और लक्ष्य की तुलना करें</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>इस कॉपी को स्रोत से जाँचने के लिए तुलना टूल खोलें।</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>इतिहास खोलें</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>चुना गया रजिस्ट्रेशन स्रोत के लिए उपयोग होता है — और सिंगल-टेनेंट मोड में दोनों पक्षों के लिए।</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>नया रजिस्ट्रेशन</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>कम से कम एक ऐप रजिस्ट्रेशन जोड़ें।</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>सत्यापन</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>चयनित रजिस्ट्रेशन के लिए Client ID आवश्यक है।</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>साइन आउट हो गए। अगले कनेक्शन पर आपसे साइन इन करने को कहा जाएगा।</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>साइन आउट हो गए</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>साइन आउट विफल: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>साइन आउट</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} मैपिंग मिलीं।</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} पंक्ति(याँ) पढ़ी नहीं जा सकतीं (पंक्ति {1})। प्रत्येक पंक्ति स्रोत,लक्ष्य जैसी होनी चाहिए।</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>स्रोत और लक्ष्य डोमेन समान हैं, इसलिए डोमेन स्वैप से कुछ नहीं बदलेगा।</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>CSV आयात करें…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>कुछ ओवरराइड पंक्तियाँ पढ़ी नहीं जा सकतीं (पंक्ति {0})। प्रत्येक पंक्ति &quot;स्रोत,लक्ष्य&quot; होनी चाहिए। उन्हें ठीक करें या हटाएँ — या पंक्ति को # से शुरू करके टिप्पणी बनाएँ।</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>पहचान मैपिंग सहेजी नहीं जा सकी: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>वह फ़ाइल पढ़ी नहीं जा सकी: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>क्रॉस-टेनेंट: इस लाइब्रेरी के {0} लेखक/संपादक खाते लक्ष्य टेनेंट में नहीं मिले और कॉपी करने वाले खाते के रूप में छोड़ दिए जाएँगे। रन के बाद, उन्हें ठीक करने के लिए रिपोर्ट में &quot;इन उपयोगकर्ताओं को मैप करें&quot; का उपयोग करें।</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>स्रोत उपयोगकर्ता या समूह दर्ज करें।</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>दर्ज करें कि लक्ष्य टेनेंट में यह कौन है — या पंक्ति हटाएँ।</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>स्रोत और लक्ष्य समान हैं।</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>यह स्रोत एक से अधिक बार आता है।</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>स्रोत (यह टेनेंट)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>लक्ष्य (दूसरा टेनेंट)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>प्रकार</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>लक्ष्य में?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>किसके लिए आवश्यक</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>उपयोगकर्ता</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>समूह</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>जाँचा नहीं गया</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>जाँच हो रही है…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ मिला</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ नहीं मिला</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>जोड़ें</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>हटाएँ</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>डोमेन स्वैप से लक्ष्य भरें</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>जिन पंक्तियों में अभी लक्ष्य नहीं है, उनमें वह पता भरता है जो डोमेन स्वैप से बनता।</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>लक्ष्य में जाँचें</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>प्रत्येक लक्ष्य उपयोगकर्ता को लक्ष्य टेनेंट में खोजता है। यह उन्हें लक्ष्य साइट की उपयोगकर्ता सूची में भी जोड़ता है, जो कॉपी वैसे भी तब करती है जब वह उन्हें लेखक सेट करती है या एक्सेस देती है।</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>पहले मल्टी-टेनेंट लक्ष्य से कनेक्ट करें: लक्ष्य चरण पर लक्ष्य साइट URL दर्ज करें, फिर यह डायलॉग दोबारा खोलें।</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>CSV निर्यात करें…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>कॉपी को इन लोगों की आवश्यकता थी लेकिन ये लक्ष्य टेनेंट में नहीं मिले। प्रत्येक के लिए दर्ज करें कि लक्ष्य में वे कौन हैं — या उन्हें बिना मैप किए छोड़ने के लिए पंक्ति हटाएँ।</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} मैपिंग।</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} पंक्ति(यों) पर ध्यान देना है।</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>जाँचा गया: {0} मिले, {1} नहीं मिले{2}।</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} जाँचे नहीं जा सके</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>{1} में से {0} जाँचा जा रहा है…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>जाँचने के लिए कुछ नहीं: किसी पंक्ति में लक्ष्य ईमेल पता नहीं है।</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>कुछ पंक्तियों पर ध्यान देना है (हाइलाइट की गई)। उन्हें ठीक करें या हटाएँ, फिर सहेजें।</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>मैपिंग सहेजी गई। इसे पहले से कॉपी की गई फ़ाइलों पर लागू करने के लिए ओवरराइट के साथ दोबारा चलाएँ — यदि नया हो तो कॉपी करें अप-टू-डेट फ़ाइलों को छोड़ देता है, इसलिए उनके लेखक नहीं बदलते। परमिशन दोनों स्थितियों में रिफ़्रेश होती हैं।</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>स्रोत के {0} व्यक्ति लक्ष्य टेनेंट में नहीं मिल सके, इसलिए उन्हें छोड़ दिया गया: उन्हें एक्सेस नहीं दिया गया, लेखक या संपादक के रूप में सेट नहीं किया गया, या व्यक्ति कॉलम से हटा दिया गया।</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>इन उपयोगकर्ताओं को मैप करें…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>अनसुलझे उपयोगकर्ताओं को मैप करें…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>उन लोगों के साथ पहचान मैपिंग खोलता है जिन्हें यह रन लक्ष्य में नहीं ढूँढ सका।</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>इस रन में कोई अनसुलझा उपयोगकर्ता नहीं था।</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>फ़ॉर्म कॉपी करें</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Microsoft Forms को लक्ष्य खाते में कॉपी करें, सभी प्रश्न, ब्रांचिंग, सेटिंग्स और थीम बनाए रखते हुए। प्रतिक्रियाएँ Excel में निर्यात की जा सकती हैं।</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>यह Microsoft Forms वेब API का उपयोग करता है, जिसे Microsoft दस्तावेज़ित या समर्थित नहीं करता। यह आज काम करता है लेकिन बिना सूचना के बदल सकता है। पहले कुछ फ़ॉर्म आज़माएँ।</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>मेरे फ़ॉर्म लोड करें</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>स्रोत खाता: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>लक्ष्य खाता: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>लक्ष्य: वही खाता (सिंगल टेनेंट)। कॉपी मूल फ़ॉर्म के बगल में बनाई जाती हैं।</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(आपसे साइन इन करने को कहा जाएगा)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>फ़ॉर्म ID मैप (Flows टूल द्वारा उपयोग किया जाता है): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>फ़ॉर्म लोड हो रहे हैं…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>{0} फ़ॉर्म लोड हुए।</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>पहले कम से कम एक फ़ॉर्म चुनें।</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>फ़ॉर्म कॉपी हो रहे हैं…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>कॉपी हो रहा है…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>कॉपी हुआ</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>विफल (लॉग देखें)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>&apos;{0}&apos; कॉपी हो रहा है</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>कॉपी पूरी हुई: {0} कॉपी हुए, {1} विफल।</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>प्रतिक्रिया निर्यात के लिए फ़ोल्डर चुनें</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>प्रतिक्रियाएँ निर्यात हो रही हैं…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>&apos;{0}&apos; निर्यात हुआ: {1} प्रतिक्रियाएँ {2} में</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>{0} फ़ॉर्म की प्रतिक्रियाएँ {1} में निर्यात हुईं।</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>फ़ॉर्म कॉपी हो गया, लेकिन Flows टूल के लिए उसका ID सहेजा नहीं जा सका: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>&apos;{0}&apos; निर्यात नहीं हो सका: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>{0} फ़ॉर्म की प्रतिक्रियाएँ {2} में निर्यात हुईं; {1} विफल (लॉग देखें)।</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>रद्द किया गया।</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>त्रुटि: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>संकेत: ऐप रजिस्ट्रेशन को सहमति के साथ डेलीगेटेड Microsoft Forms परमिशन चाहिए। इसे API permissions के अंतर्गत जोड़ें (यूज़र गाइड देखें), फिर पुनः प्रयास करें।</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>संकेत: Microsoft Forms ने अनुरोध अस्वीकार कर दिया। जाँचें कि यह खाता forms.office.com खोल सकता है और ऐप रजिस्ट्रेशन के पास Microsoft Forms परमिशन है।</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{1} में से {0} चयनित</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>शीर्षक</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>प्रकार</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>अंतिम संशोधन</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>परिणाम</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>कॉपी किए गए शीर्षकों में जोड़ें:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (कॉपी)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>चयनित फ़ॉर्म कॉपी करें</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>प्रतिक्रियाएँ निर्यात करें…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>किसी कॉपी को उसके स्रोत से जाँचें</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>अन्य टूल</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>फ़ॉर्म</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Microsoft Forms कॉपी करें और उनकी प्रतिक्रियाएँ निर्यात करें</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Forms टूल</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>लक्ष्य के लिए फ़्लो को फिर से लिखें</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>निर्यात किए गए Power Automate पैकेज (.zip) को अपडेट करें ताकि वे लक्ष्य की ओर इशारा करें: साइट, सूचियाँ, कॉलम, कॉपी किए गए फ़ॉर्म और ईमेल डोमेन। आपके मूल पैकेज कभी नहीं बदलते।</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. निर्यात किए गए फ़्लो पैकेज चुनें</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>वे फ़्लो पैकेज (.zip) जोड़ें जिन्हें आपने Power Automate से निर्यात किया था।</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>फ़ाइलें जोड़ें…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>फ़ोल्डर जोड़ें…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>स्कैन करें</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>फ़्लो पैकेज (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>पहले कम से कम एक फ़्लो पैकेज जोड़ें।</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>पैकेज स्कैन हो रहे हैं…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>{0} छोड़ा गया: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} फ़्लो मिले। वे {1} साइट, {2} सूचियों और {3} फ़ॉर्म का संदर्भ देते हैं।</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>स्कैन पूरा हुआ।</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. साइट मैप करें</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>प्रत्येक फ़्लो की SharePoint साइट कहाँ जाती है। मल्टी-टेनेंट मोड में, लक्ष्य में साइन इन करें और नए टेनेंट का पता आपके लिए भर दिया जाता है; जिस पंक्ति की साइट का नाम अलग है उसे बदलें। सिंगल टेनेंट मोड में, प्रत्येक पंक्ति के लिए लक्ष्य साइट टाइप करें।</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>फ़्लो में साइट (बदली जाएगी)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>लक्ष्य साइट</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>नए टेनेंट का पता:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>खाली लक्ष्य भरें, पाथ बनाए रखते हुए</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>पूरा URL दर्ज करें, जैसे https://contoso.sharepoint.com।</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>उस होस्ट और प्रत्येक साइट के पाथ से खाली लक्ष्य भरे गए।</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. सूचियाँ और कॉलम मिलाएँ</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>फ़्लो द्वारा उपयोग की जाने वाली प्रत्येक सूची के लिए एक कार्ड, चाहे उसे कितने भी फ़्लो उपयोग करें। प्रत्येक सूची का नाम और कॉलम, लक्ष्य पर वह सूची जिससे वह मैप होती है (डिफ़ॉल्ट रूप से समान नाम वाली; नाम अलग हो तो ड्रॉपडाउन से दूसरी चुनें), और प्रत्येक कॉलम का मैप दिखाता है। चेतावनी से चिह्नित कार्ड जाँचें।</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>सूचियाँ और कॉलम मिलाएँ</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>सूची</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>स्रोत सूची ID</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>लक्ष्य सूची ID</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>स्रोत कॉलम</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>लक्ष्य कॉलम</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>पहले पैकेज स्कैन करें।</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>पहले कम से कम एक लक्ष्य साइट दर्ज करें।</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>सूचियाँ और कॉलम मिलाए जा रहे हैं…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(नहीं मिला)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>लक्ष्य पर समान नाम वाली सूची मिली</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>जिस साइट पर यह सूची है उसकी कोई लक्ष्य साइट नहीं है (साइट चरण)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>स्रोत साइट पर यह सूची पढ़ी नहीं जा सकी: हो सकता है वह मौजूद न हो, इस खाते के पास एक्सेस न हो, या साइट आपके स्रोत कनेक्शन से अलग टेनेंट पर हो</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>लक्ष्य साइट पर इस नाम की कोई सूची नहीं है: ड्रॉपडाउन से एक चुनें</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>समान नाम</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>लक्ष्य पर नाम बदला गया</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>कोई मेल नहीं: कॉलम चुनें</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{1} में से {0} सूचियों की लक्ष्य सूची है। जाँचने के लिए {2} कॉलम।</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. फ़ॉर्म और ईमेल</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Forms टूल से कॉपी किए गए फ़ॉर्म अपने आप भर जाते हैं। जिस फ़ॉर्म को आपने खुद बनाया है, उसके लिए उसका ID या उसके संपादन पृष्ठ का लिंक पेस्ट करें।</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>स्रोत फ़ॉर्म ID</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>फ़ॉर्म ID (ड्रॉपडाउन से भरा गया, या एक पेस्ट करें)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>ईमेल डोमेन बदलें:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. अपडेट किए गए पैकेज लिखें</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>आउटपुट फ़ोल्डर चुनें (मूल फ़ाइलों वाला फ़ोल्डर नहीं)। अपडेट किए गए पैकेज और हर बदलाव की सूची वाली रिपोर्ट वहीं सहेजी जाती है।</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>अपडेट किए गए पैकेज लिखें</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>मैपिंग सहेजें…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>आउटपुट फ़ोल्डर खोलें</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>कनेक्शन टेनेंट के बीच नहीं ले जाए जा सकते। पैकेज इम्पोर्ट करने के बाद, Power Automate में प्रत्येक कनेक्शन फिर से बनाएँ और उसे दोबारा चुनें।</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>पहले आउटपुट फ़ोल्डर चुनें।</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>अपडेट किए गए पैकेज लिखे जा रहे हैं…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>{0} की अपडेट की गई कॉपी सहेजें (पैकेज {1}/{2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Power Automate पैकेज (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>आप यह फ़ाइल नाम पहले ही दूसरे पैकेज के लिए चुन चुके हैं। कोई अलग नाम चुनें।</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>एक पैकेज मूल फ़ाइल के ऊपर सहेजा जाएगा (वही फ़ोल्डर, वही नाम)। कोई अलग आउटपुट फ़ोल्डर चुनें, या &quot;इस रूप में सहेजें&quot; में नाम बदलें, ताकि मूल फ़ाइलें अछूती रहें।</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># फ़्लो पुनर्लेखन रिपोर्ट
+
+मूल पैकेज अछूते हैं। कनेक्शन माइग्रेट नहीं किए जाते; इम्पोर्ट पर उन्हें फिर से बनाएँ और दोबारा चुनें।
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>रिपोर्ट {0} में लिखी गई</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} पैकेज लिखे गए, {1} प्रतिस्थापन। {2} मान अब भी स्रोत की ओर इशारा करते हैं (रिपोर्ट देखें)।</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>मैपिंग {0} में सहेजी गई</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>फ़्लो</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>निर्यात किए गए Power Automate फ़्लो को लक्ष्य के लिए अपडेट करें</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Flows टूल</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>ये फ़्लो क्या उपयोग करते हैं</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>स्कैन किए गए फ़्लो में मिली सेवाएँ, और यह टूल प्रत्येक के बारे में क्या करता है।</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>सेवा</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>फ़्लो</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>चरण</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>मिला</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>यह टूल क्या करता है</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>जो मिलता है उसे फिर से लिखता है</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>ID रिपोर्ट किए जाते हैं; इम्पोर्ट के बाद समीक्षा करें</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>केवल कनेक्शन (इसे फिर से बनाएँ)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>कॉलम मैपिंग</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>कोई कॉलम यहाँ तब दिखता है जब कोई फ़्लो उसमें लिखता है, उस पर फ़िल्टर या सॉर्ट करता है, या मिलान की गई सूची पर किसी एक्सप्रेशन में उसे पढ़ता है। लक्ष्य कॉलम स्वचालित मिलान से चुना जाता है (समान नाम, फिर समान डिस्प्ले नाम, फिर मिलता-जुलता नाम)। आपको केवल &quot;मिलता-जुलता नाम&quot; या &quot;कोई मेल नहीं&quot; चिह्नित पंक्तियों पर कार्रवाई करनी है; किसी भी पंक्ति को उसके ड्रॉपडाउन से बदलें, या स्रोत नाम रखने के लिए &quot;(अपरिवर्तित छोड़ें)&quot; चुनें। Title जैसे बिल्ट-इन कॉलम सूचीबद्ध नहीं हैं क्योंकि वे हर जगह मौजूद होते हैं।</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(अपरिवर्तित छोड़ें)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>मिलता-जुलता नाम: कृपया जाँचें</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(अभी मिलाया नहीं गया)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>लक्ष्य सूची आपके द्वारा चुनी गई</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>स्वयं कोई सूची चुनने के लिए (उदाहरण के लिए जब नाम अलग हो) लक्ष्य सूची ID कॉलम में लक्ष्य सूची ID, या उसके सूची सेटिंग्स पृष्ठ का लिंक टाइप या पेस्ट करें। फिर उसके कॉलम मिलाने के लिए &quot;फिर से मिलाएँ&quot; पर क्लिक करें।</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>&apos;{0}&apos; में सूची ID नहीं मिली। GUID या सूची सेटिंग्स पृष्ठ का लिंक पेस्ट करें।</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>&apos;{0}&apos; में फ़ॉर्म ID नहीं मिला। फ़ॉर्म ID या फ़ॉर्म के संपादन पृष्ठ का लिंक पेस्ट करें।</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>फ़ॉर्म</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>लक्ष्य</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>कॉपी</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>परिणाम</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>कॉपी करने के लिए फ़ॉर्म चुनें</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>फ़ॉर्म फिर से लोड करें</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>अपने फ़ॉर्म देखने के लिए &quot;मेरे फ़ॉर्म लोड करें&quot; पर क्लिक करें।</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>इस खाते में कोई फ़ॉर्म नहीं मिला।</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} फ़ॉर्म कॉपी करें</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>और फ़ॉर्म कॉपी करें</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>चुनें कि कॉपी कहाँ जाएँगी</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>सिंगल टेनेंट: कॉपी उसी खाते में बनाई जाती हैं जिसका आप उपयोग कर रहे हैं, मूल फ़ॉर्म के बगल में।</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>मल्टी-टेनेंट: कॉपी लक्ष्य खाते में बनाई जाती हैं। यहाँ उसमें साइन इन करें; यह SharePoint साइटों के लिए आपके द्वारा उपयोग किए गए साइन-इन से अलग है।</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>लक्ष्य खाता</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>इस ऐप रजिस्ट्रेशन से साइन इन होता है: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>आपके लक्ष्य ऐप रजिस्ट्रेशन से साइन इन होता है (सेटिंग्स में सेट)।</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>लक्ष्य खाते में साइन इन करें</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>फिर से साइन इन करें</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>लक्ष्य खाते में साइन इन हो रहा है… एक ब्राउज़र विंडो खुल सकती है।</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>{0} के रूप में कनेक्ट हुए। Microsoft Forms एक्सेस की पुष्टि हुई (इस खाते में पहले से {1} फ़ॉर्म हैं)।</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>लक्ष्य खाते से कनेक्ट नहीं हो सका: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>लक्ष्य खाता अभी कनेक्ट नहीं है।</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>तैयार। शुरू करने के लिए कॉपी बटन पर क्लिक करें।</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>तैयार: कॉपी {0} में बनाई जाएँगी।</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>जारी रखने के लिए लक्ष्य खाते में साइन इन करें।</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>विकल्प</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} फ़ॉर्म {1} से {2} में कॉपी किए जाएँगे।</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>स्रोत खाता</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>लक्ष्य खाता</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>फ़ॉर्म कॉपी हो रहे हैं</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>शुरू हो रहा है…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>फ़ॉर्म {0}/{1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>वर्तमान फ़ॉर्म के बाद रद्द किया जा रहा है…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>कॉपी पूरी हुई: सभी {0} फ़ॉर्म कॉपी हुए</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>आपकी कॉपी {0} में हैं। उन्हें देखने के लिए Microsoft Forms खोलें, या नीचे दी गई तालिका का उपयोग करें।</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>कॉपी पूरी हुई: {1} में से {0} फ़ॉर्म कॉपी हुए, कुछ पर ध्यान देना है</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>कॉपी {0} में हैं। चेतावनी से चिह्नित फ़ॉर्म समस्याओं के साथ कॉपी हुए, और विफल फ़ॉर्म बनाए नहीं गए। विवरण कॉलम देखें।</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>कॉपी पूरी हुई, लेकिन कोई फ़ॉर्म कॉपी नहीं हुआ</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>कारण के लिए विवरण कॉलम देखें। सामान्य कारण हैं लक्ष्य रजिस्ट्रेशन पर Microsoft Forms परमिशन का न होना, या Forms एक्सेस के बिना खाता।</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>{1} में से {0} फ़ॉर्म के बाद कॉपी रद्द की गई</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>नीचे सूचीबद्ध फ़ॉर्म पूरे हो चुके थे। जब आपने रद्द किया तब जो फ़ॉर्म कॉपी हो रहा था वह पूरा नहीं हुआ और दिखाई नहीं देता।</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>कॉपी हुए</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>चेतावनियों के साथ</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>विफल</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>प्रश्न</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>स्रोत फ़ॉर्म</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>कॉपी</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>प्रश्न</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>विवरण</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>कॉपी हुआ</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>चेतावनियों के साथ कॉपी हुआ</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>विफल</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>चयनित कॉपी खोलें</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Microsoft Forms खोलें</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>परिणाम निर्यात करें…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>फ़ॉर्म ID मैप दिखाएँ</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>पहले तालिका में कॉपी किया गया कोई फ़ॉर्म चुनें।</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>परिणाम {0} में सहेजे गए</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>संकेत: ऐप रजिस्ट्रेशन में कोई मेल खाता रीडायरेक्ट पता नहीं है। Entra में, Authentication के अंतर्गत, http://localhost के साथ प्लेटफ़ॉर्म &quot;Mobile and desktop applications&quot; जोड़ें, फिर पुनः प्रयास करें।</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>पैकेज</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>साइट</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>सूचियाँ और कॉलम</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>फ़ॉर्म और ईमेल</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>लिखें</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>रिपोर्ट</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>अपने निर्यात किए गए फ़्लो चुनें</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>Power Automate में: My flows खोलें, कोई फ़्लो चुनें, फिर Export → Package (.zip) चुनें। डाउनलोड की गई .zip फ़ाइलें यहाँ जोड़ें। प्रत्येक फ़ाइल जोड़ते ही स्कैन हो जाती है।</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>साफ़ करें</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>शुरू करने के लिए निर्यात किए गए फ़्लो पैकेज जोड़ें।</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>उन फ़ाइलों में कोई फ़्लो नहीं मिला। सुनिश्चित करें कि वे Export → Package (.zip) से निर्यात किए गए पैकेज हैं।</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>स्कैन पूरा हुआ। देखें कि फ़्लो क्या उपयोग करते हैं, फिर अगला पर क्लिक करें।</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>लक्ष्य साइट चुनें</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>ये फ़्लो निश्चित पते वाली SharePoint साइटों का उपयोग नहीं करते, इसलिए यहाँ मैप करने के लिए कुछ नहीं है। अगला पर क्लिक करें।</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>इसके बाद, टूल आपके कनेक्शन से प्रत्येक सूची पढ़ता है और लक्ष्य साइट पर उसे मिलाता है।</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>प्रत्येक स्रोत साइट के लिए लक्ष्य साइट दर्ज करें, फिर अगला पर क्लिक करें।</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>सूचियाँ और कॉलम मिलाएँ</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>फिर से मिलाएँ</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>सूचियाँ</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>ये फ़्लो किसी विशिष्ट SharePoint सूची की ओर इशारा नहीं करते, इसलिए मिलाने के लिए कुछ नहीं है।</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>यह चरण खुलने पर सूचियाँ और कॉलम मिलाए जाते हैं।</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>फ़ॉर्म और ईमेल</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>फ़ॉर्म और ईमेल जाँचें, फिर अगला पर क्लिक करें।</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>ये फ़्लो Microsoft Forms का उपयोग नहीं करते।</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>ईमेल पते</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>एक ईमेल डोमेन के सभी पते दूसरे में ले जाने के लिए, दोनों डोमेन दर्ज करें। अन्य डोमेन के पते रिपोर्ट में सूचीबद्ध होते हैं, बदले नहीं जाते।</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>अपडेट किए गए पैकेज लिखें</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>आउटपुट फ़ोल्डर</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>आउटपुट फ़ोल्डर चुनें, फिर अपडेट किए गए पैकेज लिखें पर क्लिक करें।</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>{1} फ़्लो वाले {0} पैकेज लिखने के लिए तैयार। प्रतिस्थापित हो रहे हैं: {2} साइट, {3} सूची, {4} कॉलम मैपिंग, {5} फ़ॉर्म।</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>अपडेट किए गए पैकेज लिखें</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>लिखे गए पैकेज</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>प्रतिस्थापन</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>अब भी स्रोत</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>समीक्षा के लिए</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>पैकेज</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>अपडेट किया गया</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} मान अब भी स्रोत की ओर इशारा करते हैं</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>रिपोर्ट खोलें</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>फिर से शुरू करें</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>पूर्ण: {0} पैकेज लिखे गए</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>{0} में सहेजे गए। कुछ भी स्रोत की ओर इशारा करता नहीं बचा। उन्हें इम्पोर्ट करने के लिए नीचे दिए चरणों का पालन करें।</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>पूर्ण: {0} पैकेज लिखे गए, कुछ आइटम को आपकी समीक्षा चाहिए</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>{0} में सहेजे गए। अब भी स्रोत की ओर इशारा करने वाले मान और वे आइटम देखने के लिए रिपोर्ट खोलें जिन्हें टूल फिर से नहीं लिखता (अन्य सेवाएँ, बिना मिलान वाली सूचियाँ या कॉलम)।</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>आगे क्या करें</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  रिपोर्ट खोलें और &quot;अब भी स्रोत की ओर इशारा&quot; तथा समीक्षा के लिए चिह्नित हर चीज़ जाँचें।
+2.  Power Automate (लक्ष्य टेनेंट) में, My flows → Import → Import Package (Legacy) खोलें और लिखा गया कोई पैकेज चुनें।
+3.  &quot;Related resources&quot; के अंतर्गत प्रत्येक कनेक्शन के लिए &quot;Select during import&quot; पर क्लिक करें और लक्ष्य टेनेंट में कोई कनेक्शन चुनें या बनाएँ। कनेक्शन टेनेंट के बीच नहीं ले जाए जा सकते।
+4.  फ़्लो इम्पोर्ट करें। उसे बंद रखें, उसे खोलें, जो भी वह फ़्लैग करे उसे ठीक करें, फिर उसे चालू करें।</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>कोई बदलाव नहीं (इसमें कुछ भी आपकी मैपिंग से मेल नहीं खाया)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>{0} को {1} में कॉपी किया गया</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>पहले कॉपी किया गया</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>पहले से कॉपी किया गया</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …और {0} और</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>फिर से कॉपी करें?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>चयनित फ़ॉर्म में से {0} पहले ही इस खाते में कॉपी किए जा चुके हैं:
+
+{1}
+
+फिर से कॉपी करने पर प्रत्येक की दूसरी कॉपी बनेगी। जारी रखें?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>एक कॉपी अभी चल रही है। यदि आप अभी बंद करते हैं, तो जो फ़ॉर्म कॉपी हो रहा है वह लक्ष्य में अधूरा बना रह सकता है। रोकें और बंद करें?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>कॉपी प्रगति पर है</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>कोई प्रतिक्रिया निर्यात नहीं की जा सकी (लॉग देखें)।</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>शीर्षक या प्रकार से फ़िल्टर करें</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>एक वर्कबुक</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>सभी चयनित फ़ॉर्म को एक ही Excel फ़ाइल में निर्यात करें, प्रत्येक फ़ॉर्म के लिए एक शीट के साथ।</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>ईमेल पता</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Tenant ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>लाइब्रेरी पाथ</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>अन्य मान</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>जिस भी मान को बदलना है उसके लिए प्रतिस्थापन टाइप करें। खाली छोड़ी गई पंक्तियाँ नहीं बदलतीं; यदि वे अब भी स्रोत की ओर इशारा करती हैं तो रिपोर्ट में सूचीबद्ध होती हैं।</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>प्रकार</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>फ़्लो में</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>इससे बदलें</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>ID जाँच</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>फ़ॉर्म ID या संपादन-पृष्ठ लिंक नहीं है</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>स्रोत फ़ॉर्म के समान</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>यह फ़ॉर्म स्रोत टेनेंट में है, लक्ष्य में नहीं</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>यह फ़ॉर्म स्रोत से अलग टेनेंट में है</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>{0} से {1} की Forms कॉपी से</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>पहले की Forms कॉपी से</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>मैपिंग लोड करें…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>आपके द्वारा पहले सहेजी गई मैपिंग से साइट, सूचियाँ, कॉलम, फ़ॉर्म और अन्य मान भरें।</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>मैपिंग लोड नहीं हो सकी: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>{0} लोड हुई। इन फ़्लो से मेल खाने वाले मान भर दिए गए हैं; अगले चरणों में उन्हें जाँचें।</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>{0} लोड हुई। फ़्लो पैकेज जोड़ने पर यह लागू होगी।</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>{0} लक्ष्य साइट भरी गईं। नीचे उन्हें जाँचें, फिर अगला पर क्लिक करें।</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>हर साइट का पहले से लक्ष्य है, इसलिए कुछ नहीं बदला गया। भरवाने के लिए कोई लक्ष्य सेल खाली करें।</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>शॉर्टकट: नए टेनेंट का पता टाइप करें, उदाहरण के लिए https://fabrikam.sharepoint.com, और बटन पर क्लिक करें। जिस भी साइट का अभी कोई लक्ष्य नहीं है उसे वही पता मिलता है, स्रोत जैसे ही पाथ के साथ: https://contoso.sharepoint.com/sites/HR बन जाता है https://fabrikam.sharepoint.com/sites/HR। OneDrive साइट (contoso-my) नए टेनेंट के -my पते पर जाती हैं। आपके पहले से दर्ज किए गए लक्ष्यों को छुआ नहीं जाता। साइटें नए टेनेंट में पहले से मौजूद होनी चाहिए; यह टूल उन्हें नहीं बनाता। यदि वहाँ किसी साइट का नाम अलग है, तो इसके बजाय उसका पता लक्ष्य साइट सेल में टाइप करें।</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>यदि आप किसी लक्ष्य साइट को खाली छोड़ते हैं, तो वह साइट अपरिवर्तित रहती है: फ़्लो पुरानी साइट की ओर इशारा करते रहते हैं, उसकी सूचियाँ और कॉलम मिलाए या फिर से लिखे नहीं जाते, और रिपोर्ट उसे &quot;इम्पोर्ट के बाद करने योग्य&quot; में सूचीबद्ध करती है। यह केवल उस साइट के लिए सही है जो नए टेनेंट में नहीं जा रही।</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>क्या होता है</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ लक्ष्य पर जाएगी</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ अपरिवर्तित (कोई लक्ष्य नहीं)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>साइट {0} अपरिवर्तित छोड़ी गई (कोई लक्ष्य दर्ज नहीं), इसलिए फ़्लो अब भी उसकी ओर इशारा करते हैं और उसकी सूचियाँ मिलाई नहीं गईं। यदि साइट नहीं जा रही तो ठीक है; अन्यथा लक्ष्य के साथ दोबारा चलाएँ।</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>अभी दिखाने के लिए कोई कॉलम नहीं: कोई सूची मिलाई नहीं गई, इसलिए तुलना करने के लिए कुछ नहीं है। ऊपर की सूचियाँ ठीक करें, फिर फिर से मिलाएँ पर क्लिक करें।</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>मैप करने के लिए कोई कॉलम नहीं, इसलिए यहाँ आपको कुछ करने की आवश्यकता नहीं है। मिलाई गई सूचियों में ऐसे कोई कस्टम कॉलम नहीं हैं जिनमें फ़्लो लिखते हैं, जिन पर फ़िल्टर करते हैं, या जिन्हें टूल को दिखने वाले तरीके से पढ़ते हैं। नीचे की गतिविधि सूची बताती है कि प्रत्येक सूची के लिए क्या मिला।</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} कॉलम मिले: {1} का लक्ष्य पर समान नाम है, {2} का नाम बदला गया और मिलाया गया, {3} मिलते-जुलते दिखते हैं, {4} का कोई मेल नहीं है।</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>कृपया &quot;मिलता-जुलता नाम&quot; चिह्नित पंक्तियाँ जाँचें और &quot;कोई मेल नहीं&quot; चिह्नित पंक्तियों के लिए कॉलम चुनें। &quot;समान नाम&quot; या &quot;लक्ष्य पर नाम बदला गया&quot; चिह्नित पंक्तियों में कुछ करने की आवश्यकता नहीं है।</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>यहाँ कुछ करने की आवश्यकता नहीं: हर कॉलम पहले से मेल खाता है। अगला पर क्लिक करें।</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>अपडेट किए गए पैकेज के नाम</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>अपडेट की गई .zip फ़ाइल(ओं) को क्या नाम दें। मूल फ़ाइल नाम के लिए {name} का उपयोग करें: &quot;{name} - Fabrikam&quot; &quot;Onboarding.zip&quot; को &quot;Onboarding - Fabrikam.zip&quot; बना देता है। एक पैकेज के साथ आप सीधे पूरा नाम टाइप कर सकते हैं। मूल नाम रखने के लिए इसे {name} ही रहने दें। दो बार उपयोग हुए नाम में (2), (3)… जुड़ जाता है ताकि कुछ भी ओवरराइट न हो।</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>लिखा जाएगा: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>फ़्लो केवल फ़ॉर्म का ID संग्रहीत करता है, इसलिए यह चरण खुलने पर फ़ॉर्म के नाम Microsoft Forms से पढ़े जाते हैं: आपके फ़्लो में प्रत्येक फ़ॉर्म का शीर्षक (स्रोत खाता) और लक्ष्य खाते के फ़ॉर्म। जिस फ़ॉर्म का शीर्षक ठीक एक लक्ष्य फ़ॉर्म से मेल खाता है, वह आपके लिए मिला दिया जाता है; अन्यथा ड्रॉपडाउन से नया फ़ॉर्म चुनें, या उसका ID या संपादन-पृष्ठ लिंक पेस्ट करें। उन्हें फिर से पढ़ने के लिए फ़ॉर्म नाम फिर से लोड करें का उपयोग करें।</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>लक्ष्य खाते से फ़ॉर्म लोड करें…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>लक्ष्य खाते के फ़ॉर्म लोड हो रहे हैं… आपसे साइन इन करने को कहा जा सकता है।</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>लक्ष्य खाते {0} के स्वामित्व वाले फ़ॉर्म सूचीबद्ध किए जा रहे हैं ताकि आप प्रत्येक फ़्लो के लिए नया फ़ॉर्म चुन सकें। साइन-इन की प्रतीक्षा रोकने के लिए रद्द करें पर क्लिक करें।</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>लक्ष्य: {1} में {0} फ़ॉर्म मिले। प्रति पंक्ति एक चुनें, या ID पेस्ट करें।</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>लक्ष्य: {0} में कोई फ़ॉर्म नहीं मिला। ड्रॉपडाउन केवल वही फ़ॉर्म सूचीबद्ध करता है जिनका वह खाता स्वामी है (समूह फ़ॉर्म नहीं), इसलिए पहले Forms टूल से फ़ॉर्म कॉपी करें, या ID पेस्ट करें।</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>रद्द किया गया। फिर से प्रयास करने के लिए फ़ॉर्म नाम लोड करें पर क्लिक करें, या फ़ॉर्म ID पेस्ट करें।</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>लक्ष्य: फ़ॉर्म लोड नहीं हो सके: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(कोई नहीं)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(शीर्षकहीन फ़ॉर्म)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>स्रोत फ़ॉर्म</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>लक्ष्य के फ़ॉर्म में से चुनें</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>लक्ष्य खाते से कोई फ़ॉर्म चुनें। पहले &quot;लक्ष्य खाते से फ़ॉर्म लोड करें&quot; पर क्लिक करें।</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>लक्ष्य साइन-इन ({0}) से भरा गया</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>आपका स्रोत खाता, आपके लक्ष्य खाते से बदला गया</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>आपके साइन-इन ({0} → {1}) से भरा गया। ईमेल डोमेन अपरिवर्तित रखने के लिए दोनों बॉक्स खाली करें।</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>खाली लक्ष्य वाली साइट अपरिवर्तित रहती है: फ़्लो उसकी ओर इशारा करते रहते हैं, और रिपोर्ट उसे सूचीबद्ध करती है।</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ {0} के रूप में साइन इन · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>{0} के रूप में साइन इन हुए। लक्ष्य टेनेंट का SharePoint पता {1} है; खाली लक्ष्य साइट उसी से भरी गईं।</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ फ़्लो की कुछ साइट {0} पर हैं, जो लक्ष्य खाते का अपना पता है। या तो ये पैकेज पहले से लक्ष्य की ओर इशारा करते हैं (उदाहरण के लिए इस टूल द्वारा लिखे गए पैकेज, या लक्ष्य से निर्यात किए गए फ़्लो), इसलिए इसके बजाय स्रोत से मूल निर्यात जोड़ें; या स्रोत और लक्ष्य वास्तव में एक ही टेनेंट हैं, इसलिए ऐप को सिंगल टेनेंट मोड (सेटिंग्स) पर स्विच करें।</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} एक ऐसा पैकेज है जिसे इस टूल ने {1} को लिखा था: उसमें पहले से लक्ष्य के पते हैं, इसलिए ले जाने के लिए कुछ नहीं बचा। इसके बजाय स्रोत टेनेंट से मूल निर्यात जोड़ें (आपके Downloads की फ़ाइल, आउटपुट फ़ोल्डर वाली नहीं)।</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ इन फ़्लो की साइट {0} पर हैं, जो आपका लक्ष्य टेनेंट है, लेकिन आपका स्रोत {1} है। यदि पैकेज {0} से निर्यात किए गए थे, तो उस टेनेंट में स्रोत के रूप में साइन इन करें (स्रोत बदलें…)। यदि इस टूल ने उन्हें पहले लिखा था, तो उन्हें हटाएँ और मूल निर्यात जोड़ें।</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>साइन इन हो गया। {1} से {0} लक्ष्य साइट भरी गईं। उन्हें जाँचें, फिर अगला पर क्लिक करें।</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>साइन इन हो गया। हर लक्ष्य साइट में पहले से मान था, इसलिए कोई नहीं बदली गई।</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>साइन-इन पूरा नहीं हुआ, या नए टेनेंट का पता पढ़ा नहीं जा सका (लक्ष्य पंक्ति देखें)। यदि आप साइन इन हैं, तो लक्ष्य साइट भरने के लिए नीचे नए टेनेंट का पता दर्ज करें।</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} — {1} के रूप में कनेक्ट</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} — अभी साइन इन नहीं</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>लक्ष्य बदलें…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>कोई लक्ष्य सूची नहीं चुनी गई है, इसलिए ये फ़्लो अब भी ऐसी सूची की ओर इशारा करेंगे जो लक्ष्य पर नहीं है। लक्ष्य सूची चुनें, या पहले लक्ष्य साइट पर सूची बनाएँ।</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>फ़्लो कॉलम &quot;{0}&quot; का उपयोग करते हैं, लेकिन लक्ष्य सूची &quot;{1}&quot; में उसके लिए कोई कॉलम नहीं है। तालिका में उसका लक्ष्य कॉलम चुनें, या लक्ष्य सूची में कॉलम जोड़ें और फिर से जाँचें पर क्लिक करें।</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>लक्ष्य सूची &quot;{0}&quot; को कॉलम &quot;{1}&quot; आवश्यक है, लेकिन फ़्लो &quot;{2}&quot; में &quot;Create item&quot; चरण &quot;{3}&quot; उसे सेट नहीं करता, इसलिए इम्पोर्ट &quot;missing required property item/{1}&quot; के साथ विफल हो जाएगा। नीचे उसके लिए मान टाइप करें और टूल उसे उस चरण में जोड़ देगा, या लक्ष्य सूची पर &quot;{1}&quot; को वैकल्पिक बनाएँ और फिर से जाँचें पर क्लिक करें।</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>लक्ष्य सूची &quot;{0}&quot; को कॉलम &quot;{1}&quot; आवश्यक है, लेकिन फ़्लो &quot;{2}&quot; में &quot;Create item&quot; चरण &quot;{3}&quot; उसे सेट नहीं करता, इसलिए इम्पोर्ट &quot;missing required property item/{1}&quot; के साथ विफल हो जाएगा। SharePoint में लक्ष्य सूची पर &quot;{1}&quot; को वैकल्पिक बनाएँ, फिर फिर से जाँचें पर क्लिक करें।</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>इन आवश्यक कॉलम के लिए भरने योग्य मान (हर उस Create item चरण में जोड़ा जाता है जो उन्हें छोड़ देता है):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>यह इम्पोर्ट पर विफल हो जाएगा। जारी रखने के लिए इसे ठीक करें:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>फिर से जाँचें</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>विफल होगा ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ जारी रखने के लिए लक्ष्य में साइन इन करें।</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} पैकेज इस टूल द्वारा लिखे गए थे और उनमें पहले से लक्ष्य के मान हैं। उन्हें हटाएँ (सूची में ✕) और मूल निर्यात जोड़ें।</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} साइट का कोई लक्ष्य नहीं है। जैसी है वैसी छोड़ी गई साइट अब भी स्रोत टेनेंट की ओर इशारा करेगी।</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} सूची इम्पोर्ट पर विफल होंगी। जारी रखने के लिए &quot;विफल होगा&quot; चिह्नित सूचियाँ ठीक करें।</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ सूचियाँ अभी मिलाई नहीं गई हैं। पुनः प्रयास के लिए एक चरण पीछे जाएँ और फिर आगे आएँ।</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ जारी रखने के लिए {0} फ़ॉर्म को मान्य लक्ष्य फ़ॉर्म ID चाहिए।</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>स्रोत बदलें…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>{0} के रूप में साइन इन हुए। स्रोत टेनेंट का SharePoint पता {1} है।</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>स्रोत कनेक्शन {0} में बदल गया। नीचे सूचीबद्ध साइटें इसी टेनेंट पर होनी चाहिए।</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>स्रोत साइन-इन पूरा नहीं हुआ, या टेनेंट का पता पढ़ा नहीं जा सका (स्रोत पंक्ति देखें)। यदि आपने रद्द किया तो पिछला स्रोत कनेक्शन बना रहता है।</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ कुछ साइटें {0} से पढ़ी जाती हैं, जो वह टेनेंट नहीं है जिससे आप स्रोत के रूप में कनेक्ट हैं ({1})। उनकी सूचियाँ पढ़ना विफल होगा। उन पंक्तियों के लिए &quot;सूचियाँ यहाँ से पढ़ें&quot; को अपने स्रोत टेनेंट के पते पर बदलें, या स्रोत बदलें… पर क्लिक करें और उस टेनेंट के खाते से साइन इन करें।</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>फ़्लो की साइटें {0} पर हैं, लेकिन आप स्रोत के रूप में {1} से कनेक्ट हैं। &quot;सूचियाँ यहाँ से पढ़ें&quot; को {1} पर उन्हीं साइटों से भरा गया, ताकि टूल वहाँ से सूची नाम और कॉलम पढ़े। जाँचें कि वे साइटें मौजूद हैं (कोई भी पंक्ति संपादित करें), या यदि फ़्लो वास्तव में {0} से आए हैं तो स्रोत बदलें… पर क्लिक करें।</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>फ़्लो द्वारा उपयोग की जाने वाली सूचियाँ</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>किसी सूची को खोलने या बंद करने के लिए उस पर क्लिक करें। जिन सूचियों को देखना ज़रूरी है वे पहले और खुली हैं।</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>सभी खोलें</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>सभी बंद करें</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>उपयोगकर्ता:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>स्रोत:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>लक्ष्य सूची</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>या उसका ID या लिंक पेस्ट करें:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>स्रोत कॉलम</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>प्रकार</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>उपयोग हुआ</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>फ़्लो द्वारा उपयोग नहीं किया गया</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(कोई नहीं: इस सूची को अपरिवर्तित छोड़ें)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ कोई लक्ष्य सूची नहीं चुनी गई: इसे उपयोग करने वाले फ़्लो अब भी स्रोत सूची की ओर इशारा करते हैं</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ जाँचने के लिए {1} कॉलम</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ जाँचने के लिए कुछ नहीं</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>इस सूची में {0} कॉलम हैं; फ़्लो {1} का उपयोग करते हैं: {2} का लक्ष्य पर समान नाम है, {3} का नाम बदला गया और मिलाया गया, {4} मिलते-जुलते हैं (कृपया जाँचें), {5} का कोई मेल नहीं (कृपया चुनें)। अन्य कॉलम संदर्भ के लिए दिखाए गए हैं और बदले नहीं जाते।</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>इस सूची में {0} कॉलम हैं; किसी का भी फ़्लो द्वारा टूल को दिखने वाले तरीके से उपयोग नहीं होता, इसलिए कुछ मैप करने की आवश्यकता नहीं है।</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>इस सूची के लिए कोई कॉलम पढ़ा नहीं जा सका (ऊपर के नोट और गतिविधि सूची देखें)।</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>उसके कॉलम देखने और उन्हें मैप करने के लिए ऊपर लक्ष्य सूची चुनें।</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>लक्ष्य सूची के कॉलम पढ़े नहीं जा सके, इसलिए कोई मिलान सुझाया नहीं जा सका।</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>फ़्लो यह नहीं बताता कि यह सूची किस साइट पर है (वह पैरामीटर का उपयोग करता है), इसलिए उसे खोजा नहीं जा सकता। लक्ष्य सूची का ID या लिंक पेस्ट करें।</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>कोई लक्ष्य सूची नहीं: यह सूची अपरिवर्तित छोड़ी गई है।</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>{0} के लिए लक्ष्य सूची के कॉलम पढ़े जा रहे हैं…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>सूची &apos;{0}&apos;: आपने दूसरी लक्ष्य सूची चुनी। उन्हें फिर से मिलाने के लिए {1} पर उसके कॉलम पढ़े जा रहे हैं।</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} — {1} के रूप में कनेक्ट (मुख्य विंडो का साइन-इन)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>सूचियाँ यहाँ से पढ़ें (स्रोत)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>&quot;फ़्लो में साइट&quot; वह पता है जो फ़्लो में संग्रहीत है; वही बदला जाता है, इसलिए उसे संपादित नहीं किया जा सकता। &quot;सूचियाँ यहाँ से पढ़ें&quot; वह जगह है जहाँ से टूल स्रोत पक्ष पर प्रत्येक सूची का नाम और कॉलम पढ़ता है; यह उसी पते से शुरू होता है, इसलिए जब फ़्लो का पता पुराना हो, नाम बदल गया हो या आपके स्रोत कनेक्शन से अलग टेनेंट पर हो तो इसे बदलें।</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>ये फ़्लो क्या उपयोग करते हैं</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** — {1} फ़्लो, {2} चरण: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>इस टूल द्वारा फिर से लिखा गया</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>मैन्युअल समीक्षा करें</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>केवल कनेक्शन</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>इम्पोर्ट के बाद करने योग्य</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>प्रत्येक पैच किए गए पैकेज को लक्ष्य एनवायरनमेंट में इम्पोर्ट करें और कनेक्शन फिर से बनाएँ (वे कभी कॉपी नहीं होते)।</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}।</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>सॉल्यूशन पैकेज: केवल वर्कफ़्लो परिभाषाएँ फिर से लिखी गईं। सॉल्यूशन (customizations.xml) में एनवायरनमेंट वेरिएबल मान और कनेक्शन संदर्भ में अब भी स्रोत के मान हैं; इम्पोर्ट के बाद उन्हें सेट करें।</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>फ़्लो के स्वामी और केवल-रन उपयोगकर्ता पैकेज का हिस्सा नहीं हैं; इम्पोर्ट के बाद फ़्लो सही लोगों के साथ साझा करें।</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>कोई बदलाव नहीं (मैपिंग में कुछ भी मेल नहीं खाया)।</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} प्रतिस्थापन</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>अब भी स्रोत मानों की ओर इशारा (बिना मैप, इम्पोर्ट से पहले समीक्षा करें)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>स्रोत साइट {0} और लक्ष्य साइट {1} से कनेक्ट हो रहे हैं। यदि आप अभी साइन इन नहीं हैं तो साइन-इन विंडो खुलती है।</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>{0} (स्रोत) और {1} (लक्ष्य) से कनेक्ट हुए।</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>लक्ष्य साइट {0} पर सूचियाँ और लाइब्रेरी पढ़ी जा रही हैं, ताकि प्रत्येक सूची नाम से मिलाई जा सके और ड्रॉपडाउन में दी जा सके।</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>{1} पर {0} सूचियाँ और लाइब्रेरी मिलीं।</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>स्रोत साइट {1} से सूची {0} का नाम और कॉलम पढ़े जा रहे हैं।</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>सूची &apos;{0}&apos;: लक्ष्य साइट {1} पर समान नाम वाली सूची खोजी जा रही है।</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>सूची &apos;{0}&apos;: लक्ष्य पर मिली। उन्हें मिलाने के लिए लक्ष्य सूची के कॉलम पढ़े जा रहे हैं।</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>सूची &apos;{0}&apos;: उसके कॉलम पढ़े नहीं जा सके, या उसमें कोई नहीं है। इस सूची के लिए मैप करने को कुछ नहीं।</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>सूची &apos;{0}&apos;: {1} कॉलम, किसी का भी फ़्लो द्वारा टूल को दिखने वाले तरीके से उपयोग नहीं होता। कुछ मैप करने की आवश्यकता नहीं।</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>सूची &apos;{0}&apos;: फ़्लो {1} कॉलम नामों का उपयोग करते हैं: {2} का लक्ष्य पर समान नाम है (बदलाव की आवश्यकता नहीं), {3} का नाम बदला गया और मिलाया गया, {4} मिलते-जुलते दिखते हैं (कृपया जाँचें), {5} का कोई मेल नहीं (आपकी पसंद), {6} बिल्ट-इन कॉलम हैं (मैप करने को कुछ नहीं)।</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>सूची {0} स्रोत साइट पर नहीं है, लेकिन लक्ष्य साइट पर &apos;{1}&apos; के रूप में है: फ़्लो पहले से लक्ष्य की ओर इशारा करता है।</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>साइट &apos;{0}&apos; का कोई लक्ष्य नहीं है; उस पर की सूचियाँ हल नहीं की गईं।</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>उन्नत: किसी अलग पते से सूचियाँ पढ़ें</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>कॉलम मैपिंग: {0} से {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>इस सूची के लिए दिखाने को कोई कॉलम नहीं।</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>इस सूची का कोई भी कॉलम फ़्लो द्वारा उपयोग नहीं किया जाता। उन्हें देखने के लिए &quot;सभी कॉलम दिखाएँ&quot; पर टिक करें।</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>स्रोत सूची पढ़ी नहीं जा सकी, और फ़्लो कोई कॉलम नहीं बताता, इसलिए मैप करने को कुछ नहीं है।</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>सूची</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(स्रोत पर पढ़ा नहीं जा सका)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>यहाँ से पढ़ा गया:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>साइट</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>यह फ़्लो पहले से लक्ष्य पर इसी सूची की ओर इशारा करता है। इसके द्वारा उपयोग किए गए {0} कॉलम नाम लक्ष्य के कॉलम के सामने दिखाए गए हैं; कुछ बदलने की आवश्यकता नहीं।</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(सूची का नाम उपलब्ध नहीं)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>पहले से लक्ष्य पर</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>फ़्लो के कॉलम नामों से मैप किया गया</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>कॉलम पढ़े नहीं जा सकते</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>कोई लक्ष्य सूची नहीं</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>मैप करने को कुछ नहीं</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>तैयार</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>लक्ष्य कॉलम पढ़े नहीं जा सकते</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} जाँचने के लिए</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>{0} फ़्लो द्वारा उपयोग</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} कॉलम मैपिंग पर अब भी ध्यान देना है।</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>सभी कॉलम मैपिंग तय हैं।</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>कनेक्शन टेनेंट के बीच कॉपी नहीं होते: इम्पोर्ट के बाद Power Automate में उन्हें फिर से बनाएँ।</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>ईमेल: {0} का हर पता {1} बन जाता है।</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{1} में से {0} फ़ॉर्म नए फ़ॉर्म की ओर इशारा करते हैं।</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{1} में से {0} सूचियों की लक्ष्य सूची है।</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>सूचियाँ अभी मिलाई नहीं गई हैं।</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>ईमेल पते नहीं बदले जाते (कोई डोमेन मैप नहीं किया गया)।</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>फ़्लो कोई Microsoft Forms उपयोग नहीं करते।</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>फ़्लो कोई विशिष्ट सूची उपयोग नहीं करते।</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>फ़्लो किसी SharePoint साइट का नाम नहीं देते।</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{1} फ़्लो वाले {0} पैकेज लिखे जाएँगे; मूल नहीं बदले जाते।</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{1} में से {0} साइट लक्ष्य साइट पर जाएँगी; बाकी जैसी हैं वैसी रहेंगी।</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>अपने आप भरे गए मान साफ़ करें</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>भरा गया</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>आपके फ़्लो में फ़ॉर्म</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>से (आपके फ़्लो में)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>सूचियाँ</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>साइट</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>स्थिति</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>को (लक्ष्य)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>आपके द्वारा चुना गया</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>अपरिवर्तित छोड़ा गया</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(मुख्य विंडो का साइन-इन)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>जिस ईमेल डोमेन से बदलना है</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>इस पर के हर पते को ले जाएँ</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>से</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>जिस ईमेल डोमेन में बदलना है</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…या .zip फ़ाइलें (या कोई फ़ोल्डर) इस विंडो पर खींचकर छोड़ें।</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>सूची &apos;{1}&apos; के कॉलम &apos;{0}&apos; का लक्ष्य सूची में कोई मेल नहीं है।</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>{2} पर सूची &apos;{0}&apos; ({1}) की कोई लक्ष्य सूची नहीं है, इसलिए इसे उपयोग करने वाले फ़्लो अब भी स्रोत सूची की ओर इशारा करते हैं।</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(शीर्षक ज्ञात नहीं)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>चरण पर जाएँ</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>सहेजी हुई मैपिंग है? उसे लोड करें…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>कस्टम पैटर्न…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>मूल नाम रखें</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>प्रत्येक नाम में &apos; - migrated&apos; जोड़ें</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>रिपोर्ट खोलें और जाँचें कि समीक्षा के लिए क्या चिह्नित है।</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>Power Automate (लक्ष्य टेनेंट) में: My flows, Import, Import Package (Legacy), और लिखा गया कोई पैकेज चुनें।</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>Related resources के अंतर्गत प्रत्येक कनेक्शन के लिए &quot;Select during import&quot; पर क्लिक करें और लक्ष्य टेनेंट में कोई कनेक्शन चुनें या बनाएँ। कनेक्शन टेनेंट के बीच नहीं ले जाए जा सकते।</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>फ़्लो इम्पोर्ट करें, उसे बंद रखें, उसे खोलें, जो भी वह फ़्लैग करे उसे ठीक करें, फिर उसे चालू करें।</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>फ़ोल्डर खोलें</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Power Automate खोलें</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>वह आउटपुट फ़ोल्डर अभी मौजूद नहीं है; पैकेज लिखते समय वह बन जाता है।</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>स्रोत</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>लक्ष्य</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} फ़्लो मिले</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>कोई फ़्लो नहीं मिला</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>इस टूल द्वारा पहले ही लिखा गया</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>पढ़ा नहीं जा सका</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>लिखने के लिए तैयार?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>इस पैकेज को सूची से हटाएँ</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>फ़्लो पुनर्लेखन रिपोर्ट</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>ये फ़्लो क्या उपयोग करते हैं ({0} सेवाएँ)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} पैकेज लिखे नहीं जा सके।</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>लिखे गए पैकेज में {0} मान अब भी स्रोत की ओर इशारा करते हैं। कौन से, यह देखने के लिए रिपोर्ट खोलें।</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>सभी {0} कॉलम दिखाएँ</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>केवल वे कॉलम दिखाएँ जिन्हें फ़्लो उपयोग करते हैं</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>इन कॉलम का क्या अर्थ है?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>इस सूची का ID स्रोत साइट पर नहीं है, लेकिन यह लक्ष्य साइट पर सूची &apos;{0}&apos; है: फ़्लो पहले से लक्ष्य की ओर इशारा करता है, जैसा इस टूल द्वारा पहले लिखे गए पैकेज में होता है।</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>कनेक्टेड</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>समस्या</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>साइन इन नहीं</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>साइन-इन की प्रतीक्षा है…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} सूचियाँ · सभी तैयार</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} सूचियाँ · {1} तैयार · {2} को देखना ज़रूरी</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>{0} लगा।</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>समीक्षा के लिए</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>स्रोत टेनेंट से निर्यात किए गए फ़्लो पैकेज (.zip) जोड़ें। प्रत्येक जोड़ते ही स्कैन हो जाता है।</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>बताएँ कि प्रत्येक फ़्लो किस साइट पर जाता है। लक्ष्य में साइन इन करें और नए टेनेंट का पता आपके लिए भर दिया जाता है।</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>फ़्लो द्वारा उपयोग की जाने वाली प्रत्येक सूची लक्ष्य की किसी सूची से मिलाई जाती है, और उसके कॉलम मैप किए जाते हैं। जिस पर देखने की ज़रूरत चिह्नित हो उसे जाँचें।</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>कॉपी किए गए फ़ॉर्म को उनके नए ID की ओर इंगित करें, और तय करें कि ईमेल पते और टेनेंट ID कैसे बदलें।</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>नीचे की सूची जाँचें, अपडेट किए गए पैकेज सहेजने की जगह चुनें, फिर उन्हें लिखें।</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>यहाँ क्या होता है</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>टूल इस कंप्यूटर पर प्रत्येक पैकेज पढ़ता है (कुछ भी कहीं नहीं भेजा जाता) ताकि फ़्लो द्वारा उपयोग की जाने वाली साइट, सूचियाँ, कॉलम और फ़ॉर्म मिल सकें। स्रोत से मूल निर्यात जोड़ें, इस टूल द्वारा पहले लिखे गए पैकेज नहीं: उनमें पहले से लक्ष्य के पते हैं।</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>कॉलम &apos;{0}&apos; अलग-अलग सूचियों पर अलग तरह से मैप किया गया है ({1})। प्रत्येक सूची के चरणों को अपना मैपिंग मिलता है; फ़्लो में अन्यत्र एक्सप्रेशन मूल नाम रखते हैं, इसलिए उनकी समीक्षा करें।</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>फ़ॉर्म नाम फिर से लोड करें…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>फ़ॉर्म नाम लोड हो रहे हैं… आपसे साइन इन करने को कहा जा सकता है।</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>स्रोत खाते {0} से आपके फ़्लो में फ़ॉर्म के शीर्षक पढ़े जा रहे हैं। साइन-इन की प्रतीक्षा रोकने के लिए रद्द करें पर क्लिक करें।</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>स्रोत: {1} में से {0} फ़ॉर्म के शीर्षक मिले ({2})।</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>स्रोत: फ़ॉर्म शीर्षक पढ़े नहीं जा सके: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} फ़ॉर्म को समान नाम वाले लक्ष्य फ़ॉर्म से मिलाया गया।</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>मान्य फ़ॉर्म ID जैसा दिखता है</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>नाम से मिलाया गया</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>स्रोत और लक्ष्य एक ही टेनेंट ({0}) पर हैं। ऐप को सिंगल टेनेंट मोड (सेटिंग्स) पर स्विच करें, या स्रोत और लक्ष्य में अलग-अलग टेनेंट के खातों से साइन इन करें।</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>ये पैकेज हटाएँ</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>{0} पैकेज हटाए गए जो पहले से लक्ष्य की ओर इशारा करते हैं: {1}। इसके बजाय स्रोत टेनेंट से मूल निर्यात जोड़ें।</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>वे पैकेज हटा दिए गए। स्रोत टेनेंट से मूल निर्यात जोड़ें।</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>प्रत्येक पैकेज आउटपुट फ़ोल्डर में नई .zip के रूप में सहेजा जाता है; मूल कभी नहीं बदलते। किसी का नाम बदलने के लिए, इस रूप में सहेजें में अलग नाम टाइप करें।</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>मूल नाम रखें</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>हर नाम में &apos; - migrated&apos; जोड़ें</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>मूल पैकेज</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>इस रूप में सहेजें</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>इस रूप में सहेजा जाएगा: {0} (आप नीचे नाम बदल सकते हैं)।</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>पढ़ा नहीं जा सका; कोई आउटपुट नहीं लिखा गया</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>रद्द किया गया। कुछ नहीं बदला गया। साइट चरण पर फिर से प्रयास करने के लिए साइन इन का उपयोग करें (उदाहरण के लिए किसी दूसरे ब्राउज़र में); सूची चरण पर फिर से मिलाएँ का उपयोग करें।</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>रद्द हो रहा है… साइन-इन विंडो को बंद होने में कुछ समय लग सकता है।</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>टूल क्या कर रहा है</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>कनेक्शन</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>मल्टी-टेनेंट: सूचियाँ मिलाने के लिए टूल स्रोत टेनेंट से प्रत्येक सूची का नाम और कॉलम पढ़ता है और लक्ष्य टेनेंट में वही सूची खोजता है। इसके लिए प्रत्येक में साइन इन चाहिए। यहाँ प्रत्येक पक्ष में साइन इन करें, या बस अगला पर क्लिक करें और तब आपसे पूछा जाएगा। एक ब्राउज़र विंडो खुलती है; यदि वह गलत ब्राउज़र है, तो रद्द करें पर क्लिक करें और फिर प्रयास करें। किसी भी टेनेंट में कुछ नहीं बदला जाता।</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>सिंगल टेनेंट: स्रोत और लक्ष्य एक ही टेनेंट हैं, इसलिए टूल उस खाते का उपयोग करता है जिससे आपने कनेक्ट चरण पर साइन इन किया था। और कहीं साइन इन करने की आवश्यकता नहीं है। टेनेंट में कुछ नहीं बदला जाता।</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>स्रोत</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>लक्ष्य</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>स्रोत में साइन इन करें…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>लक्ष्य में साइन इन करें…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>रद्द करें</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>साइन-इन विंडो की प्रतीक्षा रोकता है, ताकि आप फिर प्रयास कर सकें, उदाहरण के लिए किसी दूसरे ब्राउज़र में।</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>अभी साइन इन नहीं</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>मुख्य विंडो का साइन-इन उपयोग करता है: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ {0} के रूप में साइन इन</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ तैयार</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>साइन-इन की प्रतीक्षा है… एक ब्राउज़र विंडो खुलनी चाहिए</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>साइन-इन रद्द किया गया। फिर प्रयास करने के लिए साइन इन पर क्लिक करें।</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>साइन इन हो गया। नीचे लक्ष्य साइटें जाँचें, फिर अगला पर क्लिक करें।</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>अभी साइन इन करने के लिए कोई स्रोत साइट नहीं है। पहले फ़्लो पैकेज जोड़ें।</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>पहले कम से कम एक लक्ष्य साइट दर्ज करें (या पाथ बनाए रखते हुए भरें का उपयोग करें); साइन-इन लक्ष्य साइट के टेनेंट में होता है।</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>स्रोत में साइन इन हो रहा है… एक ब्राउज़र विंडो खुलती है।</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>लक्ष्य में साइन इन हो रहा है… एक ब्राउज़र विंडो खुलती है।</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>स्रोत</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>लक्ष्य</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>स्रोत टेनेंट में साइन इन हो रहा है। एक ब्राउज़र विंडो खुलती है; प्रतीक्षा रोकने के लिए (उदाहरण के लिए दूसरा ब्राउज़र आज़माने हेतु) रद्द करें पर क्लिक करें। साइन-इन टूल को यह भी बताता है कि स्रोत कौन सा टेनेंट है।</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>लक्ष्य टेनेंट में साइन इन हो रहा है। एक ब्राउज़र विंडो खुलती है; प्रतीक्षा रोकने के लिए (उदाहरण के लिए दूसरा ब्राउज़र आज़माने हेतु) रद्द करें पर क्लिक करें। साइन-इन टूल को नए टेनेंट का SharePoint पता भी बताता है।</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>{0} से कनेक्ट हुए।</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>साइन-इन आपके द्वारा रद्द किया गया।</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>फ़्लो द्वारा उपयोग की जाने वाली साइट, सूचियाँ, कॉलम और फ़ॉर्म खोजने के लिए इस कंप्यूटर पर {0} पैकेज फ़ाइल(ें) पढ़ी जा रही हैं। कुछ भी कहीं नहीं भेजा जाता।</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>{0} पढ़ा गया: {1} फ़्लो।</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>{0} सूची(ओं) का मिलान: प्रत्येक के लिए, टूल स्रोत साइट से उसका नाम पूछता है, फिर लक्ष्य साइट पर उस नाम की सूची खोजता है।</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>मिलान पूरा हुआ। {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>{0} पैच किए गए पैकेज {1} में लिखे जा रहे हैं। मूल नहीं बदले जाते।</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>आपकी मैपिंग लागू करके {0} लिखा जा रहा है।</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>{0} में उन मानों की जाँच हो रही है जो अब भी स्रोत की ओर इशारा करते हैं।</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>आपके द्वारा रद्द किया गया। कुछ नहीं बदला गया।</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>रुका: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>प्रत्येक फ़्लो उस SharePoint साइट का पता संग्रहीत करता है जिससे वह पढ़ता है या जिसमें वह लिखता है। नए टेनेंट में चलने के लिए, हर फ़्लो को वहाँ की मिलती-जुलती साइट की ओर इशारा करना होगा, इसलिए टूल को बताएँ कि कौन सी नई साइट किस पुरानी की जगह लेती है। यह केवल आपके पैकेज की कॉपी संपादित करता है; अगला पर क्लिक करने तक कुछ नहीं खोजा जाता।</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>यहाँ क्या होता है: फ़्लो द्वारा उपयोग की जाने वाली प्रत्येक सूची के लिए, टूल स्रोत साइट से सूची का नाम और कॉलम पढ़ता है, लक्ष्य साइट पर समान नाम वाली सूची खोजता है, और उन्हें मिलाने के लिए उस सूची के कॉलम पढ़ता है। क्यों: फ़्लो सूचियों और कॉलम को ID या आंतरिक नाम से संदर्भित करते हैं, और नए टेनेंट में वे अलग होते हैं, इसलिए टूल समकक्ष खोजता है। यह चरण केवल पढ़ता है; किसी भी टेनेंट में कुछ बनाया या बदला नहीं जाता। आप उसके कार्ड पर लक्ष्य सूची और कोई भी कॉलम बदल सकते हैं।</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>कॉपी किए गए फ़ॉर्म को नया ID मिलता है, इसलिए उसे उपयोग करने वाले फ़्लो को कॉपी की ओर इशारा करना होगा। नए संगठन के लिए फ़्लो में ईमेल पते और टेनेंट ID भी बदलने पड़ सकते हैं। यहाँ कुछ नहीं खोजा जाता; आप प्रतिस्थापन तय करते हैं, और खाली छोड़ी गई कोई भी चीज़ जैसी है वैसी रहती है।</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>टूल आपकी मैपिंग लागू करके आउटपुट फ़ोल्डर में नई .zip फ़ाइलें लिखता है, उन्हें फिर से स्कैन करके देखता है कि कुछ अब भी स्रोत की ओर इशारा तो नहीं करता, और एक रिपोर्ट लिखता है। आपके मूल पैकेज कभी नहीं बदलते, और किसी भी टेनेंट को कुछ नहीं भेजा जाता। नए पैकेज आप बाद में खुद Power Automate में इम्पोर्ट करते हैं।</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>साइन-इन रद्द किया गया। फिर प्रयास करने के लिए बटन पर क्लिक करें, उदाहरण के लिए किसी दूसरे ब्राउज़र में।</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>रद्द करें</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>त्रुटि: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>स्रोत फ़ॉर्म पढ़ा नहीं जा सका ({0})।</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>लक्ष्य में फ़ॉर्म नहीं बनाया जा सका ({0})। {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>बीच में रद्द किया गया। लक्ष्य में एक अधूरा फ़ॉर्म छूट गया; उसे Microsoft Forms में हटाएँ।</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>कॉपी बीच में रुक गई ({0})। लक्ष्य में एक अधूरा फ़ॉर्म छूट गया; उसे Microsoft Forms में हटाएँ।</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>पृष्ठभूमि छवि</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>लोगो</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>हेडर छवि</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>{0} कॉपी नहीं किया गया (छवियाँ अभी समर्थित नहीं हैं)।</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>क्विज़ स्कोरिंग (सही उत्तर और अंक) सत्यापित नहीं है; कृपया कॉपी जाँचें।</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>सेटिंग &apos;{0}&apos; कॉपी नहीं की जा सकी ({1})।</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>प्रश्न &apos;{0}&apos; कॉपी नहीं किया गया ({1})। {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(शीर्षकहीन)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>ब्रांचिंग नियम कॉपी नहीं किए जा सके ({0}); कृपया कॉपी जाँचें।</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>कॉपी बनाई गई लेकिन Microsoft Forms में दिखाई नहीं जा सकी ({0}); वह रीसायकल बिन में हो सकती है।</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>कॉपी में {0} प्रश्न हैं लेकिन स्रोत में {1} हैं।</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>प्रश्न &apos;{0}&apos; ({1}) बनाया गया लेकिन उसके विकल्प कॉपी नहीं किए जा सके ({2})।</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>परिणाम</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>स्रोत फ़ॉर्म</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>स्रोत फ़ॉर्म ID</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>कॉपी का शीर्षक</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>कॉपी फ़ॉर्म ID</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>स्थिति</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>कॉपी किए गए प्रश्न</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>स्रोत में प्रश्न</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>चेतावनियाँ</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>नोट</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>त्रुटि</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Excel वर्कबुक (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>JSON फ़ाइलें (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Id</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>प्रारंभ समय</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>समाप्ति समय</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>उत्तरदाता</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>नाम</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>स्कोर</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>बिना मैप किए उत्तर (रॉ JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (कटा हुआ: Excel सेल के लिए बहुत लंबा)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>रन रोकें?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>तुलना या सत्यापन अभी चल रहा है। यह विंडो बंद करने पर वह रुक जाएगा, और कोई रिपोर्ट नहीं लिखी जाएगी। फिर भी बंद करें?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>काम के दौरान बंद करें?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>टूल अभी काम कर रहा है (स्कैन, मिलान, साइन-इन या पैकेज लिखना)। अभी बंद करने पर वह रुक जाएगा। फिर भी बंद करें?</value></data>
 </root>

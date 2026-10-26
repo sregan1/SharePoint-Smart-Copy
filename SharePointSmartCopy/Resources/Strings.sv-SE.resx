@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -645,4 +645,756 @@
   <data name="Ui_SuccessCount" xml:space="preserve"><value>Lyckades ({0})</value></data>
   <data name="Ui_FailedCount" xml:space="preserve"><value>Misslyckades ({0})</value></data>
   <data name="Ui_SkippedCount" xml:space="preserve"><value>Överhoppade ({0})</value></data>
+  <data name="Res_UpToDate" xml:space="preserve"><value>Uppdaterad</value></data>
+  <data name="Svc_Perm_UniqueUnknown" xml:space="preserve"><value>Det gick inte att läsa om källan har egna behörigheter (begränsning eller åtkomstfel) – behörigheter kopierades inte för det här objektet. Kör igen för att försöka på nytt.</value></data>
+  <data name="Svc_Mig_TargetRemovedPrepFailed" xml:space="preserve"><value>Den befintliga målfilen togs bort för överskrivningen, men den nya kopian kunde inte laddas upp ({0}). Filen saknas just nu i målet – kör kopieringen igen för att återställa den.</value></data>
+  <data name="Svc_Mig_LibraryGroupFailed" xml:space="preserve"><value>Ett målbibliotek misslyckades ({0}). Dess filer markeras som Misslyckades; de andra biblioteken fortsätter.</value></data>
+  <data name="Svc_Mig_SourceChangedRestart" xml:space="preserve"><value>{0}{1}: källfilen ändrades medan den laddades ned – nedladdningen startas om.</value></data>
+  <data name="Svc_Sp_MigrationJobStalled" xml:space="preserve"><value>SharePoint rapporterade ingen förloppsändring för den här importen på {0} minuter, så den avbröts. Dess filer markeras som Misslyckades; kör kopieringen igen för att försöka på nytt.</value></data>
+  <data name="Ui_SingleTenant" xml:space="preserve"><value>En klientorganisation</value></data>
+  <data name="Ui_MultiTenant" xml:space="preserve"><value>Flera klientorganisationer</value></data>
+  <data name="Ui_MultiTenantHint" xml:space="preserve"><value>Kopiera mellan två olika Microsoft 365-klientorganisationer. Du loggar in separat på källan och på målet. Välj målets appregistrering i Inställningar.</value></data>
+  <data name="Ui_TargetRegistration" xml:space="preserve"><value>Målregistrering:</value></data>
+  <data name="Ui_TargetRegistrationHint" xml:space="preserve"><value>Läge för flera klientorganisationer: appregistreringen som används för att logga in på målklientorganisationen. ”Samma som källan” återanvänder källans registrering, som då måste vara en app för flera klientorganisationer.</value></data>
+  <data name="Ui_ResumeRun" xml:space="preserve"><value>Återuppta / kör igen</value></data>
+  <data name="Ui_ResumeRunHint" xml:space="preserve"><value>Ansluter på nytt och kör om det här urvalet med Kopiera om nyare, så att redan kopierade filer hoppas över och bara det som saknas eller har ändrats överförs.</value></data>
+  <data name="Dlg_ResumeNoSelection" xml:space="preserve"><value>Den här körningen har inget sparat urval att återuppta (bara körningar med filurval sparar ett).</value></data>
+  <data name="Dlg_ResumeBusy" xml:space="preserve"><value>En kopiering pågår redan. Slutför eller avbryt den först.</value></data>
+  <data name="Dlg_ResumeFailed" xml:space="preserve"><value>Det gick inte att återuppta: {0}</value></data>
+  <data name="Dlg_InterruptedRecovered" xml:space="preserve"><value>{0} avbruten(avbrutna) körning(ar) återställdes. Se Historik.</value></data>
+  <data name="VM_ResumeReady" xml:space="preserve"><value>Återupptar: {0} objekt återställdes från den tidigare körningen, med Kopiera om nyare valt. Granska alternativen och klicka sedan på Nästa. (Anpassade kolumnmappningar återställs inte.)</value></data>
+  <data name="VM_SummaryInterrupted" xml:space="preserve"><value>AVBRUTEN – appen stängdes innan körningen blev klar. Av de objekt som hann bli klara: {0} lyckades, {1} misslyckades, {2} hoppades över, {3} avbröts  ·  {4}{5}</value></data>
+  <data name="Ui_ExportDiagnostics" xml:space="preserve"><value>Exportera diagnostik…</value></data>
+  <data name="Ui_ExportDiagnosticsHint" xml:space="preserve"><value>Sparar en zip-fil med senaste loggar, systeminformation och dina inställningar utan organisationsuppgifter – att bifoga till en felrapport. Den innehåller inga kopieringsrapporter eller filnamn.</value></data>
+  <data name="Dlg_DiagnosticsSaved" xml:space="preserve"><value>Diagnostik sparad i {0}</value></data>
+  <data name="Dlg_DiagnosticsFailed" xml:space="preserve"><value>Det gick inte att spara diagnostik: {0}</value></data>
+  <data name="Svc_Ver_DeepVolatileDateKept" xml:space="preserve"><value>Innehållet är identiskt (bara SharePoint-hanterade delar skiljer sig), men ändringsdatumet bevarades inte.</value></data>
+  <data name="Svc_PermIdsNotResolved" xml:space="preserve"><value>Behörigheter kopierades inte: det gick inte att matcha objektets SharePoint-ID:n.</value></data>
+  <data name="Svc_PermException" xml:space="preserve"><value>Behörigheter kopierades inte: {0}</value></data>
+  <data name="Svc_FolderIssue" xml:space="preserve"><value>Mapp ”{0}”: {1} tillämpades inte – {2}</value></data>
+  <data name="Svc_FolderIssueMore" xml:space="preserve"><value>Fler mappar hade problem som liknar ovanstående; de senare listas inte individuellt.</value></data>
+  <data name="Svc_FolderIssuePermissions" xml:space="preserve"><value>behörigheter</value></data>
+  <data name="Svc_FolderIssueDates" xml:space="preserve"><value>datum</value></data>
+  <data name="Svc_FolderIssueMetadata" xml:space="preserve"><value>författare / redigerare</value></data>
+  <data name="Svc_Mig_KeptUpToDate" xml:space="preserve"><value> ({0} behölls – målet är redan uppdaterat)</value></data>
+  <data name="VM_BulkReadFailed" xml:space="preserve"><value>VARNING: det gick inte att läsa metadata från källan ({0}): {1}. Objekt därifrån kan kopieras UTAN sina anpassade kolumnvärden eller unika behörigheter. Kör igen när problemet är löst (Skriv över eller Om nyare tillämpar dem på nytt).</value></data>
+  <data name="VM_PermissionFlagsNoList" xml:space="preserve"><value>VARNING: det gick inte att hitta källistan för ett bibliotek, så dess behörigheter kopieras INTE.</value></data>
+  <data name="Svc_Sp_HostNotConnected" xml:space="preserve"><value>SharePoint-värden ’{0}’ är inte kopplad till en ansluten klientorganisation. Anslut källwebbplatsen och målwebbplatsen igen och försök på nytt.</value></data>
+  <data name="Svc_CrossTenantNotes" xml:space="preserve"><value>Kopiering mellan klientorganisationer: värden i kolumner med hanterade metadata (taxonomi) kopieras inte, och OneNote-anteckningsböcker / dokumentuppsättningar kan ännu inte kopieras mellan klientorganisationer. Identiteter mappas med dina inställningar för identitetsmappning; alla som inte kan matchas i målet hoppas över.</value></data>
+  <data name="Ui_IdentityMapping" xml:space="preserve"><value>Identitetsmappning</value></data>
+  <data name="Ui_IdentityMappingButton" xml:space="preserve"><value>Identitetsmappning…</value></data>
+  <data name="Ui_IdentityMappingIntro" xml:space="preserve"><value>Lista varje person (eller grupp) i källklientorganisationen och vem de är i målklientorganisationen – det är olika konton. Författare, redigerare, personkolumner och behörigheter skrivs med hjälp av den här tabellen. Den som inte finns med matchas via domänbytet om du har angett ett; den som ändå inte kan hittas i målet hoppas över och rapporteras.</value></data>
+  <data name="Ui_SourceEmailDomain" xml:space="preserve"><value>Källans e-postdomän</value></data>
+  <data name="Ui_TargetEmailDomain" xml:space="preserve"><value>Målets e-postdomän</value></data>
+  <data name="Ui_IdentityOverrides" xml:space="preserve"><value>Åsidosättanden – ett par ”källa,mål” per rad (användare eller gruppnamn; # inleder en kommentar)</value></data>
+  <data name="Ui_SameAsSource" xml:space="preserve"><value>Samma som källan</value></data>
+  <data name="VM_SameTenantError" xml:space="preserve"><value>Källan och målet finns i samma klientorganisation. Växla till läget en klientorganisation för kopiering inom samma klientorganisation.</value></data>
+  <data name="Svc_Sp_NativeCopyCrossTenant" xml:space="preserve"><value>Inbyggd mappkopiering (OneNote-anteckningsböcker, dokumentuppsättningar) stöds ännu inte mellan klientorganisationer.</value></data>
+  <data name="Svc_Sp_DriveNotConnected" xml:space="preserve"><value>Enheten ’{0}’ är inte kopplad till en ansluten klientorganisation. Anslut källwebbplatsen och målwebbplatsen igen och försök på nytt.</value></data>
+  <data name="Err_NoRegistration" xml:space="preserve"><value>Ingen appregistrering har konfigurerats ännu. Öppna Inställningar och lägg till din Azure-appregistrering (dess program-/klient-ID) innan du ansluter.</value></data>
+  <data name="Err_SignInCancelled" xml:space="preserve"><value>Inloggningen avbröts. Klicka på Anslut för att försöka igen.</value></data>
+  <data name="Err_ConsentMissing" xml:space="preserve"><value>En administratör har ännu inte godkänt appen i den här klientorganisationen. Be en global administratör bevilja administratörsmedgivande för appregistreringen (se Konfiguration i användarhandboken).</value></data>
+  <data name="Err_AppNotInTenant" xml:space="preserve"><value>Appregistreringen hittades inte i den här klientorganisationen. Kontrollera klient-ID och klientorganisations-ID i Inställningar.</value></data>
+  <data name="Err_TenantNotFound" xml:space="preserve"><value>Klientorganisationen hittades inte. Kontrollera klientorganisations-ID i Inställningar (använd din domän, klientorganisationens GUID eller ’common’).</value></data>
+  <data name="Err_RedirectMismatch" xml:space="preserve"><value>Appregistreringen saknar den omdirigeringsadress som appen använder. Lägg till omdirigerings-URI:n http://localhost under ’Mobil- och skrivbordsprogram’ i Azure.</value></data>
+  <data name="Err_PublicClient" xml:space="preserve"><value>Appregistreringen är inte konfigurerad för skrivbordsinloggning. Aktivera ’Tillåt flöden för offentliga klienter’ för registreringen i Azure.</value></data>
+  <data name="Err_AccountNotAllowed" xml:space="preserve"><value>Det här kontot får inte använda den appregistreringen. Logga in med ett konto från den klientorganisation som äger den, eller välj en annan registrering i Inställningar.</value></data>
+  <data name="Err_Unauthorized" xml:space="preserve"><value>SharePoint avvisade inloggningen. Klicka på Anslut för att logga in igen.</value></data>
+  <data name="Err_Forbidden" xml:space="preserve"><value>Du har inte åtkomst till den här webbplatsen. Kontrollera att ditt konto kan öppna den i en webbläsare och att appen har beviljats behörigheten Sites.ReadWrite.All.</value></data>
+  <data name="Err_SiteNotFound" xml:space="preserve"><value>Webbplatsen hittades inte. Kontrollera adressen – den bör se ut så här: https://contoso.sharepoint.com/sites/name.</value></data>
+  <data name="Err_Details" xml:space="preserve"><value>(Information: {0})</value></data>
+  <data name="Why_ConnectSource" xml:space="preserve"><value>Anslut till källwebbplatsen för att fortsätta.</value></data>
+  <data name="Why_SelectItems" xml:space="preserve"><value>Markera minst ett objekt (kryssa i en kryssruta) för att fortsätta.</value></data>
+  <data name="Why_ConnectTarget" xml:space="preserve"><value>Anslut till målwebbplatsen för att fortsätta.</value></data>
+  <data name="Why_ChooseFolder" xml:space="preserve"><value>Välj en målmapp för att fortsätta.</value></data>
+  <data name="Why_ChooseList" xml:space="preserve"><value>Välj en mållista för att fortsätta.</value></data>
+  <data name="Why_NameList" xml:space="preserve"><value>Ange ett namn på den nya listan för att fortsätta.</value></data>
+  <data name="Why_NothingToCopy" xml:space="preserve"><value>Inget är markerat för kopiering.</value></data>
+  <data name="Why_CopyRunning" xml:space="preserve"><value>Väntar på att kopieringen ska slutföras…</value></data>
+  <data name="Hdr_SourceAccount" xml:space="preserve"><value>Källa: {0}</value></data>
+  <data name="Hdr_TargetAccount" xml:space="preserve"><value>Mål: {0}</value></data>
+  <data name="Notice_RegistrationChanged" xml:space="preserve"><value>Din appregistrering ändrades, så du loggades ut från båda webbplatserna. Anslut igen för att fortsätta.</value></data>
+  <data name="Dlg_StopCopyTitle" xml:space="preserve"><value>Stoppa kopieringen?</value></data>
+  <data name="Dlg_StopCopyBody" xml:space="preserve"><value>En kopiering pågår. Om du stoppar den nu lämnas de återstående objekten okopierade (du kan återuppta senare från Historik). Stoppa kopieringen?</value></data>
+  <data name="Dlg_CloseDuringCopyBody" xml:space="preserve"><value>En kopiering pågår fortfarande. Om du stänger appen stoppas den och de återstående objekten lämnas okopierade (du kan återuppta senare från Historik). Stäng ändå?</value></data>
+  <data name="Dlg_SwitchModeTitle" xml:space="preserve"><value>Byta anslutningsläge?</value></data>
+  <data name="Dlg_SwitchModeBody" xml:space="preserve"><value>När du växlar mellan en klientorganisation och flera klientorganisationer kopplas båda webbplatserna från och du måste ansluta igen. Växla ändå?</value></data>
+  <data name="Ui_ConnectionLabel" xml:space="preserve"><value>Anslutning:</value></data>
+  <data name="Ui_SourceRegistration" xml:space="preserve"><value>Källans appregistrering</value></data>
+  <data name="Ui_TargetRegistrationLabel" xml:space="preserve"><value>Målets appregistrering</value></data>
+  <data name="Ui_TargetSignsInWith" xml:space="preserve"><value>Loggar in på målklientorganisationen med:</value></data>
+  <data name="Ui_Change" xml:space="preserve"><value>Ändra</value></data>
+  <data name="Ui_OpenSettings" xml:space="preserve"><value>Öppna Inställningar</value></data>
+  <data name="Ui_ReqSourceRead" xml:space="preserve"><value>• Du måste ha läsbehörighet till källwebbplatssamlingen.</value></data>
+  <data name="Ui_ReqRegistration" xml:space="preserve"><value>• Konfigurera din Microsoft Entra ID-appregistrering i Inställningar innan du ansluter.</value></data>
+  <data name="Ui_FileOptions" xml:space="preserve"><value>Filalternativ</value></data>
+  <data name="Ui_LibraryFileOptions" xml:space="preserve"><value>Bibliotek- och filalternativ</value></data>
+  <data name="Ui_CopyingFiles" xml:space="preserve"><value>Kopierar filer…</value></data>
+  <data name="Ui_CopyingLibraries" xml:space="preserve"><value>Kopierar bibliotek…</value></data>
+  <data name="Ui_Next" xml:space="preserve"><value>Nästa</value></data>
+  <data name="Ui_StartCopy" xml:space="preserve"><value>Starta kopiering</value></data>
+  <data name="Ui_ViewReport" xml:space="preserve"><value>Visa rapport</value></data>
+  <data name="Ui_NewListNameHint" xml:space="preserve"><value>Ange namnet på den nya listan som ska skapas</value></data>
+  <data name="Ui_DestinationListLockedHint" xml:space="preserve"><value>Mållistan valdes i steget Mål. Gå tillbaka för att ändra den.</value></data>
+  <data name="Ui_FirstRunTitle" xml:space="preserve"><value>Konfigurera en appregistrering först</value></data>
+  <data name="Ui_FirstRunBody" xml:space="preserve"><value>Smart Copy loggar in med en appregistrering som du skapar i din egen Microsoft Entra ID-klientorganisation (Azure). Öppna Inställningar, lägg till din registrerings program-ID (klient-ID) och kom sedan tillbaka hit för att ansluta.</value></data>
+  <data name="Ui_MoreInfo" xml:space="preserve"><value>Mer information</value></data>
+  <data name="Ui_ResizeActivity" xml:space="preserve"><value>Dra för att göra aktivitetsflödet högre eller lägre</value></data>
+  <data name="Ui_ClickToFilterFailed" xml:space="preserve"><value>Klicka för att bara visa de misslyckade objekten</value></data>
+  <data name="Ui_ClickToFilterSkipped" xml:space="preserve"><value>Klicka för att bara visa de överhoppade objekten</value></data>
+  <data name="Ui_ColumnMappingLabel" xml:space="preserve"><value>Kolumnmappning</value></data>
+  <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Jämför källa och mål</value></data>
+  <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Öppna verktyget Jämför för att kontrollera den här kopian mot källan.</value></data>
+  <data name="Ui_OpenInHistory" xml:space="preserve"><value>Öppna Historik</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Den valda registreringen används för källan – och för båda sidor i läget en klientorganisation.</value></data>
+  <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Ny registrering</value></data>
+  <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Lägg till minst en appregistrering.</value></data>
+  <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validering</value></data>
+  <data name="Dlg_ClientIdRequired" xml:space="preserve"><value>Klient-ID krävs för den valda registreringen.</value></data>
+  <data name="Dlg_SignedOutBody" xml:space="preserve"><value>Utloggad. Du uppmanas att logga in vid nästa anslutning.</value></data>
+  <data name="Dlg_SignedOutTitle" xml:space="preserve"><value>Utloggad</value></data>
+  <data name="Dlg_SignOutFailed" xml:space="preserve"><value>Utloggningen misslyckades: {0}</value></data>
+  <data name="Dlg_SignOutFailedTitle" xml:space="preserve"><value>Logga ut</value></data>
+  <data name="Ui_IdentityMappingsFound" xml:space="preserve"><value>{0} mappning(ar) hittades.</value></data>
+  <data name="Ui_IdentityLinesInvalid" xml:space="preserve"><value>{0} rad(er) kan inte läsas (rad {1}). Varje rad måste se ut som källa,mål.</value></data>
+  <data name="Ui_IdentityDomainsSame" xml:space="preserve"><value>Käll- och måldomänerna är desamma, så domänbytet ändrar ingenting.</value></data>
+  <data name="Ui_IdentityImportCsv" xml:space="preserve"><value>Importera CSV…</value></data>
+  <data name="Dlg_IdentityFixLines" xml:space="preserve"><value>Vissa åsidosättningsrader kan inte läsas (rad {0}). Varje rad måste vara ”källa,mål”. Korrigera eller ta bort dem – eller inled en rad med # för att göra den till en kommentar.</value></data>
+  <data name="Dlg_IdentitySaveFailed" xml:space="preserve"><value>Det gick inte att spara identitetsmappningen: {0}</value></data>
+  <data name="Dlg_IdentityImportFailed" xml:space="preserve"><value>Det gick inte att läsa filen: {0}</value></data>
+  <data name="Svc_Mig_PeopleNotInTarget" xml:space="preserve"><value>Mellan klientorganisationer: {0} författar-/redigerarkonto(n) i det här biblioteket hittades inte i målklientorganisationen och lämnas som det kopierande kontot. Efter körningen kan du åtgärda dem med ”Mappa dessa användare” i rapporten.</value></data>
+  <data name="Err_IdentityBlankSource" xml:space="preserve"><value>Ange källanvändaren eller källgruppen.</value></data>
+  <data name="Err_IdentityBlankTarget" xml:space="preserve"><value>Ange vem det här är i målklientorganisationen – eller ta bort raden.</value></data>
+  <data name="Err_IdentitySame" xml:space="preserve"><value>Källa och mål är desamma.</value></data>
+  <data name="Err_IdentityDuplicate" xml:space="preserve"><value>Den här källan förekommer mer än en gång.</value></data>
+  <data name="Ui_IdentityColSource" xml:space="preserve"><value>Källa (den här klientorganisationen)</value></data>
+  <data name="Ui_IdentityColTarget" xml:space="preserve"><value>Mål (den andra klientorganisationen)</value></data>
+  <data name="Ui_IdentityColKind" xml:space="preserve"><value>Typ</value></data>
+  <data name="Ui_IdentityColStatus" xml:space="preserve"><value>I målet?</value></data>
+  <data name="Ui_IdentityColNeededFor" xml:space="preserve"><value>Behövs för</value></data>
+  <data name="Ui_IdentityKindUser" xml:space="preserve"><value>Användare</value></data>
+  <data name="Ui_IdentityKindGroup" xml:space="preserve"><value>Grupp</value></data>
+  <data name="Ui_IdentityStatusUnchecked" xml:space="preserve"><value>Ej kontrollerad</value></data>
+  <data name="Ui_IdentityStatusChecking" xml:space="preserve"><value>Kontrollerar…</value></data>
+  <data name="Ui_IdentityStatusFound" xml:space="preserve"><value>✓ Hittades</value></data>
+  <data name="Ui_IdentityStatusNotFound" xml:space="preserve"><value>✗ Hittades inte</value></data>
+  <data name="Ui_IdentityAddRow" xml:space="preserve"><value>Lägg till</value></data>
+  <data name="Ui_IdentityRemoveRows" xml:space="preserve"><value>Ta bort</value></data>
+  <data name="Ui_IdentityFillFromDomain" xml:space="preserve"><value>Fyll i mål från domänbyte</value></data>
+  <data name="Ui_IdentityFillFromDomainHint" xml:space="preserve"><value>För rader utan mål fylls den adress i som domänbytet skulle ge.</value></data>
+  <data name="Ui_IdentityCheck" xml:space="preserve"><value>Kontrollera i målet</value></data>
+  <data name="Ui_IdentityCheckHint" xml:space="preserve"><value>Slår upp varje målanvändare i målklientorganisationen. Detta lägger också till dem i målwebbplatsens användarlista, vilket kopieringen ändå gör innan den kan ange dem som författare eller ge dem åtkomst.</value></data>
+  <data name="Ui_IdentityCheckDisabledHint" xml:space="preserve"><value>Anslut först till ett mål med flera klientorganisationer: ange målwebbplatsens URL i steget Mål och öppna sedan den här dialogrutan igen.</value></data>
+  <data name="Ui_IdentityExportCsv" xml:space="preserve"><value>Exportera CSV…</value></data>
+  <data name="Ui_IdentityPrefillBanner" xml:space="preserve"><value>De här personerna behövdes för kopieringen men hittades inte i målklientorganisationen. Ange för var och en vem de är i målet – eller ta bort raden för att lämna dem omappade.</value></data>
+  <data name="Ui_IdentityRowsSummary" xml:space="preserve"><value>{0} mappning(ar).</value></data>
+  <data name="Ui_IdentityRowErrors" xml:space="preserve"><value>{0} rad(er) behöver åtgärdas.</value></data>
+  <data name="Ui_IdentityCheckResult" xml:space="preserve"><value>Kontrollerat: {0} hittades, {1} hittades inte{2}.</value></data>
+  <data name="Ui_IdentityCheckCouldNot" xml:space="preserve"><value>, {0} kunde inte kontrolleras</value></data>
+  <data name="Ui_IdentityChecking" xml:space="preserve"><value>Kontrollerar {0} av {1}…</value></data>
+  <data name="Ui_IdentityNothingToCheck" xml:space="preserve"><value>Inget att kontrollera: ingen rad har någon mål-e-postadress.</value></data>
+  <data name="Dlg_IdentityFixRows" xml:space="preserve"><value>Vissa rader behöver åtgärdas (markerade). Korrigera eller ta bort dem och spara sedan.</value></data>
+  <data name="Dlg_MappingSavedRerun" xml:space="preserve"><value>Mappningen sparades. Om du vill tillämpa den på redan kopierade filer kör du igen med Skriv över – Kopiera om nyare hoppar över filer som är uppdaterade, så deras författare ändras inte. Behörigheter uppdateras i båda fallen.</value></data>
+  <data name="Ui_UnresolvedBanner" xml:space="preserve"><value>{0} person(er) från källan hittades inte i målklientorganisationen och utelämnades därför: fick inte åtkomst, angavs inte som författare eller redigerare, eller togs bort från personkolumner.</value></data>
+  <data name="Ui_MapTheseUsers" xml:space="preserve"><value>Mappa dessa användare…</value></data>
+  <data name="Ui_MapUnresolvedUsers" xml:space="preserve"><value>Mappa olösta användare…</value></data>
+  <data name="Ui_MapUnresolvedUsersHint" xml:space="preserve"><value>Öppnar identitetsmappningen med de personer som den här körningen inte hittade i målet.</value></data>
+  <data name="Dlg_NoUnresolvedUsers" xml:space="preserve"><value>Den här körningen hade inga olösta användare.</value></data>
+  <data name="Forms_Title" xml:space="preserve"><value>Kopiera formulär</value></data>
+  <data name="Forms_Subtitle" xml:space="preserve"><value>Kopiera Microsoft Forms till målkontot och behåll alla frågor, förgreningar, inställningar och tema. Svar kan exporteras till Excel.</value></data>
+  <data name="Forms_UnofficialWarning" xml:space="preserve"><value>Detta använder webb-API:et för Microsoft Forms, som Microsoft inte dokumenterar eller stöder. Det fungerar i dag men kan ändras utan förvarning. Prova några formulär först.</value></data>
+  <data name="Forms_LoadForms" xml:space="preserve"><value>Läs in mina formulär</value></data>
+  <data name="Forms_SourceAccount" xml:space="preserve"><value>Källkonto: {0}</value></data>
+  <data name="Forms_TargetAccountMulti" xml:space="preserve"><value>Målkonto: {0}</value></data>
+  <data name="Forms_TargetAccountSingle" xml:space="preserve"><value>Mål: samma konto (en klientorganisation). Kopiorna skapas bredvid originalen.</value></data>
+  <data name="Forms_SignInOnDemand" xml:space="preserve"><value>(du uppmanas att logga in)</value></data>
+  <data name="Forms_MapLocation" xml:space="preserve"><value>Formulär-ID-karta (används av verktyget Flöden): {0}</value></data>
+  <data name="Forms_Loading" xml:space="preserve"><value>Läser in formulär…</value></data>
+  <data name="Forms_Loaded" xml:space="preserve"><value>{0} formulär lästes in.</value></data>
+  <data name="Forms_NothingSelected" xml:space="preserve"><value>Markera minst ett formulär först.</value></data>
+  <data name="Forms_Copying" xml:space="preserve"><value>Kopierar formulär…</value></data>
+  <data name="Forms_StatusCopying" xml:space="preserve"><value>Kopierar…</value></data>
+  <data name="Forms_StatusCopied" xml:space="preserve"><value>Kopierad</value></data>
+  <data name="Forms_StatusFailed" xml:space="preserve"><value>Misslyckades (se loggen)</value></data>
+  <data name="Forms_LogCopying" xml:space="preserve"><value>Kopierar ’{0}’</value></data>
+  <data name="Forms_CopyDone" xml:space="preserve"><value>Kopieringen klar: {0} kopierade, {1} misslyckades.</value></data>
+  <data name="Forms_ChooseExportFolder" xml:space="preserve"><value>Välj en mapp för svarsexporterna</value></data>
+  <data name="Forms_Exporting" xml:space="preserve"><value>Exporterar svar…</value></data>
+  <data name="Forms_LogExported" xml:space="preserve"><value>Exporterade ’{0}’: {1} svar till {2}</value></data>
+  <data name="Forms_ExportDone" xml:space="preserve"><value>Exporterade svar för {0} formulär till {1}.</value></data>
+  <data name="Forms_MapNotSaved" xml:space="preserve"><value>Formuläret kopierades, men dess ID kunde inte sparas för verktyget Flöden: {0}</value></data>
+  <data name="Forms_LogExportFailed" xml:space="preserve"><value>Det gick inte att exportera ’{0}’: {1}</value></data>
+  <data name="Forms_ExportDonePartial" xml:space="preserve"><value>Exporterade svar för {0} formulär till {2}; {1} misslyckades (se loggen).</value></data>
+  <data name="Forms_Cancelled" xml:space="preserve"><value>Avbruten.</value></data>
+  <data name="Forms_Error" xml:space="preserve"><value>Fel: {0}</value></data>
+  <data name="Forms_ConsentHelp" xml:space="preserve"><value>Tips: appregistreringen behöver den delegerade behörigheten Microsoft Forms, med medgivande. Lägg till den under API-behörigheter (se användarhandboken) och försök sedan igen.</value></data>
+  <data name="Forms_AccessHelp" xml:space="preserve"><value>Tips: Microsoft Forms nekade begäran. Kontrollera att det här kontot kan öppna forms.office.com och att appregistreringen har behörigheten Microsoft Forms.</value></data>
+  <data name="Forms_CountText" xml:space="preserve"><value>{0} av {1} markerade</value></data>
+  <data name="Forms_ColTitle" xml:space="preserve"><value>Titel</value></data>
+  <data name="Forms_ColType" xml:space="preserve"><value>Typ</value></data>
+  <data name="Forms_ColModified" xml:space="preserve"><value>Senast ändrad</value></data>
+  <data name="Forms_ColResult" xml:space="preserve"><value>Resultat</value></data>
+  <data name="Forms_TitleSuffix" xml:space="preserve"><value>Lägg till i kopierade titlar:</value></data>
+  <data name="Forms_TitleSuffixHint" xml:space="preserve"><value> (kopia)</value></data>
+  <data name="Forms_CopySelected" xml:space="preserve"><value>Kopiera markerade formulär</value></data>
+  <data name="Forms_ExportResponses" xml:space="preserve"><value>Exportera svar…</value></data>
+  <data name="Ui_CompareToolDesc" xml:space="preserve"><value>Kontrollera en kopia mot dess källa</value></data>
+  <data name="Ui_OtherTools" xml:space="preserve"><value>Andra verktyg</value></data>
+  <data name="Forms_TileTitle" xml:space="preserve"><value>Formulär</value></data>
+  <data name="Forms_TileDesc" xml:space="preserve"><value>Kopiera Microsoft Forms och exportera deras svar</value></data>
+  <data name="Forms_AutoTile" xml:space="preserve"><value>Formulärverktyg</value></data>
+  <data name="Flows_Title" xml:space="preserve"><value>Skriv om flöden för målet</value></data>
+  <data name="Flows_Subtitle" xml:space="preserve"><value>Uppdatera exporterade Power Automate-paket (.zip) så att de pekar på målet: webbplatser, listor, kolumner, kopierade formulär och e-postdomäner. Dina ursprungliga paket ändras aldrig.</value></data>
+  <data name="Flows_Step1" xml:space="preserve"><value>1. Välj exporterade flödespaket</value></data>
+  <data name="Flows_Step1Hint" xml:space="preserve"><value>Lägg till de flödespaket (.zip) som du exporterade från Power Automate.</value></data>
+  <data name="Flows_AddZips" xml:space="preserve"><value>Lägg till filer…</value></data>
+  <data name="Flows_AddFolder" xml:space="preserve"><value>Lägg till mapp…</value></data>
+  <data name="Flows_Scan" xml:space="preserve"><value>Skanna</value></data>
+  <data name="Flows_ZipFilter" xml:space="preserve"><value>Flödespaket (*.zip)|*.zip</value></data>
+  <data name="Flows_NoPackages" xml:space="preserve"><value>Lägg till minst ett flödespaket först.</value></data>
+  <data name="Flows_Scanning" xml:space="preserve"><value>Skannar paket…</value></data>
+  <data name="Flows_LogBadPackage" xml:space="preserve"><value>Hoppade över {0}: {1}</value></data>
+  <data name="Flows_ScanSummary" xml:space="preserve"><value>{0} flöden hittades. De refererar till {1} webbplatser, {2} listor och {3} formulär.</value></data>
+  <data name="Flows_ScanDone" xml:space="preserve"><value>Skanningen klar.</value></data>
+  <data name="Flows_Step2" xml:space="preserve"><value>2. Mappa webbplatser</value></data>
+  <data name="Flows_Step2Hint" xml:space="preserve"><value>Vart varje flödes SharePoint-webbplats flyttas. I läget flera klientorganisationer loggar du in på målet så fylls den nya klientorganisationens adress i åt dig; ändra varje rad vars webbplats har ett annat namn. I läget en klientorganisation skriver du målwebbplatsen för varje rad.</value></data>
+  <data name="Flows_ColSourceSite" xml:space="preserve"><value>Webbplats i flödena (ersätts)</value></data>
+  <data name="Flows_ColTargetSite" xml:space="preserve"><value>Målwebbplats</value></data>
+  <data name="Flows_TargetHost" xml:space="preserve"><value>Ny klientorganisationsadress:</value></data>
+  <data name="Flows_FillHost" xml:space="preserve"><value>Fyll i tomma mål, behåll sökvägar</value></data>
+  <data name="Flows_BadHost" xml:space="preserve"><value>Ange en fullständig URL, till exempel https://contoso.sharepoint.com.</value></data>
+  <data name="Flows_HostFilled" xml:space="preserve"><value>Tomma mål fylldes i med den värden och varje webbplats sökväg.</value></data>
+  <data name="Flows_Step3" xml:space="preserve"><value>3. Matcha listor och kolumner</value></data>
+  <data name="Flows_Step3Hint" xml:space="preserve"><value>Ett kort per lista som flödena använder, oavsett hur många flöden som använder den. Varje kort visar listans namn och kolumner, vilken lista den mappas till i målet (som standard den med samma namn; välj en annan i listrutan om namnet skiljer sig) och hur varje kolumn mappas. Kontrollera korten som är markerade med en varning.</value></data>
+  <data name="Flows_Resolve" xml:space="preserve"><value>Matcha listor och kolumner</value></data>
+  <data name="Flows_ColList" xml:space="preserve"><value>Lista</value></data>
+  <data name="Flows_ColSourceListId" xml:space="preserve"><value>Källlistans ID</value></data>
+  <data name="Flows_ColTargetListId" xml:space="preserve"><value>Mållistans ID</value></data>
+  <data name="Flows_ColSourceColumn" xml:space="preserve"><value>Källkolumn</value></data>
+  <data name="Flows_ColTargetColumn" xml:space="preserve"><value>Målkolumn</value></data>
+  <data name="Flows_ScanFirst" xml:space="preserve"><value>Skanna paketen först.</value></data>
+  <data name="Flows_NoSiteTargets" xml:space="preserve"><value>Ange minst en målwebbplats först.</value></data>
+  <data name="Flows_Resolving" xml:space="preserve"><value>Matchar listor och kolumner…</value></data>
+  <data name="Flows_NotFound" xml:space="preserve"><value>(hittades inte)</value></data>
+  <data name="Flows_ListStatus_Matched" xml:space="preserve"><value>Hittade en lista med samma namn i målet</value></data>
+  <data name="Flows_ListStatus_SiteNotMapped" xml:space="preserve"><value>Webbplatsen som den här listan finns på har ingen målwebbplats (steget Webbplatser)</value></data>
+  <data name="Flows_ListStatus_SourceListNotFound" xml:space="preserve"><value>Det gick inte att läsa den här listan på källwebbplatsen: den kanske inte finns, det här kontot saknar kanske åtkomst, eller så finns webbplatsen i en annan klientorganisation än din källanslutning</value></data>
+  <data name="Flows_ListStatus_TargetListNotFound" xml:space="preserve"><value>Ingen lista med det här namnet på målwebbplatsen: välj en i listrutan</value></data>
+  <data name="Flows_ColumnStatus_Same" xml:space="preserve"><value>Samma namn</value></data>
+  <data name="Flows_ColumnStatus_Renamed" xml:space="preserve"><value>Omdöpt i målet</value></data>
+  <data name="Flows_ColumnStatus_NotFoundInTarget" xml:space="preserve"><value>Ingen matchning: välj en kolumn</value></data>
+  <data name="Flows_ResolveDone" xml:space="preserve"><value>{0} av {1} listor har en mållista. {2} kolumn(er) att kontrollera.</value></data>
+  <data name="Flows_Step4" xml:space="preserve"><value>4. Formulär och e-post</value></data>
+  <data name="Flows_Step4Hint" xml:space="preserve"><value>Formulär som kopierats med formulärverktyget fylls i automatiskt. För ett formulär som du skapat själv klistrar du in dess ID eller länken till dess redigeringssida.</value></data>
+  <data name="Flows_ColSourceForm" xml:space="preserve"><value>Källformulärets ID</value></data>
+  <data name="Flows_ColNewForm" xml:space="preserve"><value>Formulär-ID (fylls i via listrutan, eller klistra in ett)</value></data>
+  <data name="Flows_EmailDomain" xml:space="preserve"><value>Flytta e-postdomän:</value></data>
+  <data name="Flows_Step5" xml:space="preserve"><value>5. Skriv de uppdaterade paketen</value></data>
+  <data name="Flows_Step5Hint" xml:space="preserve"><value>Välj en utdatamapp (inte mappen som innehåller originalen). De uppdaterade paketen och en rapport som listar varje ändring sparas där.</value></data>
+  <data name="Flows_Rewrite" xml:space="preserve"><value>Skriv uppdaterade paket</value></data>
+  <data name="Flows_SaveMapping" xml:space="preserve"><value>Spara mappning…</value></data>
+  <data name="Flows_OpenOutput" xml:space="preserve"><value>Öppna utdatamappen</value></data>
+  <data name="Flows_ConnectionsNote" xml:space="preserve"><value>Anslutningar kan inte flyttas mellan klientorganisationer. När du har importerat ett paket skapar du varje anslutning på nytt i Power Automate och väljer den igen.</value></data>
+  <data name="Flows_NoOutput" xml:space="preserve"><value>Välj en utdatamapp först.</value></data>
+  <data name="Flows_Rewriting" xml:space="preserve"><value>Skriver uppdaterade paket…</value></data>
+  <data name="Flows_SaveAsTitle" xml:space="preserve"><value>Spara den uppdaterade kopian av {0} (paket {1} av {2})</value></data>
+  <data name="Flows_SaveAsFilter" xml:space="preserve"><value>Power Automate-paket (*.zip)|*.zip</value></data>
+  <data name="Flows_SaveAsDuplicate" xml:space="preserve"><value>Du har redan valt det filnamnet för ett annat paket. Välj ett annat namn.</value></data>
+  <data name="Flows_OutputSameAsSource" xml:space="preserve"><value>Ett paket skulle sparas över ett original (samma mapp, samma namn). Välj en annan utdatamapp, eller ändra dess namn i ”Spara som”, så att originalen förblir orörda.</value></data>
+  <data name="Flows_ReportHeader" xml:space="preserve"><value># Rapport om omskrivning av flöden
+
+Ursprungliga paket är orörda. Anslutningar migreras INTE; skapa dem på nytt och välj dem igen vid importen.
+
+</value></data>
+  <data name="Flows_LogReport" xml:space="preserve"><value>Rapporten skrevs till {0}</value></data>
+  <data name="Flows_RewriteDone" xml:space="preserve"><value>{0} paket skrevs, {1} ersättningar. {2} värden pekar fortfarande på källan (se rapporten).</value></data>
+  <data name="Flows_MappingSaved" xml:space="preserve"><value>Mappningen sparades i {0}</value></data>
+  <data name="Flows_TileTitle" xml:space="preserve"><value>Flöden</value></data>
+  <data name="Flows_TileDesc" xml:space="preserve"><value>Uppdatera exporterade Power Automate-flöden för målet</value></data>
+  <data name="Flows_AutoTile" xml:space="preserve"><value>Flödesverktyg</value></data>
+  <data name="Flows_ResourcesHeader" xml:space="preserve"><value>Vad de här flödena använder</value></data>
+  <data name="Flows_ResourcesHint" xml:space="preserve"><value>Tjänsterna som hittades i de skannade flödena och vad det här verktyget gör med var och en.</value></data>
+  <data name="Flows_ColService" xml:space="preserve"><value>Tjänst</value></data>
+  <data name="Flows_ColFlows" xml:space="preserve"><value>Flöden</value></data>
+  <data name="Flows_ColSteps" xml:space="preserve"><value>Steg</value></data>
+  <data name="Flows_ColFound" xml:space="preserve"><value>Hittade</value></data>
+  <data name="Flows_ColHandling" xml:space="preserve"><value>Vad det här verktyget gör</value></data>
+  <data name="Flows_Handling_Rewritten" xml:space="preserve"><value>Skriver om det som hittas</value></data>
+  <data name="Flows_Handling_ReviewManually" xml:space="preserve"><value>ID:n rapporteras; granska efter importen</value></data>
+  <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Bara anslutning (skapa den på nytt)</value></data>
+  <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Kolumnmappning</value></data>
+  <data name="Flows_ColumnsHint" xml:space="preserve"><value>En kolumn visas här när ett flöde skriver till den, filtrerar eller sorterar på den eller läser den i ett uttryck, i en lista som matchats. Målkolumnen väljs genom automatisk matchning (samma namn, sedan samma visningsnamn, sedan ett liknande namn). Du behöver bara agera på rader markerade ”Liknande namn” eller ”Ingen matchning”; ändra valfri rad i dess listruta, eller välj ”(lämna oförändrad)” för att behålla källnamnet. Inbyggda kolumner som Title visas inte eftersom de finns överallt.</value></data>
+  <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(lämna oförändrad)</value></data>
+  <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Liknande namn: kontrollera</value></data>
+  <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(inte matchad ännu)</value></data>
+  <data name="Flows_ListStatus_Manual" xml:space="preserve"><value>Mållista vald av dig</value></data>
+  <data name="Flows_ListsEditHint" xml:space="preserve"><value>Skriv eller klistra in ett mållist-ID, eller länken till dess listinställningssida, i kolumnen Mållistans ID för att välja en lista själv (till exempel när namnet skiljer sig). Klicka sedan på ”Matcha igen” för att matcha dess kolumner.</value></data>
+  <data name="Flows_BadListId" xml:space="preserve"><value>Det gick inte att hitta något list-ID i ’{0}’. Klistra in ett GUID eller länken till listinställningssidan.</value></data>
+  <data name="Flows_BadFormId" xml:space="preserve"><value>Det gick inte att hitta något formulär-ID i ’{0}’. Klistra in formulär-ID:t eller länken till formulärets redigeringssida.</value></data>
+  <data name="Forms_StepForms" xml:space="preserve"><value>Formulär</value></data>
+  <data name="Forms_StepTarget" xml:space="preserve"><value>Mål</value></data>
+  <data name="Forms_StepCopy" xml:space="preserve"><value>Kopiera</value></data>
+  <data name="Forms_StepResults" xml:space="preserve"><value>Resultat</value></data>
+  <data name="Forms_ChooseFormsHeader" xml:space="preserve"><value>Välj formulären som ska kopieras</value></data>
+  <data name="Forms_ReloadForms" xml:space="preserve"><value>Läs in formulär igen</value></data>
+  <data name="Forms_StatusStart" xml:space="preserve"><value>Klicka på ”Läs in mina formulär” för att se dina formulär.</value></data>
+  <data name="Forms_NoForms" xml:space="preserve"><value>Inga formulär hittades i det här kontot.</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Kopiera {0} formulär</value></data>
+  <data name="Forms_CopyMore" xml:space="preserve"><value>Kopiera fler formulär</value></data>
+  <data name="Forms_TargetHeader" xml:space="preserve"><value>Välj vart kopiorna ska gå</value></data>
+  <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>En klientorganisation: kopiorna skapas i samma konto som du använder, bredvid originalen.</value></data>
+  <data name="Forms_TargetIntroMulti" xml:space="preserve"><value>Flera klientorganisationer: kopiorna skapas i målkontot. Logga in på det här; detta är separat från inloggningen du använde för SharePoint-webbplatserna.</value></data>
+  <data name="Forms_TargetAccount" xml:space="preserve"><value>Målkonto</value></data>
+  <data name="Forms_TargetRegistration" xml:space="preserve"><value>Loggar in med appregistreringen: {0}</value></data>
+  <data name="Forms_TargetRegistrationUnnamed" xml:space="preserve"><value>Loggar in med din målappregistrering (anges i Inställningar).</value></data>
+  <data name="Forms_TargetSignIn" xml:space="preserve"><value>Logga in på målkontot</value></data>
+  <data name="Forms_TargetSignInAgain" xml:space="preserve"><value>Logga in igen</value></data>
+  <data name="Forms_SigningInTarget" xml:space="preserve"><value>Loggar in på målkontot… ett webbläsarfönster kan öppnas.</value></data>
+  <data name="Forms_TargetConnected" xml:space="preserve"><value>Ansluten som {0}. Åtkomst till Microsoft Forms bekräftad ({1} formulär finns redan i det här kontot).</value></data>
+  <data name="Forms_TargetFailed" xml:space="preserve"><value>Det gick inte att ansluta till målkontot: {0}</value></data>
+  <data name="Forms_TargetNotConnected" xml:space="preserve"><value>Målkontot är inte anslutet ännu.</value></data>
+  <data name="Forms_TargetReady" xml:space="preserve"><value>Klart. Klicka på knappen Kopiera för att starta.</value></data>
+  <data name="Forms_TargetSingleStatus" xml:space="preserve"><value>Klart: kopiorna skapas i {0}.</value></data>
+  <data name="Forms_SignInToContinue" xml:space="preserve"><value>Logga in på målkontot för att fortsätta.</value></data>
+  <data name="Forms_Options" xml:space="preserve"><value>Alternativ</value></data>
+  <data name="Forms_Summary" xml:space="preserve"><value>{0} formulär kopieras från {1} till {2}.</value></data>
+  <data name="Forms_SourceAccountShort" xml:space="preserve"><value>källkontot</value></data>
+  <data name="Forms_TargetAccountShort" xml:space="preserve"><value>målkontot</value></data>
+  <data name="Forms_CopyingHeader" xml:space="preserve"><value>Kopierar formulär</value></data>
+  <data name="Forms_ProgressStarting" xml:space="preserve"><value>Startar…</value></data>
+  <data name="Forms_ProgressForm" xml:space="preserve"><value>Formulär {0} av {1}: {2}</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Avbryter efter det aktuella formuläret…</value></data>
+  <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopieringen klar: alla {0} formulär kopierades</value></data>
+  <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Dina kopior finns i {0}. Öppna Microsoft Forms för att se dem, eller använd tabellen nedan.</value></data>
+  <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopieringen klar: {0} av {1} formulär kopierades, vissa behöver åtgärdas</value></data>
+  <data name="Forms_ResultPartialSub" xml:space="preserve"><value>Kopiorna finns i {0}. Formulär markerade med en varning kopierades med problem, och misslyckade formulär skapades inte. Se kolumnen Information.</value></data>
+  <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopieringen klar, men inga formulär kopierades</value></data>
+  <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Se kolumnen Information för orsaken. Vanliga orsaker är att behörigheten Microsoft Forms saknas i målregistreringen, eller ett konto utan åtkomst till Forms.</value></data>
+  <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopieringen avbröts efter {0} av {1} formulär</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Formulären som listas nedan blev klara. Formuläret som kopierades när du avbröt blev inte klart och syns inte.</value></data>
+  <data name="Forms_CardCopied" xml:space="preserve"><value>Kopierade</value></data>
+  <data name="Forms_CardWarnings" xml:space="preserve"><value>Med varningar</value></data>
+  <data name="Forms_CardFailed" xml:space="preserve"><value>Misslyckades</value></data>
+  <data name="Forms_CardQuestions" xml:space="preserve"><value>Frågor</value></data>
+  <data name="Forms_ColSourceForm" xml:space="preserve"><value>Källformulär</value></data>
+  <data name="Forms_ColCopyTitle" xml:space="preserve"><value>Kopia</value></data>
+  <data name="Forms_ColQuestions" xml:space="preserve"><value>Frågor</value></data>
+  <data name="Forms_ColDetails" xml:space="preserve"><value>Information</value></data>
+  <data name="Forms_Outcome_Copied" xml:space="preserve"><value>Kopierad</value></data>
+  <data name="Forms_Outcome_CopiedWithWarnings" xml:space="preserve"><value>Kopierad med varningar</value></data>
+  <data name="Forms_Outcome_Failed" xml:space="preserve"><value>Misslyckades</value></data>
+  <data name="Forms_OpenSelected" xml:space="preserve"><value>Öppna markerad kopia</value></data>
+  <data name="Forms_OpenForms" xml:space="preserve"><value>Öppna Microsoft Forms</value></data>
+  <data name="Forms_ExportResults" xml:space="preserve"><value>Exportera resultat…</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Visa formulär-ID-karta</value></data>
+  <data name="Forms_SelectACopy" xml:space="preserve"><value>Markera ett kopierat formulär i tabellen först.</value></data>
+  <data name="Forms_ResultsSaved" xml:space="preserve"><value>Resultat sparade i {0}</value></data>
+  <data name="Forms_RedirectHelp" xml:space="preserve"><value>Tips: appregistreringen har ingen matchande omdirigeringsadress. Lägg till plattformen ”Mobil- och skrivbordsprogram” med http://localhost under Autentisering i Entra och försök sedan igen.</value></data>
+  <data name="Flows_StepPackages" xml:space="preserve"><value>Paket</value></data>
+  <data name="Flows_StepSites" xml:space="preserve"><value>Webbplatser</value></data>
+  <data name="Flows_StepMatch" xml:space="preserve"><value>Listor och kolumner</value></data>
+  <data name="Flows_StepFormsEmail" xml:space="preserve"><value>Formulär och e-post</value></data>
+  <data name="Flows_StepWrite" xml:space="preserve"><value>Skriv</value></data>
+  <data name="Flows_StepReport" xml:space="preserve"><value>Rapport</value></data>
+  <data name="Flows_PackagesHeader" xml:space="preserve"><value>Välj dina exporterade flöden</value></data>
+  <data name="Flows_HowToExport" xml:space="preserve"><value>I Power Automate: öppna Mina flöden, välj ett flöde och sedan Exportera → Paket (.zip). Lägg till de nedladdade .zip-filerna här. Varje fil skannas så snart du lägger till den.</value></data>
+  <data name="Flows_ClearPackages" xml:space="preserve"><value>Rensa</value></data>
+  <data name="Flows_StatusStart" xml:space="preserve"><value>Lägg till de exporterade flödespaketen för att börja.</value></data>
+  <data name="Flows_NoFlowsFound" xml:space="preserve"><value>Inga flöden hittades i de filerna. Kontrollera att det är paket som exporterats med Exportera → Paket (.zip).</value></data>
+  <data name="Flows_ScanDoneNext" xml:space="preserve"><value>Skanningen klar. Granska vad flödena använder och klicka sedan på Nästa.</value></data>
+  <data name="Flows_SitesHeader" xml:space="preserve"><value>Välj målwebbplatser</value></data>
+  <data name="Flows_NoSitesFound" xml:space="preserve"><value>De här flödena använder inte SharePoint-webbplatser med fasta adresser, så det finns inget att mappa här. Klicka på Nästa.</value></data>
+  <data name="Flows_SitesNext" xml:space="preserve"><value>Därefter läser verktyget varje lista via dina anslutningar och matchar den på målwebbplatsen.</value></data>
+  <data name="Flows_StatusSites" xml:space="preserve"><value>Ange målwebbplatsen för varje källwebbplats och klicka sedan på Nästa.</value></data>
+  <data name="Flows_MatchHeader" xml:space="preserve"><value>Matcha listor och kolumner</value></data>
+  <data name="Flows_MatchAgain" xml:space="preserve"><value>Matcha igen</value></data>
+  <data name="Flows_ListsHeader" xml:space="preserve"><value>Listor</value></data>
+  <data name="Flows_NoListsFound" xml:space="preserve"><value>De här flödena pekar inte på specifika SharePoint-listor, så det finns inget att matcha.</value></data>
+  <data name="Flows_StatusMatch" xml:space="preserve"><value>Listor och kolumner matchas när det här steget öppnas.</value></data>
+  <data name="Flows_FormsEmailHeader" xml:space="preserve"><value>Formulär och e-post</value></data>
+  <data name="Flows_StatusFormsEmail" xml:space="preserve"><value>Kontrollera formulären och e-posten och klicka sedan på Nästa.</value></data>
+  <data name="Flows_FormsHeader" xml:space="preserve"><value>Microsoft Forms</value></data>
+  <data name="Flows_NoFormsFound" xml:space="preserve"><value>De här flödena använder inte Microsoft Forms.</value></data>
+  <data name="Flows_EmailHeader" xml:space="preserve"><value>E-postadresser</value></data>
+  <data name="Flows_EmailHint" xml:space="preserve"><value>Ange båda domänerna för att flytta alla adresser från en e-postdomän till en annan. Adresser på andra domäner listas i rapporten och ändras inte.</value></data>
+  <data name="Flows_WriteHeader" xml:space="preserve"><value>Skriv de uppdaterade paketen</value></data>
+  <data name="Flows_OutputFolder" xml:space="preserve"><value>Utdatamapp</value></data>
+  <data name="Flows_StatusWrite" xml:space="preserve"><value>Välj utdatamappen och klicka sedan på Skriv uppdaterade paket.</value></data>
+  <data name="Flows_WriteSummary" xml:space="preserve"><value>Redo att skriva {0} paket med {1} flöde(n). Ersätter: {2} webbplats(er), {3} lista/listor, {4} kolumnmappning(ar), {5} formulär.</value></data>
+  <data name="Flows_WriteButton" xml:space="preserve"><value>Skriv uppdaterade paket</value></data>
+  <data name="Flows_CardPackages" xml:space="preserve"><value>Skrivna paket</value></data>
+  <data name="Flows_CardReplacements" xml:space="preserve"><value>Ersättningar</value></data>
+  <data name="Flows_CardStillSource" xml:space="preserve"><value>Fortfarande källan</value></data>
+  <data name="Flows_CardReview" xml:space="preserve"><value>Att granska</value></data>
+  <data name="Flows_ColPackage" xml:space="preserve"><value>Paket</value></data>
+  <data name="Flows_PackageOk" xml:space="preserve"><value>Uppdaterat</value></data>
+  <data name="Flows_PackageStillSource" xml:space="preserve"><value>{0} värde(n) pekar fortfarande på källan</value></data>
+  <data name="Flows_OpenReport" xml:space="preserve"><value>Öppna rapport</value></data>
+  <data name="Flows_StartOver" xml:space="preserve"><value>Börja om</value></data>
+  <data name="Flows_ResultSuccess" xml:space="preserve"><value>Klart: {0} paket skrevs</value></data>
+  <data name="Flows_ResultSuccessSub" xml:space="preserve"><value>Sparade i {0}. Inget pekar längre på källan. Följ stegen nedan för att importera dem.</value></data>
+  <data name="Flows_ResultReview" xml:space="preserve"><value>Klart: {0} paket skrevs, vissa objekt behöver din granskning</value></data>
+  <data name="Flows_ResultReviewSub" xml:space="preserve"><value>Sparade i {0}. Öppna rapporten för att se värden som fortfarande pekar på källan och objekt som verktyget inte skriver om (andra tjänster, omatchade listor eller kolumner).</value></data>
+  <data name="Flows_NextStepsHeader" xml:space="preserve"><value>Vad du gör härnäst</value></data>
+  <data name="Flows_NextSteps" xml:space="preserve"><value>1.  Öppna rapporten och kontrollera ”pekar fortfarande på källan” och allt som är markerat för granskning.
+2.  I Power Automate (målklientorganisationen) öppnar du Mina flöden → Importera → Importera paket (äldre) och väljer ett skrivet paket.
+3.  Under ”Relaterade resurser” klickar du på ”Välj under import” för varje anslutning och väljer eller skapar en anslutning i målklientorganisationen. Anslutningar kan inte flyttas mellan klientorganisationer.
+4.  Importera flödet. Låt det vara avstängt, öppna det, åtgärda det som flaggas och slå sedan på det.</value></data>
+  <data name="Flows_PackageNoChange" xml:space="preserve"><value>Inga ändringar (inget i det matchade din mappning)</value></data>
+  <data name="Forms_CopiedOn" xml:space="preserve"><value>Kopierade {0} till {1}</value></data>
+  <data name="Forms_CopiedBefore" xml:space="preserve"><value>Kopierad tidigare</value></data>
+  <data name="Forms_ColCopied" xml:space="preserve"><value>Redan kopierad</value></data>
+  <data name="Forms_AndMore" xml:space="preserve"><value>  …och {0} till</value></data>
+  <data name="Forms_DuplicateTitle" xml:space="preserve"><value>Kopiera igen?</value></data>
+  <data name="Forms_DuplicatePrompt" xml:space="preserve"><value>{0} av de markerade formulären har redan kopierats till det här kontot:
+
+{1}
+
+Om du kopierar igen skapas en andra kopia av varje. Fortsätta?</value></data>
+  <data name="Forms_ClosePrompt" xml:space="preserve"><value>En kopiering pågår fortfarande. Om du stänger nu kan formuläret som kopieras bli halvfärdigt i målet. Stoppa och stäng?</value></data>
+  <data name="Forms_CloseTitle" xml:space="preserve"><value>Kopiering pågår</value></data>
+  <data name="Forms_ExportNothing" xml:space="preserve"><value>Inga svar kunde exporteras (se loggen).</value></data>
+  <data name="Forms_FilterWatermark" xml:space="preserve"><value>Filtrera efter titel eller typ</value></data>
+  <data name="Forms_CombineExport" xml:space="preserve"><value>En arbetsbok</value></data>
+  <data name="Forms_CombineExportTip" xml:space="preserve"><value>Exportera alla markerade formulär till en enda Excel-fil med ett blad per formulär.</value></data>
+  <data name="Flows_ValueKind_Email" xml:space="preserve"><value>E-postadress</value></data>
+  <data name="Flows_ValueKind_Tenant" xml:space="preserve"><value>Klientorganisations-ID</value></data>
+  <data name="Flows_ValueKind_Path" xml:space="preserve"><value>Bibliotekssökväg</value></data>
+  <data name="Flows_ValuesHeader" xml:space="preserve"><value>Andra värden</value></data>
+  <data name="Flows_ValuesHint" xml:space="preserve"><value>Skriv en ersättning för varje värde som ska ändras. Rader som lämnas tomma ändras inte; de listas i rapporten om de fortfarande pekar på källan.</value></data>
+  <data name="Flows_ColValueKind" xml:space="preserve"><value>Slag</value></data>
+  <data name="Flows_ColValueSource" xml:space="preserve"><value>I flödena</value></data>
+  <data name="Flows_ColValueTarget" xml:space="preserve"><value>Ersätt med</value></data>
+  <data name="Flows_ColFormNote" xml:space="preserve"><value>ID-kontroll</value></data>
+  <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Inte ett formulär-ID eller en länk till redigeringssidan</value></data>
+  <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Samma som källformuläret</value></data>
+  <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>Det här formuläret finns i källklientorganisationen, inte i målet</value></data>
+  <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>Det här formuläret finns i en annan klientorganisation än källan</value></data>
+  <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>Från formulärkopieringen av {0} till {1}</value></data>
+  <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>Från en tidigare formulärkopiering</value></data>
+  <data name="Flows_LoadMapping" xml:space="preserve"><value>Läs in mappning…</value></data>
+  <data name="Flows_LoadMappingTip" xml:space="preserve"><value>Fyll i webbplatser, listor, kolumner, formulär och andra värden från en mappning som du sparat tidigare.</value></data>
+  <data name="Flows_MappingLoadFailed" xml:space="preserve"><value>Det gick inte att läsa in mappningen: {0}</value></data>
+  <data name="Flows_MappingLoaded" xml:space="preserve"><value>Läste in {0}. Värden som matchar de här flödena fylldes i; kontrollera dem i nästa steg.</value></data>
+  <data name="Flows_MappingLoadedPending" xml:space="preserve"><value>Läste in {0}. Den tillämpas när du lägger till flödespaket.</value></data>
+  <data name="Flows_HostFilledCount" xml:space="preserve"><value>Fyllde i {0} målwebbplats(er). Kontrollera dem nedan och klicka sedan på Nästa.</value></data>
+  <data name="Flows_HostNothingToFill" xml:space="preserve"><value>Varje webbplats har redan ett mål, så inget ändrades. Rensa en målcell för att få den ifylld.</value></data>
+  <data name="Flows_FillHostHelp" xml:space="preserve"><value>Genväg: skriv den nya klientorganisationens adress, till exempel https://fabrikam.sharepoint.com, och klicka på knappen. Varje webbplats som ännu inte har något mål får den adressen med samma sökväg som källan: https://contoso.sharepoint.com/sites/HR blir https://fabrikam.sharepoint.com/sites/HR. OneDrive-webbplatser (contoso-my) går till den nya klientorganisationens -my-adress. Mål som du redan har angett berörs inte. Webbplatserna måste redan finnas i den nya klientorganisationen; det här verktyget skapar dem inte. Om en webbplats har ett annat namn där skriver du dess adress i cellen Målwebbplats i stället.</value></data>
+  <data name="Flows_EmptyTargetHelp" xml:space="preserve"><value>Om du lämnar en Målwebbplats tom lämnas den webbplatsen oförändrad: flödena fortsätter att peka på den gamla webbplatsen, dess listor och kolumner matchas eller skrivs inte om, och rapporten listar den under ”Att göra efter importen”. Det är bara rätt för en webbplats som inte flyttas till den nya klientorganisationen.</value></data>
+  <data name="Flows_ColSiteEffect" xml:space="preserve"><value>Vad som händer</value></data>
+  <data name="Flows_SiteEffectMapped" xml:space="preserve"><value>✓ Flyttas till målet</value></data>
+  <data name="Flows_SiteEffectUnchanged" xml:space="preserve"><value>⚠ Oförändrad (inget mål)</value></data>
+  <data name="Flows_FollowUpSiteUnchanged" xml:space="preserve"><value>Webbplatsen {0} lämnades oförändrad (inget mål angavs), så flödena pekar fortfarande på den och dess listor matchades inte. Det är okej om webbplatsen inte flyttas; annars kör du igen med ett mål.</value></data>
+  <data name="Flows_ColSummaryNoLists" xml:space="preserve"><value>Inga kolumner att visa ännu: ingen lista har matchats, så det finns inget att jämföra. Åtgärda listorna ovan och klicka sedan på Matcha igen.</value></data>
+  <data name="Flows_ColSummaryNone" xml:space="preserve"><value>Inga kolumner att mappa, så du behöver inte göra något här. De matchade listorna har inga anpassade kolumner som flödena skriver till, filtrerar på eller läser på ett sätt som verktyget kan se. Aktivitetslistan längst ned anger vad som hittades för varje lista.</value></data>
+  <data name="Flows_ColSummary" xml:space="preserve"><value>{0} kolumn(er) hittades: {1} har samma namn i målet, {2} döptes om och matchades, {3} ser liknande ut, {4} saknar matchning.</value></data>
+  <data name="Flows_ColSummaryAction" xml:space="preserve"><value>Kontrollera raderna markerade ”Liknande namn” och välj en kolumn för raderna markerade ”Ingen matchning”. Rader markerade ”Samma namn” eller ”Omdöpt i målet” behöver inget.</value></data>
+  <data name="Flows_ColSummaryNoAction" xml:space="preserve"><value>Inget att göra här: alla kolumner matchar redan. Klicka på Nästa.</value></data>
+  <data name="Flows_OutputName" xml:space="preserve"><value>Namn på de uppdaterade paketen</value></data>
+  <data name="Flows_OutputNameHint" xml:space="preserve"><value>Vad de uppdaterade .zip-filerna ska heta. Använd {name} för det ursprungliga filnamnet: ”{name} - Fabrikam” gör ”Onboarding.zip” till ”Onboarding - Fabrikam.zip”. Med ett paket kan du helt enkelt skriva hela namnet. Låt det vara {name} för att behålla de ursprungliga namnen. Ett namn som används två gånger får (2), (3)… så att inget skrivs över.</value></data>
+  <data name="Flows_OutputNamePreview" xml:space="preserve"><value>Kommer att skriva: {0}</value></data>
+  <data name="Flows_FormsPickHelp" xml:space="preserve"><value>Ett flöde lagrar bara ett formulärs ID, så formulärnamnen läss från Microsoft Forms när det här steget öppnas: titeln på varje formulär i dina flöden (källkontot) och formulären i målkontot. Ett formulär vars titel matchar exakt ett målformulär matchas åt dig; annars väljer du det nya formuläret i listrutan, eller klistrar in dess ID eller länk till redigeringssidan. Använd Läs in formulärnamn igen för att läsa dem på nytt.</value></data>
+  <data name="Flows_LoadTargetForms" xml:space="preserve"><value>Läs in formulär från målkontot…</value></data>
+  <data name="Flows_LoadingTargetForms" xml:space="preserve"><value>Läser in målkontots formulär… du kan uppmanas att logga in.</value></data>
+  <data name="Flows_LogLoadTargetForms" xml:space="preserve"><value>Listar formulären som ägs av målkontot {0} så att du kan välja det nya formuläret för varje flöde. Klicka på Avbryt för att sluta vänta på en inloggning.</value></data>
+  <data name="Flows_TargetFormsLoaded" xml:space="preserve"><value>Mål: {0} formulär hittades i {1}. Välj ett per rad, eller klistra in ett ID.</value></data>
+  <data name="Flows_TargetFormsNone" xml:space="preserve"><value>Mål: inga formulär hittades i {0}. Listrutan visar bara formulär som det kontot äger (inte gruppformulär), så kopiera formulären med formulärverktyget först, eller klistra in ett ID.</value></data>
+  <data name="Flows_TargetFormsCancelled" xml:space="preserve"><value>Avbruten. Klicka på Läs in formulärnamn för att försöka igen, eller klistra in formulär-ID:n.</value></data>
+  <data name="Flows_TargetFormsFailed" xml:space="preserve"><value>Mål: det gick inte att läsa in formulären: {0}</value></data>
+  <data name="Flows_FormNone" xml:space="preserve"><value>(inget)</value></data>
+  <data name="Flows_FormUntitled" xml:space="preserve"><value>(formulär utan titel)</value></data>
+  <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Källformulär</value></data>
+  <data name="Flows_ColPickForm" xml:space="preserve"><value>Välj bland målets formulär</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Välj ett formulär från målkontot. Klicka först på ”Läs in formulär från målkontot”.</value></data>
+  <data name="Flows_NoteTenant" xml:space="preserve"><value>Ifylld från målinloggningen ({0})</value></data>
+  <data name="Flows_NoteAccount" xml:space="preserve"><value>Ditt källkonto, ersatt med ditt målkonto</value></data>
+  <data name="Flows_NoteDomain" xml:space="preserve"><value>Ifylld från dina inloggningar ({0} → {1}). Rensa båda rutorna för att lämna e-postdomäner oförändrade.</value></data>
+  <data name="Flows_EmptyTargetShort" xml:space="preserve"><value>En webbplats med tomt mål lämnas oförändrad: flödena fortsätter att peka på den, och rapporten listar den.</value></data>
+  <data name="Flows_ConnSignedInAt" xml:space="preserve"><value>✓ Inloggad som {0} · {1}</value></data>
+  <data name="Flows_LogConnectedTarget" xml:space="preserve"><value>Inloggad som {0}. Målklientorganisationens SharePoint-adress är {1}; tomma målwebbplatser fylldes i från den.</value></data>
+  <data name="Flows_ConnSameTenant" xml:space="preserve"><value>⚠ Vissa webbplatser i flödena finns på {0}, som är målkontots egen adress. Antingen pekar de här paketen redan på målet (till exempel paket som det här verktyget skrev, eller flöden exporterade från målet), så lägg i stället till de ursprungliga exporterna från källan; eller så är källan och målet verkligen en klientorganisation, så växla appen till läget en klientorganisation (Inställningar).</value></data>
+  <data name="Flows_AlreadyRewritten" xml:space="preserve"><value>{0} är ett paket som det här verktyget skrev {1}: det innehåller redan målets adresser, så det finns inget kvar att flytta. Lägg i stället till den ursprungliga exporten från källklientorganisationen (filen i din Hämtade filer, inte den i utdatamappen).</value></data>
+  <data name="Flows_FlowsOnTarget" xml:space="preserve"><value>⚠ Webbplatserna i de här flödena finns på {0}, som är din målklientorganisation, men din källa är {1}. Om paketen exporterades från {0} loggar du in på den klientorganisationen som källa (Ändra källa…). Om det här verktyget skrev dem tidigare tar du bort dem och lägger till de ursprungliga exporterna.</value></data>
+  <data name="Flows_ConnTargetFilled" xml:space="preserve"><value>Inloggad. Fyllde i {0} målwebbplats(er) från {1}. Kontrollera dem och klicka sedan på Nästa.</value></data>
+  <data name="Flows_ConnTargetNothingToFill" xml:space="preserve"><value>Inloggad. Varje målwebbplats hade redan ett värde, så inga ändrades.</value></data>
+  <data name="Flows_ConnInferFailed" xml:space="preserve"><value>Inloggningen slutfördes inte, eller så gick det inte att läsa den nya klientorganisationens adress (se raden Mål). Om du är inloggad anger du den nya klientorganisationens adress nedan för att fylla i målwebbplatserna.</value></data>
+  <data name="Flows_ConnAt" xml:space="preserve"><value>{0} – ansluten som {1}</value></data>
+  <data name="Flows_ConnAtNotSignedIn" xml:space="preserve"><value>{0} – inte inloggad ännu</value></data>
+  <data name="Flows_ConnChangeTarget" xml:space="preserve"><value>Ändra mål…</value></data>
+  <data name="Flows_Block_NoTarget" xml:space="preserve"><value>Ingen mållista är vald, så de här flödena skulle fortfarande peka på en lista som inte finns i målet. Välj mållistan, eller skapa först listan på målwebbplatsen.</value></data>
+  <data name="Flows_Block_ColumnMissing" xml:space="preserve"><value>Flödena använder kolumnen ”{0}”, men mållistan ”{1}” har ingen kolumn för den. Välj dess målkolumn i tabellen, eller lägg till kolumnen i mållistan och klicka på Kontrollera igen.</value></data>
+  <data name="Flows_Block_RequiredMissing" xml:space="preserve"><value>Mållistan ”{0}” kräver kolumnen ”{1}”, men steget ”Skapa objekt” ”{3}” i flödet ”{2}” anger den inte, så importen skulle misslyckas med ”missing required property item/{1}”. Skriv ett värde för den nedan så lägger verktyget till det i det steget, eller gör ”{1}” valfri i mållistan och klicka på Kontrollera igen.</value></data>
+  <data name="Flows_Block_RequiredMissingNoFix" xml:space="preserve"><value>Mållistan ”{0}” kräver kolumnen ”{1}”, men steget ”Skapa objekt” ”{3}” i flödet ”{2}” anger den inte, så importen skulle misslyckas med ”missing required property item/{1}”. Gör ”{1}” valfri i mållistan i SharePoint och klicka sedan på Kontrollera igen.</value></data>
+  <data name="Flows_FixHeader" xml:space="preserve"><value>Värde att fylla i för de här obligatoriska kolumnerna (läggs till i varje Skapa objekt-steg som utelämnar dem):</value></data>
+  <data name="Flows_BlockHeader" xml:space="preserve"><value>Det här skulle misslyckas vid importen. Åtgärda det för att fortsätta:</value></data>
+  <data name="Flows_CheckAgain" xml:space="preserve"><value>Kontrollera igen</value></data>
+  <data name="Flows_Chip_WillFail" xml:space="preserve"><value>Kommer att misslyckas ({0})</value></data>
+  <data name="Flows_Gate_SignInTarget" xml:space="preserve"><value>⚠ Logga in på målet för att fortsätta.</value></data>
+  <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} paket skrevs av det här verktyget och innehåller redan målets värden. Ta bort dem (✕ i listan) och lägg till de ursprungliga exporterna.</value></data>
+  <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} webbplats(er) saknar mål. En webbplats som lämnas som den är skulle fortfarande peka på källklientorganisationen.</value></data>
+  <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} lista/listor skulle misslyckas vid importen. Åtgärda listorna markerade ”Kommer att misslyckas” för att fortsätta.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Listorna har inte matchats ännu. Gå tillbaka ett steg och framåt igen för att försöka på nytt.</value></data>
+  <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} formulär behöver ett giltigt målformulär-ID för att fortsätta.</value></data>
+  <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Ändra källa…</value></data>
+  <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Inloggad som {0}. Källklientorganisationens SharePoint-adress är {1}.</value></data>
+  <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Källanslutningen ändrades till {0}. Webbplatserna som listas nedan måste finnas i den här klientorganisationen.</value></data>
+  <data name="Flows_ConnSourceFailed" xml:space="preserve"><value>Källinloggningen slutfördes inte, eller så gick det inte att läsa klientorganisationens adress (se raden Källa). Den tidigare källanslutningen behålls om du avbröt.</value></data>
+  <data name="Flows_SourceWarn" xml:space="preserve"><value>⚠ Vissa webbplatser läses från {0}, som inte är den klientorganisation du är ansluten till som källa ({1}). Det går inte att läsa deras listor. Ändra ”Läs listor från” för de raderna till adressen i din källklientorganisation, eller klicka på Ändra källa… och logga in med ett konto från den klientorganisationen.</value></data>
+  <data name="Flows_SourceAutoFilled" xml:space="preserve"><value>Flödenas webbplatser finns på {0}, men du är ansluten till {1} som källa. ”Läs listor från” fylldes i med samma webbplatser på {1}, så verktyget läser listnamn och kolumner där. Kontrollera att de webbplatserna finns (ändra valfri rad), eller klicka på Ändra källa… om flödena verkligen kom från {0}.</value></data>
+  <data name="Flows_CardsHeader" xml:space="preserve"><value>Listor som flödena använder</value></data>
+  <data name="Flows_CardsHint" xml:space="preserve"><value>Klicka på en lista för att öppna eller stänga den. Listor som behöver ses över kommer först och är öppna.</value></data>
+  <data name="Flows_ExpandAll" xml:space="preserve"><value>Öppna alla</value></data>
+  <data name="Flows_CollapseAll" xml:space="preserve"><value>Stäng alla</value></data>
+  <data name="Flows_CardUsedBy" xml:space="preserve"><value>Används av:</value></data>
+  <data name="Flows_CardSource" xml:space="preserve"><value>Källa:</value></data>
+  <data name="Flows_CardTargetList" xml:space="preserve"><value>Mållista</value></data>
+  <data name="Flows_CardOrId" xml:space="preserve"><value>eller klistra in dess ID eller länk:</value></data>
+  <data name="Flows_ColCardSource" xml:space="preserve"><value>Källkolumn</value></data>
+  <data name="Flows_ColCardType" xml:space="preserve"><value>Typ</value></data>
+  <data name="Flows_ColCardUsed" xml:space="preserve"><value>Används</value></data>
+  <data name="Flows_ColumnNotUsed" xml:space="preserve"><value>Används inte av flödena</value></data>
+  <data name="Flows_TargetNone" xml:space="preserve"><value>(ingen: lämna den här listan oförändrad)</value></data>
+  <data name="Flows_CardNoTarget" xml:space="preserve"><value>⚠ Ingen mållista vald: flöden som använder den pekar fortfarande på källistan</value></data>
+  <data name="Flows_CardToCheck" xml:space="preserve"><value>→ {0} · ⚠ {1} kolumn(er) att kontrollera</value></data>
+  <data name="Flows_CardOk" xml:space="preserve"><value>→ {0} · ✓ inget att kontrollera</value></data>
+  <data name="Flows_CardSummary" xml:space="preserve"><value>{0} kolumner i den här listan; flödena använder {1}: {2} med samma namn i målet, {3} omdöpta och matchade, {4} liknande (kontrollera), {5} utan matchning (välj). De andra kolumnerna visas för sammanhangets skull och ändras inte.</value></data>
+  <data name="Flows_CardSummaryNoUse" xml:space="preserve"><value>{0} kolumner i den här listan; inga används av flödena på ett sätt som verktyget kan se, så inget behöver mappas.</value></data>
+  <data name="Flows_CardSummaryNoColumns" xml:space="preserve"><value>Inga kolumner kunde läsas för den här listan (se anteckningarna ovan och aktivitetslistan).</value></data>
+  <data name="Flows_CardSummaryNoTarget" xml:space="preserve"><value>Välj en mållista ovan för att se dess kolumner och mappa dem.</value></data>
+  <data name="Flows_CardTargetColumnsUnread" xml:space="preserve"><value>Mållistans kolumner kunde inte läsas, så inga matchningar kunde föreslås.</value></data>
+  <data name="Flows_ListStatus_NoSite" xml:space="preserve"><value>Flödet anger inte vilken webbplats den här listan finns på (det använder en parameter), så den kan inte slås upp. Klistra in mållistans ID eller länk.</value></data>
+  <data name="Flows_ListStatus_None" xml:space="preserve"><value>Ingen mållista: den här listan lämnas oförändrad.</value></data>
+  <data name="Flows_LoadingTargetColumns" xml:space="preserve"><value>Läser kolumnerna i mållistan för {0}…</value></data>
+  <data name="Flows_LogReloadCard" xml:space="preserve"><value>Lista ’{0}’: du valde en annan mållista. Läser dess kolumner på {1} för att matcha dem igen.</value></data>
+  <data name="Flows_ConnSingleAt" xml:space="preserve"><value>{0} – ansluten som {1} (huvudfönstrets inloggning)</value></data>
+  <data name="Flows_ColReadFrom" xml:space="preserve"><value>Läs listor från (källa)</value></data>
+  <data name="Flows_SitesColumnsHint" xml:space="preserve"><value>”Webbplats i flödena” är adressen som lagras i flödena; det är den som ersätts, så den kan inte redigeras. ”Läs listor från” är var verktyget läser varje listas namn och kolumner på källsidan; den börjar som samma adress, så ändra den när flödets adress är gammal, omdöpt eller finns i en annan klientorganisation än din källanslutning.</value></data>
+  <data name="Flows_Rep_UsesHeader" xml:space="preserve"><value>Vad de här flödena använder</value></data>
+  <data name="Flows_Rep_UsesLine" xml:space="preserve"><value>**{0}** – {1} flöde(n), {2} steg: {3} ({4})</value></data>
+  <data name="Flows_Rep_HandlingRewritten" xml:space="preserve"><value>skrivs om av det här verktyget</value></data>
+  <data name="Flows_Rep_HandlingReview" xml:space="preserve"><value>granska manuellt</value></data>
+  <data name="Flows_Rep_HandlingConnection" xml:space="preserve"><value>bara anslutning</value></data>
+  <data name="Flows_Rep_TodoHeader" xml:space="preserve"><value>Att göra efter importen</value></data>
+  <data name="Flows_Rep_TodoImport" xml:space="preserve"><value>Importera varje korrigerat paket i målmiljön och skapa anslutningarna på nytt (de kopieras aldrig).</value></data>
+  <data name="Flows_Rep_TodoReview" xml:space="preserve"><value>{0}: {1}.</value></data>
+  <data name="Flows_Rep_TodoSolution" xml:space="preserve"><value>Lösningspaket: bara arbetsflödesdefinitionerna skrevs om. Miljövariabelvärden och anslutningsreferenser i lösningen (customizations.xml) innehåller fortfarande källvärden; ange dem efter importen.</value></data>
+  <data name="Flows_Rep_TodoOwners" xml:space="preserve"><value>Flödesägare och användare med enbart körningsbehörighet ingår inte i paketet; dela flödena med rätt personer efter importen.</value></data>
+  <data name="Flows_Rep_NoChanges" xml:space="preserve"><value>Inga ändringar (inget i mappningen matchade).</value></data>
+  <data name="Flows_Rep_Replacements" xml:space="preserve"><value>{0} ersättningar</value></data>
+  <data name="Flows_Rep_StillSource" xml:space="preserve"><value>Pekar fortfarande på källvärden (omappade, granska före import)</value></data>
+  <data name="Flows_Prog_Connecting" xml:space="preserve"><value>Ansluter till källwebbplatsen {0} och målwebbplatsen {1}. Ett inloggningsfönster öppnas om du inte är inloggad ännu.</value></data>
+  <data name="Flows_Prog_Connected" xml:space="preserve"><value>Ansluten till {0} (källa) och {1} (mål).</value></data>
+  <data name="Flows_Prog_ReadingTargetLists" xml:space="preserve"><value>Läser listorna och biblioteken på målwebbplatsen {0}, så att varje lista kan matchas efter namn och erbjudas i en listruta.</value></data>
+  <data name="Flows_Prog_FoundTargetLists" xml:space="preserve"><value>Hittade {0} lista/listor och bibliotek på {1}.</value></data>
+  <data name="Flows_Prog_ReadingSource" xml:space="preserve"><value>Läser namnet och kolumnerna för listan {0} från källwebbplatsen {1}.</value></data>
+  <data name="Flows_Prog_LookingTarget" xml:space="preserve"><value>Lista ’{0}’: söker efter en lista med samma namn på målwebbplatsen {1}.</value></data>
+  <data name="Flows_Prog_ReadingTargetColumns" xml:space="preserve"><value>Lista ’{0}’: hittades i målet. Läser mållistans kolumner för att matcha dem.</value></data>
+  <data name="Flows_Prog_NoColumns" xml:space="preserve"><value>Lista ’{0}’: dess kolumner kunde inte läsas, eller så har den inga. Inget att mappa för den här listan.</value></data>
+  <data name="Flows_Prog_NoneUsed" xml:space="preserve"><value>Lista ’{0}’: {1} kolumn(er), ingen av dem används av flödena på ett sätt som verktyget kan se. Inget behöver mappas.</value></data>
+  <data name="Flows_Prog_Summary" xml:space="preserve"><value>Lista ’{0}’: flödena använder {1} kolumnnamn: {2} har samma namn i målet (ingen ändring behövs), {3} döptes om och matchades, {4} ser liknande ut (kontrollera), {5} saknar matchning (ditt val), {6} är inbyggda kolumner (inget att mappa).</value></data>
+  <data name="Flows_Prog_AlreadyOnTarget" xml:space="preserve"><value>Listan {0} finns inte på källwebbplatsen, men den finns på målwebbplatsen som ’{1}’: flödet pekar redan på målet.</value></data>
+  <data name="Flows_Note_SiteNoTarget" xml:space="preserve"><value>Webbplatsen ’{0}’ har inget mål; listor på den matchades inte.</value></data>
+  <data name="Flows_AdvancedReadFrom" xml:space="preserve"><value>Avancerat: läs listor från en annan adress</value></data>
+  <data name="Flows_CardArrow" xml:space="preserve"><value>→ {0}</value></data>
+  <data name="Flows_CardColumnsHeader" xml:space="preserve"><value>Kolumnmappning: från {0} till {1}</value></data>
+  <data name="Flows_CardEmptyNoColumns" xml:space="preserve"><value>Inga kolumner att visa för den här listan.</value></data>
+  <data name="Flows_CardEmptyNoneUsed" xml:space="preserve"><value>Inga av den här listans kolumner används av flödena. Kryssa i ”Visa alla kolumner” för att se dem.</value></data>
+  <data name="Flows_CardEmptyUnreadable" xml:space="preserve"><value>Källistan kunde inte läsas, och flödet nämner inga kolumner, så det finns inget att mappa.</value></data>
+  <data name="Flows_CardListLabel" xml:space="preserve"><value>Lista</value></data>
+  <data name="Flows_CardNotReadable" xml:space="preserve"><value>(kunde inte läsas i källan)</value></data>
+  <data name="Flows_CardReadFrom" xml:space="preserve"><value>Läs från:</value></data>
+  <data name="Flows_CardSiteLabel" xml:space="preserve"><value>Webbplats</value></data>
+  <data name="Flows_CardSummaryOnTarget" xml:space="preserve"><value>Det här flödet pekar redan på den här listan i målet. De {0} kolumnnamn det använder visas mot målets kolumner; inget behöver ändras.</value></data>
+  <data name="Flows_CardUnnamed" xml:space="preserve"><value>(listnamn otillgängligt)</value></data>
+  <data name="Flows_Chip_AlreadyTarget" xml:space="preserve"><value>Redan i målet</value></data>
+  <data name="Flows_Chip_ByFlowNames" xml:space="preserve"><value>Mappad efter flödets kolumnnamn</value></data>
+  <data name="Flows_Chip_CantRead" xml:space="preserve"><value>Kan inte läsa kolumner</value></data>
+  <data name="Flows_Chip_NoTarget" xml:space="preserve"><value>Ingen mållista</value></data>
+  <data name="Flows_Chip_NothingToMap" xml:space="preserve"><value>Inget att mappa</value></data>
+  <data name="Flows_Chip_Ready" xml:space="preserve"><value>Klar</value></data>
+  <data name="Flows_Chip_TargetColsUnread" xml:space="preserve"><value>Målkolumner kan inte läsas</value></data>
+  <data name="Flows_Chip_ToCheck" xml:space="preserve"><value>{0} att kontrollera</value></data>
+  <data name="Flows_Chip_UsedBy" xml:space="preserve"><value>Används av {0} flöde(n)</value></data>
+  <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} kolumnmappning(ar) behöver fortfarande ses över.</value></data>
+  <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>Alla kolumnmappningar är klara.</value></data>
+  <data name="Flows_Chk_Connections" xml:space="preserve"><value>Anslutningar kopieras inte mellan klientorganisationer: skapa dem på nytt i Power Automate efter importen.</value></data>
+  <data name="Flows_Chk_Email" xml:space="preserve"><value>E-post: varje adress på {0} blir {1}.</value></data>
+  <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} av {1} formulär pekar på ett nytt formulär.</value></data>
+  <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} av {1} lista/listor har en mållista.</value></data>
+  <data name="Flows_Chk_ListsNotMatched" xml:space="preserve"><value>Listorna har inte matchats ännu.</value></data>
+  <data name="Flows_Chk_NoEmail" xml:space="preserve"><value>E-postadresser ändras inte (ingen domän mappades).</value></data>
+  <data name="Flows_Chk_NoForms" xml:space="preserve"><value>Flödena använder inga Microsoft Forms.</value></data>
+  <data name="Flows_Chk_NoLists" xml:space="preserve"><value>Flödena använder inga specifika listor.</value></data>
+  <data name="Flows_Chk_NoSites" xml:space="preserve"><value>Flödena anger inga SharePoint-webbplatser.</value></data>
+  <data name="Flows_Chk_Packages" xml:space="preserve"><value>{0} paket med {1} flöde(n) kommer att skrivas; originalen ändras inte.</value></data>
+  <data name="Flows_Chk_Sites" xml:space="preserve"><value>{0} av {1} webbplats(er) flyttas till en målwebbplats; de andra förblir som de är.</value></data>
+  <data name="Flows_ClearAutofill" xml:space="preserve"><value>Rensa automatiskt ifyllda värden</value></data>
+  <data name="Flows_ColFilledIn" xml:space="preserve"><value>Ifyllt</value></data>
+  <data name="Flows_ColFormInFlows" xml:space="preserve"><value>Formulär i dina flöden</value></data>
+  <data name="Flows_ColFrom" xml:space="preserve"><value>Från (i dina flöden)</value></data>
+  <data name="Flows_ColPkgLists" xml:space="preserve"><value>Listor</value></data>
+  <data name="Flows_ColPkgSites" xml:space="preserve"><value>Webbplatser</value></data>
+  <data name="Flows_ColStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Flows_ColTo" xml:space="preserve"><value>Till (mål)</value></data>
+  <data name="Flows_ColumnStatus_Chosen" xml:space="preserve"><value>Vald av dig</value></data>
+  <data name="Flows_ColumnStatus_Unchanged" xml:space="preserve"><value>Lämnad oförändrad</value></data>
+  <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(huvudfönstrets inloggning)</value></data>
+  <data name="Flows_DomainFromName" xml:space="preserve"><value>E-postdomän att flytta från</value></data>
+  <data name="Flows_DomainMove" xml:space="preserve"><value>Flytta varje adress på</value></data>
+  <data name="Flows_DomainTo" xml:space="preserve"><value>till</value></data>
+  <data name="Flows_DomainToName" xml:space="preserve"><value>E-postdomän att flytta till</value></data>
+  <data name="Flows_DropHint" xml:space="preserve"><value>…eller dra .zip-filer (eller en mapp) till det här fönstret.</value></data>
+  <data name="Flows_FollowUpColumnNoMatch" xml:space="preserve"><value>Kolumnen ’{0}’ i listan ’{1}’ saknar matchning i mållistan.</value></data>
+  <data name="Flows_FollowUpListNoTarget" xml:space="preserve"><value>Listan ’{0}’ ({1}) på {2} har ingen mållista, så flöden som använder den pekar fortfarande på källistan.</value></data>
+  <data name="Flows_FormTitleUnknown" xml:space="preserve"><value>(titel okänd)</value></data>
+  <data name="Flows_GoToStep" xml:space="preserve"><value>Gå till steg</value></data>
+  <data name="Flows_LoadMappingLink" xml:space="preserve"><value>Har du en sparad mappning? Läs in den…</value></data>
+  <data name="Flows_NameCustom" xml:space="preserve"><value>Anpassat mönster…</value></data>
+  <data name="Flows_NameKeep" xml:space="preserve"><value>Behåll de ursprungliga namnen</value></data>
+  <data name="Flows_NameSuffix" xml:space="preserve"><value>Lägg till ’ - migrated’ i varje namn</value></data>
+  <data name="Flows_NextStep1" xml:space="preserve"><value>Öppna rapporten och kontrollera det som är markerat för granskning.</value></data>
+  <data name="Flows_NextStep2" xml:space="preserve"><value>I Power Automate (målklientorganisationen): Mina flöden, Importera, Importera paket (äldre) och välj ett skrivet paket.</value></data>
+  <data name="Flows_NextStep3" xml:space="preserve"><value>Under Relaterade resurser klickar du på ”Välj under import” för varje anslutning och väljer eller skapar en i målklientorganisationen. Anslutningar kan inte flyttas mellan klientorganisationer.</value></data>
+  <data name="Flows_NextStep4" xml:space="preserve"><value>Importera flödet, låt det vara avstängt, öppna det, åtgärda det som flaggas och slå sedan på det.</value></data>
+  <data name="Flows_OpenFolder" xml:space="preserve"><value>Öppna mapp</value></data>
+  <data name="Flows_OpenPowerAutomate" xml:space="preserve"><value>Öppna Power Automate</value></data>
+  <data name="Flows_OutputFolderMissing" xml:space="preserve"><value>Den utdatamappen finns inte ännu; den skapas när du skriver paketen.</value></data>
+  <data name="Flows_PaneSource" xml:space="preserve"><value>KÄLLA</value></data>
+  <data name="Flows_PaneTarget" xml:space="preserve"><value>MÅL</value></data>
+  <data name="Flows_Pkg_Flows" xml:space="preserve"><value>{0} flöde(n) hittades</value></data>
+  <data name="Flows_Pkg_NoFlows" xml:space="preserve"><value>Inga flöden hittades</value></data>
+  <data name="Flows_Pkg_Rewritten" xml:space="preserve"><value>Redan skrivet av det här verktyget</value></data>
+  <data name="Flows_Pkg_Unreadable" xml:space="preserve"><value>Kunde inte läsas</value></data>
+  <data name="Flows_ReadyToWrite" xml:space="preserve"><value>Redo att skriva?</value></data>
+  <data name="Flows_RemovePackage" xml:space="preserve"><value>Ta bort det här paketet från listan</value></data>
+  <data name="Flows_ReportTitle" xml:space="preserve"><value>Rapport om omskrivning av flöden</value></data>
+  <data name="Flows_ResourcesHeaderCount" xml:space="preserve"><value>Vad de här flödena använder ({0} tjänster)</value></data>
+  <data name="Flows_Review_PackagesFailed" xml:space="preserve"><value>{0} paket kunde inte skrivas.</value></data>
+  <data name="Flows_Review_StillSource" xml:space="preserve"><value>{0} värde(n) i de skrivna paketen pekar fortfarande på källan. Öppna rapporten för att se vilka.</value></data>
+  <data name="Flows_ShowAllColumns" xml:space="preserve"><value>Visa alla {0} kolumner</value></data>
+  <data name="Flows_ShowUsedOnly" xml:space="preserve"><value>Visa bara de kolumner som flödena använder</value></data>
+  <data name="Flows_SitesColumnsHelpHeader" xml:space="preserve"><value>Vad betyder de här kolumnerna?</value></data>
+  <data name="Flows_SourceNote_AlreadyOnTarget" xml:space="preserve"><value>Den här listans ID finns inte på källwebbplatsen, men det är listan ’{0}’ på målwebbplatsen: flödet pekar redan på målet, som i ett paket som det här verktyget redan skrivit.</value></data>
+  <data name="Flows_State_Connected" xml:space="preserve"><value>Ansluten</value></data>
+  <data name="Flows_State_Error" xml:space="preserve"><value>Problem</value></data>
+  <data name="Flows_State_None" xml:space="preserve"><value>Inte inloggad</value></data>
+  <data name="Flows_State_Waiting" xml:space="preserve"><value>Väntar på inloggning…</value></data>
+  <data name="Flows_Summary_AllReady" xml:space="preserve"><value>{0} lista/listor · alla klara</value></data>
+  <data name="Flows_Summary_Cards" xml:space="preserve"><value>{0} lista/listor · {1} klara · {2} behöver ses över</value></data>
+  <data name="Flows_Took" xml:space="preserve"><value>Tog {0}.</value></data>
+  <data name="Flows_ToReviewHeader" xml:space="preserve"><value>Att granska</value></data>
+  <data name="Flows_What1" xml:space="preserve"><value>Lägg till de flödespaket (.zip) som du exporterade från källklientorganisationen. Varje skannas så snart du lägger till det.</value></data>
+  <data name="Flows_What2" xml:space="preserve"><value>Ange vart varje flödes webbplats flyttas. Logga in på målet så fylls den nya klientorganisationens adress i åt dig.</value></data>
+  <data name="Flows_What3" xml:space="preserve"><value>Varje lista som flödena använder matchas mot en lista i målet och dess kolumner mappas. Kontrollera allt som är markerat som att det behöver ses över.</value></data>
+  <data name="Flows_What4" xml:space="preserve"><value>Peka kopierade formulär på deras nya ID:n och bestäm hur e-postadresser och klientorganisations-ID ändras.</value></data>
+  <data name="Flows_What5" xml:space="preserve"><value>Kontrollera listan nedan, välj var de uppdaterade paketen ska sparas och skriv dem sedan.</value></data>
+  <data name="Flows_WhatHappensHere" xml:space="preserve"><value>Vad som händer här</value></data>
+  <data name="Flows_Why1" xml:space="preserve"><value>Verktyget läser varje paket på den här datorn (inget skickas någonstans) för att hitta webbplatserna, listorna, kolumnerna och formulären som flödena använder. Lägg till de URSPRUNGLIGA exporterna från källan, inte paket som det här verktyget skrev tidigare: de innehåller redan målets adresser.</value></data>
+  <data name="Flows_Note_ColumnConflict" xml:space="preserve"><value>Kolumnen ’{0}’ är mappad på olika sätt i olika listor ({1}). Varje listas steg får sin egen mappning; uttryck på andra ställen i flödet behåller det ursprungliga namnet, så granska dem.</value></data>
+  <data name="Flows_LoadFormNames" xml:space="preserve"><value>Läs in formulärnamn igen…</value></data>
+  <data name="Flows_LoadingFormNames" xml:space="preserve"><value>Läser in formulärnamn… du kan uppmanas att logga in.</value></data>
+  <data name="Flows_LogLoadSourceForms" xml:space="preserve"><value>Läser titlarna på formulären i dina flöden från källkontot {0}. Klicka på Avbryt för att sluta vänta på en inloggning.</value></data>
+  <data name="Flows_SourceTitlesLoaded" xml:space="preserve"><value>Källa: hittade titeln för {0} av {1} formulär ({2}).</value></data>
+  <data name="Flows_SourceTitlesFailed" xml:space="preserve"><value>Källa: det gick inte att läsa formulärtitlarna: {0}</value></data>
+  <data name="Flows_FormsMatchedByName" xml:space="preserve"><value>{0} formulär matchades mot målformuläret med samma namn.</value></data>
+  <data name="Flows_FormNoteOk" xml:space="preserve"><value>Ser ut som ett giltigt formulär-ID</value></data>
+  <data name="Flows_FormNoteMatchedByName" xml:space="preserve"><value>Matchad efter namn</value></data>
+  <data name="Flows_SameTenantBoth" xml:space="preserve"><value>Källan och målet finns i samma klientorganisation ({0}). Växla appen till läget en klientorganisation (Inställningar), eller logga in på källan och målet med konton från olika klientorganisationer.</value></data>
+  <data name="Flows_RemoveTargetPackages" xml:space="preserve"><value>Ta bort de här paketen</value></data>
+  <data name="Flows_LogRemovedTargetPackages" xml:space="preserve"><value>Tog bort {0} paket som redan pekar på målet: {1}. Lägg i stället till de ursprungliga exporterna från källklientorganisationen.</value></data>
+  <data name="Flows_RemovedAllAddOriginals" xml:space="preserve"><value>Paketen togs bort. Lägg till de ursprungliga exporterna från källklientorganisationen.</value></data>
+  <data name="Flows_NameCardHint" xml:space="preserve"><value>Varje paket sparas som en ny .zip i utdatamappen; originalen ändras aldrig. Om du vill byta namn på ett skriver du ett annat namn i Spara som.</value></data>
+  <data name="Flows_NameKeepAll" xml:space="preserve"><value>Behåll de ursprungliga namnen</value></data>
+  <data name="Flows_NameSuffixAll" xml:space="preserve"><value>Lägg till ’ - migrated’ i alla namn</value></data>
+  <data name="Flows_ColOriginalPackage" xml:space="preserve"><value>Ursprungligt paket</value></data>
+  <data name="Flows_ColSaveAs" xml:space="preserve"><value>Spara som</value></data>
+  <data name="Flows_Chk_SavedAs" xml:space="preserve"><value>Sparas som: {0} (du kan ändra namnen nedan).</value></data>
+  <data name="Flows_PackageFailed" xml:space="preserve"><value>Kunde inte läsas; ingen utdata skrevs</value></data>
+  <data name="Flows_Cancelled" xml:space="preserve"><value>Avbruten. Inget ändrades. I steget Webbplatser använder du Logga in för att försöka igen (till exempel i en annan webbläsare); i steget Listor använder du Matcha igen.</value></data>
+  <data name="Flows_Cancelling" xml:space="preserve"><value>Avbryter… ett inloggningsfönster kan ta en stund att stänga.</value></data>
+  <data name="Flows_ActivityHeader" xml:space="preserve"><value>Vad verktyget gör</value></data>
+  <data name="Flows_ConnectionsHeader" xml:space="preserve"><value>Anslutningar</value></data>
+  <data name="Flows_ConnIntroMulti" xml:space="preserve"><value>Flera klientorganisationer: för att matcha listor läser verktyget varje listas namn och kolumner från källklientorganisationen och söker efter samma lista i målklientorganisationen. Det kräver en inloggning på var och en. Logga in på varje sida här, eller klicka bara på Nästa så får du frågan då. Ett webbläsarfönster öppnas; om det är fel webbläsare klickar du på Avbryt och försöker igen. Inget ändras i någon av klientorganisationerna.</value></data>
+  <data name="Flows_ConnIntroSingle" xml:space="preserve"><value>En klientorganisation: källan och målet är samma klientorganisation, så verktyget använder kontot som du loggade in med i steget Anslut. Det finns inget annat att logga in på. Inget ändras i klientorganisationen.</value></data>
+  <data name="Flows_ConnSource" xml:space="preserve"><value>Källa</value></data>
+  <data name="Flows_ConnTarget" xml:space="preserve"><value>Mål</value></data>
+  <data name="Flows_ConnSignInSource" xml:space="preserve"><value>Logga in på källan…</value></data>
+  <data name="Flows_ConnSignInTarget" xml:space="preserve"><value>Logga in på målet…</value></data>
+  <data name="Flows_CancelSignIn" xml:space="preserve"><value>Avbryt</value></data>
+  <data name="Flows_CancelSignInHint" xml:space="preserve"><value>Slutar vänta på inloggningsfönstret så att du kan försöka igen, till exempel i en annan webbläsare.</value></data>
+  <data name="Flows_ConnNotYet" xml:space="preserve"><value>Inte inloggad ännu</value></data>
+  <data name="Flows_ConnSingle" xml:space="preserve"><value>Använder huvudfönstrets inloggning: {0}</value></data>
+  <data name="Flows_ConnSignedIn" xml:space="preserve"><value>✓ Inloggad som {0}</value></data>
+  <data name="Flows_ConnReady" xml:space="preserve"><value>✓ Klar</value></data>
+  <data name="Flows_ConnWaiting" xml:space="preserve"><value>Väntar på inloggning… ett webbläsarfönster bör öppnas</value></data>
+  <data name="Flows_ConnCancelled" xml:space="preserve"><value>Inloggningen avbröts. Klicka på Logga in för att försöka igen.</value></data>
+  <data name="Flows_ConnFailed" xml:space="preserve"><value>✗ {0}</value></data>
+  <data name="Flows_ConnDone" xml:space="preserve"><value>Inloggad. Kontrollera målwebbplatserna nedan och klicka sedan på Nästa.</value></data>
+  <data name="Flows_ConnNoSourceSite" xml:space="preserve"><value>Det finns ingen källwebbplats att logga in på ännu. Lägg först till flödespaket.</value></data>
+  <data name="Flows_ConnNoTargetSite" xml:space="preserve"><value>Ange minst en målwebbplats först (eller använd Fyll i, behåll sökvägar); inloggningen går till målwebbplatsens klientorganisation.</value></data>
+  <data name="Flows_ConnectingSource" xml:space="preserve"><value>Loggar in på källan… ett webbläsarfönster öppnas.</value></data>
+  <data name="Flows_ConnectingTarget" xml:space="preserve"><value>Loggar in på målet… ett webbläsarfönster öppnas.</value></data>
+  <data name="Flows_Source" xml:space="preserve"><value>källan</value></data>
+  <data name="Flows_Target" xml:space="preserve"><value>målet</value></data>
+  <data name="Flows_LogConnectSource" xml:space="preserve"><value>Loggar in på källklientorganisationen. Ett webbläsarfönster öppnas; klicka på Avbryt för att sluta vänta (till exempel för att prova en annan webbläsare). Inloggningen talar också om för verktyget vilken klientorganisation källan är.</value></data>
+  <data name="Flows_LogConnectTarget" xml:space="preserve"><value>Loggar in på målklientorganisationen. Ett webbläsarfönster öppnas; klicka på Avbryt för att sluta vänta (till exempel för att prova en annan webbläsare). Inloggningen talar också om för verktyget den nya klientorganisationens SharePoint-adress.</value></data>
+  <data name="Flows_LogConnected" xml:space="preserve"><value>Ansluten till {0}.</value></data>
+  <data name="Flows_LogConnCancelled" xml:space="preserve"><value>Inloggningen avbröts av dig.</value></data>
+  <data name="Flows_LogScanStart" xml:space="preserve"><value>Läser {0} paketfil(er) på den här datorn för att hitta webbplatserna, listorna, kolumnerna och formulären som flödena använder. Inget skickas någonstans.</value></data>
+  <data name="Flows_LogScanned" xml:space="preserve"><value>Läste {0}: {1} flöde(n).</value></data>
+  <data name="Flows_LogResolveStart" xml:space="preserve"><value>Matchar {0} lista/listor: för var och en frågar verktyget källwebbplatsen efter dess namn och söker sedan efter en lista med det namnet på målwebbplatsen.</value></data>
+  <data name="Flows_LogResolveDone" xml:space="preserve"><value>Matchningen klar. {0}</value></data>
+  <data name="Flows_LogWriteStart" xml:space="preserve"><value>Skriver {0} korrigerat(korrigerade) paket till {1}. Originalen ändras inte.</value></data>
+  <data name="Flows_LogWriting" xml:space="preserve"><value>Skriver {0} med din mappning tillämpad.</value></data>
+  <data name="Flows_LogChecking" xml:space="preserve"><value>Kontrollerar {0} efter värden som fortfarande pekar på källan.</value></data>
+  <data name="Flows_LogCancelled" xml:space="preserve"><value>Avbröts av dig. Inget ändrades.</value></data>
+  <data name="Flows_LogFailed" xml:space="preserve"><value>Stoppad: {0}</value></data>
+  <data name="Flows_Why2" xml:space="preserve"><value>Varje flöde lagrar adressen till den SharePoint-webbplats det läser från eller skriver till. För att köras i den nya klientorganisationen måste varje flöde peka på motsvarande webbplats där, så tala om för verktyget vilken ny webbplats som ersätter varje gammal. Detta redigerar bara kopior av dina paket; inget slås upp förrän du klickar på Nästa.</value></data>
+  <data name="Flows_Why3" xml:space="preserve"><value>Vad som händer här: för varje lista som ett flöde använder läser verktyget listans namn och kolumner från källwebbplatsen, söker efter en lista med samma namn på målwebbplatsen och läser den listans kolumner för att matcha dem. Varför: flöden refererar till listor och kolumner via ID eller internt namn, och de skiljer sig i den nya klientorganisationen, så verktyget hittar motsvarigheten. Det här steget bara läser; inget skapas eller ändras i någon av klientorganisationerna. Du kan ändra mållistan och valfri kolumn på dess kort.</value></data>
+  <data name="Flows_Why4" xml:space="preserve"><value>Ett kopierat formulär får ett nytt ID, så ett flöde som använder det måste peka på kopian. E-postadresser och klientorganisations-ID i ett flöde kan också behöva ändras för den nya organisationen. Inget slås upp här; du bestämmer ersättningarna, och allt som lämnas tomt förblir som det är.</value></data>
+  <data name="Flows_Why5" xml:space="preserve"><value>Verktyget skriver nya .zip-filer till utdatamappen med din mappning tillämpad, skannar dem igen för att hitta allt som fortfarande pekar på källan och skriver en rapport. Dina ursprungliga paket ändras aldrig och inget skickas till någon av klientorganisationerna. Du importerar de nya paketen i Power Automate själv efteråt.</value></data>
+  <data name="Forms_TargetCancelled" xml:space="preserve"><value>Inloggningen avbröts. Klicka på knappen för att försöka igen, till exempel i en annan webbläsare.</value></data>
+  <data name="Forms_CancelSignIn" xml:space="preserve"><value>Avbryt</value></data>
+  <data name="Flows_Error" xml:space="preserve"><value>Fel: {0}</value></data>
+  <data name="Forms_Cp_ReadFail" xml:space="preserve"><value>Det gick inte att läsa källformuläret ({0}).</value></data>
+  <data name="Forms_Cp_CreateFail" xml:space="preserve"><value>Det gick inte att skapa formuläret i målet ({0}). {1}</value></data>
+  <data name="Forms_Cp_Cancelled" xml:space="preserve"><value>Avbröts halvvägs. Ett ofullständigt formulär lämnades kvar i målet; ta bort det i Microsoft Forms.</value></data>
+  <data name="Forms_Cp_Stopped" xml:space="preserve"><value>Kopieringen stoppades halvvägs ({0}). Ett ofullständigt formulär lämnades kvar i målet; ta bort det i Microsoft Forms.</value></data>
+  <data name="Forms_Cp_LabelBackground" xml:space="preserve"><value>bakgrundsbild</value></data>
+  <data name="Forms_Cp_LabelLogo" xml:space="preserve"><value>logotyp</value></data>
+  <data name="Forms_Cp_LabelHeader" xml:space="preserve"><value>sidhuvudsbild</value></data>
+  <data name="Forms_Cp_ImageNote" xml:space="preserve"><value>{0} kopierades inte (bilder stöds inte ännu).</value></data>
+  <data name="Forms_Cp_QuizNote" xml:space="preserve"><value>Poängsättning av frågesport (rätta svar och poäng) är inte verifierad; kontrollera kopian.</value></data>
+  <data name="Forms_Cp_SettingFail" xml:space="preserve"><value>Inställningen ’{0}’ kunde inte kopieras ({1}).</value></data>
+  <data name="Forms_Cp_QuestionFail" xml:space="preserve"><value>Frågan ’{0}’ kopierades inte ({1}). {2}</value></data>
+  <data name="Forms_Cp_Untitled" xml:space="preserve"><value>(utan titel)</value></data>
+  <data name="Forms_Cp_BranchFail" xml:space="preserve"><value>Förgreningsregler kunde inte kopieras ({0}); kontrollera kopian.</value></data>
+  <data name="Forms_Cp_NotVisible" xml:space="preserve"><value>Kopian skapades men kunde inte göras synlig i Microsoft Forms ({0}); den kan finnas i papperskorgen.</value></data>
+  <data name="Forms_Cp_CountMismatch" xml:space="preserve"><value>Kopian har {0} frågor men källan har {1}.</value></data>
+  <data name="Forms_Cp_OptionsFail" xml:space="preserve"><value>Frågan ’{0}’ ({1}) skapades men dess alternativ kunde inte kopieras ({2}).</value></data>
+  <data name="Forms_Exp_Sheet" xml:space="preserve"><value>Resultat</value></data>
+  <data name="Forms_Exp_H1" xml:space="preserve"><value>Källformulär</value></data>
+  <data name="Forms_Exp_H2" xml:space="preserve"><value>Källformulärets ID</value></data>
+  <data name="Forms_Exp_H3" xml:space="preserve"><value>Kopians titel</value></data>
+  <data name="Forms_Exp_H4" xml:space="preserve"><value>Kopians formulär-ID</value></data>
+  <data name="Forms_Exp_H5" xml:space="preserve"><value>Status</value></data>
+  <data name="Forms_Exp_H6" xml:space="preserve"><value>Kopierade frågor</value></data>
+  <data name="Forms_Exp_H7" xml:space="preserve"><value>Frågor i källan</value></data>
+  <data name="Forms_Exp_H8" xml:space="preserve"><value>Varningar</value></data>
+  <data name="Forms_Exp_H9" xml:space="preserve"><value>Anteckningar</value></data>
+  <data name="Forms_Exp_H10" xml:space="preserve"><value>Fel</value></data>
+  <data name="Forms_Exp_FilterXlsx" xml:space="preserve"><value>Excel-arbetsbok (*.xlsx)|*.xlsx</value></data>
+  <data name="Flows_FilterJson" xml:space="preserve"><value>JSON-filer (*.json)|*.json</value></data>
+  <data name="Forms_Exp_RId" xml:space="preserve"><value>Id</value></data>
+  <data name="Forms_Exp_RStart" xml:space="preserve"><value>Starttid</value></data>
+  <data name="Forms_Exp_REnd" xml:space="preserve"><value>Slutförandetid</value></data>
+  <data name="Forms_Exp_RResponder" xml:space="preserve"><value>Svarande</value></data>
+  <data name="Forms_Exp_RName" xml:space="preserve"><value>Namn</value></data>
+  <data name="Forms_Exp_RScore" xml:space="preserve"><value>Poäng</value></data>
+  <data name="Forms_Exp_RUnmapped" xml:space="preserve"><value>Omappade svar (rå JSON)</value></data>
+  <data name="Forms_Exp_Cut" xml:space="preserve"><value> … (avkortad: för lång för en Excel-cell)</value></data>
+  <data name="Dlg_StopRunTitle" xml:space="preserve"><value>Stoppa körningen?</value></data>
+  <data name="Dlg_StopRunBody" xml:space="preserve"><value>En jämförelse eller verifiering pågår fortfarande. Om du stänger det här fönstret stoppas den och ingen rapport skrivs. Stäng ändå?</value></data>
+  <data name="Flows_CloseTitle" xml:space="preserve"><value>Stänga under pågående arbete?</value></data>
+  <data name="Flows_ClosePrompt" xml:space="preserve"><value>Verktyget arbetar fortfarande (skannar, matchar, loggar in eller skriver paket). Om du stänger nu stoppas det. Stäng ändå?</value></data>
 </root>

@@ -37,7 +37,7 @@ public partial class SharePointService
     // (206 + a Content-Range starting at the byte we asked for) vs. silently ignoring it and
     // sending the WHOLE file back from byte 0 (200) — the caller must know which happened, since
     // appending a 200 response to already-buffered bytes would corrupt the file.
-    public readonly record struct RangedContent(Stream Content, bool IsPartial, long StartOffset);
+    public readonly record struct RangedContent(Stream Content, bool IsPartial, long StartOffset, string? ETag = null);
 
     // Fetches file/version content starting at rangeStart, bypassing the Kiota-generated Content
     // accessor so a Range header can be attached to the request. Graph's content endpoint redirects
@@ -55,17 +55,22 @@ public partial class SharePointService
     }
 
     public async Task<RangedContent> DownloadContentRangeAsync(
-        string driveId, string itemId, string? versionId, long rangeStart, CancellationToken ct)
+        string driveId, string itemId, string? versionId, long rangeStart, CancellationToken ct, string? ifMatchETag = null)
     {
         var token = await _router.ForDrive(driveId).GetAccessTokenAsync(cancellationToken: ct);
         var url = versionId == null
             ? $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}/content"
             : $"{GraphBaseUrl}/drives/{driveId}/items/{itemId}/versions/{versionId}/content";
 
-        var req = new HttpRequestMessage(HttpMethod.Get, url);
+        using var req = new HttpRequestMessage(HttpMethod.Get, url);
         req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         if (rangeStart > 0)
+        {
             req.Headers.Range = new RangeHeaderValue(rangeStart, null);
+            // Only continue if the file is still the one the first bytes came from; otherwise the buffer would hold old bytes
+            // followed by new ones (a 412 comes back and the caller restarts from byte 0).
+            if (ifMatchETag is not null) req.Headers.TryAddWithoutValidation("If-Match", ifMatchETag);
+        }
 
         var response = await _httpClient.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
         // Content downloads use the raw HttpClient (needed for Range/resume), which bypasses the Graph
@@ -84,12 +89,20 @@ public partial class SharePointService
             Throttled?.Invoke(retryAfter, 1, 1, "content download");
             throw new DownloadThrottledException(retryAfter);
         }
-        response.EnsureSuccessStatusCode(); // other 4xx/5xx -> HttpRequestException, same as the old Kiota path threw
+        // Until the stream is handed to the caller the response is ours: a 4xx/5xx or a failed read must not leave the
+        // connection checked out until the GC finalizes it (retried failures piled these up on runs with many 404s).
+        HttpResponseMessage? owned = response;
+        try
+        {
+            response.EnsureSuccessStatusCode(); // other 4xx/5xx -> HttpRequestException, same as the old Kiota path threw
 
-        bool isPartial = response.StatusCode == System.Net.HttpStatusCode.PartialContent;
-        long startOffset = isPartial && response.Content.Headers.ContentRange?.From is { } from ? from : 0;
-        var stream = await response.Content.ReadAsStreamAsync(ct);
-        return new RangedContent(stream, isPartial, startOffset);
+            bool isPartial = response.StatusCode == System.Net.HttpStatusCode.PartialContent;
+            long startOffset = isPartial && response.Content.Headers.ContentRange?.From is { } from ? from : 0;
+            var stream = await response.Content.ReadAsStreamAsync(ct);
+            owned = null;   // the stream (and with it the connection) now belongs to the caller
+            return new RangedContent(stream, isPartial, startOffset, response.Headers.ETag?.ToString());
+        }
+        finally { owned?.Dispose(); }
     }
 
     public async Task<List<DriveItemVersion>> GetVersionsAsync(string driveId, string itemId)

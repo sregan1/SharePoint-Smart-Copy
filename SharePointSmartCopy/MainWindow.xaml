@@ -325,6 +325,7 @@
                           Unchecked="SourceNode_CheckChanged"
                           Indeterminate="SourceNode_CheckChanged"
                           PreviewMouseLeftButtonDown="SourceCheckBox_PreviewClick"
+                          PreviewKeyDown="SourceCheckBox_PreviewKeyDown"
                           VerticalAlignment="Center" Margin="0,0,4,0"/>
                 <TextBlock Text="{Binding TypeIcon}" Style="{StaticResource GlyphIcon}"
                            Foreground="{DynamicResource AccentTextBrush}" Margin="0,0,6,0"/>
@@ -1796,7 +1797,8 @@
                         </StackPanel>
                     </Border>
                     <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource DangerBgBrush}" BorderBrush="{DynamicResource DangerBrush}"
-                            Cursor="Hand" MouseLeftButtonUp="FailedTile_Click" ToolTip="{loc:Loc Ui_ClickToFilterFailed}">
+                            Cursor="Hand" MouseLeftButtonUp="FailedTile_Click" ToolTip="{loc:Loc Ui_ClickToFilterFailed}"
+                            Focusable="True" KeyDown="FailedTile_KeyDown" AutomationProperties.Name="{loc:Loc Ui_ClickToFilterFailed}">
                         <StackPanel>
                             <TextBlock Text="{Binding FailedCount}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource DangerBrush}" HorizontalAlignment="Center"/>
@@ -1804,7 +1806,8 @@
                         </StackPanel>
                     </Border>
                     <Border Style="{StaticResource SummaryCard}" Background="{DynamicResource WarningBgBrush}" BorderBrush="{DynamicResource WarningBrush}"
-                            Cursor="Hand" MouseLeftButtonUp="SkippedTile_Click" ToolTip="{loc:Loc Ui_ClickToFilterSkipped}">
+                            Cursor="Hand" MouseLeftButtonUp="SkippedTile_Click" ToolTip="{loc:Loc Ui_ClickToFilterSkipped}"
+                            Focusable="True" KeyDown="SkippedTile_KeyDown" AutomationProperties.Name="{loc:Loc Ui_ClickToFilterSkipped}">
                         <StackPanel>
                             <TextBlock Text="{Binding SkippedCount}" FontSize="28" FontWeight="Bold"
                                        Foreground="{DynamicResource WarningTextBrush}" HorizontalAlignment="Center"/>
