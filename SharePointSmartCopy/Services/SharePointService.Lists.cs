@@ -489,6 +489,224 @@ public partial class SharePointService
         return await ValidateUpdateItemFieldsAsync(siteUrl, listId, itemId, complexFields, createdDate, modifiedDate, ct);
     }
 
+    // ── List item version history ─────────────────────────────────────────────────────────────
+    // SharePoint has no call that writes a historical version, so a history is REPLAYED: the item is created from its
+    // oldest version, then one update per later version, each carrying that version's values plus its Modified date and
+    // editor. Proven on a live tenant: ValidateUpdateListItem with bNewDocumentUpdate=false creates one version per call and
+    // keeps the Modified date written in that call (bNewDocumentUpdate=true creates NO version, so it cannot be used here).
+    // A plain POST of the item would leave an extra empty first version, so version 1 is created with
+    // AddValidateUpdateItemUsingPath, whose folder path must be the list's real root folder.
+
+    private static readonly System.Text.RegularExpressions.Regex IsoUtcDate = new(@"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$");
+
+    public sealed record ListItemVersion(string Label, DateTimeOffset? Modified, string? EditorEmail, Dictionary<string, object?> Fields);
+
+    // Every version of one list item, oldest first. Only simple columns (text, number, choice, yes/no, date) are read per
+    // version; people, lookups, taxonomy and hyperlinks are applied once from the current item (CreateListItemWithHistoryAsync).
+    public async Task<List<ListItemVersion>> GetListItemVersionsAsync(
+        string siteUrl, string listId, string itemId, IEnumerable<SpColumnDef> columns, CancellationToken ct = default)
+    {
+        var simpleCols = columns.Where(c => !SpColumnDef.IsUserType(c.FieldType) && !SpColumnDef.IsLookupType(c.FieldType)
+                                            && !SpColumnDef.IsTaxonomyType(c.FieldType) && c.FieldType != SupportedFieldType.Hyperlink).ToList();
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({itemId})/versions";
+        using var resp = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Get, url);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            return r;
+        }, siteUrl, cancellationToken: ct);
+        var body = await resp.Content.ReadAsStringAsync(ct);
+        if (!resp.IsSuccessStatusCode)
+            throw new HttpRequestException($"HTTP {(int)resp.StatusCode} {body[..Math.Min(body.Length, 200)]}");
+
+        var versions = new List<(double Order, ListItemVersion Version)>();
+        using var doc = JsonDocument.Parse(body);
+        if (!doc.RootElement.TryGetProperty("value", out var values)) return [];
+        foreach (var el in values.EnumerateArray())
+        {
+            var label = el.TryGetProperty("VersionLabel", out var lp) && lp.ValueKind == JsonValueKind.String ? lp.GetString() ?? "" : "";
+            DateTimeOffset? modified = el.TryGetProperty("Modified", out var mp) && mp.ValueKind == JsonValueKind.String &&
+                DateTimeOffset.TryParse(mp.GetString(), System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.AssumeUniversal, out var m) ? m : null;
+
+            // The editor arrives as an object (or a string holding one) with an Email.
+            string? editor = null;
+            if (el.TryGetProperty("Editor", out var ep))
+            {
+                try
+                {
+                    var e = ep.ValueKind == JsonValueKind.String ? JsonDocument.Parse(ep.GetString() ?? "null").RootElement : ep;
+                    if (e.ValueKind == JsonValueKind.Object && e.TryGetProperty("Email", out var em) && em.ValueKind == JsonValueKind.String)
+                        editor = em.GetString();
+                }
+                catch (JsonException) { }
+            }
+
+            var fields = new Dictionary<string, object?>();
+            if (el.TryGetProperty("Title", out var tp) && tp.ValueKind == JsonValueKind.String) fields["Title"] = tp.GetString();
+            foreach (var col in simpleCols)
+                if (el.TryGetProperty(col.InternalName, out var vp) && vp.ValueKind != JsonValueKind.Null)
+                {
+                    var parsed = ParseFieldValue(vp, col.FieldType, col.LookupShowField);
+                    if (parsed != null) fields[col.InternalName] = parsed;
+                }
+
+            _ = double.TryParse(label, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var order);
+            versions.Add((order, new ListItemVersion(label, modified, editor, fields)));
+        }
+        return versions.OrderBy(v => v.Order).Select(v => v.Version).ToList();
+    }
+
+    // Creates the item and replays its versions (oldest first; `versions` already carry TARGET column names). Returns the new
+    // item ID (null when version 1 could not be created, so the caller can fall back to the plain create), a warning for
+    // anything that did not apply, and how many versions were written. `finalFields` is the whole current item: its people,
+    // lookup, taxonomy and hyperlink values, plus the true Created/Modified, are applied last, in place (no extra version).
+    public async Task<(string? Id, string? Warning, int Copied)> CreateListItemWithHistoryAsync(
+        string siteUrl, string listId, IReadOnlyList<ListItemVersion> versions,
+        Dictionary<string, object?> finalFields, string? createdDate, string? modifiedDate,
+        bool preserveMetadata, CancellationToken ct = default)
+    {
+        if (versions.Count == 0) return (null, null, 0);
+        var warnings = new List<string>();
+
+        // The list's real root folder (its URL name drops characters the title keeps).
+        string? rootUrl = null;
+        using (var rf = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Get, $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/rootfolder?$select=ServerRelativeUrl");
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            return r;
+        }, siteUrl, cancellationToken: ct))
+        {
+            if (rf.IsSuccessStatusCode)
+            {
+                using var rd = JsonDocument.Parse(await rf.Content.ReadAsStringAsync(ct));
+                rootUrl = rd.RootElement.TryGetProperty("ServerRelativeUrl", out var su) ? su.GetString() : null;
+            }
+        }
+        if (string.IsNullOrEmpty(rootUrl)) return (null, "list folder not found", 0);
+
+        string? itemId = null;
+        var copied = 0;
+        for (var i = 0; i < versions.Count; i++)
+        {
+            ct.ThrowIfCancellationRequested();
+            var v = versions[i];
+            var entries = new List<(string Name, string Value)>();
+            foreach (var (name, value) in v.Fields)
+            {
+                if (value == null) continue;
+                var text = FormatFieldValueForValidate(value);
+                // Dates are read as UTC ISO strings; ValidateUpdateListItem rejects those and wants the site-local form.
+                if (IsoUtcDate.IsMatch(text)) text = await ToSiteLocalFormDateAsync(siteUrl, text);
+                entries.Add((name, text));
+            }
+            if (preserveMetadata)
+                foreach (var (name, val) in await BuildDateAndPersonFormValuesAsync(
+                             siteUrl, v.Modified, i == 0 ? v.Modified : null, i == 0 ? v.EditorEmail : null, v.EditorEmail))
+                    entries.Add((name, val));
+
+            var rejected = new List<string>();
+            var skip = false;
+            for (var attempt = 0; ; attempt++)
+            {
+                var submitted  = entries.Select(e => e.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+                var formValues = entries.Select(e => new { FieldName = e.Name, FieldValue = e.Value }).ToList();
+                string url;
+                object payload;
+                if (i == 0)
+                {
+                    url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/AddValidateUpdateItemUsingPath()";
+                    payload = new
+                    {
+                        listItemCreateInfo = new { FolderPath = new { DecodedUrl = rootUrl }, UnderlyingObjectType = 0 },
+                        formValues, bNewDocumentUpdate = false,
+                    };
+                }
+                else
+                {
+                    url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({itemId})/ValidateUpdateListItem()";
+                    payload = new { formValues, bNewDocumentUpdate = false };
+                }
+                var json = JsonSerializer.Serialize(payload);
+                int status;
+                string respBody;
+                try
+                {
+                    using var resp = await SendSharePointRequestAsync(token =>
+                    {
+                        var r = new HttpRequestMessage(HttpMethod.Post, url);
+                        r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                        r.Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                        return r;
+                    }, siteUrl, cancellationToken: ct);
+                    status   = (int)resp.StatusCode;
+                    respBody = await resp.Content.ReadAsStringAsync(ct);
+                }
+                catch (HttpRequestException ex)
+                {
+                    // Once the item exists a network error must not escape: the caller would create it a second time.
+                    if (i == 0) return (null, ex.Message, 0);
+                    warnings.Add($"version {v.Label}: {ex.Message}");
+                    skip = true;
+                    break;
+                }
+                if (status is < 200 or >= 300)
+                {
+                    if (i == 0) return (null, $"HTTP {status} {respBody[..Math.Min(respBody.Length, 200)]}", 0);
+                    warnings.Add($"version {v.Label}: HTTP {status}");
+                    skip = true;
+                    break;
+                }
+
+                var bad = new List<string>();
+                string? newId = null;
+                try
+                {
+                    using var rd = JsonDocument.Parse(respBody);
+                    if (rd.RootElement.TryGetProperty("value", out var results))
+                        foreach (var entry in results.EnumerateArray())
+                        {
+                            var fn = entry.TryGetProperty("FieldName", out var fnp) ? fnp.GetString() ?? "" : "";
+                            if (i == 0 && fn == "Id" && entry.TryGetProperty("FieldValue", out var fvp)) newId = fvp.GetString();
+                            if (entry.TryGetProperty("HasException", out var hx) && hx.GetBoolean() && submitted.Contains(fn)) bad.Add(fn);
+                        }
+                }
+                catch (JsonException) { }
+
+                if (i == 0)
+                {
+                    // A rejected column makes the service save nothing (item id 0): try once more without it.
+                    if (string.IsNullOrEmpty(newId) || newId == "0")
+                    {
+                        if (bad.Count > 0 && attempt == 0)
+                        {
+                            entries.RemoveAll(e => bad.Contains(e.Name, StringComparer.OrdinalIgnoreCase));
+                            rejected.AddRange(bad);
+                            continue;
+                        }
+                        return (null, bad.Count > 0 ? $"fields rejected: {string.Join(", ", bad)}" : "the new item's ID was not returned", 0);
+                    }
+                    itemId = newId;
+                }
+                rejected.AddRange(bad);
+                break;
+            }
+            if (skip) continue;
+            copied++;
+            if (rejected.Count > 0) warnings.Add($"version {v.Label}: {string.Join(", ", rejected.Distinct())}");
+        }
+
+        var (_, complex) = SplitComplexFields(finalFields);
+        var finalError = await ValidateUpdateItemFieldsAsync(siteUrl, listId, itemId!, complex,
+            preserveMetadata ? createdDate : null, preserveMetadata ? modifiedDate : null, ct);
+        if (finalError != null) warnings.Add(finalError);
+        return (itemId, warnings.Count > 0 ? string.Join("; ", warnings) : null, copied);
+    }
+
     private static object? ExtractJsonValue(JsonElement el) => el.ValueKind switch
     {
         JsonValueKind.String  => el.GetString(),

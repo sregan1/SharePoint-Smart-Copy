@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 4.1.0  ·  October 2026**
+**Version 4.1.1  ·  October 2026**
 
 ---
 
@@ -244,6 +244,14 @@ When **Copy versions** is enabled, two additional controls appear:
 
 - **Copy all versions** — copies the complete version history for every file.
 - **Latest N versions** — copies only the N most recent versions of each file.
+
+*List item version history* (Library and Site scopes) — a separate row, **List item version history**, controls the history of list items (not files):
+
+- **Same as files** (default) — follows the file options above: off when **Copy versions** is unchecked, otherwise all versions or the latest N.
+- **All versions** — every version, whatever the file options say.
+- **Current only** — items copy with their current values only.
+
+History is replayed for items the run creates: the item is created from its oldest version, then each later version is written with its own values, Modified date and editor, so the target shows the same version labels (1.0, 2.0, 3.0…). Items that already exist on the target keep their own history and are updated in place as before. Text, number, choice, yes/no and date columns follow the history; people, lookup, taxonomy and link columns copy their current value only. If a version cannot be written, the item row says which part did not copy.
 
 The **Copy mode** selector is always available in Advanced options and controls how files are transferred:
 

@@ -23,6 +23,10 @@ public enum CopyMode { MigrationApi, EnhancedRest }
 // source was modified more recently (incremental re-copy for staged cutovers).
 public enum OverwriteMode { Skip, Overwrite, IfNewer }
 
+// Version history for list ITEMS (files follow CopyVersions/CopyAllVersions/MaxVersions):
+// SameAsFiles — follow the file version options; All — every version; Off — current values only.
+public enum ListItemVersionMode { SameAsFiles, All, Off }
+
 public enum AppTheme { System, Light, Dark }
 
 // SingleTenant: source and target share one sign-in (the original behavior).
@@ -90,6 +94,7 @@ public class AppSettings
     public bool     CopyVersions         { get; set; } = true;
     public bool     CopyAllVersions      { get; set; } = true;
     public int      MaxVersions          { get; set; } = 10;
+    public ListItemVersionMode ListItemVersions { get; set; } = ListItemVersionMode.SameAsFiles;
     public int      MaxParallelCopies    { get; set; } = 8;
     public CopyScope Scope                { get; set; } = CopyScope.Files;
     public bool      CopyCustomColumns    { get; set; } = false;

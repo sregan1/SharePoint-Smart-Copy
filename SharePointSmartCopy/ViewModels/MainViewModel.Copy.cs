@@ -898,6 +898,37 @@ public partial class MainViewModel : ObservableObject
 
         var targetListTitle = !string.IsNullOrEmpty(destinationTitle) ? destinationTitle : def.Title;
 
+        // A source item (or one of its versions) with target column names: a direct internal-name match first, then the
+        // display name, after the mapping dialog's skip / rename decisions.
+        Dictionary<string, object?> MapToTarget(Dictionary<string, object?> source)
+        {
+            var result = new Dictionary<string, object?>();
+            if (source.TryGetValue("Title", out var title) && title != null) result["Title"] = title.ToString();
+
+            foreach (var col in def.Columns)
+            {
+                if (!source.TryGetValue(col.InternalName, out var v) || v == null) continue;
+
+                string? targetKey = null;
+                if (mappingLookup.TryGetValue(col.InternalName, out var mapped))
+                {
+                    if (mapped == null) continue; // explicitly skipped in the mapping dialog
+                    if (targetByInternal.ContainsKey(mapped))
+                        targetKey = mapped;
+                }
+                if (targetKey == null)
+                {
+                    if (targetByInternal.ContainsKey(col.InternalName))
+                        targetKey = col.InternalName;
+                    else if (targetByDisplay.TryGetValue(col.DisplayName, out var tc))
+                        targetKey = tc.InternalName;
+                }
+                if (targetKey == null) continue;
+                result[targetKey] = v;
+            }
+            return result;
+        }
+
         foreach (var item in items)
         {
             _copyCts.Token.ThrowIfCancellationRequested();
@@ -915,30 +946,7 @@ public partial class MainViewModel : ObservableObject
             };
             System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(itemResult));
 
-            var fields = new Dictionary<string, object?>();
-            if (itemTitle != null) fields["Title"] = itemTitle;
-
-            foreach (var col in def.Columns)
-            {
-                if (!item.TryGetValue(col.InternalName, out var v) || v == null) continue;
-
-                string? targetKey = null;
-                if (mappingLookup.TryGetValue(col.InternalName, out var mapped))
-                {
-                    if (mapped == null) continue; // explicitly skipped in the mapping dialog
-                    if (targetByInternal.ContainsKey(mapped))
-                        targetKey = mapped;
-                }
-                if (targetKey == null)
-                {
-                    if (targetByInternal.ContainsKey(col.InternalName))
-                        targetKey = col.InternalName;
-                    else if (targetByDisplay.TryGetValue(col.DisplayName, out var tc))
-                        targetKey = tc.InternalName;
-                }
-                if (targetKey == null) continue;
-                fields[targetKey] = v;
-            }
+            var fields = MapToTarget(item);
 
             string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
             string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
@@ -980,13 +988,50 @@ public partial class MainViewModel : ObservableObject
                 }
                 else
                 {
-                    var (newItemId, createFieldError) = await SpService.CreateListItemAsync(
-                        TargetUrl.TrimEnd('/'), targetListId,
-                        fields, createdDate, modifiedDate,
-                        _copyCts.Token);
+                    // Version history is replayed for items this run creates (an existing target item keeps its own history).
+                    string? newItemId = null, createFieldError = null, historyWarning = null;
+                    var replayed = false;
+                    var versionLimit = ListItemVersionLimit;
+                    if (versionLimit > 0 && itemId != null)
+                    {
+                        try
+                        {
+                            var srcVersions = await SpService.GetListItemVersionsAsync(
+                                SourceUrl.TrimEnd('/'), def.SourceListId ?? string.Empty, itemId, def.Columns, _copyCts.Token);
+                            if (srcVersions.Count > 1)
+                            {
+                                if (srcVersions.Count > versionLimit)
+                                    srcVersions = srcVersions.Skip(srcVersions.Count - versionLimit).ToList();
+                                itemResult.VersionsTotal = srcVersions.Count;
+                                var mappedVersions = srcVersions.Select(sv => sv with { Fields = MapToTarget(sv.Fields) }).ToList();
+                                var (historyId, historyIssues, historyCopied) = await SpService.CreateListItemWithHistoryAsync(
+                                    TargetUrl.TrimEnd('/'), targetListId, mappedVersions, fields,
+                                    createdDate, modifiedDate, PreserveMetadata, _copyCts.Token);
+                                if (historyId != null)
+                                {
+                                    newItemId = historyId;
+                                    replayed  = true;
+                                    itemResult.VersionsCopied = historyCopied;
+                                    if (historyIssues != null) createFieldError = historyIssues;
+                                }
+                                else historyWarning = historyIssues;
+                            }
+                        }
+                        catch (OperationCanceledException) { throw; }
+                        catch (Exception historyEx) { historyWarning = historyEx.Message; }
+                    }
+                    if (!replayed)
+                        (newItemId, createFieldError) = await SpService.CreateListItemAsync(
+                            TargetUrl.TrimEnd('/'), targetListId,
+                            fields, createdDate, modifiedDate,
+                            _copyCts.Token);
                     resolvedTargetItemId    = newItemId;
                     itemResult.Status       = CopyStatus.Success;
-                    itemResult.ErrorMessage = createFieldError != null ? Loc.T("VM_FieldWarning", createFieldError) : null;
+                    itemResult.ErrorMessage = replayed
+                        ? (createFieldError != null ? Loc.T("VM_ItemHistoryPartial", createFieldError) : null)
+                        : (createFieldError != null ? Loc.T("VM_FieldWarning", createFieldError) + " " : "")
+                          + (historyWarning != null ? Loc.T("VM_ItemHistoryFailed", historyWarning) : "");
+                    if (string.IsNullOrEmpty(itemResult.ErrorMessage)) itemResult.ErrorMessage = null;
                 }
 
                 if (CopyPermissions && resolvedTargetItemId != null && hasUniquePerms)

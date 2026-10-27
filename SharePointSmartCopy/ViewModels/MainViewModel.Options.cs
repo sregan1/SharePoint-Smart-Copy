@@ -29,6 +29,7 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(ShowLibraryFullCopyMapping))]
     [NotifyPropertyChangedFor(nameof(LibrarySummaryCount))]
     [NotifyPropertyChangedFor(nameof(LibraryPreviewItems))]
+    [NotifyPropertyChangedFor(nameof(ShowListItemVersionOption))]
     [NotifyPropertyChangedFor(nameof(EffectiveCopyCustomColumns))]
     [NotifyPropertyChangedFor(nameof(CustomFieldColumnWidth))]
     [NotifyPropertyChangedFor(nameof(CustomFieldDetailsColumnWidth))]
@@ -103,6 +104,7 @@ public partial class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(SelectedItemCount));
         OnPropertyChanged(nameof(CopyPreviewTotalSizeDisplay));
         OnPropertyChanged(nameof(LibraryPreviewItems));
+        OnPropertyChanged(nameof(ShowListItemVersionOption));
         NextCommand.NotifyCanExecuteChanged();
     }
 
@@ -112,6 +114,34 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool _copyVersions = true;
     [ObservableProperty] private bool _copyAllVersions = true;
     [ObservableProperty] private int _maxVersions = 10;
+
+    // List item version history: follow the file options, always all versions, or current values only.
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ListItemVersionsSame), nameof(ListItemVersionsAll), nameof(ListItemVersionsOff))]
+    private ListItemVersionMode _listItemVersions = ListItemVersionMode.SameAsFiles;
+
+    public bool ListItemVersionsSame { get => ListItemVersions == ListItemVersionMode.SameAsFiles; set { if (value) ListItemVersions = ListItemVersionMode.SameAsFiles; } }
+    public bool ListItemVersionsAll  { get => ListItemVersions == ListItemVersionMode.All;         set { if (value) ListItemVersions = ListItemVersionMode.All; } }
+    public bool ListItemVersionsOff  { get => ListItemVersions == ListItemVersionMode.Off;         set { if (value) ListItemVersions = ListItemVersionMode.Off; } }
+
+    // The list item version option only matters when list items will actually be copied: a custom list (or some of its
+    // items) is selected in Library scope, or, in Site scope, the site has lists and Copy library content is on.
+    public bool ShowListItemVersionOption => IsSiteScope
+        ? CopyLibraryContent && SourceLibraries.Any(n => n.IsCustomList)
+        : IsLibraryScope && SourceLibraries.Any(HasListItemsSelected);
+
+    private static bool HasListItemsSelected(SharePointNode node) =>
+        node.GetCheckedNodes().Any(n => n.Type == NodeType.Library && n.IsCustomList)
+        || (node.IsCustomList && (node.IsChecked == null
+            || node.Children.Any(c => c.Type == NodeType.ListItem && c.IsChecked == true)));
+
+    // Versions to replay per list item: 0 = none, otherwise the number of latest versions (int.MaxValue = all).
+    private int ListItemVersionLimit => ListItemVersions switch
+    {
+        ListItemVersionMode.Off   => 0,
+        ListItemVersionMode.All   => int.MaxValue,
+        _ => !CopyVersions ? 0 : CopyAllVersions ? int.MaxValue : Math.Max(1, MaxVersions),
+    };
     [ObservableProperty] private int _maxParallelCopies = 4;
     [ObservableProperty] private CopyMode _copyMode = CopyMode.MigrationApi;
     [ObservableProperty] private ObservableCollection<CopyJob> _copyJobs = [];
@@ -129,6 +159,7 @@ public partial class MainViewModel : ObservableObject
     private bool _copyCustomColumns = false;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowFileCopyOptions))]
+    [NotifyPropertyChangedFor(nameof(ShowListItemVersionOption))]
     private bool _copyLibraryContent = true;
     [ObservableProperty] private bool _remapPageWebPartUrls = true;
     [ObservableProperty] private bool _copyNavigation = true;

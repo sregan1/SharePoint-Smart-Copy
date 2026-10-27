@@ -239,6 +239,13 @@
   <data name="VM_AlreadyExists" xml:space="preserve"><value>Already exists</value></data>
   <data name="VM_UpdatedFieldWarning" xml:space="preserve"><value>Updated (field warning: {0})</value></data>
   <data name="VM_Updated" xml:space="preserve"><value>Updated</value></data>
+  <data name="Ui_ListItemVersions" xml:space="preserve"><value>List item version history:</value></data>
+  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Same as files</value></data>
+  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>All versions</value></data>
+  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Current only</value></data>
+  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Copies each new list item's version history (values, dates and editors) by replaying its versions on the target. "Same as files" follows the file version options above. Items that already exist on the target keep their own history. People, lookup, taxonomy and link columns copy their current value only.</value></data>
+  <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>version history: some parts did not copy ({0})</value></data>
+  <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>version history was not copied ({0}); the item has its current values only</value></data>
   <data name="VM_FieldWarning" xml:space="preserve"><value>field warning: {0}</value></data>
   <data name="VM_ColumnCreated" xml:space="preserve"><value>Column created: {0}</value></data>
   <data name="VM_ColumnsCreated" xml:space="preserve"><value>{0} columns created: {1}</value></data>

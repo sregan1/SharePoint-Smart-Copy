@@ -218,11 +218,14 @@ public sealed class ActivityLogWriter : IDisposable
                 using var writer = new StreamWriter(stream, new UTF8Encoding(false));
                 writer.Write(header);
                 writer.Flush();
-                await foreach (var line in _lines.Reader.ReadAllAsync())
+                // Not ChannelReader.Count: a single-reader channel cannot count, so that threw on the very first line and
+                // (the catch below being silent) ended the log there, leaving every activity log at its header.
+                while (await _lines.Reader.WaitToReadAsync())
                 {
-                    writer.WriteLine(line);
+                    while (_lines.Reader.TryRead(out var line))
+                        writer.WriteLine(line);
                     // Flush whenever the queue drains, so a crash loses at most the last burst.
-                    if (_lines.Reader.Count == 0) writer.Flush();
+                    writer.Flush();
                 }
                 writer.Flush();
             }

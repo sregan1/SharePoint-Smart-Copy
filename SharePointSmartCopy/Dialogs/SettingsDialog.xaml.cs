@@ -128,6 +128,7 @@ public partial class SettingsDialog : Window
             CopyVersions            = _original.CopyVersions,
             CopyAllVersions         = _original.CopyAllVersions,
             MaxVersions             = _original.MaxVersions,
+            ListItemVersions        = _original.ListItemVersions,
             MaxParallelCopies       = _original.MaxParallelCopies,
             Scope                   = _original.Scope,
             CopyCustomColumns       = _original.CopyCustomColumns,

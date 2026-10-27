@@ -189,6 +189,7 @@ public partial class MainViewModel : ObservableObject
                     Settings.CopyVersions         = CopyVersions;
                     Settings.CopyAllVersions      = CopyAllVersions;
                     Settings.MaxVersions          = MaxVersions;
+                    Settings.ListItemVersions     = ListItemVersions;
                     Settings.MaxParallelCopies    = MaxParallelCopies;
                     Settings.CopyCustomColumns    = CopyCustomColumns;
                     Settings.CopyLibraryContent   = CopyLibraryContent;

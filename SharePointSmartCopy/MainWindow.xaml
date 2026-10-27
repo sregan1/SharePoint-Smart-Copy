@@ -792,7 +792,7 @@
                  way to reach it. The tree keeps its own internal scroll. -->
             <ScrollViewer Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=2}"
                           VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <Grid MaxWidth="1000" HorizontalAlignment="Center">
+            <Grid MaxWidth="1000" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" MinWidth="300"/>
                     <ColumnDefinition Width="16"/>
@@ -934,7 +934,7 @@
                         </Border>
                         <Border Style="{StaticResource SuccessBanner}" Padding="10,6" Margin="0,12,0,0"
                                 Visibility="{Binding TargetConnected, Converter={StaticResource BoolToVis}}">
-                            <TextBlock FontSize="12">
+                            <TextBlock FontSize="12" TextWrapping="Wrap">
                                 <Run FontFamily="{StaticResource GlyphFont}" Text="&#xE73E;" Foreground="{DynamicResource SuccessBrush}"/>
                                 <Run Text="{loc:Loc Ui_Target2}" FontWeight="SemiBold"/>
                                 <Run Text="{Binding TargetUrl}"/>
@@ -1081,6 +1081,26 @@
                                             <TextBlock Text="{loc:Loc Ui_Versions}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </RadioButton>
+                                </StackPanel>
+                                <StackPanel Margin="0,0,0,8"
+                                            Visibility="{Binding ShowListItemVersionOption, Converter={StaticResource BoolToVis}}">
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="{loc:Loc Ui_ListItemVersions}" FontSize="13" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                        <RadioButton GroupName="ListItemVersionDepth" Content="{loc:Loc Ui_ListItemVersionsSame}"
+                                                     IsChecked="{Binding ListItemVersionsSame}" FontSize="12" VerticalAlignment="Center"/>
+                                        <RadioButton GroupName="ListItemVersionDepth" Content="{loc:Loc Ui_ListItemVersionsAll}"
+                                                     IsChecked="{Binding ListItemVersionsAll}" FontSize="12" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                                        <RadioButton GroupName="ListItemVersionDepth" Content="{loc:Loc Ui_ListItemVersionsOff}"
+                                                     IsChecked="{Binding ListItemVersionsOff}" FontSize="12" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                                        <TextBlock Style="{StaticResource ToolTipIcon}">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip MaxWidth="320">
+                                                    <TextBlock TextWrapping="Wrap" FontSize="12"
+                                                               Text="{loc:Loc Ui_ListItemVersionsTip}"/>
+                                                </ToolTip>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </WrapPanel>
                                 </StackPanel>
                                 <!-- ── Site-scope only: Navigation ─── -->
                                 <CheckBox IsChecked="{Binding CopyNavigation}" Margin="0,0,0,8" FontSize="13"

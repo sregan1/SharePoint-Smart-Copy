@@ -71,6 +71,7 @@ public partial class MainViewModel : ObservableObject
         CopyVersions      = Settings.CopyVersions;
         CopyAllVersions   = Settings.CopyAllVersions;
         MaxVersions       = Settings.MaxVersions;
+        ListItemVersions  = Settings.ListItemVersions;
         MaxParallelCopies = Settings.MaxParallelCopies;
         PreserveMetadata    = Settings.PreserveMetadata;
         ReapplyFolderMetadataEveryRun = Settings.ReapplyFolderMetadataEveryRun;
@@ -85,6 +86,7 @@ public partial class MainViewModel : ObservableObject
         {
             OnPropertyChanged(nameof(LibrarySummaryCount));
             OnPropertyChanged(nameof(LibraryPreviewItems));
+            OnPropertyChanged(nameof(ShowListItemVersionOption));
             OnPropertyChanged(nameof(CopyPreviewTotalSizeDisplay));
         };
 

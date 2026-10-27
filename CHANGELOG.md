@@ -4,7 +4,25 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
-## Unreleased
+## 4.1.1 — 2026-10-26
+
+### Added
+
+- **List item version history** — copying a list used to give every item one version, although the Copy version history option and the README implied history copied for everything (only file versions in document libraries did). A new item is now created from its oldest version and each later version is replayed with its own values, Modified date and editor, so the copy shows the same version labels (proven on a live tenant: 4 source versions gave 1.0–4.0 with matching values and dates). A **List item version history** option (Library and Site scopes) chooses *Same as files* (the default: follows Copy versions and All / Latest N), *All versions* or *Current only*. Items that already exist on the target keep their own history. Text, number, choice, yes/no and date columns follow the history; people, lookup, taxonomy and link columns copy their current value only. Each replayed version is one extra write, so a large list takes longer with history on. Replaying needs `ValidateUpdateListItem` with `bNewDocumentUpdate=false` (the value `true` creates no version) and an item created with its first version's values, so no empty extra first version appears.
+
+### Changed
+
+- **Lists show in Site scope on the Options screen** — only Library scope loaded custom lists, so a Site copy never listed them and the list item version option could not apply. Site scope now loads them too (as top-level entries without expandable items).
+- **List item version option appears only when it applies** — it is shown when list items will be copied (a custom list or some of its items is selected in Library scope, or, in Site scope, the site has lists and Copy library content is on), not for every Library or Site copy.
+- **Target step no longer jumps while typing a URL** — the step's grid sized itself to its content, so a longer target URL widened the columns and shifted the whole layout. The grid now stretches to a fixed maximum width and the connected-site banner wraps.
+
+### Fixed
+
+- **Activity logs were empty** — every `activity-*.log` stopped at its two header lines. The writer read `ChannelReader.Count`, which throws on a single-reader channel, and the silent catch ended the log on the first line, so a failed run left nothing to diagnose (a 14-minute run with 5,897 "Invalid request" failures had no log). The writer now drains the queue with `TryRead` and flushes each burst.
+
+---
+
+## 4.1.0 — 2026-10-26
 
 ### Added
 

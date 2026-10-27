@@ -99,7 +99,9 @@ public partial class MainViewModel : ObservableObject
             var libs = await SpService.GetLibrariesAsync(SourceSiteId, SourceUrl.Trim());
 
             List<(string Id, string Title, int BaseTemplate)> customLists = [];
-            if (CopyScope == CopyScope.Library)
+            // Library scope picks lists in the tree; Site scope copies every list, so they are loaded too (the Options
+            // step lists them, counts them, and decides from them whether the list item version option applies).
+            if (CopyScope is CopyScope.Library or CopyScope.Site)
                 customLists = await SpService.GetCustomListsAsync(SourceUrl.TrimEnd('/'));
 
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
@@ -125,11 +127,13 @@ public partial class MainViewModel : ObservableObject
                         SiteId           = SourceSiteId,
                         SiteUrl          = SourceUrl,
                         Type             = NodeType.Library,
-                        HasChildren      = true,
+                        HasChildren      = CopyScope == CopyScope.Library,
                         IsCustomList     = true,
                         ListBaseTemplate = baseTemplate,
                     };
-                    listNode.Children.Add(new SharePointNode { Name = "__placeholder__", Id = "ph" });
+                    // Site scope has no source tree to expand, so no lazy-load placeholder.
+                    if (CopyScope == CopyScope.Library)
+                        listNode.Children.Add(new SharePointNode { Name = "__placeholder__", Id = "ph" });
                     SourceLibraries.Add(listNode);
                 }
             });
