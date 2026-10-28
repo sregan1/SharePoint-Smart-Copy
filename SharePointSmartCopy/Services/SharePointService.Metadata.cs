@@ -1146,27 +1146,36 @@ public partial class SharePointService
         // Cross-tenant: an author/editor who does not exist in the target makes ValidateUpdateListItem reject
         // the person field — and its all-or-nothing commit then takes the DATES with it. Confirm each person
         // first; a missing one is recorded for the report and left out, so the dates still land.
-        if (IsCrossTenant)
+        // Ask the target site for each person's real login (a guest's is the "#EXT#" form, which the plain claims string
+        // does not match, so SharePoint would stamp the calling account). Fall back to the plain claims form when the site
+        // cannot resolve them, unless cross-tenant, where a missing person is recorded and left out.
+        string? createdLogin = null, modifiedLogin = null;
+        if (!string.IsNullOrEmpty(createdByEmail))
         {
-            if (!string.IsNullOrEmpty(createdByEmail) && !await TargetUserExistsAsync(siteUrl, createdByEmail))
+            createdLogin = await ResolveTargetLoginAsync(siteUrl, createdByEmail);
+            if (createdLogin == null)
             {
-                Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
-                createdByEmail = null;
+                if (IsCrossTenant) Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
+                else createdLogin = $"i:0#.f|membership|{createdByEmail}";
             }
-            if (!string.IsNullOrEmpty(modifiedByEmail) && !await TargetUserExistsAsync(siteUrl, modifiedByEmail))
+        }
+        if (!string.IsNullOrEmpty(modifiedByEmail))
+        {
+            modifiedLogin = await ResolveTargetLoginAsync(siteUrl, modifiedByEmail);
+            if (modifiedLogin == null)
             {
-                Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
-                modifiedByEmail = null;
+                if (IsCrossTenant) Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
+                else modifiedLogin = $"i:0#.f|membership|{modifiedByEmail}";
             }
         }
         if (modified.HasValue)
             values.Add(("Modified", await FormatAsSiteLocalDateStringAsync(siteUrl, modified.Value)));
         if (created.HasValue)
             values.Add(("Created", await FormatAsSiteLocalDateStringAsync(siteUrl, created.Value)));
-        if (!string.IsNullOrEmpty(modifiedByEmail))
-            values.Add(("Editor", $"i:0#.f|membership|{modifiedByEmail}"));
-        if (!string.IsNullOrEmpty(createdByEmail))
-            values.Add(("Author", $"i:0#.f|membership|{createdByEmail}"));
+        if (!string.IsNullOrEmpty(modifiedLogin))
+            values.Add(("Editor", modifiedLogin));
+        if (!string.IsNullOrEmpty(createdLogin))
+            values.Add(("Author", createdLogin));
         return values;
     }
 

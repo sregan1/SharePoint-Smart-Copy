@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 4.1.1  ·  October 2026**
+**Version 4.1.2  ·  October 2026**
 
 ---
 

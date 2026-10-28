@@ -163,9 +163,48 @@ public partial class SharePointService
             using var doc = JsonDocument.Parse(respBody);
             int? id = doc.RootElement.TryGetProperty("Id", out var ip) ? ip.GetInt32() : null;
             if (id != null) _ensureUserCache[cacheKey] = id;
+            if (id != null && doc.RootElement.TryGetProperty("LoginName", out var lp) && lp.ValueKind == JsonValueKind.String)
+                _ensuredLoginCache[cacheKey] = lp.GetString()!;
             return id;
         }
         catch { return null; }
+    }
+
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, string> _ensuredLoginCache = new();
+
+    // The login the TARGET site itself uses for a person, for stamping Author/Editor. A guest's login is the
+    // "user_ext.com#EXT#@tenant" form, so "i:0#.f|membership|<real email>" does not match them and SharePoint silently
+    // stamps the calling account instead. Ask the site: ensureuser first (it returns the true LoginName), then the site's
+    // user list by email. Null when the person cannot be found.
+    internal async Task<string?> ResolveTargetLoginAsync(string siteUrl, string email, CancellationToken ct = default)
+    {
+        if (email.Contains('|')) return email; // already a claims login
+        var claims = $"i:0#.f|membership|{email}";
+        var key    = $"{siteUrl}|{claims}";
+        if (await EnsureUserAsync(siteUrl, claims, ct) != null)
+            return _ensuredLoginCache.TryGetValue(key, out var login) ? login : claims;
+
+        // ensureuser can fail for a guest addressed by their real email: look for them in the site's user list.
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/siteusers?$select=LoginName&$filter=Email eq '{email.Replace("'", "''")}'";
+        try
+        {
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl, cancellationToken: ct);
+            if (!resp.IsSuccessStatusCode) return null;
+            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+            if (doc.RootElement.TryGetProperty("value", out var users))
+                foreach (var u in users.EnumerateArray())
+                    if (u.TryGetProperty("LoginName", out var ln) && ln.GetString() is { Length: > 0 } name &&
+                        name.StartsWith("i:0#.f|membership|", StringComparison.OrdinalIgnoreCase))
+                        return name;
+        }
+        catch { }
+        return null;
     }
 
     // "Not found" results, remembered briefly. EnsureUserAsync deliberately never caches a failure (it could

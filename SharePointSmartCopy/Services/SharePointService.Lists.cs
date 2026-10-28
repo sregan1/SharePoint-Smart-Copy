@@ -360,7 +360,7 @@ public partial class SharePointService
         string siteUrl, string listId, string itemId,
         List<(string Name, object Value)> complexFields,
         string? createdDate, string? modifiedDate,
-        CancellationToken ct = default)
+        CancellationToken ct = default, string? editorLogin = null)
     {
         var formValues      = new List<object>();
         var submittedFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -408,6 +408,12 @@ public partial class SharePointService
         // the same way the file/folder paths do (see BuildDateAndPersonFormValuesAsync).
         if (createdDate  != null) { formValues.Add(new { FieldName = "Created",  FieldValue = await ToSiteLocalFormDateAsync(siteUrl, createdDate) });  submittedFields.Add("Created"); }
         if (modifiedDate != null) { formValues.Add(new { FieldName = "Modified", FieldValue = await ToSiteLocalFormDateAsync(siteUrl, modifiedDate) }); submittedFields.Add("Modified"); }
+        // Without this the write itself stamps the calling account as the current version's editor.
+        if (!string.IsNullOrEmpty(editorLogin))
+        {
+            formValues.Add(new { FieldName = "Editor", FieldValue = JsonSerializer.Serialize(new[] { new { Key = editorLogin } }) });
+            submittedFields.Add("Editor");
+        }
         if (formValues.Count == 0) return lookupWarning;
 
         var payload = JsonSerializer.Serialize(new { formValues, bNewDocumentUpdate = true });
@@ -606,7 +612,9 @@ public partial class SharePointService
             if (preserveMetadata)
                 foreach (var (name, val) in await BuildDateAndPersonFormValuesAsync(
                              siteUrl, v.Modified, i == 0 ? v.Modified : null, i == 0 ? v.EditorEmail : null, v.EditorEmail))
-                    entries.Add((name, val));
+                    // A person column's documented formValues shape is a JSON array of {"Key": login}; the plain login
+                    // string was accepted but stamped the calling account on every version.
+                    entries.Add((name, name is "Editor" or "Author" ? JsonSerializer.Serialize(new[] { new { Key = val } }) : val));
 
             var rejected = new List<string>();
             var skip = false;
@@ -700,9 +708,15 @@ public partial class SharePointService
             if (rejected.Count > 0) warnings.Add($"version {v.Label}: {string.Join(", ", rejected.Distinct())}");
         }
 
+        // The final pass would otherwise re-stamp the current version with the calling account, so carry the last version's editor.
+        string? lastEditorLogin = null;
+        var lastEditor = Identity.MapEmail(versions[^1].EditorEmail);
+        if (preserveMetadata && !string.IsNullOrEmpty(lastEditor))
+            lastEditorLogin = await ResolveTargetLoginAsync(siteUrl, lastEditor, ct);
+
         var (_, complex) = SplitComplexFields(finalFields);
         var finalError = await ValidateUpdateItemFieldsAsync(siteUrl, listId, itemId!, complex,
-            preserveMetadata ? createdDate : null, preserveMetadata ? modifiedDate : null, ct);
+            preserveMetadata ? createdDate : null, preserveMetadata ? modifiedDate : null, ct, lastEditorLogin);
         if (finalError != null) warnings.Add(finalError);
         return (itemId, warnings.Count > 0 ? string.Join("; ", warnings) : null, copied);
     }

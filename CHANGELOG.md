@@ -4,6 +4,14 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 4.1.2 — 2026-10-27
+
+### Fixed
+
+- **List item version history kept the connection account as editor on every version** — a version edited by someone else showed the account that ran the copy. Three causes, each confirmed in a live read-back: Editor/Author were sent as a plain login string, which SharePoint accepted but ignored (they are now sent in the documented JSON form, `[{"Key": login}]`); a guest's real login on the target is the `user_ext.com#EXT#@tenant` form, so the plain `i:0#.f|membership|<email>` never matched them (the person is now resolved through the target site, by ensureuser and then the site's user list); and the final in-place pass that applies people, lookup and taxonomy columns re-stamped the current version as the connection account, so an item whose last editor was someone else lost it (the last version's editor is now sent in that pass). The same site-based resolution applies to the Author/Editor stamped on files and folders.
+
+---
+
 ## 4.1.1 — 2026-10-26
 
 ### Added
