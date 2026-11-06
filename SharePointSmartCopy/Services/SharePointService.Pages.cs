@@ -198,7 +198,7 @@ public partial class SharePointService
 
         // Step 2: fetch full content by integer ID
         var pageUrl = $"{siteUrl.TrimEnd('/')}/_api/sitepages/pages({pageId})" +
-                      "?$select=CanvasContent1,LayoutWebpartsContent,BannerImageUrl,Description,PageLayoutType,PromotedState";
+                      "?$select=Title,CanvasContent1,LayoutWebpartsContent,BannerImageUrl,Description,PageLayoutType,PromotedState";
         System.Diagnostics.Debug.WriteLine($"[GetPageMetadata] step2 GET {pageUrl}");
         try
         {
@@ -224,6 +224,7 @@ public partial class SharePointService
 
             var meta = new PageMetadata
             {
+                Title                 = root.TryGetProperty("Title",                 out var tt) && tt.ValueKind == JsonValueKind.String ? tt.GetString() : null,
                 CanvasContent1        = root.TryGetProperty("CanvasContent1",        out var c1) ? c1.GetString() : null,
                 LayoutWebpartsContent = root.TryGetProperty("LayoutWebpartsContent", out var lw) ? lw.GetString() : null,
                 BannerImageUrl        = root.TryGetProperty("BannerImageUrl",        out var bi) ? bi.GetString() : null,

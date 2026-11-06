@@ -59,7 +59,10 @@ public sealed class FormsCopier
             return Failed(Loc.T("Forms_Cp_ReadFail", st));
         }
         var src = JsonNode.Parse(body)!.AsObject();
-        var questions = src["questions"]?.AsArray().OrderBy(q => q!["order"]!.GetValue<double>()).ToList() ?? [];
+        // A question without a usable "order" goes last instead of throwing before the form is even created.
+        var questions = src["questions"]?.AsArray()
+            .OrderBy(q => q?["order"] is JsonValue ov && ov.TryGetValue<double>(out var order) ? order : double.MaxValue)
+            .ToList() ?? [];
 
         // The form type ("form" or "quiz") can only be set at creation; PATCHing type/flags later is rejected.
         var create = new JsonObject { ["title"] = newTitle, ["description"] = src["description"]?.DeepClone() };
@@ -70,7 +73,14 @@ public sealed class FormsCopier
             _log($"FAIL create: {st} {Trim(body)}");
             return Failed(Loc.T("Forms_Cp_CreateFail", st, ShortReason(body)), questions.Count);
         }
-        var newId = JsonNode.Parse(body)!["id"]!.GetValue<string>();
+        string? newId = null;
+        try { newId = JsonNode.Parse(body)?["id"]?.GetValue<string>(); }
+        catch (Exception ex) when (ex is JsonException or InvalidOperationException or FormatException) { /* handled below */ }
+        if (string.IsNullOrEmpty(newId))
+        {
+            _log($"FAIL create: no form id in the response {Trim(body)}");
+            return Failed(Loc.T("Forms_Cp_CreateFail", st, ShortReason(body)), questions.Count);
+        }
         _log($"created {newId}");
 
         var copied = 0;
@@ -95,7 +105,16 @@ public sealed class FormsCopier
         // Known limits, worth a look in the copy
         // Only the images that really did not arrive: the source having an image says nothing about the copy (the background is
         // carried over by the property patch, and the old note claimed otherwise).
-        var missingImages = await MissingImagesAsync(src, newId, ct);
+        // The form exists by now, so a failure here (a download or an unusual image URL) must not lose its ID: it only
+        // costs the image check, and the form is reported with a warning instead.
+        Dictionary<string, string?> missingImages;
+        try { missingImages = await MissingImagesAsync(src, newId, ct); }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            _log($"image check failed: {ex.Message}");
+            warnings.Add(Loc.T("Forms_Cp_ImageCheckFailed", ex.Message));
+            missingImages = [];
+        }
         foreach (var (prop, label) in new[] { ("background", Loc.T("Forms_Cp_LabelBackground")), ("logo", Loc.T("Forms_Cp_LabelLogo")), ("header", Loc.T("Forms_Cp_LabelHeader")) })
             if (missingImages.TryGetValue(prop, out var savedAt))
                 notes.Add(savedAt is null ? Loc.T("Forms_Cp_ImageNote", label) : Loc.T("Forms_Cp_ImageSaved", label, savedAt));
@@ -174,10 +193,18 @@ public sealed class FormsCopier
         _log($"  activate: {st}");
         if (st >= 400) warnings.Add(Loc.T("Forms_Cp_NotVisible", st));
 
-        // Verify: the copy should hold as many questions as the source.
-        (st, body) = await _target.SendRawAsync(HttpMethod.Get, $"formapi/api/forms('{newId}')/questions", null, ct);
-        if (st == 200 && JsonNode.Parse(body)?["value"] is JsonArray found && found.Count != questions.Count)
-            warnings.Add(Loc.T("Forms_Cp_CountMismatch", found.Count, questions.Count));
+        // Verify: the copy should hold as many questions as the source. A hiccup in this read-back must not turn a
+        // finished, activated form into a "failed" one, so any problem here is only logged.
+        try
+        {
+            (st, body) = await _target.SendRawAsync(HttpMethod.Get, $"formapi/api/forms('{newId}')/questions", null, ct);
+            if (st == 200 && JsonNode.Parse(body)?["value"] is JsonArray found && found.Count != questions.Count)
+                warnings.Add(Loc.T("Forms_Cp_CountMismatch", found.Count, questions.Count));
+        }
+        catch (Exception ex) when (ex is JsonException or InvalidOperationException or HttpRequestException)
+        {
+            _log($"  verify skipped: {ex.Message}");
+        }
     }
 
     // Ranking and Likert questions can come back from the service with default content (one "Option 1", no rating scale) when

@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Προορισμός: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Λίστα προορισμού</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Επιλογές αντιγραφής</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Αντιγραφή περιεχομένου βιβλιοθήκης (αρχεία)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Όταν είναι ανενεργό, αναδημιουργούνται μόνο το σχήμα στηλών και οι ρυθμίσεις της βιβλιοθήκης — δεν αντιγράφονται αρχεία.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Αντιγραφή αρχείων και στοιχείων λίστας (περιεχόμενο)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Όταν είναι απενεργοποιημένο, αντιγράφεται μόνο η δομή και όχι αρχεία ή στοιχεία λίστας: στήλες, προβολές, ρυθμίσεις λίστας, τύποι περιεχομένου και, στο εύρος Ολόκληρος ο ιστότοπος, στήλες ιστότοπου, πλοήγηση και ρυθμίσεις ιστότοπου.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Αν το αρχείο υπάρχει:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Παράλειψη</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Αντικατάσταση</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Όλες οι εκδόσεις</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Τελευταίες </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> εκδόσεις</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Αντιγραφή και των λιστών στις οποίες παραπέμπουν οι λίστες μου</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>Όταν μια επιλεγμένη λίστα έχει στήλη αναζήτησης (Lookup), αντιγράφεται και η λίστα στην οποία παραπέμπει, ώστε να δημιουργηθεί η στήλη και να επιλυθούν οι τιμές της. Απενεργοποιήστε το για να αντιγραφούν μόνο όσα επιλέξατε.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Τιμές αναζήτησης</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} αντιστοιχίστηκαν ανά στοιχείο, {1} αντιστοιχίστηκαν ανά κείμενο, {2} δεν βρέθηκαν.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Διαχειριζόμενα μεταδεδομένα</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} τιμές όρων αντιγράφηκαν, {1} παραλείφθηκαν (ο όρος δεν βρέθηκε στο σύνολο που αντιγράφηκε).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>Η στήλη διαχειριζόμενων μεταδεδομένων &quot;{0}&quot; δεν δημιουργήθηκε: το σύνολο όρων της ανήκει σε άλλον μισθωτή και η αντιγραφή συνόλων όρων δεν είναι διαθέσιμη (συνδεθείτε και στους δύο μισθωτές και παραχωρήστε την άδεια TermStore.ReadWrite.All).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>Το σύνολο όρων &quot;{0}&quot; αντιγράφηκε στον προορισμό: {1} δημιουργήθηκαν, {2} υπήρχαν ήδη.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Αντιγραφή συνόλων όρων διαχειριζόμενων μεταδεδομένων στον μισθωτή προορισμού</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>Μια στήλη διαχειριζόμενων μεταδεδομένων είναι συνδεδεμένη με ένα σύνολο όρων στο κατάστημα όρων του μισθωτή προέλευσης. Όταν αυτή η επιλογή είναι ενεργή, το σύνολο όρων (όροι, ετικέτες, συνώνυμα, περιγραφές) αντιγράφεται στο κατάστημα όρων του προορισμού, η στήλη συνδέεται με το αντίγραφο και κάθε τιμή αντιστοιχίζεται εκ νέου. Απαιτεί την προαιρετική άδεια TermStore.ReadWrite.All και έναν ρόλο στο κατάστημα όρων του προορισμού.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Αναζητά τη λίστα "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Αναζητά μια λίστα σε άλλον ιστότοπο</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Διαχειριζόμενα μεταδεδομένα: το σύνολο όρων τους θα αντιγραφεί στον μισθωτή προορισμού</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Διαχειριζόμενα μεταδεδομένα: χρησιμοποιούν το ίδιο σύνολο όρων (ίδιος μισθωτής)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>Το προβαλλόμενο πεδίο "{0}" δεν δημιουργήθηκε: η στήλη αναζήτησής του "{1}" δεν υπάρχει στη λίστα προορισμού.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>Το προβαλλόμενο πεδίο "{0}" δεν δημιουργήθηκε: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Σύνδεση με εγγραφή εφαρμογής:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Δομή προς αντιγραφή</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Ό,τι είναι επιλεγμένο εδώ δημιουργείται ξανά στον προορισμό μαζί με τα δεδομένα. Μια λίστα ή βιβλιοθήκη που υπάρχει ήδη εκεί λαμβάνει μόνο τους τύπους περιεχομένου και τις προβολές που της λείπουν.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Προβολές (φίλτρα, ομαδοποίηση, στήλες, προεπιλεγμένη προβολή, προβολές ημερολογίου και πίνακα)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Ρυθμίσεις λίστας (έγκριση, έξοδος, συνημμένα, φάκελοι, ασφάλεια σε επίπεδο στοιχείου)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Τύποι περιεχομένου και τα πρότυπα εγγράφων τους</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Κανόνες επικύρωσης και μορφοποίηση στηλών</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Πρότυπο βιβλιοθήκης και προεπιλεγμένες τιμές φακέλων</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Στήλες τοποθεσίας και τύποι περιεχομένου τοποθεσίας</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Ρυθμίσεις τοποθεσίας (περιγραφή, γρήγορη εκκίνηση, προβολή δέντρου και άλλα)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Προβολές</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Ρυθμίσεις λίστας</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Τύποι περιεχομένου</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Κανόνες στηλών</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Πρότυπα και προεπιλογές</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Στήλες και τύποι τοποθεσίας</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Πλοήγηση</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Ρυθμίσεις τοποθεσίας</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Λίστες αναζήτησης</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Σύνολα όρων</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Δομή: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>καμία</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Εμφάνιση περισσότερων</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Εμφάνιση λιγότερων</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Αντιγραφή πλοήγησης (Γρήγορη εκκίνηση και επάνω γραμμή)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Αντικαθιστά την πλοήγηση του προορισμού με τους συνδέσμους της πηγής. Τα URL αντιστοιχίζονται στον ιστότοπο προορισμού.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Αντιγραφή δικαιωμάτων</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Αντιγραφή τιμών προσαρμοσμένων στηλών</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Αντιγράφει τιμές στηλών τύπου Κείμενο, Αριθμός, Επιλογή, Ημερομηνία, Boolean, Πολλαπλή επιλογή, Άτομο και Managed Metadata. Οι στήλες αναζήτησης δεν υποστηρίζονται.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Ενεργοποιήστε την «Αντιγραφή τιμών προσαρμοσμένων στηλών» για να ρυθμίσετε αντιστοιχίσεις.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Αντιγράφονται όλες οι τιμές προσαρμοσμένων στηλών. Χρησιμοποιήστε αντιστοιχίσεις για να ελέγξετε ποιες στήλες δημιουργούνται στον προορισμό.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Αντιγράφονται όλες οι τιμές των προσαρμοσμένων στηλών. Χρησιμοποιήστε την Αντιστοίχιση στηλών (παραπάνω) για να ελέγξετε ποιες στήλες δημιουργούνται στον προορισμό.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Οι τιμές προσαρμοσμένων στηλών αντιγράφονται πάντα για τα στοιχεία λίστας.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Λειτουργία αντιγραφής</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Όνομα</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Client ID (Application ID)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Tenant ID</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Χρησιμοποιήστε «common» για πολλούς μισθωτές ή το GUID ή το domain του μισθωτή σας.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Αφήστε το κενό ή πληκτρολογήστε «common» για σύνδεση σε οποιονδήποτε μισθωτή. Ένα GUID ή domain μισθωτή (για παράδειγμα contoso.onmicrosoft.com) περιορίζει τη σύνδεση σε αυτόν τον μισθωτή.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Πρόθεμα στα προεπιλεγμένα ονόματα αρχείων αναφορών με τα ονόματα των ιστότοπων πηγής και προορισμού</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Αποσύνδεση</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Θέμα:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Λειτουργία Βιβλιοθήκες και λίστες</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Λειτουργία Ολόκληρος ο ιστότοπος</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Λειτουργία Σελίδες ιστότοπου</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Αντιγραφή περιεχομένου βιβλιοθήκης (αρχεία)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Αντιγραφή αρχείων και στοιχείων λίστας (περιεχόμενο)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Αντιγραφή ιστορικού εκδόσεων</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Τελευταίες N εκδόσεις</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Αντιγραφή πλοήγησης</value></data>
@@ -939,7 +979,7 @@
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Επαναφόρτωση φορμών</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Κάντε κλικ στο «Φόρτωση των φορμών μου» για να δείτε τις φόρμες σας.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>Δεν βρέθηκαν φόρμες σε αυτόν τον λογαριασμό.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>Αντιγραφή {0} φορμών</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Έναρξη αντιγραφής {0} φορμών</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Αντιγραφή περισσότερων φορμών</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Επιλέξτε πού θα πάνε τα αντίγραφα</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Ένας μισθωτής: τα αντίγραφα δημιουργούνται στον ίδιο λογαριασμό που χρησιμοποιείτε, δίπλα στα πρωτότυπα.</value></data>
@@ -963,7 +1003,7 @@
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Αντιγραφή φορμών</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Έναρξη…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Φόρμα {0} από {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Ακύρωση μετά την τρέχουσα φόρμα…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Ακύρωση… η φόρμα που αντιγράφεται διακόπτεται.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Η αντιγραφή ολοκληρώθηκε: αντιγράφηκαν και οι {0} φόρμες</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Τα αντίγραφά σας βρίσκονται στο {0}. Ανοίξτε το Microsoft Forms για να τα δείτε ή χρησιμοποιήστε τον παρακάτω πίνακα.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Η αντιγραφή ολοκληρώθηκε: αντιγράφηκαν {0} από {1} φόρμες, ορισμένες χρειάζονται προσοχή</value></data>
@@ -971,7 +1011,7 @@
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Η αντιγραφή ολοκληρώθηκε, αλλά δεν αντιγράφηκε καμία φόρμα</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Δείτε τη στήλη Λεπτομέρειες για τον λόγο. Συχνές αιτίες είναι η έλλειψη του δικαιώματος Microsoft Forms στην εγγραφή προορισμού ή ένας λογαριασμός χωρίς πρόσβαση στο Forms.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Η αντιγραφή ακυρώθηκε μετά από {0} από {1} φόρμες</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Οι φόρμες που αναφέρονται παρακάτω ολοκληρώθηκαν. Η φόρμα που αντιγραφόταν τη στιγμή της ακύρωσης δεν ολοκληρώθηκε και δεν είναι ορατή.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Οι φόρμες που επισημαίνονται παρακάτω ως αντιγραμμένες ολοκληρώθηκαν. Η φόρμα που αντιγραφόταν τη στιγμή της ακύρωσης δεν ολοκληρώθηκε και μπορεί να έχει μείνει μισοδημιουργημένη στον προορισμό· η γραμμή της εμφανίζει το αναγνωριστικό του αντιγράφου, αν δημιουργήθηκε.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Αντιγράφηκαν</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>Με προειδοποιήσεις</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Απέτυχαν</value></data>
@@ -986,7 +1026,7 @@
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Άνοιγμα επιλεγμένου αντιγράφου</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Άνοιγμα Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Εξαγωγή αποτελεσμάτων…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Εμφάνιση αντιστοίχισης αναγνωριστικών φορμών</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Άνοιγμα αποθηκευμένων αναγνωριστικών φορμών</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Επιλέξτε πρώτα μια αντιγραμμένη φόρμα στον πίνακα.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Τα αποτελέσματα αποθηκεύτηκαν στο {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Υπόδειξη: η εγγραφή εφαρμογής δεν έχει αντίστοιχη διεύθυνση ανακατεύθυνσης. Στο Entra, στην ενότητα Έλεγχος ταυτότητας, προσθέστε την πλατφόρμα «Εφαρμογές για κινητά και υπολογιστές» με http://localhost και δοκιμάστε ξανά.</value></data>
@@ -1105,7 +1145,7 @@
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(φόρμα χωρίς τίτλο)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Φόρμα προέλευσης</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Επιλογή από τις φόρμες του προορισμού</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Επιλέξτε μια φόρμα από τον λογαριασμό προορισμού. Κάντε πρώτα κλικ στο «Φόρτωση φορμών από τον λογαριασμό προορισμού».</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Επιλέξτε μια φόρμα από τον λογαριασμό προορισμού. Η λίστα φορτώνεται όταν ανοίξει αυτό το βήμα· αν είναι κενή, κάντε κλικ στο «Επαναφόρτωση ονομάτων φορμών…».</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Συμπληρώθηκε από τη σύνδεση προορισμού ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>Ο λογαριασμός προέλευσής σας, αντικατεστημένος από τον λογαριασμό προορισμού σας</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Συμπληρώθηκε από τις συνδέσεις σας ({0} → {1}). Απαλείψτε και τα δύο πλαίσια για να μείνουν αμετάβλητοι οι τομείς email.</value></data>
@@ -1133,7 +1173,7 @@
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} πακέτα γράφτηκαν από αυτό το εργαλείο και περιέχουν ήδη τις τιμές του προορισμού. Αφαιρέστε τα (το ✕ στη λίστα) και προσθέστε τις αρχικές εξαγωγές.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} ιστότοποι δεν έχουν προορισμό. Ένας ιστότοπος που μένει ως έχει θα εξακολουθούσε να δείχνει στον μισθωτή προέλευσης.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} λίστες θα αποτύγχαναν κατά την εισαγωγή. Διορθώστε τις λίστες με την ένδειξη «Θα αποτύχει» για να συνεχίσετε.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Οι λίστες δεν έχουν αντιστοιχιστεί ακόμη. Επιστρέψτε ένα βήμα και προχωρήστε ξανά για να δοκιμάσετε πάλι.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Οι λίστες δεν έχουν αντιστοιχιστεί ακόμη. Κάντε κλικ στο «Νέα αντιστοίχιση» για να δοκιμάσετε ξανά.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} φόρμες χρειάζονται έγκυρο αναγνωριστικό φόρμας προορισμού για να συνεχίσετε.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Αλλαγή πηγής…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Συνδεθήκατε ως {0}. Η διεύθυνση SharePoint του μισθωτή προέλευσης είναι {1}.</value></data>
@@ -1398,11 +1438,65 @@
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Κλείσιμο ενώ εργάζεται;</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>Το εργαλείο εργάζεται ακόμη (σάρωση, αντιστοίχιση, σύνδεση ή εγγραφή πακέτων). Αν κλείσετε τώρα, θα διακοπεί. Να γίνει κλείσιμο παρ&apos; όλα αυτά;</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>Δεν ήταν δυνατή η αυτόματη προσθήκη του στοιχείου {0} στη νέα φόρμα. Ένα αντίγραφο του αρχείου αποθηκεύτηκε ως {1}: προσθέστε το ξανά στο Microsoft Forms.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Ιστορικό εκδόσεων στοιχείων λίστας:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Όπως στα αρχεία</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Όλες οι εκδόσεις</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Μόνο η τρέχουσα</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Αντιγράφει το ιστορικό εκδόσεων κάθε νέου στοιχείου λίστας (τιμές, ημερομηνίες και συντάκτες) αναπαράγοντας τις εκδόσεις του στον προορισμό. Η επιλογή «Όπως στα αρχεία» ακολουθεί τις παραπάνω επιλογές εκδόσεων αρχείων. Τα στοιχεία που υπάρχουν ήδη στον προορισμό διατηρούν το δικό τους ιστορικό. Οι στήλες ατόμων, αναζήτησης, ταξινομίας και συνδέσμων αντιγράφονται μόνο με την τρέχουσα τιμή τους.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>ιστορικό εκδόσεων: ορισμένα μέρη δεν αντιγράφηκαν ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>το ιστορικό εκδόσεων δεν αντιγράφηκε ({0})· το στοιχείο έχει μόνο τις τρέχουσες τιμές του</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Λίστα:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>Η μετακίνηση του τομέα email δεν εφαρμόστηκε: και οι δύο τομείς πρέπει να συμπληρωθούν, χωρίς κενά και χωρίς επιπλέον @ (για παράδειγμα contoso.com και fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Να καταργηθούν όλα τα πακέτα και να απορριφθούν η σάρωση και όσα συμπληρώσατε στα επόμενα βήματα;</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Να κλείσει η «Αναδιατύπωση ροών για τον προορισμό»; Η αντιστοίχιση που δημιουργήσατε μέχρι τώρα θα χαθεί (χρησιμοποιήστε πρώτα «Αποθήκευση αντιστοίχισης…» για να τη διατηρήσετε).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Να γίνει επανεκκίνηση; Τα πακέτα, η σάρωση και όσα συμπληρώσατε απορρίπτονται. Τα πακέτα που έχουν ήδη γραφτεί στον φάκελο εξόδου δεν διαγράφονται.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{0} διευθύνσεις email στον τομέα {1} καλύπτονται από αυτή τη μετακίνηση, γι' αυτό δεν εμφανίζονται παραπάνω. Για να δώσετε σε μία από αυτές διαφορετική διεύθυνση, καθαρίστε αυτά τα πλαίσια, συμπληρώστε τη συγκεκριμένη γραμμή και εισαγάγετε ξανά τη μετακίνηση τομέα.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση του φακέλου {0}: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Έλεγχος: αυτά τα ονόματα στηλών μετονομάστηκαν παντού όπου εμφανίζονται στις εκφράσεις της ροής, κάτι που μπορεί να περιλαμβάνει τη στήλη με το ίδιο όνομα μιας άλλης λίστας. Ελέγξτε ότι καθεμία αναφέρεται στη λίστα που την μετονόμασε.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} όνομα/ονόματα στηλών μετονομάστηκαν παντού όπου εμφανίζονται στις εκφράσεις. Ελέγξτε ότι αναφέρονται στη λίστα που τα μετονόμασε και όχι σε στήλη με το ίδιο όνομα άλλης λίστας (δείτε την αναφορά).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Να διακοπεί τώρα η αντιγραφή; Η φόρμα που αντιγράφεται αυτή τη στιγμή διακόπτεται και μπορεί να μείνει μισοδημιουργημένη στον λογαριασμό προορισμού· διαγράψτε την στο Microsoft Forms, αν συμβεί αυτό. Οι φόρμες που έχουν ήδη ολοκληρωθεί διατηρούνται.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Επιλογή</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Αρχείο καταγραφής αντιγραφής</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>Έναρξη αντιγραφής 1 φόρμας</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>Η φόρμα αντιγράφηκε, αλλά δεν ήταν δυνατός ο έλεγχος των εικόνων της ({0}). Ανοίξτε την στο Microsoft Forms και ελέγξτε τις εικόνες φόντου και κεφαλίδας.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Ελέγξτε τη σύνδεσή σας και τη σύνδεση στον λογαριασμό και κάντε κλικ στο «Επαναφόρτωση φορμών». Λεπτομέρειες: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Δεν ήταν δυνατή η φόρτωση των φορμών σας</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>Φορτώθηκε 1 φόρμα.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>Το αρχείο καταγραφής αντιγράφηκε στο πρόχειρο.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η αντιγραφή του αρχείου καταγραφής επειδή άλλο πρόγραμμα χρησιμοποιεί το πρόχειρο. Δοκιμάστε ξανά.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Αρχείο καταγραφής αντιγραφής</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Επόμενο βήμα: αν ροές χρησιμοποιούν αυτές τις φόρμες, ανοίξτε την «Αναδιατύπωση ροών για τον προορισμό» από το κύριο παράθυρο. Διαβάζει τα αναγνωριστικά φορμών που αποθηκεύτηκαν από αυτή την αντιγραφή και κατευθύνει κάθε ροή στη νέα φόρμα.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Δεν βρέθηκαν φόρμες</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>Τι αντιγράφεται: οι ερωτήσεις, η διακλάδωση, οι ρυθμίσεις και το θέμα. Τι όχι: οι απαντήσεις (χρησιμοποιήστε «Εξαγωγή απαντήσεων…» στο πρώτο βήμα για να τις αποθηκεύσετε σε Excel), οι συνεργάτες και τα άτομα με τα οποία κοινοποιείται η φόρμα. Κάθε αντίγραφο είναι νέα φόρμα που ανήκει στον λογαριασμό προορισμού και οι εικόνες ίσως χρειαστεί να προστεθούν ξανά.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Η αντιγραφή ολοκληρώθηκε: η φόρμα αντιγράφηκε</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Υπάρχει ενεργό φίλτρο: οι ενέργειες «Επιλογή όλων» και «Αποεπιλογή όλων» ισχύουν για τις {0} φόρμες που εμφανίζονται.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>{0} από τις επιλεγμένες φόρμες έχουν αντιγραφεί ήδη στο παρελθόν· η νέα αντιγραφή τους δημιουργεί διπλότυπα.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Βήμα {0} από {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 φόρμα θα αντιγραφεί από {1} σε {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>{0} από τις επιλεγμένες φόρμες θα αποκτούσαν τίτλο μεγαλύτερο από {1} χαρακτήρες μετά την προσθήκη του επιθέματος. Το Microsoft Forms ίσως τις απορρίψει· συντομεύστε το επίθεμα.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Δεν ήταν δυνατή η αντιγραφή των προβολών: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>Η προβολή '{0}' δεν αντιγράφηκε (προβολή {1})</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>Δεν ήταν δυνατή η δημιουργία της προβολής '{0}': {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>Η προβολή '{0}' δημιουργήθηκε, αλλά ορισμένες ρυθμίσεις δεν ήταν δυνατό να εφαρμοστούν: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>Προβολή '{0}': το φίλτρο ή η ταξινόμησή της δεν ήταν δυνατό να εφαρμοστεί και παραλείφθηκε</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>Προβολή '{0}': οι στήλες που δεν υπάρχουν στον προορισμό παραλείφθηκαν: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} σημείωση(-εις) για προβολές, ρυθμίσεις ή τύπους περιεχομένου: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση των ρυθμίσεων της λίστας, επομένως δεν αντιγράφηκε καμία: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>Ρυθμίσεις λίστας που δεν ήταν δυνατό να εφαρμοστούν: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η εφαρμογή κανόνων επικύρωσης ή μορφοποίησης σε: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>Δεν ήταν δυνατή η αντιγραφή του τύπου περιεχομένου '{0}': {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>Τύπος περιεχομένου '{0}': στήλες που δεν ήταν δυνατό να προστεθούν σε αυτόν: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η αντιγραφή του προτύπου εγγράφου της βιβλιοθήκης.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>Δεν ήταν δυνατή η αντιγραφή των προεπιλεγμένων τιμών φακέλων της βιβλιοθήκης.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>Οι προεπιλεγμένες τιμές φακέλων αντιγράφηκαν, αλλά δεν ήταν δυνατή η προσθήκη του κανόνα που τις εφαρμόζει σε νέα αρχεία.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση των στηλών τοποθεσίας: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Στήλες τοποθεσίας που δεν ήταν δυνατό να δημιουργηθούν: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση των τύπων περιεχομένου τοποθεσίας: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Τύποι περιεχομένου τοποθεσίας που δεν ήταν δυνατό να δημιουργηθούν: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Σύνδεσμοι πλοήγησης ({0}) που δεν ήταν δυνατό να δημιουργηθούν: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Ρυθμίσεις τοποθεσίας που δεν ήταν δυνατό να εφαρμοστούν: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Στήλες τοποθεσίας, τύποι περιεχομένου, πλοήγηση και ρυθμίσεις</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Αντιγραφή στηλών τοποθεσίας, τύπων περιεχομένου, πλοήγησης και ρυθμίσεων...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>τύπος περιεχομένου</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>Τύπος περιεχομένου '{0}': δεν ήταν δυνατή η αντιγραφή του προτύπου εγγράφου του.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Σύνδεση με εγγραφή εφαρμογής: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Μισθωτής: οποιοσδήποτε. Επιλέγετε τον λογαριασμό Microsoft 365 κατά τη σύνδεση.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Μισθωτής: {0}. Η σύνδεση μπορεί να γίνει μόνο σε αυτόν τον κατάλογο.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Για να συνδέσετε έναν ιστότοπο σε διαφορετικό μισθωτή, επιλέξτε άλλη εγγραφή εφαρμογής στις Ρυθμίσεις (με κενό Tenant ID ή ορισμένο σε αυτόν τον μισθωτή) ή χρησιμοποιήστε τη λειτουργία Πολλοί μισθωτές.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Μόνο δομή: αντιγράφονται στήλες, προβολές, ρυθμίσεις και τύποι περιεχομένου, αλλά όχι αρχεία ή στοιχεία λίστας.</value></data>
 </root>

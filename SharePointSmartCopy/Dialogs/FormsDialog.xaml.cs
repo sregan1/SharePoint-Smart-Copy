@@ -43,7 +43,13 @@ public partial class FormsDialog : Window
         InitializeComponent();
         _view = CollectionViewSource.GetDefaultView(_rows);
         _view.Filter = o => o is FormRow r && r.Matches(_vm.FilterText);
-        _vm.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(FormsDialogViewModel.FilterText)) _view.Refresh(); };
+        _vm.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(FormsDialogViewModel.Suffix)) UpdateTitleWarning();
+            if (e.PropertyName != nameof(FormsDialogViewModel.FilterText)) return;
+            _view.Refresh();
+            UpdateSelectionNote();
+        };
         FormsGrid.ItemsSource = _view;
         ResultsGrid.ItemsSource = _vm.Results;
         _vm.SourceAccountText = Loc.T("Forms_SourceAccount", sourceAuth.FormsUserName ?? sourceAuth.UserName ?? Loc.T("Forms_SignInOnDemand"));
@@ -74,28 +80,61 @@ public partial class FormsDialog : Window
     {
         await RunAsync(Loc.T("Forms_Loading"), async ct =>
         {
-            var forms = await SourceClient().ListFormsAsync(ct);
-            var copied = FormsIdMapStore.Load();
-            _rows.Clear();
-            foreach (var f in forms.OrderByDescending(f => f.Modified))
+            _vm.LoadError = string.Empty;
+            try
             {
-                var row = new FormRow { Id = f.Id, Title = f.Title, Type = f.Type, Modified = f.Modified };
-                if (copied.TryGetValue(f.Id, out var entry)) row.CopiedText = CopiedLabel(entry);
-                row.PropertyChanged += (_, args) => { if (args.PropertyName == nameof(FormRow.IsSelected)) UpdateSelection(); };
-                _rows.Add(row);
+                var forms = await SourceClient().ListFormsAsync(ct);
+                var copied = FormsIdMapStore.LoadAll();
+                _rows.Clear();
+                foreach (var f in forms.OrderByDescending(f => f.Modified))
+                {
+                    var row = new FormRow { Id = f.Id, Title = f.Title, Type = f.Type, Modified = f.Modified };
+                    if (copied.TryGetValue(f.Id, out var entries)) row.CopiedText = CopiedLabel(entries);
+                    row.PropertyChanged += (_, args) => { if (args.PropertyName == nameof(FormRow.IsSelected)) UpdateSelection(); };
+                    _rows.Add(row);
+                }
+                _vm.HasForms = _rows.Count > 0;
+                _vm.HasLoaded = true;
+                _vm.SourceAccountText = Loc.T("Forms_SourceAccount", SourceAccount);
+                _vm.LoadButtonText = Loc.T("Forms_ReloadForms");
+                UpdateSelection();
+                // An empty account is explained in the list area itself, so the footer stays quiet.
+                _vm.StatusText = forms.Count == 0 ? string.Empty : LoadedText(forms.Count);
             }
-            _vm.HasForms = _rows.Count > 0;
-            _vm.SourceAccountText = Loc.T("Forms_SourceAccount", SourceAccount);
-            _vm.LoadButtonText = Loc.T("Forms_ReloadForms");
-            UpdateSelection();
-            _vm.StatusText = forms.Count == 0 ? Loc.T("Forms_NoForms") : Loc.T("Forms_Loaded", forms.Count);
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex)
+            {
+                // Shown where the list would be, with what to try; the exception text stays in the details line.
+                // The earlier list (if any) is stale now and must not stay selectable under the error message.
+                _rows.Clear();
+                _vm.HasForms = false;
+                UpdateSelection();
+                _vm.LoadError = Loc.T("Forms_LoadFailedBody", ex.Message) + (HelpFor(ex) is { } help ? Environment.NewLine + help : "");
+                AppendLog(ex.Message);
+                _vm.StatusText = string.Empty;
+            }
         });
     }
+
+    private static string LoadedText(int count) => count == 1 ? Loc.T("Forms_LoadedOne") : Loc.T("Forms_Loaded", count);
 
     private void UpdateSelection()
     {
         _vm.SelectedCount = _rows.Count(r => r.IsSelected);
         _vm.TotalCount = _rows.Count;
+        UpdateSelectionNote();
+    }
+
+    // Select all / Deselect all act on the rows the filter shows; say so, and flag chosen forms that were copied before
+    // (they would be copied again and create duplicates).
+    private void UpdateSelectionNote()
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrWhiteSpace(_vm.FilterText))
+            parts.Add(Loc.T("Forms_SelectAllShown", _view.Cast<FormRow>().Count()));
+        var alreadyCopied = _rows.Count(r => r.IsSelected && !string.IsNullOrEmpty(r.CopiedText));
+        if (alreadyCopied > 0) parts.Add(Loc.T("Forms_SelectedAlreadyCopied", alreadyCopied));
+        _vm.SelectionNote = string.Join(" ", parts);
     }
 
     // "Select all" acts on what the filter box currently shows, so you can filter to a group of forms and take just those.
@@ -104,13 +143,18 @@ public partial class FormsDialog : Window
     private void DeselectAll_Click(object sender, RoutedEventArgs e) { foreach (var r in Visible) r.IsSelected = false; UpdateSelection(); }
 
     private static string CopiedLabel(FormsMapEntry e) =>
-        e.CopiedAt is { } at ? Loc.T("Forms_CopiedOn", at.LocalDateTime.ToString("d"), e.TargetAccount ?? "") : Loc.T("Forms_CopiedBefore");
+        e.CopiedAt is { } at && !string.IsNullOrWhiteSpace(e.TargetAccount)
+            ? Loc.T("Forms_CopiedOn", at.LocalDateTime.ToString("d"), e.TargetAccount)
+            : Loc.T("Forms_CopiedBefore");
 
-    // True when the saved copy went to the account that would receive this one (or to an unknown account, from an
-    // earlier version): a second copy would be a duplicate.
-    private bool IsDuplicate(FormRow row, Dictionary<string, FormsMapEntry> map) =>
-        map.TryGetValue(row.Id, out var e)
-        && (string.IsNullOrEmpty(e.TargetAccount) || string.Equals(e.TargetAccount, TargetAccount, StringComparison.OrdinalIgnoreCase));
+    // One label per target account, newest first ("Copied 5/2/2026 to b@x; Copied 4/1/2026 to c@y").
+    private static string CopiedLabel(List<FormsMapEntry> entries) =>
+        string.Join("; ", entries.OrderByDescending(e => e.CopiedAt ?? DateTimeOffset.MinValue).Select(CopiedLabel));
+
+    // True when a saved copy went to the account that would receive this one (or to an unknown account, from an
+    // earlier version): a second copy would be a duplicate. Copies to OTHER accounts don't count.
+    private bool IsDuplicate(FormRow row, Dictionary<string, List<FormsMapEntry>> map) =>
+        FormsIdMapStore.Find(map, row.Id, TargetAccount) is not null;   // the store's own account matching (trimmed, any case)
 
     // ── Step 2: Target ────────────────────────────────────────────────────────
 
@@ -125,6 +169,7 @@ public partial class FormsDialog : Window
                 // Signs in (a browser window may open) and proves the account can use Forms by listing its forms.
                 var existing = await TargetClient().ListFormsAsync(ct);
                 _vm.TargetConnected = true;
+                _vm.TargetAccountName = TargetAccount;   // the step's summary line names the account that just signed in
                 _vm.TargetStatusText = Loc.T("Forms_TargetConnected", TargetAccount, existing.Count);
                 _vm.TargetButtonText = Loc.T("Forms_TargetSignInAgain");
                 _vm.StatusText = Loc.T("Forms_TargetReady");
@@ -156,7 +201,7 @@ public partial class FormsDialog : Window
     {
         if (_vm.CurrentStep == 0)
         {
-            if (!Selected.Any()) { _vm.StatusText = Loc.T("Forms_NothingSelected"); return; }
+            if (!Selected.Any()) return;   // the button is disabled (and the footer says why) until a form is ticked
             PrepareTargetStep();
             GoTo(1);
         }
@@ -166,8 +211,25 @@ public partial class FormsDialog : Window
         }
     }
 
+    // Microsoft Forms limits a form title to 90 characters (Microsoft's "Form, question, response, and character limits in
+    // Microsoft Forms" support page). Forms use this unofficial API, so the service is the final judge: a longer title may be
+    // rejected when the copy is created, which would show as that form failing.
+    private const int MaxFormTitle = 90;
+
+    // A suffix of only spaces would add trailing blanks to every title; one with a deliberate leading space (" (copy)") keeps it.
+    private static string NormalizeSuffix(string? suffix) => string.IsNullOrWhiteSpace(suffix) ? string.Empty : suffix.TrimEnd();
+
+    // Warns (does not block or clip) when the chosen forms plus the suffix would exceed the title limit.
+    private void UpdateTitleWarning()
+    {
+        var suffix = NormalizeSuffix(_vm.Suffix);
+        var tooLong = Selected.Count(r => r.Title.Length + suffix.Length > MaxFormTitle);
+        _vm.TitleWarning = tooLong == 0 ? string.Empty : Loc.T("Forms_TitleTooLong", tooLong, MaxFormTitle);
+    }
+
     private void PrepareTargetStep()
     {
+        UpdateTitleWarning();
         var count = Selected.Count();
         _vm.SelectedCount = count;
         if (!_vm.IsMultiTenant)
@@ -179,13 +241,14 @@ public partial class FormsDialog : Window
         }
         _vm.TargetAccountName = TargetAccount;
         _vm.SourceAccountName = SourceAccount;
-        _vm.StatusText = _vm.TargetConnected ? Loc.T("Forms_TargetReady") : Loc.T("Forms_SignInToContinue");
+        // When sign-in is still needed the footer's red reason says so; don't repeat it in the status line.
+        _vm.StatusText = _vm.TargetConnected ? Loc.T("Forms_TargetReady") : string.Empty;
     }
 
     private void GoTo(int step)
     {
         _vm.CurrentStep = step;
-        if (step is 0) _vm.StatusText = _vm.HasForms ? Loc.T("Forms_Loaded", _rows.Count) : Loc.T("Forms_StatusStart");
+        if (step is 0) _vm.StatusText = _vm.HasForms ? LoadedText(_rows.Count) : Loc.T("Forms_StatusStart");
     }
 
     // ── Step 3: Copy ──────────────────────────────────────────────────────────
@@ -194,10 +257,10 @@ public partial class FormsDialog : Window
     {
         var chosen = Selected.ToList();
         if (chosen.Count == 0) return;
-        var suffix = _vm.Suffix;
+        var suffix = NormalizeSuffix(_vm.Suffix);
 
         // Copying a form again creates a second copy; make sure that is intended.
-        var map = FormsIdMapStore.Load();
+        var map = FormsIdMapStore.LoadAll();
         var dupes = chosen.Where(r => IsDuplicate(r, map)).ToList();
         if (dupes.Count > 0)
         {
@@ -219,6 +282,7 @@ public partial class FormsDialog : Window
         _cts = new CancellationTokenSource();
         var ct = _cts.Token;
         var cancelled = false;
+        _vm.IsCancelling = false;
         _vm.IsBusy = true;
         try
         {
@@ -250,7 +314,9 @@ public partial class FormsDialog : Window
                     try
                     {
                         FormsIdMapStore.Record(row.Id, result.NewId, TargetAccount, row.Title);
-                        row.CopiedText = CopiedLabel(new FormsMapEntry(result.NewId, TargetAccount, DateTimeOffset.Now));
+                        row.CopiedText = FormsIdMapStore.LoadAll().TryGetValue(row.Id, out var all)
+                            ? CopiedLabel(all)
+                            : CopiedLabel(new FormsMapEntry(result.NewId, TargetAccount, DateTimeOffset.Now));
                     }
                     catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
                     {
@@ -263,19 +329,53 @@ public partial class FormsDialog : Window
             }
         }
         catch (OperationCanceledException) { cancelled = true; }
+        catch (Exception ex)
+        {
+            // Anything unexpected (this runs from an async void handler) must still end on the Results step, not strand
+            // the dialog on the progress step or crash the app.
+            AppendLog(ex.Message);
+        }
         finally
         {
             clock.Stop();
             _vm.IsBusy = false;
+            _vm.IsCancelling = false;
         }
+        // Cancelling during the LAST form makes the copier return a failed result instead of throwing, so the loop ends
+        // normally; the token still says the user cancelled, and the results must too.
+        if (ct.IsCancellationRequested) cancelled = true;
 
         _vm.Finish(clock.Elapsed, cancelled, chosen.Count, TargetAccount, FormsIdMapStore.DefaultPath);
         GoTo(3);
         _vm.StatusText = _vm.ResultHeadline;
     }
 
+    // Puts the copy log on the clipboard (e.g. for a support request).
+    private void CopyLog_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Clipboard.SetText(LogBox.Text);
+            _vm.StatusText = Loc.T("Forms_LogCopied");
+        }
+        catch (System.Runtime.InteropServices.COMException)
+        {
+            _vm.StatusText = Loc.T("Forms_LogCopyFailed");   // another program is holding the clipboard
+        }
+    }
+
     private void CancelRun_Click(object sender, RoutedEventArgs e)
     {
+        // Stopping the copy itself can leave the form being built half-made in the target, so say so first.
+        // Cancelling a sign-in, load or export has no such side effect and needs no prompt.
+        if (_vm.CurrentStep == 2 && _vm.IsBusy &&
+            MessageBox.Show(this, Loc.T("Forms_CancelCopyBody"), Loc.T("Forms_CloseTitle"),
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) != MessageBoxResult.Yes)
+            return;
+        // The prompt is modal but the copy keeps running behind it; if it finished meanwhile there is nothing to cancel,
+        // and flagging "cancelling" now would leave Cancel disabled for the next run.
+        if (!_vm.IsBusy) return;
+        _vm.IsCancelling = true;
         _cts?.Cancel();
         _vm.ProgressText = Loc.T("Forms_Cancelling");
     }
@@ -345,8 +445,9 @@ public partial class FormsDialog : Window
             wb.SaveAs(dlg.FileName);
             _vm.StatusText = Loc.T("Forms_ResultsSaved", dlg.FileName);
         }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        catch (Exception ex)
         {
+            // Any failure building or saving the workbook (not only IO) is reported in the footer; this is a click handler.
             _vm.StatusText = Loc.T("Forms_Error", ex.Message);
         }
     }
@@ -441,7 +542,7 @@ public partial class FormsDialog : Window
                 }
             }
             if (fetched.Count == 0) { _vm.StatusText = Loc.T("Forms_ExportNothing"); return; }
-            FormsResponseExporter.WriteCombined(fetched, path);
+            await Task.Run(() => FormsResponseExporter.WriteCombined(fetched, path), ct);   // off the UI thread: it can be large
             _vm.StatusText = failed == 0
                 ? Loc.T("Forms_ExportDone", fetched.Count, path)
                 : Loc.T("Forms_ExportDonePartial", fetched.Count, failed, path);
@@ -453,6 +554,7 @@ public partial class FormsDialog : Window
     private async Task RunAsync(string busyText, Func<CancellationToken, Task> work)
     {
         _cts = new CancellationTokenSource();
+        _vm.IsCancelling = false;
         _vm.IsBusy = true;
         _vm.StatusText = busyText;
         try { await work(_cts.Token); }
@@ -463,7 +565,7 @@ public partial class FormsDialog : Window
             if (HelpFor(ex) is { } help) AppendLog(help);
             AppendLog(ex.Message);
         }
-        finally { _vm.IsBusy = false; }
+        finally { _vm.IsBusy = false; _vm.IsCancelling = false; }
     }
 
     // Most first-time failures are the Microsoft Forms permission missing from (or not consented on) the app registration.
@@ -578,8 +680,12 @@ public partial class FormsDialogViewModel : ObservableObject
     public ObservableCollection<FormResultRow> Results { get; } = [];
 
     [ObservableProperty, NotifyPropertyChangedFor(nameof(ShowBack), nameof(ShowNext), nameof(ShowCancel), nameof(ShowCopyMore),
-        nameof(ShowExportResponses), nameof(NextButtonText))]
+        nameof(ShowExportResponses), nameof(NextButtonText), nameof(StepText))]
     private int _currentStep;
+
+    // "Step 2 of 4: Target" - one string with the numbers as placeholders, so each language keeps its own word order.
+    private static readonly string[] StepKeys = ["Forms_StepForms", "Forms_StepTarget", "Forms_StepCopy", "Forms_StepResults"];
+    public string StepText => Loc.T("Forms_StepOfN", CurrentStep + 1, StepKeys.Length, Loc.T(StepKeys[Math.Clamp(CurrentStep, 0, StepKeys.Length - 1)]));
 
     // step 1 filter box and export option
     [ObservableProperty] private string _filterText = string.Empty;
@@ -589,12 +695,28 @@ public partial class FormsDialogViewModel : ObservableObject
     private bool _isMultiTenant;
     public bool IsSingleTenant => !IsMultiTenant;
 
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext), nameof(ShowCancel))] private bool _isBusy;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext), nameof(ShowCancel), nameof(ShowListMessage))] private bool _isBusy;
+    // Set after Cancel is pressed so it can't be clicked again while the current form finishes.
+    [ObservableProperty] private bool _isCancelling;
 
     // step 1
     [ObservableProperty] private string _sourceAccountText = string.Empty;
     [ObservableProperty] private string _loadButtonText = Loc.T("Forms_LoadForms");
-    [ObservableProperty] private bool _hasForms;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(BlockReason), nameof(HasBlockReason), nameof(ShowListMessage), nameof(ListMessageTitle), nameof(ListMessageBody))]
+    private bool _hasForms;
+
+    // Shown in place of the (empty) list: the account has no forms, or loading them failed.
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(ShowListMessage), nameof(ListMessageTitle), nameof(ListMessageBody))] private bool _hasLoaded;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasLoadError), nameof(ShowListMessage), nameof(ListMessageTitle), nameof(ListMessageBody))]
+    private string _loadError = string.Empty;
+    public bool HasLoadError => LoadError.Length > 0;
+    public bool ShowListMessage => !IsBusy && (HasLoadError || (HasLoaded && !HasForms));
+    public string ListMessageTitle => HasLoadError ? Loc.T("Forms_LoadFailedTitle") : Loc.T("Forms_NoFormsTitle");
+    public string ListMessageBody => HasLoadError ? LoadError : Loc.T("Forms_NoForms");
+
+    // Under the toolbar: what "Select all" covers while a filter is on, and how many chosen forms were copied before.
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasSelectionNote))] private string _selectionNote = string.Empty;
+    public bool HasSelectionNote => SelectionNote.Length > 0;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(SelectedCountText), nameof(CanNext), nameof(NextButtonText), nameof(SummaryText))]
     private int _selectedCount;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(SelectedCountText))] private int _totalCount;
@@ -609,10 +731,13 @@ public partial class FormsDialogViewModel : ObservableObject
     [ObservableProperty, NotifyPropertyChangedFor(nameof(SummaryText))] private string _sourceAccountName = string.Empty;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(SummaryText))] private string _targetAccountName = string.Empty;
     [ObservableProperty] private string _suffix = string.Empty;
+    // Shown under the suffix box when a title plus the suffix would be longer than Microsoft Forms allows.
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasTitleWarning))] private string _titleWarning = string.Empty;
+    public bool HasTitleWarning => TitleWarning.Length > 0;
     public bool HasTargetStatus => !string.IsNullOrEmpty(TargetStatusText);
     public bool NeedsTargetSignIn => IsMultiTenant && !TargetConnected;
     public string TargetIntroText => IsMultiTenant ? Loc.T("Forms_TargetIntroMulti") : Loc.T("Forms_TargetIntroSingle");
-    public string SummaryText => Loc.T("Forms_Summary", SelectedCount,
+    public string SummaryText => Loc.T(SelectedCount == 1 ? "Forms_SummaryOne" : "Forms_Summary", SelectedCount,
         string.IsNullOrEmpty(SourceAccountName) ? Loc.T("Forms_SourceAccountShort") : SourceAccountName,
         string.IsNullOrEmpty(TargetAccountName) ? Loc.T("Forms_TargetAccountShort") : TargetAccountName);
 
@@ -625,8 +750,13 @@ public partial class FormsDialogViewModel : ObservableObject
     [ObservableProperty] private string _outcome = "Success";
     [ObservableProperty] private string _resultHeadline = string.Empty;
     [ObservableProperty] private string _resultSubline = string.Empty;
-    [ObservableProperty] private int _copiedCount;
-    [ObservableProperty] private int _partialCount;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasCopies))] private int _copiedCount;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasCopies))] private int _partialCount;
+    // True when at least one form was created, so the hand-off to the Flows tool is worth mentioning.
+    public bool HasCopies => CopiedCount + PartialCount > 0;
+    // True when ANY row (even a failed or cancelled one) produced a form in the target, so it can be opened and checked or
+    // deleted. Such a half-built form is deliberately not in the saved ID map, so it does not count for HasCopies.
+    [ObservableProperty] private bool _hasOpenableCopy;
     [ObservableProperty] private int _failedCount;
     [ObservableProperty] private string _questionsText = "0";
     [ObservableProperty] private string _durationText = string.Empty;
@@ -640,13 +770,36 @@ public partial class FormsDialogViewModel : ObservableObject
     public bool ShowCancel => CurrentStep == 2 || IsBusy;
     public bool ShowCopyMore => CurrentStep == 3;
     public bool ShowExportResponses => CurrentStep == 0;
-    public string NextButtonText => CurrentStep == 1 ? Loc.T("Forms_CopyNForms", SelectedCount) : Loc.T("Ui_Next");
+    // Step 2's button starts the copy (it is not just "next"), so it says so.
+    public string NextButtonText => CurrentStep == 1
+        ? (SelectedCount == 1 ? Loc.T("Forms_CopyOneForm") : Loc.T("Forms_CopyNForms", SelectedCount))
+        : Loc.T("Ui_Next");
     public bool CanNext => !IsBusy && CurrentStep switch
     {
         0 => SelectedCount > 0,
         1 => TargetConnected,
         _ => false,
     };
+
+    // Why Next is disabled, shown beside the buttons in the footer instead of only greying the button out.
+    public string BlockReason => IsBusy ? string.Empty : CurrentStep switch
+    {
+        0 when HasForms && SelectedCount == 0 => Loc.T("Forms_NothingSelected"),
+        1 when !TargetConnected => Loc.T("Forms_SignInToContinue"),
+        _ => string.Empty,
+    };
+    public bool HasBlockReason => BlockReason.Length > 0;
+
+    // Everything that changes CanNext also changes the reason, so raise both together.
+    protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName == nameof(CanNext))
+        {
+            base.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(BlockReason)));
+            base.OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(HasBlockReason)));
+        }
+    }
 
     partial void OnCurrentStepChanged(int value) => OnPropertyChanged(nameof(CanNext));
     partial void OnSelectedCountChanged(int value) => OnPropertyChanged(nameof(CanNext));
@@ -657,8 +810,11 @@ public partial class FormsDialogViewModel : ObservableObject
         CopiedCount = Results.Count(r => r.Outcome == FormOutcome.Copied);
         PartialCount = Results.Count(r => r.Outcome == FormOutcome.CopiedWithWarnings);
         FailedCount = Results.Count(r => r.Outcome == FormOutcome.Failed);
-        var qCopied = Results.Sum(r => r.QuestionsCopied);
-        var qTotal = Results.Where(r => r.Outcome != FormOutcome.Failed).Sum(r => r.QuestionsTotal);
+        HasOpenableCopy = Results.Any(r => r.NewId is not null);
+        // Both sums skip failed rows, otherwise the card can read "5 / 3".
+        var counted = Results.Where(r => r.Outcome != FormOutcome.Failed).ToList();
+        var qCopied = counted.Sum(r => r.QuestionsCopied);
+        var qTotal = counted.Sum(r => r.QuestionsTotal);
         QuestionsText = $"{qCopied} / {qTotal}";
         DurationText = elapsed.TotalMinutes >= 1 ? $"{(int)elapsed.TotalMinutes}m {elapsed.Seconds}s" : $"{Math.Max(1, (int)Math.Round(elapsed.TotalSeconds))}s";
 
@@ -673,7 +829,7 @@ public partial class FormsDialogViewModel : ObservableObject
         else if (FailedCount == 0 && PartialCount == 0)
         {
             Outcome = "Success";
-            ResultHeadline = Loc.T("Forms_ResultSuccess", CopiedCount);
+            ResultHeadline = CopiedCount == 1 ? Loc.T("Forms_ResultSuccessOne") : Loc.T("Forms_ResultSuccess", CopiedCount);
             ResultSubline = Loc.T("Forms_ResultSuccessSub", who);
         }
         else if (done == 0)

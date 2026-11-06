@@ -52,14 +52,44 @@ public sealed class FlowMapping
         AllowTrailingCommas = true,
     };
 
-    public static FlowMapping Load(string path) =>
-        JsonSerializer.Deserialize<FlowMapping>(File.ReadAllText(path), Json) ?? new FlowMapping();
+    public static FlowMapping Load(string path)
+    {
+        var m = JsonSerializer.Deserialize<FlowMapping>(File.ReadAllText(path), Json) ?? new FlowMapping();
+        m.ReplaceNulls();
+        return m;
+    }
+
+    // A hand-edited file can hold "Sites": null or a null value inside a section; the code that applies a mapping assumes
+    // every section and value exists, so make that true here instead of failing later with a NullReferenceException.
+    private void ReplaceNulls()
+    {
+        static Dictionary<string, string> Clean(Dictionary<string, string>? d)
+        {
+            var clean = new Dictionary<string, string>(StringComparer.Ordinal);
+            if (d is null) return clean;
+            foreach (var (k, v) in d) if (k is not null) clean[k] = v?.Trim() ?? string.Empty;
+            return clean;
+        }
+        static Dictionary<string, Dictionary<string, string>> CleanNested(Dictionary<string, Dictionary<string, string>>? d)
+        {
+            var clean = new Dictionary<string, Dictionary<string, string>>(StringComparer.Ordinal);
+            if (d is null) return clean;
+            foreach (var (k, v) in d) if (k is not null) clean[k] = Clean(v);
+            return clean;
+        }
+        Sites = Clean(Sites); Lists = Clean(Lists); Forms = Clean(Forms); Columns = Clean(Columns);
+        Emails = Clean(Emails); EmailDomains = Clean(EmailDomains); Text = Clean(Text); TenantIds = Clean(TenantIds);
+        ListColumns = CleanNested(ListColumns); RequiredValues = CleanNested(RequiredValues);
+    }
 
     public void Save(string path) => File.WriteAllText(path, JsonSerializer.Serialize(this, Json));
 
     // Pairs with a non-empty target, longest source first so a URL is replaced before its parent URL.
+    // Targets are trimmed: a stray space typed or saved in a target would otherwise be written into the package.
     public static IEnumerable<KeyValuePair<string, string>> Active(Dictionary<string, string> map) =>
-        map.Where(kv => !string.IsNullOrWhiteSpace(kv.Value) && kv.Key != kv.Value).OrderByDescending(kv => kv.Key.Length);
+        map.Where(kv => !string.IsNullOrWhiteSpace(kv.Value) && kv.Key != kv.Value.Trim())
+           .Select(kv => new KeyValuePair<string, string>(kv.Key, kv.Value.Trim()))
+           .OrderByDescending(kv => kv.Key.Length);
 
     // Records column decisions per list (ListColumns). A decision whose target is empty or equal to the source is
     // "leave unchanged" and adds nothing. The global Columns map (used for expressions that can't be tied to one

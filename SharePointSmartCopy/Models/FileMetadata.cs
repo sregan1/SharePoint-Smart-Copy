@@ -15,5 +15,8 @@ public class FileMetadata
     public string?         ColorTag         { get; init; }
     public string?         ColorHex         { get; init; }
 
+    // A FOLDER's custom content type name (a Document Set or other folder-based type); null for the plain Folder type.
+    public string?         ContentTypeName  { get; init; }
+
     public Dictionary<string, object?> CustomFields { get; init; } = [];
 }

@@ -1,4 +1,4 @@
-﻿using SharePointSmartCopy.Localization;
+using SharePointSmartCopy.Localization;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -25,7 +25,6 @@ public enum OverwriteMode { Skip, Overwrite, IfNewer }
 
 // Version history for list ITEMS (files follow CopyVersions/CopyAllVersions/MaxVersions):
 // SameAsFiles — follow the file version options; All — every version; Off — current values only.
-public enum ListItemVersionMode { SameAsFiles, All, Off }
 
 public enum AppTheme { System, Light, Dark }
 
@@ -94,7 +93,6 @@ public class AppSettings
     public bool     CopyVersions         { get; set; } = true;
     public bool     CopyAllVersions      { get; set; } = true;
     public int      MaxVersions          { get; set; } = 10;
-    public ListItemVersionMode ListItemVersions { get; set; } = ListItemVersionMode.SameAsFiles;
     public int      MaxParallelCopies    { get; set; } = 8;
     public CopyScope Scope                { get; set; } = CopyScope.Files;
     public bool      CopyCustomColumns    { get; set; } = false;
@@ -109,6 +107,15 @@ public class AppSettings
     // PreserveMetadata is on. See MigrationJobService's folder-metadata fetch.
     public bool      ReapplyFolderMetadataEveryRun { get; set; } = true;
     public bool      CopyNavigation       { get; set; } = true;
+    public bool      CopyLookupDependencies { get; set; } = true;
+    public bool      CopyTermSets         { get; set; } = true;
+    public bool      CopyViews { get; set; } = true;
+    public bool      CopyListSettings { get; set; } = true;
+    public bool      CopyContentTypes { get; set; } = true;
+    public bool      CopyColumnRules { get; set; } = true;
+    public bool      CopyTemplates { get; set; } = true;
+    public bool      CopySiteDefinitions { get; set; } = true;
+    public bool      CopySiteSettings { get; set; } = true;
     public bool      CopyPermissions      { get; set; } = false;
     public AppTheme  Theme                { get; set; } = AppTheme.System;
     // UI language code (e.g. "de-DE"); empty = follow the Windows display language. Applied at next launch.

@@ -71,11 +71,19 @@ public partial class MainViewModel : ObservableObject
         CopyVersions      = Settings.CopyVersions;
         CopyAllVersions   = Settings.CopyAllVersions;
         MaxVersions       = Settings.MaxVersions;
-        ListItemVersions  = Settings.ListItemVersions;
         MaxParallelCopies = Settings.MaxParallelCopies;
         PreserveMetadata    = Settings.PreserveMetadata;
         ReapplyFolderMetadataEveryRun = Settings.ReapplyFolderMetadataEveryRun;
         CopyNavigation      = Settings.CopyNavigation;
+        CopyLookupDependencies = Settings.CopyLookupDependencies;
+        CopyTermSets        = Settings.CopyTermSets;
+        CopyViews = Settings.CopyViews;
+        CopyListSettings = Settings.CopyListSettings;
+        CopyContentTypes = Settings.CopyContentTypes;
+        CopyColumnRules = Settings.CopyColumnRules;
+        CopyTemplates = Settings.CopyTemplates;
+        CopySiteDefinitions = Settings.CopySiteDefinitions;
+        CopySiteSettings = Settings.CopySiteSettings;
         CopyLibraryContent  = Settings.CopyLibraryContent;
         RemapPageWebPartUrls = Settings.RemapPageWebPartUrls;
         CopyPermissions      = Settings.CopyPermissions;
@@ -86,7 +94,6 @@ public partial class MainViewModel : ObservableObject
         {
             OnPropertyChanged(nameof(LibrarySummaryCount));
             OnPropertyChanged(nameof(LibraryPreviewItems));
-            OnPropertyChanged(nameof(ShowListItemVersionOption));
             OnPropertyChanged(nameof(CopyPreviewTotalSizeDisplay));
         };
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
   <resheader name="version"><value>2.0</value></resheader>
@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Target: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Destination List</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Copy Options</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Copy library content (files)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>When off, only the column schema and library settings are recreated — no files are copied.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Copy files and list items (content)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>When off, only the structure is copied and no files or list items: columns, views, list settings, content types and, in Site scope, site columns, navigation and site settings.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>If file exists:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Skip</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Overwrite</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>All versions</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Latest </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> versions</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Also copy lists that my lists look up</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>When a selected list has a Lookup column, the list it looks up is copied too, so the column can be created and its values resolved. Turn this off to copy only what you selected.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Lookup values</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} matched by item, {1} matched by text, {2} not found.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Managed metadata</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} term values copied, {1} left out (term not found in the copied set).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>Managed metadata column "{0}" was not created: its term set belongs to another tenant, and copying term sets is not available (sign in to both tenants and grant the TermStore.ReadWrite.All permission).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>Term set "{0}" copied to the target: {1} created, {2} already there.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Copy managed-metadata term sets to the target tenant</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>A managed-metadata column is bound to a term set in the source tenant's term store. When this is on, the term set (terms, labels, synonyms, descriptions) is copied to the target term store, the column is bound to the copy and each value is remapped. Needs the optional TermStore.ReadWrite.All permission and a term store role at the target.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Looks up the list "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Looks up a list in another web</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Managed metadata: its term set will be copied to the target tenant</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Managed metadata: uses the same term set (same tenant)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>Projected field "{0}" was not created: its lookup column "{1}" is not on the target list.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>Projected field "{0}" was not created: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Sign in with app registration:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Structure to copy</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Everything checked here is recreated on the target next to the data. A list or library that already exists there only gets the content types and views it lacks.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Views (filters, grouping, columns, default view, calendar and board views)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>List settings (approval, check-out, attachments, folders, item-level security)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Content types and their document templates</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Column validation rules and formatting</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Library template and folder default values</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Site columns and site content types</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Site settings (description, quick launch, tree view and more)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Views</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>List settings</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Content types</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Column rules</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Templates and defaults</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Site columns and types</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Navigation</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Site settings</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Lookup lists</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Term sets</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Structure: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>none</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Show more</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Show less</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Copy navigation (Quick Launch &amp; top bar)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Replaces target navigation with source links. URLs are remapped to the target site.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Copy permissions</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Copy custom column values</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Copies Text, Number, Choice, Date, Boolean, Multi-choice, Person, and Managed Metadata column values. Lookup columns are not supported.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Enable 'Copy custom column values' to configure mappings.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>All custom column values are copied. Use mappings to control which columns are created at the destination.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>All custom column values are copied. Use Column mapping (above) to control which columns are created at the destination.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Custom column values are always copied for list items.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Copy mode</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Name</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Client ID (Application ID)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Tenant ID</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Use 'common' for multi-tenant, or your tenant GUID or domain.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Leave empty or enter 'common' to sign in to any tenant. A tenant GUID or domain (for example contoso.onmicrosoft.com) limits sign-in to that one tenant.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Prefix default report filenames with the source and target site names</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Sign Out</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Theme:</value></data>
@@ -239,11 +279,6 @@
   <data name="VM_AlreadyExists" xml:space="preserve"><value>Already exists</value></data>
   <data name="VM_UpdatedFieldWarning" xml:space="preserve"><value>Updated (field warning: {0})</value></data>
   <data name="VM_Updated" xml:space="preserve"><value>Updated</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>List item version history:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Same as files</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>All versions</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Current only</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Copies each new list item's version history (values, dates and editors) by replaying its versions on the target. "Same as files" follows the file version options above. Items that already exist on the target keep their own history. People, lookup, taxonomy and link columns copy their current value only.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>version history: some parts did not copy ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>version history was not copied ({0}); the item has its current values only</value></data>
   <data name="VM_FieldWarning" xml:space="preserve"><value>field warning: {0}</value></data>
@@ -299,6 +334,7 @@
   <data name="Dlg_ColStatusCreateSkip" xml:space="preserve"><value>✅ {0} will be created    ⚠ {1} skipped</value></data>
   <data name="Dlg_ColStatusMapCreateSkip" xml:space="preserve"><value>✅ {0} mapped    + {1} will be created    ⚠ {2} skipped</value></data>
   <data name="Dlg_ColStatusMapSkip" xml:space="preserve"><value>✅ {0} mapped    ⚠ {1} skipped</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>List:</value></data>
   <data name="Dlg_ColHeaderLibrary" xml:space="preserve"><value>Choose which columns to create in the new target library. Columns set to 'Skip' will not be created.</value></data>
   <data name="Dlg_ColHeaderFiles" xml:space="preserve"><value>Map source columns to target columns, or choose 'Create in target' to add a missing column to the destination library. Unmatched columns will be skipped unless you assign a target. Use Auto-match to automatically match columns by name.</value></data>
   <data name="Dlg_ColAction" xml:space="preserve"><value>Action</value></data>
@@ -624,7 +660,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Libraries and Lists mode</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Entire Site mode</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Site Pages mode</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Copy library content (files)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Copy files and list items (content)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Copy version history</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Latest N versions</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Copy navigation</value></data>
@@ -946,7 +982,26 @@ Original packages are untouched. Connections are NOT migrated; recreate and re-s
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Reload forms</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Click "Load my forms" to see your forms.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>No forms were found in this account.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>Copy {0} forms</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Start copying {0} forms</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>The form was copied, but its images could not be checked ({0}). Open it in Microsoft Forms and check the background and header images.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Step {0} of {1}: {2}</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Select</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>Loaded 1 form.</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 form will be copied from {1} to {2}.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Copy finished: the form was copied</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>No forms found</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Your forms could not be loaded</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Check your connection and sign-in, then click Reload forms. Details: {0}</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>A filter is on: Select all and Deselect all apply to the {0} forms shown.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>{0} of the selected forms were copied before; copying them again creates duplicates.</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Copy log</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Copy log</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>The log was copied to the clipboard.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>The log could not be copied because another program is using the clipboard. Try again.</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>Start copying 1 form</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>What is copied: the questions, branching, settings and theme. What is not: responses (use Export responses on the first step to save them to Excel), collaborators and who the form is shared with. Each copy is a new form owned by the target account, and images may need to be added again.</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Next: if flows use these forms, open Rewrite Flows from the main window. It reads the form IDs saved by this copy and points each flow at the new form.</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Stop copying now? The form being copied right now is cut off and may be left half-built in the target account; delete it in Microsoft Forms if it is. Forms that are already finished are kept.</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Copy more forms</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Choose where the copies go</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Single tenant: the copies are created in the same account you are using, next to the originals.</value></data>
@@ -970,7 +1025,7 @@ Original packages are untouched. Connections are NOT migrated; recreate and re-s
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Copying forms</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Starting…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Form {0} of {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Cancelling after the current form…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Cancelling… the form being copied is being stopped.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Copy finished: all {0} forms were copied</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Your copies are in {0}. Open Microsoft Forms to see them, or use the table below.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Copy finished: {0} of {1} forms were copied, some need attention</value></data>
@@ -978,7 +1033,7 @@ Original packages are untouched. Connections are NOT migrated; recreate and re-s
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Copy finished, but no forms were copied</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>See the Details column for the reason. Common causes are a missing Microsoft Forms permission on the target registration, or an account without Forms access.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Copy cancelled after {0} of {1} forms</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>The forms listed below were completed. The form being copied when you cancelled was not finished and is not visible.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>The forms marked as copied below were completed. The form being copied when you cancelled was not finished and may be left half-built in the target; its row shows the copy's ID if one was created.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Copied</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>With warnings</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Failed</value></data>
@@ -993,7 +1048,7 @@ Original packages are untouched. Connections are NOT migrated; recreate and re-s
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Open selected copy</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Open Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Export results…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Show form ID map</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Open saved form IDs</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Select a copied form in the table first.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Results saved to {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Hint: the app registration has no matching redirect address. In Entra, under Authentication, add the platform "Mobile and desktop applications" with http://localhost, then try again.</value></data>
@@ -1112,7 +1167,7 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(untitled form)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Source form</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Pick from the target's forms</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Choose a form from the target account. Click "Load forms from the target account" first.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Choose a form from the target account. The list loads when this step opens; if it is empty, click "Reload form names…".</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Filled in from the target sign-in ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>Your source account, replaced with your target account</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Filled in from your sign-ins ({0} → {1}). Clear both boxes to leave email domains unchanged.</value></data>
@@ -1140,7 +1195,15 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} package(s) were written by this tool and already hold the target&apos;s values. Remove them (the ✕ in the list) and add the original exports.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} site(s) have no target. A site left as it is would still point at the source tenant.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} list(s) would fail on import. Fix the lists marked "Will fail" to continue.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ The lists have not been matched yet. Go back one step and forward again to retry.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ The lists have not been matched yet. Click "Match again" to retry.</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Review: these column names were renamed wherever they appear in the flow's expressions, which can include the same-named column of a different list. Check that each one refers to the list that renamed it.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} column name(s) were renamed wherever they appear in expressions. Check they refer to the list that renamed them, not a same-named column of another list (see the report).</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>{0} of the selected forms would get a title longer than {1} characters once the suffix is added. Microsoft Forms may reject those; shorten the suffix.</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>The email domain move was not applied: both domains must be filled in, without spaces or an extra @ (for example contoso.com and fabrikam.com).</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>Could not read the folder {0}: {1}</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Remove all packages and discard the scan and everything you filled in on the later steps?</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Start over? The packages, the scan and everything you filled in are discarded. Packages already written to the output folder are not deleted.</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Close Rewrite Flows? The mapping you built so far is lost (use Save mapping first to keep it).</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} form(s) need a valid target form ID to continue.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Change source…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Signed in as {0}. The source tenant's SharePoint address is {1}.</value></data>
@@ -1248,6 +1311,7 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Flows_ConnMainWindowSignIn" xml:space="preserve"><value>(the main window&apos;s sign-in)</value></data>
   <data name="Flows_DomainFromName" xml:space="preserve"><value>Email domain to move from</value></data>
   <data name="Flows_DomainMove" xml:space="preserve"><value>Move every address on</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{0} email addresses on {1} are covered by this move, so they are not listed above. To give one of them a different address, clear these boxes, fill in that row, and enter the domain move again.</value></data>
   <data name="Flows_DomainTo" xml:space="preserve"><value>to</value></data>
   <data name="Flows_DomainToName" xml:space="preserve"><value>Email domain to move to</value></data>
   <data name="Flows_DropHint" xml:space="preserve"><value>…or drag .zip files (or a folder) onto this window.</value></data>
@@ -1405,4 +1469,34 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Dlg_StopRunBody" xml:space="preserve"><value>A comparison or verification is still running. Closing this window stops it, and no report will be written. Close anyway?</value></data>
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Close while working?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>The tool is still working (scanning, matching, signing in or writing packages). Closing now stops it. Close anyway?</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Views could not be copied: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>View '{0}' was not copied (a {1} view)</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>View '{0}' could not be created: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>View '{0}' was created but some settings could not be applied: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>View '{0}': its filter or sorting could not be applied and was left out</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>View '{0}': columns not in the target were left out: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} note(s) on views, settings or content types: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>List settings could not be read, so none were copied: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>List settings that could not be applied: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Validation rules or formatting could not be applied to: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>Content type '{0}' could not be copied: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>Content type '{0}': columns that could not be added to it: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>The library's document template could not be copied.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>The library's folder default values could not be copied.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>The folder default values were copied, but the rule that applies them to new files could not be added.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Site columns could not be read: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Site columns that could not be created: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Site content types could not be read: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Site content types that could not be created: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Navigation ({0}) links that could not be created: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Site settings that could not be applied: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Site columns, content types, navigation and settings</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Copying site columns, content types, navigation and settings...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>content type</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>Content type '{0}': its document template could not be copied.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Sign in with app registration: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Tenant: any. You choose the Microsoft 365 account when you sign in.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Sign-in can only go to this directory.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>To connect a site on a different tenant, choose another app registration in Settings (its Tenant ID empty or set to that tenant), or use Multi-tenant mode.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Structure only: columns, views, settings and content types are copied, but no files or list items.</value></data>
 </root>

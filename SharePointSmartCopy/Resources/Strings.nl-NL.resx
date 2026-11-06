@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Doel: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Doellijst</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Kopieeropties</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Bibliotheekinhoud (bestanden) kopiëren</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Als dit is uitgeschakeld, worden alleen het kolomschema en de bibliotheekinstellingen opnieuw gemaakt – er worden geen bestanden gekopieerd.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Bestanden en lijstitems (inhoud) kopiëren</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Als dit is uitgeschakeld, wordt alleen de structuur gekopieerd en geen bestanden of lijstitems: kolommen, weergaven, lijstinstellingen, inhoudstypen en, in het bereik Hele site, sitekolommen, navigatie en sitevoorkeuren.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Als bestand bestaat:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Overslaan</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Overschrijven</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Alle versies</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Laatste </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> versies</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Ook lijsten kopiëren waarnaar mijn lijsten verwijzen</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>Als een geselecteerde lijst een opzoekkolom (Lookup) heeft, wordt de lijst waarnaar wordt verwezen ook gekopieerd, zodat de kolom kan worden gemaakt en de waarden kunnen worden omgezet. Schakel dit uit om alleen te kopiëren wat u hebt geselecteerd.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Opzoekwaarden</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} gekoppeld op item, {1} gekoppeld op tekst, {2} niet gevonden.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Beheerde metagegevens</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} termwaarden gekopieerd, {1} weggelaten (term niet gevonden in de gekopieerde set).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>De kolom met beheerde metagegevens &quot;{0}&quot; is niet gemaakt: de bijbehorende termenset behoort tot een andere tenant en het kopiëren van termensets is niet beschikbaar (meld u aan bij beide tenants en verleen de machtiging TermStore.ReadWrite.All).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>Termenset &quot;{0}&quot; gekopieerd naar het doel: {1} gemaakt, {2} al aanwezig.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Termensets met beheerde metagegevens kopiëren naar de doeltenant</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>Een kolom met beheerde metagegevens is gebonden aan een termenset in de termenopslag van de brontenant. Als dit is ingeschakeld, wordt de termenset (termen, labels, synoniemen, beschrijvingen) gekopieerd naar de termenopslag van het doel, wordt de kolom aan de kopie gebonden en wordt elke waarde opnieuw toegewezen. Vereist de optionele machtiging TermStore.ReadWrite.All en een rol voor de termenopslag in het doel.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Zoekt op in de lijst "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Zoekt op in een lijst op een andere site</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Beheerde metagegevens: de bijbehorende termenset wordt gekopieerd naar de doeltenant</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Beheerde metagegevens: gebruikt dezelfde termenset (dezelfde tenant)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>Het geprojecteerde veld "{0}" is niet gemaakt: de opzoekkolom "{1}" staat niet in de doellijst.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>Het geprojecteerde veld "{0}" is niet gemaakt: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Aanmelden met app-registratie:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Te kopiëren structuur</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Alles wat hier is aangevinkt, wordt samen met de gegevens opnieuw gemaakt op het doel. Een lijst of bibliotheek die daar al bestaat, krijgt alleen de inhoudstypen en weergaven die ontbreken.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Weergaven (filters, groepering, kolommen, standaardweergave, agenda- en bordweergaven)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Lijstinstellingen (goedkeuring, uitchecken, bijlagen, mappen, beveiliging op itemniveau)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Inhoudstypen en hun documentsjablonen</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Kolomvalidatieregels en opmaak</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Bibliotheeksjabloon en standaardwaarden voor mappen</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Sitekolommen en site-inhoudstypen</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Site-instellingen (beschrijving, snelstart, boomstructuur en meer)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Weergaven</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Lijstinstellingen</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Inhoudstypen</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Kolomregels</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Sjablonen en standaardwaarden</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Sitekolommen en -typen</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Navigatie</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Site-instellingen</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Opzoeklijsten</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Termenreeksen</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Structuur: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>geen</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Meer weergeven</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Minder weergeven</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Navigatie kopiëren (Snelstart &amp; bovenste balk)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Vervangt de doelnavigatie door de bronkoppelingen. URL's worden omgezet naar de doelsite.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Machtigingen kopiëren</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Waarden van aangepaste kolommen kopiëren</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Kopieert waarden van de kolomtypen Tekst, Getal, Keuze, Datum, Booleaans, Meervoudige keuze, Persoon en Beheerde metagegevens. Opzoekkolommen worden niet ondersteund.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Schakel 'Waarden van aangepaste kolommen kopiëren' in om toewijzingen te configureren.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Alle waarden van aangepaste kolommen worden gekopieerd. Gebruik toewijzingen om te bepalen welke kolommen in het doel worden gemaakt.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Alle aangepaste kolomwaarden worden gekopieerd. Gebruik Kolomtoewijzing (hierboven) om te bepalen welke kolommen op de bestemming worden gemaakt.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Waarden van aangepaste kolommen worden voor lijstitems altijd gekopieerd.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Kopieermodus</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Naam</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Client-ID (toepassings-ID)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Tenant-ID</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Gebruik 'common' voor meerdere tenants, of uw tenant-GUID of domein.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Laat leeg of voer 'common' in om u aan te melden bij een willekeurige tenant. Een tenant-GUID of domein (bijvoorbeeld contoso.onmicrosoft.com) beperkt aanmelden tot die ene tenant.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Standaardbestandsnamen van rapporten laten beginnen met de namen van de bron- en doelsite</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Afmelden</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Thema:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Modus Bibliotheken en lijsten</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Modus Hele site</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Modus Sitepagina's</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Bibliotheekinhoud (bestanden) kopiëren</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Bestanden en lijstitems (inhoud) kopiëren</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Versiegeschiedenis kopiëren</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Laatste N versies</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Navigatie kopiëren</value></data>
@@ -939,7 +979,7 @@ Oorspronkelijke pakketten zijn onaangetast. Verbindingen worden NIET gemigreerd;
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Formulieren opnieuw laden</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Klik op &quot;Mijn formulieren laden&quot; om uw formulieren te zien.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>Er zijn geen formulieren gevonden in dit account.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} formulieren kopiëren</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Kopiëren van {0} formulieren starten</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Meer formulieren kopiëren</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Kies waar de kopieën naartoe gaan</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Eén tenant: de kopieën worden gemaakt in hetzelfde account dat u gebruikt, naast de originelen.</value></data>
@@ -963,7 +1003,7 @@ Oorspronkelijke pakketten zijn onaangetast. Verbindingen worden NIET gemigreerd;
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Formulieren kopiëren</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Starten…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Formulier {0} van {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Annuleren na het huidige formulier…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Annuleren… het formulier dat wordt gekopieerd, wordt gestopt.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopiëren voltooid: alle {0} formulieren zijn gekopieerd</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Uw kopieën staan in {0}. Open Microsoft Forms om ze te bekijken, of gebruik de onderstaande tabel.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopiëren voltooid: {0} van {1} formulieren zijn gekopieerd, sommige vereisen aandacht</value></data>
@@ -971,7 +1011,7 @@ Oorspronkelijke pakketten zijn onaangetast. Verbindingen worden NIET gemigreerd;
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopiëren voltooid, maar er zijn geen formulieren gekopieerd</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Zie de kolom Details voor de reden. Veelvoorkomende oorzaken zijn een ontbrekende Microsoft Forms-machtiging voor de doelregistratie, of een account zonder toegang tot Forms.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopiëren geannuleerd na {0} van {1} formulieren</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>De hieronder vermelde formulieren zijn voltooid. Het formulier dat werd gekopieerd toen u annuleerde, is niet afgemaakt en is niet zichtbaar.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>De hieronder als gekopieerd gemarkeerde formulieren zijn voltooid. Het formulier dat werd gekopieerd toen u annuleerde, is niet afgemaakt en kan half af in het doel achterblijven; de rij toont de id van de kopie als er een is gemaakt.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Gekopieerd</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>Met waarschuwingen</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Mislukt</value></data>
@@ -986,7 +1026,7 @@ Oorspronkelijke pakketten zijn onaangetast. Verbindingen worden NIET gemigreerd;
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Geselecteerde kopie openen</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Microsoft Forms openen</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Resultaten exporteren…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Formulier-ID-toewijzing weergeven</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Opgeslagen formulier-ID&apos;s openen</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Selecteer eerst een gekopieerd formulier in de tabel.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Resultaten opgeslagen in {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Tip: de app-registratie heeft geen overeenkomend omleidingsadres. Voeg in Entra, onder Verificatie, het platform &quot;Mobiele en bureaubladtoepassingen&quot; toe met http://localhost en probeer het opnieuw.</value></data>
@@ -1105,7 +1145,7 @@ Opnieuw kopiëren maakt van elk een tweede kopie. Doorgaan?</value></data>
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(naamloos formulier)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Bronformulier</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Kies uit de formulieren van het doel</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Kies een formulier uit het doelaccount. Klik eerst op &quot;Formulieren laden uit het doelaccount&quot;.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Kies een formulier uit het doelaccount. De lijst wordt geladen wanneer deze stap wordt geopend; is de lijst leeg, klik dan op &quot;Formuliernamen opnieuw laden…&quot;.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Ingevuld vanuit de doelaanmelding ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>Uw bronaccount, vervangen door uw doelaccount</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Ingevuld vanuit uw aanmeldingen ({0} → {1}). Wis beide vakken om e-maildomeinen ongewijzigd te laten.</value></data>
@@ -1133,7 +1173,7 @@ Opnieuw kopiëren maakt van elk een tweede kopie. Doorgaan?</value></data>
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} pakket(ten) zijn door dit hulpmiddel geschreven en bevatten al de waarden van het doel. Verwijder ze (de ✕ in de lijst) en voeg de oorspronkelijke exports toe.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} site(s) hebben geen doel. Een site die ongewijzigd blijft, zou nog steeds naar de brontenant verwijzen.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} lijst(en) zouden mislukken bij het importeren. Herstel de lijsten die zijn gemarkeerd met &quot;Mislukt&quot; om door te gaan.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ De lijsten zijn nog niet gekoppeld. Ga één stap terug en weer vooruit om het opnieuw te proberen.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ De lijsten zijn nog niet gekoppeld. Klik op &quot;Opnieuw koppelen&quot; om het opnieuw te proberen.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} formulier(en) hebben een geldige doelformulier-ID nodig om door te gaan.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Bron wijzigen…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Aangemeld als {0}. Het SharePoint-adres van de brontenant is {1}.</value></data>
@@ -1398,11 +1438,65 @@ Opnieuw kopiëren maakt van elk een tweede kopie. Doorgaan?</value></data>
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Sluiten tijdens het werk?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>Het hulpmiddel is nog bezig (scannen, koppelen, aanmelden of pakketten schrijven). Als u nu sluit, wordt het gestopt. Toch sluiten?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>{0} kon niet automatisch aan het nieuwe formulier worden toegevoegd. Een kopie van het bestand is opgeslagen als {1}: voeg het opnieuw toe in Microsoft Forms.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Versiegeschiedenis van lijstitems:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Hetzelfde als bestanden</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Alle versies</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Alleen huidige</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Kopieert de versiegeschiedenis van elk nieuw lijstitem (waarden, datums en bewerkers) door de versies op het doel opnieuw af te spelen. &apos;Hetzelfde als bestanden&apos; volgt de bestandsversieopties hierboven. Items die al op het doel staan, behouden hun eigen geschiedenis. Kolommen voor personen, opzoeken, taxonomie en koppelingen kopiëren alleen hun huidige waarde.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>versiegeschiedenis: een deel is niet gekopieerd ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>de versiegeschiedenis is niet gekopieerd ({0}); het item heeft alleen zijn huidige waarden</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Lijst:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>De verplaatsing van het e-maildomein is niet toegepast: beide domeinen moeten zijn ingevuld, zonder spaties of een extra @ (bijvoorbeeld contoso.com en fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Alle pakketten verwijderen en de scan en alles wat u in de latere stappen hebt ingevuld verwerpen?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Flows herschrijven sluiten? De toewijzing die u tot nu toe hebt opgebouwd gaat verloren (gebruik eerst Toewijzing opslaan… om deze te bewaren).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Opnieuw beginnen? De pakketten, de scan en alles wat u hebt ingevuld worden verworpen. Pakketten die al naar de uitvoermap zijn geschreven, worden niet verwijderd.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{0} e-mailadressen op {1} vallen onder deze verplaatsing en staan daarom niet hierboven vermeld. Wilt u een van deze adressen een ander adres geven, wis dan deze vakken, vul die rij in en voer de domeinverplaatsing opnieuw in.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>Kan de map {0} niet lezen: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Controleren: deze kolomnamen zijn overal gewijzigd waar ze in de expressies van de flow voorkomen, ook in de kolom met dezelfde naam van een andere lijst. Controleer of elke kolom verwijst naar de lijst die de naam heeft gewijzigd.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>Kolomnamen ({0}) zijn overal gewijzigd waar ze in expressies voorkomen. Controleer of ze verwijzen naar de lijst die ze heeft gewijzigd en niet naar een kolom met dezelfde naam van een andere lijst (zie het rapport).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Nu stoppen met kopiëren? Het formulier dat nu wordt gekopieerd, wordt afgebroken en kan half af in het doelaccount achterblijven; verwijder het in Microsoft Forms als dat zo is. Formulieren die al klaar zijn, blijven behouden.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Selecteren</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Kopieerlogboek</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>Kopiëren van 1 formulier starten</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>Het formulier is gekopieerd, maar de afbeeldingen konden niet worden gecontroleerd ({0}). Open het in Microsoft Forms en controleer de achtergrond- en koptekstafbeeldingen.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Controleer uw verbinding en aanmelding en klik vervolgens op Formulieren opnieuw laden. Details: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Uw formulieren konden niet worden geladen</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>1 formulier geladen.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>Het logboek is naar het klembord gekopieerd.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>Het logboek kon niet worden gekopieerd omdat een ander programma het klembord gebruikt. Probeer het opnieuw.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Kopieerlogboek</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Volgende stap: als flows deze formulieren gebruiken, opent u Flows herschrijven vanuit het hoofdvenster. Het leest de formulier-id&apos;s die door deze kopieerbewerking zijn opgeslagen en laat elke flow naar het nieuwe formulier verwijzen.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Geen formulieren gevonden</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>Wat wordt gekopieerd: de vragen, vertakkingen, instellingen en het thema. Wat niet: antwoorden (gebruik Antwoorden exporteren… in de eerste stap om ze in Excel op te slaan), medewerkers en met wie het formulier is gedeeld. Elke kopie is een nieuw formulier dat eigendom is van het doelaccount, en afbeeldingen moeten mogelijk opnieuw worden toegevoegd.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Kopiëren voltooid: het formulier is gekopieerd</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Er is een filter actief: Alles selecteren en Selectie opheffen gelden voor de {0} weergegeven formulieren.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>{0} van de geselecteerde formulieren zijn eerder gekopieerd; opnieuw kopiëren maakt duplicaten.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Stap {0} van {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 formulier wordt gekopieerd van {1} naar {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>{0} van de geselecteerde formulieren zouden na toevoeging van het achtervoegsel een titel krijgen die langer is dan {1} tekens. Microsoft Forms kan deze weigeren; verkort het achtervoegsel.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Weergaven konden niet worden gekopieerd: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>Weergave '{0}' is niet gekopieerd (een {1}-weergave)</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>Weergave '{0}' kon niet worden gemaakt: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>Weergave '{0}' is gemaakt, maar sommige instellingen konden niet worden toegepast: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>Weergave '{0}': het filter of de sortering kon niet worden toegepast en is weggelaten</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>Weergave '{0}': kolommen die niet in het doel voorkomen, zijn weggelaten: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} opmerking(en) over weergaven, instellingen of inhoudstypen: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>Lijstinstellingen konden niet worden gelezen, dus er is niets gekopieerd: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>Lijstinstellingen die niet konden worden toegepast: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Validatieregels of opmaak konden niet worden toegepast op: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>Inhoudstype '{0}' kon niet worden gekopieerd: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>Inhoudstype '{0}': kolommen die niet konden worden toegevoegd: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>De documentsjabloon van de bibliotheek kon niet worden gekopieerd.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>De standaardwaarden voor mappen van de bibliotheek konden niet worden gekopieerd.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>De standaardwaarden voor mappen zijn gekopieerd, maar de regel waarmee ze op nieuwe bestanden worden toegepast, kon niet worden toegevoegd.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Sitekolommen konden niet worden gelezen: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Sitekolommen die niet konden worden gemaakt: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Site-inhoudstypen konden niet worden gelezen: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Site-inhoudstypen die niet konden worden gemaakt: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Navigatiekoppelingen ({0}) die niet konden worden gemaakt: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Siteinstellingen die niet konden worden toegepast: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Sitekolommen, inhoudstypen, navigatie en instellingen</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Sitekolommen, inhoudstypen, navigatie en instellingen worden gekopieerd...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>inhoudstype</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>Inhoudstype '{0}': de documentsjabloon kan niet worden gekopieerd.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Meldt zich aan met app-registratie: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Tenant: willekeurig. U kiest het Microsoft 365-account wanneer u zich aanmeldt.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Aanmelden kan alleen bij deze directory.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Als u een site in een andere tenant wilt verbinden, kiest u in Instellingen een andere app-registratie (met Tenant-ID leeg of ingesteld op die tenant) of gebruikt u de modus Meerdere tenants.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Alleen structuur: kolommen, weergaven, instellingen en inhoudstypen worden gekopieerd, maar geen bestanden of lijstitems.</value></data>
 </root>

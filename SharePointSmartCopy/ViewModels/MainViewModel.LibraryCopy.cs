@@ -16,6 +16,58 @@ namespace SharePointSmartCopy.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
     // A custom list read from the source site; Def is null (and ReadError set) when reading it failed.
+    private async Task ApplyDeferredStructureSettingsAsync()
+    {
+        try
+        {
+            foreach (var note in await _libraryCopyService.ApplyPendingSettingsAsync())
+                PushActivity(note);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException) { PushActivity(ex.Message); }
+
+        // Managed metadata: term sets copied to the target, and how many values were remapped or left out.
+        var (taxRemapped, taxSkipped) = SpService.TaxonomyStats;
+        if (_libraryCopyService.TermStoreNotes.Count > 0 || taxRemapped + taxSkipped > 0)
+        {
+            var parts = new List<string>(_libraryCopyService.TermStoreNotes.Take(6));
+            if (taxRemapped + taxSkipped > 0) parts.Add(Loc.T("VM_TaxonomySummary", taxRemapped, taxSkipped));
+            System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(new CopyResult
+            {
+                FileName          = Loc.T("VM_TaxonomySummaryTitle"),
+                SourcePath        = string.Empty,
+                TargetPath        = TargetUrl.TrimEnd('/'),
+                Status            = taxSkipped > 0 ? CopyStatus.Failed : CopyStatus.Success,
+                ErrorMessage      = string.Join(" ", parts),
+                IsLibraryCreation = true,
+            }));
+        }
+
+        // One summary line for lookup values (matched by item ID where the item was copied in this run).
+        var (byId, byText, unresolved) = SpService.LookupStats;
+        if (byId + byText + unresolved > 0)
+        {
+            var text = Loc.T("VM_LookupSummary", byId, byText, unresolved);
+            System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(new CopyResult
+            {
+                FileName          = Loc.T("VM_LookupSummaryTitle"),
+                SourcePath        = string.Empty,
+                TargetPath        = TargetUrl.TrimEnd('/'),
+                Status            = unresolved > 0 ? CopyStatus.Failed : CopyStatus.Success,
+                ErrorMessage      = text,
+                IsLibraryCreation = true,
+            }));
+        }
+    }
+
+    // Adds what could not be copied of the list's/library's views (filled in when the list was created) to its result line.
+    private void AppendViewNotes(CopyResult result, string title)
+    {
+        var notes = _libraryCopyService.ViewFailuresFor(title);
+        if (notes.Count == 0) return;
+        var text = Loc.T("VM_ViewsNotes", notes.Count, string.Join("; ", notes.Take(3)));
+        result.ErrorMessage = string.IsNullOrEmpty(result.ErrorMessage) ? text : result.ErrorMessage + " " + text;
+    }
+
     private sealed record SiteListInfo(string Id, string Title, int BaseTemplate, LibraryDefinition? Def, string? ReadError);
 
     // Orders lists so each one comes after every list its Lookup columns point at (depth-first
@@ -90,6 +142,7 @@ public partial class MainViewModel : ObservableObject
                     if (colFailures.Count > 0)
                         listResult.ErrorMessage =
                             Loc.T("VM_ColumnsCouldNotBeCreated", colFailures.Count, string.Join("; ", colFailures.Take(3)));
+                    AppendViewNotes(listResult, listTitle);
 
                     if (CopyPermissions)
                     {
@@ -133,6 +186,17 @@ public partial class MainViewModel : ObservableObject
                         catch { }
                     }
 
+                    // Existing list: add the content types and views it lacks (nothing it already has is changed).
+                    if (!string.IsNullOrEmpty(alreadyEx.ListId) && EffectiveCopyCustomColumns)
+                    {
+                        try
+                        {
+                            await _libraryCopyService.AddMissingStructureAsync(definition, TargetUrl.TrimEnd('/'), alreadyEx.ListId, isLibrary: false);
+                            AppendViewNotes(listResult, definition.Title);
+                        }
+                        catch (Exception ex) when (ex is not OperationCanceledException) { }
+                    }
+
                     if (CopyLibraryContent && !string.IsNullOrEmpty(alreadyEx.ListId))
                         await CopyListItemsAsync(alreadyEx.ListId, definition, [], false, listResult);
 
@@ -166,6 +230,14 @@ public partial class MainViewModel : ObservableObject
         BeginRunJournal();
         SpService.Unresolved.Clear();
         SpService.ClearLookupCache();   // lookup values resolve against the target as it is NOW
+        _libraryCopyService.ResetTermStoreRun();
+        _libraryCopyService.CopyTermSets = CopyTermSets;
+        _libraryCopyService.Structure = new LibraryCopyService.StructureOptions
+        {
+            Views = CopyViews, ListSettings = CopyListSettings, ContentTypes = CopyContentTypes, ColumnRules = CopyColumnRules,
+            Templates = CopyTemplates, SiteDefinitions = CopySiteDefinitions, Navigation = CopyNavigation, SiteSettings = CopySiteSettings,
+        };
+        _libraryCopyService.TermStore = new TermStoreCopyService(AuthService, IsMultiTenant ? TargetAuthService : AuthService);
 
         _copyCts?.Dispose();
         _copyCts = new CancellationTokenSource();
@@ -201,6 +273,9 @@ public partial class MainViewModel : ObservableObject
                 else MetadataElapsedTime = FormatDuration(DateTimeOffset.Now - _metadataStartTime);
                 MetadataEta        = string.Empty;
                 IsUpdatingMetadata = false;
+                // Content approval and require check-out are switched on only now, after every file and the metadata passes
+                // are done: on the empty new list they would have changed how the copy's own writes behave.
+                if (!anyMetadataCancelled) _ = ApplyDeferredStructureSettingsAsync();
             }
         }
         IProgress<bool>? MakeMetadataProgress()
@@ -234,6 +309,34 @@ public partial class MainViewModel : ObservableObject
                     }
                     catch (OperationCanceledException) { throw; }
                     catch { /* non-fatal */ }
+                }
+            }
+
+            // Site scope: the site-wide definitions first (custom site columns and content types, navigation, site settings),
+            // so the lists created below can use them.
+            if (IsSiteScope)
+            {
+                var siteResult = new CopyResult
+                {
+                    FileName   = Loc.T("VM_SiteStructure"),
+                    SourcePath = SourceUrl.TrimEnd('/'),
+                    TargetPath = TargetUrl.TrimEnd('/'),
+                    Status     = CopyStatus.Copying,
+                };
+                System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(siteResult));
+                try
+                {
+                    StatusMessage = Loc.T("VM_CopyingSiteStructure");
+                    var siteNotes = await _libraryCopyService.CopySiteStructureAsync(
+                        SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'), _copyCts.Token);
+                    siteResult.Status       = CopyStatus.Success;
+                    siteResult.ErrorMessage = siteNotes.Count > 0 ? string.Join("; ", siteNotes.Take(5)) : null;
+                }
+                catch (OperationCanceledException) { throw; }
+                catch (Exception ex)
+                {
+                    siteResult.Status       = CopyStatus.Failed;
+                    siteResult.ErrorMessage = ex.Message;
                 }
             }
 
@@ -286,6 +389,53 @@ public partial class MainViewModel : ObservableObject
                             listDefinitions.Add((def, lib.ListBaseTemplate, lib));
                         }
                     }
+                }
+            }
+
+            // Library scope: lists that the selected lists look up are copied too (so lookup columns can
+            // bind and values resolve), repeating until no new dependency appears. They get a synthetic
+            // checked node so they are copied as whole lists, not as items-only.
+            if (!IsSiteScope && CopyLookupDependencies && EffectiveCopyCustomColumns)
+            {
+                try
+                {
+                    static string Norm(string? id) => (id ?? string.Empty).Trim('{', '}').ToLowerInvariant();
+                    var customLists = (await SpService.GetCustomListsAsync(SourceUrl.TrimEnd('/')))
+                        .ToDictionary(l => Norm(l.Item1), l => l, StringComparer.OrdinalIgnoreCase);
+                    var have = new HashSet<string>(
+                        listDefinitions.Select(l => Norm(l.Def.SourceListId))
+                            .Concat(definitions.Select(d => Norm(d.SourceListId))),
+                        StringComparer.OrdinalIgnoreCase);
+                    for (var pass = 0; pass < 10; pass++)
+                    {
+                        var wanted = listDefinitions.Select(l => l.Def).Concat(definitions)
+                            .SelectMany(d => d.Columns)
+                            .Where(c => SpColumnDef.IsLookupType(c.FieldType) && !string.IsNullOrEmpty(c.LookupListId))
+                            .Select(c => Norm(c.LookupListId))
+                            .Where(id => !have.Contains(id) && customLists.ContainsKey(id))
+                            .Distinct().ToList();
+                        if (wanted.Count == 0) break;
+                        foreach (var id in wanted)
+                        {
+                            have.Add(id);
+                            var (listId, listTitle, listBase) = customLists[id];
+                            var dep = await _libraryCopyService.ReadListDefinitionAsync(
+                                SourceUrl.TrimEnd('/'), listId, listTitle);
+                            var node = new SharePointNode
+                            {
+                                Name = listTitle, Id = listId, Type = NodeType.Library,
+                                IsCustomList = true, ListBaseTemplate = listBase,
+                                SiteId = SourceSiteId, SiteUrl = SourceUrl.TrimEnd('/'),
+                                IsChecked = true,
+                            };
+                            listDefinitions.Add((dep, listBase, node));
+                        }
+                    }
+                }
+                catch (OperationCanceledException) { throw; }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[LibraryCopy] lookup dependency expansion failed: {ex.Message}");
                 }
             }
 
@@ -407,6 +557,7 @@ public partial class MainViewModel : ObservableObject
                     if (colFailures.Count > 0)
                         libResult.ErrorMessage =
                             Loc.T("VM_ColumnsCouldNotBeCreated", colFailures.Count, string.Join("; ", colFailures.Take(3)));
+                    AppendViewNotes(libResult, def.Title);
 
                     if (CopyPermissions)
                     {
@@ -467,7 +618,7 @@ public partial class MainViewModel : ObservableObject
                             var libPermFlags = new Dictionary<string, bool>();
                             try
                             {
-                                if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
+                                if (EffectiveCopyCustomColumns)
                                 {
                                     var wantsSystemMeta = CopyMode == CopyMode.MigrationApi && PreserveMetadata;
                                     var systemMeta = wantsSystemMeta ? new Dictionary<string, FileMetadata>() : null;
@@ -531,6 +682,19 @@ public partial class MainViewModel : ObservableObject
                         catch { }
                     }
 
+                    // Existing library: add the content types and views it lacks (nothing it already has is changed).
+                    if (!string.IsNullOrEmpty(alreadyEx.ServerRelativeUrl) && EffectiveCopyCustomColumns)
+                    {
+                        try
+                        {
+                            var structListId = await SpService.GetListIdByServerRelativeUrlAsync(
+                                TargetUrl.TrimEnd('/'), alreadyEx.ServerRelativeUrl);
+                            await _libraryCopyService.AddMissingStructureAsync(def, TargetUrl.TrimEnd('/'), structListId, isLibrary: true);
+                            AppendViewNotes(libResult, def.Title);
+                        }
+                        catch (Exception ex) when (ex is not OperationCanceledException) { }
+                    }
+
                     if (CopyLibraryContent && !string.IsNullOrEmpty(alreadyEx.DriveId))
                     {
                         StatusMessage = Loc.T("VM_CopyingFilesIntoExisting", def.Title);
@@ -569,7 +733,7 @@ public partial class MainViewModel : ObservableObject
                             var existLibPermFlags = new Dictionary<string, bool>();
                             try
                             {
-                                if (EffectiveCopyCustomColumns && def.Columns.Count > 0)
+                                if (EffectiveCopyCustomColumns)
                                 {
                                     var wantsSystemMeta = CopyMode == CopyMode.MigrationApi && PreserveMetadata;
                                     var systemMeta = wantsSystemMeta ? new Dictionary<string, FileMetadata>() : null;
@@ -669,6 +833,7 @@ public partial class MainViewModel : ObservableObject
                             def.Title    = sourceNode.EffectiveDestinationName;
                             targetListId = await _libraryCopyService.CreateCustomListAsync(
                                 TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate);
+                            AppendViewNotes(listResult, def.Title);
                         }
                         else
                         {
@@ -687,8 +852,11 @@ public partial class MainViewModel : ObservableObject
                         }
                     }
                     else
+                    {
                         targetListId = await _libraryCopyService.CreateCustomListAsync(
                             TargetUrl.TrimEnd('/'), TargetSiteId, def, baseTemplate);
+                        AppendViewNotes(listResult, def.Title);
+                    }
 
                     if (CopyPermissions)
                     {
@@ -730,6 +898,17 @@ public partial class MainViewModel : ObservableObject
                             AddColumnCreationResult(def.Title, $"{TargetUrl.TrimEnd('/')}/{def.Title}", createdCols);
                         }
                         catch { }
+                    }
+
+                    // Existing list: add the content types and views it lacks (nothing it already has is changed).
+                    if (!string.IsNullOrEmpty(alreadyEx.ListId) && EffectiveCopyCustomColumns)
+                    {
+                        try
+                        {
+                            await _libraryCopyService.AddMissingStructureAsync(def, TargetUrl.TrimEnd('/'), alreadyEx.ListId, isLibrary: false);
+                            AppendViewNotes(listResult, def.Title);
+                        }
+                        catch (Exception ex) when (ex is not OperationCanceledException) { }
                     }
 
                     if (needsItemCopy && !string.IsNullOrEmpty(alreadyEx.ListId))

@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> 目標: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>目的地清單</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>複製選項</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>複製文件庫內容 (檔案)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>關閉時,只會重新建立欄結構與文件庫設定,不會複製任何檔案。</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>複製檔案和清單項目 (內容)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>關閉時,只會複製結構,不會複製任何檔案或清單項目:包括欄、檢視、清單設定、內容類型,在「整個網站」範圍中還包括網站欄、導覽和網站設定。</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>若檔案已存在:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>略過</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>覆寫</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>所有版本</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>最新 </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> 個版本</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>同時複製我的清單所查閱的清單</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>當所選清單包含查閱 (Lookup) 欄位時,也會複製其查閱的清單,以便建立該欄位並解析其值。關閉此選項則僅複製您所選取的內容。</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>查閱值</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} 項依項目比對,{1} 項依文字比對,{2} 項找不到。</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>受控中繼資料</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>已複製 {0} 個詞彙值,{1} 個已省略 (在複製的集合中找不到詞彙)。</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>未建立受控中繼資料欄位 &quot;{0}&quot;:其詞彙集屬於另一個租用戶,且無法複製詞彙集 (請登入兩個租用戶並授與 TermStore.ReadWrite.All 權限)。</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>詞彙集 &quot;{0}&quot; 已複製到目標:已建立 {1} 個,{2} 個已存在。</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>將受控中繼資料詞彙集複製到目標租用戶</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>受控中繼資料欄位繫結至來源租用戶詞彙存放區中的詞彙集。啟用後,詞彙集(詞彙、標籤、同義字、描述)會複製到目標詞彙存放區,欄位會繫結至複本,並重新對應每個值。需要選用的 TermStore.ReadWrite.All 權限,以及目標上的詞彙存放區角色。</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>查閱清單 "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>查閱另一個網站中的清單</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>受控中繼資料:其詞彙集將複製到目標租用戶</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>受控中繼資料:使用相同的詞彙集(同一租用戶)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>未建立投影欄位 "{0}":其查閱欄位 "{1}" 不在目標清單中。</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>未建立投影欄位 "{0}":{1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>使用應用程式註冊登入:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>要複製的結構</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>此處勾選的所有項目都會連同資料一併在目的地重新建立。目的地上已存在的清單或文件庫只會取得其缺少的內容類型和檢視。</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>檢視(篩選、群組、欄位、預設檢視、行事曆檢視和看板檢視)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>清單設定(核准、簽出、附件、資料夾、項目層級安全性)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>內容類型及其文件範本</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>欄位驗證規則和格式設定</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>文件庫範本和資料夾預設值</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>網站欄位和網站內容類型</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>網站設定(說明、快速啟動、樹狀檢視等)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>檢視</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>清單設定</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>內容類型</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>欄位規則</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>範本和預設值</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>網站欄位和類型</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>導覽</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>網站設定</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>查閱清單</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>詞彙集</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>結構:{0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>無</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>顯示更多</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>顯示較少</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>複製導覽 (快速啟動與頂端列)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>以來源連結取代目標導覽。URL 會重新對應至目標網站。</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>複製權限</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>複製自訂欄值</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>複製文字、數字、選項、日期、布林、多選、人員與受管理中繼資料欄值。不支援查閱欄。</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>啟用「複製自訂欄值」以設定對應。</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>會複製所有自訂欄值。請使用對應來控制要在目的地建立哪些欄。</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>將複製所有自訂欄的值。請使用上方的欄對應來控制在目的地建立哪些欄。</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>清單項目一律會複製自訂欄值。</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>複製模式</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>名稱</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>用戶端識別碼 (應用程式識別碼)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>租用戶識別碼</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>多租用戶請使用「common」,或使用您的租用戶 GUID 或網域。</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>留空或輸入「common」即可登入任何租用戶。指定租用戶 GUID 或網域(例如 contoso.onmicrosoft.com)則會將登入限制在該租用戶。</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>在預設報告檔名前加上來源與目標網站名稱</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>登出</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>佈景主題:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>文件庫與清單模式</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>整個網站模式</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>網站頁面模式</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>複製文件庫內容 (檔案)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>複製檔案和清單項目 (內容)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>複製版本記錄</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>最新 N 個版本</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>複製導覽</value></data>
@@ -939,7 +979,7 @@
   <data name="Forms_ReloadForms" xml:space="preserve"><value>重新載入表單</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>按一下「載入我的表單」以檢視您的表單。</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>此帳戶中找不到表單。</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>複製 {0} 個表單</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>開始複製 {0} 個表單</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>複製更多表單</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>選擇複本的去向</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>單一租用戶: 複本會建立在您正在使用的同一個帳戶中,位於原件旁邊。</value></data>
@@ -963,7 +1003,7 @@
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>正在複製表單</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>正在開始…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>表單 {0} / {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>將在目前表單完成後取消…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>正在取消…正在停止目前複製的表單。</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>複製完成: 全部 {0} 個表單均已複製</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>您的複本位於 {0}。請開啟 Microsoft Forms 檢視,或使用下方的表格。</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>複製完成: 已複製 {1} 個表單中的 {0} 個,部分需要處理</value></data>
@@ -971,7 +1011,7 @@
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>複製完成,但沒有複製任何表單</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>原因請參閱「詳細資料」欄。常見原因是目標註冊缺少 Microsoft Forms 權限,或帳戶沒有 Forms 存取權。</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>已在 {1} 個表單中的 {0} 個之後取消複製</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>下方列出的表單已完成。取消時正在複製的表單未完成,且看不到。</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>下方標示為已複製的表單已完成。取消時正在複製的表單未完成,可能在目標中處於半成品狀態;如果已建立副本,其所在列會顯示該副本的 ID。</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>已複製</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>有警告</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>失敗</value></data>
@@ -986,7 +1026,7 @@
   <data name="Forms_OpenSelected" xml:space="preserve"><value>開啟所選複本</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>開啟 Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>匯出結果…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>顯示表單 ID 對應</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>開啟已儲存的表單 ID</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>請先在表格中選取一個已複製的表單。</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>結果已儲存至 {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>提示: 應用程式註冊沒有相符的重新導向位址。請在 Entra 的「驗證」下,新增平台「行動和傳統型應用程式」並使用 http://localhost,然後再試一次。</value></data>
@@ -1105,7 +1145,7 @@
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(未命名表單)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>來源表單</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>從目標的表單中選擇</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>從目標帳戶中選擇一個表單。請先按一下「從目標帳戶載入表單」。</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>從目標帳戶中選擇一個表單。此步驟開啟時會載入清單;如果清單是空的,請按一下「重新載入表單名稱…」。</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>根據目標登入填入({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>您的來源帳戶,已取代為您的目標帳戶</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>根據您的登入填入({0} → {1})。清除兩個方塊可保持電子郵件網域不變。</value></data>
@@ -1133,7 +1173,7 @@
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ 有 {0} 個封裝是由此工具寫入的,已包含目標的值。請移除它們(清單中的 ✕),然後新增原始匯出。</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ 有 {0} 個網站沒有目標。維持原樣的網站仍會指向來源租用戶。</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ 有 {0} 個清單在匯入時會失敗。請修正標示為「將失敗」的清單以繼續。</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ 清單尚未比對。請返回上一步再前進以重試。</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ 清單尚未比對。請按一下「重新比對」重試。</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ 有 {0} 個表單需要有效的目標表單 ID 才能繼續。</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>變更來源…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>已以 {0} 身分登入。來源租用戶的 SharePoint 位址為 {1}。</value></data>
@@ -1398,11 +1438,65 @@
   <data name="Flows_CloseTitle" xml:space="preserve"><value>工作中關閉?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>工具仍在運作(掃描、比對、登入或寫入封裝)。現在關閉會停止它。仍要關閉嗎?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>無法將{0}自動新增至新表單。檔案複本已另存為 {1}: 請在 Microsoft Forms 中重新新增。</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>清單項目版本歷程記錄:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>與檔案相同</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>所有版本</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>僅目前版本</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>透過在目標中重播每個新清單項目的版本,複製其版本歷程記錄(值、日期和編輯者)。「與檔案相同」會遵循上方的檔案版本選項。目標中已存在的項目會保留自己的歷程記錄。人員、查閱、分類和連結欄位只會複製其目前的值。</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>版本歷程記錄: 部分內容未複製({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>版本歷程記錄未複製({0});該項目只有目前的值</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>清單:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>未套用電子郵件網域搬移:兩個網域都必須填寫,且不可包含空格或多餘的 @(例如 contoso.com 和 fabrikam.com)。</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>移除所有套件,並捨棄掃描結果以及您在後續步驟中填寫的所有內容?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>關閉「為目標重寫流程」?您目前建立的對應將會遺失(如要保留,請先使用「儲存對應…」)。</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>重新開始?套件、掃描結果以及您填寫的所有內容都將被捨棄。已寫入輸出資料夾的套件不會被刪除。</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{1} 上的 {0} 個電子郵件地址已包含在此次搬移中,因此未列在上方。若要為其中某個地址指定不同的地址,請清除這些方塊,填寫該列,然後重新輸入網域搬移。</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>無法讀取資料夾 {0}:{1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>請檢查:這些欄位名稱已在流程運算式中出現的所有位置被重新命名,其中可能包括其他清單中的同名欄位。請確認每個欄位名稱指向的是將其重新命名的那個清單。</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} 個欄位名稱已在運算式中出現的所有位置被重新命名。請確認它們指向的是將其重新命名的清單,而不是其他清單中的同名欄位(請參閱報告)。</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>現在停止複製?正在複製的表單會被中斷,並可能在目標帳戶中處於半成品狀態;如果是這樣,請在 Microsoft Forms 中將其刪除。已完成的表單會保留。</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>選取</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>複製記錄</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>開始複製 1 個表單</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>表單已複製,但無法檢查其影像({0})。請在 Microsoft Forms 中開啟,檢查背景和標題影像。</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>請檢查網路連線和登入狀態,然後按一下「重新載入表單」。詳細資料:{0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>無法載入您的表單</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>已載入 1 個表單。</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>記錄已複製到剪貼簿。</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>由於剪貼簿正被其他程式使用,無法複製記錄。請重試。</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>複製記錄</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>下一步:如果有流程使用這些表單,請從主視窗開啟「為目標重寫流程」。它會讀取本次複製儲存的表單 ID,並將每個流程指向新表單。</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>找不到表單</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>會複製的內容:問題、分支、設定和主題。不會複製的內容:回應(請使用第一步中的「匯出回應…」將其儲存到 Excel)、共同作者,以及表單的共用對象。每個副本都是由目標帳戶擁有的新表單,影像可能需要重新新增。</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>複製完成:表單已複製</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>篩選已開啟:「全選」和「取消全選」適用於顯示的 {0} 個表單。</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>所選表單中有 {0} 個先前已複製過;再次複製會建立重複項目。</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>第 {0} 步,共 {1} 步:{2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>將把 1 個表單從 {1} 複製到 {2}。</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>加上尾碼後,所選表單中有 {0} 個的標題將超過 {1} 個字元。Microsoft Forms 可能會拒絕這些表單;請縮短尾碼。</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>無法複製檢視：{0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>未複製檢視 '{0}'（{1} 檢視）</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>無法建立檢視 '{0}'：{1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>檢視 '{0}' 已建立，但無法套用部分設定：{1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>檢視 '{0}'：無法套用其篩選或排序，已略過</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>檢視 '{0}'：目標中不存在的欄已略過：{1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>有 {0} 則關於檢視、設定或內容類型的備註：{1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>無法讀取清單設定，因此未複製任何設定：{0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>無法套用的清單設定：{0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>無法對下列項目套用驗證規則或格式設定：{0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>無法複製內容類型 '{0}'：{1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>內容類型 '{0}'：無法加入其中的欄：{1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>無法複製文件庫的文件範本。</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>無法複製文件庫的資料夾預設值。</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>已複製資料夾預設值，但無法加入將其套用至新檔案的規則。</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>無法讀取網站欄：{0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>無法建立的網站欄：{0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>無法讀取網站內容類型：{0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>無法建立的網站內容類型：{0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>無法建立的導覽（{0}）連結：{1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>無法套用的網站設定：{0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>網站欄、內容類型、導覽和設定</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>正在複製網站欄、內容類型、導覽和設定...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>內容類型</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>內容類型 '{0}'：無法複製其文件範本。</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>使用應用程式註冊登入: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>租用戶: 任何。登入時由您選擇 Microsoft 365 帳戶。</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>租用戶: {0}。登入只能進入此目錄。</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>若要連線到其他租用戶上的網站,請在「設定」中選擇另一個應用程式註冊(其租用戶識別碼為空白或設定為該租用戶),或使用多租用戶模式。</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>僅結構:會複製欄、檢視、設定和內容類型,但不會複製任何檔案或清單項目。</value></data>
 </root>

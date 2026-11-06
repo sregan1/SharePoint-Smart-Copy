@@ -2,6 +2,7 @@ namespace SharePointSmartCopy.Models;
 
 public class PageMetadata
 {
+    public string? Title                 { get; set; }
     public string? CanvasContent1        { get; set; }
     public string? LayoutWebpartsContent { get; set; }
     public string? BannerImageUrl        { get; set; }

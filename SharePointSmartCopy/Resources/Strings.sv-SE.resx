@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Mål: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Mållista</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Kopieringsalternativ</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Kopiera bibliotekets innehåll (filer)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>När det är avstängt återskapas bara kolumnschemat och biblioteksinställningarna – inga filer kopieras.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Kopiera filer och listobjekt (innehåll)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>När det är avstängt kopieras endast strukturen, utan filer eller listobjekt: kolumner, vyer, listinställningar, innehållstyper och, i omfånget Hela webbplatsen, webbplatskolumner, navigering och webbplatsinställningar.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Om filen finns:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Hoppa över</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Skriv över</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Alla versioner</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Senaste </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> versionerna</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Kopiera även listor som mina listor slår upp i</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>När en markerad lista har en sökkolumn (Lookup) kopieras även listan som den slår upp i, så att kolumnen kan skapas och dess värden lösas. Inaktivera för att bara kopiera det du markerat.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Sökvärden</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} matchade efter objekt, {1} matchade efter text, {2} hittades inte.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Hanterade metadata</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} termvärden kopierade, {1} utelämnade (termen hittades inte i den kopierade uppsättningen).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>Kolumnen för hanterade metadata &quot;{0}&quot; skapades inte: dess termuppsättning tillhör en annan klientorganisation, och kopiering av termuppsättningar är inte tillgänglig (logga in på båda klientorganisationerna och ge behörigheten TermStore.ReadWrite.All).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>Termuppsättningen &quot;{0}&quot; kopierades till målet: {1} skapade, {2} fanns redan.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Kopiera termuppsättningar för hanterade metadata till målklientorganisationen</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>En kolumn för hanterade metadata är bunden till en termuppsättning i källklientorganisationens termlager. När detta är aktiverat kopieras termuppsättningen (termer, etiketter, synonymer, beskrivningar) till målets termlager, kolumnen binds till kopian och varje värde mappas om. Kräver den valfria behörigheten TermStore.ReadWrite.All och en termlagerroll på målet.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Slår upp listan "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Slår upp en lista på en annan webbplats</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Hanterade metadata: dess termuppsättning kopieras till målklientorganisationen</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Hanterade metadata: använder samma termuppsättning (samma klientorganisation)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>Det projicerade fältet "{0}" skapades inte: dess uppslagskolumn "{1}" finns inte i mållistan.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>Det projicerade fältet "{0}" skapades inte: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Logga in med appregistrering:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Struktur att kopiera</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Allt som är markerat här återskapas på målet tillsammans med data. En lista eller ett bibliotek som redan finns där får bara de innehållstyper och vyer som saknas.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Vyer (filter, gruppering, kolumner, standardvy, kalender- och tavelvyer)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Listinställningar (godkännande, utcheckning, bilagor, mappar, säkerhet på objektnivå)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Innehållstyper och deras dokumentmallar</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Valideringsregler och formatering för kolumner</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Biblioteksmall och standardvärden för mappar</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Webbplatskolumner och innehållstyper för webbplatsen</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Webbplatsinställningar (beskrivning, snabbstart, trädvy med mera)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Vyer</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Listinställningar</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Innehållstyper</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Kolumnregler</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Mallar och standardvärden</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Webbplatskolumner och -typer</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Navigering</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Webbplatsinställningar</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Uppslagslistor</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Termuppsättningar</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Struktur: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>ingen</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Visa mer</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Visa mindre</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Kopiera navigering (Snabbstart och översta fältet)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Ersätter målets navigering med källans länkar. URL:er mappas om till målwebbplatsen.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Kopiera behörigheter</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Kopiera värden i anpassade kolumner</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Kopierar värden från kolumntyperna Text, Tal, Val, Datum, Boolesk, Flerval, Person och Hanterade metadata. Uppslagskolumner stöds inte.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Aktivera ”Kopiera värden i anpassade kolumner” för att konfigurera mappningar.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Alla värden i anpassade kolumner kopieras. Använd mappningar för att styra vilka kolumner som skapas i målet.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Alla anpassade kolumnvärden kopieras. Använd Kolumnmappning (ovan) för att styra vilka kolumner som skapas på målet.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Värden i anpassade kolumner kopieras alltid för listobjekt.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Kopieringsläge</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Namn</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Klient-ID (program-ID)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Klientorganisations-ID</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Använd ”common” för flera klientorganisationer, eller din klientorganisations GUID eller domän.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Lämna tomt eller ange ”common” för att logga in på valfri klientorganisation. Ett GUID eller en domän för klientorganisationen (till exempel contoso.onmicrosoft.com) begränsar inloggningen till just den klientorganisationen.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Inled standardfilnamn för rapporter med käll- och målwebbplatsens namn</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Logga ut</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Tema:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Läget Bibliotek och listor</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Läget Hela webbplatsen</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Läget Webbplatssidor</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Kopiera bibliotekets innehåll (filer)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Kopiera filer och listobjekt (innehåll)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Kopiera versionshistorik</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Senaste N versionerna</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Kopiera navigering</value></data>
@@ -939,7 +979,7 @@ Ursprungliga paket är orörda. Anslutningar migreras INTE; skapa dem på nytt o
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Läs in formulär igen</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Klicka på ”Läs in mina formulär” för att se dina formulär.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>Inga formulär hittades i det här kontot.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>Kopiera {0} formulär</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Börja kopiera {0} formulär</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Kopiera fler formulär</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Välj vart kopiorna ska gå</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>En klientorganisation: kopiorna skapas i samma konto som du använder, bredvid originalen.</value></data>
@@ -963,7 +1003,7 @@ Ursprungliga paket är orörda. Anslutningar migreras INTE; skapa dem på nytt o
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Kopierar formulär</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Startar…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Formulär {0} av {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Avbryter efter det aktuella formuläret…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Avbryter… formuläret som kopieras stoppas.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopieringen klar: alla {0} formulär kopierades</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Dina kopior finns i {0}. Öppna Microsoft Forms för att se dem, eller använd tabellen nedan.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopieringen klar: {0} av {1} formulär kopierades, vissa behöver åtgärdas</value></data>
@@ -971,7 +1011,7 @@ Ursprungliga paket är orörda. Anslutningar migreras INTE; skapa dem på nytt o
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopieringen klar, men inga formulär kopierades</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Se kolumnen Information för orsaken. Vanliga orsaker är att behörigheten Microsoft Forms saknas i målregistreringen, eller ett konto utan åtkomst till Forms.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopieringen avbröts efter {0} av {1} formulär</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Formulären som listas nedan blev klara. Formuläret som kopierades när du avbröt blev inte klart och syns inte.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Formulären som nedan är markerade som kopierade blev klara. Formuläret som kopierades när du avbröt blev inte klart och kan ha lämnats halvfärdigt i målet; dess rad visar kopians ID om en skapades.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Kopierade</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>Med varningar</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Misslyckades</value></data>
@@ -986,7 +1026,7 @@ Ursprungliga paket är orörda. Anslutningar migreras INTE; skapa dem på nytt o
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Öppna markerad kopia</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Öppna Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Exportera resultat…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Visa formulär-ID-karta</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Öppna sparade formulär-ID:n</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Markera ett kopierat formulär i tabellen först.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Resultat sparade i {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Tips: appregistreringen har ingen matchande omdirigeringsadress. Lägg till plattformen ”Mobil- och skrivbordsprogram” med http://localhost under Autentisering i Entra och försök sedan igen.</value></data>
@@ -1105,7 +1145,7 @@ Om du kopierar igen skapas en andra kopia av varje. Fortsätta?</value></data>
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(formulär utan titel)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Källformulär</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Välj bland målets formulär</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Välj ett formulär från målkontot. Klicka först på ”Läs in formulär från målkontot”.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Välj ett formulär från målkontot. Listan läses in när det här steget öppnas; om den är tom klickar du på ”Läs in formulärnamn igen…”.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Ifylld från målinloggningen ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>Ditt källkonto, ersatt med ditt målkonto</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Ifylld från dina inloggningar ({0} → {1}). Rensa båda rutorna för att lämna e-postdomäner oförändrade.</value></data>
@@ -1133,7 +1173,7 @@ Om du kopierar igen skapas en andra kopia av varje. Fortsätta?</value></data>
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} paket skrevs av det här verktyget och innehåller redan målets värden. Ta bort dem (✕ i listan) och lägg till de ursprungliga exporterna.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} webbplats(er) saknar mål. En webbplats som lämnas som den är skulle fortfarande peka på källklientorganisationen.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} lista/listor skulle misslyckas vid importen. Åtgärda listorna markerade ”Kommer att misslyckas” för att fortsätta.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Listorna har inte matchats ännu. Gå tillbaka ett steg och framåt igen för att försöka på nytt.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Listorna har inte matchats ännu. Klicka på ”Matcha igen” för att försöka på nytt.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} formulär behöver ett giltigt målformulär-ID för att fortsätta.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Ändra källa…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Inloggad som {0}. Källklientorganisationens SharePoint-adress är {1}.</value></data>
@@ -1398,11 +1438,65 @@ Om du kopierar igen skapas en andra kopia av varje. Fortsätta?</value></data>
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Stänga under pågående arbete?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>Verktyget arbetar fortfarande (skannar, matchar, loggar in eller skriver paket). Om du stänger nu stoppas det. Stäng ändå?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>{0} kunde inte läggas till i det nya formuläret automatiskt. En kopia av filen sparades som {1}: lägg till den igen i Microsoft Forms.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Versionshistorik för listobjekt:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Som filer</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Alla versioner</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Endast aktuell</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Kopierar versionshistoriken för varje nytt listobjekt (värden, datum och redigerare) genom att spela upp dess versioner på målet. ”Som filer” följer filversionsalternativen ovan. Objekt som redan finns på målet behåller sin egen historik. Kolumner för personer, sökning, taxonomi och länkar kopieras bara med sitt aktuella värde.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>versionshistorik: en del kopierades inte ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>versionshistoriken kopierades inte ({0}); objektet har bara sina aktuella värden</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Lista:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>Flytten av e-postdomän tillämpades inte: båda domänerna måste fyllas i, utan blanksteg eller extra @ (till exempel contoso.com och fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Ta bort alla paket och kassera genomsökningen och allt du fyllt i på de senare stegen?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Stänga Skriv om flöden? Mappningen du byggt hittills går förlorad (använd Spara mappning först för att behålla den).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Börja om? Paketen, genomsökningen och allt du fyllt i kasseras. Paket som redan skrivits till utdatamappen tas inte bort.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{0} e-postadresser på {1} omfattas av den här flytten och visas därför inte ovan. Om du vill ge en av dem en annan adress rensar du de här rutorna, fyller i den raden och anger domänflytten igen.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>Det gick inte att läsa mappen {0}: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Granska: de här kolumnnamnen byttes ut överallt där de förekommer i flödets uttryck, vilket kan inkludera en kolumn med samma namn i en annan lista. Kontrollera att varje namn avser den lista som bytte namn på det.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} kolumnnamn har bytts överallt där de förekommer i uttryck. Kontrollera att de avser den lista som bytte namn på dem, inte en kolumn med samma namn i en annan lista (se rapporten).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Sluta kopiera nu? Formuläret som kopieras just nu avbryts och kan lämnas halvfärdigt i målkontot; ta bort det i Microsoft Forms om det händer. Formulär som redan är klara behålls.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Markera</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Kopieringslogg</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>Börja kopiera 1 formulär</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>Formuläret kopierades, men bilderna kunde inte kontrolleras ({0}). Öppna det i Microsoft Forms och kontrollera bakgrunds- och sidhuvudsbilderna.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Kontrollera anslutningen och inloggningen och klicka sedan på Läs in formulär igen. Information: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Dina formulär kunde inte läsas in</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>1 formulär inläst.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>Loggen kopierades till Urklipp.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>Loggen kunde inte kopieras eftersom ett annat program använder Urklipp. Försök igen.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Kopieringslogg</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Nästa: om flöden använder de här formulären öppnar du Skriv om flöden från huvudfönstret. Den läser formulär-ID:na som sparades av den här kopieringen och pekar varje flöde mot det nya formuläret.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Inga formulär hittades</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>Det som kopieras: frågorna, förgreningen, inställningarna och temat. Det som inte kopieras: svar (använd Exportera svar… i det första steget för att spara dem i Excel), medarbetare och vilka formuläret delas med. Varje kopia är ett nytt formulär som ägs av målkontot, och bilder kan behöva läggas till igen.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Kopieringen klar: formuläret kopierades</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Ett filter är aktivt: Markera alla och Avmarkera alla gäller de {0} formulär som visas.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>{0} av de markerade formulären har kopierats tidigare; om du kopierar dem igen skapas dubbletter.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Steg {0} av {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 formulär kopieras från {1} till {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>{0} av de markerade formulären skulle få en titel som är längre än {1} tecken när suffixet har lagts till. Microsoft Forms kan avvisa dem; korta ned suffixet.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Vyerna kunde inte kopieras: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>Vyn '{0}' kopierades inte (en {1}-vy)</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>Vyn '{0}' kunde inte skapas: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>Vyn '{0}' skapades, men vissa inställningar kunde inte tillämpas: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>Vyn '{0}': filtret eller sorteringen kunde inte tillämpas och utelämnades</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>Vyn '{0}': kolumner som saknas i målet utelämnades: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} anmärkning(ar) om vyer, inställningar eller innehållstyper: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>Listinställningarna kunde inte läsas, så inga kopierades: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>Listinställningar som inte kunde tillämpas: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Valideringsregler eller formatering kunde inte tillämpas på: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>Innehållstypen '{0}' kunde inte kopieras: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>Innehållstypen '{0}': kolumner som inte kunde läggas till i den: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>Bibliotekets dokumentmall kunde inte kopieras.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>Bibliotekets standardvärden för mappar kunde inte kopieras.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>Standardvärdena för mappar kopierades, men regeln som tillämpar dem på nya filer kunde inte läggas till.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Webbplatskolumnerna kunde inte läsas: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Webbplatskolumner som inte kunde skapas: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Webbplatsens innehållstyper kunde inte läsas: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Webbplatsinnehållstyper som inte kunde skapas: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Navigeringslänkar ({0}) som inte kunde skapas: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Webbplatsinställningar som inte kunde tillämpas: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Webbplatskolumner, innehållstyper, navigering och inställningar</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Kopierar webbplatskolumner, innehållstyper, navigering och inställningar...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>innehållstyp</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>Innehållstyp '{0}': dokumentmallen kunde inte kopieras.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Loggar in med appregistrering: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Klientorganisation: valfri. Du väljer Microsoft 365-kontot när du loggar in.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Klientorganisation: {0}. Inloggning kan bara ske till den här katalogen.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Om du vill ansluta en webbplats i en annan klientorganisation väljer du en annan appregistrering i Inställningar (med Klientorganisations-ID tomt eller inställt på den klientorganisationen) eller använder läget Flera klientorganisationer.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Endast struktur: kolumner, vyer, inställningar och innehållstyper kopieras, men inga filer eller listobjekt.</value></data>
 </root>

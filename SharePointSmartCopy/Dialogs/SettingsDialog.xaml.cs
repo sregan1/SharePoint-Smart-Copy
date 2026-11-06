@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using SharePointSmartCopy.Models;
@@ -128,7 +128,6 @@ public partial class SettingsDialog : Window
             CopyVersions            = _original.CopyVersions,
             CopyAllVersions         = _original.CopyAllVersions,
             MaxVersions             = _original.MaxVersions,
-            ListItemVersions        = _original.ListItemVersions,
             MaxParallelCopies       = _original.MaxParallelCopies,
             Scope                   = _original.Scope,
             CopyCustomColumns       = _original.CopyCustomColumns,
@@ -137,6 +136,15 @@ public partial class SettingsDialog : Window
             PreserveMetadata        = _original.PreserveMetadata,
             ReapplyFolderMetadataEveryRun = _original.ReapplyFolderMetadataEveryRun,
             CopyNavigation          = _original.CopyNavigation,
+            CopyLookupDependencies  = _original.CopyLookupDependencies,
+            CopyTermSets            = _original.CopyTermSets,
+            CopyViews = _original.CopyViews,
+            CopyListSettings = _original.CopyListSettings,
+            CopyContentTypes = _original.CopyContentTypes,
+            CopyColumnRules = _original.CopyColumnRules,
+            CopyTemplates = _original.CopyTemplates,
+            CopySiteDefinitions = _original.CopySiteDefinitions,
+            CopySiteSettings = _original.CopySiteSettings,
             CopyPermissions         = _original.CopyPermissions,
             Theme                   = (AppTheme)Math.Max(0, ThemeCombo.SelectedIndex),
             Language                = LanguageCombo.SelectedValue as string ?? string.Empty,

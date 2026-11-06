@@ -1,4 +1,4 @@
-namespace SharePointSmartCopy.Models;
+﻿namespace SharePointSmartCopy.Models;
 
 public enum SupportedFieldType { Text, Note, Number, Boolean, DateTime, Choice, MultiChoice, User, UserMulti, Taxonomy, TaxonomyMulti, Lookup, LookupMulti, Hyperlink, Currency }
 
@@ -35,6 +35,12 @@ public class ColumnDefinition
     // and the internal name of the field displayed as the lookup value.
     public string? LookupListId    { get; set; }
     public string? LookupShowField { get; set; }
+
+    // The web the looked-up list lives in (the schema's WebId); null when it is the column's own web.
+    public string? LookupWebId     { get; set; }
+
+    // Title of the looked-up list when it could be read (shown in the column mapping dialog).
+    public string? LookupListTitle { get; set; }
 
     public static bool IsUserType(SupportedFieldType t)     => t is SupportedFieldType.User or SupportedFieldType.UserMulti;
     public static bool IsTaxonomyType(SupportedFieldType t) => t is SupportedFieldType.Taxonomy or SupportedFieldType.TaxonomyMulti;

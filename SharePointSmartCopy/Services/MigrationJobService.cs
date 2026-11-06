@@ -1,4 +1,4 @@
-﻿using SharePointSmartCopy.Localization;
+using SharePointSmartCopy.Localization;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Channels;
@@ -102,7 +102,11 @@ public class MigrationJobService(SharePointService spService)
         // segment shift the walk onto the WRONG folder (including, in one case, the target library
         // root itself). Null falls back to the old scheme, for any caller that bypasses the normal
         // scan (defensive — every current caller provides it).
-        Dictionary<string, (string driveId, string itemId)>? scannedFolderIdentities = null)
+        Dictionary<string, (string driveId, string itemId)>? scannedFolderIdentities = null,
+        // Target paths (same key shape) of folders with no file anywhere under them. They are not ancestors of any file, so
+        // without this their dates and authors were never corrected after the import (found by the live harness: an empty
+        // folder kept the copy time while every folder holding files was corrected).
+        IReadOnlyCollection<string>? emptyFolderKeys = null)
     {
         if (fileTasks.Count == 0) return;
 
@@ -308,7 +312,10 @@ public class MigrationJobService(SharePointService spService)
                     listId = fallbackId
                         ?? throw new Exception(Loc.T("Svc_Mig_CannotResolveListID", libraryServerRelUrl));
                 }
-                var libraryTitle = libraryServerRelUrl.Split('/').Last();
+                // The manifest's library TITLE is applied by the import, so it must be the library's real title. It used to be the last
+                // segment of the URL, which renamed a library whose title differs from its URL name ("Project Files" is at
+                // /ProjectFiles; a hyphen is dropped too) to the URL name on every Migration API copy. Found by the live harness.
+                var libraryTitle = await spService.GetListTitleAsync(targetSiteUrl, listId) ?? libraryServerRelUrl.Split('/').Last();
 
                 // Pre-create subfolders before parallel split — concurrent creates for the same path conflict.
                 // Capture the returned IDs so each batch can skip re-resolving them independently.
@@ -559,6 +566,14 @@ public class MigrationJobService(SharePointService spService)
                         allAncestorFolderPaths.Add(string.Join('/', segs[..i]));
                 }
 
+                if (reapplyFolderMetadata && emptyFolderKeys != null)
+                    foreach (var p in emptyFolderKeys)
+                    {
+                        var segs = p.Trim('/').Split('/', StringSplitOptions.RemoveEmptyEntries);
+                        for (int i = 1; i <= segs.Length; i++)
+                            allAncestorFolderPaths.Add(string.Join('/', segs[..i]));
+                    }
+
                 Dictionary<string, FileMetadata> folderMetadata;
                 if (scannedFolderIdentities != null)
                 {
@@ -681,7 +696,8 @@ public class MigrationJobService(SharePointService spService)
                     // source color set would otherwise never reach PatchFolderMetadataAsync at all.
                     var foldersNeedingAuthorFix = folderMetadata
                         .Where(kv => !string.IsNullOrEmpty(kv.Value.CreatedByEmail) || !string.IsNullOrEmpty(kv.Value.ModifiedByEmail)
-                                  || !string.IsNullOrEmpty(kv.Value.ColorTag) || !string.IsNullOrEmpty(kv.Value.ColorHex))
+                                  || !string.IsNullOrEmpty(kv.Value.ColorTag) || !string.IsNullOrEmpty(kv.Value.ColorHex)
+                                  || !string.IsNullOrEmpty(kv.Value.ContentTypeName))
                         .ToList();
                     // Distinguish "we never had a source email to try" (folderMetadata's CreatedByEmail/
                     // ModifiedByEmail came back null — GetIdentityEmail found no email/UPN on the Graph
@@ -728,6 +744,14 @@ public class MigrationJobService(SharePointService spService)
                                 // "now" as a side effect (see PatchFolderMetadataAsync's doc comment).
                                 // folderRelUrl is the folder's server-relative path, which the
                                 // foldercoloring endpoint needs (it's path-based, not ID-based).
+                                // The folder's content type (a Document Set, say) goes on first: that write bumps Modified,
+                                // and the correction below then puts the source dates and authors back.
+                                var ctErr = await spService.SetFolderContentTypeAsync(targetSiteUrl, listId, guid!, meta.ContentTypeName, ct);
+                                if (ctErr != null)
+                                {
+                                    Interlocked.Increment(ref colorFailures);   // reported with the informational folder notes
+                                    sampleColorErrors.Add($"{(relKey.Length == 0 ? Loc.T("Svc_Ver_LibraryRoot") : relKey)}: {ctErr}");
+                                }
                                 var (err, colorWarning) = await spService.PatchFolderMetadataAsync(
                                     targetSiteUrl, listId, guid!, meta.CreatedDateTime, meta.ModifiedDateTime,
                                     meta.CreatedByEmail, meta.ModifiedByEmail, meta.ColorTag, meta.ColorHex,

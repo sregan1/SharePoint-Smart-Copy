@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Cél: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Céllista</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Másolási beállítások</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Könyvtár tartalmának (fájlok) másolása</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Kikapcsolt állapotban csak az oszlopséma és a könyvtárbeállítások jönnek létre újra – fájlok nem kerülnek másolásra.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Fájlok és listaelemek (tartalom) másolása</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Kikapcsolt állapotban csak a struktúra másolódik, fájlok és listaelemek nélkül: oszlopok, nézetek, listabeállítások, tartalomtípusok, a Teljes webhely hatókörben pedig a webhelyoszlopok, a navigáció és a webhelybeállítások is.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Ha a fájl létezik:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Kihagyás</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Felülírás</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Összes verzió</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Legutóbbi </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> verzió</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>A listáim által hivatkozott listák másolása is</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>Ha egy kijelölt lista Kikeresés (Lookup) oszlopot tartalmaz, a hivatkozott lista is másolásra kerül, hogy az oszlop létrehozható és az értékei feloldhatók legyenek. Kapcsolja ki, ha csak a kijelölteket szeretné másolni.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Kikeresési értékek</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} elem alapján egyeztetve, {1} szöveg alapján egyeztetve, {2} nem található.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Felügyelt metaadatok</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} kifejezésérték másolva, {1} kihagyva (a kifejezés nem található a másolt készletben).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>A(z) &quot;{0}&quot; felügyelt metaadat-oszlop nem jött létre: a kifejezéskészlete másik bérlőhöz tartozik, és a kifejezéskészletek másolása nem érhető el (jelentkezzen be mindkét bérlőbe, és adja meg a TermStore.ReadWrite.All engedélyt).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>A(z) &quot;{0}&quot; kifejezéskészlet átmásolva a célhelyre: {1} létrehozva, {2} már megvolt.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Felügyelt metaadatok kifejezéskészleteinek másolása a célbérlőbe</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>A felügyelt metaadat-oszlop a forrásbérlő kifejezéstárának egy kifejezéskészletéhez van kötve. Bekapcsolt állapotban a kifejezéskészlet (kifejezések, címkék, szinonimák, leírások) átmásolódik a cél kifejezéstárába, az oszlop a másolathoz kötődik, és minden érték újra leképezésre kerül. Szükséges hozzá a választható TermStore.ReadWrite.All engedély és egy kifejezéstár-szerepkör a célhelyen.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Keresés a(z) "{0}" listában</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Keresés egy másik webhelyen lévő listában</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Felügyelt metaadatok: a kifejezéskészlete átmásolódik a célbérlőbe</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Felügyelt metaadatok: ugyanazt a kifejezéskészletet használja (ugyanaz a bérlő)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>A(z) "{0}" kivetített mező nem jött létre: a(z) "{1}" keresőoszlopa nincs a céllistán.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>A(z) "{0}" kivetített mező nem jött létre: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Bejelentkezés alkalmazásregisztrációval:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Másolandó struktúra</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Minden, ami itt be van jelölve, a céloldalon újra létrejön az adatok mellett. Egy már létező lista vagy könyvtár csak a hiányzó tartalomtípusokat és nézeteket kapja meg.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Nézetek (szűrők, csoportosítás, oszlopok, alapértelmezett nézet, naptár- és táblanézetek)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Listabeállítások (jóváhagyás, kivétel, mellékletek, mappák, elemszintű biztonság)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Tartalomtípusok és dokumentumsablonjaik</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Oszlopellenőrzési szabályok és formázás</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Könyvtársablon és a mappák alapértelmezett értékei</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Webhelyoszlopok és webhely-tartalomtípusok</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Webhelybeállítások (leírás, gyorsindítás, fanézet és egyebek)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Nézetek</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Listabeállítások</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Tartalomtípusok</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Oszlopszabályok</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Sablonok és alapértékek</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Webhelyoszlopok és -típusok</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Navigáció</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Webhelybeállítások</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Keresőlisták</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Kifejezéskészletek</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Struktúra: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>nincs</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Továbbiak megjelenítése</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Kevesebb megjelenítése</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Navigáció másolása (Gyorsindító és felső sáv)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>A cél navigációját a forrás hivatkozásaival váltja fel. Az URL-ek a célwebhelyre lesznek átképezve.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Engedélyek másolása</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Egyéni oszlopértékek másolása</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Másolja a Szöveg, Szám, Választás, Dátum, Logikai, Többszörös választás, Személy és Felügyelt metaadat típusú oszlopok értékeit. A Keresés típusú oszlopok nem támogatottak.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>A hozzárendelések konfigurálásához kapcsolja be az „Egyéni oszlopértékek másolása” beállítást.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Az összes egyéni oszlopérték másolásra kerül. A hozzárendelésekkel szabályozhatja, mely oszlopok jönnek létre a célban.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>A rendszer az összes egyéni oszlopérték átmásolja. Az Oszlopleképezés (fent) segítségével szabályozhatja, mely oszlopok jöjjenek létre a célhelyen.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Az egyéni oszlopértékek listaelemeknél mindig másolásra kerülnek.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Másolási mód</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Név</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Ügyfélazonosító (alkalmazásazonosító)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Bérlőazonosító</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Több bérlős használathoz írja be: „common”, vagy adja meg a bérlő GUID-ját vagy tartományát.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Hagyja üresen, vagy adja meg a „common” értéket, hogy bármely bérlőbe bejelentkezhessen. A bérlő GUID-ja vagy tartománya (például contoso.onmicrosoft.com) csak az adott bérlőre korlátozza a bejelentkezést.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Az alapértelmezett jelentésfájlnevek elé a forrás- és célwebhely neve kerüljön</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Kijelentkezés</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Téma:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Könyvtárak és listák mód</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Teljes webhely mód</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Webhelyoldalak mód</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Könyvtár tartalmának (fájlok) másolása</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Fájlok és listaelemek (tartalom) másolása</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Verzióelőzmények másolása</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Legutóbbi N verzió</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Navigáció másolása</value></data>
@@ -939,7 +979,7 @@ Az eredeti csomagok érintetlenek. A kapcsolatok NEM kerülnek áttelepítésre;
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Űrlapok újratöltése</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Az űrlapok megtekintéséhez kattintson a „Saját űrlapok betöltése” gombra.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>Ebben a fiókban nem található űrlap.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} űrlap másolása</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} űrlap másolásának indítása</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>További űrlapok másolása</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Válassza ki, hová kerüljenek a másolatok</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Egy bérlő: a másolatok ugyanabban a fiókban jönnek létre, amelyet használ, az eredetik mellett.</value></data>
@@ -963,7 +1003,7 @@ Az eredeti csomagok érintetlenek. A kapcsolatok NEM kerülnek áttelepítésre;
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Űrlapok másolása</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Indítás…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>{0}/{1}. űrlap: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Megszakítás az aktuális űrlap után…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Megszakítás… a most másolt űrlap leállítása folyamatban van.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>A másolás befejeződött: mind a(z) {0} űrlap átmásolva</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>A másolatok itt vannak: {0}. Nyissa meg a Microsoft Forms-ot a megtekintésükhöz, vagy használja az alábbi táblázatot.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>A másolás befejeződött: {1} űrlapból {0} átmásolva, néhány figyelmet igényel</value></data>
@@ -971,7 +1011,7 @@ Az eredeti csomagok érintetlenek. A kapcsolatok NEM kerülnek áttelepítésre;
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>A másolás befejeződött, de egyetlen űrlap sem lett átmásolva</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Az okot lásd a Részletek oszlopban. Gyakori ok a célregisztráció hiányzó Microsoft Forms-engedélye, vagy a Forms-hozzáférés nélküli fiók.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>A másolás megszakítva {1} űrlapból {0} után</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Az alább felsorolt űrlapok elkészültek. A megszakításkor másolt űrlap nem készült el, és nem látható.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Az alább másoltként megjelölt űrlapok elkészültek. A megszakításkor másolt űrlap nem készült el, és félkészen maradhat a célfiókban; a sora megjeleníti a másolat azonosítóját, ha létrejött.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Átmásolva</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>Figyelmeztetésekkel</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Sikertelen</value></data>
@@ -986,7 +1026,7 @@ Az eredeti csomagok érintetlenek. A kapcsolatok NEM kerülnek áttelepítésre;
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Kijelölt másolat megnyitása</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Microsoft Forms megnyitása</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Eredmények exportálása…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Űrlapazonosító-leképezés megjelenítése</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Mentett űrlapazonosítók megnyitása</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Előbb jelöljön ki egy átmásolt űrlapot a táblázatban.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Az eredmények elmentve ide: {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Tipp: az alkalmazásregisztrációnak nincs megfelelő átirányítási címe. Az Entrában az Authentication alatt adja hozzá a „Mobile and desktop applications” platformot a http://localhost címmel, majd próbálja újra.</value></data>
@@ -1105,7 +1145,7 @@ Az ismételt másolás mindegyikből második másolatot hoz létre. Folytatja?<
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(cím nélküli űrlap)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Forrásűrlap</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Választás a cél űrlapjai közül</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Válasszon egy űrlapot a célfiókból. Előbb kattintson az „Űrlapok betöltése a célfiókból” gombra.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Válasszon egy űrlapot a célfiókból. A lista a lépés megnyitásakor töltődik be; ha üres, kattintson az „Űrlapnevek újratöltése…” gombra.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>A célbejelentkezésből kitöltve ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>A forrásfiókja, lecserélve a célfiókjára</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>A bejelentkezéseiből kitöltve ({0} → {1}). Törölje mindkét mezőt, hogy az e-mail-tartományok változatlanok maradjanak.</value></data>
@@ -1133,7 +1173,7 @@ Az ismételt másolás mindegyikből második másolatot hoz létre. Folytatja?<
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} csomagot ez az eszköz írt, és már a cél értékeit tartalmazzák. Távolítsa el őket (a ✕ a listában), és adja hozzá az eredeti exportokat.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} webhelynek nincs célja. A változatlanul hagyott webhely még mindig a forrásbérlőre mutatna.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} lista meghiúsulna az importáláskor. A folytatáshoz javítsa a „Meghiúsul” jelölésű listákat.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ A listák még nincsenek párosítva. Lépjen vissza egy lépést, majd előre, hogy újrapróbálja.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ A listák még nincsenek párosítva. Az újrapróbálkozáshoz kattintson az „Újrapárosítás” gombra.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} űrlaphoz érvényes célűrlap-azonosító szükséges a folytatáshoz.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Forrás módosítása…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Bejelentkezve mint {0}. A forrásbérlő SharePoint-címe: {1}.</value></data>
@@ -1398,11 +1438,65 @@ Az ismételt másolás mindegyikből második másolatot hoz létre. Folytatja?<
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Bezárja munka közben?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>Az eszköz még dolgozik (vizsgálat, párosítás, bejelentkezés vagy csomagírás). A bezárás most leállítja. Mégis bezárja?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>A(z) {0} elemet nem sikerült automatikusan hozzáadni az új űrlaphoz. A fájl másolata {1} néven lett mentve: adja hozzá újra a Microsoft Formsban.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Listaelemek verzióelőzményei:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Mint a fájloknál</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Minden verzió</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Csak az aktuális</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Átmásolja minden új listaelem verzióelőzményeit (értékek, dátumok és szerkesztők) úgy, hogy a célhelyen újrajátssza a verzióit. A „Mint a fájloknál” a fenti fájlverzió-beállításokat követi. A célhelyen már meglévő elemek megtartják a saját előzményeiket. A személy-, keresési, taxonómia- és hivatkozásoszlopok csak az aktuális értéküket másolják.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>verzióelőzmények: egyes részek nem másolódtak ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>a verzióelőzmények nem másolódtak ({0}); az elemnek csak az aktuális értékei vannak</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Lista:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>Az e-mail-tartomány áthelyezése nem lett alkalmazva: mindkét tartományt ki kell tölteni, szóközök és felesleges @ nélkül (például contoso.com és fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Eltávolítja az összes csomagot, és elveti a vizsgálatot és mindent, amit a későbbi lépésekben kitöltött?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Bezárja a Folyamatok átírása ablakot? Az eddig összeállított leképezés elvész (a megtartásához előbb használja a „Leképezés mentése” gombot).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Újrakezdi? A csomagok, a vizsgálat és minden kitöltött adat elvetésre kerül. A kimeneti mappába már kiírt csomagok nem törlődnek.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>A(z) {1} tartományon {0} e-mail-cím érintett ebben az áthelyezésben, ezért nem szerepelnek fent. Ha az egyiknek másik címet szeretne adni, törölje ezeket a mezőket, töltse ki az adott sort, majd adja meg újra a tartományáthelyezést.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>A(z) {0} mappa nem olvasható: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Ellenőrzés: ezeket az oszlopneveket mindenhol átnevezték, ahol a folyamat kifejezéseiben szerepelnek, ami egy másik lista azonos nevű oszlopát is érintheti. Ellenőrizze, hogy mindegyik arra a listára hivatkozik, amely átnevezte.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} oszlopnevet átneveztek mindenhol, ahol kifejezésekben szerepel. Ellenőrizze, hogy azokra a listákra hivatkoznak, amelyek átnevezték őket, nem pedig egy másik lista azonos nevű oszlopára (lásd a jelentést).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Leállítja most a másolást? A most másolt űrlap megszakad, és félkészen maradhat a célfiókban; ha így történt, törölje a Microsoft Formsban. A már elkészült űrlapok megmaradnak.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Kijelölés</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Másolási napló</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>1 űrlap másolásának indítása</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>Az űrlap átmásolódott, de a képeit nem sikerült ellenőrizni ({0}). Nyissa meg a Microsoft Formsban, és ellenőrizze a háttér- és fejlécképeket.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Ellenőrizze a kapcsolatot és a bejelentkezést, majd kattintson az Űrlapok újratöltése gombra. Részletek: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Az űrlapok nem tölthetők be</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>1 űrlap betöltve.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>A napló a vágólapra került.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>A napló nem másolható, mert a vágólapot egy másik program használja. Próbálja újra.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Másolási napló</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Következő lépés: ha folyamatok használják ezeket az űrlapokat, nyissa meg a Folyamatok átírása eszközt a főablakból. Beolvassa a másolás által mentett űrlapazonosítókat, és minden folyamatot az új űrlapra irányít.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Nem található űrlap</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>Ami másolódik: a kérdések, az elágazások, a beállítások és a téma. Ami nem: a válaszok (az első lépésben a „Válaszok exportálása” paranccsal mentheti őket Excelbe), a közreműködők és az, hogy kikkel van megosztva az űrlap. Minden másolat a célfiók tulajdonában lévő új űrlap, a képeket pedig esetleg újra hozzá kell adni.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>A másolás befejeződött: az űrlap átmásolódott</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Szűrő van bekapcsolva: az „Összes kijelölése” és a „Kijelölés megszüntetése” a megjelenített {0} űrlapra vonatkozik.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>A kijelölt űrlapok közül {0} már le lett másolva; újbóli másolásuk duplikátumokat hoz létre.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>{0}. lépés / {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 űrlap lesz átmásolva innen: {1}, ide: {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>A kijelölt űrlapok közül {0} címe hosszabb lenne {1} karakternél az utótag hozzáadása után. A Microsoft Forms elutasíthatja őket; rövidítse az utótagot.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>A nézeteket nem sikerült másolni: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>A(z) '{0}' nézet nem lett átmásolva ({1} nézet)</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>A(z) '{0}' nézetet nem sikerült létrehozni: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>A(z) '{0}' nézet létrejött, de néhány beállítást nem sikerült alkalmazni: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>A(z) '{0}' nézet: a szűrőjét vagy rendezését nem sikerült alkalmazni, ezért kimaradt</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>A(z) '{0}' nézet: a célban nem szereplő oszlopok kimaradtak: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} megjegyzés a nézetekkel, beállításokkal vagy tartalomtípusokkal kapcsolatban: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>A lista beállításait nem sikerült beolvasni, ezért egyiket sem másolta a rendszer: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>A lista beállításai, amelyeket nem sikerült alkalmazni: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Az érvényesítési szabályokat vagy a formázást nem sikerült alkalmazni a következőn: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>A(z) '{0}' tartalomtípust nem sikerült másolni: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>A(z) '{0}' tartalomtípus: oszlopok, amelyeket nem sikerült hozzáadni: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>A tár dokumentumsablonját nem sikerült másolni.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>A tár mappáinak alapértelmezett értékeit nem sikerült másolni.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>A mappák alapértelmezett értékei átmásolódtak, de az őket az új fájlokra alkalmazó szabályt nem sikerült hozzáadni.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>A webhelyoszlopokat nem sikerült beolvasni: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Webhelyoszlopok, amelyeket nem sikerült létrehozni: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>A webhely tartalomtípusait nem sikerült beolvasni: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Webhelytartalomtípusok, amelyeket nem sikerült létrehozni: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Navigációs ({0}) hivatkozások, amelyeket nem sikerült létrehozni: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Webhelybeállítások, amelyeket nem sikerült alkalmazni: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Webhelyoszlopok, tartalomtípusok, navigáció és beállítások</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Webhelyoszlopok, tartalomtípusok, navigáció és beállítások másolása...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>tartalomtípus</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>'{0}' tartalomtípus: a dokumentumsablonját nem sikerült átmásolni.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Bejelentkezés az alkalmazásregisztrációval: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Bérlő: bármelyik. A Microsoft 365-fiókot a bejelentkezéskor választja ki.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Bérlő: {0}. A bejelentkezés csak ebbe a címtárba irányulhat.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Másik bérlő webhelyének csatlakoztatásához válasszon másik alkalmazásregisztrációt a Beállításokban (üres vagy az adott bérlőre beállított bérlőazonosítóval), vagy használja a Több bérlő módot.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Csak struktúra: az oszlopok, nézetek, beállítások és tartalomtípusok másolódnak, fájlok és listaelemek nélkül.</value></data>
 </root>

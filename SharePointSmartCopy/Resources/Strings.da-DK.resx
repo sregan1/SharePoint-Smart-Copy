@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Mål: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Målliste</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Kopieringsindstillinger</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Kopiér bibliotekets indhold (filer)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Når den er slået fra, genskabes kun kolonneskemaet og bibliotekets indstillinger – der kopieres ingen filer.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Kopiér filer og listeelementer (indhold)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Når den er slået fra, kopieres kun strukturen og ingen filer eller listeelementer: kolonner, visninger, listeindstillinger, indholdstyper og, i omfanget Hele webstedet, webstedskolonner, navigation og webstedsindstillinger.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Hvis filen findes:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Spring over</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Overskriv</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Alle versioner</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Seneste </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> versioner</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Kopier også lister, som mine lister slår op i</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>Når en valgt liste har en opslagskolonne, kopieres den liste, der slås op i, også, så kolonnen kan oprettes, og dens værdier kan løses. Slå dette fra for kun at kopiere det, du har valgt.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Opslagsværdier</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} matchet efter element, {1} matchet efter tekst, {2} ikke fundet.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Administrerede metadata</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} termværdier kopieret, {1} udeladt (termen blev ikke fundet i det kopierede sæt).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>Kolonnen med administrerede metadata &quot;{0}&quot; blev ikke oprettet: dens termsæt tilhører en anden lejer, og kopiering af termsæt er ikke tilgængelig (log på begge lejere, og giv tilladelsen TermStore.ReadWrite.All).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>Termsættet &quot;{0}&quot; er kopieret til målet: {1} oprettet, {2} fandtes allerede.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Kopiér termsæt med administrerede metadata til mållejeren</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>En kolonne med administrerede metadata er bundet til et termsæt i kildelejerens termlager. Når dette er slået til, kopieres termsættet (termer, etiketter, synonymer, beskrivelser) til målets termlager, kolonnen bindes til kopien, og hver værdi omknyttes. Kræver den valgfri tilladelse TermStore.ReadWrite.All og en termlagerrolle på målet.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Slår op i listen "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Slår op i en liste på et andet websted</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Administrerede metadata: dens termsæt kopieres til mållejeren</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Administrerede metadata: bruger det samme termsæt (samme lejer)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>Det projicerede felt "{0}" blev ikke oprettet: dets opslagskolonne "{1}" findes ikke på målelisten.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>Det projicerede felt "{0}" blev ikke oprettet: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Log på med appregistrering:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Struktur, der skal kopieres</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Alt, der er markeret her, genoprettes på målet sammen med dataene. En liste eller et bibliotek, der allerede findes dér, får kun de indholdstyper og visninger, det mangler.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Visninger (filtre, gruppering, kolonner, standardvisning, kalender- og tavlevisninger)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Listeindstillinger (godkendelse, udtjekning, vedhæftede filer, mapper, sikkerhed på elementniveau)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Indholdstyper og deres dokumentskabeloner</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Kolonnevalideringsregler og formatering</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Biblioteksskabelon og standardværdier for mapper</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Webstedskolonner og webstedsindholdstyper</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Webstedsindstillinger (beskrivelse, hurtigstart, trævisning og mere)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Visninger</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Listeindstillinger</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Indholdstyper</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Kolonneregler</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Skabeloner og standardværdier</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Webstedskolonner og -typer</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Webstedsnavigation</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Webstedsindstillinger</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Opslagslister</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Termsæt</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Struktur: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>ingen</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Vis mere</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Vis mindre</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Kopiér navigation (Hurtig start &amp; øverste bjælke)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Erstatter målets navigation med kildens links. URL'er omdirigeres til målwebstedet.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Kopiér tilladelser</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Kopiér værdier i brugerdefinerede kolonner</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Kopierer værdier fra kolonnetyperne Tekst, Tal, Valg, Dato, Boolesk, Flervalg, Person og Administrerede metadata. Opslagskolonner understøttes ikke.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Aktivér 'Kopiér værdier i brugerdefinerede kolonner' for at konfigurere tilknytninger.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Alle værdier i brugerdefinerede kolonner kopieres. Brug tilknytninger til at styre, hvilke kolonner der oprettes i målet.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Alle brugerdefinerede kolonneværdier kopieres. Brug Kolonnetilknytning (ovenfor) til at styre, hvilke kolonner der oprettes på destinationen.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Værdier i brugerdefinerede kolonner kopieres altid for listeelementer.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Kopieringstilstand</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Navn</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Klient-id (program-id)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Lejer-id</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Brug 'common' til flere lejere, eller dit lejer-GUID eller domæne.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Lad feltet stå tomt, eller angiv 'common' for at logge på en vilkårlig lejer. Et lejer-GUID eller et domæne (f.eks. contoso.onmicrosoft.com) begrænser logon til netop den lejer.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Start standardfilnavne for rapporter med kilde- og målwebstedets navne</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Log af</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Tema:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Tilstanden Biblioteker og lister</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Tilstanden Hele webstedet</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Tilstanden Webstedssider</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Kopiér bibliotekets indhold (filer)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Kopiér filer og listeelementer (indhold)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Kopiér versionshistorik</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Seneste N versioner</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Kopiér navigation</value></data>
@@ -939,7 +979,7 @@ Originale pakker er urørte. Forbindelser migreres IKKE; genskab og vælg dem ig
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Genindlæs formularer</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Klik på &quot;Indlæs mine formularer&quot; for at se dine formularer.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>Der blev ikke fundet nogen formularer i denne konto.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>Kopiér {0} formularer</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Start kopiering af {0} formularer</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Kopiér flere formularer</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Vælg, hvor kopierne skal placeres</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Enkelt lejer: kopierne oprettes i den samme konto, som du bruger, ved siden af originalerne.</value></data>
@@ -963,7 +1003,7 @@ Originale pakker er urørte. Forbindelser migreres IKKE; genskab og vælg dem ig
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Kopierer formularer</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Starter…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Formular {0} af {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Annullerer efter den aktuelle formular…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Annullerer… den formular, der kopieres, bliver stoppet.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopiering færdig: alle {0} formularer blev kopieret</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Dine kopier findes i {0}. Åbn Microsoft Forms for at se dem, eller brug tabellen nedenfor.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopiering færdig: {0} af {1} formularer blev kopieret, nogle kræver opmærksomhed</value></data>
@@ -971,7 +1011,7 @@ Originale pakker er urørte. Forbindelser migreres IKKE; genskab og vælg dem ig
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopiering færdig, men ingen formularer blev kopieret</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Se kolonnen Detaljer for årsagen. Almindelige årsager er en manglende Microsoft Forms-tilladelse i målregistreringen eller en konto uden adgang til Forms.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopiering annulleret efter {0} af {1} formularer</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>De formularer, der er angivet nedenfor, blev fuldført. Den formular, der blev kopieret, da du annullerede, blev ikke færdig og er ikke synlig.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>De formularer, der er markeret som kopieret nedenfor, blev fuldført. Den formular, der blev kopieret, da du annullerede, blev ikke færdig og kan være efterladt halvfærdig i målet; dens række viser kopiens id, hvis der blev oprettet en.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Kopieret</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>Med advarsler</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Mislykkedes</value></data>
@@ -986,7 +1026,7 @@ Originale pakker er urørte. Forbindelser migreres IKKE; genskab og vælg dem ig
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Åbn valgt kopi</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Åbn Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Eksportér resultater…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Vis formular-id-oversigt</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Åbn gemte formular-id'er</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Vælg først en kopieret formular i tabellen.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Resultater gemt i {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Tip: appregistreringen har ingen matchende omdirigeringsadresse. Tilføj platformen &quot;Mobil- og skrivebordsprogrammer&quot; med http://localhost under Godkendelse i Entra, og prøv igen.</value></data>
@@ -1105,7 +1145,7 @@ Kopiering igen opretter en ekstra kopi af hver. Fortsæt?</value></data>
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(formular uden titel)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Kildeformular</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Vælg blandt målets formularer</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Vælg en formular fra målkontoen. Klik først på &quot;Indlæs formularer fra målkontoen&quot;.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Vælg en formular fra målkontoen. Listen indlæses, når dette trin åbnes; hvis den er tom, skal du klikke på &quot;Genindlæs formularnavne…&quot;.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Udfyldt fra målets logon ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>Din kildekonto, erstattet med din målkonto</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Udfyldt fra dine logon ({0} → {1}). Ryd begge felter for at lade e-maildomæner være uændrede.</value></data>
@@ -1133,7 +1173,7 @@ Kopiering igen opretter en ekstra kopi af hver. Fortsæt?</value></data>
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} pakke(r) blev skrevet af dette værktøj og indeholder allerede målets værdier. Fjern dem (✕ på listen), og tilføj de originale eksporter.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} websted(er) har intet mål. Et websted, der efterlades som det er, ville stadig pege på kildelejeren.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} liste(r) ville mislykkes ved import. Ret de lister, der er markeret &quot;Vil mislykkes&quot;, for at fortsætte.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Listerne er ikke matchet endnu. Gå ét trin tilbage og frem igen for at prøve igen.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Listerne er ikke matchet endnu. Klik på &quot;Match igen&quot; for at prøve igen.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} formular(er) skal have et gyldigt målformular-id for at fortsætte.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Skift kilde…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Logget på som {0}. Kildelejerens SharePoint-adresse er {1}.</value></data>
@@ -1398,11 +1438,65 @@ Kopiering igen opretter en ekstra kopi af hver. Fortsæt?</value></data>
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Luk under arbejde?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>Værktøjet arbejder stadig (scanner, matcher, logger på eller skriver pakker). Hvis du lukker nu, stopper det. Luk alligevel?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>{0} kunne ikke føjes automatisk til den nye formular. En kopi af filen blev gemt som {1}: tilføj den igen i Microsoft Forms.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Versionshistorik for listeelementer:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Som filer</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Alle versioner</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Kun aktuel</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Kopierer versionshistorikken for hvert nyt listeelement (værdier, datoer og redaktører) ved at afspille dets versioner på målet. &quot;Som filer&quot; følger filversionsindstillingerne ovenfor. Elementer, der allerede findes på målet, beholder deres egen historik. Kolonner med personer, opslag, taksonomi og links kopieres kun med deres aktuelle værdi.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>versionshistorik: nogle dele blev ikke kopieret ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>versionshistorikken blev ikke kopieret ({0}); elementet har kun sine aktuelle værdier</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Liste:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>Flytningen af e-mail-domæne blev ikke anvendt: begge domæner skal udfyldes, uden mellemrum og uden ekstra @ (for eksempel contoso.com og fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Fjern alle pakker og kassér scanningen og alt, hvad du har udfyldt i de senere trin?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Luk Omskriv flows til målet? Den tilknytning, du hidtil har opbygget, går tabt (brug først &quot;Gem tilknytning…&quot; for at beholde den).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Start forfra? Pakkerne, scanningen og alt, hvad du har udfyldt, kasseres. Pakker, der allerede er skrevet til outputmappen, slettes ikke.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{0} e-mailadresser på {1} er dækket af denne flytning og vises derfor ikke ovenfor. Hvis du vil give en af dem en anden adresse, skal du rydde disse felter, udfylde den pågældende række og indtaste domæneflytningen igen.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>Mappen {0} kunne ikke læses: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Gennemse: disse kolonnenavne blev omdøbt overalt, hvor de forekommer i flowets udtryk, hvilket også kan omfatte kolonnen med samme navn i en anden liste. Kontrollér, at hver enkelt henviser til den liste, der omdøbte den.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} kolonnenavn(e) blev omdøbt overalt, hvor de forekommer i udtryk. Kontrollér, at de henviser til den liste, der omdøbte dem, og ikke til en kolonne med samme navn i en anden liste (se rapporten).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Stop kopieringen nu? Den formular, der kopieres lige nu, afbrydes og kan blive efterladt halvfærdig i målkontoen; slet den i Microsoft Forms, hvis det sker. Formularer, der allerede er færdige, beholdes.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Vælg</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Kopieringslog</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>Start kopiering af 1 formular</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>Formularen blev kopieret, men dens billeder kunne ikke kontrolleres ({0}). Åbn den i Microsoft Forms, og kontrollér baggrunds- og overskriftsbillederne.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Kontrollér din forbindelse og login, og klik derefter på Genindlæs formularer. Detaljer: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Dine formularer kunne ikke indlæses</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>1 formular indlæst.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>Loggen blev kopieret til udklipsholderen.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>Loggen kunne ikke kopieres, fordi et andet program bruger udklipsholderen. Prøv igen.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Kopieringslog</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Næste: hvis flows bruger disse formularer, skal du åbne Omskriv flows til målet fra hovedvinduet. Det læser de formular-id'er, der blev gemt af denne kopiering, og peger hvert flow på den nye formular.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Ingen formularer fundet</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>Det kopieres: spørgsmålene, forgreningen, indstillingerne og temaet. Det kopieres ikke: svar (brug Eksportér svar… i det første trin for at gemme dem i Excel), samarbejdspartnere og hvem formularen er delt med. Hver kopi er en ny formular, der ejes af målkontoen, og billeder skal muligvis tilføjes igen.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Kopiering fuldført: formularen blev kopieret</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Et filter er slået til: Vælg alle og Fravælg alle gælder for de {0} viste formularer.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>{0} af de valgte formularer er kopieret før; kopieres de igen, oprettes der dubletter.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Trin {0} af {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 formular kopieres fra {1} til {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>{0} af de valgte formularer ville få en titel på mere end {1} tegn, når suffikset er tilføjet. Microsoft Forms afviser dem muligvis; forkort suffikset.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Visninger kunne ikke kopieres: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>Visningen '{0}' blev ikke kopieret (en {1}-visning)</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>Visningen '{0}' kunne ikke oprettes: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>Visningen '{0}' blev oprettet, men nogle indstillinger kunne ikke anvendes: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>Visningen '{0}': filteret eller sorteringen kunne ikke anvendes og blev udeladt</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>Visningen '{0}': kolonner, der ikke findes i målet, blev udeladt: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} bemærkning(er) om visninger, indstillinger eller indholdstyper: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>Listeindstillinger kunne ikke læses, så ingen blev kopieret: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>Listeindstillinger, der ikke kunne anvendes: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Valideringsregler eller formatering kunne ikke anvendes på: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>Indholdstypen '{0}' kunne ikke kopieres: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>Indholdstypen '{0}': kolonner, der ikke kunne tilføjes: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>Bibliotekets dokumentskabelon kunne ikke kopieres.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>Bibliotekets standardværdier for mapper kunne ikke kopieres.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>Standardværdierne for mapper blev kopieret, men reglen, der anvender dem på nye filer, kunne ikke tilføjes.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Webstedskolonner kunne ikke læses: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Webstedskolonner, der ikke kunne oprettes: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Webstedsindholdstyper kunne ikke læses: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Webstedsindholdstyper, der ikke kunne oprettes: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Navigationslinks ({0}), der ikke kunne oprettes: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Webstedsindstillinger, der ikke kunne anvendes: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Webstedskolonner, indholdstyper, navigation og indstillinger</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Kopierer webstedskolonner, indholdstyper, navigation og indstillinger...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>indholdstype</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>Indholdstype '{0}': dens dokumentskabelon kunne ikke kopieres.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Logger på med appregistrering: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Lejer: alle. Du vælger Microsoft 365-kontoen, når du logger på.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Lejer: {0}. Logon kan kun gå til dette bibliotek.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Hvis du vil forbinde et websted på en anden lejer, skal du vælge en anden appregistrering i Indstillinger (med Lejer-id tomt eller angivet til den pågældende lejer) eller bruge tilstanden Flere lejere.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Kun struktur: kolonner, visninger, indstillinger og indholdstyper kopieres, men ingen filer eller listeelementer.</value></data>
 </root>

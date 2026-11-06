@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 4.1.2  ·  October 2026**
+**Version 4.1.3  ·  November 2026**
 
 ---
 
@@ -41,6 +41,9 @@ Two copy engines are available. **Migration API** mode uses SharePoint's server-
 - Copy report with succeeded, failed, and skipped counts, inline permission status, and CSV export
 - **Total Size** shown alongside item counts on the preview, in-progress, and report screens, in the Excel verification report, and in History
 - **OneNote notebooks** copy correctly as a single native operation, preserving their special notebook association instead of being rebuilt as a plain folder of files
+- **Structure of new lists and libraries** — views, list settings, column rules and formatting, content types (with items, files and folders put on their type), the library document template and folder default values, and, in Site scope, site columns, site content types, navigation and site settings (see *What a Library, List or Site copy brings along* in Section 5)
+- **Structure to copy** — on the Options step, one checkbox per kind of structure (views, list settings, content types, column rules, templates, and in Site scope site columns, navigation and settings), and the report records what a run copied
+- **Lookups and managed metadata** — lookup values are matched by the original item, the lists a lookup points at can be copied along, and a managed-metadata term set can be copied to another tenant through Microsoft Graph (optional `TermStore.ReadWrite.All` permission)
 - **Verification Report** — independently re-scans source and target after a run and produces an Excel workbook confirming what actually matches
 - **Compare** — generate the same kind of difference report for any source and target you connect to, without needing a prior copy or a saved history entry
 - **Copy between two tenants** — Multi-tenant mode signs in to source and target separately, with a user mapping table and **Check in target**; the report lists people the target couldn't find so you can map them (see Section 5)
@@ -141,21 +144,25 @@ Before using SharePoint Smart Copy for the first time, a one-time setup is requi
 
 > **Optional — only for the Forms tool:** to copy Microsoft Forms, also add **Microsoft Forms** → **Delegated permissions** (search "Microsoft Forms" under *APIs my organization uses*) and grant consent. It is not needed for any other feature. See [Copying Forms and Flows](#copying-forms-and-flows).
 
+> **Optional — only to copy managed metadata to a different tenant:** also add **Microsoft Graph** → **Delegated permissions** → `TermStore.ReadWrite.All` and grant admin consent on the registration used for the **target** (the copy writes the term set there). In different-tenant mode the registration used for the **source** needs only the read permission `TermStore.Read.All`; with one registration (single-tenant mode) `TermStore.ReadWrite.All` covers both sides, and without `TermStore.Read.All` you are not asked for it. The signed-in target account also needs a term store role, for example *Term Store Administrator*. It is not needed for any other feature, and a same-tenant copy never uses it. See [Managed metadata](#managed-metadata--how-it-copies).
+
 #### Which permissions does each feature need?
 
 Every sign-in asks for the two Microsoft Graph permissions, so they are needed for anything that connects to SharePoint. The other two are only needed by the features marked below. If you do not use a feature, you can leave its permission out.
 
-| Feature | Graph `Sites.ReadWrite.All` | Graph `Files.ReadWrite.All` | SharePoint `AllSites.FullControl` | Microsoft Forms |
-|---|:-:|:-:|:-:|:-:|
-| Files & Folders, Libraries & Lists, Entire Site — **Enhanced REST** mode | ✔ | ✔ | — | — |
-| Files & Folders, Libraries & Lists, Entire Site — **Migration API** mode | ✔ | ✔ | ✔ | — |
-| Site Pages (always Enhanced REST) | ✔ | ✔ | — | — |
-| **Compare**, and verifying a copy | ✔ | ✔ | — | — |
-| **Forms** tool | ✔ | ✔ | — | ✔ |
-| **Flows** tool | ✔ | ✔ | — | optional* |
-| Browsing saved History, Settings (local only; verifying a run signs in like Compare) | — | — | — | — |
+| Feature | Graph `Sites.ReadWrite.All` | Graph `Files.ReadWrite.All` | SharePoint `AllSites.FullControl` | Microsoft Forms | Graph `TermStore.ReadWrite.All` |
+|---|:-:|:-:|:-:|:-:|:-:|
+| Files & Folders, Libraries & Lists, Entire Site — **Enhanced REST** mode | ✔ | ✔ | — | — | optional† |
+| Files & Folders, Libraries & Lists, Entire Site — **Migration API** mode | ✔ | ✔ | ✔ | — | optional† |
+| Site Pages (always Enhanced REST) | ✔ | ✔ | — | — | — |
+| **Compare**, and verifying a copy | ✔ | ✔ | — | — | — |
+| **Forms** tool | ✔ | ✔ | — | ✔ | — |
+| **Flows** tool | ✔ | ✔ | — | optional* | — |
+| Browsing saved History, Settings (local only; verifying a run signs in like Compare) | — | — | — | — | — |
 
 \* The Flows tool only uses Microsoft Forms to look up form titles and the target account's forms. Without the permission those lookups report an error and you paste each new form's ID or edit-page link instead; everything else in Flows works.
+
+† Only for copying a managed-metadata column to a different tenant (the term set is copied through Microsoft Graph, delegated, admin consent). The signed-in target account also needs a term store role, for example *Term Store Administrator*. Without the permission the column is not created and the run report says why. See *Managed metadata* in the User Guide.
 
 For example, a company that only wants to move Power Automate flows needs the two Graph permissions and nothing else: no Microsoft Forms permission, and no `AllSites.FullControl`. Flows reads your packages from disk and looks up lists and columns on the source and target sites with the same sign-in.
 
@@ -245,11 +252,7 @@ When **Copy versions** is enabled, two additional controls appear:
 - **Copy all versions** — copies the complete version history for every file.
 - **Latest N versions** — copies only the N most recent versions of each file.
 
-*List item version history* (Library and Site scopes) — a separate row, **List item version history**, controls the history of list items (not files):
-
-- **Same as files** (default) — follows the file options above: off when **Copy versions** is unchecked, otherwise all versions or the latest N.
-- **All versions** — every version, whatever the file options say.
-- **Current only** — items copy with their current values only.
+*List item version history* (Library and Site scopes) follows the same options: with **Copy version history** off, list items copy with their current values only; otherwise they copy all versions or the latest N, exactly as files do. There is no separate setting for list items.
 
 History is replayed for items the run creates: the item is created from its oldest version, then each later version is written with its own values, Modified date and editor, so the target shows the same version labels (1.0, 2.0, 3.0…). Items that already exist on the target keep their own history and are updated in place as before. Text, number, choice, yes/no and date columns follow the history; people, lookup, taxonomy and link columns copy their current value only. If a version cannot be written, the item row says which part did not copy.
 
@@ -261,6 +264,58 @@ The **Copy mode** selector is always available in Advanced options and controls 
 > **Note:** Choose **Migration API** when exact version numbers matter or for large batches. Choose **Enhanced REST** when you do not have Site Collection Admin rights, or for small quick copies where sequential numbering is not critical.
 
 The right panel shows a preview of the top-level items to be copied. Click **Start Copy →** to begin.
+
+### Copying only the structure (no files or items)
+
+In Library and Site scope, untick **Copy files and list items (content)** at the top of the Options step. A line under it confirms *Structure only*: the copy then creates the libraries and lists with their columns, views, settings and content types (and, in Site scope, the site columns, site content types, navigation and site settings), and copies no files or list items. Tick it again to copy the content as well. A library or list that already exists on the target only gets the content types and views it lacks.
+
+### Choosing what structure is copied
+
+In Library and Site scope the Options step has a **Structure to copy** section (open by default, above *Advanced options*). Each checkbox is one kind of structure, all on by default:
+
+![The Options step of a Libraries and Lists copy with the Structure to copy section](SharePointSmartCopy/Docs/screenshots/04_options_library.png)
+
+| Checkbox | What it covers |
+|---|---|
+| **Views** | Shared views, including calendar, Gantt, datasheet and board views and the default view |
+| **List settings** | Content approval, check-out, attachments, folder creation, item-level security and the list's own validation rule |
+| **Content types and their document templates** | Custom content types on the list, their columns and templates, and the type of copied items, files and folders |
+| **Column validation rules and formatting** | A column's validation formula and message and its JSON formatting |
+| **Library template and folder default values** | The library's document template and its folder default values |
+| **Site columns and site content types** (Site scope) | The site-wide definitions the lists build on |
+| **Navigation** (Site scope) | Quick Launch and top navigation |
+| **Site settings** (Site scope) | Description, quick launch, tree view and the other settings that can be written |
+| **Also copy lists that my lists look up** (Library scope) | Adds the custom lists that a selected list's Lookup columns point at |
+| **Copy managed-metadata term sets** (different-tenant mode) | Copies a managed-metadata column's term set to the target term store |
+
+Columns themselves, projected lookup fields and the data are not switches: columns are always created, and *Copy files and list items (content)* above the section controls the data. The choices are remembered for the next run, and the run summary on the report (and in History) lists the structure that run copied, for example *Structure: Views, List settings, Content types*.
+
+### What a Library, List or Site copy brings along
+When a Libraries & Lists or Site copy **creates** a list or library on the target, it copies the list's structure as well as its content:
+
+| What | How it is copied |
+|---|---|
+| **Columns** | Created on the list, with your column mapping applied. Column validation rules (formula and message) and column formatting are copied onto the matching column |
+| **Views** | Shared views are recreated: filter, sorting, grouping, columns and their order, row limit, paging, totals, formatting, and the default view. A view with the same name as one the new list already has (its built-in *All Items* / *All Documents*) is updated instead of duplicated. Calendar, Gantt, datasheet and modern board views are created with their own type. Personal and hidden views are skipped |
+| **List settings** | Content approval, check-out, attachments (lists), open in browser (libraries), folder creation, search visibility, draft version visibility, item-level security, and the list's own validation rule |
+| **Content types** | Custom content types are created on the target site (SharePoint derives every type created this way from *Item*) and added to the list; the list's columns that the source type carries are recreated so they sit on the new type. Copied list items, files and folders are put on the matching type, a file only when the type carries every column being written to it |
+| **Document template** | The library's template file is copied into the target's Forms folder and set as its template |
+| **Folder default values** | The library's folder default column values, with their folder paths pointed at the target library, and the rule that applies them to new files |
+
+**Site scope** also copies the site-wide definitions the lists build on, before any list is created: custom **site columns**, custom **site content types** (without their own columns, which cannot be linked over REST), the **left and top navigation** (links whose title already exists on the target are left alone, and addresses into the source site point at the target site), and **site settings** (description, quick launch, tree view, horizontal quick launch, mega menu and minimal download options). The site title, address, time zone and regional settings are not changed. Site permissions use the existing **Copy permissions** option. A *Site columns, content types, navigation and settings* row in the results lists anything that could not be copied.
+
+What to know:
+
+- Everything above is copied to lists and libraries the copy **creates**. A list or library that already exists on the target only gets what it lacks: the content types it does not have and the views whose title it does not have are added. Its existing views, default view, settings, column rules, template and default values are never changed.
+- A custom content type's own **document template** (the file new documents of that type start from) is copied into the new library's Forms folder and set on the library's copy of the type. It is not copied for the site-level type in Site scope (a site content type's own folder cannot be written over REST).
+- Anything that cannot be copied is listed on that item's result row (for example *views, settings or content types: …*), and the rest of the copy carries on. A view's missing columns are left out of the view, and a filter that names a missing column is left out so the view is still created.
+- **Content types on files and folders** are written together with the custom column values, so files get their type only when custom columns are being copied and the library has at least one custom column (custom columns are always copied in Library and Site scope). Only custom types are carried; ordinary Documents and Folders need no extra write. A folder's type is set before its dates and authors are re-applied.
+- **Document sets** are folders on a special content type. The copy sets a copied folder to the type when the target list has it, which needs the *Document Sets* feature turned on for the target site collection. It does not create the document set's welcome page or shared columns.
+- Lookup site columns are not copied, and neither are managed-metadata site columns in a cross-tenant copy (list columns are handled by the term set copy, see *Managed metadata*).
+- **List settings are applied in two steps:** most when the list is created, but content approval, require check-out and draft visibility only after all files and the metadata passes are done, so they cannot interfere with the copy's own writes.
+- A custom column on a copied content type is recreated on the new (still empty) list so it sits on the type. A lookup or managed-metadata column, or any column on a list that already holds data, is listed in the report instead.
+- Modern **board** views are created and set to the board type, but whether they render as a board has not been proven. Document Set types need the feature on the target site collection.
+- The links under the *Recent* navigation node are generated by SharePoint and are not copied.
 
 ### Step 5 — Copy in Progress
 
@@ -514,6 +569,10 @@ Connect a **Source** and a **Target** independently, the same way you would in t
 
 ## 8. Troubleshooting
 
+### Switching to another tenant still signs in to the first one
+
+In **Single tenant** mode one sign-in serves every site. If you change the source URL to a site on a different tenant, the app now clears the sign-in and prompts again. If the prompt still offers (or forces) the first tenant, look at the card at the top of the Connect step: its **Sign in with app registration** dropdown shows (and lets you change) the registration the sign-in uses, and **Show more** under it names that registration's tenant and explains how to connect a site on another one: a registration with a specific **Tenant ID** can only sign in to that directory, so another tenant needs either a multi-tenant registration (leave Tenant ID empty to use `common`) or **Multi-tenant** mode, which signs in to the source and target separately. Closing and reopening the app also clears the sign-in.
+
 ### Cannot connect to source or target site
 
 - Verify the URL is the full root URL of the site collection, e.g. `https://company.sharepoint.com/sites/sitename` — not a document library URL.
@@ -544,7 +603,9 @@ Connect a **Source** and a **Target** independently, the same way you would in t
 
 ### Lookup columns — how they copy and where they can't
 
-A Lookup column stores a pointer to an item in another list, and item IDs differ between source and target. So the copy matches each value by its **display text** (the column's "show field", usually Title) against the items in the target column's bound list, and writes the matching target item's ID. This works in both copy modes and between tenants.
+A Lookup column stores a pointer to an item in another list, and item IDs differ between source and target. So the copy writes the matching **target item's ID**. For an item copied in the same run, the match is made by the **original item** (so two items with the same title are told apart); for an item that was already at the target, the copy falls back to the column's **display text** (its "show field", usually Title). The run report ends with one *Lookup values* line: how many values were matched by item, by text, and not found. This works in both copy modes and between tenants.
+
+In **Library** scope, the option **Also copy lists that my lists look up** (on by default) adds the custom lists that a selected list's Lookup columns point at, repeating until nothing new is needed, so the column can be created and its values resolved in one run. A lookup to a list in a **child web** of the same site collection is recreated against the same-named list in the same child web at the target (the child web must already exist there), and its values are matched against that child web. **Projected (additional) fields** — the extra columns a lookup shows from the other list — are recreated on a new list once its lookup column exists. The Column mapping dialog shows under each lookup column which list it looks up, and under each managed-metadata column whether its term set will be copied.
 
 For a value to come across:
 
@@ -553,12 +614,25 @@ For a value to come across:
 
 **Known limitations** — these are not bugs to report; they are not supported today:
 
-- **Duplicate display text** — if two target items have the same display text (two items titled "Q1"), every value resolves to the one with the lowest ID. Matching is by text, not by the original item.
-- **Lookups to a different site** — a column that looks up a list on another site is not recreated (the target list can't be found by title on the target site), and its values are skipped.
+- **Duplicate display text** — for items that were **not** copied in this run, two target items with the same display text (two items titled "Q1") resolve to the one with the lowest ID.
+- **Lookups to a different site collection** — a column that looks up a list on another site collection is not recreated (the target list can't be found), and its values are skipped.
+- **Projected fields on a list that already exists** — they are added only when the app creates the list (or adds its missing structure); a projected field already on the target is left alone.
 - **Lookups to a document library's files** — libraries are copied after custom lists, so a lookup that points at a library's items finds nothing to match on the first run. Run the copy again after the library has been copied.
-- **Library scope with a mix of libraries and lists** — only **Site** scope creates all lists and libraries up front. In Library scope, libraries are copied before the lists you selected, so a library column that looks up one of those lists may need a second run after the lists have been copied. Among the selected lists themselves, ones that others look up are copied first.
+- **Library scope with a mix of libraries and lists** — only **Site** scope creates all lists and libraries up front. In Library scope, libraries are copied before the lists you selected, so a library column that looks up one of those lists may need a second run after the lists have been copied. Among the selected lists themselves (and the lists added by *Also copy lists that my lists look up*), ones that others look up are copied first. Lists added that way are custom lists only, not libraries.
 - **A same-named column that isn't a Lookup** — if the target already has a column with that name but a different type (for example Text), the values are not written and the Custom Fields Details column says so. Rename or remove it and copy again.
 - **Items missing at the target** — a value whose display text matches nothing is reported as "unresolved"; the file or item itself still copies.
+
+### Managed metadata — how it copies
+
+A managed-metadata column is bound to a **term set** in the tenant's term store, and a term is identified by a GUID.
+
+- **Same tenant:** the column is recreated with the same term set, and each value is written with its term GUID. Nothing else is needed.
+- **Different tenant:** the term store of the target does not have those GUIDs. The app copies the **term set** (group, set, terms with their hierarchy, labels in every language, synonyms, descriptions and custom properties) to the target through Microsoft Graph, builds a map from every source term to its new term, binds the column to the copy, and writes each value with the new term. The copy is repeatable: a group, set or term that is already at the target (matched by name) is reused. The run report gets a *Managed metadata* line: term sets copied (created / already there) and how many values were remapped or left out.
+- **The switch:** on the Options screen (different-tenant mode) **Copy managed-metadata term sets to the target tenant** is on by default. Turn it off to skip the term store entirely; the column is then reported as not created. The Column mapping dialog says under each managed-metadata column whether its term set will be copied.
+- **What it needs:** the optional delegated Microsoft Graph permission `TermStore.ReadWrite.All` on the registration used for the target (admin consent; the source registration needs `TermStore.Read.All`) and a term store role (for example *Term Store Administrator*) for the signed-in target account. The first term set copy may show a consent prompt. Without them the column is **not created** and the report says so, instead of being skipped silently.
+- **Not copied:** term GUIDs themselves (Graph always assigns new ones), tagging availability, deprecation, term order, term store roles and Enterprise Keywords. A term set that belongs to only the source site collection is copied into the target site's own site-collection group.
+- A value whose term is not in the copied set (a term outside the column's branch, or one deleted at the source) is left out and counted.
+- The term set copy is checked by the live test harness by copying a term set into a second group of the same term store (every GUID changes, so the same remapping is exercised). A copy into another tenant has not been tested live.
 
 ### Version history not copying
 

@@ -109,6 +109,9 @@ public partial class FlowsDialogViewModel : ObservableObject
     public bool HasTargetFormsText => TargetFormsText.Length > 0;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(HasDomainNote))] private string _domainNote = string.Empty;
     public bool HasDomainNote => DomainNote.Length > 0;
+    // "N addresses are covered by the domain move and hidden from the list above."
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasDomainCover))] private string _domainCoverText = string.Empty;
+    public bool HasDomainCover => DomainCoverText.Length > 0;
     // Something on this step was filled in automatically from the sign-ins (so the "clear" link shows).
     [ObservableProperty] private bool _hasAutofill;
 
@@ -293,6 +296,11 @@ public partial class FormMapRow : ObservableObject
     // Forms IDs start with the same tenant and owner characters, so the END is what tells two forms apart.
     public string ShortId => SourceId.Length > 22 ? SourceId[..6] + "…" + SourceId[^12..] : SourceId;
     [ObservableProperty] private string _newId = string.Empty;
+    // The saved Forms-copy entry for the target account this ID came from (null when none), and the ID the tool filled in
+    // from it. NewId is only replaced by a later lookup while it is still empty or still equals AutoFilledId, so nothing
+    // the user typed or picked is ever overwritten.
+    public SharePointSmartCopy.Forms.FormsMapEntry? FromCopy { get; set; }
+    public string AutoFilledId { get; set; } = string.Empty;
     [ObservableProperty] private TargetFormOption? _picked;
     // Where the ID came from, or why it looks wrong (wrong tenant, not an ID), and how serious that is (Ready / Look).
     [ObservableProperty, NotifyPropertyChangedFor(nameof(HasNote))] private string _note = string.Empty;

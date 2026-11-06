@@ -194,7 +194,7 @@
 
                     <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0" Padding="12,8"
                             Visibility="{Binding HasPackageWarning, Converter={StaticResource BoolToVis}}">
-                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding PackageWarning}"/>
+                        <TextBox Style="{StaticResource SelectableText}" FontSize="12" Text="{Binding PackageWarning, Mode=OneWay}"/>
                     </Border>
 
                     <!-- What was added: one row per package, with the flows found in it -->
@@ -233,7 +233,7 @@
                             ToolTip="{loc:Loc Flows_LoadMappingTip}" IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
 
                     <!-- What the flows use: informative, so it is there but closed -->
-                    <Expander Style="{StaticResource OptionsExpander}" Margin="0,14,0,0" IsExpanded="True"
+                    <Expander Style="{StaticResource OptionsExpander}" Margin="0,14,0,0" IsExpanded="False"
                               Visibility="{Binding HasScan, Converter={StaticResource BoolToVis}}">
                         <Expander.Header>
                             <TextBlock Text="{Binding ResourcesHeaderText}" FontWeight="SemiBold" Margin="0,0,24,0"/>
@@ -338,7 +338,7 @@
                     <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0" Padding="12,8"
                             Visibility="{Binding HasSourceWarning, Converter={StaticResource BoolToVis}}">
                         <StackPanel>
-                            <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding SourceWarning}"/>
+                            <TextBox Style="{StaticResource SelectableText}" FontSize="12" Text="{Binding SourceWarning, Mode=OneWay}"/>
                             <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_RemoveTargetPackages}" Click="RemoveTargetPackages_Click"
                                     HorizontalAlignment="Left" Margin="0,8,0,0" Padding="14,5"
                                     Visibility="{Binding ShowRemoveTargetPackages, Converter={StaticResource BoolToVis}}"
@@ -667,6 +667,24 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
+                    <!-- Email domain as a sentence (above the individual values it can make unnecessary) -->
+                    <TextBlock Text="{loc:Loc Flows_EmailHeader}" FontSize="13" FontWeight="SemiBold" Margin="0,20,0,0"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <TextBlock Text="{loc:Loc Flows_DomainMove}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <TextBox x:Name="DomainFromBox" Width="200" Style="{StaticResource WatermarkTextBox}" Tag="contoso.com"
+                                 TextChanged="Domain_TextChanged"
+                                 AutomationProperties.Name="{loc:Loc Flows_DomainFromName}"/>
+                        <TextBlock Text="{loc:Loc Flows_DomainTo}" VerticalAlignment="Center" Margin="8,0"/>
+                        <TextBox x:Name="DomainToBox" Width="200" Style="{StaticResource WatermarkTextBox}" Tag="fabrikam.com"
+                                 TextChanged="Domain_TextChanged"
+                                 AutomationProperties.Name="{loc:Loc Flows_DomainToName}"/>
+                    </StackPanel>
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,6,0,0" Text="{loc:Loc Flows_EmailHint}" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,0" Text="{Binding DomainCoverText}"
+                               Visibility="{Binding HasDomainCover, Converter={StaticResource BoolToVis}}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,0" Text="{Binding DomainNote}"
+                               Visibility="{Binding HasDomainNote, Converter={StaticResource BoolToVis}}"/>
+
                     <!-- Other values, grouped by kind -->
                     <StackPanel Visibility="{Binding HasValues, Converter={StaticResource BoolToVis}}">
                         <Grid Margin="0,20,0,0">
@@ -715,19 +733,6 @@
                         </DataGrid>
                     </StackPanel>
 
-                    <!-- Email domain as a sentence -->
-                    <TextBlock Text="{loc:Loc Flows_EmailHeader}" FontSize="13" FontWeight="SemiBold" Margin="0,20,0,0"/>
-                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                        <TextBlock Text="{loc:Loc Flows_DomainMove}" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                        <TextBox x:Name="DomainFromBox" Width="200" Style="{StaticResource WatermarkTextBox}" Tag="contoso.com"
-                                 AutomationProperties.Name="{loc:Loc Flows_DomainFromName}"/>
-                        <TextBlock Text="{loc:Loc Flows_DomainTo}" VerticalAlignment="Center" Margin="8,0"/>
-                        <TextBox x:Name="DomainToBox" Width="200" Style="{StaticResource WatermarkTextBox}" Tag="fabrikam.com"
-                                 AutomationProperties.Name="{loc:Loc Flows_DomainToName}"/>
-                    </StackPanel>
-                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,6,0,0" Text="{loc:Loc Flows_EmailHint}" Foreground="{DynamicResource TextSecondaryBrush}"/>
-                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,0" Text="{Binding DomainNote}"
-                               Visibility="{Binding HasDomainNote, Converter={StaticResource BoolToVis}}"/>
                 </StackPanel>
             </ScrollViewer>
 
@@ -973,7 +978,7 @@
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <ProgressBar IsIndeterminate="True" Width="90" Height="4" Margin="0,0,12,0" VerticalAlignment="Center"
                                  Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
-                    <TextBlock Text="{Binding StatusText}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center" MaxWidth="560"
+                    <TextBox Style="{StaticResource SelectableText}" Text="{Binding StatusText, Mode=OneWay}" FontSize="12" VerticalAlignment="Center" MaxWidth="560"
                                Foreground="{DynamicResource TextSecondaryBrush}"/>
                     <TextBlock Text="{Binding BlockReason}" FontSize="12" FontWeight="SemiBold" TextWrapping="Wrap" VerticalAlignment="Center" MaxWidth="560"
                                Foreground="{DynamicResource DangerBrush}"

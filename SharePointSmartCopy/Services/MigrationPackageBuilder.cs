@@ -454,7 +454,9 @@ public class MigrationPackageBuilder
                 E("Folder",
                     new XAttribute("Id", rootFolderGuid),
                     new XAttribute("Url", libraryWebRelUrl),
-                    new XAttribute("Name", libraryTitle),
+                    // The root folder's name is the library's URL name, which differs from its title when the title has
+                    // spaces or hyphens ("Project Files" lives at /ProjectFiles).
+                    new XAttribute("Name", libraryRelUrl.TrimEnd('/').Split('/').Last()),
                     new XAttribute("ParentWebId", webId),
                     new XAttribute("ParentFolderId", listId),
                     new XAttribute("ProgId", FolderProgId(string.Empty)),

@@ -189,7 +189,6 @@ public partial class MainViewModel : ObservableObject
                     Settings.CopyVersions         = CopyVersions;
                     Settings.CopyAllVersions      = CopyAllVersions;
                     Settings.MaxVersions          = MaxVersions;
-                    Settings.ListItemVersions     = ListItemVersions;
                     Settings.MaxParallelCopies    = MaxParallelCopies;
                     Settings.CopyCustomColumns    = CopyCustomColumns;
                     Settings.CopyLibraryContent   = CopyLibraryContent;
@@ -197,6 +196,15 @@ public partial class MainViewModel : ObservableObject
                     Settings.PreserveMetadata     = PreserveMetadata;
                     Settings.ReapplyFolderMetadataEveryRun = ReapplyFolderMetadataEveryRun;
                     Settings.CopyNavigation       = CopyNavigation;
+                    Settings.CopyLookupDependencies = CopyLookupDependencies;
+                    Settings.CopyTermSets         = CopyTermSets;
+                    Settings.CopyViews = CopyViews;
+                    Settings.CopyListSettings = CopyListSettings;
+                    Settings.CopyContentTypes = CopyContentTypes;
+                    Settings.CopyColumnRules = CopyColumnRules;
+                    Settings.CopyTemplates = CopyTemplates;
+                    Settings.CopySiteDefinitions = CopySiteDefinitions;
+                    Settings.CopySiteSettings = CopySiteSettings;
                     Settings.Scope                = CopyScope;
                     Settings.Save();
                     _ = IsLibraryOrSiteScope ? StartLibraryCopyAsync() : StartCopyAsync();

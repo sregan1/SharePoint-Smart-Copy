@@ -29,7 +29,6 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(ShowLibraryFullCopyMapping))]
     [NotifyPropertyChangedFor(nameof(LibrarySummaryCount))]
     [NotifyPropertyChangedFor(nameof(LibraryPreviewItems))]
-    [NotifyPropertyChangedFor(nameof(ShowListItemVersionOption))]
     [NotifyPropertyChangedFor(nameof(EffectiveCopyCustomColumns))]
     [NotifyPropertyChangedFor(nameof(CustomFieldColumnWidth))]
     [NotifyPropertyChangedFor(nameof(CustomFieldDetailsColumnWidth))]
@@ -104,7 +103,6 @@ public partial class MainViewModel : ObservableObject
         OnPropertyChanged(nameof(SelectedItemCount));
         OnPropertyChanged(nameof(CopyPreviewTotalSizeDisplay));
         OnPropertyChanged(nameof(LibraryPreviewItems));
-        OnPropertyChanged(nameof(ShowListItemVersionOption));
         NextCommand.NotifyCanExecuteChanged();
     }
 
@@ -115,33 +113,8 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool _copyAllVersions = true;
     [ObservableProperty] private int _maxVersions = 10;
 
-    // List item version history: follow the file options, always all versions, or current values only.
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ListItemVersionsSame), nameof(ListItemVersionsAll), nameof(ListItemVersionsOff))]
-    private ListItemVersionMode _listItemVersions = ListItemVersionMode.SameAsFiles;
-
-    public bool ListItemVersionsSame { get => ListItemVersions == ListItemVersionMode.SameAsFiles; set { if (value) ListItemVersions = ListItemVersionMode.SameAsFiles; } }
-    public bool ListItemVersionsAll  { get => ListItemVersions == ListItemVersionMode.All;         set { if (value) ListItemVersions = ListItemVersionMode.All; } }
-    public bool ListItemVersionsOff  { get => ListItemVersions == ListItemVersionMode.Off;         set { if (value) ListItemVersions = ListItemVersionMode.Off; } }
-
-    // The list item version option only matters when list items will actually be copied: a custom list (or some of its
-    // items) is selected in Library scope, or, in Site scope, the site has lists and Copy library content is on.
-    public bool ShowListItemVersionOption => IsSiteScope
-        ? CopyLibraryContent && SourceLibraries.Any(n => n.IsCustomList)
-        : IsLibraryScope && SourceLibraries.Any(HasListItemsSelected);
-
-    private static bool HasListItemsSelected(SharePointNode node) =>
-        node.GetCheckedNodes().Any(n => n.Type == NodeType.Library && n.IsCustomList)
-        || (node.IsCustomList && (node.IsChecked == null
-            || node.Children.Any(c => c.Type == NodeType.ListItem && c.IsChecked == true)));
-
-    // Versions to replay per list item: 0 = none, otherwise the number of latest versions (int.MaxValue = all).
-    private int ListItemVersionLimit => ListItemVersions switch
-    {
-        ListItemVersionMode.Off   => 0,
-        ListItemVersionMode.All   => int.MaxValue,
-        _ => !CopyVersions ? 0 : CopyAllVersions ? int.MaxValue : Math.Max(1, MaxVersions),
-    };
+    // Versions to replay per list item follow the file version options: 0 = none, otherwise the number of latest versions (int.MaxValue = all).
+    private int ListItemVersionLimit => !CopyVersions ? 0 : CopyAllVersions ? int.MaxValue : Math.Max(1, MaxVersions);
     [ObservableProperty] private int _maxParallelCopies = 4;
     [ObservableProperty] private CopyMode _copyMode = CopyMode.MigrationApi;
     [ObservableProperty] private ObservableCollection<CopyJob> _copyJobs = [];
@@ -159,10 +132,18 @@ public partial class MainViewModel : ObservableObject
     private bool _copyCustomColumns = false;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowFileCopyOptions))]
-    [NotifyPropertyChangedFor(nameof(ShowListItemVersionOption))]
     private bool _copyLibraryContent = true;
     [ObservableProperty] private bool _remapPageWebPartUrls = true;
     [ObservableProperty] private bool _copyNavigation = true;
+    [ObservableProperty] private bool _copyLookupDependencies = true;
+    [ObservableProperty] private bool _copyTermSets = true;
+    [ObservableProperty] private bool _copyViews = true;
+    [ObservableProperty] private bool _copyListSettings = true;
+    [ObservableProperty] private bool _copyContentTypes = true;
+    [ObservableProperty] private bool _copyColumnRules = true;
+    [ObservableProperty] private bool _copyTemplates = true;
+    [ObservableProperty] private bool _copySiteDefinitions = true;
+    [ObservableProperty] private bool _copySiteSettings = true;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PermColumnWidth))]
     [NotifyPropertyChangedFor(nameof(PermDetailsColumnWidth))]
@@ -181,10 +162,25 @@ public partial class MainViewModel : ObservableObject
     public IReadOnlyList<SpColumnDef> SourceColumns => _sourceColumns;
     public IReadOnlyList<SpColumnDef> TargetColumns => _targetColumns;
 
+    // Item-level copies: one mapping context per selected source list (empty for every other scope).
+    internal List<ListMappingContext> ListMappingContexts { get; } = [];
+
     public string MappingButtonLabel
     {
         get
         {
+            if (ListMappingContexts.Count > 0)
+            {
+                var listTotal = ListMappingContexts.Sum(c => c.SourceColumns.Count);
+                var all       = ListMappingContexts.SelectMany(c => c.Mappings).ToList();
+                if (all.Count == 0)
+                    return listTotal > 0 ? Loc.T("VM_ConfigureMappingsCount", listTotal) : Loc.T("VM_ConfigureMappings");
+                var listUnmatched = all.Count(m => m.Status == MappingStatus.Unmatched);
+                return listUnmatched > 0
+                    ? Loc.T("VM_ConfigureMappingsUnmatched", listUnmatched, listTotal)
+                    : Loc.T("VM_ConfigureMappingsMapped", all.Count - listUnmatched, listTotal);
+            }
+
             var total = _sourceColumns.Count;
             if (ColumnMappings.Count == 0)
                 return total > 0 ? Loc.T("VM_ConfigureMappingsCount", total) : Loc.T("VM_ConfigureMappings");

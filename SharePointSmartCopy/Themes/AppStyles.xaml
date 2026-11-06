@@ -198,6 +198,17 @@
         <Setter Property="Padding" Value="12,8"/>
     </Style>
 
+    <!-- Read-only text that looks like a TextBlock but can be selected and copied (error and status messages). -->
+    <Style x:Key="SelectableText" TargetType="TextBox">
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="Cursor" Value="IBeam"/>
+    </Style>
+
     <Style x:Key="WarningBanner" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource WarningBgBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource WarningBrush}"/>

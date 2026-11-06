@@ -25,7 +25,9 @@ public sealed class FormsResponseExporter
     public async Task<int> ExportAsync(string formId, string xlsxPath, CancellationToken ct = default)
     {
         var (form, responses) = await FetchAsync(formId, ct);
-        Write(form, responses, xlsxPath);
+        // Building and saving the workbook is CPU and disk work (a form can hold tens of thousands of responses), so it
+        // runs off the UI thread; otherwise the window freezes until it is done.
+        await Task.Run(() => Write(form, responses, xlsxPath), ct);
         return responses.Count;
     }
 
@@ -54,13 +56,16 @@ public sealed class FormsResponseExporter
         var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var (title, form, responses) in forms)
         {
-            var baseName = new string(title.Select(c => "[]:*?/\\".Contains(c) ? '_' : c).ToArray()).Trim();
-            if (baseName.Length == 0) baseName = "Form";
-            var name = Clip(baseName, 31);
+            // Excel also rejects a name that starts or ends with an apostrophe and the reserved name "History"; clipping to 31
+            // characters can leave a trailing space or apostrophe, so the cleanup runs after the clip too.
+            static string Tidy(string s) => s.Trim().Trim('\'').Trim();
+            var baseName = Tidy(new string(title.Select(c => "[]:*?/\\".Contains(c) ? '_' : c).ToArray()));
+            if (baseName.Length == 0 || baseName.Equals("History", StringComparison.OrdinalIgnoreCase)) baseName = baseName.Length == 0 ? "Form" : baseName + " form";
+            var name = Tidy(Clip(baseName, 31));
             for (var n = 2; !used.Add(name); n++)
             {
                 var suffix = $" ({n})";
-                name = Clip(baseName, 31 - suffix.Length) + suffix;
+                name = Tidy(Clip(baseName, 31 - suffix.Length)) + suffix;
             }
             AddSheet(wb, name, form, responses);
         }
@@ -72,7 +77,9 @@ public sealed class FormsResponseExporter
     private static void AddSheet(XLWorkbook wb, string sheetName, JsonObject form, IReadOnlyList<JsonObject> responses)
     {
         // Matrix rows are separate questions (MatrixChoice); the group itself carries no answer.
-        var questions = form["questions"]!.AsArray().Select(q => q!.AsObject())
+        // A form with no "questions" node (or a null entry in it) exports its responses with the fixed columns only,
+        // instead of aborting the whole workbook.
+        var questions = (form["questions"] as JsonArray ?? []).OfType<JsonObject>()
             .Where(q => q["type"]?.GetValue<string>() != "Question.MatrixChoiceGroup" && q["id"] is not null)
             .GroupBy(q => q["id"]!.GetValue<string>()).Select(g => g.First())   // a repeated question id must not abort the export
             .OrderBy(q => q["order"]?.GetValue<double>() ?? double.MaxValue).ToList();

@@ -600,6 +600,7 @@ public partial class SharePointService
         if (canvas  != null) fields["CanvasContent1"]        = canvas;
         if (layout  != null) fields["LayoutWebpartsContent"] = layout;
         if (banner  != null) fields["BannerImageUrl"]        = banner;
+        if (!string.IsNullOrEmpty(pageMeta.Title)) fields["Title"] = pageMeta.Title;
         if (pageMeta.Description    != null) fields["Description"]    = pageMeta.Description;
         if (pageMeta.PageLayoutType != null) fields["PageLayoutType"]  = pageMeta.PageLayoutType;
         fields["PromotedState"] = (object)pageMeta.PromotedState;

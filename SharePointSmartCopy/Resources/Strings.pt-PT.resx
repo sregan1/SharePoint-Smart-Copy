@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Destino: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Lista de destino</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Opções de cópia</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Copiar o conteúdo da biblioteca (ficheiros)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Se desativado, apenas o esquema de colunas e as definições da biblioteca são recriados; nenhum ficheiro é copiado.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Copiar ficheiros e itens de lista (conteúdo)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Quando desativado, apenas a estrutura é copiada, sem ficheiros nem itens de lista: colunas, vistas, definições da lista, tipos de conteúdo e, no âmbito Site completo, colunas do site, navegação e definições do site.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Se o ficheiro existir:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Ignorar</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Substituir</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Todas as versões</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Últimas </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> versões</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Copiar também as listas que as minhas listas consultam</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>Quando uma lista selecionada tem uma coluna de pesquisa (Lookup), a lista consultada também é copiada, para que a coluna possa ser criada e os respetivos valores resolvidos. Desative para copiar apenas o que selecionou.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Valores de pesquisa</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} correspondidos por item, {1} correspondidos por texto, {2} não encontrados.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Metadados geridos</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} valores de termo copiados, {1} omitidos (termo não encontrado no conjunto copiado).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>A coluna de metadados geridos &quot;{0}&quot; não foi criada: o respetivo conjunto de termos pertence a outro inquilino e a cópia de conjuntos de termos não está disponível (inicie sessão nos dois inquilinos e conceda a permissão TermStore.ReadWrite.All).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>Conjunto de termos &quot;{0}&quot; copiado para o destino: {1} criados, {2} já existiam.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Copiar os conjuntos de termos de metadados geridos para o inquilino de destino</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>Uma coluna de metadados geridos está associada a um conjunto de termos no arquivo de termos do inquilino de origem. Quando esta opção está ativada, o conjunto de termos (termos, etiquetas, sinónimos, descrições) é copiado para o arquivo de termos de destino, a coluna é associada à cópia e cada valor é remapeado. Requer a permissão opcional TermStore.ReadWrite.All e uma função do arquivo de termos no destino.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Pesquisa a lista "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Pesquisa uma lista noutro site</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Metadados geridos: o respetivo conjunto de termos será copiado para o inquilino de destino</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Metadados geridos: utiliza o mesmo conjunto de termos (mesmo inquilino)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>O campo projetado "{0}" não foi criado: a respetiva coluna de pesquisa "{1}" não está na lista de destino.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>O campo projetado "{0}" não foi criado: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Iniciar sessão com o registo da aplicação:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Estrutura a copiar</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Tudo o que estiver selecionado aqui é recriado no destino juntamente com os dados. Uma lista ou biblioteca que já exista aí recebe apenas os tipos de conteúdo e as vistas que lhe faltam.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Vistas (filtros, agrupamento, colunas, vista predefinida, vistas de calendário e de quadro)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Definições da lista (aprovação, check-out, anexos, pastas, segurança ao nível do item)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Tipos de conteúdo e respetivos modelos de documento</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Regras de validação e formatação de colunas</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Modelo de biblioteca e valores predefinidos de pasta</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Colunas do site e tipos de conteúdo do site</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Definições do site (descrição, iniciação rápida, vista em árvore e mais)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Vistas</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Definições da lista</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Tipos de conteúdo</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Regras de coluna</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Modelos e predefinições</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Colunas e tipos do site</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Navegação</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Definições do site</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Listas de pesquisa</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Conjuntos de termos</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Estrutura: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>nenhuma</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Mostrar mais</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Mostrar menos</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Copiar navegação (Início Rápido e barra superior)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Substitui a navegação do destino pelas ligações da origem. Os URL são remapeados para o site de destino.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Copiar permissões</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Copiar valores de colunas personalizadas</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Copia valores de colunas dos tipos Texto, Número, Escolha, Data, Booleano, Escolha múltipla, Pessoa e Metadados geridos. As colunas de pesquisa não são suportadas.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Ative "Copiar valores de colunas personalizadas" para configurar os mapeamentos.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Todos os valores de colunas personalizadas são copiados. Utilize os mapeamentos para controlar quais as colunas criadas no destino.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Todos os valores das colunas personalizadas são copiados. Utilize o Mapeamento de colunas (acima) para controlar quais as colunas criadas no destino.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Os valores de colunas personalizadas são sempre copiados para os itens de lista.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Modo de cópia</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Nome</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>ID de cliente (ID da aplicação)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>ID do tenant</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Utilize "common" para multi-tenant, ou o GUID ou domínio do seu tenant.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Deixe em branco ou introduza 'common' para iniciar sessão em qualquer tenant. Um GUID ou domínio de tenant (por exemplo, contoso.onmicrosoft.com) limita o início de sessão a esse único tenant.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Prefixar os nomes de relatório predefinidos com os nomes dos sites de origem e destino</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Terminar sessão</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Tema:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Modo Bibliotecas e listas</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Modo Site completo</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Modo Páginas do site</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Copiar o conteúdo da biblioteca (ficheiros)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Copiar ficheiros e itens de lista (conteúdo)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Copiar histórico de versões</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Últimas N versões</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Copiar navegação</value></data>
@@ -939,7 +979,7 @@ Os pacotes originais não foram alterados. As ligações NÃO são migradas; rec
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Recarregar formulários</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Clique em &quot;Carregar os meus formulários&quot; para ver os seus formulários.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>Não foram encontrados formulários nesta conta.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>Copiar {0} formulários</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Iniciar a cópia de {0} formulários</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Copiar mais formulários</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Escolha para onde vão as cópias</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Tenant único: as cópias são criadas na mesma conta que está a utilizar, junto aos originais.</value></data>
@@ -963,7 +1003,7 @@ Os pacotes originais não foram alterados. As ligações NÃO são migradas; rec
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>A copiar formulários</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>A iniciar…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Formulário {0} de {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>A cancelar após o formulário atual…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>A cancelar… o formulário que está a ser copiado está a ser interrompido.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Cópia concluída: todos os {0} formulários foram copiados</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>As suas cópias estão em {0}. Abra o Microsoft Forms para as ver ou utilize a tabela abaixo.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Cópia concluída: {0} de {1} formulários foram copiados, alguns precisam de atenção</value></data>
@@ -971,7 +1011,7 @@ Os pacotes originais não foram alterados. As ligações NÃO são migradas; rec
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Cópia concluída, mas nenhum formulário foi copiado</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Consulte a coluna Detalhes para saber o motivo. Causas comuns são a falta da permissão do Microsoft Forms no registo do destino ou uma conta sem acesso ao Forms.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Cópia cancelada após {0} de {1} formulários</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Os formulários listados abaixo foram concluídos. O formulário que estava a ser copiado quando cancelou não foi terminado e não está visível.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Os formulários marcados como copiados abaixo foram concluídos. O formulário que estava a ser copiado quando cancelou não foi terminado e pode ficar incompleto no destino; a respetiva linha mostra o ID da cópia, se esta tiver sido criada.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Copiados</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>Com avisos</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Com falha</value></data>
@@ -986,7 +1026,7 @@ Os pacotes originais não foram alterados. As ligações NÃO são migradas; rec
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Abrir cópia selecionada</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Abrir o Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Exportar resultados…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Mostrar mapa de IDs de formulário</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Abrir IDs de formulário guardados</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Selecione primeiro um formulário copiado na tabela.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Resultados guardados em {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Sugestão: o registo de aplicação não tem um endereço de redirecionamento correspondente. No Entra, em Autenticação, adicione a plataforma &quot;Aplicações móveis e de ambiente de trabalho&quot; com http://localhost e tente novamente.</value></data>
@@ -1105,7 +1145,7 @@ Copiar novamente cria uma segunda cópia de cada um. Continuar?</value></data>
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(formulário sem título)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Formulário de origem</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Escolher entre os formulários do destino</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Escolha um formulário da conta de destino. Clique primeiro em &quot;Carregar formulários da conta de destino&quot;.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Escolha um formulário da conta de destino. A lista é carregada quando este passo é aberto; se estiver vazia, clique em &quot;Recarregar nomes de formulários…&quot;.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Preenchido a partir do início de sessão no destino ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>A sua conta de origem, substituída pela sua conta de destino</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Preenchido a partir dos seus inícios de sessão ({0} → {1}). Limpe as duas caixas para deixar os domínios de e-mail inalterados.</value></data>
@@ -1133,7 +1173,7 @@ Copiar novamente cria uma segunda cópia de cada um. Continuar?</value></data>
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} pacote(s) foi(ram) escrito(s) por esta ferramenta e já contém(êm) os valores do destino. Remova-os (o ✕ na lista) e adicione as exportações originais.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} site(s) não tem(êm) destino. Um site deixado como está ainda apontaria para o tenant de origem.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} lista(s) falharia(m) na importação. Corrija as listas marcadas como &quot;Vai falhar&quot; para continuar.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ As listas ainda não foram correspondidas. Volte um passo atrás e avance novamente para tentar de novo.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ As listas ainda não foram correspondidas. Clique em &quot;Corresponder novamente&quot; para tentar de novo.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} formulário(s) precisa(m) de um ID de formulário de destino válido para continuar.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Alterar origem…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Sessão iniciada como {0}. O endereço do SharePoint do tenant de origem é {1}.</value></data>
@@ -1398,11 +1438,65 @@ Copiar novamente cria uma segunda cópia de cada um. Continuar?</value></data>
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Fechar durante o trabalho?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>A ferramenta ainda está a trabalhar (a analisar, a corresponder, a iniciar sessão ou a escrever pacotes). Fechar agora interrompe-a. Fechar mesmo assim?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>Não foi possível adicionar {0} ao novo formulário automaticamente. Foi guardada uma cópia do ficheiro como {1}: adicione-o novamente no Microsoft Forms.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Histórico de versões de itens de lista:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Igual aos ficheiros</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Todas as versões</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Apenas a atual</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Copia o histórico de versões de cada novo item de lista (valores, datas e editores) reproduzindo as respetivas versões no destino. &quot;Igual aos ficheiros&quot; segue as opções de versões de ficheiros acima. Os itens que já existem no destino mantêm o seu próprio histórico. As colunas de pessoas, pesquisa, taxonomia e ligações copiam apenas o valor atual.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>histórico de versões: algumas partes não foram copiadas ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>o histórico de versões não foi copiado ({0}); o item tem apenas os valores atuais</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Lista:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>A mudança de domínio de e-mail não foi aplicada: os dois domínios têm de estar preenchidos, sem espaços nem @ a mais (por exemplo, contoso.com e fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Remover todos os pacotes e descartar a análise e tudo o que preencheu nos passos seguintes?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Fechar Reescrever fluxos? O mapeamento criado até agora perde-se (use primeiro Guardar mapeamento para o manter).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Recomeçar? Os pacotes, a análise e tudo o que preencheu são descartados. Os pacotes já escritos na pasta de saída não são eliminados.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{0} endereços de e-mail em {1} são abrangidos por esta mudança e, por isso, não aparecem na lista acima. Para dar a um deles outro endereço, limpe estas caixas, preencha essa linha e indique novamente a mudança de domínio.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>Não foi possível ler a pasta {0}: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Rever: estes nomes de coluna foram renomeados em todos os locais onde aparecem nas expressões do fluxo, o que pode incluir a coluna com o mesmo nome de outra lista. Verifique se cada um se refere à lista que o renomeou.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} nome(s) de coluna foram renomeados em todos os locais onde aparecem nas expressões. Verifique se se referem à lista que os renomeou e não a uma coluna com o mesmo nome de outra lista (consulte o relatório).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Parar a cópia agora? O formulário que está a ser copiado neste momento é interrompido e pode ficar incompleto na conta de destino; elimine-o no Microsoft Forms se for o caso. Os formulários já concluídos são mantidos.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Selecionar</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Registo de cópia</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>Iniciar a cópia de 1 formulário</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>O formulário foi copiado, mas não foi possível verificar as imagens ({0}). Abra-o no Microsoft Forms e verifique as imagens de fundo e de cabeçalho.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Verifique a sua ligação e a sessão iniciada e clique em Recarregar formulários. Detalhes: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Não foi possível carregar os seus formulários</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>1 formulário carregado.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>O registo foi copiado para a área de transferência.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>Não foi possível copiar o registo porque outro programa está a utilizar a área de transferência. Tente novamente.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Registo de cópia</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Seguinte: se existirem fluxos que utilizam estes formulários, abra Reescrever fluxos na janela principal. Lê os IDs de formulário guardados por esta cópia e aponta cada fluxo para o novo formulário.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Nenhum formulário encontrado</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>O que é copiado: as perguntas, a ramificação, as definições e o tema. O que não é: as respostas (utilize Exportar respostas… no primeiro passo para as guardar no Excel), os colaboradores e as pessoas com quem o formulário é partilhado. Cada cópia é um novo formulário pertencente à conta de destino e pode ser necessário adicionar novamente as imagens.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Cópia concluída: o formulário foi copiado</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Está ativo um filtro: Selecionar tudo e Desmarcar tudo aplicam-se aos {0} formulários apresentados.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>{0} dos formulários selecionados já foram copiados anteriormente; copiá-los novamente cria duplicados.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Passo {0} de {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 formulário será copiado de {1} para {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>{0} dos formulários selecionados ficariam com um título com mais de {1} carateres depois de adicionado o sufixo. O Microsoft Forms pode rejeitá-los; encurte o sufixo.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Não foi possível copiar as vistas: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>A vista '{0}' não foi copiada (uma vista {1})</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>Não foi possível criar a vista '{0}': {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>A vista '{0}' foi criada, mas não foi possível aplicar algumas definições: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>Vista '{0}': não foi possível aplicar o filtro ou a ordenação, que foram omitidos</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>Vista '{0}': as colunas que não existem no destino foram omitidas: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} nota(s) sobre vistas, definições ou tipos de conteúdo: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>Não foi possível ler as definições da lista, pelo que nenhuma foi copiada: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>Definições da lista que não puderam ser aplicadas: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Não foi possível aplicar regras de validação ou formatação a: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>Não foi possível copiar o tipo de conteúdo '{0}': {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>Tipo de conteúdo '{0}': colunas que não puderam ser adicionadas ao mesmo: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>Não foi possível copiar o modelo de documento da biblioteca.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>Não foi possível copiar os valores predefinidos de pasta da biblioteca.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>Os valores predefinidos de pasta foram copiados, mas não foi possível adicionar a regra que os aplica a novos ficheiros.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Não foi possível ler as colunas do site: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Colunas do site que não puderam ser criadas: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Não foi possível ler os tipos de conteúdo do site: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Tipos de conteúdo do site que não puderam ser criados: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Ligações de navegação ({0}) que não puderam ser criadas: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Definições do site que não puderam ser aplicadas: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Colunas do site, tipos de conteúdo, navegação e definições</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>A copiar colunas do site, tipos de conteúdo, navegação e definições...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>tipo de conteúdo</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>Tipo de conteúdo '{0}': não foi possível copiar o modelo de documento.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Inicia sessão com o registo de aplicação: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Tenant: qualquer. Escolhe a conta do Microsoft 365 ao iniciar sessão.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. O início de sessão só pode ser feito neste diretório.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Para ligar um site noutro tenant, escolha outro registo de aplicação em Definições (com o ID do tenant vazio ou definido para esse tenant) ou utilize o modo Multi-tenant.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Apenas estrutura: as colunas, vistas, definições e tipos de conteúdo são copiados, mas nenhum ficheiro nem item de lista.</value></data>
 </root>

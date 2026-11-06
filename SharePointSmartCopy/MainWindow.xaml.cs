@@ -122,6 +122,14 @@ public partial class MainWindow : Window
 
     private void OpenSettings_Click(object sender, RoutedEventArgs e) => SettingsButton_Click(sender, e);
 
+    // Single-tenant card on the Connect step: the explanatory text under the registration picker is folded away by default.
+    private void SingleTenantMore_Click(object sender, RoutedEventArgs e)
+    {
+        var show = SingleTenantMorePanel.Visibility != Visibility.Visible;
+        SingleTenantMorePanel.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+        SingleTenantMoreBtn.Content = Loc.T(show ? "Ui_ShowLess" : "Ui_ShowMore");
+    }
+
     // Clicking the Failed / Skipped tile on the report filters the list to those items.
     private void FailedTile_Click(object sender, MouseButtonEventArgs e)
         => VM.FileResultFilter = ResultFilterKind.Failed;

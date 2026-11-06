@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Cíl: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Cílový seznam</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Možnosti kopírování</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Kopírovat obsah knihovny (soubory)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Je-li vypnuto, znovu se vytvoří pouze schéma sloupců a nastavení knihovny – žádné soubory se nekopírují.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Kopírovat soubory a položky seznamu (obsah)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Pokud je vypnuto, zkopíruje se pouze struktura bez souborů a položek seznamu: sloupce, zobrazení, nastavení seznamu, typy obsahu a v rozsahu Celý web také sloupce webu, navigace a nastavení webu.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Pokud soubor existuje:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Přeskočit</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Přepsat</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Všechny verze</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Posledních </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> verzí</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Kopírovat také seznamy, na které odkazují moje seznamy</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>Pokud vybraný seznam obsahuje sloupec Vyhledávání, zkopíruje se také seznam, na který odkazuje, aby bylo možné sloupec vytvořit a vyřešit jeho hodnoty. Vypnutím zkopírujete pouze vybrané položky.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Hodnoty vyhledávání</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} spárováno podle položky, {1} spárováno podle textu, {2} nenalezeno.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Spravovaná metadata</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} hodnot termínů zkopírováno, {1} vynecháno (termín nebyl nalezen ve zkopírované sadě).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>Sloupec spravovaných metadat &quot;{0}&quot; nebyl vytvořen: jeho sada termínů patří jinému tenantovi a kopírování sad termínů není k dispozici (přihlaste se k oběma tenantům a udělte oprávnění TermStore.ReadWrite.All).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>Sada termínů &quot;{0}&quot; zkopírována do cíle: {1} vytvořeno, {2} již existovalo.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Kopírovat sady termínů spravovaných metadat do cílového tenanta</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>Sloupec spravovaných metadat je vázán na sadu termínů v úložišti termínů zdrojového tenanta. Když je tato možnost zapnutá, sada termínů (termíny, popisky, synonyma, popisy) se zkopíruje do cílového úložiště termínů, sloupec se naváže na kopii a každá hodnota se přemapuje. Vyžaduje volitelné oprávnění TermStore.ReadWrite.All a roli v úložišti termínů v cíli.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Vyhledává v seznamu "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Vyhledává v seznamu v jiném webu</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Spravovaná metadata: jejich sada termínů bude zkopírována do cílového tenanta</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Spravovaná metadata: používá stejnou sadu termínů (stejný tenant)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>Promítnuté pole "{0}" nebylo vytvořeno: jeho vyhledávací sloupec "{1}" není v cílovém seznamu.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>Promítnuté pole "{0}" nebylo vytvořeno: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Přihlásit se pomocí registrace aplikace:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Struktura ke zkopírování</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Vše, co je zde zaškrtnuto, se na cíli znovu vytvoří spolu s daty. Seznam nebo knihovna, které tam již existují, dostanou jen chybějící typy obsahu a zobrazení.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Zobrazení (filtry, seskupení, sloupce, výchozí zobrazení, zobrazení kalendáře a tabule)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Nastavení seznamu (schvalování, rezervace, přílohy, složky, zabezpečení na úrovni položek)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Typy obsahu a jejich šablony dokumentů</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Ověřovací pravidla a formátování sloupců</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Šablona knihovny a výchozí hodnoty složek</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Sloupce webu a typy obsahu webu</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Nastavení webu (popis, rychlé spuštění, stromové zobrazení a další)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Zobrazení</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Nastavení seznamu</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Typy obsahu</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Pravidla sloupců</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Šablony a výchozí hodnoty</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Sloupce a typy webu</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Navigace</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Nastavení webu</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Vyhledávací seznamy</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Sady termínů</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Struktura: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>žádná</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Zobrazit více</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Zobrazit méně</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Kopírovat navigaci (Rychlé spuštění a horní panel)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Nahradí cílovou navigaci odkazy ze zdroje. Adresy URL se přemapují na cílový web.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Kopírovat oprávnění</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Kopírovat hodnoty vlastních sloupců</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Kopíruje hodnoty sloupců typu Text, Číslo, Volba, Datum, Boolean, Vícenásobná volba, Osoba a Spravovaná metadata. Sloupce typu Vyhledávání nejsou podporovány.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Chcete-li nastavit mapování, zapněte „Kopírovat hodnoty vlastních sloupců“.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Zkopírují se všechny hodnoty vlastních sloupců. Pomocí mapování určíte, které sloupce se v cíli vytvoří.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Zkopírují se všechny hodnoty vlastních sloupců. Pomocí Mapování sloupců (výše) určíte, které sloupce se v cíli vytvoří.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Hodnoty vlastních sloupců se u položek seznamu kopírují vždy.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Režim kopírování</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Název</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>ID klienta (ID aplikace)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>ID tenanta</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Pro více tenantů použijte „common“, nebo GUID či doménu vašeho tenanta.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Ponechte prázdné nebo zadejte „common“ pro přihlášení k libovolnému tenantu. GUID nebo doména tenanta (například contoso.onmicrosoft.com) omezí přihlášení pouze na tento tenant.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Předřadit výchozím názvům souborů sestav názvy zdrojového a cílového webu</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Odhlásit se</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Motiv:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Režim Knihovny a seznamy</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Režim Celý web</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Režim Stránky webu</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Kopírovat obsah knihovny (soubory)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Kopírovat soubory a položky seznamu (obsah)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Kopírovat historii verzí</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Posledních N verzí</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Kopírovat navigaci</value></data>
@@ -939,7 +979,7 @@ Původní balíčky nejsou změněny. Připojení se NEMIGRUJÍ; při importu je
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Znovu načíst formuláře</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Kliknutím na „Načíst moje formuláře“ zobrazíte své formuláře.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>V tomto účtu nebyly nalezeny žádné formuláře.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>Kopírovat formuláře: {0}</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Zahájit kopírování formulářů: {0}</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Kopírovat další formuláře</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Vyberte, kam se kopie uloží</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Jeden tenant: kopie se vytvoří ve stejném účtu, který používáte, vedle originálů.</value></data>
@@ -963,7 +1003,7 @@ Původní balíčky nejsou změněny. Připojení se NEMIGRUJÍ; při importu je
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Kopírování formulářů</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Spouštění…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Formulář {0} z {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Zrušení po aktuálním formuláři…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Ruším… právě kopírovaný formulář se zastavuje.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopírování dokončeno: zkopírovány všechny formuláře ({0})</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Vaše kopie jsou v {0}. Otevřete Microsoft Forms, abyste je viděli, nebo použijte tabulku níže.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopírování dokončeno: zkopírováno {0} z {1} formulářů, některé vyžadují pozornost</value></data>
@@ -971,7 +1011,7 @@ Původní balíčky nejsou změněny. Připojení se NEMIGRUJÍ; při importu je
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopírování dokončeno, ale žádné formuláře nebyly zkopírovány</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Důvod najdete ve sloupci Podrobnosti. Častými příčinami jsou chybějící oprávnění Microsoft Forms v cílové registraci nebo účet bez přístupu k Forms.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopírování zrušeno po {0} z {1} formulářů</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Níže uvedené formuláře byly dokončeny. Formulář, který se kopíroval v okamžiku zrušení, nebyl dokončen a není viditelný.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Formuláře níže označené jako zkopírované byly dokončeny. Formulář, který se kopíroval v okamžiku zrušení, nebyl dokončen a v cíli může zůstat částečně vytvořený; jeho řádek zobrazuje ID kopie, pokud vznikla.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Zkopírováno</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>S varováním</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Selhalo</value></data>
@@ -986,7 +1026,7 @@ Původní balíčky nejsou změněny. Připojení se NEMIGRUJÍ; při importu je
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Otevřít vybranou kopii</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Otevřít Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Exportovat výsledky…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Zobrazit mapu ID formulářů</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Otevřít uložená ID formulářů</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Nejprve v tabulce vyberte zkopírovaný formulář.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Výsledky byly uloženy do {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Tip: registrace aplikace nemá odpovídající adresu přesměrování. V Entra v části Ověřování přidejte platformu „Mobilní a desktopové aplikace“ s adresou http://localhost a zkuste to znovu.</value></data>
@@ -1105,7 +1145,7 @@ Při opakovaném kopírování se z každého vytvoří druhá kopie. Pokračova
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(formulář bez názvu)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Zdrojový formulář</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Vybrat z formulářů cíle</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Vyberte formulář z cílového účtu. Nejprve klikněte na „Načíst formuláře z cílového účtu“.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Vyberte formulář z cílového účtu. Seznam se načte při otevření tohoto kroku; pokud je prázdný, klikněte na „Znovu načíst názvy formulářů…“.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Vyplněno z přihlášení k cíli ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>Váš zdrojový účet, nahrazený vaším cílovým účtem</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Vyplněno z vašich přihlášení ({0} → {1}). Chcete-li e-mailové domény ponechat beze změny, vymažte obě pole.</value></data>
@@ -1133,7 +1173,7 @@ Při opakovaném kopírování se z každého vytvoří druhá kopie. Pokračova
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ Balíčky zapsané tímto nástrojem, které již obsahují cílové hodnoty: {0}. Odeberte je (✕ v seznamu) a přidejte původní exporty.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ Weby bez cíle: {0}. Web ponechaný tak, jak je, by stále odkazoval na zdrojový tenant.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ Seznamy, které by při importu selhaly: {0}. Chcete-li pokračovat, opravte seznamy označené „Selže“.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Seznamy zatím nebyly spárovány. Vraťte se o krok zpět a znovu vpřed, abyste to zkusili znovu.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Seznamy zatím nebyly spárovány. Kliknutím na „Spárovat znovu“ to zkuste znovu.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ Formuláře, které pro pokračování potřebují platné cílové ID formuláře: {0}.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Změnit zdroj…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Přihlášen jako {0}. Adresa SharePointu zdrojového tenantu je {1}.</value></data>
@@ -1398,11 +1438,65 @@ Při opakovaném kopírování se z každého vytvoří druhá kopie. Pokračova
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Zavřít během práce?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>Nástroj stále pracuje (prohledává, páruje, přihlašuje nebo zapisuje balíčky). Zavřením ho nyní zastavíte. Přesto zavřít?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>{0} se nepodařilo do nového formuláře přidat automaticky. Kopie souboru byla uložena jako {1}: přidejte ji znovu v Microsoft Forms.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Historie verzí položek seznamu:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Stejně jako soubory</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Všechny verze</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Pouze aktuální</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Zkopíruje historii verzí každé nové položky seznamu (hodnoty, data a editory) přehráním jejích verzí v cíli. Možnost „Stejně jako soubory“ se řídí možnostmi verzí souborů výše. Položky, které v cíli již existují, si ponechají vlastní historii. Sloupce osob, vyhledávání, taxonomie a odkazů se kopírují jen s aktuální hodnotou.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>historie verzí: část se nezkopírovala ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>historie verzí nebyla zkopírována ({0}); položka má pouze aktuální hodnoty</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Seznam:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>Přesun e-mailové domény nebyl použit: obě domény musí být vyplněny, bez mezer a bez další zavináče @ (například contoso.com a fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Odebrat všechny balíčky a zahodit sken i vše, co jste vyplnili v dalších krocích?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Zavřít Přepsat toky pro cíl? Dosud vytvořené mapování se ztratí (chcete-li je zachovat, nejprve použijte „Uložit mapování…“).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Začít znovu? Balíčky, sken i vše, co jste vyplnili, budou zahozeny. Balíčky již zapsané do výstupní složky se nesmažou.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>Tento přesun pokrývá e-mailové adresy v počtu {0} na doméně {1}, proto nejsou uvedeny výše. Chcete-li některé z nich přiřadit jinou adresu, vymažte tato pole, vyplňte daný řádek a přesun domény zadejte znovu.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>Složku {0} se nepodařilo přečíst: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Zkontrolujte: tyto názvy sloupců byly přejmenovány všude, kde se vyskytují ve výrazech toku, což může zahrnovat i stejnojmenný sloupec jiného seznamu. Ověřte, že každý odkazuje na seznam, který jej přejmenoval.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>Počet přejmenovaných názvů sloupců všude, kde se vyskytují ve výrazech: {0}. Ověřte, že odkazují na seznam, který je přejmenoval, a ne na stejnojmenný sloupec jiného seznamu (viz sestava).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Zastavit kopírování? Právě kopírovaný formulář se přeruší a v cílovém účtu může zůstat částečně vytvořený; pokud ano, odstraňte jej v Microsoft Forms. Již dokončené formuláře se zachovají.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Vybrat</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Protokol kopírování</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>Zahájit kopírování 1 formuláře</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>Formulář byl zkopírován, ale jeho obrázky se nepodařilo zkontrolovat ({0}). Otevřete jej v Microsoft Forms a zkontrolujte obrázky pozadí a záhlaví.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Zkontrolujte připojení a přihlášení a klikněte na „Znovu načíst formuláře“. Podrobnosti: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Vaše formuláře se nepodařilo načíst</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>Načten 1 formulář.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>Protokol byl zkopírován do schránky.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>Protokol se nepodařilo zkopírovat, protože schránku používá jiný program. Zkuste to znovu.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Protokol kopírování</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Další krok: pokud toky tyto formuláře používají, otevřete z hlavního okna Přepsat toky pro cíl. Načte ID formulářů uložená tímto kopírováním a nasměruje každý tok na nový formulář.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Nebyly nalezeny žádné formuláře</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>Co se kopíruje: otázky, větvení, nastavení a motiv. Co ne: odpovědi (použijte Exportovat odpovědi… v prvním kroku a uložte je do Excelu), spolupracovníci a s kým je formulář sdílen. Každá kopie je nový formulář vlastněný cílovým účtem a obrázky může být nutné přidat znovu.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Kopírování dokončeno: formulář byl zkopírován</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Filtr je zapnutý: Vybrat vše a Zrušit výběr se vztahují na zobrazené formuláře ({0}).</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>Vybrané formuláře v počtu {0} již byly dříve zkopírovány; jejich opakované kopírování vytvoří duplicity.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Krok {0} z {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 formulář bude zkopírován z {1} do {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>Po přidání přípony by měl vybrané formuláře v počtu {0} název delší než {1} znaků. Microsoft Forms je může odmítnout; zkraťte příponu.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Zobrazení se nepodařilo zkopírovat: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>Zobrazení '{0}' nebylo zkopírováno (zobrazení typu {1})</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>Zobrazení '{0}' se nepodařilo vytvořit: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>Zobrazení '{0}' bylo vytvořeno, ale některá nastavení se nepodařilo použít: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>Zobrazení '{0}': filtr nebo řazení se nepodařilo použít a byly vynechány</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>Zobrazení '{0}': sloupce, které v cíli neexistují, byly vynechány: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>Poznámky k zobrazením, nastavením nebo typům obsahu ({0}): {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>Nastavení seznamu se nepodařilo přečíst, proto nebylo zkopírováno žádné: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>Nastavení seznamu, která se nepodařilo použít: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Pravidla ověření nebo formátování se nepodařilo použít u: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>Typ obsahu '{0}' se nepodařilo zkopírovat: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>Typ obsahu '{0}': sloupce, které se do něj nepodařilo přidat: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>Šablonu dokumentu knihovny se nepodařilo zkopírovat.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>Výchozí hodnoty složek knihovny se nepodařilo zkopírovat.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>Výchozí hodnoty složek byly zkopírovány, ale pravidlo, které je používá u nových souborů, se nepodařilo přidat.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Sloupce webu se nepodařilo přečíst: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Sloupce webu, které se nepodařilo vytvořit: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Typy obsahu webu se nepodařilo přečíst: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Typy obsahu webu, které se nepodařilo vytvořit: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Odkazy navigace ({0}), které se nepodařilo vytvořit: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Nastavení webu, která se nepodařilo použít: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Sloupce webu, typy obsahu, navigace a nastavení</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Kopírování sloupců webu, typů obsahu, navigace a nastavení...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>typ obsahu</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>Typ obsahu '{0}': šablonu dokumentu se nepodařilo zkopírovat.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Přihlašuje se pomocí registrace aplikace: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Tenant: libovolný. Účet Microsoft 365 vyberete při přihlášení.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Přihlášení může směřovat pouze do tohoto adresáře.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Chcete-li připojit web v jiném tenantu, vyberte v Nastavení jinou registraci aplikace (s prázdným ID tenanta nebo nastaveným na tento tenant) nebo použijte režim Více tenantů.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Pouze struktura: sloupce, zobrazení, nastavení a typy obsahu se zkopírují, ale žádné soubory ani položky seznamu.</value></data>
 </root>

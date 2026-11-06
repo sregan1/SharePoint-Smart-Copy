@@ -14,6 +14,11 @@ public sealed record Change(string Category, string From, string To, int Count);
 // by callers; RewritePackage writes a new .zip and leaves the source package untouched.
 public static partial class FlowRewriter
 {
+    // Column renames done by the "anywhere" pass (every expression in the flow) are reported under their own category: that pass
+    // cannot tell which list a "body/Title" belongs to, so it can also rename the same-named column of a different list.
+    // The report asks the user to review these (see ToMarkdown).
+    public const string GlobalColumnCategory = "Column (anywhere)";
+
     public static List<Change> Apply(JsonObject flow, FlowMapping map)
     {
         var counts = new Dictionary<(string Cat, string From, string To), int>();
@@ -40,11 +45,20 @@ public static partial class FlowRewriter
         // Global column renames (apply to expressions anywhere) and per-list renames (apply to the SharePoint
         // operation that targets that list: written fields and OData query text). Per-list wins over global.
         var activeColumns = FlowMapping.Active(map.Columns).ToList();
-        var globalColumns = activeColumns.Count > 0 ? ColumnReplacer(activeColumns, queryWords: false, Hit) : null;
-        var perList = map.ListColumns.ToDictionary(
-            kv => kv.Key, kv => FlowMapping.Active(kv.Value).ToList(), StringComparer.OrdinalIgnoreCase);
+        var globalColumns = activeColumns.Count > 0
+            ? ColumnReplacer(activeColumns, queryWords: false, (cat, from, to, n) => Hit(cat == "Column" ? GlobalColumnCategory : cat, from, to, n))
+            : null;
+        // Keys are list GUIDs compared ignoring case, and a hand-edited mapping can hold the same GUID twice in different
+        // case: merge those instead of letting ToDictionary throw and fail the whole package.
+        var perList = new Dictionary<string, List<KeyValuePair<string, string>>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var kv in map.ListColumns)
+        {
+            var active = FlowMapping.Active(kv.Value).ToList();
+            perList[kv.Key] = perList.TryGetValue(kv.Key, out var earlier) ? [.. earlier, .. active] : active;
+        }
 
-        var requiredValues = new Dictionary<string, Dictionary<string, string>>(map.RequiredValues, StringComparer.OrdinalIgnoreCase);
+        var requiredValues = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var kv in map.RequiredValues) requiredValues[kv.Key] = kv.Value;
 
         void Walk(JsonNode node)
         {
@@ -311,11 +325,42 @@ public static partial class FlowRewriter
             sourceSites.Any(k => IsUrlUnder(value, k)) && !targetSites.Any(t => IsUrlUnder(value, t) && t.Length >= LongestSource(value));
         int LongestSource(string value) => sourceSites.Where(k => IsUrlUnder(value, k)).Max(k => k.Length);
 
-        return FlowScanner.ScanPackage(rewrittenZip)
+        var leftovers = FlowScanner.ScanPackage(rewrittenZip)
             .SelectMany(s => s.Findings)
             .Where(f => f.Kind != FindingKind.ConnectionRef
                         && (ignoreCase.Contains(f.Value) || exact.Contains(f.Value) || IsSourceSite(f.Value)))
             .ToList();
+
+        // A site URL can also sit URL-encoded inside a link ("https%3A%2F%2Fcontoso.sharepoint.com%2Fsites%2FHR"). The
+        // rewrite does not change that form, and the scan above does not see it, so look for it in the raw text and flag it.
+        if (sourceSites.Count > 0) leftovers.AddRange(FindEncodedSiteUrls(rewrittenZip, IsSourceSite));
+        return leftovers;
+    }
+
+    [GeneratedRegex(@"https%3[Aa]%2[Ff]%2[Ff][A-Za-z0-9._~%\-]*")]
+    private static partial Regex EncodedUrlRegex();
+
+    // URL-encoded http(s) addresses in the flows of a package whose decoded form is a moving source site (same test as the
+    // plain-text leftovers, so a sub-site with its own target is not flagged).
+    private static List<Finding> FindEncodedSiteUrls(string zipPath, Func<string, bool> isSourceSite)
+    {
+        var found = new List<Finding>();
+        using var zip = ZipFile.OpenRead(zipPath);
+        foreach (var entry in zip.Entries)
+        {
+            if (entry.FullName.EndsWith('/') || !FlowScanner.IsFlowEntry(entry.FullName)) continue;
+            string text;
+            using (var reader = new StreamReader(entry.Open(), Encoding.UTF8)) text = reader.ReadToEnd();
+            foreach (Match m in EncodedUrlRegex().Matches(text))
+            {
+                string decoded;
+                try { decoded = Uri.UnescapeDataString(m.Value); }
+                catch (UriFormatException) { continue; }
+                if (isSourceSite(decoded))
+                    found.Add(new Finding(FindingKind.SiteUrl, m.Value, entry.FullName, "URL-encoded"));
+            }
+        }
+        return found;
     }
 
     // True when url is base itself or something below it (base + '/', '?', '#', quote...), not base + more name.
@@ -335,6 +380,8 @@ public static partial class FlowRewriter
                 sb.Append("**").Append(g.Key).Append("** (").Append(Loc.T("Flows_Rep_Replacements", g.Sum(c => c.Count))).Append(")\n\n");
                 foreach (var c in g) sb.Append($"- `{Short(c.From)}` → `{Short(c.To)}` ×{c.Count}\n");
                 sb.Append('\n');
+                // Warning only: this pass renames matching column names anywhere, so check each one belongs to the list that renamed it.
+                if (g.Key == GlobalColumnCategory) sb.Append("⚠ ").Append(Loc.T("Flows_Rep_GlobalColumnWarn")).Append("\n\n");
             }
         }
         if (leftovers.Count > 0)

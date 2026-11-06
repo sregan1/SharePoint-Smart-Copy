@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> 目标: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>目标列表</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>复制选项</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>复制库内容(文件)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>关闭时,仅重新创建列架构和库设置,不复制任何文件。</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>复制文件和列表项(内容)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>关闭后,仅复制结构,不复制任何文件或列表项:包括列、视图、列表设置、内容类型,在“整个站点”范围内还包括站点列、导航和站点设置。</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>如果文件已存在:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>跳过</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>覆盖</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>所有版本</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>最近 </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> 个版本</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>同时复制我的列表所查阅的列表</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>当所选列表包含查阅项(Lookup)列时,也会复制其查阅的列表,以便创建该列并解析其值。关闭此选项则仅复制您所选的内容。</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>查阅项值</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} 项按项目匹配,{1} 项按文本匹配,{2} 项未找到。</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>托管元数据</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>已复制 {0} 个术语值,{1} 个被省略(在复制的集中未找到术语)。</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>未创建托管元数据列 &quot;{0}&quot;:其术语集属于另一个租户,且无法复制术语集(请登录两个租户并授予 TermStore.ReadWrite.All 权限)。</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>术语集 &quot;{0}&quot; 已复制到目标:已创建 {1} 个,{2} 个已存在。</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>将托管元数据术语集复制到目标租户</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>托管元数据列绑定到源租户术语存储中的术语集。启用后,术语集(术语、标签、同义词、说明)将复制到目标术语存储,列将绑定到副本,并重新映射每个值。需要可选的 TermStore.ReadWrite.All 权限以及目标上的术语存储角色。</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>查阅列表 "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>查阅另一个网站中的列表</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>托管元数据:其术语集将复制到目标租户</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>托管元数据:使用相同的术语集(同一租户)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>未创建投影字段 "{0}":其查阅列 "{1}" 不在目标列表中。</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>未创建投影字段 "{0}":{1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>使用应用注册登录:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>要复制的结构</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>此处选中的所有内容都会与数据一起在目标位置重新创建。目标位置上已存在的列表或库只会获得其缺少的内容类型和视图。</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>视图(筛选器、分组、列、默认视图、日历视图和看板视图)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>列表设置(审批、签出、附件、文件夹、项目级安全性)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>内容类型及其文档模板</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>列验证规则和格式设置</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>库模板和文件夹默认值</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>网站栏和网站内容类型</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>网站设置(说明、快速启动、树状视图等)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>视图</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>列表设置</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>内容类型</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>列规则</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>模板和默认值</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>网站栏和类型</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>导航</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>网站设置</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>查阅列表</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>术语集</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>结构:{0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>无</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>显示更多</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>显示更少</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>复制导航(快速启动和顶部栏)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>用源链接替换目标导航。URL 将重新映射到目标站点。</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>复制权限</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>复制自定义列值</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>复制文本、数字、选择、日期、布尔、多选、人员和托管元数据列的值。不支持查阅列。</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>启用“复制自定义列值”以配置映射。</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>将复制所有自定义列值。使用映射来控制在目标处创建哪些列。</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>将复制所有自定义列的值。请使用上方的列映射来控制在目标位置创建哪些列。</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>列表项的自定义列值始终会被复制。</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>复制模式</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>名称</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>客户端 ID(应用程序 ID)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>租户 ID</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>多租户请使用“common”,或使用您的租户 GUID 或域。</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>留空或输入“common”可登录到任何租户。指定租户 GUID 或域(例如 contoso.onmicrosoft.com)则将登录限制在该租户。</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>在默认报告文件名前加上源站点和目标站点名称</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>注销</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>主题:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>库和列表模式</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>整个站点模式</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>站点页面模式</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>复制库内容(文件)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>复制文件和列表项(内容)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>复制版本历史记录</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>最近 N 个版本</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>复制导航</value></data>
@@ -939,7 +979,7 @@
   <data name="Forms_ReloadForms" xml:space="preserve"><value>重新加载表单</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>单击“加载我的表单”以查看您的表单。</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>此帐户中未找到表单。</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>复制 {0} 个表单</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>开始复制 {0} 个表单</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>复制更多表单</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>选择副本的去向</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>单租户: 副本创建在您正在使用的同一帐户中,位于原件旁边。</value></data>
@@ -963,7 +1003,7 @@
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>正在复制表单</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>正在开始…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>表单 {0} / {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>将在当前表单完成后取消…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>正在取消…正在停止当前复制的表单。</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>复制完成: 全部 {0} 个表单均已复制</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>您的副本位于 {0}。请打开 Microsoft Forms 查看,或使用下表。</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>复制完成: 已复制 {1} 个表单中的 {0} 个,部分需要处理</value></data>
@@ -971,7 +1011,7 @@
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>复制完成,但没有复制任何表单</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>原因请参阅“详细信息”列。常见原因是目标注册缺少 Microsoft Forms 权限,或帐户没有 Forms 访问权限。</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>已在 {1} 个表单中的 {0} 个之后取消复制</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>下面列出的表单已完成。取消时正在复制的表单未完成,且不可见。</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>下面标记为已复制的表单已完成。取消时正在复制的表单未完成,可能在目标中处于半成品状态;如果已创建副本,其所在行会显示该副本的 ID。</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>已复制</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>有警告</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>失败</value></data>
@@ -986,7 +1026,7 @@
   <data name="Forms_OpenSelected" xml:space="preserve"><value>打开所选副本</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>打开 Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>导出结果…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>显示表单 ID 映射</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>打开已保存的表单 ID</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>请先在表中选择一个已复制的表单。</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>结果已保存到 {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>提示: 应用注册没有匹配的重定向地址。请在 Entra 的“身份验证”下,添加平台“移动和桌面应用程序”并使用 http://localhost,然后重试。</value></data>
@@ -1105,7 +1145,7 @@
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(无标题表单)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>源表单</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>从目标的表单中选择</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>从目标帐户中选择一个表单。请先单击“从目标帐户加载表单”。</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>从目标帐户中选择一个表单。此步骤打开时会加载列表;如果列表为空,请单击“重新加载表单名称…”。</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>根据目标登录填入({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>您的源帐户,已替换为您的目标帐户</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>根据您的登录填入({0} → {1})。清除两个框可保持电子邮件域不变。</value></data>
@@ -1133,7 +1173,7 @@
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ 有 {0} 个包是由此工具写入的,已包含目标的值。请删除它们(列表中的 ✕),然后添加原始导出。</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ 有 {0} 个站点没有目标。保持原样的站点仍会指向源租户。</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ 有 {0} 个列表在导入时会失败。请修复标记为“将失败”的列表以继续。</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ 列表尚未匹配。请返回上一步再前进以重试。</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ 列表尚未匹配。请单击“重新匹配”重试。</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ 有 {0} 个表单需要有效的目标表单 ID 才能继续。</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>更改源…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>已以 {0} 身份登录。源租户的 SharePoint 地址为 {1}。</value></data>
@@ -1398,11 +1438,65 @@
   <data name="Flows_CloseTitle" xml:space="preserve"><value>工作中关闭?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>工具仍在工作(扫描、匹配、登录或写入包)。现在关闭将停止它。仍要关闭?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>无法将{0}自动添加到新表单。文件副本已另存为 {1}: 请在 Microsoft Forms 中重新添加。</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>列表项版本历史记录:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>与文件相同</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>所有版本</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>仅当前版本</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>通过在目标中重放每个新列表项的版本,复制其版本历史记录(值、日期和编辑者)。“与文件相同”遵循上方的文件版本选项。目标中已存在的项会保留自己的历史记录。人员、查阅项、分类和链接列只复制其当前值。</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>版本历史记录: 部分内容未复制({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>版本历史记录未复制({0});该项只有当前值</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>列表:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>未应用电子邮件域迁移:两个域都必须填写,且不能包含空格或多余的 @(例如 contoso.com 和 fabrikam.com)。</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>删除所有包,并放弃扫描结果以及你在后续步骤中填写的所有内容?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>关闭“为目标重写流”?你目前创建的映射将丢失(如需保留,请先使用“保存映射…”)。</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>重新开始?包、扫描结果以及你填写的所有内容都将被放弃。已写入输出文件夹的包不会被删除。</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{1} 上的 {0} 个电子邮件地址已包含在此次迁移中,因此未在上方列出。若要为其中某个地址指定不同的地址,请清除这些框,填写该行,然后重新输入域迁移。</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>无法读取文件夹 {0}:{1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>请检查:这些列名已在流表达式中出现的所有位置被重命名,其中可能包括其他列表中的同名列。请确认每个列名指向的是对其重命名的那个列表。</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} 个列名已在表达式中出现的所有位置被重命名。请确认它们指向的是对其重命名的列表,而不是其他列表中的同名列(请参阅报告)。</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>现在停止复制?正在复制的表单会被中断,并可能在目标帐户中处于半成品状态;如果是这样,请在 Microsoft Forms 中将其删除。已完成的表单会保留。</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>选择</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>复制日志</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>开始复制 1 个表单</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>表单已复制,但无法检查其图像({0})。请在 Microsoft Forms 中打开它,检查背景和标题图像。</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>请检查网络连接和登录状态,然后单击“重新加载表单”。详细信息:{0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>无法加载你的表单</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>已加载 1 个表单。</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>日志已复制到剪贴板。</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>由于剪贴板正被其他程序使用,无法复制日志。请重试。</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>复制日志</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>下一步:如果有流使用这些表单,请在主窗口中打开“为目标重写流”。它会读取本次复制保存的表单 ID,并将每个流指向新表单。</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>未找到表单</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>会复制的内容:问题、分支、设置和主题。不会复制的内容:响应(请使用第一步中的“导出响应…”将其保存到 Excel)、协作者以及表单的共享对象。每个副本都是由目标帐户拥有的新表单,图像可能需要重新添加。</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>复制完成:表单已复制</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>筛选器已开启:“全选”和“取消全选”适用于显示的 {0} 个表单。</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>所选表单中有 {0} 个之前已复制过;再次复制会创建重复项。</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>第 {0} 步,共 {1} 步:{2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>将把 1 个表单从 {1} 复制到 {2}。</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>添加后缀后,所选表单中有 {0} 个的标题将超过 {1} 个字符。Microsoft Forms 可能会拒绝这些表单;请缩短后缀。</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>无法复制视图：{0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>未复制视图 '{0}'（{1} 视图）</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>无法创建视图 '{0}'：{1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>视图 '{0}' 已创建，但无法应用某些设置：{1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>视图 '{0}'：无法应用其筛选或排序，已将其忽略</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>视图 '{0}'：目标中不存在的列已被忽略：{1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>有 {0} 条关于视图、设置或内容类型的说明：{1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>无法读取列表设置，因此未复制任何设置：{0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>无法应用的列表设置：{0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>无法对以下项应用验证规则或格式设置：{0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>无法复制内容类型 '{0}'：{1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>内容类型 '{0}'：无法添加到其中的列：{1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>无法复制库的文档模板。</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>无法复制库的文件夹默认值。</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>已复制文件夹默认值，但无法添加将其应用于新文件的规则。</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>无法读取网站列：{0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>无法创建的网站列：{0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>无法读取网站内容类型：{0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>无法创建的网站内容类型：{0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>无法创建的导航（{0}）链接：{1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>无法应用的网站设置：{0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>网站列、内容类型、导航和设置</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>正在复制网站列、内容类型、导航和设置...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>内容类型</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>内容类型 '{0}'：无法复制其文档模板。</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>使用应用注册登录: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>租户: 任意。登录时由您选择 Microsoft 365 帐户。</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>租户: {0}。登录只能进入此目录。</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>若要连接其他租户上的站点,请在“设置”中选择另一个应用注册(其租户 ID 为空或设置为该租户),或使用多租户模式。</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>仅结构:复制列、视图、设置和内容类型,但不复制任何文件或列表项。</value></data>
 </root>

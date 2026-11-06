@@ -114,6 +114,20 @@ public partial class MainViewModel
         }
     }
 
+    // ── Single tenant: which registration (and tenant) the one sign-in uses, shown on the Connect step ─────────
+    private static bool IsAnyTenant(string? id) =>
+        string.IsNullOrWhiteSpace(id) || id.Trim().ToLowerInvariant() is "common" or "organizations" or "consumers";
+
+    public string SingleTenantRegistrationText =>
+        Loc.T("Ui_SingleTenantRegistration", Settings.ActiveRegistration?.DisplayName ?? "—");
+
+    // True when the registration names one specific tenant: the sign-in can then only go to that directory.
+    public bool SingleTenantTenantIsFixed => Settings.ActiveRegistration is { } r && !IsAnyTenant(r.TenantId);
+
+    public string SingleTenantTenantText => Settings.ActiveRegistration is { } r && !IsAnyTenant(r.TenantId)
+        ? Loc.T("Ui_SingleTenantFixedTenant", r.TenantId.Trim())
+        : Loc.T("Ui_SingleTenantAnyTenant");
+
     // The registration the second (target) sign-in uses — shown on the Target step.
     public string TargetRegistrationName => Settings.TargetRegistration?.DisplayName ?? string.Empty;
 
@@ -139,6 +153,9 @@ public partial class MainViewModel
         OnPropertyChanged(nameof(SourceRegistrationIndex));
         OnPropertyChanged(nameof(TargetRegistrationChoiceIndex));
         OnPropertyChanged(nameof(TargetRegistrationName));
+        OnPropertyChanged(nameof(SingleTenantRegistrationText));
+        OnPropertyChanged(nameof(SingleTenantTenantText));
+        OnPropertyChanged(nameof(SingleTenantTenantIsFixed));
         OnPropertyChanged(nameof(IsNotConfigured));
     }
 

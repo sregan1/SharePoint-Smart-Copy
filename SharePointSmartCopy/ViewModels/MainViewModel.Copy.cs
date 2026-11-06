@@ -320,8 +320,26 @@ public partial class MainViewModel : ObservableObject
             Loc.T("VM_SumPreserveMetadata", PreserveMetadata ? Loc.T("VM_Yes") : Loc.T("VM_No")),
             Loc.T("VM_SumFolderRepair", PreserveMetadata && ReapplyFolderMetadataEveryRun ? Loc.T("VM_EveryRun") : Loc.T("VM_NewFoldersOnly")),
             Loc.T("VM_SumPermissions", CopyPermissions ? Loc.T("VM_Yes") : Loc.T("VM_No")),
-            Loc.T("VM_SumCustomColumns", EffectiveCopyCustomColumns ? Loc.T("VM_Yes") : Loc.T("VM_No"))
+            Loc.T("VM_SumCustomColumns", EffectiveCopyCustomColumns ? Loc.T("VM_Yes") : Loc.T("VM_No")),
+            .. (IsLibraryOrSiteScope ? [Loc.T("VM_SumStructure", StructureSummary())] : Array.Empty<string>())
         ]);
+    }
+
+    // The kinds of structure this run copies, by short name (shown in the run summary).
+    private string StructureSummary()
+    {
+        var on = new List<string>();
+        if (CopyViews) on.Add(Loc.T("Ui_StructViews"));
+        if (CopyListSettings) on.Add(Loc.T("Ui_StructListSettings"));
+        if (CopyContentTypes) on.Add(Loc.T("Ui_StructContentTypes"));
+        if (CopyColumnRules) on.Add(Loc.T("Ui_StructColumnRules"));
+        if (CopyTemplates) on.Add(Loc.T("Ui_StructTemplates"));
+        if (IsSiteScope && CopySiteDefinitions) on.Add(Loc.T("Ui_StructSiteDefs"));
+        if (IsSiteScope && CopyNavigation) on.Add(Loc.T("Ui_StructNavigation"));
+        if (IsSiteScope && CopySiteSettings) on.Add(Loc.T("Ui_StructSiteSettings"));
+        if (IsLibraryScope && CopyLookupDependencies) on.Add(Loc.T("Ui_StructLookupLists"));
+        if (IsMultiTenant && CopyTermSets) on.Add(Loc.T("Ui_StructTermSets"));
+        return on.Count == 0 ? Loc.T("VM_SumStructureNone") : string.Join(", ", on);
     }
 
     private readonly List<string> _activityLines = [];
@@ -596,6 +614,14 @@ public partial class MainViewModel : ObservableObject
         BeginRunJournal();
         SpService.Unresolved.Clear();   // people the target can't find are collected per run
         SpService.ClearLookupCache();   // lookup values resolve against the target as it is NOW
+        _libraryCopyService.ResetTermStoreRun();
+        _libraryCopyService.CopyTermSets = CopyTermSets;
+        _libraryCopyService.Structure = new LibraryCopyService.StructureOptions
+        {
+            Views = CopyViews, ListSettings = CopyListSettings, ContentTypes = CopyContentTypes, ColumnRules = CopyColumnRules,
+            Templates = CopyTemplates, SiteDefinitions = CopySiteDefinitions, Navigation = CopyNavigation, SiteSettings = CopySiteSettings,
+        };
+        _libraryCopyService.TermStore = new TermStoreCopyService(AuthService, IsMultiTenant ? TargetAuthService : AuthService);
         RunSettingsSummary = BuildRunSettingsSummary();
         PushActivity(Loc.T("VM_SettingsSummary", RunSettingsSummary));
         // Once per run (CopyService.ExecuteAsync runs once per library in Library/Site scopes).
@@ -866,7 +892,12 @@ public partial class MainViewModel : ObservableObject
             .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
 
         // Honor mapping-dialog decisions (skip / rename) the same way the file writers do.
-        var mappingLookup = ColumnMapping.BuildTargetNameMap(ColumnMappings);
+        // Item-level copies use the mapping saved for THIS source list; anything else (or a list the user
+        // never opened in the dialog) falls back to the shared mapping.
+        var listMapping = ListMappingContexts.FirstOrDefault(c =>
+            string.Equals(c.SourceListId, def.SourceListId, StringComparison.OrdinalIgnoreCase));
+        var mappingLookup = ColumnMapping.BuildTargetNameMap(
+            listMapping is { Mappings.Count: > 0 } ? listMapping.Mappings : ColumnMappings);
 
         // Fetch existing target items to support skip/overwrite by Title.
         // Items are matched by Title, but a title is not unique (and may be blank), so existing target
@@ -887,7 +918,12 @@ public partial class MainViewModel : ObservableObject
 
         var allItems = await SpService.GetListItemsAsync(
             SourceUrl.TrimEnd('/'), def.SourceListId ?? string.Empty, def.Columns,
-            ["HasUniqueRoleAssignments"], _copyCts!.Token);
+            ["HasUniqueRoleAssignments", "ContentTypeId"], _copyCts!.Token);
+
+        // Items go onto the target list's content type of the same name as their source type.
+        var contentTypeMap = await SpService.GetContentTypeIdMapAsync(
+            SourceUrl.TrimEnd('/'), def.SourceListId ?? string.Empty, TargetUrl.TrimEnd('/'), targetListId, _copyCts.Token);
+        var targetCtFields = await SpService.GetTargetContentTypeFieldsAsync(TargetUrl.TrimEnd('/'), targetListId, _copyCts.Token);
 
         var items = (isPartialSelection
             ? allItems.Where(i => i.TryGetValue("Id", out var id) && selectedItemIds.Contains(id?.ToString() ?? string.Empty)).ToList()
@@ -947,6 +983,13 @@ public partial class MainViewModel : ObservableObject
             System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(itemResult));
 
             var fields = MapToTarget(item);
+            // On the target type of the same name, but only when that type carries every column being written (a column the
+            // type lacks is not stored; column links cannot be added over REST).
+            if (item.TryGetValue("ContentTypeId", out var srcCtId) && srcCtId?.ToString() is { Length: > 0 } srcCt &&
+                contentTypeMap.TryGetValue(srcCt, out var targetCt) &&
+                targetCtFields.TryGetValue(targetCt.Name, out var ctColumns) &&
+                fields.Keys.All(ctColumns.Contains))
+                fields["ContentTypeId"] = targetCt.TargetId;
 
             string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
             string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
@@ -955,6 +998,9 @@ public partial class MainViewModel : ObservableObject
             (string Id, DateTimeOffset? Modified)? existing =
                 existingByTitle.TryGetValue(itemTitle ?? string.Empty, out var matchQueue) && matchQueue.Count > 0
                     ? matchQueue.Dequeue() : null;
+            // An item already at the target (skipped or updated) is the copy of this one too, for lookups.
+            if (existing is { } alreadyThere && int.TryParse(alreadyThere.Id, out var alreadyNo) && int.TryParse(itemId, out var itemNo))
+                SpService.RecordCopiedItem(targetListId, itemNo, alreadyNo);
             var hasUniquePerms = item.TryGetValue("HasUniqueRoleAssignments", out var hurv) && hurv is true;
             try
             {
@@ -1033,6 +1079,10 @@ public partial class MainViewModel : ObservableObject
                           + (historyWarning != null ? Loc.T("VM_ItemHistoryFailed", historyWarning) : "");
                     if (string.IsNullOrEmpty(itemResult.ErrorMessage)) itemResult.ErrorMessage = null;
                 }
+
+                // Remember which target item this source item became: lookup values pointing at it are resolved through this.
+                if (resolvedTargetItemId != null && int.TryParse(resolvedTargetItemId, out var copiedTargetNo) && int.TryParse(itemId, out var copiedSourceNo))
+                    SpService.RecordCopiedItem(targetListId, copiedSourceNo, copiedTargetNo);
 
                 if (CopyPermissions && resolvedTargetItemId != null && hasUniquePerms)
                 {
@@ -1170,10 +1220,68 @@ public partial class MainViewModel : ObservableObject
     private bool _isColumnsLoading;
     public bool IsColumnsReady => !IsColumnsLoading;
 
+    // Reads source and (existing) destination columns for every list in the item-level selection.
+    // A list going to a new destination, or whose destination columns can't be read, gets Create/Skip only.
+    private async Task LoadPerListColumnsAsync()
+    {
+        var sourceSite = SourceUrl.TrimEnd('/');
+        var targetSite = TargetUrl.TrimEnd('/');
+        foreach (var node in ItemDestinationNodes.ToList())
+        {
+            List<SpColumnDef> src = [];
+            List<SpColumnDef> tgt = [];
+            try
+            {
+                // Custom lists carry the list GUID as their Id — no drive lookup needed.
+                src = [.. await SpService.GetLibraryColumnsAsync(sourceSite, node.Id)];
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[LoadColumns] source load failed for '{node.Name}': {ex.Message}");
+                ColumnLoadError ??= Loc.T("VM_SourceColumnsUnavailable", ex.Message);
+            }
+
+            var existingDest = node.DestinationList != null && !node.IsCreatingNewDestination ? node.DestinationList : null;
+            if (existingDest != null)
+            {
+                try { tgt = [.. await SpService.GetLibraryColumnsAsync(targetSite, existingDest.Id)]; }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[LoadColumns] target load failed for '{node.Name}': {ex.Message}");
+                    ColumnLoadError ??= Loc.T("VM_TargetColumnsUnavailable", ex.Message);
+                }
+            }
+
+            ListMappingContexts.Add(new ListMappingContext
+            {
+                SourceListId     = node.Id,
+                Title            = existingDest != null && !string.Equals(existingDest.Title, node.Name, StringComparison.OrdinalIgnoreCase)
+                                       ? $"{node.Name} → {existingDest.Title}"
+                                       : node.Name,
+                IsNewDestination = existingDest == null || tgt.Count == 0,
+                SourceColumns    = src,
+                TargetColumns    = tgt,
+            });
+        }
+    }
+
     private async Task LoadTargetColumnsAsync()
     {
         IsColumnsLoading = true;
         ColumnLoadError  = null;
+        ListMappingContexts.Clear();
+
+        // Item-level copies map each selected list on its own (different columns, different destination).
+        if (IsItemSelectionActive && ItemDestinationNodes.Count > 0)
+        {
+            try { await LoadPerListColumnsAsync(); }
+            finally
+            {
+                IsColumnsLoading = false;
+                OnPropertyChanged(nameof(MappingButtonLabel));
+            }
+            return;
+        }
 
         // Load target columns — Files/Pages scope uses the selected folder; individual item
         // copies use the chosen destination list directly.

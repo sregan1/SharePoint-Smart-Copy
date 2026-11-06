@@ -112,7 +112,7 @@ public partial class FlowsDialog : Window
 
     private void OnViewModelChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(FlowsDialogViewModel.IsBusy)) UpdateGates();
+        if (e.PropertyName is nameof(FlowsDialogViewModel.IsBusy) or nameof(FlowsDialogViewModel.OutputPath)) UpdateGates();
         if (e.PropertyName == nameof(FlowsDialogViewModel.ShowReadFrom))
             ReadFromColumn.Visibility = _vm.ShowReadFrom ? Visibility.Visible : Visibility.Collapsed;
     }
@@ -335,10 +335,32 @@ public partial class FlowsDialog : Window
     private async void AddFolder_Click(object sender, RoutedEventArgs e)
     {
         var dlg = new OpenFolderDialog { Title = Loc.T("Flows_AddFolder") };
-        if (dlg.ShowDialog(this) == true) await AddAndScanAsync(Directory.GetFiles(dlg.FolderName, "*.zip"));
+        if (dlg.ShowDialog(this) != true) return;
+        if (ZipsIn(dlg.FolderName) is { } zips) await AddAndScanAsync(zips);
     }
 
-    private void ClearPackages_Click(object sender, RoutedEventArgs e) => ResetAll();
+    // The .zip files directly inside a folder, or null (with the reason in the status line) when it can't be read - a
+    // protected or disconnected folder must not crash the app from an async void handler.
+    private string[]? ZipsIn(string folder)
+    {
+        try { return Directory.GetFiles(folder, "*.zip"); }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+        {
+            _vm.StatusText = Loc.T("Flows_FolderUnreadable", folder, ex.Message);
+            return null;
+        }
+    }
+
+    // Clearing throws away the scan and everything typed on the later steps, so ask first (nothing to lose when empty).
+    private void ClearPackages_Click(object sender, RoutedEventArgs e)
+    {
+        if (_zips.Count > 0 && !ConfirmDiscard("Flows_ConfirmClearBody")) return;
+        ResetAll();
+    }
+
+    private bool ConfirmDiscard(string bodyKey) =>
+        MessageBox.Show(this, Loc.T(bodyKey), Title, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No)
+            == MessageBoxResult.Yes;
 
     // Dropping .zip files (or a folder of them) onto the Packages step adds them, same as the buttons.
     private void Packages_DragOver(object sender, DragEventArgs e)
@@ -353,7 +375,7 @@ public partial class FlowsDialog : Window
         var zips = new List<string>();
         foreach (var item in items)
         {
-            if (Directory.Exists(item)) zips.AddRange(Directory.GetFiles(item, "*.zip"));
+            if (Directory.Exists(item)) { if (ZipsIn(item) is { } inFolder) zips.AddRange(inFolder); }
             else if (item.EndsWith(".zip", StringComparison.OrdinalIgnoreCase)) zips.Add(item);
         }
         if (zips.Count > 0) await AddAndScanAsync(zips);
@@ -445,7 +467,9 @@ public partial class FlowsDialog : Window
                         scans.AddRange(found);
                         Log(Loc.T("Flows_LogScanned", Path.GetFileName(zip), found.Count));
                     }
-                    catch (Exception ex) when (ex is InvalidDataException or IOException or System.Text.Json.JsonException)
+                    // Any failure reading ONE package (a bad zip, or JSON of an unexpected shape) skips that package only;
+                    // the write step already treats these the same way.
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         unreadable.Add(zip);
                         AppendLog(Loc.T("Flows_LogBadPackage", Path.GetFileName(zip), ex.Message));
@@ -457,6 +481,7 @@ public partial class FlowsDialog : Window
             _zipScans = perZip;
             _formNamesAttempted = false;
             _resolved = null;
+            SnapshotCardEdits();   // the user's list/column choices outlive the cards, so adding a package doesn't discard them
             _cards.Clear();
             _vm.HasCards = false;
             _vm.MatchSummary.Text = string.Empty;
@@ -510,8 +535,8 @@ public partial class FlowsDialog : Window
         // handing the user a blank table after they filled it in.
         var prevSites = new Dictionary<string, (string Target, string? ReadFrom)>(StringComparer.OrdinalIgnoreCase);
         foreach (var r in _sites) prevSites.TryAdd(r.Source, (r.Target, r.ReadFromEdited ? r.ReadFrom : null));
-        var prevForms = new Dictionary<string, (string NewId, string Title)>(StringComparer.Ordinal);
-        foreach (var r in _forms) prevForms.TryAdd(r.SourceId, (r.NewId, r.SourceTitle));
+        var prevForms = new Dictionary<string, (string NewId, string Title, string AutoFilledId)>(StringComparer.Ordinal);
+        foreach (var r in _forms) prevForms.TryAdd(r.SourceId, (r.NewId, r.SourceTitle, r.AutoFilledId));
         var prevValues = new Dictionary<string, (string Target, string Note)>(StringComparer.OrdinalIgnoreCase);
         foreach (var r in _values) prevValues.TryAdd(r.Category + "|" + r.Source, (r.Target, r.Note));
 
@@ -544,23 +569,30 @@ public partial class FlowsDialog : Window
                      .Select(f => f.Value).Distinct(StringComparer.OrdinalIgnoreCase));
 
         _forms.Clear();
-        var saved = FormsIdMapStore.Load();
+        // The copy made for the account the flows are going to (the target sign-in may not exist yet at this point; the
+        // lookup is repeated when the Forms step opens, see RefreshFormsFromCopies).
+        var saved = FormsIdMapStore.LoadAll();
+        var formsTarget = FormsTargetAccount();
         foreach (var id in _scans.SelectMany(s => s.Findings).Where(f => f.Kind == FindingKind.FormId).Select(f => f.Value).Distinct())
         {
-            saved.TryGetValue(id, out var fromCopy);
+            var fromCopy = FormsIdMapStore.Find(saved, id, formsTarget);
             prevForms.TryGetValue(id, out var prevForm);
             var row = new FormMapRow
             {
                 Options = _targetForms, SourceId = id,
+                FromCopy = fromCopy,
+                // An ID the tool filled in stays recognizable as such after a rescan, so a later change of target account can
+                // still replace it; one the user typed or picked has an empty AutoFilledId and is never overwritten.
+                AutoFilledId = prevForm.NewId is { Length: > 0 } ? prevForm.AutoFilledId : fromCopy?.NewId ?? "",
                 SourceTitle = prevForm.Title is { Length: > 0 } t ? t : fromCopy?.SourceTitle ?? "",
                 NewId = prevForm.NewId is { Length: > 0 } n ? n : fromCopy?.NewId ?? "",
             };
             row.PropertyChanged += (_, e) =>
             {
-                if (e.PropertyName == nameof(FormMapRow.NewId)) { ShowFormNote(row, fromCopy); UpdateGates(); }
+                if (e.PropertyName == nameof(FormMapRow.NewId)) { ShowFormNote(row, row.FromCopy); UpdateGates(); }
                 else if (e.PropertyName == nameof(FormMapRow.StatusLevel)) UpdateGates();
             };
-            ShowFormNote(row, fromCopy);
+            ShowFormNote(row, row.FromCopy);
             _forms.Add(row);
         }
         _vm.HasForms = _forms.Count > 0;
@@ -580,8 +612,11 @@ public partial class FlowsDialog : Window
             if (prevValues.TryGetValue(v.Category + "|" + v.Source, out var pv) && pv.Target.Length > 0) { v.Target = pv.Target; v.Note = pv.Note; }
         _vm.HasValues = _values.Count > 0;
 
-        if (_loaded is not null) ApplyLoadedMapping(_loaded);
+        // A rescan re-applies the loaded mapping, but only to rows still empty: values the user entered after loading it stay.
+        if (_loaded is not null) ApplyLoadedMapping(_loaded, onlyEmpty: true);
         AutoFillFromSignIns();   // after a loaded mapping, so loaded values win
+        SuggestSourceDomain();   // starts the domain move from the addresses the flows actually use
+        RefreshValuesFilter();   // hides addresses the domain move (typed, loaded or auto-filled) already covers
         ShowConnectionStatus();  // refreshes the "flows point at another tenant" warning for the new site list
     }
 
@@ -745,8 +780,12 @@ public partial class FlowsDialog : Window
 
             var sourceDomain = DomainOf(sourceUser);
             var targetDomain = DomainOf(targetUser);
+            // Fills only an empty "to" box, and a "from" box that is empty or still holds the domain the tool itself
+            // suggested after the scan (SuggestSourceDomain) - never something the user typed or loaded.
+            var fromIsOurs = NormalizeDomain(DomainFromBox.Text).Length == 0
+                || string.Equals(NormalizeDomain(DomainFromBox.Text), _suggestedFrom, StringComparison.OrdinalIgnoreCase);
             if (sourceDomain.Length > 0 && targetDomain.Length > 0 && !sourceDomain.Equals(targetDomain, StringComparison.OrdinalIgnoreCase)
-                && string.IsNullOrWhiteSpace(DomainFromBox.Text) && string.IsNullOrWhiteSpace(DomainToBox.Text)
+                && fromIsOurs && NormalizeDomain(DomainToBox.Text).Length == 0
                 && _values.Any(r => r.Category == "Email" && DomainOf(r.Source).Equals(sourceDomain, StringComparison.OrdinalIgnoreCase)))
             {
                 DomainFromBox.Text = sourceDomain;
@@ -766,14 +805,93 @@ public partial class FlowsDialog : Window
             DomainFromBox.Text = string.Empty;
             DomainToBox.Text = string.Empty;
             _vm.DomainNote = string.Empty;
+            _suggestedFrom = string.Empty;
         }
         _vm.HasAutofill = false;
+    }
+
+    // The domain SuggestSourceDomain put in the "from" box, so a later sign-in fill can tell it from something typed.
+    private string _suggestedFrom = string.Empty;
+
+    // A domain as typed ("@contoso.com", " Contoso.com ") reduced to the bare name the rewrite and the row filter both use.
+    private static string NormalizeDomain(string? text) => (text ?? string.Empty).Trim().TrimStart('@').Trim();
+
+    // A usable domain has no spaces and no '@' left inside it. Anything else can never match an address.
+    private static bool IsValidDomain(string domain) =>
+        domain.Length > 0 && !domain.Any(c => char.IsWhiteSpace(c) || c == '@');
+
+    // Fills the "from" box with the most common email domain in the flows, when both boxes are empty. Only the source
+    // side: the new domain is the user's decision, and the move applies only once both boxes are filled in.
+    private void SuggestSourceDomain()
+    {
+        if (!string.IsNullOrWhiteSpace(DomainFromBox.Text) || !string.IsNullOrWhiteSpace(DomainToBox.Text)) return;
+        var top = _values.Where(r => r.Category == "Email")
+            .Select(r => DomainOf(r.Source))
+            .Where(d => d.Length > 0)
+            .GroupBy(d => d, StringComparer.OrdinalIgnoreCase)
+            .OrderByDescending(g => g.Count())
+            .FirstOrDefault();
+        if (top != null)
+        {
+            _suggestedFrom = top.Key;
+            DomainFromBox.Text = top.Key;
+        }
+    }
+
+    private void Domain_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) => RefreshValuesFilter();
+
+    // With a domain move filled in (both boxes), email rows on that domain are redundant — the move already rewrites
+    // them — so they are hidden. A row the user filled in themselves stays visible, because that explicit address wins
+    // over the domain rule. The whole "Other values" section disappears when nothing is left to show.
+    private void RefreshValuesFilter()
+    {
+        if (_valuesView is null) return;
+        // Same rule as BuildMapping: only a valid pair counts, so rows are never hidden for a move that will not happen.
+        var from = NormalizeDomain(DomainFromBox.Text);
+        var active = IsValidDomain(from) && IsValidDomain(NormalizeDomain(DomainToBox.Text));
+
+        bool Covered(ValueMapRow r) =>
+            active && r.Category == "Email" && string.IsNullOrWhiteSpace(r.Target)
+            && DomainOf(r.Source).Equals(from, StringComparison.OrdinalIgnoreCase);
+
+        _valuesView.Filter = active ? o => o is ValueMapRow r && !Covered(r) : null;
+        _valuesView.Refresh();
+
+        var hidden = active ? _values.Count(Covered) : 0;
+        _vm.DomainCoverText = hidden > 0 ? Loc.T("Flows_DomainCovered", hidden, from) : string.Empty;
+        _vm.HasValues = !_valuesView.IsEmpty;
     }
 
     private static string DomainOf(string email)
     {
         var at = email.LastIndexOf('@');
         return at >= 0 && at < email.Length - 1 ? email[(at + 1)..].Trim() : string.Empty;
+    }
+
+    // The account the copied forms belong to: the target sign-in when copying across tenants, otherwise the one account.
+    // Empty while that sign-in doesn't exist yet.
+    private string FormsTargetAccount() => _signedInUser(!_isMultiTenant).Trim();
+
+    // Repeats the Forms-copy lookup once the target sign-in exists, so each form gets the copy made for THIS target
+    // account (a form copied to two accounts has two copies). A row whose ID the user typed or picked is left alone.
+    private void RefreshFormsFromCopies()
+    {
+        var target = FormsTargetAccount();
+        if (target.Length == 0 || _forms.Count == 0) return;
+        var saved = FormsIdMapStore.LoadAll();
+        foreach (var row in _forms)
+        {
+            var entry = FormsIdMapStore.Find(saved, row.SourceId, target);
+            row.FromCopy = entry;   // before NewId, so the note the NewId change raises already sees it
+            if (string.IsNullOrWhiteSpace(row.NewId) || row.NewId == row.AutoFilledId)
+            {
+                row.AutoFilledId = entry?.NewId ?? string.Empty;
+                row.NewId = row.AutoFilledId;
+                if (row.SourceTitle.Length == 0 && entry?.SourceTitle is { Length: > 0 } title) row.SourceTitle = title;
+            }
+            ShowFormNote(row, entry);
+        }
+        UpdateGates();
     }
 
     // What to tell the user about the form ID in a row: where it came from, or why it looks wrong.
@@ -868,12 +986,18 @@ public partial class FlowsDialog : Window
         var siteMap = SiteMap();
         if (_listIds.Count == 0)
         {
+            SnapshotCardEdits();
+            _cards.Clear(); _vm.HasCards = false;   // old cards must not stay visible (and pass the gate) next to "no lists"
             ShowMatchSummary(Loc.T("Flows_NoListsFound"), "Info");
+            UpdateGates();
             return;
         }
         if (siteMap.Count == 0)
         {
+            SnapshotCardEdits();
+            _cards.Clear(); _vm.HasCards = false;
             ShowMatchSummary(Loc.T("Flows_NoSiteTargets"), "Look");
+            UpdateGates();
             return;
         }
 
@@ -889,18 +1013,21 @@ public partial class FlowsDialog : Window
             if (_loaded is not null)
                 foreach (var (source, target) in _loaded.Lists)
                     if (FlowIdParser.ParseListId(target) is { } loadedId) overrides[source] = loadedId;
-            foreach (var c in _cards.Where(c => c.UserEdited))
+            // The user's own picks come from the saved card edits, not from _cards: adding or removing a package clears the
+            // cards before this runs, and an edit would be lost with them.
+            SnapshotCardEdits();
+            foreach (var c in _cardEdits.Targets)
             {
                 // A list the user picked lives on the target site it was picked from; if that site's target changed since,
                 // the choice no longer applies and the list is matched by name again.
                 var stillSameSite = c.SourceSite.Length == 0 || string.Equals(
                     FlowMappingResolver.NormalizeSite(siteMap.GetValueOrDefault(FlowMappingResolver.NormalizeSite(c.SourceSite)) ?? ""),
                     FlowMappingResolver.NormalizeSite(c.TargetSite), StringComparison.OrdinalIgnoreCase);
-                if (stillSameSite && FlowIdParser.ParseListId(c.TargetListId) is { } id) overrides[c.SourceListId] = id;
+                if (stillSameSite && FlowIdParser.ParseListId(c.TargetListId) is { } id) overrides[c.ListId] = id;
             }
 
             // Column choices the user made are put back after the cards are rebuilt.
-            var kept = _cards.SelectMany(c => c.Columns.Where(r => r.UserEdited).Select(r => (c.SourceListId, r.SourceColumn, r.Selected))).ToList();
+            var kept = _cardEdits.Columns;
 
             _lastReadMap = _sites.Where(r => !string.IsNullOrWhiteSpace(r.ReadFrom) && !string.Equals(FlowMappingResolver.NormalizeSite(r.ReadFrom), FlowMappingResolver.NormalizeSite(r.Source), StringComparison.OrdinalIgnoreCase))
                 .ToDictionary(r => FlowMappingResolver.NormalizeSite(r.Source), r => FlowMappingResolver.NormalizeSite(r.ReadFrom), StringComparer.OrdinalIgnoreCase);
@@ -912,6 +1039,38 @@ public partial class FlowsDialog : Window
             foreach (var n in _resolved.Notes) AppendLog(n);
             Log(Loc.T("Flows_LogResolveDone", _vm.MatchSummary.Text));
         });
+    }
+
+    // What the user decided on the list cards (target list, column choices, values for required columns), kept apart from the
+    // cards themselves so it survives the cards being cleared by a rescan or "Match again". Taken from the cards whenever
+    // there are cards; a rebuilt card whose target came from an earlier pick is not marked as edited, so for those the
+    // earlier entry is carried forward instead of being forgotten on the next rebuild.
+    private sealed record CardEdits(
+        List<(string ListId, string TargetListId, string SourceSite, string TargetSite)> Targets,
+        List<(string ListId, string Column, string Selected)> Columns,
+        Dictionary<string, IReadOnlyDictionary<string, string>> Fix);
+
+    private CardEdits _cardEdits = NoCardEdits();
+
+    private static CardEdits NoCardEdits() => new([], [], new Dictionary<string, IReadOnlyDictionary<string, string>>(StringComparer.OrdinalIgnoreCase));
+
+    private void SnapshotCardEdits()
+    {
+        if (_cards.Count == 0) return;   // nothing newer than what is already kept
+        var previous = _cardEdits.Targets;
+        var targets = new List<(string ListId, string TargetListId, string SourceSite, string TargetSite)>();
+        foreach (var c in _cards)
+        {
+            if (c.UserEdited) targets.Add((c.SourceListId, c.TargetListId, c.SourceSite, c.TargetSite));
+            else if (previous.FirstOrDefault(p => string.Equals(p.ListId, c.SourceListId, StringComparison.OrdinalIgnoreCase)) is { ListId: not null } earlier)
+                targets.Add(earlier);
+        }
+        var fix = new Dictionary<string, IReadOnlyDictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var c in _cards.Where(c => c.FixValues.Count > 0)) fix[c.SourceListId] = c.FixValues;
+        _cardEdits = new CardEdits(
+            targets,
+            [.. _cards.SelectMany(c => c.Columns.Where(r => r.UserEdited).Select(r => (c.SourceListId, r.SourceColumn, r.Selected)))],
+            fix);
     }
 
     private void ShowMatchSummary(string text, string level)
@@ -972,7 +1131,10 @@ public partial class FlowsDialog : Window
             // it uses: map those, so the user is never stuck with an empty grid.
             card.SourceColumns = r.SourceColumnsBySourceList.GetValueOrDefault(card.SourceListId)
                                  ?? card.Used.OrderBy(n => n, StringComparer.OrdinalIgnoreCase).Select(n => new FlowColumnInfo(n, n)).ToList();
-            if (_loaded?.RequiredValues.FirstOrDefault(kv => string.Equals(kv.Key, card.SourceListId, StringComparison.OrdinalIgnoreCase)).Value is { } savedValues)
+            // Values the user typed for this list's required columns win over a loaded mapping's.
+            if (_cardEdits.Fix.TryGetValue(card.SourceListId, out var typedValues))
+                card.LoadFixValues(typedValues);
+            else if (_loaded?.RequiredValues.FirstOrDefault(kv => string.Equals(kv.Key, card.SourceListId, StringComparison.OrdinalIgnoreCase)).Value is { } savedValues)
                 card.LoadFixValues(savedValues);
             card.CreateSteps = _scans.SelectMany(s => s.CreateSteps)
                 .Where(s => string.Equals(s.ListId, card.SourceListId, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -1094,7 +1256,8 @@ public partial class FlowsDialog : Window
         {
             _loaded = FlowMapping.Load(dlg.FileName);
         }
-        catch (Exception ex) when (ex is IOException or System.Text.Json.JsonException or UnauthorizedAccessException)
+        catch (Exception ex) when (ex is IOException or System.Text.Json.JsonException or UnauthorizedAccessException
+                                       or ArgumentException or InvalidOperationException or NotSupportedException)
         {
             _vm.StatusText = Loc.T("Flows_MappingLoadFailed", ex.Message);
             return;
@@ -1108,23 +1271,32 @@ public partial class FlowsDialog : Window
     // Fills the rows with what the loaded mapping says. Only values the flows actually contain have a row, so a mapping
     // saved for a bigger set of flows applies cleanly to a smaller one. Rows already filled in are overwritten: a loaded
     // file is an explicit choice.
-    private void ApplyLoadedMapping(FlowMapping m)
+    // onlyEmpty: used when the flows are rescanned (a package added or removed). The user may have edited rows since the file
+    // was loaded, and those edits must not be reverted to the file's values; only rows that are still empty are filled.
+    private void ApplyLoadedMapping(FlowMapping m, bool onlyEmpty = false)
     {
         static string? Get(Dictionary<string, string> map, string key) =>
             map.FirstOrDefault(kv => string.Equals(kv.Key.TrimEnd('/'), key.TrimEnd('/'), StringComparison.OrdinalIgnoreCase)).Value is { Length: > 0 } v ? v : null;
 
-        foreach (var r in _sites) if (Get(m.Sites, r.Source) is { } s) r.Target = s;
-        foreach (var r in _forms) if (Get(m.Forms, r.SourceId) is { } f) r.NewId = f;
+        foreach (var r in _sites) if ((!onlyEmpty || string.IsNullOrWhiteSpace(r.Target)) && Get(m.Sites, r.Source) is { } s) r.Target = s;
+        foreach (var r in _forms) if ((!onlyEmpty || string.IsNullOrWhiteSpace(r.NewId)) && Get(m.Forms, r.SourceId) is { } f) r.NewId = f;
         foreach (var r in _values)
         {
+            if (onlyEmpty && !string.IsNullOrWhiteSpace(r.Target)) continue;
             var map = r.Category switch { "Email" => m.Emails, "Tenant" => m.TenantIds, _ => m.Text };
             if (Get(map, r.Source) is { } v) r.Target = v;
         }
-        if (m.EmailDomains.FirstOrDefault(kv => !string.IsNullOrWhiteSpace(kv.Value)) is { Key: not null } d && !string.IsNullOrWhiteSpace(d.Key))
+        // The domain move: when re-applying, only into boxes the user has not filled (a suggested "from" counts as unfilled).
+        var domainBoxesFree = NormalizeDomain(DomainToBox.Text).Length == 0
+            && (NormalizeDomain(DomainFromBox.Text).Length == 0
+                || string.Equals(NormalizeDomain(DomainFromBox.Text), _suggestedFrom, StringComparison.OrdinalIgnoreCase));
+        if ((!onlyEmpty || domainBoxesFree)
+            && m.EmailDomains.FirstOrDefault(kv => !string.IsNullOrWhiteSpace(kv.Value)) is { Key: not null } d && !string.IsNullOrWhiteSpace(d.Key))
         {
-            DomainFromBox.Text = d.Key;
-            DomainToBox.Text = d.Value;
+            DomainFromBox.Text = NormalizeDomain(d.Key);
+            DomainToBox.Text = NormalizeDomain(d.Value);
         }
+        RefreshValuesFilter();   // targets and domains just changed: re-hide the rows the domain move covers
         _resolved = null;   // list targets changed: matching runs again when the lists step opens
     }
 
@@ -1151,6 +1323,7 @@ public partial class FlowsDialog : Window
                 break;
             case 2:
                 AutoFillFromSignIns();   // by now the sign-ins exist; fill the tenant ID, account and domain
+                RefreshFormsFromCopies();
                 GoTo(3);
                 // The form names load by themselves the first time this step opens (the button reloads them).
                 if (_forms.Count > 0 && !_formNamesAttempted) await LoadFormNamesAsync();
@@ -1203,6 +1376,10 @@ public partial class FlowsDialog : Window
                     : FlowIdParser.ParseFormId(f.NewId) is null || f.StatusLevel == "Look");
                 if (badForms > 0) reason = Loc.T("Flows_Gate_Forms", badForms);
                 break;
+            case 4:
+                // Write is disabled while there is no output folder; say so next to the button instead of just greying it out.
+                if (_vm.OutputPath.Trim().Length == 0) reason = Loc.T("Flows_NoOutput");
+                break;
         }
         _vm.BlockReason = reason;
     }
@@ -1248,8 +1425,12 @@ public partial class FlowsDialog : Window
                 default: map.Text[v.Source] = target; break;
             }
         }
-        if (!string.IsNullOrWhiteSpace(DomainFromBox.Text) && !string.IsNullOrWhiteSpace(DomainToBox.Text))
-            map.EmailDomains[DomainFromBox.Text.Trim()] = DomainToBox.Text.Trim();
+        var domainFrom = NormalizeDomain(DomainFromBox.Text);
+        var domainTo = NormalizeDomain(DomainToBox.Text);
+        if (IsValidDomain(domainFrom) && IsValidDomain(domainTo))
+            map.EmailDomains[domainFrom] = domainTo;
+        else if (domainFrom.Length > 0 || domainTo.Length > 0)
+            AppendLog(Loc.T("Flows_BadDomain"));   // half-filled or malformed: nothing is moved, and the report says why
         return map;
     }
 
@@ -1258,12 +1439,14 @@ public partial class FlowsDialog : Window
     private void BuildOutputNameRows()
     {
         _vm.OutputNames.Clear();
+        // Unless the user already typed a name, the default is the original name plus " - migrated", so the updated package
+        // is told apart from the original.
         foreach (var zip in _zips)
         {
             var row = new OutputNameRow
             {
                 Original = Path.GetFileName(zip), FullPath = zip,
-                SaveAs = _saveAs.GetValueOrDefault(zip) ?? Path.GetFileNameWithoutExtension(zip),
+                SaveAs = _saveAs.GetValueOrDefault(zip) ?? Path.GetFileNameWithoutExtension(zip) + " - migrated",
             };
             row.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(OutputNameRow.SaveAs)) _saveAs[zip] = row.SaveAs; };
             _vm.OutputNames.Add(row);
@@ -1431,10 +1614,17 @@ public partial class FlowsDialog : Window
             var report = new StringBuilder(Loc.T("Flows_ReportHeader"));
             report.Append(FlowReport.Overview(_scans, followUps));
             var rows = new List<PackageResultRow>();
-            int replacements = 0, leftoverValues = 0, failed = 0;
+            int replacements = 0, leftoverValues = 0, failed = 0, globalColumnRenames = 0;
 
             // The names come from the "Name of the updated package" setting (default: the original names), unique per package.
             // A patched package must never land on top of an original.
+
+            // The report is named after the package(s) and the time, so reports of several runs in one folder never overwrite
+            // each other: "rewrite-report - MyFlow - 20261105-143012" (more packages: "MyFlow and 2 more").
+            var firstName = SafeFileName(Path.GetFileNameWithoutExtension(dests[0]));
+            if (firstName.Length > 60) firstName = firstName[..60].TrimEnd();
+            var reportBase = Path.Combine(outDir, $"rewrite-report - {firstName}" +
+                (dests.Count > 1 ? $" and {dests.Count - 1} more" : "") + $" - {DateTime.Now:yyyyMMdd-HHmmss}");
 
             await Task.Run(() =>
             {
@@ -1448,11 +1638,17 @@ public partial class FlowsDialog : Window
 
                     // One unreadable package (it was already reported as skipped by the scan) must not stop the others.
                     List<(string Flow, List<Change> Changes)> results;
-                    try { results = FlowRewriter.RewritePackage(zip, dest, map); }
-                    // Also an unwritable folder (UnauthorizedAccessException) and a package whose JSON has an unexpected shape
-                    // (InvalidOperationException, FormatException from GetValue<T>): those fail THIS package, not the whole run.
-                    catch (Exception ex) when (ex is InvalidDataException or IOException or System.Text.Json.JsonException
-                                                   or UnauthorizedAccessException or InvalidOperationException or FormatException)
+                    List<Finding> leftovers;
+                    try
+                    {
+                        results = FlowRewriter.RewritePackage(zip, dest, map);
+                        Log(Loc.T("Flows_LogChecking", fileName));
+                        leftovers = FlowRewriter.FindLeftovers(dest, map);
+                    }
+                    // Whatever goes wrong with ONE package - an unwritable folder, a bad zip, JSON of an unexpected shape,
+                    // a mapping entry that can't be applied - fails THIS package and removes its partial output; the other
+                    // packages and the report still complete. (Cancelling is not a failure and keeps propagating.)
+                    catch (Exception ex) when (ex is not OperationCanceledException)
                     {
                         try { File.Delete(dest); } catch (Exception delEx) when (delEx is IOException or UnauthorizedAccessException) { /* partial output: best effort */ }
                         AppendLog(Loc.T("Flows_LogBadPackage", Path.GetFileName(zip), ex.Message));
@@ -1460,14 +1656,14 @@ public partial class FlowsDialog : Window
                         failed++;
                         continue;
                     }
+                    // Recorded only once the package was written AND checked, so a failed one is never remembered as written.
                     try { FlowOutputLog.Record(dest); }
                     catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { /* the log is a convenience */ }
-                    Log(Loc.T("Flows_LogChecking", fileName));
-                    var leftovers = FlowRewriter.FindLeftovers(dest, map);
                     var changed = results.Sum(r => r.Changes.Sum(c => c.Count));
                     var still = leftovers.Select(l => l.Value).Distinct().Count();
                     replacements += changed;
                     leftoverValues += still;
+                    globalColumnRenames += results.Sum(r => r.Changes.Where(c => c.Category == FlowRewriter.GlobalColumnCategory).Sum(c => c.Count));
                     rows.Add(new PackageResultRow
                     {
                         Package = fileName, Flows = results.Count, Replacements = changed, StillSource = still,
@@ -1477,13 +1673,13 @@ public partial class FlowsDialog : Window
                     });
                     report.Append(FlowRewriter.ToMarkdown(Path.GetFileNameWithoutExtension(fileName), results, leftovers));
                 }
-                File.WriteAllText(Path.Combine(outDir, "rewrite-report.md"), report.ToString());
-                File.WriteAllText(Path.Combine(outDir, "rewrite-report.html"), FlowReport.ToHtml(report.ToString(), Loc.T("Flows_ReportTitle")), new UTF8Encoding(false));
+                File.WriteAllText(reportBase + ".md", report.ToString());
+                File.WriteAllText(reportBase + ".html", FlowReport.ToHtml(report.ToString(), Loc.T("Flows_ReportTitle")), new UTF8Encoding(false));
             }, ct);
             clock.Stop();
 
             _lastOutput = outDir;
-            _lastReport = Path.Combine(outDir, "rewrite-report.html");
+            _lastReport = reportBase + ".html";
             AppendLog(Loc.T("Flows_LogReport", _lastReport));
             FlowsUiState.SaveOutputPath(outDir);
 
@@ -1491,6 +1687,9 @@ public partial class FlowsDialog : Window
             foreach (var r in FlowResources.Summarize(_scans).Where(r => r.Handling == ResourceHandling.ReviewManually))
                 review.Add(new ReviewItem { Text = Loc.T("Flows_Rep_TodoReview", r.Service, r.Detail) });
             if (leftoverValues > 0) review.Add(new ReviewItem { Text = Loc.T("Flows_Review_StillSource", leftoverValues) });
+            // With only one list in the flows every "body/<Column>" belongs to it, so the warning would be noise.
+            if (globalColumnRenames > 0 && _cards.Count > 1)
+                review.Add(new ReviewItem { Text = Loc.T("Flows_Review_GlobalColumns", globalColumnRenames) });
             if (failed > 0) review.Add(new ReviewItem { Text = Loc.T("Flows_Review_PackagesFailed", failed) });
 
             _vm.PackageResults.Clear();
@@ -1544,7 +1743,11 @@ public partial class FlowsDialog : Window
         catch (Exception ex) when (ex is System.ComponentModel.Win32Exception or InvalidOperationException) { /* no default browser */ }
     }
 
-    private void StartOver_Click(object sender, RoutedEventArgs e) => ResetAll();
+    private void StartOver_Click(object sender, RoutedEventArgs e)
+    {
+        if (!ConfirmDiscard("Flows_ConfirmStartOverBody")) return;
+        ResetAll();
+    }
 
     private void ResetAll()
     {
@@ -1557,6 +1760,7 @@ public partial class FlowsDialog : Window
         _scans = [];
         _resolved = null;
         _sites.Clear(); _forms.Clear(); _cards.Clear(); _listIds.Clear(); _targetListOptions.Clear(); _lookup = null; _values.Clear();
+        _cardEdits = NoCardEdits();
         _lastReadMap = new(StringComparer.OrdinalIgnoreCase);
         _loaded = null;
         _loadedColumns = new(StringComparer.OrdinalIgnoreCase);
@@ -1564,6 +1768,7 @@ public partial class FlowsDialog : Window
         _vm.PackageWarning = string.Empty;
         DomainFromBox.Text = string.Empty;   // the previous batch's email-domain rewrite must not carry over
         DomainToBox.Text = string.Empty;
+        _suggestedFrom = string.Empty;
         ResourcesGrid.ItemsSource = null;
         UpdateGates();
     }
@@ -1572,6 +1777,10 @@ public partial class FlowsDialog : Window
 
     private async Task RunAsync(string busyText, Func<CancellationToken, Task> work)
     {
+        // One operation at a time: a second one started from a handler that isn't disabled while busy (a card's target
+        // changing, say) would replace _cts - so the first could no longer be cancelled - and its finally would clear IsBusy
+        // while the other is still running.
+        if (_vm.IsBusy) return;
         _cts = new CancellationTokenSource();
         _vm.IsBusy = true;
         _vm.StatusText = busyText;
@@ -1590,6 +1799,8 @@ public partial class FlowsDialog : Window
         finally
         {
             _vm.IsBusy = false;
+            _cts?.Dispose();
+            _cts = null;
             // The footer shows what is happening right now; once it is done, don't leave the busy text behind.
             if (_vm.StatusText == busyText) _vm.StatusText = string.Empty;
         }
@@ -1621,18 +1832,24 @@ public partial class FlowsDialog : Window
         _vm.AddNote(line);
     }
 
+    // Close, Esc and the title-bar X all end up in OnClosing, so there is ONE place that asks, with one message: leaving
+    // during a run abandons it, and leaving mid-wizard loses the mapping built so far. The first step and the finished
+    // report have nothing to lose.
     private void Close_Click(object sender, RoutedEventArgs e) => Close();
 
     protected override void OnClosing(CancelEventArgs e)
     {
-        // Close also answers to Esc: do not abandon a write, scan or sign-in that is still running without asking.
-        if (_vm.IsBusy && MessageBox.Show(this, Loc.T("Flows_ClosePrompt"), Loc.T("Flows_CloseTitle"),
+        var bodyKey = _vm.IsBusy ? "Flows_ClosePrompt"
+                    : _vm.CurrentStep is >= 1 and <= 4 ? "Flows_ConfirmCloseBody"
+                    : null;
+        if (bodyKey is not null && MessageBox.Show(this, Loc.T(bodyKey), Loc.T("Flows_CloseTitle"),
                 MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) != MessageBoxResult.Yes)
         {
             e.Cancel = true;
             return;
         }
-        _cts?.Cancel();
+        try { _cts?.Cancel(); }
+        catch (ObjectDisposedException) { /* the run had just finished */ }
         base.OnClosing(e);
     }
 }

@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Hedef: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Hedef Liste</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Kopyalama Seçenekleri</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Kitaplık içeriğini kopyala (dosyalar)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Kapalıyken yalnızca sütun şeması ve kitaplık ayarları yeniden oluşturulur; hiçbir dosya kopyalanmaz.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Dosyaları ve liste öğelerini (içerik) kopyala</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Kapalıyken yalnızca yapı kopyalanır; dosya veya liste öğesi kopyalanmaz: sütunlar, görünümler, liste ayarları, içerik türleri ve Tüm Site kapsamında site sütunları, gezinti ve site ayarları.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Dosya varsa:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Atla</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Üzerine yaz</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Tüm sürümler</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Son </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> sürüm</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Listelerimin başvurduğu listeleri de kopyala</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>Seçili bir listede Arama (Lookup) sütunu varsa, başvurduğu liste de kopyalanır; böylece sütun oluşturulabilir ve değerleri çözümlenebilir. Yalnızca seçtiklerinizi kopyalamak için bunu kapatın.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Arama değerleri</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} öğeye göre eşleşti, {1} metne göre eşleşti, {2} bulunamadı.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Yönetilen meta veriler</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} terim değeri kopyalandı, {1} dışarıda bırakıldı (terim kopyalanan kümede bulunamadı).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>&quot;{0}&quot; yönetilen meta veri sütunu oluşturulmadı: terim kümesi başka bir kiracıya ait ve terim kümelerini kopyalama kullanılamıyor (her iki kiracıda oturum açın ve TermStore.ReadWrite.All iznini verin).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>&quot;{0}&quot; terim kümesi hedefe kopyalandı: {1} oluşturuldu, {2} zaten vardı.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Yönetilen meta veri terim kümelerini hedef kiracıya kopyala</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>Yönetilen meta veri sütunu, kaynak kiracının terim deposundaki bir terim kümesine bağlıdır. Bu seçenek açıkken terim kümesi (terimler, etiketler, eş anlamlılar, açıklamalar) hedef terim deposuna kopyalanır, sütun kopyaya bağlanır ve her değer yeniden eşlenir. İsteğe bağlı TermStore.ReadWrite.All iznini ve hedefte bir terim deposu rolünü gerektirir.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>"{0}" listesinde arama yapar</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Başka bir sitedeki bir listede arama yapar</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Yönetilen meta veriler: terim kümesi hedef kiracıya kopyalanacak</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Yönetilen meta veriler: aynı terim kümesini kullanır (aynı kiracı)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>"{0}" yansıtılan alanı oluşturulmadı: "{1}" arama sütunu hedef listede yok.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>"{0}" yansıtılan alanı oluşturulmadı: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Uygulama kaydıyla oturum aç:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Kopyalanacak yapı</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Burada işaretlenen her şey, verilerle birlikte hedefte yeniden oluşturulur. Hedefte zaten bulunan bir liste veya kitaplık yalnızca eksik olan içerik türlerini ve görünümleri alır.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Görünümler (filtreler, gruplama, sütunlar, varsayılan görünüm, takvim ve pano görünümleri)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Liste ayarları (onay, çıkış yapma, ekler, klasörler, öğe düzeyinde güvenlik)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>İçerik türleri ve belge şablonları</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Sütun doğrulama kuralları ve biçimlendirme</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Kitaplık şablonu ve klasör varsayılan değerleri</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Site sütunları ve site içerik türleri</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Site ayarları (açıklama, hızlı başlat, ağaç görünümü ve daha fazlası)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Görünümler</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Liste ayarları</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>İçerik türleri</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Sütun kuralları</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Şablonlar ve varsayılanlar</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Site sütunları ve türleri</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Gezinti</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Site ayarları</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Arama listeleri</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Terim kümeleri</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Yapı: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>yok</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Daha fazla göster</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Daha az göster</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Gezintiyi kopyala (Hızlı Başlatma ve üst çubuk)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Hedef gezintisini kaynak bağlantılarıyla değiştirir. URL'ler hedef siteye göre yeniden eşlenir.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>İzinleri kopyala</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Özel sütun değerlerini kopyala</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Metin, Sayı, Seçim, Tarih, Boole, Çoklu seçim, Kişi ve Yönetilen Meta Veri sütun değerlerini kopyalar. Arama sütunları desteklenmez.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Eşlemeleri yapılandırmak için 'Özel sütun değerlerini kopyala' seçeneğini etkinleştirin.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Tüm özel sütun değerleri kopyalanır. Hedefte hangi sütunların oluşturulacağını denetlemek için eşlemeleri kullanın.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Tüm özel sütun değerleri kopyalanır. Hedefte hangi sütunların oluşturulacağını denetlemek için Sütun eşleme (yukarıda) özelliğini kullanın.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Özel sütun değerleri liste öğeleri için her zaman kopyalanır.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Kopyalama modu</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Ad</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>İstemci Kimliği (Uygulama Kimliği)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Kiracı Kimliği</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Çok kiracılı için 'common' veya kiracı GUID'inizi ya da etki alanınızı kullanın.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Herhangi bir kiracıda oturum açmak için boş bırakın veya 'common' girin. Bir kiracı GUID'i veya etki alanı (örneğin contoso.onmicrosoft.com) oturum açmayı yalnızca o kiracıyla sınırlar.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Varsayılan rapor dosya adlarının başına kaynak ve hedef site adlarını ekle</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Oturumu Kapat</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Tema:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Kitaplıklar ve Listeler modu</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Tüm Site modu</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Site Sayfaları modu</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Kitaplık içeriğini kopyala (dosyalar)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Dosyaları ve liste öğelerini (içerik) kopyala</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Sürüm geçmişini kopyala</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Son N sürüm</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Gezintiyi kopyala</value></data>
@@ -939,7 +979,7 @@ Orijinal paketlere dokunulmadı. Bağlantılar taşınmaz; içe aktarırken yeni
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Formları yeniden yükle</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Formlarınızı görmek için &quot;Formlarımı yükle&quot;ye tıklayın.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>Bu hesapta form bulunamadı.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} formu kopyala</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} formu kopyalamaya başla</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Daha fazla form kopyala</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Kopyaların nereye gideceğini seçin</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Tek kiracı: kopyalar kullandığınız hesapta, orijinallerin yanında oluşturulur.</value></data>
@@ -963,7 +1003,7 @@ Orijinal paketlere dokunulmadı. Bağlantılar taşınmaz; içe aktarırken yeni
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Formlar kopyalanıyor</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Başlatılıyor…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Form {0}/{1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Geçerli formdan sonra iptal ediliyor…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>İptal ediliyor… kopyalanmakta olan form durduruluyor.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopyalama bitti: {0} formun tamamı kopyalandı</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Kopyalarınız {0} içinde. Görmek için Microsoft Forms&apos;u açın veya aşağıdaki tabloyu kullanın.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopyalama bitti: {1} formdan {0} tanesi kopyalandı, bazıları dikkat gerektiriyor</value></data>
@@ -971,7 +1011,7 @@ Orijinal paketlere dokunulmadı. Bağlantılar taşınmaz; içe aktarırken yeni
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopyalama bitti, ancak hiçbir form kopyalanmadı</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Nedeni için Ayrıntılar sütununa bakın. Yaygın nedenler, hedef kayıtta Microsoft Forms izninin eksik olması veya Forms erişimi olmayan bir hesaptır.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopyalama {1} formdan {0} tanesinden sonra iptal edildi</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Aşağıda listelenen formlar tamamlandı. İptal ettiğinizde kopyalanmakta olan form bitirilmedi ve görünmez.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Aşağıda kopyalandı olarak işaretlenen formlar tamamlandı. İptal ettiğinizde kopyalanmakta olan form bitirilmedi ve hedefte yarım kalmış olabilir; bir kopya oluşturulduysa satırında kopyanın kimliği görünür.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Kopyalandı</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>Uyarılarla</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Başarısız</value></data>
@@ -986,7 +1026,7 @@ Orijinal paketlere dokunulmadı. Bağlantılar taşınmaz; içe aktarırken yeni
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Seçili kopyayı aç</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Microsoft Forms&apos;u aç</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Sonuçları dışa aktar…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Form kimliği eşlemesini göster</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Kaydedilen form kimliklerini aç</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Önce tablodan kopyalanmış bir form seçin.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Sonuçlar {0} konumuna kaydedildi</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>İpucu: uygulama kaydında eşleşen bir yönlendirme adresi yok. Entra&apos;da Kimlik Doğrulama altında &quot;Mobil ve masaüstü uygulamaları&quot; platformunu http://localhost ile ekleyin, ardından yeniden deneyin.</value></data>
@@ -1105,7 +1145,7 @@ Yeniden kopyalamak her birinin ikinci bir kopyasını oluşturur. Devam edilsin 
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(başlıksız form)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Kaynak form</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Hedefin formlarından seçin</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Hedef hesaptan bir form seçin. Önce &quot;Hedef hesaptan formları yükle&quot;ye tıklayın.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Hedef hesaptan bir form seçin. Liste bu adım açıldığında yüklenir; boşsa &quot;Form adlarını yeniden yükle…&quot;ye tıklayın.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Hedef oturum açmadan dolduruldu ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>Kaynak hesabınız, hedef hesabınızla değiştirildi</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Oturum açmalarınızdan dolduruldu ({0} → {1}). E-posta etki alanlarını değiştirmemek için her iki kutuyu da temizleyin.</value></data>
@@ -1133,7 +1173,7 @@ Yeniden kopyalamak her birinin ikinci bir kopyasını oluşturur. Devam edilsin 
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} paket bu araç tarafından yazılmış ve hedefin değerlerini zaten içeriyor. Bunları kaldırın (listedeki ✕) ve orijinal dışa aktarımları ekleyin.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} sitenin hedefi yok. Olduğu gibi bırakılan bir site hâlâ kaynak kiracıyı gösterir.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} liste içe aktarmada başarısız olur. Devam etmek için &quot;Başarısız olacak&quot; işaretli listeleri düzeltin.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Listeler henüz eşleştirilmedi. Yeniden denemek için bir adım geri gidip tekrar ileri gelin.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Listeler henüz eşleştirilmedi. Yeniden denemek için &quot;Yeniden eşleştir&quot;e tıklayın.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ Devam etmek için {0} formun geçerli bir hedef form kimliğine ihtiyacı var.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Kaynağı değiştir…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>{0} olarak oturum açıldı. Kaynak kiracının SharePoint adresi {1}.</value></data>
@@ -1398,11 +1438,65 @@ Yeniden kopyalamak her birinin ikinci bir kopyasını oluşturur. Devam edilsin 
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Çalışırken kapatılsın mı?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>Araç hâlâ çalışıyor (tarama, eşleştirme, oturum açma veya paket yazma). Şimdi kapatmak onu durdurur. Yine de kapatılsın mı?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>{0} yeni forma otomatik olarak eklenemedi. Dosyanın bir kopyası {1} olarak kaydedildi: Microsoft Forms&apos;ta yeniden ekleyin.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Liste öğesi sürüm geçmişi:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Dosyalarla aynı</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Tüm sürümler</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Yalnızca geçerli</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Her yeni liste öğesinin sürüm geçmişini (değerler, tarihler ve düzenleyenler) sürümlerini hedefte yeniden oynatarak kopyalar. &quot;Dosyalarla aynı&quot; yukarıdaki dosya sürüm seçeneklerini izler. Hedefte zaten bulunan öğeler kendi geçmişini korur. Kişi, arama, sınıflandırma ve bağlantı sütunları yalnızca geçerli değerlerini kopyalar.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>sürüm geçmişi: bazı bölümler kopyalanmadı ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>sürüm geçmişi kopyalanmadı ({0}); öğenin yalnızca geçerli değerleri var</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Liste:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>E-posta etki alanı taşıma uygulanmadı: her iki etki alanı da doldurulmalı, boşluk veya fazladan @ içermemelidir (örneğin contoso.com ve fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Tüm paketler kaldırılsın ve tarama ile sonraki adımlarda doldurduğunuz her şey silinsin mi?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Akışları Hedef İçin Yeniden Yaz kapatılsın mı? Şimdiye kadar oluşturduğunuz eşleme kaybolur (korumak için önce Eşlemeyi kaydet’i kullanın).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Baştan başlansın mı? Paketler, tarama ve doldurduğunuz her şey silinir. Çıktı klasörüne daha önce yazılmış paketler silinmez.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{1} üzerindeki {0} e-posta adresi bu taşıma kapsamındadır, bu yüzden yukarıda listelenmez. Bunlardan birine farklı bir adres vermek için bu kutuları temizleyin, o satırı doldurun ve etki alanı taşımayı yeniden girin.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>{0} klasörü okunamadı: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>İnceleyin: bu sütun adları, akışın ifadelerinde geçtiği her yerde yeniden adlandırıldı; buna farklı bir listedeki aynı adlı sütun da dahil olabilir. Her birinin onu yeniden adlandıran listeye başvurduğunu kontrol edin.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} sütun adı, ifadelerde geçtiği her yerde yeniden adlandırıldı. Bunların, başka bir listedeki aynı adlı sütuna değil, onları yeniden adlandıran listeye başvurduğunu kontrol edin (rapora bakın).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Kopyalama şimdi durdurulsun mu? Şu anda kopyalanan form yarıda kesilir ve hedef hesapta yarım kalmış olabilir; öyleyse Microsoft Forms’ta silin. Tamamlanmış formlar korunur.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Seç</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Kopyalama günlüğü</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>1 formu kopyalamaya başla</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>Form kopyalandı, ancak görselleri denetlenemedi ({0}). Microsoft Forms’ta açıp arka plan ve üst bilgi görsellerini kontrol edin.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Bağlantınızı ve oturum açma durumunuzu kontrol edin, ardından Formları yeniden yükle’ye tıklayın. Ayrıntılar: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Formlarınız yüklenemedi</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>1 form yüklendi.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>Günlük panoya kopyalandı.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>Pano başka bir program tarafından kullanıldığı için günlük kopyalanamadı. Tekrar deneyin.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Kopyalama günlüğü</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Sonraki adım: akışlar bu formları kullanıyorsa ana pencereden Akışları Hedef İçin Yeniden Yaz’ı açın. Bu kopyalamanın kaydettiği form kimliklerini okur ve her akışı yeni forma yönlendirir.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Form bulunamadı</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>Kopyalananlar: sorular, dallanma, ayarlar ve tema. Kopyalanmayanlar: yanıtlar (bunları Excel’e kaydetmek için ilk adımdaki Yanıtları dışa aktar’ı kullanın), ortak çalışanlar ve formun paylaşıldığı kişiler. Her kopya, hedef hesabın sahip olduğu yeni bir formdur ve görsellerin yeniden eklenmesi gerekebilir.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Kopyalama tamamlandı: form kopyalandı</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Bir filtre açık: Tümünü Seç ve Tüm Seçimleri Kaldır, gösterilen {0} form için geçerlidir.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>Seçili formlardan {0} tanesi daha önce kopyalandı; yeniden kopyalamak yinelenen formlar oluşturur.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Adım {0}/{1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 form, {1} hesabından {2} hesabına kopyalanacak.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>Seçili formlardan {0} tanesi, sonek eklendiğinde {1} karakterden uzun bir başlık alır. Microsoft Forms bunları reddedebilir; soneki kısaltın.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Görünümler kopyalanamadı: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>'{0}' görünümü kopyalanmadı ({1} görünümü)</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>'{0}' görünümü oluşturulamadı: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>'{0}' görünümü oluşturuldu ancak bazı ayarlar uygulanamadı: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>'{0}' görünümü: filtresi veya sıralaması uygulanamadı ve dışarıda bırakıldı</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>'{0}' görünümü: hedefte bulunmayan sütunlar dışarıda bırakıldı: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>Görünümler, ayarlar veya içerik türleriyle ilgili {0} not: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>Liste ayarları okunamadığından hiçbiri kopyalanmadı: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>Uygulanamayan liste ayarları: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Doğrulama kuralları veya biçimlendirme şuraya uygulanamadı: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>'{0}' içerik türü kopyalanamadı: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>'{0}' içerik türü: eklenemeyen sütunlar: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>Kitaplığın belge şablonu kopyalanamadı.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>Kitaplığın klasör varsayılan değerleri kopyalanamadı.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>Klasör varsayılan değerleri kopyalandı ancak bunları yeni dosyalara uygulayan kural eklenemedi.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Site sütunları okunamadı: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Oluşturulamayan site sütunları: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Site içerik türleri okunamadı: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Oluşturulamayan site içerik türleri: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Oluşturulamayan gezinti ({0}) bağlantıları: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Uygulanamayan site ayarları: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Site sütunları, içerik türleri, gezinti ve ayarlar</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Site sütunları, içerik türleri, gezinti ve ayarlar kopyalanıyor...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>içerik türü</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>'{0}' içerik türü: belge şablonu kopyalanamadı.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Şu uygulama kaydıyla oturum açar: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Kiracı: herhangi biri. Oturum açarken Microsoft 365 hesabını siz seçersiniz.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Kiracı: {0}. Oturum açma yalnızca bu dizine yapılabilir.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Farklı bir kiracıdaki siteyi bağlamak için Ayarlar'da başka bir uygulama kaydı seçin (Kiracı Kimliği boş veya o kiracıya ayarlı olan) ya da Çok kiracılı modunu kullanın.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Yalnızca yapı: sütunlar, görünümler, ayarlar ve içerik türleri kopyalanır, ancak dosya veya liste öğesi kopyalanmaz.</value></data>
 </root>

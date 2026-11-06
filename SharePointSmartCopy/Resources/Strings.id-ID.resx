@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Target: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Daftar Tujuan</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Opsi Penyalinan</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Salin konten pustaka (file)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Jika nonaktif, hanya skema kolom dan pengaturan pustaka yang dibuat ulang — tidak ada file yang disalin.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Salin file dan item daftar (konten)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Saat nonaktif, hanya struktur yang disalin, tanpa file atau item daftar: kolom, tampilan, pengaturan daftar, tipe konten, dan, dalam cakupan Seluruh Situs, kolom situs, navigasi, serta pengaturan situs.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Jika file sudah ada:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Lewati</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Timpa</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Semua versi</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Terbaru </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> versi</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Salin juga daftar yang dirujuk oleh daftar saya</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>Jika daftar yang dipilih memiliki kolom Lookup, daftar yang dirujuknya juga disalin, sehingga kolom dapat dibuat dan nilainya diselesaikan. Nonaktifkan untuk menyalin hanya yang Anda pilih.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Nilai Lookup</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} dicocokkan berdasarkan item, {1} dicocokkan berdasarkan teks, {2} tidak ditemukan.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Metadata terkelola</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} nilai istilah disalin, {1} dilewati (istilah tidak ditemukan di kumpulan yang disalin).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>Kolom metadata terkelola &quot;{0}&quot; tidak dibuat: set istilahnya milik tenant lain, dan penyalinan set istilah tidak tersedia (masuk ke kedua tenant dan berikan izin TermStore.ReadWrite.All).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>Set istilah &quot;{0}&quot; disalin ke target: {1} dibuat, {2} sudah ada.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Salin set istilah metadata terkelola ke tenant target</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>Kolom metadata terkelola terikat ke set istilah di penyimpanan istilah tenant sumber. Saat opsi ini aktif, set istilah (istilah, label, sinonim, deskripsi) disalin ke penyimpanan istilah target, kolom diikat ke salinan, dan setiap nilai dipetakan ulang. Memerlukan izin opsional TermStore.ReadWrite.All dan peran penyimpanan istilah di target.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Mencari di daftar "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Mencari di daftar pada web lain</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Metadata terkelola: set istilahnya akan disalin ke tenant target</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Metadata terkelola: menggunakan set istilah yang sama (tenant yang sama)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>Bidang proyeksi "{0}" tidak dibuat: kolom pencarian "{1}" tidak ada di daftar target.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>Bidang proyeksi "{0}" tidak dibuat: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Masuk dengan pendaftaran aplikasi:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Struktur yang akan disalin</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Semua yang dicentang di sini dibuat ulang di target bersama data. Daftar atau pustaka yang sudah ada di sana hanya menerima tipe konten dan tampilan yang belum dimilikinya.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Tampilan (filter, pengelompokan, kolom, tampilan default, tampilan kalender dan papan)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Pengaturan daftar (persetujuan, check-out, lampiran, folder, keamanan tingkat item)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Tipe konten dan templat dokumennya</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Aturan validasi dan pemformatan kolom</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Templat pustaka dan nilai default folder</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Kolom situs dan tipe konten situs</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Pengaturan situs (deskripsi, peluncuran cepat, tampilan pohon, dan lainnya)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Tampilan</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Pengaturan daftar</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Tipe konten</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Aturan kolom</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Templat dan default</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Kolom dan tipe situs</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Navigasi</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Pengaturan situs</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Daftar pencarian</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Set istilah</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Struktur: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>tidak ada</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Tampilkan lebih banyak</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Tampilkan lebih sedikit</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Salin navigasi (Quick Launch &amp; bilah atas)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Mengganti navigasi target dengan tautan sumber. URL dipetakan ulang ke situs target.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Salin izin</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Salin nilai kolom kustom</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Menyalin nilai kolom Text, Number, Choice, Date, Boolean, Multi-choice, Person, dan Managed Metadata. Kolom Lookup tidak didukung.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Aktifkan 'Salin nilai kolom kustom' untuk mengonfigurasi pemetaan.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Semua nilai kolom kustom disalin. Gunakan pemetaan untuk mengatur kolom mana yang dibuat di tujuan.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Semua nilai kolom kustom disalin. Gunakan Pemetaan kolom (di atas) untuk mengontrol kolom mana yang dibuat di tujuan.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Nilai kolom kustom selalu disalin untuk item daftar.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Mode penyalinan</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Nama</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Client ID (Application ID)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Tenant ID</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Gunakan 'common' untuk multi-tenant, atau GUID atau domain tenant Anda.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Biarkan kosong atau masukkan 'common' untuk masuk ke tenant mana pun. GUID atau domain tenant (misalnya contoso.onmicrosoft.com) membatasi proses masuk hanya ke tenant tersebut.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Awali nama file laporan default dengan nama situs sumber dan target</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Keluar</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Tema:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Mode Pustaka dan Daftar</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Mode Seluruh Situs</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Mode Halaman Situs</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Salin konten pustaka (file)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Salin file dan item daftar (konten)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Salin riwayat versi</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>N versi terbaru</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Salin navigasi</value></data>
@@ -939,7 +979,7 @@ Paket asli tidak tersentuh. Koneksi TIDAK dimigrasikan; buat ulang dan pilih kem
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Muat ulang formulir</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Klik &quot;Muat formulir saya&quot; untuk melihat formulir Anda.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>Tidak ada formulir yang ditemukan di akun ini.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>Salin {0} formulir</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Mulai menyalin {0} formulir</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Salin formulir lainnya</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Pilih ke mana salinan dikirim</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Satu tenant: salinan dibuat di akun yang sama dengan yang Anda gunakan, di samping aslinya.</value></data>
@@ -963,7 +1003,7 @@ Paket asli tidak tersentuh. Koneksi TIDAK dimigrasikan; buat ulang dan pilih kem
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Menyalin formulir</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Memulai…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Formulir {0} dari {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Membatalkan setelah formulir saat ini…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Membatalkan… formulir yang sedang disalin sedang dihentikan.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Penyalinan selesai: semua {0} formulir tersalin</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Salinan Anda ada di {0}. Buka Microsoft Forms untuk melihatnya, atau gunakan tabel di bawah.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Penyalinan selesai: {0} dari {1} formulir tersalin, beberapa perlu diperhatikan</value></data>
@@ -971,7 +1011,7 @@ Paket asli tidak tersentuh. Koneksi TIDAK dimigrasikan; buat ulang dan pilih kem
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Penyalinan selesai, tetapi tidak ada formulir yang tersalin</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Lihat kolom Detail untuk alasannya. Penyebab umum adalah izin Microsoft Forms yang hilang pada registrasi target, atau akun tanpa akses Forms.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Penyalinan dibatalkan setelah {0} dari {1} formulir</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Formulir yang tercantum di bawah telah selesai. Formulir yang sedang disalin saat Anda membatalkan belum selesai dan tidak terlihat.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Formulir yang ditandai sudah disalin di bawah telah selesai. Formulir yang sedang disalin saat Anda membatalkan belum selesai dan mungkin tertinggal setengah jadi di target; barisnya menampilkan ID salinan jika salinan tersebut sempat dibuat.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Tersalin</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>Dengan peringatan</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Gagal</value></data>
@@ -986,7 +1026,7 @@ Paket asli tidak tersentuh. Koneksi TIDAK dimigrasikan; buat ulang dan pilih kem
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Buka salinan yang dipilih</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Buka Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Ekspor hasil…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Tampilkan peta ID formulir</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Buka ID formulir yang tersimpan</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Pilih formulir yang telah disalin di tabel terlebih dahulu.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Hasil disimpan ke {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Petunjuk: registrasi aplikasi tidak memiliki alamat pengalihan yang cocok. Di Entra, di bawah Authentication, tambahkan platform &quot;Mobile and desktop applications&quot; dengan http://localhost, lalu coba lagi.</value></data>
@@ -1105,7 +1145,7 @@ Menyalin lagi akan membuat salinan kedua dari masing-masing. Lanjutkan?</value><
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(formulir tanpa judul)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Formulir sumber</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Pilih dari formulir target</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Pilih formulir dari akun target. Klik &quot;Muat formulir dari akun target&quot; terlebih dahulu.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Pilih formulir dari akun target. Daftar dimuat saat langkah ini dibuka; jika kosong, klik &quot;Muat ulang nama formulir…&quot;.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Diisi dari proses masuk target ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>Akun sumber Anda, diganti dengan akun target Anda</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Diisi dari proses masuk Anda ({0} → {1}). Kosongkan kedua kotak agar domain email tidak berubah.</value></data>
@@ -1133,7 +1173,7 @@ Menyalin lagi akan membuat salinan kedua dari masing-masing. Lanjutkan?</value><
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} paket ditulis oleh alat ini dan sudah berisi nilai target. Hapus (✕ di daftar) dan tambahkan ekspor asli.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} situs tidak memiliki target. Situs yang dibiarkan apa adanya masih akan mengarah ke tenant sumber.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} daftar akan gagal saat impor. Perbaiki daftar yang ditandai &quot;Akan gagal&quot; untuk melanjutkan.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Daftar belum dicocokkan. Kembali satu langkah lalu maju lagi untuk mencoba ulang.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Daftar belum dicocokkan. Klik &quot;Cocokkan lagi&quot; untuk mencoba ulang.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} formulir memerlukan ID formulir target yang valid untuk melanjutkan.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Ubah sumber…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Masuk sebagai {0}. Alamat SharePoint tenant sumber adalah {1}.</value></data>
@@ -1398,11 +1438,65 @@ Menyalin lagi akan membuat salinan kedua dari masing-masing. Lanjutkan?</value><
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Tutup saat sedang bekerja?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>Alat masih bekerja (memindai, mencocokkan, masuk, atau menulis paket). Menutup sekarang akan menghentikannya. Tutup juga?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>{0} tidak dapat ditambahkan ke formulir baru secara otomatis. Salinan file disimpan sebagai {1}: tambahkan lagi di Microsoft Forms.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Riwayat versi item daftar:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Sama seperti file</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Semua versi</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Hanya saat ini</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Menyalin riwayat versi setiap item daftar baru (nilai, tanggal, dan editor) dengan memutar ulang versinya di target. &quot;Sama seperti file&quot; mengikuti opsi versi file di atas. Item yang sudah ada di target tetap memiliki riwayatnya sendiri. Kolom orang, pencarian, taksonomi, dan tautan hanya menyalin nilai saat ini.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>riwayat versi: sebagian tidak tersalin ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>riwayat versi tidak disalin ({0}); item hanya memiliki nilai saat ini</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Daftar:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>Pemindahan domain email tidak diterapkan: kedua domain harus diisi, tanpa spasi atau @ tambahan (misalnya contoso.com dan fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Hapus semua paket dan buang hasil pemindaian serta semua yang telah Anda isi di langkah berikutnya?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Tutup Tulis Ulang Alur? Pemetaan yang sudah Anda buat akan hilang (gunakan &quot;Simpan pemetaan&quot; terlebih dahulu untuk menyimpannya).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Mulai dari awal? Paket, hasil pemindaian, dan semua yang telah Anda isi akan dibuang. Paket yang sudah ditulis ke folder output tidak dihapus.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{0} alamat email di {1} tercakup oleh pemindahan ini, sehingga tidak tercantum di atas. Untuk memberi salah satunya alamat yang berbeda, kosongkan kotak ini, isi barisnya, lalu masukkan kembali pemindahan domain.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>Tidak dapat membaca folder {0}: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Tinjau: nama kolom ini diganti di semua tempat yang muncul dalam ekspresi alur, yang dapat mencakup kolom bernama sama dari daftar lain. Pastikan masing-masing merujuk ke daftar yang mengganti namanya.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} nama kolom diganti di semua tempat yang muncul dalam ekspresi. Pastikan kolom tersebut merujuk ke daftar yang mengganti namanya, bukan kolom bernama sama dari daftar lain (lihat laporan).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Hentikan penyalinan sekarang? Formulir yang sedang disalin akan terputus dan mungkin tertinggal setengah jadi di akun target; hapus di Microsoft Forms jika itu terjadi. Formulir yang sudah selesai tetap disimpan.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Pilih</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Log penyalinan</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>Mulai menyalin 1 formulir</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>Formulir telah disalin, tetapi gambarnya tidak dapat diperiksa ({0}). Buka di Microsoft Forms dan periksa gambar latar belakang dan header.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Periksa koneksi dan proses masuk Anda, lalu klik Muat ulang formulir. Detail: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Formulir Anda tidak dapat dimuat</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>1 formulir dimuat.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>Log telah disalin ke clipboard.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>Log tidak dapat disalin karena program lain sedang menggunakan clipboard. Coba lagi.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Log penyalinan</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Berikutnya: jika alur menggunakan formulir ini, buka Tulis Ulang Alur dari jendela utama. Alat ini membaca ID formulir yang disimpan oleh penyalinan ini dan mengarahkan setiap alur ke formulir baru.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Formulir tidak ditemukan</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>Yang disalin: pertanyaan, percabangan, pengaturan, dan tema. Yang tidak: respons (gunakan Ekspor respons di langkah pertama untuk menyimpannya ke Excel), kolaborator, dan orang yang diberi akses ke formulir. Setiap salinan adalah formulir baru milik akun target, dan gambar mungkin perlu ditambahkan lagi.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Penyalinan selesai: formulir telah disalin</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Filter aktif: Pilih Semua dan Batalkan Semua Pilihan berlaku untuk {0} formulir yang ditampilkan.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>{0} dari formulir yang dipilih sudah pernah disalin; menyalinnya lagi akan membuat duplikat.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Langkah {0} dari {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 formulir akan disalin dari {1} ke {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>{0} dari formulir yang dipilih akan memiliki judul lebih panjang dari {1} karakter setelah sufiks ditambahkan. Microsoft Forms mungkin menolaknya; persingkat sufiksnya.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Tampilan tidak dapat disalin: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>Tampilan '{0}' tidak disalin (tampilan {1})</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>Tampilan '{0}' tidak dapat dibuat: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>Tampilan '{0}' dibuat, tetapi beberapa pengaturan tidak dapat diterapkan: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>Tampilan '{0}': filter atau pengurutannya tidak dapat diterapkan dan dilewati</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>Tampilan '{0}': kolom yang tidak ada di target dilewati: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} catatan tentang tampilan, pengaturan, atau jenis konten: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>Pengaturan daftar tidak dapat dibaca, sehingga tidak ada yang disalin: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>Pengaturan daftar yang tidak dapat diterapkan: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Aturan validasi atau pemformatan tidak dapat diterapkan ke: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>Jenis konten '{0}' tidak dapat disalin: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>Jenis konten '{0}': kolom yang tidak dapat ditambahkan ke dalamnya: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>Templat dokumen pustaka tidak dapat disalin.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>Nilai default folder pustaka tidak dapat disalin.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>Nilai default folder telah disalin, tetapi aturan yang menerapkannya ke file baru tidak dapat ditambahkan.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Kolom situs tidak dapat dibaca: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Kolom situs yang tidak dapat dibuat: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Jenis konten situs tidak dapat dibaca: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Jenis konten situs yang tidak dapat dibuat: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Tautan navigasi ({0}) yang tidak dapat dibuat: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Pengaturan situs yang tidak dapat diterapkan: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Kolom situs, jenis konten, navigasi, dan pengaturan</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Menyalin kolom situs, jenis konten, navigasi, dan pengaturan...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>jenis konten</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>Tipe konten '{0}': templat dokumennya tidak dapat disalin.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Masuk dengan registrasi aplikasi: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Tenant: apa saja. Anda memilih akun Microsoft 365 saat masuk.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Proses masuk hanya dapat menuju direktori ini.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Untuk menyambungkan situs di tenant lain, pilih registrasi aplikasi lain di Pengaturan (dengan Tenant ID kosong atau diatur ke tenant tersebut), atau gunakan mode Multi-tenant.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Hanya struktur: kolom, tampilan, pengaturan, dan tipe konten disalin, tetapi tanpa file atau item daftar.</value></data>
 </root>

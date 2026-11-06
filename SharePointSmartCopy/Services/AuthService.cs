@@ -227,6 +227,53 @@ public class AuthService
         finally { _refreshLock.Release(); }
     }
 
+    // Token for Microsoft Graph with extra delegated scopes (e.g. "TermStore.ReadWrite.All") that the normal
+    // sign-in does not request. Same single-flight / pinned-account behavior as the Forms token: the first call
+    // may show a consent screen, later calls are silent. Throws MsalServiceException when the registration has
+    // not been granted the permission; callers translate that for the user.
+    public async Task<string> GetGraphTokenAsync(string[] extraScopes, CancellationToken cancellationToken = default, bool forceRefresh = false)
+    {
+        if (_app == null)
+            throw new InvalidOperationException(Loc.T("Svc_Auth_NotConfiguredSignIn"));
+
+        var scopes   = extraScopes.Select(s => s.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? s : $"https://graph.microsoft.com/{s}").ToArray();
+        var cacheKey = string.Join(' ', scopes);
+
+        if (!forceRefresh && TryGetCachedToken(cacheKey, out var fastToken))
+            return fastToken;
+
+        await _refreshLock.WaitAsync(cancellationToken);
+        try
+        {
+            if (!forceRefresh && TryGetCachedToken(cacheKey, out var cachedToken))
+                return cachedToken;
+
+            var account = await GetPinnedAccountAsync();
+            if (account != null)
+            {
+                try
+                {
+                    var result = await _app.AcquireTokenSilent(scopes, account)
+                        .WithForceRefresh(forceRefresh)
+                        .ExecuteAsync(cancellationToken);
+                    _tokenCache[cacheKey] = result;
+                    return result.AccessToken;
+                }
+                catch (MsalUiRequiredException) { /* new scope = new consent: fall through to interactive */ }
+            }
+
+            var interactive = _app.AcquireTokenInteractive(scopes);
+            interactive = account != null
+                ? interactive.WithAccount(account)
+                : interactive.WithPrompt(Prompt.SelectAccount);
+            var authResult = await interactive.ExecuteAsync(cancellationToken);
+            _pinnedAccountId ??= authResult.Account?.HomeAccountId?.Identifier;
+            _tokenCache[cacheKey] = authResult;
+            return authResult.AccessToken;
+        }
+        finally { _refreshLock.Release(); }
+    }
+
     public async Task SignOutAsync()
     {
         if (_app == null) return;

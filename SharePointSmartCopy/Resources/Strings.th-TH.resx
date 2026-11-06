@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> ปลายทาง: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>รายการปลายทาง</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>ตัวเลือกการคัดลอก</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>คัดลอกเนื้อหาไลบรารี (ไฟล์)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>เมื่อปิด ระบบจะสร้างเฉพาะสคีมาคอลัมน์และการตั้งค่าไลบรารีขึ้นใหม่ โดยไม่คัดลอกไฟล์</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>คัดลอกไฟล์และรายการในรายการ (เนื้อหา)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>เมื่อปิด ระบบจะคัดลอกเฉพาะโครงสร้างโดยไม่มีไฟล์หรือรายการในรายการ ได้แก่ คอลัมน์ มุมมอง การตั้งค่ารายการ ประเภทเนื้อหา และในขอบเขตทั้งไซต์ จะรวมคอลัมน์ไซต์ การนำทาง และการตั้งค่าไซต์ด้วย</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>หากมีไฟล์อยู่แล้ว:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>ข้าม</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>เขียนทับ</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>ทุกเวอร์ชัน</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>ล่าสุด </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> เวอร์ชัน</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>คัดลอกรายการที่รายการของฉันค้นหาด้วย</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>เมื่อรายการที่เลือกมีคอลัมน์การค้นหา (Lookup) รายการที่ถูกค้นหาจะถูกคัดลอกด้วย เพื่อให้สร้างคอลัมน์และแก้ไขค่าได้ ปิดตัวเลือกนี้เพื่อคัดลอกเฉพาะสิ่งที่คุณเลือก</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>ค่าการค้นหา</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} จับคู่ตามรายการ, {1} จับคู่ตามข้อความ, {2} ไม่พบ</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>ข้อมูลเมตาที่มีการจัดการ</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>คัดลอกค่าคำศัพท์แล้ว {0} รายการ ข้ามไป {1} รายการ (ไม่พบคำศัพท์ในชุดที่คัดลอก)</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>ไม่ได้สร้างคอลัมน์ข้อมูลเมตาที่มีการจัดการ &quot;{0}&quot;: ชุดคำศัพท์ของคอลัมน์นี้เป็นของผู้เช่ารายอื่น และไม่สามารถคัดลอกชุดคำศัพท์ได้ (ลงชื่อเข้าใช้ผู้เช่าทั้งสองราย และให้สิทธิ์ TermStore.ReadWrite.All)</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>คัดลอกชุดคำศัพท์ &quot;{0}&quot; ไปยังปลายทางแล้ว: สร้าง {1} รายการ มีอยู่แล้ว {2} รายการ</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>คัดลอกชุดคำศัพท์ของข้อมูลเมตาที่มีการจัดการไปยังผู้เช่าเป้าหมาย</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>คอลัมน์ข้อมูลเมตาที่มีการจัดการผูกกับชุดคำศัพท์ในที่เก็บคำศัพท์ของผู้เช่าต้นทาง เมื่อเปิดใช้งานตัวเลือกนี้ ชุดคำศัพท์ (คำศัพท์ ป้ายชื่อ คำพ้องความหมาย คำอธิบาย) จะถูกคัดลอกไปยังที่เก็บคำศัพท์ของเป้าหมาย คอลัมน์จะผูกกับสำเนา และแต่ละค่าจะถูกแมปใหม่ ต้องใช้สิทธิ์ TermStore.ReadWrite.All (ไม่บังคับ) และบทบาทของที่เก็บคำศัพท์ที่เป้าหมาย</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>ค้นหาในรายการ "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>ค้นหาในรายการในเว็บอื่น</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>ข้อมูลเมตาที่มีการจัดการ: ชุดคำศัพท์ของคอลัมน์จะถูกคัดลอกไปยังผู้เช่าเป้าหมาย</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>ข้อมูลเมตาที่มีการจัดการ: ใช้ชุดคำศัพท์เดียวกัน (ผู้เช่าเดียวกัน)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>ไม่ได้สร้างฟิลด์ที่แสดงผล "{0}": คอลัมน์การค้นหา "{1}" ไม่อยู่ในรายการเป้าหมาย</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>ไม่ได้สร้างฟิลด์ที่แสดงผล "{0}": {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>ลงชื่อเข้าใช้ด้วยการลงทะเบียนแอป:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>โครงสร้างที่จะคัดลอก</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>ทุกอย่างที่เลือกไว้ที่นี่จะถูกสร้างใหม่ที่ปลายทางพร้อมกับข้อมูล รายการหรือไลบรารีที่มีอยู่แล้วที่นั่นจะได้รับเฉพาะประเภทเนื้อหาและมุมมองที่ยังขาดอยู่</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>มุมมอง (ตัวกรอง การจัดกลุ่ม คอลัมน์ มุมมองเริ่มต้น มุมมองปฏิทินและกระดาน)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>การตั้งค่ารายการ (การอนุมัติ การเช็คเอาต์ ไฟล์แนบ โฟลเดอร์ ความปลอดภัยระดับรายการ)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>ประเภทเนื้อหาและเทมเพลตเอกสาร</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>กฎการตรวจสอบและการจัดรูปแบบคอลัมน์</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>เทมเพลตไลบรารีและค่าเริ่มต้นของโฟลเดอร์</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>คอลัมน์ไซต์และประเภทเนื้อหาของไซต์</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>การตั้งค่าไซต์ (คำอธิบาย การเปิดใช้งานด่วน มุมมองแบบต้นไม้ และอื่น ๆ)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>มุมมอง</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>การตั้งค่ารายการ</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>ประเภทเนื้อหา</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>กฎคอลัมน์</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>เทมเพลตและค่าเริ่มต้น</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>คอลัมน์และประเภทของไซต์</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>การนำทาง</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>การตั้งค่าไซต์</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>รายการค้นหา</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>ชุดคำศัพท์</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>โครงสร้าง: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>ไม่มี</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>แสดงเพิ่มเติม</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>แสดงน้อยลง</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>คัดลอกการนำทาง (Quick Launch และแถบด้านบน)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>แทนที่การนำทางของปลายทางด้วยลิงก์จากต้นทาง URL จะถูกแมปใหม่ไปยังไซต์ปลายทาง</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>คัดลอกสิทธิ์</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>คัดลอกค่าคอลัมน์แบบกำหนดเอง</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>คัดลอกค่าคอลัมน์ประเภทข้อความ ตัวเลข ตัวเลือก วันที่ บูลีน หลายตัวเลือก บุคคล และ Managed Metadata ไม่รองรับคอลัมน์การค้นหา</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>เปิดใช้ 'คัดลอกค่าคอลัมน์แบบกำหนดเอง' เพื่อกำหนดค่าการแมป</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>ระบบจะคัดลอกค่าคอลัมน์แบบกำหนดเองทั้งหมด ใช้การแมปเพื่อควบคุมว่าจะสร้างคอลัมน์ใดที่ปลายทาง</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>ระบบจะคัดลอกค่าคอลัมน์แบบกำหนดเองทั้งหมด ใช้การแมปคอลัมน์ (ด้านบน) เพื่อควบคุมว่าจะสร้างคอลัมน์ใดที่ปลายทาง</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>ระบบจะคัดลอกค่าคอลัมน์แบบกำหนดเองเสมอสำหรับรายการในรายการ</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>โหมดการคัดลอก</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>ชื่อ</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Client ID (Application ID)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Tenant ID</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>ใช้ 'common' สำหรับหลายผู้เช่า หรือใช้ GUID หรือโดเมนของผู้เช่าของคุณ</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>เว้นว่างไว้หรือป้อน 'common' เพื่อลงชื่อเข้าใช้ผู้เช่ารายใดก็ได้ GUID หรือโดเมนของผู้เช่า (เช่น contoso.onmicrosoft.com) จะจำกัดการลงชื่อเข้าใช้เฉพาะผู้เช่ารายนั้น</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>เติมชื่อไซต์ต้นทางและปลายทางนำหน้าชื่อไฟล์รายงานเริ่มต้น</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>ออกจากระบบ</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>ธีม:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>โหมดไลบรารีและรายการ</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>โหมดทั้งไซต์</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>โหมดหน้าไซต์</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>คัดลอกเนื้อหาไลบรารี (ไฟล์)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>คัดลอกไฟล์และรายการในรายการ (เนื้อหา)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>คัดลอกประวัติเวอร์ชัน</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>N เวอร์ชันล่าสุด</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>คัดลอกการนำทาง</value></data>
@@ -939,7 +979,7 @@
   <data name="Forms_ReloadForms" xml:space="preserve"><value>โหลดฟอร์มใหม่</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>คลิก “โหลดฟอร์มของฉัน” เพื่อดูฟอร์มของคุณ</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>ไม่พบฟอร์มในบัญชีนี้</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>คัดลอก {0} ฟอร์ม</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>เริ่มคัดลอก {0} ฟอร์ม</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>คัดลอกฟอร์มเพิ่มเติม</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>เลือกตำแหน่งที่จะวางสำเนา</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>ผู้เช่าเดียว: สำเนาจะถูกสร้างในบัญชีเดียวกับที่คุณใช้อยู่ ข้างฉบับต้นฉบับ</value></data>
@@ -963,7 +1003,7 @@
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>กำลังคัดลอกฟอร์ม</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>กำลังเริ่ม…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>ฟอร์ม {0} จาก {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>กำลังยกเลิกหลังจากฟอร์มปัจจุบัน…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>กำลังยกเลิก… กำลังหยุดฟอร์มที่กำลังคัดลอกอยู่</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>คัดลอกเสร็จสิ้น: คัดลอกครบทั้ง {0} ฟอร์ม</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>สำเนาของคุณอยู่ใน {0} เปิด Microsoft Forms เพื่อดู หรือใช้ตารางด้านล่าง</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>คัดลอกเสร็จสิ้น: คัดลอกแล้ว {0} จาก {1} ฟอร์ม บางรายการต้องได้รับการตรวจสอบ</value></data>
@@ -971,7 +1011,7 @@
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>คัดลอกเสร็จสิ้น แต่ไม่ได้คัดลอกฟอร์มใดเลย</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>ดูเหตุผลในคอลัมน์รายละเอียด สาเหตุที่พบบ่อยคือการลงทะเบียนปลายทางไม่มีสิทธิ์ Microsoft Forms หรือบัญชีไม่มีสิทธิ์เข้าถึง Forms</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>ยกเลิกการคัดลอกหลังจาก {0} จาก {1} ฟอร์ม</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>ฟอร์มที่แสดงด้านล่างเสร็จสมบูรณ์แล้ว ฟอร์มที่กำลังคัดลอกเมื่อคุณยกเลิกยังไม่เสร็จและมองไม่เห็น</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>ฟอร์มที่ทำเครื่องหมายว่าคัดลอกแล้วด้านล่างเสร็จสมบูรณ์แล้ว ฟอร์มที่กำลังคัดลอกเมื่อคุณยกเลิกยังไม่เสร็จและอาจค้างอยู่ในสถานะไม่สมบูรณ์ที่ปลายทาง แถวของฟอร์มนั้นจะแสดง ID ของสำเนาหากมีการสร้างไว้</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>คัดลอกแล้ว</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>มีคำเตือน</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>ล้มเหลว</value></data>
@@ -986,7 +1026,7 @@
   <data name="Forms_OpenSelected" xml:space="preserve"><value>เปิดสำเนาที่เลือก</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>เปิด Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>ส่งออกผลลัพธ์…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>แสดงแผนที่ ID ฟอร์ม</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>เปิด ID ฟอร์มที่บันทึกไว้</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>เลือกฟอร์มที่คัดลอกในตารางก่อน</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>บันทึกผลลัพธ์ไปที่ {0} แล้ว</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>คำแนะนำ: การลงทะเบียนแอปไม่มีที่อยู่การเปลี่ยนเส้นทางที่ตรงกัน ใน Entra ใต้ Authentication ให้เพิ่มแพลตฟอร์ม “แอปพลิเคชันมือถือและเดสก์ท็อป” พร้อม http://localhost แล้วลองอีกครั้ง</value></data>
@@ -1105,7 +1145,7 @@
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(ฟอร์มที่ไม่มีชื่อเรื่อง)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>ฟอร์มต้นทาง</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>เลือกจากฟอร์มของปลายทาง</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>เลือกฟอร์มจากบัญชีปลายทาง คลิก “โหลดฟอร์มจากบัญชีปลายทาง” ก่อน</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>เลือกฟอร์มจากบัญชีปลายทาง รายการจะโหลดเมื่อเปิดขั้นตอนนี้ หากว่างเปล่า ให้คลิก “โหลดชื่อฟอร์มใหม่…”</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>เติมจากการลงชื่อเข้าใช้ปลายทาง ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>บัญชีต้นทางของคุณ ถูกแทนที่ด้วยบัญชีปลายทางของคุณ</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>เติมจากการลงชื่อเข้าใช้ของคุณ ({0} → {1}) ล้างทั้งสองช่องเพื่อไม่เปลี่ยนโดเมนอีเมล</value></data>
@@ -1133,7 +1173,7 @@
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ แพ็กเกจ {0} รายการถูกเขียนโดยเครื่องมือนี้และมีค่าของปลายทางอยู่แล้ว ลบออก (✕ ในรายการ) แล้วเพิ่มต้นฉบับที่ส่งออก</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} ไซต์ไม่มีปลายทาง ไซต์ที่ปล่อยไว้ตามเดิมจะยังชี้ไปยังผู้เช่าต้นทาง</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} รายการจะล้มเหลวเมื่อนำเข้า แก้ไขรายการที่ทำเครื่องหมาย “จะล้มเหลว” เพื่อดำเนินการต่อ</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ ยังไม่ได้จับคู่รายการ ย้อนกลับหนึ่งขั้นตอนแล้วไปข้างหน้าอีกครั้งเพื่อลองใหม่</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ ยังไม่ได้จับคู่รายการ คลิก “จับคู่อีกครั้ง” เพื่อลองใหม่</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} ฟอร์มต้องมี ID ฟอร์มปลายทางที่ถูกต้องเพื่อดำเนินการต่อ</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>เปลี่ยนต้นทาง…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>ลงชื่อเข้าใช้ในชื่อ {0} ที่อยู่ SharePoint ของผู้เช่าต้นทางคือ {1}</value></data>
@@ -1398,11 +1438,65 @@
   <data name="Flows_CloseTitle" xml:space="preserve"><value>ปิดขณะกำลังทำงานหรือไม่</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>เครื่องมือยังทำงานอยู่ (สแกน จับคู่ ลงชื่อเข้าใช้ หรือเขียนแพ็กเกจ) การปิดตอนนี้จะหยุดการทำงาน ปิดต่อไปหรือไม่</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>ไม่สามารถเพิ่ม{0}ลงในแบบฟอร์มใหม่โดยอัตโนมัติได้ บันทึกสำเนาของไฟล์เป็น {1} แล้ว: เพิ่มอีกครั้งใน Microsoft Forms</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>ประวัติเวอร์ชันของรายการในลิสต์:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>เหมือนไฟล์</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>ทุกเวอร์ชัน</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>เฉพาะปัจจุบัน</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>คัดลอกประวัติเวอร์ชันของรายการในลิสต์ใหม่แต่ละรายการ (ค่า วันที่ และผู้แก้ไข) โดยเล่นซ้ำเวอร์ชันของรายการนั้นที่ปลายทาง &quot;เหมือนไฟล์&quot; จะทำตามตัวเลือกเวอร์ชันไฟล์ด้านบน รายการที่มีอยู่แล้วที่ปลายทางจะเก็บประวัติของตัวเองไว้ คอลัมน์บุคคล การค้นหา อนุกรมวิธาน และลิงก์จะคัดลอกเฉพาะค่าปัจจุบัน</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>ประวัติเวอร์ชัน: บางส่วนไม่ได้คัดลอก ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>ไม่ได้คัดลอกประวัติเวอร์ชัน ({0}) รายการมีเฉพาะค่าปัจจุบัน</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>รายการ:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>ไม่ได้ใช้การย้ายโดเมนอีเมล: ต้องกรอกทั้งสองโดเมน โดยไม่มีช่องว่างหรือ @ เกินมา (เช่น contoso.com และ fabrikam.com)</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>ลบแพ็กเกจทั้งหมด และทิ้งผลการสแกนและทุกอย่างที่คุณกรอกในขั้นตอนถัดไปหรือไม่</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>ปิด เขียนโฟลว์ใหม่ หรือไม่ การแมปที่สร้างไว้จนถึงตอนนี้จะสูญหาย (ใช้ บันทึกการแมป ก่อนเพื่อเก็บไว้)</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>เริ่มใหม่หรือไม่ แพ็กเกจ ผลการสแกน และทุกอย่างที่คุณกรอกจะถูกทิ้ง แพ็กเกจที่เขียนไปยังโฟลเดอร์เอาต์พุตแล้วจะไม่ถูกลบ</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>ที่อยู่อีเมล {0} รายการบน {1} อยู่ภายใต้การย้ายนี้ จึงไม่แสดงไว้ด้านบน หากต้องการกำหนดที่อยู่อื่นให้รายการใดรายการหนึ่ง ให้ล้างช่องเหล่านี้ กรอกแถวนั้น แล้วป้อนการย้ายโดเมนอีกครั้ง</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>ไม่สามารถอ่านโฟลเดอร์ {0}: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>โปรดตรวจสอบ: ชื่อคอลัมน์เหล่านี้ถูกเปลี่ยนชื่อทุกที่ที่ปรากฏในนิพจน์ของโฟลว์ ซึ่งอาจรวมถึงคอลัมน์ชื่อเดียวกันของรายการอื่น ตรวจสอบว่าแต่ละชื่ออ้างถึงรายการที่เปลี่ยนชื่อ</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>ชื่อคอลัมน์ {0} รายการถูกเปลี่ยนชื่อทุกที่ที่ปรากฏในนิพจน์ ตรวจสอบว่าอ้างถึงรายการที่เปลี่ยนชื่อ ไม่ใช่คอลัมน์ชื่อเดียวกันของรายการอื่น (ดูรายงาน)</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>หยุดคัดลอกตอนนี้หรือไม่ ฟอร์มที่กำลังคัดลอกอยู่จะถูกตัดกลางคันและอาจค้างอยู่ในสถานะไม่สมบูรณ์ในบัญชีปลายทาง หากเป็นเช่นนั้นให้ลบใน Microsoft Forms ฟอร์มที่เสร็จแล้วจะถูกเก็บไว้</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>เลือก</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>บันทึกการคัดลอก</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>เริ่มคัดลอก 1 ฟอร์ม</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>คัดลอกฟอร์มแล้ว แต่ตรวจสอบรูปภาพไม่ได้ ({0}) เปิดใน Microsoft Forms และตรวจสอบรูปพื้นหลังและรูปส่วนหัว</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>ตรวจสอบการเชื่อมต่อและการลงชื่อเข้าใช้ แล้วคลิก โหลดฟอร์มใหม่ รายละเอียด: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>ไม่สามารถโหลดฟอร์มของคุณได้</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>โหลด 1 ฟอร์มแล้ว</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>คัดลอกบันทึกไปยังคลิปบอร์ดแล้ว</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>ไม่สามารถคัดลอกบันทึกได้เพราะโปรแกรมอื่นกำลังใช้คลิปบอร์ด ลองอีกครั้ง</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>บันทึกการคัดลอก</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>ถัดไป: หากมีโฟลว์ที่ใช้ฟอร์มเหล่านี้ ให้เปิด เขียนโฟลว์ใหม่ จากหน้าต่างหลัก ซึ่งจะอ่าน ID ฟอร์มที่บันทึกไว้โดยการคัดลอกนี้ และชี้แต่ละโฟลว์ไปยังฟอร์มใหม่</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>ไม่พบฟอร์ม</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>สิ่งที่คัดลอก: คำถาม การแตกสาขา การตั้งค่า และธีม สิ่งที่ไม่คัดลอก: การตอบกลับ (ใช้ ส่งออกการตอบกลับ… ในขั้นตอนแรกเพื่อบันทึกลง Excel) ผู้ร่วมงาน และผู้ที่แชร์ฟอร์มด้วย แต่ละสำเนาเป็นฟอร์มใหม่ที่เป็นของบัญชีปลายทาง และอาจต้องเพิ่มรูปภาพอีกครั้ง</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>คัดลอกเสร็จสิ้น: คัดลอกฟอร์มแล้ว</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>ตัวกรองเปิดอยู่: เลือกทั้งหมด และ ยกเลิกการเลือกทั้งหมด ใช้กับ {0} ฟอร์มที่แสดง</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>{0} จากฟอร์มที่เลือกเคยถูกคัดลอกแล้ว การคัดลอกซ้ำจะสร้างรายการซ้ำ</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>ขั้นตอนที่ {0} จาก {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>จะคัดลอก 1 ฟอร์มจาก {1} ไปยัง {2}</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>{0} จากฟอร์มที่เลือกจะมีชื่อยาวกว่า {1} อักขระเมื่อเพิ่มส่วนต่อท้าย Microsoft Forms อาจปฏิเสธ ให้ย่อส่วนต่อท้าย</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>ไม่สามารถคัดลอกมุมมองได้: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>ไม่ได้คัดลอกมุมมอง '{0}' (มุมมองแบบ {1})</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>ไม่สามารถสร้างมุมมอง '{0}' ได้: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>สร้างมุมมอง '{0}' แล้ว แต่ไม่สามารถนำการตั้งค่าบางอย่างไปใช้ได้: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>มุมมอง '{0}': ไม่สามารถนำตัวกรองหรือการเรียงลำดับไปใช้ได้ จึงถูกละเว้น</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>มุมมอง '{0}': คอลัมน์ที่ไม่มีในปลายทางถูกละเว้น: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>หมายเหตุ {0} รายการเกี่ยวกับมุมมอง การตั้งค่า หรือชนิดเนื้อหา: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>ไม่สามารถอ่านการตั้งค่ารายการได้ จึงไม่ได้คัดลอกการตั้งค่าใดเลย: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>การตั้งค่ารายการที่ไม่สามารถนำไปใช้ได้: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>ไม่สามารถนำกฎการตรวจสอบหรือการจัดรูปแบบไปใช้กับ: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>ไม่สามารถคัดลอกชนิดเนื้อหา '{0}' ได้: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>ชนิดเนื้อหา '{0}': คอลัมน์ที่ไม่สามารถเพิ่มลงในชนิดเนื้อหานี้ได้: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>ไม่สามารถคัดลอกเทมเพลตเอกสารของไลบรารีได้</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>ไม่สามารถคัดลอกค่าเริ่มต้นของโฟลเดอร์ในไลบรารีได้</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>คัดลอกค่าเริ่มต้นของโฟลเดอร์แล้ว แต่ไม่สามารถเพิ่มกฎที่นำค่าเหล่านั้นไปใช้กับไฟล์ใหม่ได้</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>ไม่สามารถอ่านคอลัมน์ไซต์ได้: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>คอลัมน์ไซต์ที่ไม่สามารถสร้างได้: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>ไม่สามารถอ่านชนิดเนื้อหาของไซต์ได้: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>ชนิดเนื้อหาของไซต์ที่ไม่สามารถสร้างได้: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>ลิงก์การนำทาง ({0}) ที่ไม่สามารถสร้างได้: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>การตั้งค่าไซต์ที่ไม่สามารถนำไปใช้ได้: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>คอลัมน์ไซต์ ชนิดเนื้อหา การนำทาง และการตั้งค่า</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>กำลังคัดลอกคอลัมน์ไซต์ ชนิดเนื้อหา การนำทาง และการตั้งค่า...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>ชนิดเนื้อหา</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>ประเภทเนื้อหา '{0}': ไม่สามารถคัดลอกเทมเพลตเอกสารได้</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>ลงชื่อเข้าใช้ด้วยการลงทะเบียนแอป: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>ผู้เช่า: ใดก็ได้ คุณเลือกบัญชี Microsoft 365 เมื่อลงชื่อเข้าใช้</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>ผู้เช่า: {0} การลงชื่อเข้าใช้ทำได้เฉพาะไดเรกทอรีนี้เท่านั้น</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>หากต้องการเชื่อมต่อไซต์ในผู้เช่ารายอื่น ให้เลือกการลงทะเบียนแอปอื่นในการตั้งค่า (โดยให้ Tenant ID ว่างไว้หรือตั้งเป็นผู้เช่ารายนั้น) หรือใช้โหมดหลายผู้เช่า</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>เฉพาะโครงสร้าง: ระบบจะคัดลอกคอลัมน์ มุมมอง การตั้งค่า และประเภทเนื้อหา แต่จะไม่คัดลอกไฟล์หรือรายการในรายการ</value></data>
 </root>

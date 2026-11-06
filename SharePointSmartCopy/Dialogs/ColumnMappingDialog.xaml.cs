@@ -1,4 +1,4 @@
-using SharePointSmartCopy.Localization;
+﻿using SharePointSmartCopy.Localization;
 using System.ComponentModel;
 using System.Windows;
 using SharePointSmartCopy.Models;
@@ -10,22 +10,49 @@ public partial class ColumnMappingDialog : Window
 {
     private readonly MainViewModel _vm;
 
+    // One entry per editable mapping. Item-level copies have one per selected list (Context set); every
+    // other scope has a single entry with a null Context that edits the shared VM.ColumnMappings.
+    private sealed record Entry(ListMappingContext? Context, ColumnMappingViewModel Vm);
+    private readonly List<Entry> _entries = [];
+
     public ColumnMappingDialog(MainViewModel vm)
     {
         _vm = vm;
+        MappingRow.TermSetsWillBeCopied = vm.IsMultiTenant && vm.CopyTermSets;
         InitializeComponent();
 
-        var dlgVm = new ColumnMappingViewModel(
-            vm.SourceColumns, vm.TargetColumns, vm.ColumnMappings,
-            isLibraryScope: vm.IsLibraryOrSiteScope);
-        DataContext = dlgVm;
+        if (vm.ListMappingContexts.Count > 0)
+        {
+            foreach (var ctx in vm.ListMappingContexts)
+                _entries.Add(new Entry(ctx, new ColumnMappingViewModel(
+                    ctx.SourceColumns, ctx.TargetColumns, ctx.Mappings,
+                    isLibraryScope: ctx.IsNewDestination)));
+        }
+        else
+        {
+            _entries.Add(new Entry(null, new ColumnMappingViewModel(
+                vm.SourceColumns, vm.TargetColumns, vm.ColumnMappings,
+                isLibraryScope: vm.IsLibraryOrSiteScope)));
+        }
 
-        foreach (var row in dlgVm.Mappings)
-            row.PropertyChanged += (_, e) =>
-            {
-                if (e.PropertyName == nameof(MappingRow.SelectedTargetItem))
-                    UpdateStatusBar();
-            };
+        foreach (var entry in _entries)
+            foreach (var row in entry.Vm.Mappings)
+                row.PropertyChanged += (_, e) =>
+                {
+                    if (e.PropertyName == nameof(MappingRow.SelectedTargetItem))
+                        UpdateStatusBar();
+                };
+
+        if (_entries[0].Context != null)
+        {
+            ListPicker.ItemsSource = _entries.Select(en => en.Context!.Title).ToList();
+            ListPickerPanel.Visibility = _entries.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
+            ListPicker.SelectedIndex = 0; // fires SelectionChanged, which sets the DataContext
+        }
+        else
+        {
+            DataContext = _entries[0].Vm;
+        }
 
         UpdateStatusBar();
         if (vm.ColumnLoadError != null)
@@ -33,6 +60,17 @@ public partial class ColumnMappingDialog : Window
     }
 
     private ColumnMappingViewModel DlgVM => (ColumnMappingViewModel)DataContext;
+
+    // Columns the current list's rows can map to.
+    private IReadOnlyList<ColumnDefinition> CurrentTargetColumns =>
+        _entries.First(en => en.Vm == DlgVM).Context?.TargetColumns ?? (IReadOnlyList<ColumnDefinition>)_vm.TargetColumns;
+
+    private void ListPicker_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (ListPicker.SelectedIndex < 0) return;
+        DataContext = _entries[ListPicker.SelectedIndex].Vm;
+        UpdateStatusBar();
+    }
 
     private void AutoMatch_Click(object sender, RoutedEventArgs e)
     {
@@ -48,6 +86,7 @@ public partial class ColumnMappingDialog : Window
         }
         else
         {
+            var targets = CurrentTargetColumns;
             foreach (var row in DlgVM.Mappings)
             {
                 if (row.Mapping.Status == MappingStatus.ManuallyMapped) continue;
@@ -55,10 +94,10 @@ public partial class ColumnMappingDialog : Window
                 // Name matches only count when the value types are compatible — a Person
                 // column must not silently match a Text column that shares its name.
                 var srcType = row.Mapping.SourceColumn.FieldType;
-                var exact = _vm.TargetColumns.FirstOrDefault(t =>
+                var exact = targets.FirstOrDefault(t =>
                     t.InternalName.Equals(row.Mapping.SourceColumn.InternalName, StringComparison.OrdinalIgnoreCase) &&
                     ColumnMapping.AreTypesCompatible(srcType, t.FieldType));
-                var fuzzy = exact ?? _vm.TargetColumns.FirstOrDefault(t =>
+                var fuzzy = exact ?? targets.FirstOrDefault(t =>
                     t.DisplayName.Equals(row.Mapping.SourceColumn.DisplayName, StringComparison.OrdinalIgnoreCase) &&
                     ColumnMapping.AreTypesCompatible(srcType, t.FieldType));
 
@@ -80,8 +119,26 @@ public partial class ColumnMappingDialog : Window
 
     private void Save_Click(object sender, RoutedEventArgs e)
     {
-        _vm.ColumnMappings.Clear();
-        foreach (var row in DlgVM.Mappings)
+        // Saves every list's mapping, not just the one currently shown.
+        foreach (var entry in _entries)
+        {
+            if (entry.Context != null)
+                SaveRows(entry.Vm, entry.Context.TargetColumns, entry.Context.Mappings);
+            else
+            {
+                var shared = new List<ColumnMapping>();
+                SaveRows(entry.Vm, _vm.TargetColumns, shared);
+                _vm.ColumnMappings.Clear();
+                foreach (var m in shared) _vm.ColumnMappings.Add(m);
+            }
+        }
+        DialogResult = true;
+    }
+
+    private static void SaveRows(ColumnMappingViewModel dlg, IReadOnlyList<ColumnDefinition> targetColumns, ICollection<ColumnMapping> dest)
+    {
+        dest.Clear();
+        foreach (var row in dlg.Mappings)
         {
             var sel = row.SelectedTargetItem;
             if (sel == null || sel.IsSkip)
@@ -98,16 +155,15 @@ public partial class ColumnMappingDialog : Window
             }
             else
             {
-                row.Mapping.TargetColumn = _vm.TargetColumns.FirstOrDefault(
+                row.Mapping.TargetColumn = targetColumns.FirstOrDefault(
                     t => t.InternalName == sel.InternalName);
                 row.Mapping.CreateNew    = false;
                 row.Mapping.Status       = row.Mapping.TargetColumn != null
                     ? MappingStatus.ManuallyMapped
                     : MappingStatus.Unmatched;
             }
-            _vm.ColumnMappings.Add(row.Mapping);
+            dest.Add(row.Mapping);
         }
-        DialogResult = true;
     }
 
     private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -287,6 +343,24 @@ public class MappingRow : INotifyPropertyChanged
             return "✓";
         }
     }
+
+    // Set by the dialog: a managed-metadata column's term set will be copied to the target tenant.
+    public static bool TermSetsWillBeCopied { get; set; }
+
+    // One line under the column name that says what the column is bound to and what the copy will do about it.
+    public string Info
+    {
+        get
+        {
+            var c = Mapping.SourceColumn;
+            if (ColumnDefinition.IsLookupType(c.FieldType))
+                return string.IsNullOrEmpty(c.LookupListTitle) ? Loc.T("Dlg_ColLooksUpOther") : Loc.T("Dlg_ColLooksUp", c.LookupListTitle);
+            if (ColumnDefinition.IsTaxonomyType(c.FieldType))
+                return TermSetsWillBeCopied ? Loc.T("Dlg_ColTermSetCopy") : Loc.T("Dlg_ColTermSetSame");
+            return string.Empty;
+        }
+    }
+    public bool HasInfo => Info.Length > 0;
 
     public MappingRow(ColumnMapping mapping, TargetColumnOption? initialSelection, List<TargetColumnOption> compatibleOptions)
     {

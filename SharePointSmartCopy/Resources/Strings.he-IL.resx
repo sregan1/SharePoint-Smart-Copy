@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> יעד: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>רשימת יעד</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>אפשרויות העתקה</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>העתקת תוכן הספרייה (קבצים)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>כשהאפשרות כבויה, נוצרים מחדש רק סכמת העמודות והגדרות הספרייה — לא מועתקים קבצים.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>העתקת קבצים ופריטי רשימה (תוכן)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>כאשר האפשרות כבויה, מועתק המבנה בלבד ללא קבצים או פריטי רשימה: עמודות, תצוגות, הגדרות רשימה, סוגי תוכן, ובהיקף האתר כולו גם עמודות אתר, ניווט והגדרות אתר.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>אם הקובץ קיים:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>דלג</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>החלף</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>כל הגרסאות</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>האחרונות </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> גרסאות</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>העתק גם רשימות שהרשימות שלי מבצעות בהן חיפוש</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>כאשר לרשימה שנבחרה יש עמודת בדיקה (Lookup), הרשימה שאליה היא מפנה מועתקת גם היא, כך שניתן ליצור את העמודה ולפתור את הערכים שלה. כבה אפשרות זו כדי להעתיק רק את מה שבחרת.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>ערכי בדיקה</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} הותאמו לפי פריט, {1} הותאמו לפי טקסט, {2} לא נמצאו.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>מטא-נתונים מנוהלים</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>הועתקו {0} ערכי מונח, {1} הושמטו (המונח לא נמצא בקבוצה שהועתקה).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>עמודת המטא-נתונים המנוהלים &quot;{0}&quot; לא נוצרה: קבוצת המונחים שלה שייכת ללקוח אחר, והעתקת קבוצות מונחים אינה זמינה (היכנס לשני הלקוחות והענק את ההרשאה TermStore.ReadWrite.All).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>קבוצת המונחים &quot;{0}&quot; הועתקה ליעד: {1} נוצרו, {2} כבר היו קיימים.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>העתק קבוצות מונחים של מטא-נתונים מנוהלים ללקוח היעד</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>עמודת מטא-נתונים מנוהלים קשורה לקבוצת מונחים במאגר המונחים של לקוח המקור. כאשר האפשרות מופעלת, קבוצת המונחים (מונחים, תוויות, מילים נרדפות, תיאורים) מועתקת למאגר המונחים של היעד, העמודה נקשרת לעותק וכל ערך ממופה מחדש. נדרשת ההרשאה האופציונלית TermStore.ReadWrite.All ותפקיד במאגר המונחים ביעד.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>מבצע חיפוש ברשימה "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>מבצע חיפוש ברשימה באתר אינטרנט אחר</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>מטא-נתונים מנוהלים: קבוצת המונחים שלהם תועתק ללקוח היעד</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>מטא-נתונים מנוהלים: משתמש באותה קבוצת מונחים (אותו לקוח)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>השדה המוקרן "{0}" לא נוצר: עמודת החיפוש שלו "{1}" אינה ברשימת היעד.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>השדה המוקרן "{0}" לא נוצר: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>היכנס באמצעות רישום אפליקציה:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>המבנה להעתקה</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>כל מה שמסומן כאן נוצר מחדש ביעד יחד עם הנתונים. רשימה או ספרייה שכבר קיימות שם מקבלות רק את סוגי התוכן והתצוגות שחסרים להן.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>תצוגות (מסננים, קיבוץ, עמודות, תצוגת ברירת מחדל, תצוגות לוח שנה ולוח)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>הגדרות רשימה (אישור, משיכה לעריכה, קבצים מצורפים, תיקיות, אבטחה ברמת הפריט)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>סוגי תוכן ותבניות המסמך שלהם</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>כללי אימות ועיצוב של עמודות</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>תבנית ספרייה וערכי ברירת מחדל של תיקיות</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>עמודות אתר וסוגי תוכן של אתר</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>הגדרות אתר (תיאור, הפעלה מהירה, תצוגת עץ ועוד)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>תצוגות</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>הגדרות רשימה</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>סוגי תוכן</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>כללי עמודות</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>תבניות וברירות מחדל</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>עמודות וסוגים של אתר</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>ניווט</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>הגדרות אתר</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>רשימות בדיקה</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>ערכות מונחים</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>מבנה: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>אין</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>הצג עוד</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>הצג פחות</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>העתקת ניווט (הפעלה מהירה והסרגל העליון)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>מחליף את הניווט ביעד בקישורי המקור. כתובות ה-URL ממופות מחדש לאתר היעד.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>העתקת הרשאות</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>העתקת ערכי עמודות מותאמות אישית</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>מעתיק ערכי עמודות מסוג טקסט, מספר, בחירה, תאריך, בוליאני, בחירה מרובה, אדם ומטא-נתונים מנוהלים. עמודות חיפוש אינן נתמכות.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>הפעל את 'העתקת ערכי עמודות מותאמות אישית' כדי להגדיר מיפויים.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>כל ערכי העמודות המותאמות אישית מועתקים. השתמש במיפויים כדי לשלוט באילו עמודות ייווצרו ביעד.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>כל ערכי העמודות המותאמות אישית מועתקים. השתמשו במיפוי עמודות (למעלה) כדי לקבוע אילו עמודות ייווצרו ביעד.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>ערכי עמודות מותאמות אישית מועתקים תמיד עבור פריטי רשימה.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>מצב העתקה</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>שם</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>מזהה לקוח (מזהה אפליקציה)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>מזהה דייר</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>השתמש ב-'common' עבור ריבוי דיירים, או ב-GUID או בדומיין של הדייר שלך.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>השאר ריק או הזן 'common' כדי להתחבר לכל דייר. GUID או דומיין של דייר (לדוגמה contoso.onmicrosoft.com) מגבילים את ההתחברות לאותו דייר בלבד.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>הוספת שמות אתר המקור והיעד כקידומת לשמות קובצי הדוח המוגדרים כברירת מחדל</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>התנתק</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>ערכת נושא:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>מצב ספריות ורשימות</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>מצב האתר כולו</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>מצב דפי האתר</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>העתקת תוכן הספרייה (קבצים)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>העתקת קבצים ופריטי רשימה (תוכן)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>העתקת היסטוריית גרסאות</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>N הגרסאות האחרונות</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>העתקת ניווט</value></data>
@@ -939,7 +979,7 @@
   <data name="Forms_ReloadForms" xml:space="preserve"><value>טען טפסים מחדש</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>לחץ על &quot;טען את הטפסים שלי&quot; כדי לראות את הטפסים שלך.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>לא נמצאו טפסים בחשבון זה.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>העתק {0} טפסים</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>התחל להעתיק {0} טפסים</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>העתק טפסים נוספים</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>בחר לאן ילכו ההעתקים</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>דייר יחיד: ההעתקים נוצרים באותו חשבון שבו אתה משתמש, לצד המקוריים.</value></data>
@@ -963,7 +1003,7 @@
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>מעתיק טפסים</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>מתחיל…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>טופס {0} מתוך {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>מבטל לאחר הטופס הנוכחי…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>מבטל… הטופס שמועתק כעת נעצר.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>ההעתקה הסתיימה: כל {0} הטפסים הועתקו</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>ההעתקים שלך נמצאים ב-{0}. פתח את Microsoft Forms כדי לראות אותם, או השתמש בטבלה שלמטה.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>ההעתקה הסתיימה: {0} מתוך {1} טפסים הועתקו, חלקם דורשים תשומת לב</value></data>
@@ -971,7 +1011,7 @@
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>ההעתקה הסתיימה, אך אף טופס לא הועתק</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>ראה את העמודה פרטים לסיבה. סיבות נפוצות הן הרשאת Microsoft Forms חסרה ברישום היעד, או חשבון ללא גישה ל-Forms.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>ההעתקה בוטלה לאחר {0} מתוך {1} טפסים</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>הטפסים המפורטים למטה הושלמו. הטופס שהועתק בעת הביטול לא הסתיים ואינו גלוי.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>הטפסים שסומנו למטה כמועתקים הושלמו. הטופס שהועתק בעת הביטול לא הסתיים ועשוי להישאר בנוי חלקית ביעד; בשורה שלו מוצג מזהה ההעתק אם נוצר.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>הועתקו</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>עם אזהרות</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>נכשלו</value></data>
@@ -986,7 +1026,7 @@
   <data name="Forms_OpenSelected" xml:space="preserve"><value>פתח את ההעתק שנבחר</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>פתח את Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>ייצוא תוצאות…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>הצג מיפוי מזהי טפסים</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>פתח מזהי טפסים שמורים</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>בחר קודם טופס שהועתק בטבלה.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>התוצאות נשמרו ב-{0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>רמז: לרישום האפליקציה אין כתובת הפניה תואמת. ב-Entra, תחת אימות, הוסף את הפלטפורמה &quot;אפליקציות לנייד ולשולחן העבודה&quot; עם http://localhost ונסה שוב.</value></data>
@@ -1105,7 +1145,7 @@
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(טופס ללא כותרת)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>טופס מקור</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>בחר מטפסי היעד</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>בחר טופס מחשבון היעד. לחץ קודם על &quot;טען טפסים מחשבון היעד&quot;.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>בחר טופס מחשבון היעד. הרשימה נטענת כשהשלב הזה נפתח; אם היא ריקה, לחץ על &quot;טען שמות טפסים מחדש&quot;.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>מולא מההתחברות ליעד ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>חשבון המקור שלך, הוחלף בחשבון היעד שלך</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>מולא מההתחברויות שלך ({0} ← {1}). נקה את שתי התיבות כדי להשאיר את דומייני הדוא&quot;ל ללא שינוי.</value></data>
@@ -1133,7 +1173,7 @@
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} חבילות נכתבו על ידי הכלי הזה וכבר מכילות את ערכי היעד. הסר אותן (ה-✕ ברשימה) והוסף את הייצוא המקורי.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ ל-{0} אתרים אין יעד. אתר שיישאר כמות שהוא עדיין יצביע על דייר המקור.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} רשימות ייכשלו בייבוא. תקן את הרשימות המסומנות &quot;ייכשל&quot; כדי להמשיך.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ הרשימות עדיין לא הותאמו. חזור שלב אחד אחורה וקדימה שוב כדי לנסות מחדש.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ הרשימות עדיין לא הותאמו. לחץ על &quot;התאם שוב&quot; כדי לנסות מחדש.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} טפסים זקוקים למזהה טופס יעד תקין כדי להמשיך.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>שנה מקור…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>מחובר בשם {0}. כתובת SharePoint של דייר המקור היא {1}.</value></data>
@@ -1398,11 +1438,65 @@
   <data name="Flows_CloseTitle" xml:space="preserve"><value>לסגור בזמן עבודה?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>הכלי עדיין עובד (סריקה, התאמה, התחברות או כתיבת חבילות). סגירה עכשיו תעצור אותו. לסגור בכל זאת?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>לא ניתן היה להוסיף את {0} לטופס החדש באופן אוטומטי. עותק של הקובץ נשמר בשם {1}: הוסף אותו שוב ב-Microsoft Forms.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>היסטוריית גרסאות של פריטי רשימה:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>כמו בקבצים</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>כל הגרסאות</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>הנוכחית בלבד</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>מעתיק את היסטוריית הגרסאות של כל פריט רשימה חדש (ערכים, תאריכים ועורכים) על ידי הפעלה חוזרת של הגרסאות ביעד. &quot;כמו בקבצים&quot; פועל לפי אפשרויות גרסאות הקבצים שלמעלה. פריטים שכבר קיימים ביעד שומרים על ההיסטוריה שלהם. עמודות של אנשים, בדיקה, טקסונומיה וקישורים מועתקות עם הערך הנוכחי שלהן בלבד.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>היסטוריית גרסאות: חלקים ממנה לא הועתקו ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>היסטוריית הגרסאות לא הועתקה ({0}); לפריט יש רק את הערכים הנוכחיים שלו</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>רשימה:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>העברת דומיין האימייל לא הוחלה: יש למלא את שני הדומיינים, ללא רווחים וללא @ נוסף (לדוגמה contoso.com ו-fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>להסיר את כל החבילות ולמחוק את הסריקה ואת כל מה שמילאת בשלבים הבאים?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>לסגור את כתיבה מחדש של זרימות? המיפוי שבנית עד כה יאבד (השתמש תחילה ב&quot;שמירת מיפוי&quot; כדי לשמור אותו).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>להתחיל מחדש? החבילות, הסריקה וכל מה שמילאת יימחקו. חבילות שכבר נכתבו לתיקיית הפלט לא יימחקו.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{0} כתובות אימייל ב-{1} מכוסות על ידי העברה זו, ולכן הן אינן מפורטות למעלה. כדי לתת לאחת מהן כתובת אחרת, נקה את התיבות האלה, מלא את השורה שלה והזן שוב את העברת הדומיין.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>לא ניתן לקרוא את התיקייה {0}: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>לבדיקה: שמות העמודות האלה שונו בכל מקום שבו הם מופיעים בביטויי הזרימה, מה שעשוי לכלול עמודה בעלת אותו שם ברשימה אחרת. ודא שכל אחד מהם מתייחס לרשימה ששינתה אותו.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>שמות של {0} עמודות שונו בכל מקום שבו הם מופיעים בביטויים. ודא שהם מתייחסים לרשימה ששינתה אותם ולא לעמודה בעלת אותו שם ברשימה אחרת (ראה את הדוח).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>להפסיק את ההעתקה עכשיו? הטופס שמועתק כעת ייקטע ועשוי להישאר בנוי חלקית בחשבון היעד; מחק אותו ב-Microsoft Forms אם זה קרה. טפסים שכבר הסתיימו נשמרים.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>בחירה</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>יומן העתקה</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>התחל להעתיק טופס אחד</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>הטופס הועתק, אך לא ניתן היה לבדוק את התמונות שלו ({0}). פתח אותו ב-Microsoft Forms ובדוק את תמונות הרקע והכותרת.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>בדוק את החיבור ואת ההתחברות, ואז לחץ על &quot;טען טפסים מחדש&quot;. פרטים: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>לא ניתן לטעון את הטפסים שלך</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>נטען טופס אחד.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>היומן הועתק ללוח.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>לא ניתן להעתיק את היומן מפני שתוכנית אחרת משתמשת בלוח. נסה שוב.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>יומן העתקה</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>השלב הבא: אם זרימות משתמשות בטפסים האלה, פתח את כתיבה מחדש של זרימות מהחלון הראשי. הכלי קורא את מזהי הטפסים ששמרה ההעתקה הזו ומפנה כל זרימה לטופס החדש.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>לא נמצאו טפסים</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>מה מועתק: השאלות, ההסתעפות, ההגדרות וערכת הנושא. מה לא: תשובות (השתמש ב&quot;ייצוא תשובות&quot; בשלב הראשון כדי לשמור אותן ב-Excel), משתפי פעולה והאנשים שאיתם הטופס משותף. כל העתק הוא טופס חדש בבעלות חשבון היעד, ייתכן שיהיה צורך להוסיף תמונות מחדש.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>ההעתקה הסתיימה: הטופס הועתק</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>מסנן פעיל: &quot;בחר הכול&quot; ו&quot;בטל בחירת הכול&quot; חלים על {0} הטפסים המוצגים.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>{0} מהטפסים שנבחרו הועתקו בעבר; העתקתם שוב יוצרת כפילויות.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>שלב {0} מתוך {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>טופס אחד יועתק מ-{1} אל {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>ל-{0} מהטפסים שנבחרו תהיה כותרת ארוכה מ-{1} תווים לאחר הוספת הסיומת. Microsoft Forms עשוי לדחות אותם; קצר את הסיומת.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>לא ניתן היה להעתיק תצוגות: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>התצוגה '{0}' לא הועתקה (תצוגת {1})</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>לא ניתן היה ליצור את התצוגה '{0}': {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>התצוגה '{0}' נוצרה, אך לא ניתן היה להחיל חלק מההגדרות: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>התצוגה '{0}': לא ניתן היה להחיל את המסנן או המיון שלה והם הושמטו</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>התצוגה '{0}': עמודות שאינן קיימות ביעד הושמטו: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>הערות ({0}) לגבי תצוגות, הגדרות או סוגי תוכן: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>לא ניתן היה לקרוא את הגדרות הרשימה, ולכן לא הועתקה אף אחת מהן: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>הגדרות רשימה שלא ניתן היה להחיל: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>לא ניתן היה להחיל כללי אימות או עיצוב על: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>לא ניתן היה להעתיק את סוג התוכן '{0}': {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>סוג התוכן '{0}': עמודות שלא ניתן היה להוסיף אליו: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>לא ניתן היה להעתיק את תבנית המסמך של הספרייה.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>לא ניתן היה להעתיק את ערכי ברירת המחדל של התיקיות בספרייה.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>ערכי ברירת המחדל של התיקיות הועתקו, אך לא ניתן היה להוסיף את הכלל שמחיל אותם על קבצים חדשים.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>לא ניתן היה לקרוא עמודות אתר: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>עמודות אתר שלא ניתן היה ליצור: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>לא ניתן היה לקרוא סוגי תוכן של האתר: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>סוגי תוכן של האתר שלא ניתן היה ליצור: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>קישורי ניווט ({0}) שלא ניתן היה ליצור: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>הגדרות אתר שלא ניתן היה להחיל: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>עמודות אתר, סוגי תוכן, ניווט והגדרות</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>מעתיק עמודות אתר, סוגי תוכן, ניווט והגדרות...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>סוג תוכן</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>סוג תוכן '{0}': לא ניתן היה להעתיק את תבנית המסמך שלו.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>מתחבר באמצעות רישום האפליקציה: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>דייר: כל דייר. אתה בוחר את חשבון Microsoft 365 בעת ההתחברות.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>דייר: {0}. ההתחברות יכולה להתבצע רק לספרייה זו.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>כדי לחבר אתר בדייר אחר, בחר בהגדרות רישום אפליקציה אחר (כשמזהה הדייר שלו ריק או מוגדר לאותו דייר), או השתמש במצב ריבוי דיירים.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>מבנה בלבד: עמודות, תצוגות, הגדרות וסוגי תוכן מועתקים, אך ללא קבצים או פריטי רשימה.</value></data>
 </root>

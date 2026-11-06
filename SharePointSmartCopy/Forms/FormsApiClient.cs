@@ -41,6 +41,8 @@ public sealed class FormsApiClient
     {
         var items = new List<System.Text.Json.Nodes.JsonObject>();
         string? url = relativeUrl;
+        // A service that keeps returning the same next link would otherwise loop (and grow the list) forever.
+        var seen = new HashSet<string>(StringComparer.Ordinal) { relativeUrl };
         while (url is not null)
         {
             var (status, body) = await SendRawAsync(HttpMethod.Get, url, null, ct);
@@ -52,6 +54,7 @@ public sealed class FormsApiClient
             url = page["@odata.nextLink"]?.GetValue<string>();
             if (url is not null && _http.BaseAddress is { } b && url.StartsWith(b.ToString(), StringComparison.OrdinalIgnoreCase))
                 url = url[b.ToString().Length..];
+            if (url is not null && !seen.Add(url)) break;
         }
         return items;
     }
@@ -96,6 +99,11 @@ public sealed class FormsApiClient
             return ((int)resp.StatusCode, bytes, resp.Content.Headers.ContentType?.MediaType);
         }
         catch (HttpRequestException) { return (0, null, null); }
+        // A timeout surfaces as a cancellation although the user did not cancel: report it like any failed download.
+        catch (OperationCanceledException) when (!ct.IsCancellationRequested) { return (0, null, null); }
+        // A resource URL that is not http(s) (a file: or data: URL in the source form) can't be downloaded.
+        catch (NotSupportedException) { return (0, null, null); }
+        catch (InvalidOperationException) { return (0, null, null); }
     }
 
     // Sends a file (an image) as the raw request body, the way the Forms web app does: the file's type as Content-Type and a
@@ -111,8 +119,16 @@ public sealed class FormsApiClient
             req.Content = new ByteArrayContent(content);
             req.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
             req.Content.Headers.TryAddWithoutValidation("Content-Disposition", contentDisposition);
-            using var resp = await _http.SendAsync(req, ct);
-            var body = await resp.Content.ReadAsStringAsync(ct);
+            HttpResponseMessage resp;
+            string body;
+            try
+            {
+                resp = await _http.SendAsync(req, ct);
+                body = await resp.Content.ReadAsStringAsync(ct);
+            }
+            // The HttpClient timeout also surfaces as a cancellation; the user did not cancel, so report it as a failed request.
+            catch (OperationCanceledException) when (!ct.IsCancellationRequested) { return (408, "The request timed out."); }
+            using var respScope = resp;
             if ((int)resp.StatusCode == 401 && attempt == 1) { forceToken = true; continue; }
             return ((int)resp.StatusCode, body);
         }
@@ -133,9 +149,18 @@ public sealed class FormsApiClient
             if (jsonBody != null) req.Content = new StringContent(jsonBody, System.Text.Encoding.UTF8, "application/json");
             forceToken = false;
 
-            using var resp = await _http.SendAsync(req, ct);
+            HttpResponseMessage resp;
+            string body;
+            try
+            {
+                resp = await _http.SendAsync(req, ct);
+                body = await resp.Content.ReadAsStringAsync(ct);
+            }
+            // The HttpClient timeout also surfaces as a cancellation; the user did not cancel, so report it as a failed
+            // request (the caller turns that into a warning or one failed form) instead of ending the whole batch.
+            catch (OperationCanceledException) when (!ct.IsCancellationRequested) { return (408, "The request timed out."); }
+            using var respScope = resp;
             var status = (int)resp.StatusCode;
-            var body = await resp.Content.ReadAsStringAsync(ct);
 
             if (status == 401 && !refreshed)
             {

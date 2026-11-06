@@ -1,4 +1,4 @@
-﻿using SharePointSmartCopy.Localization;
+using SharePointSmartCopy.Localization;
 using System.Collections.ObjectModel;
 using System.IO;
 using SharePointSmartCopy.Models;
@@ -224,6 +224,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         // migrating account regardless of preserved source metadata. Newly-created ones are recorded
         // here so their paths can be folded into that same dirty set.
         var newlyCreatedEmptyFolderPaths = new List<string>();
+        // Every empty folder the scan saw (new or already there): the Migration API folder correction needs them too.
+        var allEmptyFolderPaths = new List<string>();
 
         // Ordinary (non-special, non-root) folder IDENTITIES discovered by the scan for free — see
         // SourceFileEntry.IsFolder — captured here per top-level job (keyed by reference; CopyJob has
@@ -499,6 +501,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             var displayName = string.IsNullOrEmpty(relativePath) ? job.SourceName : name;
                             var emptyFolderTarget = ComputeTargetFolderPath(
                                 relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
+                            allEmptyFolderPaths.Add(emptyFolderTarget);
                             var folderResult = new CopyResult
                             {
                                 FileName   = displayName,
@@ -653,7 +656,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             await migrationJobService.ExecuteAsync(allTasks, overwriteMode, migrationMaxVersions, maxParallel, cancellationToken,
                 copyCustomColumns, columnMappings, bulkFieldCache, preflightProgress, activityLog, onFilePacked,
                 reapplyFolderMetadata: preserveMetadata && reapplyFolderMetadata,
-                scannedFolderIdentities: scannedFolderIdentities);
+                scannedFolderIdentities: scannedFolderIdentities,
+                emptyFolderKeys: allEmptyFolderPaths);
 
             // Permissions: run after the migration job completes so the target items exist.
             // We can't use Graph item IDs here (the migration API doesn't surface them), so we
@@ -1176,7 +1180,10 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
 
                 var pubErr = await spService.PublishPageAsync(job.TargetSiteUrl, targetSitePagesId);
                 if (pubErr != null)
+                {
                     System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] Publish warning: {pubErr}");
+                    result.ErrorMessage ??= $"Page copied but left as a draft: {pubErr}";
+                }
                 else
                     System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] page published OK");
             }
@@ -1265,6 +1272,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     result.ErrorMessage ??= err;
                 }
             }
+        }
+        // The date/author/column writes above each save the page again as a new minor (draft) version, which left a
+        // copied page showing 1.1 instead of published. Publish once more so the copy ends as a published page.
+        if (job.IsPage && targetSitePagesId != 0 && copyPages && !string.IsNullOrEmpty(targetItemId))
+        {
+            var rePubErr = await spService.PublishPageAsync(job.TargetSiteUrl, targetSitePagesId);
+            if (rePubErr != null)
+                result.ErrorMessage ??= $"Page copied but left as a draft: {rePubErr}";
         }
         System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] DONE: {job.SourceName}");
         return targetItemId;
@@ -1487,6 +1502,13 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 var rootMeta = await spService.GetFileMetadataAsync(job.SourceDriveId, job.SourceItemId, includeFolderColor: true);
                 var rootPath = prefix + job.SourceName;
                 await StampColorIfAnyAsync(rootMeta, rootPath);
+                if (!string.IsNullOrEmpty(rootMeta.ContentTypeName))
+                {
+                    var rootTgtIds = await spService.GetSharePointIdsAsync(job.TargetDriveId, rootTargetId);
+                    if (rootTgtIds.HasValue && int.TryParse(rootTgtIds.Value.listItemId, out var rootItemNo))
+                        ReportFolderIssue(rootPath, Loc.T("Svc_FolderIssueContentType"),
+                            await spService.SetFolderContentTypeByItemAsync(rootTgtIds.Value.siteUrl, rootTgtIds.Value.listId, rootItemNo, rootMeta.ContentTypeName, ct));
+                }
                 // Same ordering rule as the file path (see CopyCurrentVersionAsync): the Graph
                 // fileSystemInfo PATCH re-stamps the item as the migrating account, so it runs FIRST and
                 // the author/editor/date stamp runs last — the old Apply→Patch order left every folder's
@@ -1582,6 +1604,15 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     // Folder, not a file — opt into the folder-color read (see GetFileMetadataAsync).
                     var meta = await spService.GetFileMetadataAsync(driveId, itemId, includeFolderColor: true);
                     await StampColorIfAnyAsync(meta, targetPath);
+                    // A folder on a custom content type (a Document Set, say) goes onto it first: that write bumps Modified,
+                    // and the date and author stamps below put the source values back.
+                    if (!string.IsNullOrEmpty(meta.ContentTypeName))
+                    {
+                        var tgtIds = await spService.GetSharePointIdsAsync(job.TargetDriveId, targetFolderId);
+                        if (tgtIds.HasValue && int.TryParse(tgtIds.Value.listItemId, out var tgtItemNo))
+                            ReportFolderIssue(targetPath, Loc.T("Svc_FolderIssueContentType"),
+                                await spService.SetFolderContentTypeByItemAsync(tgtIds.Value.siteUrl, tgtIds.Value.listId, tgtItemNo, meta.ContentTypeName, innerCt));
+                    }
                     // PATCH first, author/editor/date stamp last — see the root-folder note above.
                     if (meta.ModifiedDateTime.HasValue)
                         ReportFolderIssue(targetPath, Loc.T("Svc_FolderIssueDates"),

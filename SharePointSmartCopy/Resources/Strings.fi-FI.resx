@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Kohde: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Kohdeluettelo</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Kopiointiasetukset</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Kopioi kirjaston sisältö (tiedostot)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Kun asetus on pois päältä, vain sarakeskeema ja kirjaston asetukset luodaan uudelleen – tiedostoja ei kopioida.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Kopioi tiedostot ja luettelon kohteet (sisältö)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Kun asetus on pois päältä, kopioidaan vain rakenne ilman tiedostoja tai luettelon kohteita: sarakkeet, näkymät, luettelon asetukset, sisältötyypit sekä Koko sivusto -laajuudessa sivuston sarakkeet, siirtymisrakenne ja sivuston asetukset.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Jos tiedosto on olemassa:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Ohita</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Korvaa</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Kaikki versiot</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Viimeiset </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> versiota</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Kopioi myös luettelot, joihin luettelojeni hakukentät viittaavat</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>Kun valitussa luettelossa on hakusarake (Lookup), myös luettelo, johon se viittaa, kopioidaan, jotta sarake voidaan luoda ja sen arvot ratkaista. Poista tämä käytöstä, jos haluat kopioida vain valitsemasi.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Hakuarvot</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} täsmätty kohteen mukaan, {1} täsmätty tekstin mukaan, {2} ei löytynyt.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Hallitut metatiedot</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} termiarvoa kopioitu, {1} jätetty pois (termiä ei löytynyt kopioidusta joukosta).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>Hallittujen metatietojen saraketta &quot;{0}&quot; ei luotu: sen termijoukko kuuluu toiselle vuokraajalle, eikä termijoukkojen kopiointi ole käytettävissä (kirjaudu sisään molempiin vuokraajiin ja myönnä TermStore.ReadWrite.All-oikeus).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>Termijoukko &quot;{0}&quot; kopioitu kohteeseen: {1} luotu, {2} oli jo olemassa.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Kopioi hallittujen metatietojen termijoukot kohdevuokraajaan</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>Hallittujen metatietojen sarake on sidottu lähdevuokraajan termivaraston termijoukkoon. Kun tämä on käytössä, termijoukko (termit, nimikkeet, synonyymit, kuvaukset) kopioidaan kohteen termivarastoon, sarake sidotaan kopioon ja jokainen arvo yhdistetään uudelleen. Vaatii valinnaisen TermStore.ReadWrite.All-oikeuden ja termivaraston roolin kohteessa.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Hakee luettelosta "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Hakee luettelosta toisella sivustolla</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Hallitut metatiedot: sen termijoukko kopioidaan kohdevuokraajaan</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Hallitut metatiedot: käyttää samaa termijoukkoa (sama vuokraaja)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>Projisoitua kenttää "{0}" ei luotu: sen hakusaraketta "{1}" ei ole kohdeluettelossa.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>Projisoitua kenttää "{0}" ei luotu: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Kirjaudu sovellusrekisteröinnillä:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Kopioitava rakenne</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Kaikki tähän valittu luodaan uudelleen kohteeseen tietojen mukana. Jo olemassa oleva luettelo tai kirjasto saa vain puuttuvat sisältötyypit ja näkymät.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Näkymät (suodattimet, ryhmittely, sarakkeet, oletusnäkymä, kalenteri- ja taulunäkymät)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Luettelon asetukset (hyväksyntä, uloskirjaus, liitteet, kansiot, kohdetason suojaus)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Sisältötyypit ja niiden asiakirjamallit</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Sarakkeiden vahvistussäännöt ja muotoilu</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Kirjastomalli ja kansioiden oletusarvot</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Sivuston sarakkeet ja sivuston sisältötyypit</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Sivuston asetukset (kuvaus, pikakäynnistys, puunäkymä ja muuta)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Näkymät</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Luettelon asetukset</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Sisältötyypit</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Sarakesäännöt</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Mallit ja oletusarvot</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Sivuston sarakkeet ja tyypit</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Siirtyminen</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Sivuston asetukset</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Hakuluettelot</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Termijoukot</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Rakenne: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>ei mitään</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Näytä lisää</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Näytä vähemmän</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Kopioi siirtymisrakenne (pikakäynnistys ja yläpalkki)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Korvaa kohteen siirtymisrakenteen lähteen linkeillä. URL-osoitteet yhdistetään uudelleen kohdesivustoon.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Kopioi käyttöoikeudet</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Kopioi mukautettujen sarakkeiden arvot</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Kopioi seuraavien sarakityyppien arvot: Teksti, Luku, Valinta, Päivämäärä, Totuusarvo, Monivalinta, Henkilö ja Hallitut metatiedot. Hakusarakkeita ei tueta.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Ota käyttöön ”Kopioi mukautettujen sarakkeiden arvot” määrittääksesi yhdistämiset.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Kaikkien mukautettujen sarakkeiden arvot kopioidaan. Yhdistämisillä voit hallita, mitkä sarakkeet luodaan kohteeseen.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Kaikkien mukautettujen sarakkeiden arvot kopioidaan. Hallitse Sarakeyhdistäminen-toiminnolla (yllä), mitkä sarakkeet luodaan kohteeseen.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Mukautettujen sarakkeiden arvot kopioidaan aina luettelokohteille.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Kopiointitila</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Nimi</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Asiakastunnus (sovellustunnus)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Vuokraajan tunnus</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Käytä arvoa ”common” usean vuokraajan käyttöön tai vuokraajasi GUID-tunnusta tai toimialuetta.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Jätä tyhjäksi tai anna ”common”, jos haluat kirjautua mihin tahansa vuokraajaan. Vuokraajan GUID-tunnus tai toimialue (esimerkiksi contoso.onmicrosoft.com) rajoittaa kirjautumisen vain kyseiseen vuokraajaan.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Aloita raporttien oletustiedostonimet lähde- ja kohdesivuston nimillä</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Kirjaudu ulos</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Teema:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Kirjastot ja luettelot -tila</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Koko sivusto -tila</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Sivuston sivut -tila</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Kopioi kirjaston sisältö (tiedostot)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Kopioi tiedostot ja luettelon kohteet (sisältö)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Kopioi versiohistoria</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Viimeiset N versiota</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Kopioi siirtymisrakenne</value></data>
@@ -939,7 +979,7 @@ Alkuperäiset paketit ovat koskemattomia. Yhteyksiä EI siirretä; luo ne uudell
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Lataa lomakkeet uudelleen</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Näet lomakkeesi valitsemalla ”Lataa lomakkeeni”.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>Tililtä ei löytynyt lomakkeita.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>Kopioi {0} lomaketta</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Aloita {0} lomakkeen kopiointi</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Kopioi lisää lomakkeita</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Valitse, minne kopiot menevät</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Yksi vuokraaja: kopiot luodaan samalle tilille, jota käytät, alkuperäisten viereen.</value></data>
@@ -963,7 +1003,7 @@ Alkuperäiset paketit ovat koskemattomia. Yhteyksiä EI siirretä; luo ne uudell
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Kopioidaan lomakkeita</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Aloitetaan…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Lomake {0}/{1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Peruutetaan nykyisen lomakkeen jälkeen…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Peruutetaan… parhaillaan kopioitavaa lomaketta pysäytetään.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Kopiointi valmis: kaikki {0} lomaketta kopioitiin</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Kopiosi ovat kohteessa {0}. Näet ne avaamalla Microsoft Formsin tai käyttämällä alla olevaa taulukkoa.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Kopiointi valmis: {0}/{1} lomaketta kopioitiin, osa vaatii huomiota</value></data>
@@ -971,7 +1011,7 @@ Alkuperäiset paketit ovat koskemattomia. Yhteyksiä EI siirretä; luo ne uudell
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Kopiointi valmis, mutta yhtään lomaketta ei kopioitu</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Syy näkyy Tiedot-sarakkeessa. Yleisiä syitä ovat kohderekisteröinnistä puuttuva Microsoft Forms -käyttöoikeus tai tili, jolla ei ole Forms-käyttöä.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Kopiointi peruutettu {0}/{1} lomakkeen jälkeen</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Alla luetellut lomakkeet valmistuivat. Peruuttaessasi kopioitavana ollut lomake ei valmistunut, eikä se ole näkyvissä.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Alla kopioiduiksi merkityt lomakkeet valmistuivat. Peruuttaessasi kopioitavana ollut lomake ei valmistunut ja voi jäädä keskeneräiseksi kohteeseen; sen rivillä näkyy kopion tunnus, jos sellainen luotiin.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Kopioitu</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>Varoituksin</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Epäonnistui</value></data>
@@ -986,7 +1026,7 @@ Alkuperäiset paketit ovat koskemattomia. Yhteyksiä EI siirretä; luo ne uudell
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Avaa valittu kopio</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Avaa Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Vie tulokset…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Näytä lomaketunnusten yhdistäminen</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Avaa tallennetut lomaketunnukset</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Valitse ensin kopioitu lomake taulukosta.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Tulokset tallennettu kohteeseen {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Vihje: sovellusrekisteröinnillä ei ole vastaavaa uudelleenohjausosoitetta. Lisää Entrassa kohdassa Todennus alusta ”Mobiili- ja työpöytäsovellukset” osoitteella http://localhost ja yritä uudelleen.</value></data>
@@ -1105,7 +1145,7 @@ Uudelleen kopioiminen luo jokaisesta toisen kopion. Jatketaanko?</value></data>
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(nimetön lomake)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Lähdelomake</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Valitse kohteen lomakkeista</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Valitse lomake kohdetililtä. Valitse ensin ”Lataa lomakkeet kohdetililtä”.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Valitse lomake kohdetililtä. Luettelo latautuu, kun tämä vaihe avautuu; jos se on tyhjä, valitse ”Lataa lomakenimet uudelleen”.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Täytetty kohdekirjautumisesta ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>Lähdetilisi, korvattu kohdetililläsi</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Täytetty kirjautumisistasi ({0} → {1}). Tyhjennä molemmat kentät jättääksesi sähköpostin verkkotunnukset ennalleen.</value></data>
@@ -1133,7 +1173,7 @@ Uudelleen kopioiminen luo jokaisesta toisen kopion. Jatketaanko?</value></data>
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} pakettia on tämän työkalun kirjoittamia ja sisältää jo kohteen arvot. Poista ne (luettelon ✕) ja lisää alkuperäiset viennit.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} sivustolla ei ole kohdetta. Ennalleen jätetty sivusto osoittaisi edelleen lähdevuokraajaan.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} luetteloa epäonnistuisi tuonnissa. Jatka korjaamalla ”Epäonnistuu”-merkityt luettelot.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Luetteloita ei ole vielä täsmätty. Yritä uudelleen palaamalla yksi vaihe taaksepäin ja siirtymällä uudelleen eteenpäin.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Luetteloita ei ole vielä täsmätty. Yritä uudelleen valitsemalla ”Täsmäytä uudelleen”.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} lomaketta tarvitsee kelvollisen kohdelomakkeen tunnuksen jatkaakseen.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Vaihda lähde…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Kirjauduttu käyttäjänä {0}. Lähdevuokraajan SharePoint-osoite on {1}.</value></data>
@@ -1398,11 +1438,65 @@ Uudelleen kopioiminen luo jokaisesta toisen kopion. Jatketaanko?</value></data>
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Suljetaanko kesken työn?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>Työkalu on edelleen käynnissä (skannaus, täsmäytys, kirjautuminen tai pakettien kirjoitus). Sulkeminen nyt pysäyttää sen. Suljetaanko silti?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>Kohdetta {0} ei voitu lisätä uuteen lomakkeeseen automaattisesti. Tiedoston kopio tallennettiin nimellä {1}: lisää se uudelleen Microsoft Formsissa.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Luettelon kohteiden versiohistoria:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Kuten tiedostot</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Kaikki versiot</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Vain nykyinen</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Kopioi jokaisen uuden luettelokohteen versiohistorian (arvot, päivämäärät ja muokkaajat) toistamalla sen versiot kohteessa. Vaihtoehto &quot;Kuten tiedostot&quot; noudattaa yllä olevia tiedostoversioiden asetuksia. Kohteessa jo olevat kohteet säilyttävät oman historiansa. Henkilö-, hakuarvo-, taksonomia- ja linkkisarakkeet kopioidaan vain nykyisellä arvollaan.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>versiohistoria: osa ei kopioitunut ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>versiohistoriaa ei kopioitu ({0}); kohteella on vain nykyiset arvonsa</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Luettelo:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>Sähköpostialueen siirtoa ei otettu käyttöön: molemmat verkkotunnukset on täytettävä ilman välilyöntejä tai ylimääräistä @-merkkiä (esimerkiksi contoso.com ja fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Poistetaanko kaikki paketit ja hylätäänkö tarkistus sekä kaikki myöhemmissä vaiheissa täyttämäsi tiedot?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Suljetaanko Kirjoita työnkulut uudelleen? Tähän mennessä luotu yhdistäminen menetetään (tallenna se ensin toiminnolla Tallenna yhdistäminen).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Aloitetaanko alusta? Paketit, tarkistus ja kaikki täyttämäsi tiedot hylätään. Tulostekansioon jo kirjoitettuja paketteja ei poisteta.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>Tämä siirto kattaa {0} sähköpostiosoitetta verkkotunnuksessa {1}, joten niitä ei luetella yllä. Jos haluat antaa jollekin niistä eri osoitteen, tyhjennä nämä kentät, täytä kyseinen rivi ja anna verkkotunnuksen siirto uudelleen.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>Kansiota {0} ei voitu lukea: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Tarkista: nämä sarakkeiden nimet muutettiin kaikkialla, missä ne esiintyvät työnkulun lausekkeissa, mikä voi koskea myös toisen luettelon samannimistä saraketta. Tarkista, että kukin viittaa luetteloon, joka nimesi sen uudelleen.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} sarakkeen nimeä muutettiin kaikkialla, missä ne esiintyvät lausekkeissa. Tarkista, että ne viittaavat luetteloon, joka nimesi ne uudelleen, eikä toisen luettelon samannimiseen sarakkeeseen (katso raportti).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Lopetetaanko kopiointi nyt? Parhaillaan kopioitava lomake katkeaa ja voi jäädä keskeneräiseksi kohdetilille; poista se Microsoft Formsissa, jos näin käy. Jo valmistuneet lomakkeet säilyvät.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Valitse</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Kopiointiloki</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>Aloita 1 lomakkeen kopiointi</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>Lomake kopioitiin, mutta sen kuvia ei voitu tarkistaa ({0}). Avaa se Microsoft Formsissa ja tarkista tausta- ja otsikkokuvat.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Tarkista yhteys ja kirjautuminen ja valitse sitten Lataa lomakkeet uudelleen. Tiedot: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Lomakkeita ei voitu ladata</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>1 lomake ladattu.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>Loki kopioitiin leikepöydälle.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>Lokia ei voitu kopioida, koska toinen ohjelma käyttää leikepöytää. Yritä uudelleen.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Kopiointiloki</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Seuraavaksi: jos työnkulut käyttävät näitä lomakkeita, avaa Kirjoita työnkulut uudelleen pääikkunasta. Se lukee tämän kopioinnin tallentamat lomaketunnukset ja ohjaa kunkin työnkulun uuteen lomakkeeseen.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Lomakkeita ei löytynyt</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>Kopioidaan: kysymykset, haarautuminen, asetukset ja teema. Ei kopioida: vastauksia (tallenna ne Exceliin ensimmäisen vaiheen toiminnolla Vie vastaukset), yhteistyökumppaneita eikä tietoa siitä, kenen kanssa lomake on jaettu. Jokainen kopio on uusi lomake, jonka omistaa kohdetili, ja kuvat on ehkä lisättävä uudelleen.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Kopiointi valmis: lomake kopioitiin</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Suodatin on käytössä: Valitse kaikki ja Poista kaikki valinnat koskevat näytettyjä {0} lomaketta.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>{0} valituista lomakkeista kopioitiin aiemmin; niiden kopioiminen uudelleen luo kaksoiskappaleita.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Vaihe {0}/{1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 lomake kopioidaan tililtä {1} tilille {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>{0} valitulle lomakkeelle tulisi yli {1} merkin pituinen otsikko, kun pääte lisätään. Microsoft Forms voi hylätä ne; lyhennä päätettä.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Näkymiä ei voitu kopioida: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>Näkymää '{0}' ei kopioitu ({1}-näkymä)</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>Näkymää '{0}' ei voitu luoda: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>Näkymä '{0}' luotiin, mutta joitakin asetuksia ei voitu ottaa käyttöön: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>Näkymä '{0}': sen suodatinta tai lajittelua ei voitu ottaa käyttöön, ja ne jätettiin pois</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>Näkymä '{0}': kohteesta puuttuvat sarakkeet jätettiin pois: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>Huomautuksia ({0}) näkymistä, asetuksista tai sisältötyypeistä: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>Luettelon asetuksia ei voitu lukea, joten mitään ei kopioitu: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>Luettelon asetukset, joita ei voitu ottaa käyttöön: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Vahvistussääntöjä tai muotoilua ei voitu ottaa käyttöön: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>Sisältötyyppiä '{0}' ei voitu kopioida: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>Sisältötyyppi '{0}': sarakkeet, joita ei voitu lisätä siihen: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>Kirjaston asiakirjamallia ei voitu kopioida.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>Kirjaston kansioiden oletusarvoja ei voitu kopioida.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>Kansioiden oletusarvot kopioitiin, mutta niitä uusiin tiedostoihin soveltavaa sääntöä ei voitu lisätä.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Sivustosarakkeita ei voitu lukea: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Sivustosarakkeet, joita ei voitu luoda: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Sivuston sisältötyyppejä ei voitu lukea: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Sivuston sisältötyypit, joita ei voitu luoda: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Siirtymisen ({0}) linkit, joita ei voitu luoda: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Sivuston asetukset, joita ei voitu ottaa käyttöön: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Sivustosarakkeet, sisältötyypit, siirtymisrakenne ja asetukset</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Kopioidaan sivustosarakkeita, sisältötyyppejä, siirtymisrakennetta ja asetuksia...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>sisältötyyppi</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>Sisältötyyppi '{0}': sen asiakirjamallia ei voitu kopioida.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Kirjautuu sovellusrekisteröinnillä: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Vuokraaja: mikä tahansa. Valitset Microsoft 365 -tilin kirjautuessasi.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Vuokraaja: {0}. Kirjautuminen voi kohdistua vain tähän hakemistoon.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Jos haluat yhdistää sivuston toisessa vuokraajassa, valitse Asetuksissa toinen sovellusrekisteröinti (jonka Vuokraajan tunnus on tyhjä tai määritetty kyseiselle vuokraajalle) tai käytä Usea vuokraaja -tilaa.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Vain rakenne: sarakkeet, näkymät, asetukset ja sisältötyypit kopioidaan, mutta ei tiedostoja tai luettelon kohteita.</value></data>
 </root>

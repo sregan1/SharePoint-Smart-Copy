@@ -237,6 +237,67 @@ public partial class SharePointService
         return result;
     }
 
+    // Maps each visible content type of the source list (by its ID) to the target list's content type of the same name, so a
+    // copied item can be put on the matching type. Names the target lacks are left out. Empty when either list can't be read.
+    public async Task<Dictionary<string, (string TargetId, string Name)>> GetContentTypeIdMapAsync(
+        string sourceSiteUrl, string sourceListId, string targetSiteUrl, string targetListId, CancellationToken ct = default)
+    {
+        async Task<List<(string Id, string Name)>> ReadAsync(string site, string list)
+        {
+            var url = $"{site.TrimEnd('/')}/_api/web/lists('{list}')/contenttypes?$select=Name,StringId,Hidden";
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, site, cancellationToken: ct);
+            var result = new List<(string, string)>();
+            if (!resp.IsSuccessStatusCode) return result;
+            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+            foreach (var e in doc.RootElement.GetProperty("value").EnumerateArray())
+            {
+                if (e.TryGetProperty("Hidden", out var h) && h.ValueKind == JsonValueKind.True) continue;
+                var id = e.TryGetProperty("StringId", out var i) ? i.GetString() : null;
+                var name = e.TryGetProperty("Name", out var n) ? n.GetString() : null;
+                if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(name)) result.Add((id, name));
+            }
+            return result;
+        }
+
+        var map = new Dictionary<string, (string TargetId, string Name)>(StringComparer.OrdinalIgnoreCase);
+        try
+        {
+            var target = (await ReadAsync(targetSiteUrl, targetListId))
+                .GroupBy(t => t.Name, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(g => g.Key, g => g.First().Id, StringComparer.OrdinalIgnoreCase);
+            foreach (var (id, name) in await ReadAsync(sourceSiteUrl, sourceListId))
+                if (target.TryGetValue(name, out var tid)) map[id] = (tid, name);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or JsonException or KeyNotFoundException) { map.Clear(); }
+        return map;
+    }
+
+    // The title of a list (null when it cannot be read).
+    public async Task<string?> GetListTitleAsync(string siteUrl, string listId)
+    {
+        try
+        {
+            var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')?$select=Title";
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl);
+            if (!resp.IsSuccessStatusCode) return null;
+            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
+            return doc.RootElement.TryGetProperty("Title", out var t) ? t.GetString() : null;
+        }
+        catch (Exception ex) when (ex is HttpRequestException or JsonException) { return null; }
+    }
+
     // Returns (Id, Title, Modified) for each item in a list — lightweight query used for
     // tree display and for skip / copy-if-newer decisions during list item copies.
     public async Task<List<(string Id, string Title, DateTimeOffset? Modified)>> GetListItemTitlesAsync(
@@ -395,9 +456,10 @@ public partial class SharePointService
                 continue;
             }
 
-            if (SkipsTaxonomyValue(f.Value)) continue;
+            var taxValue = RemapTaxonomyValue(f.Value);
+            if (taxValue == null) continue;
             // Cross-tenant: leave out (and record) people who do not exist in the target.
-            var checkedValue = await DropUnresolvedPeopleAsync(siteUrl, f.Value, ct);
+            var checkedValue = await DropUnresolvedPeopleAsync(siteUrl, taxValue, ct);
             if (checkedValue == null) continue;
             formValues.Add(new { FieldName = f.Name, FieldValue = FormatFieldValueForValidate(checkedValue) });
             submittedFields.Add(f.Name);

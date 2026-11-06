@@ -129,7 +129,18 @@
 
         <!-- Header + the always-visible heads-up about the unofficial API -->
         <StackPanel Grid.Row="0" Margin="24,16,24,12">
-            <TextBlock Text="{loc:Loc Forms_Title}" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{loc:Loc Forms_Title}" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <!-- "Step 2 of 4: Target" - also read out by screen readers when the step changes -->
+                <TextBlock Grid.Column="1" Text="{Binding StepText}" FontSize="12" VerticalAlignment="Center" Margin="12,0,0,0"
+                           Foreground="{DynamicResource TextTertiaryBrush}"
+                           AutomationProperties.LiveSetting="Polite"/>
+            </Grid>
             <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,0" Foreground="{DynamicResource TextTertiaryBrush}" Text="{loc:Loc Forms_Subtitle}"/>
             <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0" Padding="10,6">
                 <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Forms_UnofficialWarning}"/>
@@ -147,8 +158,8 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type models:StepInfo}">
-                        <StackPanel Orientation="Horizontal">
-                            <Border Height="2" Width="60" Background="{DynamicResource BorderLightBrush}"
+                        <StackPanel Orientation="Horizontal" AutomationProperties.Name="{Binding Label}">
+                            <Border Height="2" Width="40" Background="{DynamicResource BorderLightBrush}"
                                     VerticalAlignment="Top" Margin="4,13,4,0"
                                     Visibility="{Binding Index, Converter={StaticResource IntToVis}}"/>
                             <StackPanel>
@@ -188,16 +199,29 @@
                             IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
                 </Grid>
 
-                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,6"
+                <StackPanel Grid.Row="1" Margin="0,10,0,6"
                             Visibility="{Binding HasForms, Converter={StaticResource BoolToVis}}">
-                    <Button Content="{loc:Loc Ui_SelectAll}" Style="{StaticResource LinkBtn}" Click="SelectAll_Click"/>
-                    <Button Content="{loc:Loc Ui_DeselectAll}" Style="{StaticResource LinkBtn}" Click="DeselectAll_Click" Margin="8,0,0,0"/>
-                    <TextBlock Text="{Binding SelectedCountText}" Margin="16,0,0,0" VerticalAlignment="Center" FontSize="12"
-                               Foreground="{DynamicResource TextTertiaryBrush}"/>
-                    <TextBox Width="220" Margin="16,0,0,0" VerticalAlignment="Center" Style="{StaticResource WatermarkTextBox}"
-                             Tag="{loc:Loc Forms_FilterWatermark}"
-                             Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
-                             AutomationProperties.Name="{loc:Loc Forms_FilterWatermark}"/>
+                    <WrapPanel>
+                        <Button Content="{loc:Loc Ui_SelectAll}" Style="{StaticResource LinkBtn}" Click="SelectAll_Click"/>
+                        <Button Content="{loc:Loc Ui_DeselectAll}" Style="{StaticResource LinkBtn}" Click="DeselectAll_Click" Margin="8,0,0,0"/>
+                        <TextBlock Text="{Binding SelectedCountText}" Margin="16,0,0,0" VerticalAlignment="Center" FontSize="12"
+                                   Foreground="{DynamicResource TextTertiaryBrush}"/>
+                        <TextBox MinWidth="220" Margin="16,0,0,0" VerticalAlignment="Center" Style="{StaticResource WatermarkTextBox}"
+                                 Tag="{loc:Loc Forms_FilterWatermark}"
+                                 Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                                 AutomationProperties.Name="{loc:Loc Forms_FilterWatermark}"/>
+                        <!-- A separate task from copying, kept with the form list rather than beside the Next button -->
+                        <Button Content="{loc:Loc Forms_ExportResponses}" Style="{StaticResource SecondaryBtn}" Click="Export_Click"
+                                IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}" Margin="24,0,8,0"/>
+                        <CheckBox Content="{loc:Loc Forms_CombineExport}" IsChecked="{Binding CombineExport}" VerticalAlignment="Center"
+                                  IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"
+                                  ToolTip="{loc:Loc Forms_CombineExportTip}"
+                                  AutomationProperties.HelpText="{loc:Loc Forms_CombineExportTip}"/>
+                    </WrapPanel>
+                    <!-- What Select all covers when a filter is on, and how many chosen forms were copied before -->
+                    <TextBlock Text="{Binding SelectionNote}" FontSize="12" TextWrapping="Wrap" Margin="0,4,0,0"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               Visibility="{Binding HasSelectionNote, Converter={StaticResource BoolToVis}}"/>
                 </StackPanel>
 
                 <DataGrid Grid.Row="2" x:Name="FormsGrid" AutoGenerateColumns="False" CanUserAddRows="False"
@@ -205,13 +229,46 @@
                           SelectionMode="Single" Background="{DynamicResource SurfaceBrush}"
                           BorderBrush="{DynamicResource BorderLightBrush}" MinHeight="160" Margin="0,4,0,0">
                     <DataGrid.Columns>
-                        <DataGridCheckBoxColumn Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" Width="36"/>
-                        <DataGridTextColumn Header="{loc:Loc Forms_ColTitle}" Binding="{Binding Title}" IsReadOnly="True" Width="*"/>
-                        <DataGridTextColumn Header="{loc:Loc Forms_ColType}" Binding="{Binding Type}" IsReadOnly="True" Width="80"/>
-                        <DataGridTextColumn Header="{loc:Loc Forms_ColModified}" Binding="{Binding ModifiedText}" IsReadOnly="True" Width="150"/>
-                        <DataGridTextColumn Header="{loc:Loc Forms_ColCopied}" Binding="{Binding CopiedText}" IsReadOnly="True" Width="220"/>
+                        <!-- A template column with a plain CheckBox: one click toggles it (the built-in checkbox column needs
+                             a click to select the row first), and the box is named after its form for screen readers. -->
+                        <DataGridTemplateColumn Width="Auto" MinWidth="36">
+                            <DataGridTemplateColumn.Header>
+                                <TextBlock Text="{loc:Loc Forms_ColSelect}" AutomationProperties.Name="{loc:Loc Forms_ColSelect}"/>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              AutomationProperties.Name="{Binding Title}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColTitle}" Binding="{Binding Title}" IsReadOnly="True" Width="2*" MinWidth="160"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColType}" Binding="{Binding Type}" IsReadOnly="True" Width="Auto" MinWidth="70"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColModified}" Binding="{Binding ModifiedText}" IsReadOnly="True" Width="Auto" MinWidth="110"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColCopied}" Binding="{Binding CopiedText}" IsReadOnly="True" Width="*" MinWidth="160">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="ToolTip" Value="{Binding CopiedText}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
+
+                <!-- Nothing to show: an empty account, or the list could not be loaded. Said here, not only in the footer. -->
+                <Border Grid.Row="2" Margin="0,4,0,0" Padding="32" Background="{DynamicResource SurfaceBrush}"
+                        BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1" CornerRadius="4"
+                        Visibility="{Binding ShowListMessage, Converter={StaticResource BoolToVis}}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="480">
+                        <TextBlock Text="{Binding ListMessageTitle}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap"
+                                   HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,8"/>
+                        <TextBox Style="{StaticResource SelectableText}" Text="{Binding ListMessageBody, Mode=OneWay}" FontSize="12"
+                                   HorizontalAlignment="Center" TextAlignment="Center"
+                                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
             </Grid>
 
             <!-- ── Step 2: choose the target ────────────────────────────────── -->
@@ -238,8 +295,10 @@
                                             IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
                                     <ProgressBar IsIndeterminate="True" Width="110" Height="4" Margin="12,0,0,0" VerticalAlignment="Center"
                                                  Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
-                                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Forms_CancelSignIn}" Click="CancelRun_Click" Margin="12,0,0,0"
-                                            Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
+                                    <!-- Cancel a sign-in right where it was started (the footer Cancel does the same) -->
+                                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Ui_Cancel}" Click="CancelRun_Click" Margin="12,0,0,0"
+                                            Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"
+                                            IsEnabled="{Binding IsCancelling, Converter={StaticResource InvBool}}"/>
                                 </StackPanel>
                             </StackPanel>
 
@@ -259,7 +318,7 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Border.Style>
-                                <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding TargetStatusText}"/>
+                                <TextBox Style="{StaticResource SelectableText}" FontSize="12" Text="{Binding TargetStatusText, Mode=OneWay}"/>
                             </Border>
                         </StackPanel>
                     </Border>
@@ -268,16 +327,22 @@
                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                         <TextBlock Text="{loc:Loc Forms_TitleSuffix}" VerticalAlignment="Center" FontSize="12" Margin="0,0,8,0"
                                    Foreground="{DynamicResource TextSecondaryBrush}"/>
-                        <TextBox Width="200" Text="{Binding Suffix, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource WatermarkTextBox}"
-                                 Tag="{loc:Loc Forms_TitleSuffixHint}"/>
+                        <TextBox MinWidth="200" Text="{Binding Suffix, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource WatermarkTextBox}"
+                                 Tag="{loc:Loc Forms_TitleSuffixHint}"
+                                 AutomationProperties.Name="{loc:Loc Forms_TitleSuffix}"/>
                     </StackPanel>
+
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,8,0,0" Foreground="{DynamicResource WarningTextBrush}"
+                               Text="{Binding TitleWarning}"
+                               Visibility="{Binding HasTitleWarning, Converter={StaticResource BoolToVis}}"/>
 
                     <Border Style="{StaticResource InfoBanner}" Margin="0,20,0,0">
                         <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding SummaryText}"/>
                     </Border>
-                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,10,0,0" Foreground="{DynamicResource TextTertiaryBrush}"
-                               Visibility="{Binding NeedsTargetSignIn, Converter={StaticResource BoolToVis}}"
-                               Text="{loc:Loc Forms_SignInToContinue}"/>
+                    <!-- Said before the copy starts, not only per form afterwards -->
+                    <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0" Padding="10,8">
+                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Forms_NotCopiedNote}"/>
+                    </Border>
                 </StackPanel>
             </ScrollViewer>
 
@@ -288,14 +353,23 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="{loc:Loc Forms_CopyingHeader}" Style="{StaticResource SectionHeader}"/>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{loc:Loc Forms_CopyingHeader}" Style="{StaticResource SectionHeader}" VerticalAlignment="Center"/>
+                    <!-- Keeps the log for a support request; it is cleared when the next copy starts -->
+                    <Button Grid.Column="1" Content="{loc:Loc Forms_CopyLog}" Style="{StaticResource SecondaryBtn}" Click="CopyLog_Click"/>
+                </Grid>
                 <StackPanel Grid.Row="1" Margin="0,8,0,10">
                     <TextBlock Text="{Binding ProgressText}" FontSize="13" Margin="0,0,0,6"/>
                     <ProgressBar Height="10" Minimum="0" Maximum="{Binding ProgressMax}" Value="{Binding ProgressValue}"/>
                 </StackPanel>
                 <TextBox Grid.Row="2" x:Name="LogBox" IsReadOnly="True" TextWrapping="NoWrap" AcceptsReturn="True"
                          VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
-                         FontFamily="Consolas" FontSize="11" Style="{StaticResource BaseTextBox}"/>
+                         FontFamily="Consolas" FontSize="11" Style="{StaticResource BaseTextBox}"
+                         AutomationProperties.Name="{loc:Loc Forms_LogName}"/>
             </Grid>
 
             <!-- ── Step 4: results ──────────────────────────────────────────── -->
@@ -347,12 +421,19 @@
                     </Border>
                 </WrapPanel>
 
-                <WrapPanel Grid.Row="2" Margin="0,4,0,8">
-                    <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_OpenSelected}" Click="OpenSelectedCopy_Click"/>
-                    <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_OpenForms}" Click="OpenForms_Click"/>
-                    <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_ExportResults}" Click="ExportResults_Click"/>
-                    <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_ShowMap}" Click="ShowMap_Click"/>
-                </WrapPanel>
+                <StackPanel Grid.Row="2" Margin="0,4,0,8">
+                    <WrapPanel>
+                        <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_OpenSelected}" Click="OpenSelectedCopy_Click"
+                                IsEnabled="{Binding HasOpenableCopy}"/>
+                        <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_OpenForms}" Click="OpenForms_Click"/>
+                        <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_ExportResults}" Click="ExportResults_Click"/>
+                        <Button Style="{StaticResource SecondaryBtn}" Margin="0,0,8,6" Content="{loc:Loc Forms_ShowMap}" Click="ShowMap_Click"/>
+                    </WrapPanel>
+                    <!-- The Flows tool reads the saved form IDs to point flows at these copies -->
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,2,0,0" Foreground="{DynamicResource TextSecondaryBrush}"
+                               Visibility="{Binding HasCopies, Converter={StaticResource BoolToVis}}"
+                               Text="{loc:Loc Forms_NextRewriteFlows}"/>
+                </StackPanel>
 
                 <DataGrid Grid.Row="3" x:Name="ResultsGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
                           HeadersVisibility="Column" GridLinesVisibility="Horizontal" SelectionMode="Single"
@@ -360,8 +441,8 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="{loc:Loc Forms_ColSourceForm}" Binding="{Binding SourceTitle}" Width="*"/>
                         <DataGridTextColumn Header="{loc:Loc Forms_ColCopyTitle}" Binding="{Binding CopyTitle}" Width="*"/>
-                        <DataGridTextColumn Header="{loc:Loc Forms_ColResult}" Binding="{Binding StatusText}" Width="170"/>
-                        <DataGridTextColumn Header="{loc:Loc Forms_ColQuestions}" Binding="{Binding QuestionsText}" Width="90"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColResult}" Binding="{Binding StatusText}" Width="Auto" MinWidth="120"/>
+                        <DataGridTextColumn Header="{loc:Loc Forms_ColQuestions}" Binding="{Binding QuestionsText}" Width="Auto" MinWidth="80"/>
                         <DataGridTextColumn Header="{loc:Loc Forms_ColDetails}" Binding="{Binding Details}" Width="2*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
@@ -384,15 +465,17 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Forms_ExportResponses}" Click="Export_Click"
-                            Visibility="{Binding ShowExportResponses, Converter={StaticResource BoolToVis}}"
-                            IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}" Margin="0,0,8,0"/>
-                    <CheckBox Content="{loc:Loc Forms_CombineExport}" IsChecked="{Binding CombineExport}" VerticalAlignment="Center"
-                              Visibility="{Binding ShowExportResponses, Converter={StaticResource BoolToVis}}"
-                              IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}" Margin="0,0,12,0"
-                              ToolTip="{loc:Loc Forms_CombineExportTip}"/>
-                    <TextBlock Text="{Binding StatusText}" FontSize="12" TextWrapping="Wrap" VerticalAlignment="Center" MaxWidth="520"
-                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    <!-- Shown for any running operation (load, sign-in, export, copy) -->
+                    <ProgressBar IsIndeterminate="True" Width="90" Height="4" Margin="0,0,12,0" VerticalAlignment="Center"
+                                 Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
+                    <TextBox Style="{StaticResource SelectableText}" Text="{Binding StatusText, Mode=OneWay}" FontSize="12" VerticalAlignment="Center" MaxWidth="520"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               AutomationProperties.LiveSetting="Polite"/>
+                    <!-- Why Next is disabled, right beside the buttons -->
+                    <TextBlock Text="{Binding BlockReason}" FontSize="12" FontWeight="SemiBold" TextWrapping="Wrap" VerticalAlignment="Center"
+                               MaxWidth="360" Margin="12,0,0,0" Foreground="{DynamicResource DangerBrush}"
+                               AutomationProperties.LiveSetting="Polite"
+                               Visibility="{Binding HasBlockReason, Converter={StaticResource BoolToVis}}"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Ui_Back}" Click="Back_Click" Margin="0,0,8,0"
@@ -402,7 +485,8 @@
                             Visibility="{Binding ShowNext, Converter={StaticResource BoolToVis}}"
                             IsEnabled="{Binding CanNext}"/>
                     <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Ui_Cancel}" Click="CancelRun_Click" Margin="0,0,8,0"
-                            Visibility="{Binding ShowCancel, Converter={StaticResource BoolToVis}}"/>
+                            Visibility="{Binding ShowCancel, Converter={StaticResource BoolToVis}}"
+                            IsEnabled="{Binding IsCancelling, Converter={StaticResource InvBool}}"/>
                     <Button Style="{StaticResource PrimaryBtn}" Content="{loc:Loc Forms_CopyMore}" Click="CopyMore_Click" Margin="0,0,8,0"
                             Visibility="{Binding ShowCopyMore, Converter={StaticResource BoolToVis}}"/>
                     <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Ui_Close}" IsCancel="True" Click="Close_Click"/>

@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Назначение: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Список назначения</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Параметры копирования</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Копировать содержимое библиотеки (файлы)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Если выключено, воссоздаются только схема столбцов и параметры библиотеки — файлы не копируются.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Копировать файлы и элементы списка (содержимое)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Если параметр отключен, копируется только структура без файлов и элементов списка: столбцы, представления, параметры списка, типы контента, а в области "Весь сайт" также столбцы сайта, навигация и параметры сайта.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Если файл существует:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Пропустить</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Перезаписать</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Все версии</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Последние </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> версий</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Также копировать списки, на которые ссылаются мои списки</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>Если в выбранном списке есть столбец подстановки (Lookup), список, на который он ссылается, тоже копируется, чтобы можно было создать столбец и разрешить его значения. Отключите, чтобы копировать только выбранное.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Значения подстановки</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} сопоставлено по элементу, {1} сопоставлено по тексту, {2} не найдено.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Управляемые метаданные</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>Скопировано значений терминов: {0}, пропущено: {1} (термин не найден в скопированном наборе).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>Столбец управляемых метаданных &quot;{0}&quot; не создан: его набор терминов принадлежит другому клиенту, а копирование наборов терминов недоступно (войдите в оба клиента и предоставьте разрешение TermStore.ReadWrite.All).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>Набор терминов &quot;{0}&quot; скопирован в целевое расположение: создано {1}, уже существовало {2}.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Копировать наборы терминов управляемых метаданных в целевой клиент</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>Столбец управляемых метаданных привязан к набору терминов в хранилище терминов исходного клиента. Если этот параметр включен, набор терминов (термины, метки, синонимы, описания) копируется в целевое хранилище терминов, столбец привязывается к копии, а каждое значение сопоставляется заново. Требуется необязательное разрешение TermStore.ReadWrite.All и роль в хранилище терминов целевого расположения.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Подстановка из списка "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Подстановка из списка на другом веб-сайте</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Управляемые метаданные: их набор терминов будет скопирован в целевой клиент</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Управляемые метаданные: используется тот же набор терминов (тот же клиент)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>Проецируемое поле "{0}" не создано: его столбец подстановки "{1}" отсутствует в целевом списке.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>Проецируемое поле "{0}" не создано: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Войти с помощью регистрации приложения:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Структура для копирования</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Всё, что отмечено здесь, воссоздаётся в целевом расположении вместе с данными. Список или библиотека, которые там уже существуют, получают только недостающие типы контента и представления.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Представления (фильтры, группировка, столбцы, представление по умолчанию, представления календаря и доски)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Параметры списка (утверждение, извлечение, вложения, папки, безопасность на уровне элементов)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Типы контента и их шаблоны документов</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Правила проверки и форматирование столбцов</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Шаблон библиотеки и значения папок по умолчанию</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Столбцы сайта и типы контента сайта</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Параметры сайта (описание, быстрый запуск, представление в виде дерева и другое)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Представления</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Параметры списка</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Типы контента</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Правила столбцов</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Шаблоны и значения по умолчанию</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Столбцы и типы сайта</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Навигация</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Параметры сайта</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Списки подстановки</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Наборы терминов</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Структура: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>нет</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Показать больше</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Показать меньше</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Копировать навигацию (быстрый запуск и верхняя панель)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Заменяет навигацию целевого сайта ссылками источника. URL-адреса преобразуются для целевого сайта.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Копировать разрешения</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Копировать значения пользовательских столбцов</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Копирует значения столбцов типов «Текст», «Число», «Выбор», «Дата», «Логический», «Множественный выбор», «Пользователь» и «Управляемые метаданные». Столбцы подстановки не поддерживаются.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Включите «Копировать значения пользовательских столбцов», чтобы настроить сопоставления.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Копируются все значения пользовательских столбцов. Используйте сопоставления, чтобы указать, какие столбцы создаются в месте назначения.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Копируются все значения настраиваемых столбцов. Используйте Сопоставление столбцов (выше), чтобы выбрать, какие столбцы создаются в целевом расположении.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Значения пользовательских столбцов для элементов списка копируются всегда.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Режим копирования</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Имя</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Идентификатор клиента (идентификатор приложения)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Идентификатор клиента Microsoft (Tenant ID)</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Используйте 'common' для мультиклиентских приложений либо GUID или домен вашего клиента Microsoft.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Оставьте пустым или введите 'common', чтобы входить в любой клиент. GUID или домен клиента (например, contoso.onmicrosoft.com) ограничивает вход только этим клиентом.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Добавлять в имена отчетов по умолчанию префикс из имен сайтов источника и назначения</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Выйти</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Тема:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Режим «Библиотеки и списки»</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Режим «Весь сайт»</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Режим «Страницы сайта»</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Копировать содержимое библиотеки (файлы)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Копировать файлы и элементы списка (содержимое)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Копировать историю версий</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>Последние N версий</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Копировать навигацию</value></data>
@@ -939,7 +979,7 @@
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Перезагрузить формы</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Нажмите «Загрузить мои формы», чтобы увидеть свои формы.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>В этой учетной записи формы не найдены.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>Копировать формы: {0}</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Начать копирование форм: {0}</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Копировать другие формы</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Выберите, куда поместить копии</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Один клиент: копии создаются в той же учетной записи, которую вы используете, рядом с оригиналами.</value></data>
@@ -963,7 +1003,7 @@
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Копирование форм</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Запуск…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Форма {0} из {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Отмена после текущей формы…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Отмена… копирование текущей формы останавливается.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Копирование завершено: все формы скопированы ({0})</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Ваши копии находятся в {0}. Откройте Microsoft Forms, чтобы увидеть их, или воспользуйтесь таблицей ниже.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Копирование завершено: скопировано форм — {0} из {1}, некоторые требуют внимания</value></data>
@@ -971,7 +1011,7 @@
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Копирование завершено, но ни одна форма не скопирована</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Причину см. в столбце «Подробности». Частые причины — отсутствие разрешения Microsoft Forms у регистрации назначения или учетная запись без доступа к Forms.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Копирование отменено после {0} из {1} форм</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Перечисленные ниже формы были завершены. Форма, которая копировалась в момент отмены, не была завершена и не отображается.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Формы, отмеченные ниже как скопированные, были завершены. Форма, которая копировалась в момент отмены, не была завершена и может остаться незавершенной в целевой учетной записи; в ее строке показан ID копии, если она была создана.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Скопировано</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>С предупреждениями</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Сбой</value></data>
@@ -986,7 +1026,7 @@
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Открыть выбранную копию</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Открыть Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Экспорт результатов…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Показать карту ID форм</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Открыть сохраненные ID форм</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Сначала выберите скопированную форму в таблице.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Результаты сохранены в {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Подсказка: у регистрации приложения нет подходящего адреса перенаправления. В Entra в разделе «Проверка подлинности» добавьте платформу «Мобильные приложения и приложения для настольных компьютеров» с http://localhost и повторите попытку.</value></data>
@@ -1105,7 +1145,7 @@
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(форма без названия)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Исходная форма</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Выбрать из форм назначения</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Выберите форму из целевой учетной записи. Сначала нажмите «Загрузить формы из целевой учетной записи».</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Выберите форму из целевой учетной записи. Список загружается при открытии этого шага; если он пуст, нажмите «Перезагрузить названия форм…».</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Заполнено по входу в назначение ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>Ваша исходная учетная запись, замененная вашей целевой учетной записью</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Заполнено по вашим входам ({0} → {1}). Очистите оба поля, чтобы не менять домены электронной почты.</value></data>
@@ -1133,7 +1173,7 @@
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ Пакетов, записанных этим средством и уже содержащих значения назначения: {0}. Удалите их (значок ✕ в списке) и добавьте исходные экспорты.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ У сайтов без назначения: {0}. Сайт, оставленный как есть, по-прежнему указывал бы на исходный клиент.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ Списков, при импорте которых будет сбой: {0}. Чтобы продолжить, исправьте списки с пометкой «Будет сбой».</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Списки еще не сопоставлены. Вернитесь на шаг назад и снова вперед, чтобы повторить.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Списки еще не сопоставлены. Нажмите «Сопоставить снова», чтобы повторить.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ Форм, которым нужен допустимый ID целевой формы: {0}. Чтобы продолжить, укажите их.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Изменить источник…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Выполнен вход как {0}. Адрес SharePoint исходного клиента — {1}.</value></data>
@@ -1398,11 +1438,65 @@
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Закрыть во время работы?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>Средство все еще работает (сканирование, сопоставление, вход или запись пакетов). Если закрыть сейчас, оно будет остановлено. Все равно закрыть?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>Не удалось автоматически добавить {0} в новую форму. Копия файла сохранена как {1}: добавьте ее снова в Microsoft Forms.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Журнал версий элементов списка:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Как для файлов</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Все версии</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Только текущая</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Копирует журнал версий каждого нового элемента списка (значения, даты и редакторы), воспроизводя его версии в целевом расположении. Вариант «Как для файлов» следует параметрам версий файлов выше. Элементы, уже существующие в целевом расположении, сохраняют собственный журнал. Столбцы людей, подстановки, таксономии и ссылок копируются только с текущим значением.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>журнал версий: часть не скопирована ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>журнал версий не скопирован ({0}); у элемента только текущие значения</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Список:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>Перенос почтового домена не применен: оба домена должны быть заполнены, без пробелов и лишнего символа @ (например, contoso.com и fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Удалить все пакеты и отбросить результаты сканирования и все, что вы заполнили на следующих шагах?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Закрыть «Перезапись потоков»? Созданное до этого момента сопоставление будет потеряно (сначала используйте «Сохранить сопоставление…», чтобы сохранить его).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Начать заново? Пакеты, результаты сканирования и все заполненное вами будут отброшены. Пакеты, уже записанные в выходную папку, не удаляются.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>Адресов электронной почты в домене {1}, охваченных этим переносом: {0}, поэтому они не перечислены выше. Чтобы задать для одного из них другой адрес, очистите эти поля, заполните его строку и снова введите перенос домена.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>Не удалось прочитать папку {0}: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Проверьте: эти названия столбцов были переименованы везде, где они встречаются в выражениях потока, включая, возможно, одноименный столбец другого списка. Убедитесь, что каждое из них относится к списку, который его переименовал.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>Названий столбцов, переименованных везде, где они встречаются в выражениях: {0}. Убедитесь, что они относятся к списку, который их переименовал, а не к одноименному столбцу другого списка (см. отчет).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Остановить копирование сейчас? Копирование текущей формы будет прервано, и она может остаться незавершенной в целевой учетной записи; при необходимости удалите ее в Microsoft Forms. Уже завершенные формы сохраняются.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Выбор</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Журнал копирования</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>Начать копирование 1 формы</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>Форма скопирована, но проверить ее изображения не удалось ({0}). Откройте ее в Microsoft Forms и проверьте фоновое изображение и изображение заголовка.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Проверьте подключение и вход в систему, затем нажмите «Перезагрузить формы». Подробности: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Не удалось загрузить ваши формы</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>Загружена 1 форма.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>Журнал скопирован в буфер обмена.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>Не удалось скопировать журнал, так как буфер обмена используется другой программой. Повторите попытку.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Журнал копирования</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Далее: если потоки используют эти формы, откройте «Перезапись потоков» в главном окне. Она считывает ID форм, сохраненные этим копированием, и направляет каждый поток на новую форму.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Формы не найдены</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>Что копируется: вопросы, ветвление, параметры и тема. Что не копируется: ответы (используйте «Экспорт ответов…» на первом шаге, чтобы сохранить их в Excel), соавторы и пользователи, которым предоставлен доступ к форме. Каждая копия — это новая форма, принадлежащая целевой учетной записи; изображения, возможно, придется добавить снова.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Копирование завершено: форма скопирована</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Включен фильтр: «Выбрать все» и «Снять выбор» применяются к показанным формам ({0}).</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>Ранее уже были скопированы выбранные формы: {0}; повторное копирование создаст дубликаты.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Шаг {0} из {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 форма будет скопирована из {1} в {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>Выбранных форм, название которых после добавления суффикса станет длиннее {1} симв.: {0}. Microsoft Forms может отклонить их; сократите суффикс.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Не удалось скопировать представления: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>Представление '{0}' не скопировано (представление типа {1})</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>Не удалось создать представление '{0}': {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>Представление '{0}' создано, но некоторые параметры не удалось применить: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>Представление '{0}': не удалось применить фильтр или сортировку, они пропущены</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>Представление '{0}': столбцы, отсутствующие в целевом расположении, пропущены: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} примеч. о представлениях, параметрах или типах контента: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>Не удалось прочитать параметры списка, поэтому ни один из них не скопирован: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>Параметры списка, которые не удалось применить: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Не удалось применить правила проверки или форматирование для: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>Не удалось скопировать тип контента '{0}': {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>Тип контента '{0}': столбцы, которые не удалось в него добавить: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>Не удалось скопировать шаблон документа библиотеки.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>Не удалось скопировать значения папок по умолчанию для библиотеки.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>Значения папок по умолчанию скопированы, но не удалось добавить правило, применяющее их к новым файлам.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Не удалось прочитать столбцы сайта: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Столбцы сайта, которые не удалось создать: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Не удалось прочитать типы контента сайта: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Типы контента сайта, которые не удалось создать: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Ссылки навигации ({0}), которые не удалось создать: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Параметры сайта, которые не удалось применить: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Столбцы сайта, типы контента, навигация и параметры</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Копирование столбцов сайта, типов контента, навигации и параметров...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>тип контента</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>Тип контента '{0}': не удалось скопировать шаблон документа.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Вход выполняется с регистрацией приложения: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Клиент: любой. Учетную запись Microsoft 365 вы выбираете при входе.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Клиент: {0}. Вход возможен только в этот каталог.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Чтобы подключить сайт другого клиента, выберите в разделе «Параметры» другую регистрацию приложения (с пустым значением Tenant ID или с этим клиентом) либо используйте режим «Несколько клиентов».</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Только структура: столбцы, представления, параметры и типы контента копируются, но без файлов и элементов списка.</value></data>
 </root>

@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> الهدف: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>قائمة الوجهة</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>خيارات النسخ</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>نسخ محتوى المكتبة (الملفات)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>عند الإيقاف، تتم إعادة إنشاء مخطط الأعمدة وإعدادات المكتبة فقط — ولا يتم نسخ أي ملفات.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>نسخ الملفات وعناصر القائمة (المحتوى)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>عند إيقاف التشغيل، يتم نسخ البنية فقط دون أي ملفات أو عناصر قائمة: الأعمدة وطرق العرض وإعدادات القائمة وأنواع المحتوى، وفي نطاق "الموقع بالكامل" أعمدة الموقع والتنقل وإعدادات الموقع.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>إذا كان الملف موجودًا:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>تخطي</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>استبدال</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>جميع الإصدارات</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>أحدث </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> إصدارات</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>نسخ القوائم التي تبحث عنها قوائمي أيضًا</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>عندما تحتوي قائمة محددة على عمود بحث (Lookup)، يتم نسخ القائمة التي يبحث عنها أيضًا، بحيث يمكن إنشاء العمود وحل قيمه. أوقف هذا الخيار لنسخ ما حددته فقط.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>قيم البحث</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} تمت مطابقتها حسب العنصر، {1} تمت مطابقتها حسب النص، {2} لم يتم العثور عليها.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>البيانات الوصفية المُدارة</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>تم نسخ {0} من قيم المصطلحات، وتم استبعاد {1} (لم يتم العثور على المصطلح في المجموعة المنسوخة).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>لم يتم إنشاء عمود البيانات الوصفية المُدارة &quot;{0}&quot;: مجموعة المصطلحات الخاصة به تنتمي إلى مستأجر آخر، ونسخ مجموعات المصطلحات غير متاح (سجّل الدخول إلى كلا المستأجرين وامنح الإذن TermStore.ReadWrite.All).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>تم نسخ مجموعة المصطلحات &quot;{0}&quot; إلى الهدف: تم إنشاء {1}، وكان {2} موجودًا بالفعل.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>نسخ مجموعات مصطلحات البيانات الوصفية المُدارة إلى المستأجر الهدف</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>يرتبط عمود البيانات الوصفية المُدارة بمجموعة مصطلحات في مخزن المصطلحات للمستأجر المصدر. عند تشغيل هذا الخيار، يتم نسخ مجموعة المصطلحات (المصطلحات والتسميات والمرادفات والأوصاف) إلى مخزن المصطلحات الهدف، ويرتبط العمود بالنسخة، ويُعاد تعيين كل قيمة. يتطلب الإذن الاختياري TermStore.ReadWrite.All ودورًا في مخزن المصطلحات على الهدف.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>يبحث في القائمة "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>يبحث في قائمة في موقع ويب آخر</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>بيانات وصفية مُدارة: سيتم نسخ مجموعة المصطلحات الخاصة بها إلى المستأجر الهدف</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>بيانات وصفية مُدارة: تستخدم مجموعة المصطلحات نفسها (المستأجر نفسه)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>لم يتم إنشاء الحقل المعروض "{0}": عمود البحث الخاص به "{1}" غير موجود في القائمة الهدف.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>لم يتم إنشاء الحقل المعروض "{0}": {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>تسجيل الدخول باستخدام تسجيل التطبيق:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>البنية المراد نسخها</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>يُعاد إنشاء كل ما تم تحديده هنا في الوجهة مع البيانات. القائمة أو المكتبة الموجودة هناك مسبقًا تحصل فقط على أنواع المحتوى وطرق العرض التي تنقصها.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>طرق العرض (عوامل التصفية والتجميع والأعمدة وطريقة العرض الافتراضية وطرق عرض التقويم واللوحة)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>إعدادات القائمة (الموافقة والسحب للتحرير والمرفقات والمجلدات والأمان على مستوى العنصر)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>أنواع المحتوى وقوالب المستندات الخاصة بها</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>قواعد التحقق من صحة الأعمدة وتنسيقها</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>قالب المكتبة والقيم الافتراضية للمجلدات</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>أعمدة الموقع وأنواع محتوى الموقع</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>إعدادات الموقع (الوصف والتشغيل السريع وعرض الشجرة والمزيد)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>طرق العرض</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>إعدادات القائمة</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>أنواع المحتوى</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>قواعد الأعمدة</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>القوالب والقيم الافتراضية</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>أعمدة الموقع وأنواعه</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>التنقل</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>إعدادات الموقع</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>قوائم البحث</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>مجموعات المصطلحات</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>البنية: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>لا شيء</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>عرض المزيد</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>عرض أقل</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>نسخ التنقل (الإطلاق السريع والشريط العلوي)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>يستبدل تنقل الهدف بروابط المصدر. تتم إعادة تعيين عناوين URL إلى الموقع الهدف.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>نسخ الأذونات</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>نسخ قيم الأعمدة المخصصة</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>ينسخ قيم أعمدة النص والرقم والاختيار والتاريخ والمنطقي والاختيار المتعدد والشخص والبيانات الوصفية المُدارة. أعمدة البحث غير مدعومة.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>فعّل 'نسخ قيم الأعمدة المخصصة' لتكوين التعيينات.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>يتم نسخ جميع قيم الأعمدة المخصصة. استخدم التعيينات للتحكم في الأعمدة التي يتم إنشاؤها في الوجهة.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>يتم نسخ جميع قيم الأعمدة المخصصة. استخدم تعيين الأعمدة (أعلاه) للتحكم في الأعمدة التي يتم إنشاؤها في الوجهة.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>يتم دائمًا نسخ قيم الأعمدة المخصصة لعناصر القائمة.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>وضع النسخ</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>الاسم</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>معرّف العميل (معرّف التطبيق)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>معرّف المستأجر</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>استخدم 'common' لتعدد المستأجرين، أو GUID المستأجر أو نطاقه.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>اتركه فارغًا أو أدخل 'common' لتسجيل الدخول إلى أي مستأجر. يقصر GUID المستأجر أو نطاقه (مثل contoso.onmicrosoft.com) تسجيل الدخول على ذلك المستأجر وحده.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>إضافة أسماء موقعي المصدر والهدف كبادئة لأسماء ملفات التقارير الافتراضية</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>تسجيل الخروج</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>المظهر:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>وضع المكتبات والقوائم</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>وضع الموقع بالكامل</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>وضع صفحات الموقع</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>نسخ محتوى المكتبة (الملفات)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>نسخ الملفات وعناصر القائمة (المحتوى)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>نسخ سجل الإصدارات</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>أحدث N إصدارات</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>نسخ التنقل</value></data>
@@ -939,7 +979,7 @@
   <data name="Forms_ReloadForms" xml:space="preserve"><value>إعادة تحميل النماذج</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>انقر فوق &quot;تحميل نماذجي&quot; لعرض نماذجك.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>لم يتم العثور على نماذج في هذا الحساب.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>نسخ {0} نموذج</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>بدء نسخ {0} نموذج</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>نسخ مزيد من النماذج</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>اختر مكان النسخ</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>مستأجر واحد: تُنشأ النسخ في الحساب نفسه الذي تستخدمه، بجانب الأصول.</value></data>
@@ -963,7 +1003,7 @@
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>جارٍ نسخ النماذج</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>جارٍ البدء…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>النموذج {0} من {1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>جارٍ الإلغاء بعد النموذج الحالي…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>جارٍ الإلغاء… يتم إيقاف النموذج الذي يجري نسخه.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>انتهى النسخ: تم نسخ جميع النماذج ({0})</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>نسخك موجودة في {0}. افتح Microsoft Forms لعرضها، أو استخدم الجدول أدناه.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>انتهى النسخ: تم نسخ {0} من {1} نموذج، وبعضها يحتاج إلى انتباه</value></data>
@@ -971,7 +1011,7 @@
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>انتهى النسخ، لكن لم يتم نسخ أي نموذج</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>راجع عمود التفاصيل لمعرفة السبب. من الأسباب الشائعة غياب إذن Microsoft Forms في تسجيل الهدف، أو حساب بلا وصول إلى Forms.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>تم إلغاء النسخ بعد {0} من {1} نموذج</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>النماذج المدرجة أدناه اكتملت. النموذج الذي كان قيد النسخ عند الإلغاء لم يكتمل وهو غير مرئي.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>النماذج المعلَّمة أدناه على أنها منسوخة اكتملت. النموذج الذي كان قيد النسخ عند الإلغاء لم يكتمل وقد يبقى نصف مُنشأ في الهدف؛ يعرض صفه معرّف النسخة إذا تم إنشاؤها.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>تم النسخ</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>مع تحذيرات</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>فشل</value></data>
@@ -986,7 +1026,7 @@
   <data name="Forms_OpenSelected" xml:space="preserve"><value>فتح النسخة المحددة</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>فتح Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>تصدير النتائج…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>عرض خريطة معرّفات النماذج</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>فتح معرّفات النماذج المحفوظة</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>حدد نموذجًا منسوخًا في الجدول أولاً.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>تم حفظ النتائج في {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>تلميح: لا يملك تسجيل التطبيق عنوان إعادة توجيه مطابقًا. في Entra، ضمن المصادقة، أضف النظام الأساسي &quot;تطبيقات الجوال وسطح المكتب&quot; مع http://localhost ثم حاول مرة أخرى.</value></data>
@@ -1105,7 +1145,7 @@
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(نموذج بلا عنوان)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>نموذج المصدر</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>اختر من نماذج الهدف</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>اختر نموذجًا من حساب الهدف. انقر فوق &quot;تحميل النماذج من حساب الهدف&quot; أولاً.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>اختر نموذجًا من حساب الهدف. يتم تحميل القائمة عند فتح هذه الخطوة؛ وإذا كانت فارغة، فانقر فوق &quot;إعادة تحميل أسماء النماذج…&quot;.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>تم الملء من تسجيل دخول الهدف ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>حساب المصدر الخاص بك، مستبدل بحساب الهدف الخاص بك</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>تم الملء من عمليات تسجيل الدخول لديك ({0} ← {1}). امسح المربعين لترك نطاقات البريد الإلكتروني دون تغيير.</value></data>
@@ -1133,7 +1173,7 @@
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ كتبت هذه الأداة {0} حزمة وهي تحتوي بالفعل على قيم الهدف. أزلها (علامة ✕ في القائمة) وأضف عمليات التصدير الأصلية.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} موقع بلا هدف. الموقع المتروك كما هو سيظل يشير إلى مستأجر المصدر.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ ستفشل {0} قائمة عند الاستيراد. أصلح القوائم المميّزة بـ &quot;سيفشل&quot; للمتابعة.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ لم تتم مطابقة القوائم بعد. ارجع خطوة ثم تقدّم مرة أخرى لإعادة المحاولة.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ لم تتم مطابقة القوائم بعد. انقر فوق &quot;مطابقة مرة أخرى&quot; لإعادة المحاولة.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ يحتاج {0} نموذج إلى معرّف نموذج هدف صالح للمتابعة.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>تغيير المصدر…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>تم تسجيل الدخول باسم {0}. عنوان SharePoint لمستأجر المصدر هو {1}.</value></data>
@@ -1398,11 +1438,65 @@
   <data name="Flows_CloseTitle" xml:space="preserve"><value>الإغلاق أثناء العمل؟</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>لا تزال الأداة تعمل (فحص أو مطابقة أو تسجيل دخول أو كتابة حزم). الإغلاق الآن يوقفها. هل تريد الإغلاق على أي حال؟</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>تعذرت إضافة {0} إلى النموذج الجديد تلقائيًا. تم حفظ نسخة من الملف باسم {1}: أضفه مرة أخرى في Microsoft Forms.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>سجل إصدارات عناصر القائمة:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>مثل الملفات</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>كل الإصدارات</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>الحالي فقط</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>ينسخ سجل إصدارات كل عنصر قائمة جديد (القيم والتواريخ والمحررون) بإعادة تشغيل إصداراته في الوجهة. يتبع الخيار &quot;مثل الملفات&quot; خيارات إصدارات الملفات أعلاه. تحتفظ العناصر الموجودة في الوجهة بسجلها الخاص. تُنسخ أعمدة الأشخاص والبحث والتصنيف والارتباطات بقيمتها الحالية فقط.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>سجل الإصدارات: لم يُنسخ جزء منه ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>لم يُنسخ سجل الإصدارات ({0})؛ للعنصر قيمه الحالية فقط</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>القائمة:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>لم يتم تطبيق نقل نطاق البريد الإلكتروني: يجب ملء النطاقين معًا، من دون مسافات ومن دون @ إضافية (مثل contoso.com وfabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>هل تريد إزالة جميع الحزم وتجاهل الفحص وكل ما ملأته في الخطوات اللاحقة؟</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>هل تريد إغلاق &quot;إعادة كتابة التدفقات للهدف&quot;؟ سيتم فقدان التعيين الذي أنشأته حتى الآن (استخدم &quot;حفظ التعيين…&quot; أولاً للاحتفاظ به).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>هل تريد البدء من جديد؟ سيتم تجاهل الحزم والفحص وكل ما ملأته. لا يتم حذف الحزم التي تمت كتابتها بالفعل في مجلد الإخراج.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{0} عنوان بريد إلكتروني على {1} مشمولة بهذا النقل، لذلك لم تُدرج أعلاه. لإعطاء أحدها عنوانًا مختلفًا، امسح هذه المربعات واملأ ذلك الصف وأدخل نقل النطاق مرة أخرى.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>تعذرت قراءة المجلد {0}: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>مراجعة: تمت إعادة تسمية أسماء الأعمدة هذه أينما وردت في تعبيرات التدفق، وقد يشمل ذلك العمود الذي يحمل الاسم نفسه في قائمة أخرى. تحقق من أن كل اسم يشير إلى القائمة التي أعادت تسميته.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>تمت إعادة تسمية {0} من أسماء الأعمدة أينما وردت في التعبيرات. تحقق من أنها تشير إلى القائمة التي أعادت تسميتها وليس إلى عمود يحمل الاسم نفسه في قائمة أخرى (راجع التقرير).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>هل تريد إيقاف النسخ الآن؟ سيتم قطع النموذج الذي يجري نسخه حاليًا وقد يبقى نصف مُنشأ في حساب الهدف؛ احذفه في Microsoft Forms إذا حدث ذلك. تبقى النماذج المكتملة بالفعل.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>تحديد</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>سجل النسخ</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>بدء نسخ نموذج واحد</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>تم نسخ النموذج، لكن تعذر التحقق من صوره ({0}). افتحه في Microsoft Forms وتحقق من صورتي الخلفية والرأس.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>تحقق من اتصالك وتسجيل الدخول، ثم انقر فوق &quot;إعادة تحميل النماذج&quot;. التفاصيل: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>تعذر تحميل نماذجك</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>تم تحميل نموذج واحد.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>تم نسخ السجل إلى الحافظة.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>تعذر نسخ السجل لأن برنامجًا آخر يستخدم الحافظة. حاول مرة أخرى.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>سجل النسخ</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>التالي: إذا كانت هناك تدفقات تستخدم هذه النماذج، فافتح &quot;إعادة كتابة التدفقات للهدف&quot; من النافذة الرئيسية. تقرأ الأداة معرّفات النماذج التي حفظتها عملية النسخ هذه وتوجّه كل تدفق إلى النموذج الجديد.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>لم يتم العثور على نماذج</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>ما يتم نسخه: الأسئلة والتفرعات والإعدادات والمظهر. وما لا يتم نسخه: الردود (استخدم &quot;تصدير الردود…&quot; في الخطوة الأولى لحفظها في Excel) والمتعاونون ومن تمت مشاركة النموذج معهم. كل نسخة هي نموذج جديد يملكه حساب الهدف، وقد تحتاج الصور إلى إضافتها مرة أخرى.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>اكتمل النسخ: تم نسخ النموذج</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>عامل التصفية قيد التشغيل: يسري &quot;تحديد الكل&quot; و&quot;إلغاء تحديد الكل&quot; على النماذج المعروضة وعددها {0}.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>تم نسخ {0} من النماذج المحددة من قبل؛ نسخها مرة أخرى ينشئ نسخًا مكررة.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>الخطوة {0} من {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>سيتم نسخ نموذج واحد من {1} إلى {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>سيصبح عنوان {0} من النماذج المحددة أطول من {1} حرفًا بعد إضافة اللاحقة. قد يرفضها Microsoft Forms؛ قصّر اللاحقة.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>تعذر نسخ طرق العرض: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>لم يتم نسخ طريقة العرض '{0}' (طريقة عرض {1})</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>تعذر إنشاء طريقة العرض '{0}': {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>تم إنشاء طريقة العرض '{0}' ولكن تعذر تطبيق بعض الإعدادات: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>طريقة العرض '{0}': تعذر تطبيق عامل التصفية أو الفرز الخاص بها وتم استبعاده</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>طريقة العرض '{0}': تم استبعاد الأعمدة غير الموجودة في الهدف: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} ملاحظة (ملاحظات) حول طرق العرض أو الإعدادات أو أنواع المحتوى: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>تعذرت قراءة إعدادات القائمة، لذا لم يتم نسخ أي منها: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>إعدادات القائمة التي تعذر تطبيقها: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>تعذر تطبيق قواعد التحقق من الصحة أو التنسيق على: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>تعذر نسخ نوع المحتوى '{0}': {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>نوع المحتوى '{0}': الأعمدة التي تعذرت إضافتها إليه: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>تعذر نسخ قالب المستند الخاص بالمكتبة.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>تعذر نسخ القيم الافتراضية للمجلدات الخاصة بالمكتبة.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>تم نسخ القيم الافتراضية للمجلدات، ولكن تعذرت إضافة القاعدة التي تطبقها على الملفات الجديدة.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>تعذرت قراءة أعمدة الموقع: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>أعمدة الموقع التي تعذر إنشاؤها: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>تعذرت قراءة أنواع محتوى الموقع: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>أنواع محتوى الموقع التي تعذر إنشاؤها: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>روابط التنقل ({0}) التي تعذر إنشاؤها: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>إعدادات الموقع التي تعذر تطبيقها: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>أعمدة الموقع وأنواع المحتوى والتنقل والإعدادات</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>جارٍ نسخ أعمدة الموقع وأنواع المحتوى والتنقل والإعدادات...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>نوع المحتوى</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>نوع المحتوى '{0}': تعذر نسخ قالب المستند الخاص به.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>يسجّل الدخول باستخدام تسجيل التطبيق: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>المستأجر: أي مستأجر. تختار حساب Microsoft 365 عند تسجيل الدخول.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>المستأجر: {0}. يمكن أن يتم تسجيل الدخول إلى هذا الدليل فقط.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>لتوصيل موقع على مستأجر مختلف، اختر تسجيل تطبيق آخر في الإعدادات (يكون معرّف المستأجر فيه فارغًا أو معيّنًا لذلك المستأجر)، أو استخدم وضع عدة مستأجرين.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>البنية فقط: يتم نسخ الأعمدة وطرق العرض والإعدادات وأنواع المحتوى، ولكن دون أي ملفات أو عناصر قائمة.</value></data>
 </root>

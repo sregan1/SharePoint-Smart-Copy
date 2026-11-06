@@ -33,7 +33,7 @@ public partial class SharePointService
     {
         string[] select = ["createdDateTime", "lastModifiedDateTime", "createdBy", "lastModifiedBy", "size"];
         DriveItem? item = null;
-        string? colorTag = null, colorHex = null;
+        string? colorTag = null, colorHex = null, contentTypeName = null;
 
         if (includeFolderColor)
         {
@@ -54,6 +54,9 @@ public partial class SharePointService
                     cfg.QueryParameters.Expand = [$"listItem($expand=fields($select={FolderColorTagODataName},{FolderColorHexODataName}))"];
                 });
                 (colorTag, colorHex) = GetFolderColorValues(item);
+                // The folder's content type (listItem comes back with its contentType); the plain Folder type is not kept.
+                var ctn = item?.ListItem?.ContentType?.Name;
+                if (!string.IsNullOrEmpty(ctn) && !DefaultContentTypeNames.Contains(ctn)) contentTypeName = ctn;
             }
             catch
             {
@@ -73,6 +76,7 @@ public partial class SharePointService
             Size             = item?.Size,
             ColorTag         = colorTag,
             ColorHex         = colorHex,
+            ContentTypeName  = contentTypeName,
         };
     }
 
@@ -175,6 +179,7 @@ public partial class SharePointService
                         ProgId           = progId,
                         ColorTag         = metadata.ColorTag,
                         ColorHex         = metadata.ColorHex,
+                        ContentTypeName  = metadata.ContentTypeName,
                         CustomFields     = metadata.CustomFields,
                     };
                 }
@@ -539,6 +544,76 @@ public partial class SharePointService
         }
         System.Diagnostics.Debug.WriteLine($"[GetSPIds] all 3 attempts failed for itemId={itemId}");
         return null;
+    }
+
+    // Puts a copied folder on its source's content type (a Document Set or another folder-based type) when the target list has
+    // a type of that name. Done BEFORE the date/author correction, which then re-stamps Modified (this write bumps it).
+    // Returns an error text, or null when it was set or there was nothing to do.
+    public async Task<string?> SetFolderContentTypeAsync(
+        string siteUrl, string listId, string folderUniqueId, string? contentTypeName, CancellationToken ct = default)
+    {
+        if (string.IsNullOrEmpty(contentTypeName)) return null;
+        if (!(await GetTargetContentTypeNamesAsync(siteUrl, listId, ct)).Contains(contentTypeName)) return null;
+        try
+        {
+            var idUrl = $"{siteUrl.TrimEnd('/')}/_api/web/GetFolderById('{folderUniqueId}')/ListItemAllFields/Id";
+            using var idResp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, idUrl);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl, cancellationToken: ct);
+            var idBody = await idResp.Content.ReadAsStringAsync(ct);
+            if (!idResp.IsSuccessStatusCode) return $"content type '{contentTypeName}': HTTP {(int)idResp.StatusCode}";
+            int itemId;
+            using (var idDoc = JsonDocument.Parse(idBody))
+                itemId = idDoc.RootElement.ValueKind == JsonValueKind.Object && idDoc.RootElement.TryGetProperty("value", out var v)
+                    ? v.GetInt32() : idDoc.RootElement.GetInt32();
+            return await SetFolderContentTypeByItemAsync(siteUrl, listId, itemId, contentTypeName, ct);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or JsonException or InvalidOperationException or FormatException)
+        {
+            return $"content type '{contentTypeName}': {ex.Message}";
+        }
+    }
+
+    // Same, for a folder whose list item ID is already known (Enhanced REST resolves it from the Graph item).
+    public async Task<string?> SetFolderContentTypeByItemAsync(
+        string siteUrl, string listId, int itemId, string? contentTypeName, CancellationToken ct = default)
+    {
+        if (string.IsNullOrEmpty(contentTypeName)) return null;
+        if (!(await GetTargetContentTypeNamesAsync(siteUrl, listId, ct)).Contains(contentTypeName)) return null;
+        try
+        {
+            var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({itemId})/ValidateUpdateListItem()";
+            var payload = JsonSerializer.Serialize(new
+            {
+                formValues = new[] { new { FieldName = "ContentType", FieldValue = contentTypeName } },
+                bNewDocumentUpdate = true,
+            });
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                r.Content = new StringContent(payload, System.Text.Encoding.UTF8, "application/json");
+                return r;
+            }, siteUrl, cancellationToken: ct);
+            var body = await resp.Content.ReadAsStringAsync(ct);
+            if (!resp.IsSuccessStatusCode) return $"content type '{contentTypeName}': HTTP {(int)resp.StatusCode}";
+            using var doc = JsonDocument.Parse(body);
+            if (doc.RootElement.TryGetProperty("value", out var vals))
+                foreach (var f in vals.EnumerateArray())
+                    if (f.TryGetProperty("FieldName", out var fn) && fn.GetString() == "ContentType" &&
+                        f.TryGetProperty("HasException", out var he) && he.ValueKind == JsonValueKind.True)
+                        return $"content type '{contentTypeName}' was not accepted";
+            return null;
+        }
+        catch (Exception ex) when (ex is HttpRequestException or JsonException or InvalidOperationException or FormatException)
+        {
+            return $"content type '{contentTypeName}': {ex.Message}";
+        }
     }
 
     // Corrects a folder's Created/Modified/Author/Editor via REST after a Migration API import.

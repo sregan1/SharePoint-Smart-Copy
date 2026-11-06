@@ -45,8 +45,8 @@ Choose from four copy scopes in a step-by-step wizard:
 | Scope | What it copies |
 |---|---|
 | **Files** | Selected files and folders from a document library, with full version history and metadata |
-| **Libraries & Lists** | Entire document libraries or generic lists — schema, columns, versioning settings, and content |
-| **Site** | All document libraries and custom lists on a source site, plus optional navigation links |
+| **Libraries & Lists** | Entire document libraries or generic lists — schema, columns, views, settings, content types, versioning settings, and content |
+| **Site** | All document libraries and custom lists on a source site, plus site columns, site content types, navigation links, and site settings |
 | **Pages** | Modern SharePoint pages (.aspx), with optional web part URL remapping |
 
 **Related tools** (two more tiles on the Browse step, not copy scopes):
@@ -74,6 +74,18 @@ Choose from four copy scopes in a step-by-step wizard:
 - **Crash recovery and Resume** — a run interrupted by a crash or power loss is recovered as an **Interrupted** History entry, and **Resume / run again** re-runs its selection so only what's missing or changed is transferred
 - **Export diagnostics** (Settings) — a redacted zip of logs and system info for bug reports
 - **Total Size** shown alongside item counts on the preview, in-progress, and report screens, in the Excel verification report, and in History — including bytes from copied version history, not just each file's current version
+
+**Libraries, Lists and Site scopes — structure of new lists and libraries:**
+- **Lookups and managed metadata** — lookup values are matched by the original item (duplicate titles no longer collapse), looked-up lists and child-web lookups are carried along, projected lookup fields are recreated, and a managed-metadata term set can be copied to a different tenant through Microsoft Graph (optional `TermStore.ReadWrite.All` permission); the Column mapping dialog shows what each lookup and managed-metadata column is bound to
+- **Structure to copy** — the Options step lists every kind of structure that is recreated (views, list settings, content types, column rules, templates, and in Site scope site columns, navigation and settings) with a checkbox for each, and the report records what a run copied
+- **Views** — shared views are recreated with their filter, sorting, grouping, columns and order, paging, totals, formatting and default view; calendar, Gantt, datasheet and board views are created with their own type
+- **List settings** — content approval, check-out, attachments, open in browser, folder creation, search visibility, draft visibility, item-level security, and the list's validation rule
+- **Column validation rules and formatting**
+- **Content types** — custom types are recreated with their columns, and copied items, files and folders (including Document Sets) are put on the matching type
+- **Document template and folder default column values** of a library
+- **Site scope only** — custom site columns and content types, navigation (left and top), and site settings, before the lists are created
+- **Structure only:** untick *Copy files and list items (content)* to copy just the structure (no files or items)
+- Lists and libraries the app creates get all of this; ones that already exist on the target only get the missing content types and views (nothing existing is changed). A content type's own document template is copied into the library too. Anything that cannot be copied is listed on the item's result row. See the [User Guide](USER-GUIDE.md) for details and limits
 
 **Files scope:**
 - Full version history — version numbers, dates, and per-version editors preserved exactly
@@ -128,6 +140,7 @@ Go to **API permissions** → **Add a permission**:
 | Microsoft Graph | Delegated | `Files.ReadWrite.All` | Upload/download file content via Graph |
 | SharePoint | Delegated | `AllSites.FullControl` | Required by the Migration API to submit migration jobs; also allows correct `IsSiteAdmin` evaluation in the OAuth context |
 | Microsoft Forms | Delegated | *(Microsoft Forms permissions)* | **Optional** — only for the Forms tool; search "Microsoft Forms" under *APIs my organization uses* |
+| Microsoft Graph | Delegated | `TermStore.ReadWrite.All` | **Optional** — only to copy managed-metadata term sets to a different tenant (needs admin consent, and the signed-in target account needs a term store role). With two registrations (different-tenant mode) the **source** registration needs `TermStore.Read.All` instead |
 
 > **Why `AllSites.FullControl`?**
 > SharePoint's Migration API (`CreateMigrationJobEncrypted`) performs a server-side site-collection-administrator check.
@@ -140,17 +153,19 @@ Go to **API permissions** → **Add a permission**:
 
 Every sign-in asks for the two Microsoft Graph permissions, so they are needed for anything that connects to SharePoint. The other two are only needed by the features marked below. If you do not use a feature, you can leave its permission out.
 
-| Feature | Graph `Sites.ReadWrite.All` | Graph `Files.ReadWrite.All` | SharePoint `AllSites.FullControl` | Microsoft Forms |
-|---|:-:|:-:|:-:|:-:|
-| Files & Folders, Libraries & Lists, Entire Site — **Enhanced REST** mode | ✔ | ✔ | — | — |
-| Files & Folders, Libraries & Lists, Entire Site — **Migration API** mode | ✔ | ✔ | ✔ | — |
-| Site Pages (always Enhanced REST) | ✔ | ✔ | — | — |
-| **Compare**, and verifying a copy | ✔ | ✔ | — | — |
-| **Forms** tool | ✔ | ✔ | — | ✔ |
-| **Flows** tool | ✔ | ✔ | — | optional* |
-| Browsing saved History, Settings (local only; verifying a run signs in like Compare) | — | — | — | — |
+| Feature | Graph `Sites.ReadWrite.All` | Graph `Files.ReadWrite.All` | SharePoint `AllSites.FullControl` | Microsoft Forms | Graph `TermStore.ReadWrite.All` |
+|---|:-:|:-:|:-:|:-:|:-:|
+| Files & Folders, Libraries & Lists, Entire Site — **Enhanced REST** mode | ✔ | ✔ | — | — | optional† |
+| Files & Folders, Libraries & Lists, Entire Site — **Migration API** mode | ✔ | ✔ | ✔ | — | optional† |
+| Site Pages (always Enhanced REST) | ✔ | ✔ | — | — | — |
+| **Compare**, and verifying a copy | ✔ | ✔ | — | — | — |
+| **Forms** tool | ✔ | ✔ | — | ✔ | — |
+| **Flows** tool | ✔ | ✔ | — | optional* | — |
+| Browsing saved History, Settings (local only; verifying a run signs in like Compare) | — | — | — | — | — |
 
 \* The Flows tool only uses Microsoft Forms to look up form titles and the target account's forms. Without the permission those lookups report an error and you paste each new form's ID or edit-page link instead; everything else in Flows works.
+
+† Only for copying a managed-metadata column to a different tenant (the term set is copied through Microsoft Graph, delegated, admin consent). The signed-in target account also needs a term store role, for example *Term Store Administrator*. Without the permission the column is not created and the run report says why. See *Managed metadata* in the User Guide.
 
 For example, a company that only wants to move Power Automate flows needs the two Graph permissions and nothing else: no Microsoft Forms permission, and no `AllSites.FullControl`. Flows reads your packages from disk and looks up lists and columns on the source and target sites with the same sign-in.
 
@@ -285,7 +300,8 @@ Part of SharePoint Smart Solutions, a software product brand of Vivity, Inc.
 
 ## Disclaimer
 
-This software is provided "as is", without warranty of any kind, under the terms of the MIT License. Copying data between
+This software is provided "as is", without warranty of any kind, under the terms of the MIT License. To the extent permitted by law, Vivity, Inc. and the authors are not
+liable for any loss or damage arising from its use. Copying data between
 SharePoint sites and tenants can overwrite or miss content: verify the results (the Verification Report helps) before you rely
 on a copy or remove a source. The Forms tool uses an unofficial Microsoft Forms API that Microsoft does not document or
 support and may change without notice. This project is not affiliated with or endorsed by Microsoft. SharePoint, Microsoft

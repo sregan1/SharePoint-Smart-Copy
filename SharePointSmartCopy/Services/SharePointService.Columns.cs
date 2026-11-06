@@ -84,10 +84,26 @@ public partial class SharePointService
 
     // Called at the start of every copy run so a value resolved (or missed) in an earlier run — against
     // a target list that has since changed — is never reused.
+    // Source item ID -> target item ID for the items this run copied, per TARGET list: a lookup value is resolved through it
+    // first, so two items with the same title keep pointing at the right copy and a value does not depend on matching text.
+    // Only items copied in this run are in it; anything else falls back to the display-text match below.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, int> _lookupIdMap = new(StringComparer.OrdinalIgnoreCase);
+    private int _lookupResolvedById, _lookupResolvedByText, _lookupUnresolved;
+
+    public void RecordCopiedItem(string targetListId, int sourceItemId, int targetItemId) =>
+        _lookupIdMap[$"{targetListId}|{sourceItemId}"] = targetItemId;
+
+    // How lookup values were resolved this run (by copied item ID, by display text, not at all), for the report summary.
+    public (int ById, int ByText, int Unresolved) LookupStats => (_lookupResolvedById, _lookupResolvedByText, _lookupUnresolved);
+
     public void ClearLookupCache()
     {
         _lookupValueCache.Clear();
         _lookupMissCache.Clear();
+        _lookupIdMap.Clear();
+        _lookupResolvedById = _lookupResolvedByText = _lookupUnresolved = 0;
+        TermMap.Clear();
+        _taxonomyRemapped = _taxonomySkipped = 0;
     }
 
     // Every editable, non-hidden column of a list, built-in ones such as Title included. GetLibraryColumnsAsync (below)
@@ -183,8 +199,11 @@ public partial class SharePointService
 
                 string? lookupListId    = null;
                 string? lookupShowField = null;
+                string? lookupWebId     = null;
                 if (SpColumnDef.IsLookupType(fieldType) && schemaXml != null)
                 {
+                    var webMatch = System.Text.RegularExpressions.Regex.Match(schemaXml, @"WebId=""(\{?[0-9A-Fa-f\-]+\}?)""");
+                    if (webMatch.Success) lookupWebId = webMatch.Groups[1].Value.Trim('{', '}');
                     var listMatch = System.Text.RegularExpressions.Regex.Match(schemaXml, @"List=""(\{?[0-9A-Fa-f\-]+\}?)""");
                     if (listMatch.Success)
                         lookupListId = listMatch.Groups[1].Value.Trim('{', '}');
@@ -202,6 +221,8 @@ public partial class SharePointService
                     SchemaXml       = schemaXml,
                     LookupListId    = lookupListId,
                     LookupShowField = lookupShowField,
+                    LookupWebId     = lookupWebId,
+                    LookupListTitle = lookupListId != null ? await GetListTitleByIdAsync(siteUrl, lookupListId, ct) : null,
                 });
             }
         }
@@ -226,11 +247,11 @@ public partial class SharePointService
         CancellationToken ct = default)
     {
         var cols = columns.ToList();
-        if (cols.Count == 0) return [];
 
-        // Chunk columns into groups of 20 to stay within URL length limits.
+        // Chunk columns into groups of 20 to stay within URL length limits. A library with no custom columns still gets one
+        // (empty) pass, which reads each item's content type.
         var result = new Dictionary<string, Dictionary<string, object?>>();
-        var chunks  = cols.Chunk(20).ToList();
+        var chunks  = cols.Count == 0 ? [Array.Empty<SpColumnDef>()] : cols.Chunk(20).ToList();
 
         for (int chunk = 0; chunk < chunks.Count; chunk++)
         {
@@ -246,7 +267,7 @@ public partial class SharePointService
             // Set when the lookup sub-select (Id + show field) is rejected: lookups then read Id only.
             var lookupIdOnly = false;
 
-            while (chunkCols.Count > 0)
+            while (chunkCols.Count > 0 || cols.Count == 0)   // the no-column pass runs once: it never asks for a retry
             {
                 // User fields are lookups: they must be $expand-ed and read via {name}/Name
                 // (the claims login). Other field types are selected directly.
@@ -258,6 +279,12 @@ public partial class SharePointService
                 {
                     selectParts.AddRange(["Modified", "Editor/EMail", "Created", "Author/EMail"]);
                     expandParts.AddRange(["Editor", "Author"]);
+                }
+                // Each item's content type name rides along on chunk 0 too (see DefaultContentTypeNames below).
+                if (chunk == 0)
+                {
+                    selectParts.Add("ContentType/Name");
+                    expandParts.Add("ContentType");
                 }
                 foreach (var c in chunkCols)
                 {
@@ -343,6 +370,13 @@ public partial class SharePointService
                                 if (!item.TryGetProperty(col.InternalName, out var valProp)) continue;
                                 fields[col.InternalName] = ParseFieldValue(valProp, col.FieldType, col.LookupShowField);
                             }
+
+                            // A custom content type is kept under "ContentType" so the write can put the copy on the same type.
+                            // The built-in defaults are not kept: every file has one, and it would cost an extra write each.
+                            if (chunk == 0 && item.TryGetProperty("ContentType", out var ctProp) && ctProp.ValueKind == JsonValueKind.Object &&
+                                ctProp.TryGetProperty("Name", out var ctName) && ctName.GetString() is { Length: > 0 } ctn &&
+                                !DefaultContentTypeNames.Contains(ctn))
+                                fields[ContentTypeFieldKey] = ctn;
 
                             if (chunk == 0 && systemMetadataOut != null)
                             {
@@ -571,6 +605,44 @@ public partial class SharePointService
         return result;
     }
 
+    // The web that holds a lookup column's list: the column's own web unless its schema names another one (WebId).
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, string> _lookupWebUrls = new(StringComparer.OrdinalIgnoreCase);
+    private async Task<string> ResolveLookupWebUrlAsync(string siteUrl, SpColumnDef tgtCol, CancellationToken ct)
+    {
+        var webId = tgtCol.LookupWebId;
+        if (string.IsNullOrEmpty(webId)) return siteUrl;
+        var key = $"{siteUrl.TrimEnd('/')}|{webId}";
+        if (_lookupWebUrls.TryGetValue(key, out var known)) return known;
+        string result = siteUrl;
+        try
+        {
+            using var own = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, $"{siteUrl.TrimEnd('/')}/_api/web?$select=Id,Url");
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl, cancellationToken: ct);
+            var ownId = own.IsSuccessStatusCode ? JsonDocument.Parse(await own.Content.ReadAsStringAsync(ct)).RootElement.GetProperty("Id").GetString()?.Trim('{', '}') : null;
+            if (ownId != null && !string.Equals(ownId, webId, StringComparison.OrdinalIgnoreCase))
+            {
+                using var other = await SendSharePointRequestAsync(token =>
+                {
+                    var r = new HttpRequestMessage(HttpMethod.Get, $"{siteUrl.TrimEnd('/')}/_api/site/openWebById('{webId}')?$select=Url");
+                    r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                    return r;
+                }, siteUrl, cancellationToken: ct);
+                if (other.IsSuccessStatusCode &&
+                    JsonDocument.Parse(await other.Content.ReadAsStringAsync(ct)).RootElement.TryGetProperty("Url", out var u) && u.GetString() is { Length: > 0 } url)
+                    result = url;
+            }
+        }
+        catch (Exception ex) when (ex is HttpRequestException or JsonException) { /* fall back to the column's own web */ }
+        _lookupWebUrls[key] = result;
+        return result;
+    }
+
     // Message for a lookup field that can't be written because the TARGET column is missing, isn't a
     // Lookup column at all (e.g. a same-named Text column already there), or has no bound list.
     private static string DescribeUnusableLookupTarget(string targetName, SpColumnDef? tgtCol) =>
@@ -589,10 +661,20 @@ public partial class SharePointService
     {
         var showField   = string.IsNullOrEmpty(tgtCol.LookupShowField) ? "Title" : tgtCol.LookupShowField;
         var resolvedIds = new List<int>();
-        foreach (var (_, display) in lookup.Entries)
+        // A lookup to a list in a child web: the items are in that web, not in the column's own web.
+        var lookupWeb   = await ResolveLookupWebUrlAsync(siteUrl, tgtCol, ct);
+        foreach (var (sourceItemId, display) in lookup.Entries)
         {
-            var targetId = await ResolveLookupValueAsync(siteUrl, tgtCol.LookupListId!, showField, display, ct);
-            if (targetId.HasValue) resolvedIds.Add(targetId.Value);
+            // The item this run copied wins over a text match (duplicate titles, items whose text changed).
+            if (_lookupIdMap.TryGetValue($"{tgtCol.LookupListId}|{sourceItemId}", out var mappedId))
+            {
+                resolvedIds.Add(mappedId);
+                Interlocked.Increment(ref _lookupResolvedById);
+                continue;
+            }
+            var targetId = await ResolveLookupValueAsync(lookupWeb, tgtCol.LookupListId!, showField, display, ct);
+            if (targetId.HasValue) { resolvedIds.Add(targetId.Value); Interlocked.Increment(ref _lookupResolvedByText); }
+            else Interlocked.Increment(ref _lookupUnresolved);
         }
 
         if (resolvedIds.Count < lookup.Entries.Length)
@@ -605,6 +687,58 @@ public partial class SharePointService
             ? resolvedIds[0].ToString()
             : string.Join(";#;#", resolvedIds.Select(id => id.ToString())) + ";#";
     }
+
+    // The key under which an item's (custom) content type name travels in the custom-field dictionary. "ContentType" is on
+    // the excluded-columns list, so it can never collide with a real column.
+    internal const string ContentTypeFieldKey = "ContentType";
+    internal static readonly HashSet<string> DefaultContentTypeNames = new(StringComparer.OrdinalIgnoreCase) { "Document", "Folder", "Item" };
+
+    // The content type names of a target list, loaded once per list. Used to put a copied file on its type only when the
+    // target list has that type, so a type that was not copied never turns into an error on every file.
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Task<Dictionary<string, HashSet<string>>>> _targetContentTypeFields = new();
+
+    // The content types of a target list with the columns each one carries (loaded once per list). Columns cannot be linked to
+    // a content type over REST, so a copied file is put on a type only when that type carries every column being written to it:
+    // a column the item's type lacks is silently not written.
+    internal Task<Dictionary<string, HashSet<string>>> GetTargetContentTypeFieldsAsync(string siteUrl, string listId, CancellationToken ct) =>
+        _targetContentTypeFields.GetOrAdd($"{siteUrl.TrimEnd('/')}|{listId}", async _ =>
+        {
+            var result = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
+            async Task<JsonDocument?> GetAsync(string url)
+            {
+                using var resp = await SendSharePointRequestAsync(token =>
+                {
+                    var r = new HttpRequestMessage(HttpMethod.Get, url);
+                    r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                    return r;
+                }, siteUrl, cancellationToken: ct);
+                return resp.IsSuccessStatusCode ? JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct)) : null;
+            }
+            try
+            {
+                var baseUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/contenttypes";
+                using var list = await GetAsync($"{baseUrl}?$select=Name,StringId");
+                if (list is null) return result;
+                foreach (var e in list.RootElement.GetProperty("value").EnumerateArray())
+                {
+                    var name = e.TryGetProperty("Name", out var n) ? n.GetString() : null;
+                    var id = e.TryGetProperty("StringId", out var i) ? i.GetString() : null;
+                    if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(id)) continue;
+                    var links = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    using var fl = await GetAsync($"{baseUrl}('{id}')/fieldlinks?$select=Name");
+                    if (fl is not null)
+                        foreach (var l in fl.RootElement.GetProperty("value").EnumerateArray())
+                            if (l.TryGetProperty("Name", out var ln) && ln.GetString() is { Length: > 0 } s) links.Add(s);
+                    result[name] = links;
+                }
+            }
+            catch (Exception ex) when (ex is HttpRequestException or JsonException) { /* no types known: nothing is bound */ }
+            return result;
+        });
+
+    internal async Task<HashSet<string>> GetTargetContentTypeNamesAsync(string siteUrl, string listId, CancellationToken ct) =>
+        new((await GetTargetContentTypeFieldsAsync(siteUrl, listId, ct)).Keys, StringComparer.OrdinalIgnoreCase);
 
     // Applies custom field values to a list item via ValidateUpdateListItem.
     // mappings translates source InternalName → target InternalName.
@@ -697,7 +831,7 @@ public partial class SharePointService
         var lookupErrors    = new List<string>();
         foreach (var (srcName, value) in fields)
         {
-            if (value == null) continue;
+            if (value == null || srcName == ContentTypeFieldKey) continue;
             // Resolve target name via mapping, or use source name directly
             string targetName;
             if (mappingLookup.TryGetValue(srcName, out var mapped))
@@ -728,15 +862,31 @@ public partial class SharePointService
                 continue;
             }
 
-            if (SkipsTaxonomyValue(value)) continue;
+            var taxValue = RemapTaxonomyValue(value);
+            if (taxValue == null) continue;
 
             // Cross-tenant: leave out (and record) people who do not exist in the target.
-            var checkedValue = await DropUnresolvedPeopleAsync(siteUrl, value, ct);
+            var checkedValue = await DropUnresolvedPeopleAsync(siteUrl, taxValue, ct);
             if (checkedValue == null) continue;
 
             var formattedValue = FormatFieldValueForValidate(checkedValue);
+            // A date column is read as a UTC ISO string ("…T…Z"), which ValidateUpdateListItem rejects ("Enter a date like
+            // 2/23/2012"); it wants the site-local form. Found by the live harness: the rejected date made the whole
+            // all-or-nothing write fail, so EVERY custom column value on that file was lost, not only the date.
+            if (IsoUtcDate.IsMatch(formattedValue)) formattedValue = await ToSiteLocalFormDateAsync(siteUrl, formattedValue);
             formValues.Add((targetName, formattedValue));
             submittedFields.Add(targetName);
+        }
+
+        // The content type goes FIRST, so the other values are written against it (confirmed on a live site: setting it by name
+        // through ValidateUpdateListItem works on files, folders and list items). Only when the target list has a type of that
+        // name AND that type carries every column being written; otherwise the type is left off rather than lose a value.
+        if (fields.TryGetValue(ContentTypeFieldKey, out var ctValue) && ctValue is string ctName &&
+            (await GetTargetContentTypeFieldsAsync(siteUrl, listId, ct)).TryGetValue(ctName, out var ctColumns) &&
+            submittedFields.All(ctColumns.Contains))
+        {
+            formValues.Insert(0, (ContentTypeFieldKey, ctName));
+            submittedFields.Add(ContentTypeFieldKey);
         }
 
         // Fold a Modified/Created/Editor/Author correction into this SAME ValidateUpdateListItem
@@ -849,7 +999,36 @@ public partial class SharePointService
     // Managed-metadata values carry the SOURCE term store's term GUIDs, which don't exist in another
     // tenant's term store — writing them fails the field. In a cross-tenant copy they are skipped (the
     // copy reports this once per run; see CopyService) rather than failing every item.
-    private bool SkipsTaxonomyValue(object? value) => value is TaxonomyFieldValue && _router.IsMultiTenant;
+    // With a term map (see TermStoreCopyService) the values are remapped instead: each source term GUID is
+    // replaced by the target's, and a term the map does not know is dropped (cross-tenant) or kept (same
+    // tenant, where the GUID still exists). Returns null when nothing is left to write.
+    private object? RemapTaxonomyValue(object? value)
+    {
+        if (value is not TaxonomyFieldValue tax) return value;
+        if (TermMap.IsEmpty)
+        {
+            if (!_router.IsMultiTenant) return value;
+            Interlocked.Add(ref _taxonomySkipped, tax.Terms.Length);
+            return null;
+        }
+        var kept = new List<(string Label, string TermGuid)>();
+        foreach (var t in tax.Terms)
+        {
+            if (TermMap.TryGetValue(t.TermGuid.Trim('{', '}'), out var mapped))
+            {
+                kept.Add((t.Label, mapped));
+                Interlocked.Increment(ref _taxonomyRemapped);
+            }
+            else if (!_router.IsMultiTenant) kept.Add(t);
+            else Interlocked.Increment(ref _taxonomySkipped);
+        }
+        return kept.Count > 0 ? new TaxonomyFieldValue(kept.ToArray()) : null;
+    }
+
+    // Source term GUID -> target term GUID, filled by TermStoreCopyService when a term set is copied.
+    public System.Collections.Concurrent.ConcurrentDictionary<string, string> TermMap { get; } = new(StringComparer.OrdinalIgnoreCase);
+    private int _taxonomyRemapped, _taxonomySkipped;
+    public (int Remapped, int Skipped) TaxonomyStats => (_taxonomyRemapped, _taxonomySkipped);
 
     private string FormatFieldValueForValidate(object value)
     {

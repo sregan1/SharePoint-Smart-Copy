@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> लक्ष्य: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>गंतव्य सूची</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>कॉपी विकल्प</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>लाइब्रेरी की सामग्री (फ़ाइलें) कॉपी करें</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>बंद होने पर केवल कॉलम स्कीमा और लाइब्रेरी सेटिंग्स दोबारा बनाई जाती हैं — कोई फ़ाइल कॉपी नहीं होती।</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>फ़ाइलें और सूची आइटम (सामग्री) कॉपी करें</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>बंद होने पर, केवल संरचना कॉपी होती है और कोई फ़ाइल या सूची आइटम नहीं: कॉलम, दृश्य, सूची सेटिंग, सामग्री प्रकार और, पूरी साइट स्कोप में, साइट कॉलम, नेविगेशन और साइट सेटिंग।</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>यदि फ़ाइल मौजूद है:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>छोड़ें</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>ओवरराइट करें</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>सभी वर्शन</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>नवीनतम </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> वर्शन</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>मेरी सूचियाँ जिन सूचियों को लुकअप करती हैं उन्हें भी कॉपी करें</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>जब चयनित सूची में लुकअप (Lookup) कॉलम होता है, तो जिस सूची को वह लुकअप करता है उसे भी कॉपी किया जाता है, ताकि कॉलम बनाया जा सके और उसके मान हल किए जा सकें। केवल अपने चयन को कॉपी करने के लिए इसे बंद करें।</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>लुकअप मान</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} आइटम द्वारा मिलान किए गए, {1} टेक्स्ट द्वारा मिलान किए गए, {2} नहीं मिले।</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>प्रबंधित मेटाडेटा</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} शब्द मान कॉपी किए गए, {1} छोड़े गए (कॉपी किए गए समूह में शब्द नहीं मिला)।</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>प्रबंधित मेटाडेटा कॉलम &quot;{0}&quot; नहीं बनाया गया: इसका शब्द समूह किसी अन्य टेनेंट का है, और शब्द समूह कॉपी करना उपलब्ध नहीं है (दोनों टेनेंट में साइन इन करें और TermStore.ReadWrite.All अनुमति दें)।</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>शब्द समूह &quot;{0}&quot; लक्ष्य पर कॉपी किया गया: {1} बनाए गए, {2} पहले से मौजूद थे।</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>प्रबंधित मेटाडेटा शब्द समूहों को लक्ष्य टेनेंट में कॉपी करें</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>प्रबंधित मेटाडेटा कॉलम स्रोत टेनेंट के शब्द स्टोर के एक शब्द समूह से जुड़ा होता है। इसे चालू करने पर शब्द समूह (शब्द, लेबल, पर्यायवाची, विवरण) को लक्ष्य शब्द स्टोर में कॉपी किया जाता है, कॉलम को कॉपी से जोड़ा जाता है और प्रत्येक मान को फिर से मैप किया जाता है। इसके लिए वैकल्पिक TermStore.ReadWrite.All अनुमति और लक्ष्य पर शब्द स्टोर भूमिका आवश्यक है।</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>सूची "{0}" में लुकअप करता है</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>किसी अन्य वेब में सूची में लुकअप करता है</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>प्रबंधित मेटाडेटा: इसका शब्द समूह लक्ष्य टेनेंट में कॉपी किया जाएगा</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>प्रबंधित मेटाडेटा: वही शब्द समूह उपयोग करता है (वही टेनेंट)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>प्रक्षेपित फ़ील्ड "{0}" नहीं बनाया गया: इसका लुकअप कॉलम "{1}" लक्ष्य सूची में नहीं है।</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>प्रक्षेपित फ़ील्ड "{0}" नहीं बनाया गया: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>ऐप पंजीकरण के साथ साइन इन करें:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>कॉपी की जाने वाली संरचना</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>यहाँ चुनी गई हर चीज़ डेटा के साथ लक्ष्य पर फिर से बनाई जाती है। वहाँ पहले से मौजूद सूची या लाइब्रेरी को केवल वे कंटेंट प्रकार और दृश्य मिलते हैं जो उसमें नहीं हैं।</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>दृश्य (फ़िल्टर, समूहीकरण, कॉलम, डिफ़ॉल्ट दृश्य, कैलेंडर और बोर्ड दृश्य)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>सूची सेटिंग (अनुमोदन, चेक-आउट, अनुलग्नक, फ़ोल्डर, आइटम-स्तर की सुरक्षा)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>कंटेंट प्रकार और उनके दस्तावेज़ टेम्पलेट</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>कॉलम सत्यापन नियम और फ़ॉर्मैटिंग</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>लाइब्रेरी टेम्पलेट और फ़ोल्डर के डिफ़ॉल्ट मान</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>साइट कॉलम और साइट कंटेंट प्रकार</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>साइट सेटिंग (विवरण, क्विक लॉन्च, ट्री व्यू और बहुत कुछ)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>दृश्य</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>सूची सेटिंग</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>कंटेंट प्रकार</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>कॉलम नियम</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>टेम्पलेट और डिफ़ॉल्ट</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>साइट कॉलम और प्रकार</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>नेविगेशन</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>साइट सेटिंग</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>लुकअप सूचियाँ</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>शब्द समूह</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>संरचना: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>कोई नहीं</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>और दिखाएं</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>कम दिखाएं</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>नेविगेशन कॉपी करें (क्विक लॉन्च और टॉप बार)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>लक्ष्य के नेविगेशन को स्रोत के लिंक से बदलता है। URL को लक्ष्य साइट के अनुसार बदला जाता है।</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>परमिशन कॉपी करें</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>कस्टम कॉलम मान कॉपी करें</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Text, Number, Choice, Date, Boolean, Multi-choice, Person और Managed Metadata कॉलम के मान कॉपी करता है। Lookup कॉलम समर्थित नहीं हैं।</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>मैपिंग कॉन्फ़िगर करने के लिए 'कस्टम कॉलम मान कॉपी करें' चालू करें।</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>सभी कस्टम कॉलम मान कॉपी किए जाते हैं। गंतव्य पर कौन-से कॉलम बनें, यह नियंत्रित करने के लिए मैपिंग का उपयोग करें।</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>सभी कस्टम कॉलम मान कॉपी किए जाते हैं। गंतव्य पर कौन-से कॉलम बनाए जाएँ, यह नियंत्रित करने के लिए कॉलम मैपिंग (ऊपर) का उपयोग करें।</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>सूची आइटम के लिए कस्टम कॉलम मान हमेशा कॉपी किए जाते हैं।</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>कॉपी मोड</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>नाम</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>क्लाइंट ID (एप्लिकेशन ID)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>टेनेंट ID</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>मल्टी-टेनेंट के लिए 'common' का उपयोग करें, या अपने टेनेंट का GUID या डोमेन।</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>किसी भी टेनेंट में साइन इन करने के लिए खाली छोड़ें या 'common' दर्ज करें। टेनेंट GUID या डोमेन (उदाहरण के लिए contoso.onmicrosoft.com) साइन-इन को केवल उसी टेनेंट तक सीमित करता है।</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>डिफ़ॉल्ट रिपोर्ट फ़ाइल नामों के आगे स्रोत और लक्ष्य साइट के नाम जोड़ें</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>साइन आउट</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>थीम:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>लाइब्रेरी और सूचियाँ मोड</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>पूरी साइट मोड</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>साइट पेज मोड</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>लाइब्रेरी की सामग्री (फ़ाइलें) कॉपी करें</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>फ़ाइलें और सूची आइटम (सामग्री) कॉपी करें</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>वर्शन इतिहास कॉपी करें</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>नवीनतम N वर्शन</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>नेविगेशन कॉपी करें</value></data>
@@ -939,7 +979,7 @@
   <data name="Forms_ReloadForms" xml:space="preserve"><value>फ़ॉर्म फिर से लोड करें</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>अपने फ़ॉर्म देखने के लिए &quot;मेरे फ़ॉर्म लोड करें&quot; पर क्लिक करें।</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>इस खाते में कोई फ़ॉर्म नहीं मिला।</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} फ़ॉर्म कॉपी करें</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} फ़ॉर्म कॉपी करना शुरू करें</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>और फ़ॉर्म कॉपी करें</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>चुनें कि कॉपी कहाँ जाएँगी</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>सिंगल टेनेंट: कॉपी उसी खाते में बनाई जाती हैं जिसका आप उपयोग कर रहे हैं, मूल फ़ॉर्म के बगल में।</value></data>
@@ -963,7 +1003,7 @@
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>फ़ॉर्म कॉपी हो रहे हैं</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>शुरू हो रहा है…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>फ़ॉर्म {0}/{1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>वर्तमान फ़ॉर्म के बाद रद्द किया जा रहा है…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>रद्द किया जा रहा है… जो फ़ॉर्म अभी कॉपी हो रहा है उसे रोका जा रहा है।</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>कॉपी पूरी हुई: सभी {0} फ़ॉर्म कॉपी हुए</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>आपकी कॉपी {0} में हैं। उन्हें देखने के लिए Microsoft Forms खोलें, या नीचे दी गई तालिका का उपयोग करें।</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>कॉपी पूरी हुई: {1} में से {0} फ़ॉर्म कॉपी हुए, कुछ पर ध्यान देना है</value></data>
@@ -971,7 +1011,7 @@
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>कॉपी पूरी हुई, लेकिन कोई फ़ॉर्म कॉपी नहीं हुआ</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>कारण के लिए विवरण कॉलम देखें। सामान्य कारण हैं लक्ष्य रजिस्ट्रेशन पर Microsoft Forms परमिशन का न होना, या Forms एक्सेस के बिना खाता।</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>{1} में से {0} फ़ॉर्म के बाद कॉपी रद्द की गई</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>नीचे सूचीबद्ध फ़ॉर्म पूरे हो चुके थे। जब आपने रद्द किया तब जो फ़ॉर्म कॉपी हो रहा था वह पूरा नहीं हुआ और दिखाई नहीं देता।</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>नीचे कॉपी किए गए के रूप में चिह्नित फ़ॉर्म पूरे हो चुके थे। जब आपने रद्द किया तब जो फ़ॉर्म कॉपी हो रहा था वह पूरा नहीं हुआ और लक्ष्य में अधूरा बना रह सकता है; यदि कॉपी बनी थी तो उसकी पंक्ति में कॉपी की ID दिखती है।</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>कॉपी हुए</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>चेतावनियों के साथ</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>विफल</value></data>
@@ -986,7 +1026,7 @@
   <data name="Forms_OpenSelected" xml:space="preserve"><value>चयनित कॉपी खोलें</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Microsoft Forms खोलें</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>परिणाम निर्यात करें…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>फ़ॉर्म ID मैप दिखाएँ</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>सहेजी गई फ़ॉर्म ID खोलें</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>पहले तालिका में कॉपी किया गया कोई फ़ॉर्म चुनें।</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>परिणाम {0} में सहेजे गए</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>संकेत: ऐप रजिस्ट्रेशन में कोई मेल खाता रीडायरेक्ट पता नहीं है। Entra में, Authentication के अंतर्गत, http://localhost के साथ प्लेटफ़ॉर्म &quot;Mobile and desktop applications&quot; जोड़ें, फिर पुनः प्रयास करें।</value></data>
@@ -1105,7 +1145,7 @@
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(शीर्षकहीन फ़ॉर्म)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>स्रोत फ़ॉर्म</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>लक्ष्य के फ़ॉर्म में से चुनें</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>लक्ष्य खाते से कोई फ़ॉर्म चुनें। पहले &quot;लक्ष्य खाते से फ़ॉर्म लोड करें&quot; पर क्लिक करें।</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>लक्ष्य खाते से कोई फ़ॉर्म चुनें। यह चरण खुलने पर सूची लोड होती है; यदि वह खाली है, तो &quot;फ़ॉर्म नाम फिर से लोड करें…&quot; पर क्लिक करें।</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>लक्ष्य साइन-इन ({0}) से भरा गया</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>आपका स्रोत खाता, आपके लक्ष्य खाते से बदला गया</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>आपके साइन-इन ({0} → {1}) से भरा गया। ईमेल डोमेन अपरिवर्तित रखने के लिए दोनों बॉक्स खाली करें।</value></data>
@@ -1133,7 +1173,7 @@
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} पैकेज इस टूल द्वारा लिखे गए थे और उनमें पहले से लक्ष्य के मान हैं। उन्हें हटाएँ (सूची में ✕) और मूल निर्यात जोड़ें।</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} साइट का कोई लक्ष्य नहीं है। जैसी है वैसी छोड़ी गई साइट अब भी स्रोत टेनेंट की ओर इशारा करेगी।</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} सूची इम्पोर्ट पर विफल होंगी। जारी रखने के लिए &quot;विफल होगा&quot; चिह्नित सूचियाँ ठीक करें।</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ सूचियाँ अभी मिलाई नहीं गई हैं। पुनः प्रयास के लिए एक चरण पीछे जाएँ और फिर आगे आएँ।</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ सूचियाँ अभी मिलाई नहीं गई हैं। पुनः प्रयास के लिए &quot;फिर से मिलाएँ&quot; पर क्लिक करें।</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ जारी रखने के लिए {0} फ़ॉर्म को मान्य लक्ष्य फ़ॉर्म ID चाहिए।</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>स्रोत बदलें…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>{0} के रूप में साइन इन हुए। स्रोत टेनेंट का SharePoint पता {1} है।</value></data>
@@ -1398,11 +1438,65 @@
   <data name="Flows_CloseTitle" xml:space="preserve"><value>काम के दौरान बंद करें?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>टूल अभी काम कर रहा है (स्कैन, मिलान, साइन-इन या पैकेज लिखना)। अभी बंद करने पर वह रुक जाएगा। फिर भी बंद करें?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>{0} को नए फ़ॉर्म में अपने-आप नहीं जोड़ा जा सका. फ़ाइल की एक प्रति {1} के रूप में सहेजी गई: इसे Microsoft Forms में फिर से जोड़ें.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>सूची आइटम का संस्करण इतिहास:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>फ़ाइलों की तरह</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>सभी संस्करण</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>केवल वर्तमान</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>हर नए सूची आइटम का संस्करण इतिहास (मान, तिथियां और संपादक) लक्ष्य पर उसके संस्करणों को दोहराकर कॉपी करता है. &quot;फ़ाइलों की तरह&quot; ऊपर के फ़ाइल संस्करण विकल्पों का पालन करता है. लक्ष्य पर पहले से मौजूद आइटम अपना इतिहास रखते हैं. व्यक्ति, लुकअप, टैक्सोनॉमी और लिंक कॉलम केवल अपना वर्तमान मान कॉपी करते हैं.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>संस्करण इतिहास: कुछ हिस्से कॉपी नहीं हुए ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>संस्करण इतिहास कॉपी नहीं हुआ ({0}); आइटम में केवल उसके वर्तमान मान हैं</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>सूची:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>ईमेल डोमेन का बदलाव लागू नहीं किया गया: दोनों डोमेन भरे होने चाहिए, बिना रिक्त स्थान या अतिरिक्त @ के (उदाहरण के लिए contoso.com और fabrikam.com)।</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>सभी पैकेज हटाएँ और स्कैन तथा बाद के चरणों में भरी गई सारी जानकारी छोड़ दें?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>फ़्लो को फिर से लिखें बंद करें? अब तक बनाई गई मैपिंग खो जाएगी (उसे रखने के लिए पहले &quot;मैपिंग सहेजें&quot; का उपयोग करें)।</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>फिर से शुरू करें? पैकेज, स्कैन और आपकी भरी हुई सारी जानकारी छोड़ दी जाएगी। आउटपुट फ़ोल्डर में पहले से लिखे गए पैकेज नहीं हटाए जाते।</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{1} पर {0} ईमेल पते इस बदलाव में शामिल हैं, इसलिए वे ऊपर सूचीबद्ध नहीं हैं। उनमें से किसी को अलग पता देने के लिए, ये बॉक्स खाली करें, उस पंक्ति को भरें और डोमेन बदलाव फिर से दर्ज करें।</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>फ़ोल्डर {0} पढ़ा नहीं जा सका: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>समीक्षा करें: इन कॉलम नामों को फ़्लो के एक्सप्रेशन में जहाँ-जहाँ वे आते हैं वहाँ बदला गया, जिसमें किसी दूसरी सूची का उसी नाम वाला कॉलम भी शामिल हो सकता है। जाँचें कि हर नाम उसी सूची को संदर्भित करता है जिसने उसका नाम बदला।</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} कॉलम नाम एक्सप्रेशन में जहाँ-जहाँ वे आते हैं वहाँ बदले गए। जाँचें कि वे उसी सूची को संदर्भित करते हैं जिसने उनका नाम बदला, न कि किसी दूसरी सूची के उसी नाम वाले कॉलम को (रिपोर्ट देखें)।</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>अभी कॉपी करना रोकें? जो फ़ॉर्म अभी कॉपी हो रहा है वह बीच में कट जाएगा और लक्ष्य खाते में अधूरा रह सकता है; ऐसा हो तो उसे Microsoft Forms में हटा दें। जो फ़ॉर्म पहले ही पूरे हो चुके हैं वे बने रहते हैं।</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>चुनें</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>कॉपी लॉग</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>1 फ़ॉर्म कॉपी करना शुरू करें</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>फ़ॉर्म कॉपी हो गया, लेकिन उसकी छवियों की जाँच नहीं की जा सकी ({0})। उसे Microsoft Forms में खोलें और पृष्ठभूमि तथा हेडर की छवियाँ जाँचें।</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>अपना कनेक्शन और साइन-इन जाँचें, फिर &quot;फ़ॉर्म फिर से लोड करें&quot; पर क्लिक करें। विवरण: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>आपके फ़ॉर्म लोड नहीं हो सके</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>1 फ़ॉर्म लोड हुआ।</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>लॉग क्लिपबोर्ड पर कॉपी कर दिया गया।</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>लॉग कॉपी नहीं हो सका क्योंकि कोई दूसरा प्रोग्राम क्लिपबोर्ड का उपयोग कर रहा है। फिर से प्रयास करें।</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>कॉपी लॉग</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>आगे: यदि फ़्लो इन फ़ॉर्म का उपयोग करते हैं, तो मुख्य विंडो से &quot;फ़्लो को फिर से लिखें&quot; खोलें। यह इस कॉपी द्वारा सहेजी गई फ़ॉर्म ID पढ़ता है और हर फ़्लो को नए फ़ॉर्म की ओर इंगित करता है।</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>कोई फ़ॉर्म नहीं मिला</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>क्या कॉपी होता है: प्रश्न, ब्रांचिंग, सेटिंग्स और थीम। क्या नहीं: प्रतिक्रियाएँ (उन्हें Excel में सहेजने के लिए पहले चरण में &quot;प्रतिक्रियाएँ निर्यात करें&quot; का उपयोग करें), सहयोगी और वे लोग जिनके साथ फ़ॉर्म साझा है। हर कॉपी लक्ष्य खाते के स्वामित्व वाला एक नया फ़ॉर्म है, और छवियाँ दोबारा जोड़नी पड़ सकती हैं।</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>कॉपी पूरी हुई: फ़ॉर्म कॉपी कर दिया गया</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>फ़िल्टर चालू है: &quot;सभी चुनें&quot; और &quot;सभी का चयन रद्द करें&quot; दिखाए गए {0} फ़ॉर्म पर लागू होते हैं।</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>चुने गए फ़ॉर्म में से {0} पहले कॉपी किए जा चुके हैं; उन्हें फिर से कॉपी करने पर डुप्लिकेट बनते हैं।</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>चरण {0} / {1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 फ़ॉर्म {1} से {2} में कॉपी किया जाएगा।</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>प्रत्यय जोड़ने के बाद चुने गए {0} फ़ॉर्म का शीर्षक {1} वर्णों से लंबा हो जाएगा। Microsoft Forms उन्हें अस्वीकार कर सकता है; प्रत्यय छोटा करें।</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>दृश्य कॉपी नहीं किए जा सके: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>दृश्य '{0}' कॉपी नहीं किया गया ({1} दृश्य)</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>दृश्य '{0}' बनाया नहीं जा सका: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>दृश्य '{0}' बनाया गया, लेकिन कुछ सेटिंग्स लागू नहीं की जा सकीं: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>दृश्य '{0}': इसका फ़िल्टर या सॉर्टिंग लागू नहीं की जा सकी और उसे छोड़ दिया गया</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>दृश्य '{0}': लक्ष्य में मौजूद न होने वाले कॉलम छोड़ दिए गए: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>दृश्यों, सेटिंग्स या सामग्री प्रकारों पर {0} टिप्पणी(याँ): {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>सूची सेटिंग्स पढ़ी नहीं जा सकीं, इसलिए कोई भी कॉपी नहीं की गई: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>सूची सेटिंग्स जो लागू नहीं की जा सकीं: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>सत्यापन नियम या फ़ॉर्मेटिंग इन पर लागू नहीं की जा सकी: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>सामग्री प्रकार '{0}' कॉपी नहीं किया जा सका: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>सामग्री प्रकार '{0}': वे कॉलम जो इसमें जोड़े नहीं जा सके: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>लाइब्रेरी का दस्तावेज़ टेम्पलेट कॉपी नहीं किया जा सका।</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>लाइब्रेरी के फ़ोल्डर के डिफ़ॉल्ट मान कॉपी नहीं किए जा सके।</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>फ़ोल्डर के डिफ़ॉल्ट मान कॉपी कर दिए गए, लेकिन उन्हें नई फ़ाइलों पर लागू करने वाला नियम जोड़ा नहीं जा सका।</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>साइट कॉलम पढ़े नहीं जा सके: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>साइट कॉलम जो बनाए नहीं जा सके: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>साइट सामग्री प्रकार पढ़े नहीं जा सके: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>साइट सामग्री प्रकार जो बनाए नहीं जा सके: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>नेविगेशन ({0}) लिंक जो बनाए नहीं जा सके: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>साइट सेटिंग्स जो लागू नहीं की जा सकीं: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>साइट कॉलम, सामग्री प्रकार, नेविगेशन और सेटिंग्स</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>साइट कॉलम, सामग्री प्रकार, नेविगेशन और सेटिंग्स कॉपी की जा रही हैं...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>सामग्री प्रकार</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>सामग्री प्रकार '{0}': इसका दस्तावेज़ टेम्पलेट कॉपी नहीं किया जा सका।</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>ऐप रजिस्ट्रेशन के साथ साइन इन करता है: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>टेनेंट: कोई भी। साइन इन करते समय आप Microsoft 365 खाता चुनते हैं।</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>टेनेंट: {0}। साइन-इन केवल इसी डायरेक्टरी में हो सकता है।</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>किसी दूसरे टेनेंट की साइट कनेक्ट करने के लिए, सेटिंग्स में कोई अन्य ऐप रजिस्ट्रेशन चुनें (जिसका टेनेंट ID खाली हो या उसी टेनेंट पर सेट हो), या मल्टी-टेनेंट मोड का उपयोग करें।</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>केवल संरचना: कॉलम, दृश्य, सेटिंग और सामग्री प्रकार कॉपी किए जाते हैं, लेकिन कोई फ़ाइल या सूची आइटम नहीं।</value></data>
 </root>

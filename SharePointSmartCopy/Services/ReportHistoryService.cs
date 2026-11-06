@@ -7,9 +7,14 @@ namespace SharePointSmartCopy.Services;
 
 public static class ReportHistoryService
 {
-    private static readonly string ReportsDir = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "SharePointSmartCopy", "Reports");
+    // SPSC_REPORTS_DIR redirects the report store (used by the live test harness, so a test can never add to or prune the
+    // real history, which keeps only 50 reports). Unset in normal use.
+    private static readonly string ReportsDir =
+        Environment.GetEnvironmentVariable("SPSC_REPORTS_DIR") is { Length: > 0 } overrideDir
+            ? overrideDir
+            : Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "SharePointSmartCopy", "Reports");
 
     private static readonly JsonSerializerOptions _options = new()
     {

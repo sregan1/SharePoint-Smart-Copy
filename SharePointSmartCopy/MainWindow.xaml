@@ -1,4 +1,4 @@
-﻿<Window xmlns:loc="clr-namespace:SharePointSmartCopy.Localization" x:Class="SharePointSmartCopy.MainWindow"
+<Window xmlns:loc="clr-namespace:SharePointSmartCopy.Localization" x:Class="SharePointSmartCopy.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conv="clr-namespace:SharePointSmartCopy.Converters"
@@ -520,6 +520,27 @@
                                  IsChecked="{Binding IsMultiTenant, Mode=TwoWay}"
                                  IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
                 </StackPanel>
+                <!-- Single tenant: which app registration, and so which tenant, the one sign-in uses. The registration's Tenant ID
+                     decides where the sign-in goes, so it is shown here instead of only in Settings. -->
+                <Border Style="{StaticResource InfoBanner}" Margin="0,0,0,16"
+                        Visibility="{Binding IsSingleTenant, Converter={StaticResource BoolToVis}}">
+                    <StackPanel>
+                        <TextBlock Text="{loc:Loc Ui_SingleTenantRegistrationLabel}" Style="{StaticResource FieldLabel}"/>
+                        <ComboBox ItemsSource="{Binding RegistrationNames}"
+                                  SelectedIndex="{Binding SourceRegistrationIndex, Mode=TwoWay}"
+                                  IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        <Button x:Name="SingleTenantMoreBtn" Content="{loc:Loc Ui_ShowMore}" Style="{StaticResource LinkBtn}"
+                                Click="SingleTenantMore_Click" HorizontalAlignment="Left" Margin="0,4,0,0" Padding="0" FontSize="12"/>
+                        <StackPanel x:Name="SingleTenantMorePanel" Visibility="Collapsed">
+                            <TextBlock Text="{Binding SingleTenantTenantText}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                            <TextBlock Text="{loc:Loc Ui_SingleTenantFixedHint}" FontSize="11" TextWrapping="Wrap" Margin="0,4,0,0"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Visibility="{Binding SingleTenantTenantIsFixed, Converter={StaticResource BoolToVis}}"/>
+                            <Button Content="{loc:Loc Ui_OpenSettings}" Style="{StaticResource LinkBtn}"
+                                    Click="OpenSettings_Click" HorizontalAlignment="Left" Margin="0,4,0,0" Padding="0" FontSize="12"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
                 <StackPanel Margin="0,0,0,16" Visibility="{Binding IsMultiTenant, Converter={StaticResource BoolToVis}}">
                     <TextBlock TextWrapping="Wrap" FontSize="12"
                                Foreground="{DynamicResource TextTertiaryBrush}"
@@ -595,7 +616,7 @@
                     <Border Style="{StaticResource WarningBanner}"
                             Visibility="{Binding SourceHasError, Converter={StaticResource BoolToVis}}">
                         <StackPanel>
-                            <TextBlock Text="{Binding SourceStatus}" TextWrapping="Wrap" FontSize="12"/>
+                            <TextBox Style="{StaticResource SelectableText}" Text="{Binding SourceStatus, Mode=OneWay}" FontSize="12"/>
                             <Button Content="{loc:Loc Ui_OpenSettings}" Style="{StaticResource LinkBtn}"
                                     Click="OpenSettings_Click" HorizontalAlignment="Left" Margin="0,6,0,0" Padding="0" FontSize="12"
                                     Visibility="{Binding SourceNeedsSettings, Converter={StaticResource BoolToVis}}"/>
@@ -851,7 +872,7 @@
                         <Border Style="{StaticResource WarningBanner}"
                                 Visibility="{Binding TargetHasError, Converter={StaticResource BoolToVis}}">
                             <StackPanel>
-                                <TextBlock Text="{Binding TargetStatus}" TextWrapping="Wrap" FontSize="12"/>
+                                <TextBox Style="{StaticResource SelectableText}" Text="{Binding TargetStatus, Mode=OneWay}" FontSize="12"/>
                                 <Button Content="{loc:Loc Ui_OpenSettings}" Style="{StaticResource LinkBtn}"
                                         Click="OpenSettings_Click" HorizontalAlignment="Left" Margin="0,6,0,0" Padding="0" FontSize="12"
                                         Visibility="{Binding TargetNeedsSettings, Converter={StaticResource BoolToVis}}"/>
@@ -1027,6 +1048,24 @@
                                 </WrapPanel>
                             </CheckBox>
 
+                            <!-- Content off = structure only: said here, not only in the tooltip -->
+                            <TextBlock Text="{loc:Loc Ui_StructureOnlyCaption}" TextWrapping="Wrap" Margin="20,-4,0,8">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource OptionCaption}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding IsLibraryOrSiteScope}" Value="True"/>
+                                                    <Condition Binding="{Binding CopyLibraryContent}" Value="False"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
                             <!-- Shared file copy options (Files scope, or Library/Site with content enabled) -->
                             <StackPanel Visibility="{Binding ShowFileCopyOptions, Converter={StaticResource BoolToVis}}">
                                 <WrapPanel Orientation="Horizontal" Margin="0,0,0,8">
@@ -1082,42 +1121,6 @@
                                         </StackPanel>
                                     </RadioButton>
                                 </StackPanel>
-                                <StackPanel Margin="0,0,0,8"
-                                            Visibility="{Binding ShowListItemVersionOption, Converter={StaticResource BoolToVis}}">
-                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="{loc:Loc Ui_ListItemVersions}" FontSize="13" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                        <RadioButton GroupName="ListItemVersionDepth" Content="{loc:Loc Ui_ListItemVersionsSame}"
-                                                     IsChecked="{Binding ListItemVersionsSame}" FontSize="12" VerticalAlignment="Center"/>
-                                        <RadioButton GroupName="ListItemVersionDepth" Content="{loc:Loc Ui_ListItemVersionsAll}"
-                                                     IsChecked="{Binding ListItemVersionsAll}" FontSize="12" Margin="14,0,0,0" VerticalAlignment="Center"/>
-                                        <RadioButton GroupName="ListItemVersionDepth" Content="{loc:Loc Ui_ListItemVersionsOff}"
-                                                     IsChecked="{Binding ListItemVersionsOff}" FontSize="12" Margin="14,0,0,0" VerticalAlignment="Center"/>
-                                        <TextBlock Style="{StaticResource ToolTipIcon}">
-                                            <TextBlock.ToolTip>
-                                                <ToolTip MaxWidth="320">
-                                                    <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                               Text="{loc:Loc Ui_ListItemVersionsTip}"/>
-                                                </ToolTip>
-                                            </TextBlock.ToolTip>
-                                        </TextBlock>
-                                    </WrapPanel>
-                                </StackPanel>
-                                <!-- ── Site-scope only: Navigation ─── -->
-                                <CheckBox IsChecked="{Binding CopyNavigation}" Margin="0,0,0,8" FontSize="13"
-                                          Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}"
-                                          AutomationProperties.Name="{loc:Loc Ui2_AutoCopyNavigation}">
-                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyNavigationQuickLaunchTop}" VerticalAlignment="Center"/>
-                                        <TextBlock Style="{StaticResource ToolTipIcon}">
-                                            <TextBlock.ToolTip>
-                                                <ToolTip MaxWidth="280">
-                                                    <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                               Text="{loc:Loc Ui_ReplacesTargetNavigationWithSource}"/>
-                                                </ToolTip>
-                                            </TextBlock.ToolTip>
-                                        </TextBlock>
-                                    </WrapPanel>
-                                </CheckBox>
                                 <!-- ── Permissions ─── -->
                                 <CheckBox IsChecked="{Binding CopyPermissions, Mode=TwoWay}" Margin="0,0,0,0" FontSize="13"
                                           AutomationProperties.Name="{loc:Loc Ui2_AutoCopyPermissions}">
@@ -1207,6 +1210,64 @@
                         </StackPanel>
                     </Border>
 
+                    <!-- Structure to copy (Library / Site scope): what is recreated next to the data -->
+                    <Expander Style="{StaticResource OptionsExpander}" Margin="0,8,0,0" IsExpanded="True"
+                              Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}">
+                        <Expander.Header>
+                            <TextBlock Text="{loc:Loc Ui_StructureHeader}" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextTertiaryBrush}"/>
+                        </Expander.Header>
+                        <StackPanel>
+                            <TextBlock Text="{loc:Loc Ui_StructureIntro}" TextWrapping="Wrap" FontSize="12" Margin="0,0,0,8"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+                            <CheckBox IsChecked="{Binding CopyViews}" Margin="0,0,0,6" FontSize="13"
+                                      AutomationProperties.Name="{loc:Loc Ui_StructViewsLong}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructViewsLong}"/>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding CopyListSettings}" Margin="0,0,0,6" FontSize="13"
+                                      AutomationProperties.Name="{loc:Loc Ui_StructListSettingsLong}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructListSettingsLong}"/>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding CopyContentTypes}" Margin="0,0,0,6" FontSize="13"
+                                      AutomationProperties.Name="{loc:Loc Ui_StructContentTypesLong}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructContentTypesLong}"/>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding CopyColumnRules}" Margin="0,0,0,6" FontSize="13"
+                                      AutomationProperties.Name="{loc:Loc Ui_StructColumnRulesLong}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructColumnRulesLong}"/>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding CopyTemplates}" Margin="0,0,0,6" FontSize="13"
+                                      AutomationProperties.Name="{loc:Loc Ui_StructTemplatesLong}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructTemplatesLong}"/>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding CopySiteDefinitions}" Margin="0,0,0,6" FontSize="13"
+                                      Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}"
+                                      AutomationProperties.Name="{loc:Loc Ui_StructSiteDefsLong}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructSiteDefsLong}"/>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding CopyNavigation}" Margin="0,0,0,6" FontSize="13"
+                                      Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}"
+                                      AutomationProperties.Name="{loc:Loc Ui_CopyNavigationQuickLaunchTop}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyNavigationQuickLaunchTop}"/>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding CopySiteSettings}" Margin="0,0,0,6" FontSize="13"
+                                      Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}"
+                                      AutomationProperties.Name="{loc:Loc Ui_StructSiteSettingsLong}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructSiteSettingsLong}"/>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding CopyLookupDependencies}" Margin="0,0,0,6" FontSize="13"
+                                      Visibility="{Binding IsLibraryScope, Converter={StaticResource BoolToVis}}"
+                                      AutomationProperties.Name="{loc:Loc Ui_CopyLookupDependencies}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyLookupDependencies}"/>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding CopyTermSets}" Margin="0,0,0,6" FontSize="13"
+                                      Visibility="{Binding IsMultiTenant, Converter={StaticResource BoolToVis}}"
+                                      AutomationProperties.Name="{loc:Loc Ui_CopyTermSets}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyTermSets}"/>
+                            </CheckBox>
+                        </StackPanel>
+                    </Expander>
+
                     <!-- ── Advanced options (metadata, custom columns, copy mode, performance) ── -->
                     <Expander Style="{StaticResource OptionsExpander}" Margin="0,8,0,0">
                         <Expander.Header>
@@ -1268,11 +1329,6 @@
                                         </TextBlock>
                                     </WrapPanel>
                                 </CheckBox>
-                                <Button Margin="20,8,0,0" HorizontalAlignment="Left"
-                                        Style="{StaticResource SecondaryBtn}"
-                                        Click="ConfigureMappings_Click"
-                                        Content="{Binding MappingButtonLabel}"
-                                        IsEnabled="{Binding CanConfigureMappings}"/>
                                 <TextBlock Text="{loc:Loc Ui_EnableCopyCustomColumnValues}"
                                            Style="{StaticResource OptionCaption}" Margin="20,4,0,0"
                                            Visibility="{Binding CopyCustomColumns, Converter={StaticResource InvBoolToVis}}"/>
@@ -1288,11 +1344,6 @@
                                         Margin="0,4,0,0">
                                 <TextBlock Text="{loc:Loc Ui_AllCustomColumnValuesAre}"
                                            Style="{StaticResource OptionCaption}" Margin="0,0,0,8" TextWrapping="Wrap"/>
-                                <Button HorizontalAlignment="Left"
-                                        Style="{StaticResource SecondaryBtn}"
-                                        Click="ConfigureMappings_Click"
-                                        Content="{Binding MappingButtonLabel}"
-                                        IsEnabled="{Binding IsColumnsReady}"/>
                             </StackPanel>
 
                             <!-- Pages scope: column values always copied — just show mapping button -->
@@ -1300,11 +1351,6 @@
                                         Margin="0,4,0,0">
                                 <TextBlock Text="{loc:Loc Ui_AllCustomColumnValuesAre}"
                                            Style="{StaticResource OptionCaption}" Margin="0,0,0,8" TextWrapping="Wrap"/>
-                                <Button HorizontalAlignment="Left"
-                                        Style="{StaticResource SecondaryBtn}"
-                                        Click="ConfigureMappings_Click"
-                                        Content="{Binding MappingButtonLabel}"
-                                        IsEnabled="{Binding IsColumnsReady}"/>
                             </StackPanel>
 
                             <!-- Library scope (individual items): column values always copied — just show mapping button -->
@@ -1312,11 +1358,6 @@
                                         Margin="0,4,0,0">
                                 <TextBlock Text="{loc:Loc Ui_CustomColumnValuesAreAlways}"
                                            Style="{StaticResource OptionCaption}" Margin="0,0,0,8"/>
-                                <Button HorizontalAlignment="Left"
-                                        Style="{StaticResource SecondaryBtn}"
-                                        Click="ConfigureMappings_Click"
-                                        Content="{Binding MappingButtonLabel}"
-                                        IsEnabled="{Binding IsColumnsReady}"/>
                             </StackPanel>
 
                             <!-- Copy mode + performance (not applicable to Pages scope) -->

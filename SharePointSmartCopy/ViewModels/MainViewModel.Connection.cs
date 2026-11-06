@@ -24,6 +24,17 @@ public partial class MainViewModel : ObservableObject
     private string _signedInUser = string.Empty;
     [ObservableProperty] private bool _isConnectingSource;
 
+    // The tenant (the SharePoint host name without ".sharepoint.com" and without OneDrive's "-my") the single-tenant sign-in was
+    // made for; empty before the first sign-in.
+    private string _signedInTenant = string.Empty;
+
+    private static string TenantOf(string url)
+    {
+        if (!Uri.TryCreate(url?.Trim(), UriKind.Absolute, out var u)) return string.Empty;
+        var label = u.Host.Split('.')[0];
+        return (label.EndsWith("-my", StringComparison.OrdinalIgnoreCase) ? label[..^3] : label).ToLowerInvariant();
+    }
+
     [RelayCommand]
     private async Task ConnectSourceAsync()
     {
@@ -38,8 +49,19 @@ public partial class MainViewModel : ObservableObject
         IsConnectingSource = true;
         try
         {
+            // Single tenant: one sign-in serves every site, and it stays valid until the app is reconfigured. A URL on a DIFFERENT
+            // tenant than the one signed in to used to silently reuse that sign-in (no prompt), so "switching to tenant B"
+            // kept using tenant A. A change of tenant now clears the sign-in and asks again.
+            var urlTenant = TenantOf(SourceUrl);
+            if (!IsMultiTenant && AuthService.IsAuthenticated && _signedInTenant.Length > 0 && urlTenant.Length > 0 &&
+                !urlTenant.Equals(_signedInTenant, StringComparison.OrdinalIgnoreCase))
+            {
+                await AuthService.SignOutAsync();
+                _signedInTenant = string.Empty;
+            }
             await AuthService.GetAccessTokenAsync(forceInteractive: !AuthService.IsAuthenticated, cancellationToken: ct);
             ct.ThrowIfCancellationRequested();
+            if (!IsMultiTenant) _signedInTenant = urlTenant;
             SignedInUser = AuthService.UserName ?? string.Empty;
             if (IsMultiTenant)
             {

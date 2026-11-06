@@ -2,6 +2,24 @@ namespace SharePointSmartCopy.Models;
 
 public enum MappingStatus { AutoMatched, ManuallyMapped, Unmatched, WillCreate, Skipped }
 
+// Column-mapping state for ONE source list in an item-level copy. Each selected list can have a different
+// column set and a different destination, so the mapping dialog edits one of these per list.
+public class ListMappingContext
+{
+    public string SourceListId { get; init; } = string.Empty;
+    public string Title        { get; init; } = string.Empty;
+
+    // True when the destination list is created by the copy (or its columns couldn't be read): the dialog then
+    // offers Create/Skip only, since there is no existing target column to map to.
+    public bool IsNewDestination { get; init; }
+
+    public List<ColumnDefinition> SourceColumns { get; init; } = [];
+    public List<ColumnDefinition> TargetColumns { get; init; } = [];
+
+    // Saved decisions for this list. Empty until the user opens and saves the dialog.
+    public List<ColumnMapping> Mappings { get; } = [];
+}
+
 public class ColumnMapping
 {
     public ColumnDefinition  SourceColumn { get; set; } = new();

@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> Đích: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>Danh sách đích</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>Tùy chọn sao chép</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Sao chép nội dung thư viện (tệp)</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Khi tắt, chỉ lược đồ cột và cài đặt thư viện được tạo lại — không có tệp nào được sao chép.</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>Sao chép tệp và mục danh sách (nội dung)</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>Khi tắt, chỉ cấu trúc được sao chép, không có tệp hoặc mục danh sách: cột, dạng xem, cài đặt danh sách, loại nội dung và, trong phạm vi Toàn bộ trang web, cột trang, điều hướng và cài đặt trang.</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>Nếu tệp đã tồn tại:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>Bỏ qua</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>Ghi đè</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>Tất cả phiên bản</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>Mới nhất </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> phiên bản</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>Sao chép cả các danh sách mà danh sách của tôi tra cứu</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>Khi một danh sách đã chọn có cột Tra cứu (Lookup), danh sách được tra cứu cũng được sao chép để có thể tạo cột và giải quyết các giá trị của cột. Tắt tùy chọn này để chỉ sao chép những gì bạn đã chọn.</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>Giá trị tra cứu</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} khớp theo mục, {1} khớp theo văn bản, {2} không tìm thấy.</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>Siêu dữ liệu được quản lý</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>Đã sao chép {0} giá trị thuật ngữ, bỏ qua {1} (không tìm thấy thuật ngữ trong tập hợp đã sao chép).</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>Cột siêu dữ liệu được quản lý &quot;{0}&quot; chưa được tạo: bộ thuật ngữ của cột thuộc về một tenant khác và không thể sao chép bộ thuật ngữ (hãy đăng nhập vào cả hai tenant và cấp quyền TermStore.ReadWrite.All).</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>Đã sao chép bộ thuật ngữ &quot;{0}&quot; sang đích: tạo mới {1}, đã có sẵn {2}.</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>Sao chép bộ thuật ngữ siêu dữ liệu được quản lý sang tenant đích</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>Cột siêu dữ liệu được quản lý được liên kết với một bộ thuật ngữ trong kho thuật ngữ của tenant nguồn. Khi bật tùy chọn này, bộ thuật ngữ (thuật ngữ, nhãn, từ đồng nghĩa, mô tả) được sao chép sang kho thuật ngữ đích, cột được liên kết với bản sao và mỗi giá trị được ánh xạ lại. Cần có quyền tùy chọn TermStore.ReadWrite.All và vai trò kho thuật ngữ tại đích.</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>Tra cứu danh sách "{0}"</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>Tra cứu một danh sách trong web khác</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>Siêu dữ liệu được quản lý: bộ thuật ngữ của cột sẽ được sao chép sang tenant đích</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>Siêu dữ liệu được quản lý: dùng cùng bộ thuật ngữ (cùng tenant)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>Trường được chiếu "{0}" chưa được tạo: cột tra cứu "{1}" không có trong danh sách đích.</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>Trường được chiếu "{0}" chưa được tạo: {1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>Đăng nhập bằng đăng ký ứng dụng:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>Cấu trúc cần sao chép</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>Mọi mục được chọn ở đây sẽ được tạo lại trên đích cùng với dữ liệu. Danh sách hoặc thư viện đã tồn tại ở đó chỉ nhận các loại nội dung và dạng xem mà nó còn thiếu.</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>Dạng xem (bộ lọc, nhóm, cột, dạng xem mặc định, dạng xem lịch và bảng)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>Cài đặt danh sách (phê duyệt, trả ra, tệp đính kèm, thư mục, bảo mật mức mục)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Loại nội dung và mẫu tài liệu của chúng</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Quy tắc xác thực và định dạng cột</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Mẫu thư viện và giá trị mặc định của thư mục</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Cột trang và loại nội dung trang</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Cài đặt trang (mô tả, khởi chạy nhanh, dạng xem cây và hơn thế nữa)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>Dạng xem</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>Cài đặt danh sách</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>Loại nội dung</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>Quy tắc cột</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>Mẫu và mặc định</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>Cột và loại của trang</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>Điều hướng</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>Cài đặt trang</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>Danh sách tra cứu</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>Bộ thuật ngữ</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>Cấu trúc: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>không có</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>Hiển thị thêm</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>Ẩn bớt</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>Sao chép điều hướng (Quick Launch và thanh trên cùng)</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>Thay thế điều hướng đích bằng các liên kết nguồn. URL được ánh xạ sang trang web đích.</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>Sao chép quyền</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>Sao chép giá trị cột tùy chỉnh</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>Sao chép giá trị của các cột Văn bản, Số, Lựa chọn, Ngày, Boolean, Nhiều lựa chọn, Người và Managed Metadata. Cột tra cứu không được hỗ trợ.</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>Bật 'Sao chép giá trị cột tùy chỉnh' để cấu hình ánh xạ.</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Tất cả giá trị cột tùy chỉnh đều được sao chép. Dùng ánh xạ để kiểm soát các cột được tạo tại đích.</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>Tất cả giá trị cột tùy chỉnh đều được sao chép. Dùng Ánh xạ cột (ở trên) để kiểm soát cột nào được tạo ở đích.</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>Giá trị cột tùy chỉnh luôn được sao chép đối với các mục danh sách.</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>Chế độ sao chép</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>Tên</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>Client ID (Application ID)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>Tenant ID</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Dùng 'common' cho đa tenant, hoặc GUID hoặc tên miền tenant của bạn.</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>Để trống hoặc nhập 'common' để đăng nhập vào bất kỳ tenant nào. GUID hoặc tên miền của tenant (ví dụ contoso.onmicrosoft.com) giới hạn đăng nhập chỉ vào tenant đó.</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>Thêm tiền tố tên tệp báo cáo mặc định bằng tên trang web nguồn và đích</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>Đăng xuất</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>Giao diện:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>Chế độ Thư viện và danh sách</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>Chế độ Toàn bộ trang web</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>Chế độ Trang của trang web</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Sao chép nội dung thư viện (tệp)</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>Sao chép tệp và mục danh sách (nội dung)</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>Sao chép lịch sử phiên bản</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>N phiên bản mới nhất</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>Sao chép điều hướng</value></data>
@@ -939,7 +979,7 @@ Các gói gốc không bị thay đổi. Kết nối KHÔNG được chuyển; h
   <data name="Forms_ReloadForms" xml:space="preserve"><value>Tải lại biểu mẫu</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>Nhấp &quot;Tải biểu mẫu của tôi&quot; để xem các biểu mẫu của bạn.</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>Không tìm thấy biểu mẫu nào trong tài khoản này.</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>Sao chép {0} biểu mẫu</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>Bắt đầu sao chép {0} biểu mẫu</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Sao chép thêm biểu mẫu</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>Chọn nơi đặt các bản sao</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>Một tenant: các bản sao được tạo trong cùng tài khoản bạn đang dùng, cạnh bản gốc.</value></data>
@@ -963,7 +1003,7 @@ Các gói gốc không bị thay đổi. Kết nối KHÔNG được chuyển; h
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>Đang sao chép biểu mẫu</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>Đang bắt đầu…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>Biểu mẫu {0}/{1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>Đang hủy sau biểu mẫu hiện tại…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>Đang hủy… biểu mẫu đang được sao chép đang bị dừng.</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>Sao chép hoàn tất: đã sao chép toàn bộ {0} biểu mẫu</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>Các bản sao của bạn nằm trong {0}. Mở Microsoft Forms để xem, hoặc dùng bảng bên dưới.</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>Sao chép hoàn tất: đã sao chép {0} trên {1} biểu mẫu, một số cần chú ý</value></data>
@@ -971,7 +1011,7 @@ Các gói gốc không bị thay đổi. Kết nối KHÔNG được chuyển; h
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>Sao chép hoàn tất, nhưng không có biểu mẫu nào được sao chép</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>Xem cột Chi tiết để biết lý do. Nguyên nhân thường gặp là đăng ký đích thiếu quyền Microsoft Forms, hoặc tài khoản không có quyền truy cập Forms.</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>Đã hủy sao chép sau {0} trên {1} biểu mẫu</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Các biểu mẫu liệt kê bên dưới đã hoàn tất. Biểu mẫu đang được sao chép khi bạn hủy chưa hoàn thành và không hiển thị.</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>Các biểu mẫu được đánh dấu là đã sao chép bên dưới đã hoàn tất. Biểu mẫu đang được sao chép khi bạn hủy chưa hoàn thành và có thể bị bỏ dở ở đích; hàng của nó hiển thị ID của bản sao nếu đã tạo.</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>Đã sao chép</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>Có cảnh báo</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>Thất bại</value></data>
@@ -986,7 +1026,7 @@ Các gói gốc không bị thay đổi. Kết nối KHÔNG được chuyển; h
   <data name="Forms_OpenSelected" xml:space="preserve"><value>Mở bản sao đã chọn</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Mở Microsoft Forms</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>Xuất kết quả…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>Hiển thị ánh xạ ID biểu mẫu</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>Mở ID biểu mẫu đã lưu</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>Hãy chọn một biểu mẫu đã sao chép trong bảng trước.</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>Đã lưu kết quả vào {0}</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>Gợi ý: đăng ký ứng dụng không có địa chỉ chuyển hướng phù hợp. Trong Entra, ở mục Xác thực, hãy thêm nền tảng &quot;Ứng dụng di động và máy tính để bàn&quot; với http://localhost, rồi thử lại.</value></data>
@@ -1105,7 +1145,7 @@ Sao chép lại sẽ tạo bản sao thứ hai cho mỗi biểu mẫu. Tiếp t�
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(biểu mẫu không có tiêu đề)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>Biểu mẫu nguồn</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>Chọn từ các biểu mẫu của đích</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Chọn một biểu mẫu từ tài khoản đích. Trước tiên hãy nhấp &quot;Tải biểu mẫu từ tài khoản đích&quot;.</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>Chọn một biểu mẫu từ tài khoản đích. Danh sách được tải khi bước này mở; nếu trống, hãy nhấp &quot;Tải lại tên biểu mẫu…&quot;.</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>Điền từ lần đăng nhập đích ({0})</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>Tài khoản nguồn của bạn, được thay bằng tài khoản đích của bạn</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>Điền từ các lần đăng nhập của bạn ({0} → {1}). Xóa cả hai ô để giữ nguyên miền email.</value></data>
@@ -1133,7 +1173,7 @@ Sao chép lại sẽ tạo bản sao thứ hai cho mỗi biểu mẫu. Tiếp t�
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} gói do công cụ này ghi và đã chứa giá trị của đích. Hãy xóa chúng (dấu ✕ trong danh sách) và thêm các bản xuất gốc.</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} trang web chưa có đích. Một trang web để nguyên vẫn trỏ về tenant nguồn.</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} danh sách sẽ thất bại khi nhập. Hãy sửa các danh sách được đánh dấu &quot;Sẽ thất bại&quot; để tiếp tục.</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Các danh sách chưa được khớp. Hãy quay lại một bước rồi tiến lên lại để thử lại.</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ Các danh sách chưa được khớp. Nhấp &quot;Khớp lại&quot; để thử lại.</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} biểu mẫu cần ID biểu mẫu đích hợp lệ để tiếp tục.</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Đổi nguồn…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Đã đăng nhập với tư cách {0}. Địa chỉ SharePoint của tenant nguồn là {1}.</value></data>
@@ -1398,11 +1438,65 @@ Sao chép lại sẽ tạo bản sao thứ hai cho mỗi biểu mẫu. Tiếp t�
   <data name="Flows_CloseTitle" xml:space="preserve"><value>Đóng khi đang làm việc?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>Công cụ vẫn đang làm việc (quét, khớp, đăng nhập hoặc ghi gói). Đóng bây giờ sẽ dừng nó. Vẫn đóng?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>Không thể tự động thêm {0} vào biểu mẫu mới. Một bản sao của tệp đã được lưu thành {1}: hãy thêm lại trong Microsoft Forms.</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>Lịch sử phiên bản của mục danh sách:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>Giống như tệp</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>Tất cả phiên bản</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>Chỉ bản hiện tại</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>Sao chép lịch sử phiên bản của mỗi mục danh sách mới (giá trị, ngày và người chỉnh sửa) bằng cách phát lại các phiên bản của nó ở đích. &quot;Giống như tệp&quot; làm theo các tùy chọn phiên bản tệp ở trên. Các mục đã có ở đích giữ lịch sử riêng. Các cột người, tra cứu, phân loại và liên kết chỉ sao chép giá trị hiện tại.</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>lịch sử phiên bản: một số phần chưa được sao chép ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>lịch sử phiên bản chưa được sao chép ({0}); mục chỉ có các giá trị hiện tại</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>Danh sách:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>Việc chuyển miền email chưa được áp dụng: cả hai miền phải được điền, không có khoảng trắng hoặc dấu @ thừa (ví dụ contoso.com và fabrikam.com).</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>Xóa tất cả gói và loại bỏ kết quả quét cùng mọi thứ bạn đã điền ở các bước sau?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Đóng Ghi lại luồng cho đích? Ánh xạ bạn đã tạo sẽ bị mất (hãy dùng Lưu ánh xạ… trước để giữ lại).</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Bắt đầu lại? Các gói, kết quả quét và mọi thứ bạn đã điền sẽ bị loại bỏ. Các gói đã ghi vào thư mục đầu ra không bị xóa.</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{0} địa chỉ email trên {1} nằm trong phạm vi việc chuyển này nên không được liệt kê ở trên. Để gán địa chỉ khác cho một trong số đó, hãy xóa các ô này, điền vào hàng đó rồi nhập lại việc chuyển miền.</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>Không thể đọc thư mục {0}: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>Xem lại: các tên cột này đã được đổi ở mọi nơi chúng xuất hiện trong biểu thức của luồng, có thể gồm cả cột cùng tên của một danh sách khác. Hãy kiểm tra từng cột có thuộc danh sách đã đổi tên nó hay không.</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} tên cột đã được đổi ở mọi nơi chúng xuất hiện trong biểu thức. Hãy kiểm tra chúng thuộc danh sách đã đổi tên chúng, không phải cột cùng tên của danh sách khác (xem báo cáo).</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Dừng sao chép ngay bây giờ? Biểu mẫu đang được sao chép sẽ bị cắt ngang và có thể bị bỏ dở trong tài khoản đích; nếu vậy hãy xóa nó trong Microsoft Forms. Các biểu mẫu đã hoàn tất vẫn được giữ lại.</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>Chọn</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>Nhật ký sao chép</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>Bắt đầu sao chép 1 biểu mẫu</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>Biểu mẫu đã được sao chép nhưng không thể kiểm tra hình ảnh của nó ({0}). Hãy mở nó trong Microsoft Forms và kiểm tra hình nền và hình tiêu đề.</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>Kiểm tra kết nối và đăng nhập của bạn, sau đó nhấp Tải lại biểu mẫu. Chi tiết: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>Không thể tải biểu mẫu của bạn</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>Đã tải 1 biểu mẫu.</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>Nhật ký đã được sao chép vào bảng nhớ tạm.</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>Không thể sao chép nhật ký vì một chương trình khác đang dùng bảng nhớ tạm. Hãy thử lại.</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>Nhật ký sao chép</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Tiếp theo: nếu các luồng dùng những biểu mẫu này, hãy mở Ghi lại luồng cho đích từ cửa sổ chính. Công cụ đọc các ID biểu mẫu do lần sao chép này lưu và trỏ mỗi luồng tới biểu mẫu mới.</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>Không tìm thấy biểu mẫu</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>Những gì được sao chép: câu hỏi, phân nhánh, cài đặt và chủ đề. Những gì không: phản hồi (dùng Xuất phản hồi… ở bước đầu tiên để lưu vào Excel), cộng tác viên và những người được chia sẻ biểu mẫu. Mỗi bản sao là một biểu mẫu mới thuộc sở hữu của tài khoản đích, và có thể cần thêm lại hình ảnh.</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>Sao chép hoàn tất: biểu mẫu đã được sao chép</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>Bộ lọc đang bật: Chọn tất cả và Bỏ chọn tất cả áp dụng cho {0} biểu mẫu đang hiển thị.</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>{0} trong số các biểu mẫu đã chọn đã được sao chép trước đó; sao chép lại sẽ tạo bản trùng lặp.</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>Bước {0}/{1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 biểu mẫu sẽ được sao chép từ {1} sang {2}.</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>{0} trong số các biểu mẫu đã chọn sẽ có tiêu đề dài hơn {1} ký tự sau khi thêm hậu tố. Microsoft Forms có thể từ chối chúng; hãy rút ngắn hậu tố.</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>Không thể sao chép các dạng xem: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>Dạng xem '{0}' chưa được sao chép (dạng xem {1})</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>Không thể tạo dạng xem '{0}': {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>Dạng xem '{0}' đã được tạo nhưng không thể áp dụng một số cài đặt: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>Dạng xem '{0}': không thể áp dụng bộ lọc hoặc cách sắp xếp của dạng xem và đã bị bỏ qua</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>Dạng xem '{0}': các cột không có trong đích đã bị bỏ qua: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} ghi chú về dạng xem, cài đặt hoặc kiểu nội dung: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>Không thể đọc cài đặt danh sách nên không có cài đặt nào được sao chép: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>Các cài đặt danh sách không thể áp dụng: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>Không thể áp dụng quy tắc xác thực hoặc định dạng cho: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>Không thể sao chép kiểu nội dung '{0}': {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>Kiểu nội dung '{0}': các cột không thể thêm vào: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>Không thể sao chép mẫu tài liệu của thư viện.</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>Không thể sao chép các giá trị mặc định của thư mục trong thư viện.</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>Các giá trị mặc định của thư mục đã được sao chép nhưng không thể thêm quy tắc áp dụng chúng cho tệp mới.</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Không thể đọc các cột của site: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Các cột của site không thể tạo: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Không thể đọc các kiểu nội dung của site: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Các kiểu nội dung của site không thể tạo: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>Các liên kết điều hướng ({0}) không thể tạo: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>Các cài đặt site không thể áp dụng: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>Cột site, kiểu nội dung, điều hướng và cài đặt</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>Đang sao chép cột site, kiểu nội dung, điều hướng và cài đặt...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>kiểu nội dung</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>Loại nội dung '{0}': không thể sao chép mẫu tài liệu của nó.</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>Đăng nhập bằng đăng ký ứng dụng: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>Tenant: bất kỳ. Bạn chọn tài khoản Microsoft 365 khi đăng nhập.</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Chỉ có thể đăng nhập vào thư mục này.</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Để kết nối một site ở tenant khác, hãy chọn đăng ký ứng dụng khác trong Cài đặt (với Tenant ID để trống hoặc đặt thành tenant đó), hoặc dùng chế độ đa tenant.</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Chỉ cấu trúc: cột, dạng xem, cài đặt và loại nội dung được sao chép, nhưng không có tệp hoặc mục danh sách.</value></data>
 </root>

@@ -41,8 +41,8 @@
   <data name="Ui_Target2" xml:space="preserve"><value> コピー先: </value></data>
   <data name="Ui_DestinationList" xml:space="preserve"><value>コピー先リスト</value></data>
   <data name="Ui_CopyOptions" xml:space="preserve"><value>コピー オプション</value></data>
-  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>ライブラリのコンテンツ (ファイル) をコピーする</value></data>
-  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>オフの場合、列スキーマとライブラリ設定のみが再作成され、ファイルはコピーされません。</value></data>
+  <data name="Ui_CopyLibraryContentFiles" xml:space="preserve"><value>ファイルとリスト アイテム (コンテンツ) をコピーする</value></data>
+  <data name="Ui_WhenOffOnlyTheColumn" xml:space="preserve"><value>オフにすると、ファイルやリスト アイテムはコピーされず、構造のみがコピーされます。対象は、列、ビュー、リストの設定、コンテンツ タイプで、サイト全体のスコープでは、サイト列、ナビゲーション、サイトの設定も含まれます。</value></data>
   <data name="Ui_IfFileExists" xml:space="preserve"><value>ファイルが存在する場合:</value></data>
   <data name="Ui_Skip" xml:space="preserve"><value>スキップ</value></data>
   <data name="Ui_Overwrite" xml:space="preserve"><value>上書き</value></data>
@@ -53,6 +53,46 @@
   <data name="Ui_AllVersions" xml:space="preserve"><value>すべてのバージョン</value></data>
   <data name="Ui_Latest" xml:space="preserve"><value>最新 </value></data>
   <data name="Ui_Versions" xml:space="preserve"><value> バージョン</value></data>
+  <data name="Ui_CopyLookupDependencies" xml:space="preserve"><value>自分のリストが参照するリストもコピーする</value></data>
+  <data name="Ui_CopyLookupDependenciesTip" xml:space="preserve"><value>選択したリストにルックアップ列がある場合、参照先のリストもコピーされ、列を作成して値を解決できます。選択したものだけをコピーするには、これをオフにします。</value></data>
+  <data name="VM_LookupSummaryTitle" xml:space="preserve"><value>ルックアップ値</value></data>
+  <data name="VM_LookupSummary" xml:space="preserve"><value>{0} 件が項目で一致、{1} 件がテキストで一致、{2} 件が見つかりませんでした。</value></data>
+  <data name="VM_TaxonomySummaryTitle" xml:space="preserve"><value>管理されたメタデータ</value></data>
+  <data name="VM_TaxonomySummary" xml:space="preserve"><value>{0} 件の用語値をコピーし、{1} 件を除外しました (コピーしたセットに用語が見つかりません)。</value></data>
+  <data name="Svc_Lib_TaxonomyNotCopied" xml:space="preserve"><value>管理されたメタデータ列 &quot;{0}&quot; は作成されませんでした。その用語セットは別のテナントに属しており、用語セットのコピーは利用できません (両方のテナントにサインインし、TermStore.ReadWrite.All アクセス許可を付与してください)。</value></data>
+  <data name="Svc_Lib_TermSetCopied" xml:space="preserve"><value>用語セット &quot;{0}&quot; をターゲットにコピーしました: {1} 件を作成、{2} 件は既に存在していました。</value></data>
+  <data name="Ui_CopyTermSets" xml:space="preserve"><value>管理されたメタデータの用語セットをターゲット テナントにコピーする</value></data>
+  <data name="Ui_CopyTermSetsTip" xml:space="preserve"><value>管理されたメタデータ列は、ソース テナントの用語ストア内の用語セットにバインドされています。この設定をオンにすると、用語セット (用語、ラベル、同義語、説明) がターゲットの用語ストアにコピーされ、列はコピーにバインドされ、各値が再マップされます。オプションの TermStore.ReadWrite.All アクセス許可と、ターゲットでの用語ストアのロールが必要です。</value></data>
+  <data name="Dlg_ColLooksUp" xml:space="preserve"><value>リスト "{0}" を参照します</value></data>
+  <data name="Dlg_ColLooksUpOther" xml:space="preserve"><value>別の Web のリストを参照します</value></data>
+  <data name="Dlg_ColTermSetCopy" xml:space="preserve"><value>管理されたメタデータ: その用語セットがターゲット テナントにコピーされます</value></data>
+  <data name="Dlg_ColTermSetSame" xml:space="preserve"><value>管理されたメタデータ: 同じ用語セットを使用します (同じテナント)</value></data>
+  <data name="Svc_Lib_ProjectedNoPrimary" xml:space="preserve"><value>射影フィールド "{0}" は作成されませんでした。参照列 "{1}" がターゲット リストにありません。</value></data>
+  <data name="Svc_Lib_ProjectedFailed" xml:space="preserve"><value>射影フィールド "{0}" は作成されませんでした。{1}</value></data>
+  <data name="Ui_SingleTenantRegistrationLabel" xml:space="preserve"><value>アプリ登録でサインイン:</value></data>
+  <data name="Ui_StructureHeader" xml:space="preserve"><value>コピーする構造</value></data>
+  <data name="Ui_StructureIntro" xml:space="preserve"><value>ここでオンにしたものはすべて、データとともにコピー先に再作成されます。コピー先に既に存在するリストまたはライブラリには、不足しているコンテンツ タイプとビューのみが追加されます。</value></data>
+  <data name="Ui_StructViewsLong" xml:space="preserve"><value>ビュー (フィルター、グループ化、列、既定のビュー、カレンダー ビューとボード ビュー)</value></data>
+  <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>リストの設定 (承認、チェックアウト、添付ファイル、フォルダー、アイテム レベルのセキュリティ)</value></data>
+  <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>コンテンツ タイプとそのドキュメント テンプレート</value></data>
+  <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>列の検証規則と書式設定</value></data>
+  <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>ライブラリ テンプレートとフォルダーの既定値</value></data>
+  <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>サイト列とサイト コンテンツ タイプ</value></data>
+  <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>サイトの設定 (説明、クイック起動、ツリー ビューなど)</value></data>
+  <data name="Ui_StructViews" xml:space="preserve"><value>ビュー</value></data>
+  <data name="Ui_StructListSettings" xml:space="preserve"><value>リストの設定</value></data>
+  <data name="Ui_StructContentTypes" xml:space="preserve"><value>コンテンツ タイプ</value></data>
+  <data name="Ui_StructColumnRules" xml:space="preserve"><value>列の規則</value></data>
+  <data name="Ui_StructTemplates" xml:space="preserve"><value>テンプレートと既定値</value></data>
+  <data name="Ui_StructSiteDefs" xml:space="preserve"><value>サイト列とタイプ</value></data>
+  <data name="Ui_StructNavigation" xml:space="preserve"><value>ナビゲーション</value></data>
+  <data name="Ui_StructSiteSettings" xml:space="preserve"><value>サイトの設定</value></data>
+  <data name="Ui_StructLookupLists" xml:space="preserve"><value>参照リスト</value></data>
+  <data name="Ui_StructTermSets" xml:space="preserve"><value>用語セット</value></data>
+  <data name="VM_SumStructure" xml:space="preserve"><value>構造: {0}</value></data>
+  <data name="VM_SumStructureNone" xml:space="preserve"><value>なし</value></data>
+  <data name="Ui_ShowMore" xml:space="preserve"><value>さらに表示</value></data>
+  <data name="Ui_ShowLess" xml:space="preserve"><value>表示を減らす</value></data>
   <data name="Ui_CopyNavigationQuickLaunchTop" xml:space="preserve"><value>ナビゲーション (クイック起動とトップ バー) をコピーする</value></data>
   <data name="Ui_ReplacesTargetNavigationWithSource" xml:space="preserve"><value>コピー先のナビゲーションをコピー元のリンクで置き換えます。URL はコピー先サイトに合わせて再マップされます。</value></data>
   <data name="Ui_CopyPermissions" xml:space="preserve"><value>アクセス許可をコピーする</value></data>
@@ -70,7 +110,7 @@
   <data name="Ui_CopyCustomColumnValues" xml:space="preserve"><value>カスタム列の値をコピーする</value></data>
   <data name="Ui_CopiesTextNumberChoiceDate" xml:space="preserve"><value>テキスト、数値、選択肢、日付、ブール値、複数選択肢、ユーザー、マネージド メタデータの列の値をコピーします。参照列はサポートされていません。</value></data>
   <data name="Ui_EnableCopyCustomColumnValues" xml:space="preserve"><value>マッピングを構成するには「カスタム列の値をコピーする」を有効にしてください。</value></data>
-  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>すべてのカスタム列の値がコピーされます。マッピングを使用して、コピー先で作成する列を制御できます。</value></data>
+  <data name="Ui_AllCustomColumnValuesAre" xml:space="preserve"><value>すべてのユーザー設定列の値がコピーされます。コピー先で作成する列を制御するには、上の列マッピングを使用します。</value></data>
   <data name="Ui_CustomColumnValuesAreAlways" xml:space="preserve"><value>リスト アイテムのカスタム列の値は常にコピーされます。</value></data>
   <data name="Ui_CopyMode" xml:space="preserve"><value>コピー モード</value></data>
   <data name="Ui_MigrationApi" xml:space="preserve"><value>Migration API</value></data>
@@ -158,7 +198,7 @@
   <data name="Ui_Name" xml:space="preserve"><value>名前</value></data>
   <data name="Ui_ClientIdApplicationId" xml:space="preserve"><value>クライアント ID (アプリケーション ID)</value></data>
   <data name="Ui_TenantId" xml:space="preserve"><value>テナント ID</value></data>
-  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>マルチテナントの場合は「common」を、それ以外はテナントの GUID またはドメインを使用します。</value></data>
+  <data name="Ui_UseCommonForMultiTenant" xml:space="preserve"><value>任意のテナントにサインインするには、空のままにするか「common」を入力します。テナントの GUID またはドメイン (例: contoso.onmicrosoft.com) を指定すると、サインインはそのテナントのみに制限されます。</value></data>
   <data name="Ui_PrefixDefaultReportFilenamesWith" xml:space="preserve"><value>既定のレポート ファイル名の先頭にコピー元とコピー先のサイト名を付ける</value></data>
   <data name="Ui_SignOut" xml:space="preserve"><value>サインアウト</value></data>
   <data name="Ui_Theme" xml:space="preserve"><value>テーマ:</value></data>
@@ -611,7 +651,7 @@
   <data name="Ui2_AutoLibrariesListsMode" xml:space="preserve"><value>ライブラリとリスト モード</value></data>
   <data name="Ui2_AutoEntireSiteMode" xml:space="preserve"><value>サイト全体モード</value></data>
   <data name="Ui2_AutoSitePagesMode" xml:space="preserve"><value>サイト ページ モード</value></data>
-  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>ライブラリのコンテンツ (ファイル) をコピーする</value></data>
+  <data name="Ui2_AutoCopyLibraryContent" xml:space="preserve"><value>ファイルとリスト アイテム (コンテンツ) をコピーする</value></data>
   <data name="Ui2_AutoCopyVersionHistory" xml:space="preserve"><value>バージョン履歴をコピーする</value></data>
   <data name="Ui2_AutoLatestNVersions" xml:space="preserve"><value>最新 N 個のバージョン</value></data>
   <data name="Ui2_AutoCopyNavigation" xml:space="preserve"><value>ナビゲーションをコピーする</value></data>
@@ -939,7 +979,7 @@
   <data name="Forms_ReloadForms" xml:space="preserve"><value>フォームを再読み込み</value></data>
   <data name="Forms_StatusStart" xml:space="preserve"><value>「自分のフォームを読み込む」をクリックしてフォームを表示します。</value></data>
   <data name="Forms_NoForms" xml:space="preserve"><value>このアカウントにフォームが見つかりませんでした。</value></data>
-  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} 件のフォームをコピー</value></data>
+  <data name="Forms_CopyNForms" xml:space="preserve"><value>{0} 件のフォームのコピーを開始</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>さらにフォームをコピー</value></data>
   <data name="Forms_TargetHeader" xml:space="preserve"><value>コピーの保存先を選択</value></data>
   <data name="Forms_TargetIntroSingle" xml:space="preserve"><value>シングルテナント: コピーは、使用中の同じアカウントに元のフォームの隣に作成されます。</value></data>
@@ -963,7 +1003,7 @@
   <data name="Forms_CopyingHeader" xml:space="preserve"><value>フォームをコピー中</value></data>
   <data name="Forms_ProgressStarting" xml:space="preserve"><value>開始中…</value></data>
   <data name="Forms_ProgressForm" xml:space="preserve"><value>フォーム {0}/{1}: {2}</value></data>
-  <data name="Forms_Cancelling" xml:space="preserve"><value>現在のフォームの完了後にキャンセルします…</value></data>
+  <data name="Forms_Cancelling" xml:space="preserve"><value>キャンセルしています… コピー中のフォームを停止しています。</value></data>
   <data name="Forms_ResultSuccess" xml:space="preserve"><value>コピーが完了しました: {0} 件のフォームすべてをコピーしました</value></data>
   <data name="Forms_ResultSuccessSub" xml:space="preserve"><value>コピーは {0} にあります。Microsoft Forms を開くか、下の表で確認してください。</value></data>
   <data name="Forms_ResultPartial" xml:space="preserve"><value>コピーが完了しました: {1} 件中 {0} 件のフォームをコピーしました。対処が必要なものがあります</value></data>
@@ -971,7 +1011,7 @@
   <data name="Forms_ResultAllFailed" xml:space="preserve"><value>コピーは完了しましたが、コピーされたフォームはありません</value></data>
   <data name="Forms_ResultAllFailedSub" xml:space="preserve"><value>理由は [詳細] 列を参照してください。よくある原因は、コピー先の登録に Microsoft Forms アクセス許可がないこと、またはアカウントに Forms へのアクセス権がないことです。</value></data>
   <data name="Forms_ResultCancelled" xml:space="preserve"><value>{1} 件中 {0} 件のフォームのコピー後にキャンセルしました</value></data>
-  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>下に表示されているフォームは完了しています。キャンセル時にコピー中だったフォームは完了しておらず、表示されません。</value></data>
+  <data name="Forms_ResultCancelledSub" xml:space="preserve"><value>下でコピー済みと表示されているフォームは完了しています。キャンセル時にコピー中だったフォームは完了しておらず、コピー先に未完成のまま残る場合があります。コピーが作成されていた場合は、その行にコピーの ID が表示されます。</value></data>
   <data name="Forms_CardCopied" xml:space="preserve"><value>コピー済み</value></data>
   <data name="Forms_CardWarnings" xml:space="preserve"><value>警告あり</value></data>
   <data name="Forms_CardFailed" xml:space="preserve"><value>失敗</value></data>
@@ -986,7 +1026,7 @@
   <data name="Forms_OpenSelected" xml:space="preserve"><value>選択したコピーを開く</value></data>
   <data name="Forms_OpenForms" xml:space="preserve"><value>Microsoft Forms を開く</value></data>
   <data name="Forms_ExportResults" xml:space="preserve"><value>結果をエクスポート…</value></data>
-  <data name="Forms_ShowMap" xml:space="preserve"><value>フォーム ID マップを表示</value></data>
+  <data name="Forms_ShowMap" xml:space="preserve"><value>保存済みのフォーム ID を開く</value></data>
   <data name="Forms_SelectACopy" xml:space="preserve"><value>最初に表でコピーしたフォームを選択してください。</value></data>
   <data name="Forms_ResultsSaved" xml:space="preserve"><value>結果を {0} に保存しました</value></data>
   <data name="Forms_RedirectHelp" xml:space="preserve"><value>ヒント: アプリの登録に一致するリダイレクト アドレスがありません。Entra の [認証] で、プラットフォーム「モバイル アプリケーションとデスクトップ アプリケーション」を http://localhost で追加し、もう一度お試しください。</value></data>
@@ -1105,7 +1145,7 @@
   <data name="Flows_FormUntitled" xml:space="preserve"><value>(無題のフォーム)</value></data>
   <data name="Flows_ColSourceTitle" xml:space="preserve"><value>コピー元フォーム</value></data>
   <data name="Flows_ColPickForm" xml:space="preserve"><value>コピー先のフォームから選択</value></data>
-  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>コピー先アカウントのフォームを選択します。先に「コピー先アカウントからフォームを読み込む」をクリックしてください。</value></data>
+  <data name="Flows_ColPickFormTip" xml:space="preserve"><value>コピー先アカウントのフォームを選択します。一覧はこの手順を開いたときに読み込まれます。空の場合は「フォーム名を再読み込み…」をクリックしてください。</value></data>
   <data name="Flows_NoteTenant" xml:space="preserve"><value>コピー先のサインイン ({0}) から入力</value></data>
   <data name="Flows_NoteAccount" xml:space="preserve"><value>コピー元アカウントをコピー先アカウントに置換</value></data>
   <data name="Flows_NoteDomain" xml:space="preserve"><value>サインイン ({0} → {1}) から入力しました。メール ドメインを変更しない場合は、両方のボックスをクリアしてください。</value></data>
@@ -1133,7 +1173,7 @@
   <data name="Flows_Gate_Written" xml:space="preserve"><value>⚠ {0} 件のパッケージはこのツールによって書き込まれたもので、すでにコピー先の値が含まれています。削除して (一覧の ✕)、元のエクスポートを追加してください。</value></data>
   <data name="Flows_Gate_Sites" xml:space="preserve"><value>⚠ {0} 件のサイトにコピー先がありません。そのままにしたサイトは、引き続きコピー元テナントを指します。</value></data>
   <data name="Flows_Gate_Lists" xml:space="preserve"><value>⚠ {0} 件のリストはインポート時に失敗します。続行するには、「失敗します」とマークされたリストを修正してください。</value></data>
-  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ リストはまだ照合されていません。1 つ前の手順に戻ってから進み、再試行してください。</value></data>
+  <data name="Flows_Gate_NoCards" xml:space="preserve"><value>⚠ リストはまだ照合されていません。「再照合」をクリックして再試行してください。</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ 続行するには、{0} 件のフォームに有効なコピー先フォーム ID が必要です。</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>コピー元を変更…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>{0} としてサインインしました。コピー元テナントの SharePoint アドレスは {1} です。</value></data>
@@ -1398,11 +1438,65 @@
   <data name="Flows_CloseTitle" xml:space="preserve"><value>処理中に閉じますか?</value></data>
   <data name="Flows_ClosePrompt" xml:space="preserve"><value>ツールはまだ処理中です (スキャン、照合、サインイン、またはパッケージの書き込み)。今閉じると停止します。閉じますか?</value></data>
   <data name="Forms_Cp_ImageSaved" xml:space="preserve"><value>{0}を新しいフォームに自動的に追加できませんでした。ファイルのコピーを {1} として保存しました。Microsoft Forms で追加し直してください。</value></data>
-  <data name="Ui_ListItemVersions" xml:space="preserve"><value>リスト アイテムのバージョン履歴:</value></data>
-  <data name="Ui_ListItemVersionsSame" xml:space="preserve"><value>ファイルと同じ</value></data>
-  <data name="Ui_ListItemVersionsAll" xml:space="preserve"><value>すべてのバージョン</value></data>
-  <data name="Ui_ListItemVersionsOff" xml:space="preserve"><value>現在のみ</value></data>
-  <data name="Ui_ListItemVersionsTip" xml:space="preserve"><value>新しいリスト アイテムごとに、ターゲットでバージョンを再生してバージョン履歴 (値、日付、編集者) をコピーします。「ファイルと同じ」は上のファイル バージョン オプションに従います。ターゲットに既にあるアイテムは独自の履歴を保持します。ユーザー、参照、分類、リンクの列は現在の値のみコピーされます。</value></data>
   <data name="VM_ItemHistoryPartial" xml:space="preserve"><value>バージョン履歴: 一部がコピーされませんでした ({0})</value></data>
   <data name="VM_ItemHistoryFailed" xml:space="preserve"><value>バージョン履歴はコピーされませんでした ({0})。アイテムには現在の値のみがあります</value></data>
+  <data name="Dlg_MappingForList" xml:space="preserve"><value>リスト:</value></data>
+  <data name="Flows_BadDomain" xml:space="preserve"><value>メール ドメインの移動は適用されませんでした。両方のドメインを、スペースや余分な @ を含めずに入力してください (例: contoso.com と fabrikam.com)。</value></data>
+  <data name="Flows_ConfirmClearBody" xml:space="preserve"><value>すべてのパッケージを削除し、スキャン結果と後続の手順で入力した内容をすべて破棄しますか?</value></data>
+  <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>「コピー先向けにフローを書き換え」を閉じますか? ここまでに作成したマッピングは失われます (保持するには、先に「マッピングを保存…」を使用してください)。</value></data>
+  <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>最初からやり直しますか? パッケージ、スキャン結果、入力した内容がすべて破棄されます。出力フォルダーに書き込み済みのパッケージは削除されません。</value></data>
+  <data name="Flows_DomainCovered" xml:space="preserve"><value>{1} 上の {0} 件のメール アドレスはこの移動の対象であるため、上には一覧表示されません。そのうちの 1 件に別のアドレスを指定するには、これらのボックスをクリアし、その行に入力してから、もう一度ドメインの移動を入力してください。</value></data>
+  <data name="Flows_FolderUnreadable" xml:space="preserve"><value>フォルダー {0} を読み取れませんでした: {1}</value></data>
+  <data name="Flows_Rep_GlobalColumnWarn" xml:space="preserve"><value>確認: これらの列名は、フローの式に含まれるすべての箇所で名前が変更されました。これには別のリストの同名の列も含まれる場合があります。それぞれが名前を変更したリストを指していることを確認してください。</value></data>
+  <data name="Flows_Review_GlobalColumns" xml:space="preserve"><value>{0} 個の列名が、式に含まれるすべての箇所で名前変更されました。別のリストの同名の列ではなく、名前を変更したリストを指していることを確認してください (レポートを参照)。</value></data>
+  <data name="Forms_CancelCopyBody" xml:space="preserve"><value>今すぐコピーを停止しますか? 現在コピー中のフォームは中断され、コピー先アカウントに未完成のまま残る場合があります。その場合は Microsoft Forms で削除してください。完了済みのフォームは保持されます。</value></data>
+  <data name="Forms_ColSelect" xml:space="preserve"><value>選択</value></data>
+  <data name="Forms_CopyLog" xml:space="preserve"><value>コピー ログ</value></data>
+  <data name="Forms_CopyOneForm" xml:space="preserve"><value>1 件のフォームのコピーを開始</value></data>
+  <data name="Forms_Cp_ImageCheckFailed" xml:space="preserve"><value>フォームはコピーされましたが、画像を確認できませんでした ({0})。Microsoft Forms で開き、背景画像とヘッダー画像を確認してください。</value></data>
+  <data name="Forms_LoadFailedBody" xml:space="preserve"><value>接続とサインインを確認してから、[フォームを再読み込み] をクリックしてください。詳細: {0}</value></data>
+  <data name="Forms_LoadFailedTitle" xml:space="preserve"><value>フォームを読み込めませんでした</value></data>
+  <data name="Forms_LoadedOne" xml:space="preserve"><value>1 件のフォームを読み込みました。</value></data>
+  <data name="Forms_LogCopied" xml:space="preserve"><value>ログをクリップボードにコピーしました。</value></data>
+  <data name="Forms_LogCopyFailed" xml:space="preserve"><value>別のプログラムがクリップボードを使用しているため、ログをコピーできませんでした。もう一度お試しください。</value></data>
+  <data name="Forms_LogName" xml:space="preserve"><value>コピー ログ</value></data>
+  <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>次の手順: フローがこれらのフォームを使用している場合は、メイン ウィンドウから「コピー先向けにフローを書き換え」を開いてください。このコピーで保存されたフォーム ID を読み取り、各フローを新しいフォームに向けます。</value></data>
+  <data name="Forms_NoFormsTitle" xml:space="preserve"><value>フォームが見つかりません</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>コピーされるもの: 質問、分岐、設定、テーマ。コピーされないもの: 回答 (最初の手順の「回答をエクスポート…」で Excel に保存できます)、共同作成者、フォームの共有先。コピーごとにコピー先アカウントが所有する新しいフォームが作成され、画像は再度追加が必要な場合があります。</value></data>
+  <data name="Forms_ResultSuccessOne" xml:space="preserve"><value>コピーが完了しました: フォームをコピーしました</value></data>
+  <data name="Forms_SelectAllShown" xml:space="preserve"><value>フィルターが有効です。「すべて選択」と「すべて選択解除」は、表示されている {0} 件のフォームに適用されます。</value></data>
+  <data name="Forms_SelectedAlreadyCopied" xml:space="preserve"><value>選択したフォームのうち {0} 件は以前にコピー済みです。もう一度コピーすると重複が作成されます。</value></data>
+  <data name="Forms_StepOfN" xml:space="preserve"><value>手順 {0}/{1}: {2}</value></data>
+  <data name="Forms_SummaryOne" xml:space="preserve"><value>1 件のフォームを {1} から {2} にコピーします。</value></data>
+  <data name="Forms_TitleTooLong" xml:space="preserve"><value>選択したフォームのうち {0} 件は、サフィックスを追加するとタイトルが {1} 文字を超えます。Microsoft Forms に拒否される場合があります。サフィックスを短くしてください。</value></data>
+  <data name="Svc_View_ReadFail" xml:space="preserve"><value>ビューをコピーできませんでした: {0}</value></data>
+  <data name="Svc_View_Skipped" xml:space="preserve"><value>ビュー '{0}' はコピーされませんでした ({1} ビュー)</value></data>
+  <data name="Svc_View_CreateFail" xml:space="preserve"><value>ビュー '{0}' を作成できませんでした: {1}</value></data>
+  <data name="Svc_View_SettingsFail" xml:space="preserve"><value>ビュー '{0}' は作成されましたが、一部の設定を適用できませんでした: {1}</value></data>
+  <data name="Svc_View_QueryDropped" xml:space="preserve"><value>ビュー '{0}': フィルターまたは並べ替えを適用できなかったため、除外されました</value></data>
+  <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>ビュー '{0}': コピー先にない列は除外されました: {1}</value></data>
+  <data name="VM_ViewsNotes" xml:space="preserve"><value>ビュー、設定、コンテンツ タイプに関するメモ {0} 件: {1}</value></data>
+  <data name="Svc_Set_ReadFail" xml:space="preserve"><value>リスト設定を読み取れなかったため、どの設定もコピーされませんでした: {0}</value></data>
+  <data name="Svc_Set_Failed" xml:space="preserve"><value>適用できなかったリスト設定: {0}</value></data>
+  <data name="Svc_Col_RulesFailed" xml:space="preserve"><value>検証規則または書式設定を適用できなかった対象: {0}</value></data>
+  <data name="Svc_CT_Failed" xml:space="preserve"><value>コンテンツ タイプ '{0}' をコピーできませんでした: {1}</value></data>
+  <data name="Svc_CT_ColumnsFailed" xml:space="preserve"><value>コンテンツ タイプ '{0}': 追加できなかった列: {1}</value></data>
+  <data name="Svc_Lib_TemplateFailed" xml:space="preserve"><value>ライブラリのドキュメント テンプレートをコピーできませんでした。</value></data>
+  <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>ライブラリのフォルダーの既定値をコピーできませんでした。</value></data>
+  <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>フォルダーの既定値はコピーされましたが、新しいファイルに適用するルールを追加できませんでした。</value></data>
+  <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>サイト列を読み取れませんでした: {0}</value></data>
+  <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>作成できなかったサイト列: {0}</value></data>
+  <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>サイトのコンテンツ タイプを読み取れませんでした: {0}</value></data>
+  <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>作成できなかったサイトのコンテンツ タイプ: {0}</value></data>
+  <data name="Svc_Site_NavFailed" xml:space="preserve"><value>作成できなかったナビゲーション ({0}) リンク: {1}</value></data>
+  <data name="Svc_Site_SettingsFailed" xml:space="preserve"><value>適用できなかったサイト設定: {0}</value></data>
+  <data name="VM_SiteStructure" xml:space="preserve"><value>サイト列、コンテンツ タイプ、ナビゲーション、設定</value></data>
+  <data name="VM_CopyingSiteStructure" xml:space="preserve"><value>サイト列、コンテンツ タイプ、ナビゲーション、設定をコピーしています...</value></data>
+  <data name="Svc_FolderIssueContentType" xml:space="preserve"><value>コンテンツ タイプ</value></data>
+  <data name="Svc_CT_TemplateFailed" xml:space="preserve"><value>コンテンツ タイプ '{0}': ドキュメント テンプレートをコピーできませんでした。</value></data>
+  <data name="Ui_SingleTenantRegistration" xml:space="preserve"><value>アプリの登録でサインインします: {0}</value></data>
+  <data name="Ui_SingleTenantAnyTenant" xml:space="preserve"><value>テナント: 任意。サインイン時に Microsoft 365 アカウントを選択します。</value></data>
+  <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>テナント: {0}。サインインできるのはこのディレクトリのみです。</value></data>
+  <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>別のテナントのサイトに接続するには、[設定] で別のアプリの登録を選択するか (テナント ID を空にするか、そのテナントに設定したもの)、マルチテナント モードを使用してください。</value></data>
+  <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>構造のみ: 列、ビュー、設定、コンテンツ タイプはコピーされますが、ファイルやリスト アイテムはコピーされません。</value></data>
 </root>
