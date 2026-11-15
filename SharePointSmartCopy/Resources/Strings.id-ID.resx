@@ -1499,4 +1499,116 @@ Menyalin lagi akan membuat salinan kedua dari masing-masing. Lanjutkan?</value><
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Proses masuk hanya dapat menuju direktori ini.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Untuk menyambungkan situs di tenant lain, pilih registrasi aplikasi lain di Pengaturan (dengan Tenant ID kosong atau diatur ke tenant tersebut), atau gunakan mode Multi-tenant.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Hanya struktur: kolom, tampilan, pengaturan, dan tipe konten disalin, tetapi tanpa file atau item daftar.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Perbarui juga daftar yang sudah ada di target: ganti tampilan bernama sama (dan tampilan default), pengaturan daftar, serta aturan dan pemformatan kolom</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Perbarui daftar yang ada</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Daftar yang ada telah diperbarui agar sesuai dengan sumber.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Kecualikan dari alur (tidak ada di target)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Dikecualikan dari alur</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} kolom akan dikecualikan dari langkah-langkah alur karena daftar target tidak memiliki kolom tersebut: {1}. Tambahkan kolom ke daftar target lalu klik Periksa lagi, atau pilih kolom lain, untuk mempertahankannya.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Kolom &quot;{0}&quot; tidak ada di daftar target &quot;{1}&quot;, sehingga langkah-langkah alur tidak lagi menulis ke kolom tersebut. Tambahkan kolom ke daftar lalu jalankan ini lagi, atau tambahkan bidang ke langkah-langkah tersebut di Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>Di daftar target &quot;{0}&quot;, kolom {1} semuanya dipetakan ke &quot;{2}&quot; pada langkah &quot;{4}&quot; dari &quot;{3}&quot;. Pilih kolom target yang berbeda untuk semua kecuali satu, atau kecualikan sisanya.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Tinjau: daftar target tidak memiliki kolom untuk bidang ini, sehingga langkah tidak lagi menulisnya. Nilai yang dibawanya tidak disimpan di mana pun di target.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Formulir ini tidak ada di tenant tempat Anda masuk</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Masuk…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Setiap koneksi dicocokkan dengan salah satu koneksi Anda yang sudah ada di target. Koneksi yang tidak cocok dibiarkan agar Anda atur di Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Koneksi tidak dicocokkan: atur setiap koneksi di Power Automate setelah alur dibuat.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Tampilan &apos;{0}&apos;: pengaturan {1} tidak dapat diterapkan: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Tampilan &quot;{0}&quot;: filter, pengurutan, atau pengelompokan pada kolom yang tidak dimiliki target dikecualikan ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Kolom situs pencarian tidak dibuat karena daftarnya tidak ada di target: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Kolom situs pencarian</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Salin dari lingkungan Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Gunakan paket yang diekspor (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Pilih alur di lingkungan sumber dan alat ini membuatnya di lingkungan target, yang sudah mengarah ke situs, daftar, dan formulir target. Alur dibuat dalam keadaan nonaktif, sehingga tidak ada yang berjalan sampai Anda meninjaunya.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Masuk dan muat lingkungan</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Salin dari (lingkungan sumber)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Masuk ke tenant target</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Target adalah tenant yang berbeda: masuk ke sana dengan akun yang dapat membuat alur di sana, lalu pilih lingkungan.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Salin ke (lingkungan target)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Pilih semua</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Batalkan pilihan</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Memuat lingkungan...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Memuat alur...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Tidak ada alur di {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} alur di {1}. Centang yang akan disalin.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Tidak ada alur yang dipilih yang dapat dibaca.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Membuat alur di target...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Buat alur di target</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Setiap alur dibuat di lingkungan target dalam keadaan nonaktif, sehingga tidak ada yang berjalan sampai Anda meninjaunya. Laporan disimpan di folder di bawah.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Gunakan koneksi saya yang sudah ada di lingkungan target jika ada</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} alur akan dibuat di {2} (disalin dari {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Alur dibuat dalam keadaan nonaktif. Aktifkan masing-masing setelah Anda meninjaunya.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Ditemukan {0} lingkungan sumber dan {1} lingkungan target.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Membaca {0} alur dari {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Membuat {0} alur di {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Koneksi tidak dapat dicocokkan, sehingga alur dibuat tanpa koneksi. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>{0} dibuat</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Dibuat (nonaktif)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Dibuat, {0} koneksi perlu diatur</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} koneksi tidak dicocokkan dengan koneksi di target. Buka setiap alur di Power Automate dan pilih koneksi.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} alur tidak dapat dibuat. Lihat log aktivitas untuk alasannya.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Pendaftaran aplikasi belum memiliki izin Power Automate (atau Power Apps). Minta administrator untuk menambahkannya dan memberikan persetujuan, lalu coba lagi.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Akun Anda tidak memiliki peran keamanan Dataverse di lingkungan target ({0}). Minta administrator untuk memberi Anda peran Environment Maker (atau System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Akun Anda tidak memiliki akses ke lingkungan atau alur ini.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Target menolak alur: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Lingkungan atau alur tidak ditemukan.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate mengembalikan kesalahan: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Selesai: {0} alur dibuat</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Dibuat di {0}, dalam keadaan nonaktif. Tidak ada yang tertinggal mengarah ke sumber.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Selesai: {0} alur dibuat, beberapa item perlu Anda tinjau</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Dibuat di {0}, dalam keadaan nonaktif. Buka laporan untuk melihat nilai yang masih mengarah ke sumber, koneksi yang perlu diatur, dan item yang tidak ditulis ulang oleh alat.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Buka laporan dan periksa apa yang ditandai untuk ditinjau.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Di Power Automate (target), buka setiap alur baru, perbaiki koneksi yang ditandai, lalu aktifkan.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Uji setiap alur sebelum Anda menonaktifkan yang asli di sumber.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>File ID formulir yang disimpan sedang digunakan (oleh salinan aplikasi lain atau program lain). Coba lagi sebentar lagi.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Dibatalkan sebelum gambar diperiksa: periksa latar belakang, logo, dan gambar header salinan.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Pilih lingkungan target terlebih dahulu di langkah Paket.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Sumber dan target adalah lingkungan yang sama ({0}), sehingga salinan akan dibuat di samping alur asli. Lanjutkan?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Sudah dibuat (percobaan sebelumnya)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Dibatalkan. {0} alur dibuat sebelum pembatalan; laporan mencantumkannya.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} alur sudah dibuat pada percobaan sebelumnya dan tidak dibuat lagi.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} alur dicentang setelah pemindaian dan tidak dibuat. Kembali ke Paket dan tekan Berikutnya untuk menyertakannya.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Dibatalkan: {0} alur tidak dibuat.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Tinjau: kolom ini dikecualikan dari langkah karena daftar target tidak memilikinya, tetapi sebuah langkah masih memfilter, mengurutkan, atau memilih berdasarkan kolom tersebut. Impor berhasil; langkah itu gagal saat alur berjalan sampai kuerinya diubah di Power Automate atau kolom ditambahkan ke daftar.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Tinjau: file alur ini tidak dapat dibaca, sehingga disalin ke paket baru tanpa perubahan dan masih mengarah ke sumber.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} referensi kueri masih menyebut kolom yang dikecualikan karena daftar target tidak memilikinya. Langkah-langkah itu gagal saat alur berjalan; ubah filter atau pengurutannya di Power Automate, atau tambahkan kolom ke daftar.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Permintaan ke Power Automate habis waktu. Periksa koneksi dan coba lagi.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Alur saya (tidak dalam solusi)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Membaca solusi lingkungan target…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Solusi lingkungan target tidak dapat dibaca, sehingga alur akan dibuat di luar solusi mana pun: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Buat di</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Pilih solusi untuk membuat alur di dalamnya (alur kemudian mendukung solusi dan dapat berpindah bersama solusi). Setiap koneksi menggunakan referensi koneksi target yang cocok; jika belum ada, satu ditambahkan ke solusi.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Dibuat (nonaktif) di solusi {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Permintaan habis waktu.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>opsi berbeda</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} dari {1} opsi</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} pertanyaan memiliki gambar (pada pertanyaan atau pilihannya). Gambar disalin sebagai tautan ke gambar formulir sumber, sehingga tidak lagi tampil jika formulir sumber dihapus atau saat salinan berada di tenant lain. Tambahkan kembali gambar tersebut di salinan.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Respons</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Formulir {0}/{1}: {2} (pertanyaan {3}/{4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0}m {1}d</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0}d</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - dimigrasikan</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Ketik alamat situs target, mis. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: koneksi {1} menggunakan &quot;{2}&quot; di target.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Koneksi yang digunakan di target</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>Di daftar target &quot;{0}&quot;, kolom {1} semuanya dipetakan ke &quot;{2}&quot; dalam {3} langkah (misalnya langkah &quot;{5}&quot; dari &quot;{4}&quot;). Pilih kolom target yang berbeda untuk semua kecuali satu, atau kecualikan sisanya.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} alur tidak dicoba: penyalinan berhenti setelah kesalahan yang akan menggagalkan semua alur yang tersisa dengan cara yang sama (lihat log aktivitas). Perbaiki, lalu tekan Tulis lagi; alur yang sudah dibuat akan dilewati.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Tidak ada situs target yang diketik, jadi setiap situs tetap apa adanya. Ketik setidaknya satu situs target di kolom Ke, atau tekan Berikutnya lagi untuk membiarkan situs tidak berubah.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Tidak cocok: &quot;{0}&quot; sudah dipakai oleh {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Dikecualikan: &quot;{0}&quot; sudah dipakai oleh {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} kolom akan dikecualikan dari langkah-langkah alur karena kolom target yang cocok dengannya sudah dipakai oleh kolom lain (dalam tanda kurung): {1}. Ubah target salah satu kolom jika bukan itu yang Anda inginkan.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Kolom &quot;{0}&quot; dikecualikan dari langkah-langkah pada &quot;{1}&quot;: kolom targetnya &quot;{2}&quot; sudah ditulis oleh &quot;{3}&quot;. Ubah target salah satu kolom pada langkah Daftar &amp; kolom jika bukan itu yang Anda inginkan.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Folder laporan</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Penyalinan langsung membuat alur secara langsung di lingkungan target, sehingga tidak ada file alur yang disimpan di komputer ini. Folder ini hanya menerima laporan penyalinan: halaman web dan file teks yang mencantumkan apa yang diubah di setiap alur, kolom yang dilewati, koneksi yang dicocokkan, dan apa yang masih perlu Anda tinjau. Simpan bersama catatan migrasi Anda. Ini satu-satunya catatan tertulis tentang apa yang diubah.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Setiap alur dibuat di lingkungan target dalam keadaan nonaktif, sehingga tidak ada yang berjalan sampai Anda meninjaunya.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Pilih folder laporan terlebih dahulu.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Salin alur</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Salin alur ke target</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Periksa daftar di bawah, pilih tempat menyimpan laporan, lalu salin alur.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Alat ini menerapkan pemetaan Anda pada salinan setiap alur dan membuatnya di lingkungan target dalam keadaan nonaktif, sehingga tidak ada yang berjalan sampai Anda meninjaunya. Alur asli Anda tidak diubah. Laporan tentang semua yang diubah, dilewati, atau masih perlu Anda tinjau disimpan di folder laporan. Setelah itu, buka setiap alur baru di Power Automate, perbaiki koneksi yang ditandai, lalu aktifkan.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Siap menyalin?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Masuk ke tenant target untuk menampilkan lingkungannya</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Muat lingkungan terlebih dahulu</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Tidak ada lingkungan Power Automate yang ditemukan untuk akun target. Akun tersebut memerlukan lisensi Power Automate atau akses ke sebuah lingkungan di sana. Coba masuk lagi dengan akun lain.</value></data>
 </root>

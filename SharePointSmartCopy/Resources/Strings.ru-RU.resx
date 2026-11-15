@@ -1499,4 +1499,116 @@
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Клиент: {0}. Вход возможен только в этот каталог.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Чтобы подключить сайт другого клиента, выберите в разделе «Параметры» другую регистрацию приложения (с пустым значением Tenant ID или с этим клиентом) либо используйте режим «Несколько клиентов».</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Только структура: столбцы, представления, параметры и типы контента копируются, но без файлов и элементов списка.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Также обновлять списки, которые уже существуют в назначении: заменять представления с такими же именами (и представление по умолчанию), параметры списка, а также правила и форматирование столбцов</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Обновлять существующие списки</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Существующий список обновлен в соответствии с источником.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Исключить из потоков (нет в назначении)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Исключен из потоков</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>Столбцов, которые будут исключены из шагов потоков: {0}, так как в целевом списке нет такого столбца: {1}. Чтобы сохранить его, добавьте столбец в целевой список и нажмите «Проверить снова» либо выберите другой столбец.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Столбца «{0}» нет в целевом списке «{1}», поэтому шаги потоков больше не записывают его. Добавьте столбец в список и запустите это снова либо добавьте поле в эти шаги в Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>В целевом списке «{0}» столбцы {1} сопоставлены с «{2}» в шаге «{4}» потока «{3}». Выберите другой целевой столбец для всех, кроме одного, либо исключите остальные.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Проверьте: в целевом списке нет столбца для этих полей, поэтому шаги больше не записывают их. Значения, которые они содержали, нигде не сохраняются в назначении.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Эта форма находится не в том клиенте, в который вы вошли</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Войти…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Каждое подключение сопоставляется с одним из ваших существующих подключений в назначении. Подключения без совпадения нужно будет настроить самостоятельно в Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Подключения не сопоставляются: настройте каждое из них в Power Automate после создания потоков.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Представление «{0}»: не удалось применить параметр {1}: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Представление «{0}»: фильтр, сортировка или группировка по столбцам, которых нет в назначении, исключены ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Столбцы сайта типа «подстановка» не созданы, так как их списка нет в назначении: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Столбцы сайта типа «подстановка»</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Копировать из среды Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Использовать экспортированные пакеты (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Выберите потоки в исходной среде, и приложение создаст их в целевой среде, сразу указывая на сайты, списки и формы назначения. Потоки создаются выключенными, поэтому ничего не запускается, пока вы не проверите их.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Войти и загрузить среды</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Копировать из (исходная среда)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Войти в целевой клиент</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Назначение находится в другом клиенте: войдите в него с учетной записью, которая может создавать там потоки, затем выберите среду.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Копировать в (целевая среда)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Выбрать все</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Снять выбор</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Загрузка сред...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Загрузка потоков...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Потоки не найдены в {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>Потоков в {1}: {0}. Отметьте те, которые нужно скопировать.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Не удалось прочитать ни один из выбранных потоков.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Создание потоков в назначении...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Создать потоки в назначении</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Каждый поток создается в целевой среде выключенным, поэтому ничего не запускается, пока вы его не проверите. Отчет сохраняется в папке ниже.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Использовать мои существующие подключения в целевой среде, если они есть</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>Потоков будет создано: {0} в {2} (скопированы из {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Потоки создаются выключенными. Включите каждый после проверки.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Найдено сред: источников {0}, назначений {1}.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Чтение потоков ({0}) из {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Создание потоков ({0}) в {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Не удалось сопоставить подключения, поэтому потоки созданы без них. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Создан: {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Создан (выключен)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Создан, подключений для настройки: {0}</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>Подключений, не сопоставленных с подключением в назначении: {0}. Откройте каждый поток в Power Automate и выберите подключение.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>Потоков, которые не удалось создать: {0}. Причину см. в журнале действий.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>У регистрации приложения пока нет разрешения Power Automate (или Power Apps). Попросите администратора добавить его и предоставить согласие, затем повторите попытку.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>У вашей учетной записи нет роли безопасности Dataverse в целевой среде ({0}). Попросите администратора назначить вам роль Environment Maker (или System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>У вашей учетной записи нет доступа к этой среде или потоку.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Назначение отклонило поток: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Среда или поток не найдены.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate вернул ошибку: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Готово: создано потоков: {0}</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Создано в {0}, выключено. Ничто не осталось указывающим на источник.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Готово: создано потоков: {0}, некоторые элементы требуют проверки</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Создано в {0}, выключено. Откройте отчет, чтобы увидеть значения, все еще указывающие на источник, подключения для настройки и элементы, которые приложение не перезаписывает.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Откройте отчет и проверьте элементы, помеченные для проверки.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>В Power Automate (назначение) откройте каждый новый поток, исправьте отмеченное подключение и включите поток.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Протестируйте каждый поток, прежде чем выключать оригинал в источнике.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Файл сохраненных идентификаторов форм используется (другой копией приложения или другой программой). Повторите попытку через мгновение.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Отменено до проверки изображений: проверьте фон, логотип и изображение заголовка копии.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Сначала выберите целевую среду на шаге «Пакеты».</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Источник и назначение находятся в одной среде ({0}), поэтому копии будут созданы рядом с исходными потоками. Продолжить?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Уже создан (предыдущая попытка)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Отменено. До отмены создано потоков: {0}; они перечислены в отчете.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>Потоков, уже созданных при предыдущей попытке и не созданных повторно: {0}.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>Потоков, отмеченных после сканирования и не созданных: {0}. Вернитесь к шагу «Пакеты» и нажмите «Далее», чтобы включить их.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Отменено: потоков не создано: {0}.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Проверьте: эти столбцы исключены из шагов, так как их нет в целевом списке, но шаг все еще фильтрует, сортирует или выбирает по ним. Импорт работает; этот шаг завершится ошибкой при запуске потока, пока запрос не будет изменен в Power Automate или столбец не будет добавлен в список.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Проверьте: не удалось прочитать этот файл потока, поэтому он скопирован в новый пакет без изменений и по-прежнему указывает на источник.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>Ссылок на столбец в запросах: {0}, а столбец исключен, так как его нет в целевом списке. Эти шаги завершатся ошибкой при запуске потока; измените их фильтр или сортировку в Power Automate либо добавьте столбец в список.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Время ожидания запроса к Power Automate истекло. Проверьте подключение и повторите попытку.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Мои потоки (не в решении)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Чтение решений целевой среды…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Не удалось прочитать решения целевой среды, поэтому потоки будут созданы вне какого-либо решения: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Создать в</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Выберите решение, чтобы создать потоки внутри него (тогда они учитывают решение и могут перемещаться вместе с ним). Каждое подключение использует соответствующую ссылку на подключение в назначении; если ее нет, она добавляется в решение.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Создан (выключен) в решении {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Время ожидания запроса истекло.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>параметры различаются</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>Параметров: {0} из {1}</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>Вопросов с изображениями (в вопросе или его вариантах ответа): {0}. Они скопированы как ссылки на изображения исходной формы, поэтому перестанут отображаться, если исходная форма будет удалена или если копия находится в другом клиенте. Добавьте эти изображения в копию заново.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Ответы</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Форма {0} из {1}: {2} (вопрос {3} из {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} мин {1} с</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} с</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - перенесено</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Введите адрес сайта назначения, например https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: подключение {1} использует «{2}» в назначении.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Подключения, используемые в назначении</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>В целевом списке «{0}» столбцы {1} сопоставлены с «{2}» в {3} шагах (например, в шаге «{5}» потока «{4}»). Выберите другой целевой столбец для всех, кроме одного, либо исключите остальные.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>Потоков, попытка создания которых не выполнялась: {0}. Копирование остановлено после ошибки, из-за которой все оставшиеся потоки завершились бы сбоем таким же образом (см. журнал действий). Исправьте ее и снова нажмите «Запись»; уже созданные потоки пропускаются.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Целевой сайт не введен, поэтому все сайты остаются как есть. Введите хотя бы один целевой сайт в столбце «В» или снова нажмите «Далее», чтобы оставить сайты без изменений.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Нет совпадения: &quot;{0}&quot; уже используется столбцом {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Исключен: &quot;{0}&quot; уже используется столбцом {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>Столбцов, которые будут исключены из шагов потоков, так как сопоставленный им целевой столбец уже используется другим столбцом (в скобках): {0} ({1}). Если это не то, что вам нужно, измените целевой столбец у одного из них.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Столбец &quot;{0}&quot; исключен из шагов для списка &quot;{1}&quot;: в его целевой столбец &quot;{2}&quot; уже записывает &quot;{3}&quot;. Если это не то, что вам нужно, измените целевой столбец у одного из них на шаге «Списки и столбцы».</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Папка отчета</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Живое копирование создает потоки прямо в целевой среде, поэтому файлы потоков на этом компьютере не сохраняются. В эту папку попадает только отчет о копировании: веб-страница и текстовый файл со списком изменений в каждом потоке, пропущенных столбцов, сопоставленных подключений и того, что еще нужно проверить. Храните его вместе с документами по миграции. Это единственная письменная запись о внесенных изменениях.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Каждый поток создается в целевой среде выключенным, поэтому ничего не запускается, пока вы его не проверите.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Сначала выберите папку отчета.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Копировать потоки</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Копирование потоков в целевую среду</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Проверьте список ниже, выберите, где сохранить отчет, затем скопируйте потоки.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Средство применяет ваше сопоставление к копии каждого потока и создает его в целевой среде выключенным, поэтому ничего не запускается, пока вы его не проверите. Исходные потоки не изменяются. Отчет обо всем, что было изменено, пропущено или еще требует проверки, сохраняется в папке отчета. После этого откройте каждый новый поток в Power Automate, исправьте отмеченное подключение и включите поток.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Готово к копированию?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Войдите в целевой клиент, чтобы получить список его сред</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Сначала загрузите среды</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Для целевой учетной записи не найдено сред Power Automate. Нужна лицензия Power Automate или доступ к среде там. Попробуйте войти снова с другой учетной записью.</value></data>
 </root>

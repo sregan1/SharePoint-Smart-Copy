@@ -334,6 +334,7 @@ public partial class MainViewModel : ObservableObject
         if (CopyContentTypes) on.Add(Loc.T("Ui_StructContentTypes"));
         if (CopyColumnRules) on.Add(Loc.T("Ui_StructColumnRules"));
         if (CopyTemplates) on.Add(Loc.T("Ui_StructTemplates"));
+        if (UpdateExistingStructure) on.Add(Loc.T("Ui_StructUpdateExisting"));
         if (IsSiteScope && CopySiteDefinitions) on.Add(Loc.T("Ui_StructSiteDefs"));
         if (IsSiteScope && CopyNavigation) on.Add(Loc.T("Ui_StructNavigation"));
         if (IsSiteScope && CopySiteSettings) on.Add(Loc.T("Ui_StructSiteSettings"));
@@ -619,7 +620,7 @@ public partial class MainViewModel : ObservableObject
         _libraryCopyService.Structure = new LibraryCopyService.StructureOptions
         {
             Views = CopyViews, ListSettings = CopyListSettings, ContentTypes = CopyContentTypes, ColumnRules = CopyColumnRules,
-            Templates = CopyTemplates, SiteDefinitions = CopySiteDefinitions, Navigation = CopyNavigation, SiteSettings = CopySiteSettings,
+            UpdateExisting = UpdateExistingStructure, Templates = CopyTemplates, SiteDefinitions = CopySiteDefinitions, Navigation = CopyNavigation, SiteSettings = CopySiteSettings,
         };
         _libraryCopyService.TermStore = new TermStoreCopyService(AuthService, IsMultiTenant ? TargetAuthService : AuthService);
         RunSettingsSummary = BuildRunSettingsSummary();

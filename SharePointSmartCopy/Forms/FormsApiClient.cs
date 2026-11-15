@@ -1,6 +1,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace SharePointSmartCopy.Forms;
 
@@ -77,13 +78,20 @@ public sealed class FormsApiClient
         var forms = new List<FormSummary>();
         foreach (var o in await GetAllPagesAsync("formapi/api/forms", "Listing forms", ct))
         {
-            if (o["softDeleted"]?.GetValue<int>() is > 0) continue;
-            DateTimeOffset? modified = DateTimeOffset.TryParse(o["modifiedDate"]?.GetValue<string>(), out var m) ? m : null;
-            forms.Add(new FormSummary(
-                o["id"]!.GetValue<string>(),
-                o["title"]?.GetValue<string>() ?? "",
-                o["type"]?.GetValue<string>() ?? "form",
-                modified));
+            // One entry the service describes in an unexpected way (a flag that is not a number, no id) is skipped on its own;
+            // it must not make the whole list fail.
+            try
+            {
+                if (o["softDeleted"] is JsonValue sd && sd.TryGetValue<int>(out var deleted) && deleted > 0) continue;
+                if (o["id"] is not JsonValue idv || !idv.TryGetValue<string>(out var id) || string.IsNullOrEmpty(id)) continue;
+                DateTimeOffset? modified = o["modifiedDate"] is JsonValue mv && mv.TryGetValue<string>(out var ms) && DateTimeOffset.TryParse(ms, out var m) ? m : null;
+                forms.Add(new FormSummary(
+                    id,
+                    o["title"] is JsonValue tv && tv.TryGetValue<string>(out var title) ? title : "",
+                    o["type"] is JsonValue yv && yv.TryGetValue<string>(out var type) ? type : "form",
+                    modified));
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or FormatException) { /* skipped */ }
         }
         return forms;
     }
@@ -127,7 +135,7 @@ public sealed class FormsApiClient
                 body = await resp.Content.ReadAsStringAsync(ct);
             }
             // The HttpClient timeout also surfaces as a cancellation; the user did not cancel, so report it as a failed request.
-            catch (OperationCanceledException) when (!ct.IsCancellationRequested) { return (408, "The request timed out."); }
+            catch (OperationCanceledException) when (!ct.IsCancellationRequested) { return (408, Localization.Loc.T("Forms_ErrTimeout")); }
             using var respScope = resp;
             if ((int)resp.StatusCode == 401 && attempt == 1) { forceToken = true; continue; }
             return ((int)resp.StatusCode, body);
@@ -158,7 +166,7 @@ public sealed class FormsApiClient
             }
             // The HttpClient timeout also surfaces as a cancellation; the user did not cancel, so report it as a failed
             // request (the caller turns that into a warning or one failed form) instead of ending the whole batch.
-            catch (OperationCanceledException) when (!ct.IsCancellationRequested) { return (408, "The request timed out."); }
+            catch (OperationCanceledException) when (!ct.IsCancellationRequested) { return (408, Localization.Loc.T("Forms_ErrTimeout")); }
             using var respScope = resp;
             var status = (int)resp.StatusCode;
 

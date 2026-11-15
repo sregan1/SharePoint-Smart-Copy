@@ -85,10 +85,11 @@ public partial class FormsDialog : Window
             {
                 var forms = await SourceClient().ListFormsAsync(ct);
                 var copied = FormsIdMapStore.LoadAll();
+                var keepSelected = _rows.Where(r => r.IsSelected).Select(r => r.Id).ToHashSet(StringComparer.Ordinal);   // a reload keeps the ticks
                 _rows.Clear();
                 foreach (var f in forms.OrderByDescending(f => f.Modified))
                 {
-                    var row = new FormRow { Id = f.Id, Title = f.Title, Type = f.Type, Modified = f.Modified };
+                    var row = new FormRow { Id = f.Id, Title = f.Title, Type = f.Type, Modified = f.Modified, IsSelected = keepSelected.Contains(f.Id) };
                     if (copied.TryGetValue(f.Id, out var entries)) row.CopiedText = CopiedLabel(entries);
                     row.PropertyChanged += (_, args) => { if (args.PropertyName == nameof(FormRow.IsSelected)) UpdateSelection(); };
                     _rows.Add(row);
@@ -161,11 +162,15 @@ public partial class FormsDialog : Window
     private async void TargetSignIn_Click(object sender, RoutedEventArgs e)
     {
         _vm.TargetHasError = false;
+        // "Sign in again" (already connected, two tenants) must be able to switch account: the cached token would silently
+        // bring the same one back, so that case opens the account picker.
+        var signInAgain = _vm.IsMultiTenant && _vm.TargetConnected;
         _vm.TargetConnected = false;
         await RunAsync(Loc.T("Forms_SigningInTarget"), async ct =>
         {
             try
             {
+                if (signInAgain) await _targetAuth.SignInFormsAsync(ct);
                 // Signs in (a browser window may open) and proves the account can use Forms by listing its forms.
                 var existing = await TargetClient().ListFormsAsync(ct);
                 _vm.TargetConnected = true;
@@ -299,7 +304,10 @@ public partial class FormsDialog : Window
                 FormCopyResult result;
                 try
                 {
-                    result = await new FormsCopier(source, target, AppendLog).CopyAsync(row.Id, copyTitle, ct);
+                    var position = i + 1;
+                    result = await new FormsCopier(source, target, AppendLog,
+                        (done, total) => { if (!_vm.IsCancelling) _vm.ProgressText = Loc.T("Forms_ProgressQuestion", position, chosen.Count, row.Title, done, total); })
+                        .CopyAsync(row.Id, copyTitle, ct);
                 }
                 catch (OperationCanceledException) { throw; }
                 catch (Exception ex)
@@ -313,7 +321,9 @@ public partial class FormsDialog : Window
                     // The copy itself succeeded; a locked or unwritable map file must not turn that into a crash.
                     try
                     {
-                        FormsIdMapStore.Record(row.Id, result.NewId, TargetAccount, row.Title);
+                        // Off the UI thread: Record may wait for the file (mutex + retries), and the window must stay responsive.
+                        var (sourceId, newId, account, title) = (row.Id, result.NewId, TargetAccount, row.Title);
+                        await Task.Run(() => FormsIdMapStore.Record(sourceId, newId, account, title), CancellationToken.None);
                         row.CopiedText = FormsIdMapStore.LoadAll().TryGetValue(row.Id, out var all)
                             ? CopiedLabel(all)
                             : CopiedLabel(new FormsMapEntry(result.NewId, TargetAccount, DateTimeOffset.Now));
@@ -488,7 +498,8 @@ public partial class FormsDialog : Window
                 // Forms can share a title; each gets its own file.
                 var baseName = SafeFileName(row.Title);
                 var fileName = baseName;
-                for (var n = 2; !usedNames.Add(fileName); n++) fileName = $"{baseName} ({n})";
+                // ... and never replaces a file that is already in the folder.
+                for (var n = 2; !usedNames.Add(fileName) || File.Exists(Path.Combine(folder, fileName + ".xlsx")); n++) fileName = $"{baseName} ({n})";
                 var path = Path.Combine(folder, fileName + ".xlsx");
                 try
                 {
@@ -816,7 +827,7 @@ public partial class FormsDialogViewModel : ObservableObject
         var qCopied = counted.Sum(r => r.QuestionsCopied);
         var qTotal = counted.Sum(r => r.QuestionsTotal);
         QuestionsText = $"{qCopied} / {qTotal}";
-        DurationText = elapsed.TotalMinutes >= 1 ? $"{(int)elapsed.TotalMinutes}m {elapsed.Seconds}s" : $"{Math.Max(1, (int)Math.Round(elapsed.TotalSeconds))}s";
+        DurationText = elapsed.TotalMinutes >= 1 ? Loc.T("Common_DurMinSec", (int)elapsed.TotalMinutes, elapsed.Seconds) : Loc.T("Common_DurSec", Math.Max(1, (int)Math.Round(elapsed.TotalSeconds)));
 
         var done = CopiedCount + PartialCount;
         var who = string.IsNullOrWhiteSpace(targetAccount) ? Loc.T("Forms_TargetAccountShort") : targetAccount;

@@ -1499,4 +1499,116 @@
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>דייר: {0}. ההתחברות יכולה להתבצע רק לספרייה זו.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>כדי לחבר אתר בדייר אחר, בחר בהגדרות רישום אפליקציה אחר (כשמזהה הדייר שלו ריק או מוגדר לאותו דייר), או השתמש במצב ריבוי דיירים.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>מבנה בלבד: עמודות, תצוגות, הגדרות וסוגי תוכן מועתקים, אך ללא קבצים או פריטי רשימה.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>עדכן גם רשימות שכבר קיימות ביעד: החלף תצוגות בעלות אותו שם (ואת תצוגת ברירת המחדל), הגדרות רשימה, וכללי עמודות ועיצובן</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>עדכן רשימות קיימות</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>הרשימה הקיימת עודכנה בהתאם למקור.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>השמט מהזרימות (לא קיים ביעד)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>הושמט מהזרימות</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} עמודות יושמטו משלבי הזרימות כי רשימת היעד אינה כוללת עמודה כזו: {1}. הוסף את העמודה לרשימת היעד ולחץ על בדוק שוב, או בחר עמודה אחרת, כדי לשמור אותה.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>העמודה &quot;{0}&quot; אינה קיימת ברשימת היעד &quot;{1}&quot;, ולכן שלבי הזרימות כבר אינם כותבים אותה. הוסף את העמודה לרשימה והפעל זאת שוב, או הוסף את השדה לשלבים האלה ב-Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>ברשימת היעד &quot;{0}&quot;, העמודות {1} ממופות כולן אל &quot;{2}&quot; בשלב &quot;{4}&quot; של &quot;{3}&quot;. בחר עמודת יעד אחרת לכולן מלבד אחת, או השמט את האחרות.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>סקירה: ברשימת היעד אין עמודה עבור השדות האלה, ולכן השלבים כבר אינם כותבים אותם. הערכים שהם נשאו אינם נשמרים בשום מקום ביעד.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>הטופס הזה אינו נמצא בדייר שאליו נכנסת</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>כניסה…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>כל חיבור מותאם לאחד מהחיבורים הקיימים שלך ביעד. חיבור ללא התאמה נשאר להגדרה על ידך ב-Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>החיבורים אינם מותאמים: הגדר כל אחד מהם ב-Power Automate לאחר יצירת הזרימות.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>תצוגה &apos;{0}&apos;: לא ניתן היה להחיל את ההגדרה {1}: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>תצוגה &quot;{0}&quot;: הסינון, המיון או הקיבוץ בעמודות שאינן קיימות ביעד הושמטו ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>עמודות אתר מסוג בדיקה (Lookup) לא נוצרו כי הרשימה שלהן אינה ביעד: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>עמודות אתר מסוג בדיקה</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>העתקה מסביבת Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>שימוש בחבילות שיוצאו (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>בחר זרימות בסביבת המקור והכלי יוצר אותן בסביבת היעד, כשהן כבר מצביעות על האתרים, הרשימות והטפסים של היעד. הזרימות נוצרות כבויות, כך שדבר לא רץ עד שתסקור אותו.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>כניסה וטעינת סביבות</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>העתק מ (סביבת מקור)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>כניסה לדייר היעד</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>היעד הוא דייר אחר: היכנס אליו עם חשבון שיכול ליצור שם זרימות, ואז בחר את הסביבה.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>העתק אל (סביבת יעד)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>בחר הכול</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>אל תבחר דבר</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>טוען סביבות...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>טוען זרימות...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>לא נמצאו זרימות ב-{0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} זרימות ב-{1}. סמן את אלה שיש להעתיק.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>לא ניתן היה לקרוא אף אחת מהזרימות שנבחרו.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>יוצר זרימות ביעד...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>יצירת זרימות ביעד</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>כל זרימה נוצרת בסביבת היעד כבויה, כך שדבר לא רץ עד שתסקור אותה. הדוח נשמר בתיקייה שלהלן.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>השתמש בחיבורים הקיימים שלי בסביבת היעד כשיש כאלה</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} זרימות ייווצרו ב-{2} (הועתקו מ-{1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>הזרימות נוצרות כבויות. הפעל כל אחת מהן לאחר הסקירה.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>נמצאו {0} סביבות מקור ו-{1} סביבות יעד.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>קורא {0} זרימות מ-{1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>יוצר {0} זרימות ב-{1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>לא ניתן היה להתאים חיבורים, ולכן הזרימות נוצרות בלעדיהם. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>נוצר {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>נוצר (כבוי)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>נוצר, {0} חיבורים להגדרה</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} חיבורים לא הותאמו לחיבור ביעד. פתח כל זרימה ב-Power Automate ובחר חיבור.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>לא ניתן היה ליצור {0} זרימות. ראה את יומן הפעילות לסיבה.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>לרישום האפליקציה אין עדיין הרשאה ל-Power Automate (או ל-Power Apps). בקש ממנהל להוסיף אותה ולהעניק הסכמה, ואז נסה שוב.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>בחשבון שלך חסר תפקיד אבטחה של Dataverse בסביבת היעד ({0}). בקש ממנהל להקצות לך את התפקיד Environment Maker (או System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>לחשבון שלך אין גישה לסביבה או לזרימה הזו.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>היעד דחה את הזרימה: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>הסביבה או הזרימה לא נמצאו.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate החזיר שגיאה: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>בוצע: {0} זרימות נוצרו</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>נוצרו ב-{0}, כבויות. דבר לא נשאר מצביע על המקור.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>בוצע: {0} זרימות נוצרו, חלק מהפריטים דורשים את סקירתך</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>נוצרו ב-{0}, כבויות. פתח את הדוח כדי לראות ערכים שעדיין מצביעים על המקור, חיבורים להגדרה ופריטים שהכלי אינו כותב מחדש.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>פתח את הדוח ובדוק מה מסומן לסקירה.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>ב-Power Automate (יעד), פתח כל זרימה חדשה, תקן כל חיבור שמסומן והפעל אותה.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>בדוק כל זרימה לפני שתכבה את המקור בסביבת המקור.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>קובץ מזהי הטפסים השמור נמצא בשימוש (על ידי עותק אחר של האפליקציה או תוכנית אחרת). נסה שוב בעוד רגע.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>בוטל לפני בדיקת התמונות: בדוק את הרקע, הלוגו ותמונת הכותרת של ההעתק.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>בחר תחילה את סביבת היעד בשלב החבילות.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>המקור והיעד הם אותה סביבה ({0}), ולכן ההעתקים ייווצרו לצד הזרימות המקוריות. להמשיך?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>כבר נוצר (ניסיון קודם)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>בוטל. {0} זרימות נוצרו לפני הביטול; הדוח מפרט אותן.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} זרימות כבר נוצרו בניסיון קודם ולא נוצרו שוב.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} זרימות סומנו לאחר הסריקה ולא נוצרו. חזור אל חבילות ולחץ על הבא כדי לכלול אותן.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>בוטל: {0} זרימות לא נוצרו.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>סקירה: העמודות האלה הושמטו מהשלבים כי רשימת היעד אינה כוללת אותן, אך שלב עדיין מסנן, ממיין או בוחר לפיהן. הייבוא פועל; השלב הזה נכשל כשהזרימה רצה עד שהשאילתה שלו תשונה ב-Power Automate או שהעמודה תתווסף לרשימה.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>סקירה: לא ניתן היה לקרוא את קובץ הזרימה הזה, ולכן הועתק לחבילה החדשה ללא שינוי ועדיין מצביע על המקור.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} הפניות שאילתה עדיין מציינות עמודה שהושמטה כי רשימת היעד אינה כוללת אותה. השלבים האלה נכשלים כשהזרימה רצה; שנה את הסינון או המיון שלהם ב-Power Automate, או הוסף את העמודה לרשימה.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>הבקשה אל Power Automate חרגה ממגבלת הזמן. בדוק את החיבור ונסה שוב.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>הזרימות שלי (לא בפתרון)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>קורא את הפתרונות של סביבת היעד…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>לא ניתן היה לקרוא את הפתרונות של סביבת היעד, ולכן הזרימות ייווצרו מחוץ לכל פתרון: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>צור ב</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>בחר פתרון כדי ליצור בתוכו את הזרימות (הן יהיו מודעות לפתרון וניתן יהיה להעביר אותן עמו). כל חיבור משתמש בהפניית החיבור התואמת ביעד; אם אין כזו, נוספת אחת לפתרון.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>נוצר (כבוי) בפתרון {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>הבקשה חרגה ממגבלת הזמן.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>האפשרויות שונות</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} מתוך {1} אפשרויות</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>ל-{0} שאלות יש תמונות (בשאלה או באפשרויות שלה). הן מועתקות כקישורים לתמונות של הטופס המקורי, ולכן הן מפסיקות להופיע אם הטופס המקורי נמחק או כשההעתק נמצא בדייר אחר. הוסף את התמונות האלה שוב בהעתק.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>תגובות</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>טופס {0} מתוך {1}: {2} (שאלה {3} מתוך {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} דק׳ {1} שנ׳</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} שנ׳</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - הועבר</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>הקלד את כתובת אתר היעד, למשל https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: החיבור {1} משתמש ב-&quot;{2}&quot; ביעד.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>חיבורים בשימוש ביעד</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>ברשימת היעד &quot;{0}&quot;, העמודות {1} ממופות כולן אל &quot;{2}&quot; ב-{3} שלבים (לדוגמה השלב &quot;{5}&quot; של &quot;{4}&quot;). בחר עמודת יעד אחרת לכולן מלבד אחת, או השמט את האחרות.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} זרימות לא נוסו: ההעתקה נעצרה אחרי שגיאה שהייתה מכשילה את כל הזרימות הנותרות באותו אופן (ראה את יומן הפעילות). תקן אותה ולחץ שוב על כתיבה; זרימות שכבר נוצרו ידולגו.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>לא הוקלד אתר יעד, ולכן כל אתר נשאר כמות שהוא. הקלד לפחות אתר יעד אחד בעמודה אל, או לחץ שוב על הבא כדי להשאיר את האתרים ללא שינוי.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>אין התאמה: &quot;{0}&quot; כבר בשימוש על ידי {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>הושמט: &quot;{0}&quot; כבר בשימוש על ידי {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} עמודות יושמטו משלבי הזרימות כי עמודת היעד שהותאמה להן כבר בשימוש על ידי עמודה אחרת (בסוגריים): {1}. שנה את היעד של אחת משתי העמודות אם זה לא מה שרצית.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>העמודה &quot;{0}&quot; הושמטה מהשלבים ברשימה &quot;{1}&quot;: עמודת היעד שלה &quot;{2}&quot; כבר נכתבת על ידי &quot;{3}&quot;. שנה את היעד של אחת משתי העמודות בשלב רשימות ועמודות אם זה לא מה שרצית.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>תיקיית דוח</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>העתקה חיה יוצרת את הזרימות ישירות בסביבת היעד, ולכן לא נשמרים קובצי זרימה במחשב זה. תיקייה זו מקבלת רק את דוח ההעתקה: דף אינטרנט וקובץ טקסט שמפרטים מה שונה בכל זרימה, אילו עמודות הושמטו, אילו חיבורים הותאמו ומה עדיין דורש את הסקירה שלך. שמור אותו יחד עם רשומות ההעברה שלך. זהו התיעוד הכתוב היחיד של מה ששונה.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>כל זרימה נוצרת בסביבת היעד כבויה, כך שדבר לא רץ עד שתסקור אותה.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>בחר תחילה תיקיית דוח.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>העתק זרימות</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>העתקת הזרימות ליעד</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>עיין ברשימה שלהלן, בחר היכן לשמור את הדוח ולאחר מכן העתק את הזרימות.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>הכלי מחיל את המיפוי שלך על עותק של כל זרימה ויוצר אותה בסביבת היעד כבויה, כך שדבר לא רץ עד שתסקור אותה. הזרימות המקוריות שלך אינן משתנות. דוח של כל מה ששונה, הושמט או עדיין דורש את הסקירה שלך נשמר בתיקיית הדוח. לאחר מכן, פתח כל זרימה חדשה ב-Power Automate, תקן כל חיבור שהיא מסמנת והפעל אותה.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>מוכן להעתקה?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>היכנס לדייר היעד כדי להציג את הסביבות שלו</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>טען תחילה את הסביבות</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>לא נמצאו סביבות Power Automate עבור חשבון היעד. נדרש רישיון Power Automate או גישה לסביבה שם. נסה להיכנס שוב עם חשבון אחר.</value></data>
 </root>

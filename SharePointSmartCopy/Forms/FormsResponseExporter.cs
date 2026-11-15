@@ -44,7 +44,7 @@ public sealed class FormsResponseExporter
     public static void Write(JsonObject form, IReadOnlyList<JsonObject> responses, string xlsxPath)
     {
         using var wb = new XLWorkbook();
-        AddSheet(wb, "Responses", form, responses);
+        AddSheet(wb, Loc.T("Forms_SheetResponses"), form, responses);
         wb.SaveAs(xlsxPath);
     }
 

@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using SharePointSmartCopy.Localization;
 
 namespace SharePointSmartCopy.Forms;
 
@@ -49,8 +50,10 @@ public static class FormsIdMapStore
     private static bool SameAccount(string? a, string? b) =>
         string.Equals(a?.Trim() ?? string.Empty, b?.Trim() ?? string.Empty, StringComparison.OrdinalIgnoreCase);
 
-    // damaged: the file exists but could not be read or parsed (as opposed to simply not being there yet).
-    private static Dictionary<string, List<FormsMapEntry>> Read(string path, out bool damaged)
+    // damaged: the file exists but its content could not be parsed (as opposed to simply not being there yet). A file that
+    // cannot be OPENED right now (antivirus, OneDrive, another process) is not damaged: it reads as empty, or throws when
+    // throwOnIo is set, so a writer never mistakes a brief lock for a broken file and replaces it.
+    private static Dictionary<string, List<FormsMapEntry>> Read(string path, out bool damaged, bool throwOnIo = false)
     {
         damaged = false;
         var map = new Dictionary<string, List<FormsMapEntry>>(StringComparer.Ordinal);
@@ -84,7 +87,11 @@ public static class FormsIdMapStore
                 if (list.Count > 0) map[source] = list;
             }
         }
-        catch (Exception ex) when (ex is JsonException or IOException or InvalidOperationException or FormatException)
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException && !throwOnIo)
+        {
+            // could not be opened right now (locked, or mid-replace by another process): show nothing, but this is not damage
+        }
+        catch (Exception ex) when (ex is JsonException or InvalidOperationException or FormatException)
         {
             // a damaged map must never block copying; it is rebuilt as forms are copied (Record keeps the old file aside)
             damaged = true;
@@ -126,7 +133,7 @@ public static class FormsIdMapStore
         {
             try { held = gate.WaitOne(TimeSpan.FromSeconds(10)); }
             catch (AbandonedMutexException) { held = true; }   // the other process died holding it: the file is still ours to write
-            if (!held) throw new IOException("The saved form IDs file is in use by another copy of the app. Try again.");
+            if (!held) throw new IOException(Loc.T("Forms_MapInUse"));
             RecordLocked(sourceFormId, newFormId, targetAccount, sourceTitle, path ?? DefaultPath);
         }
         finally { if (held) gate.ReleaseMutex(); }
@@ -134,7 +141,16 @@ public static class FormsIdMapStore
 
     private static void RecordLocked(string sourceFormId, string newFormId, string? targetAccount, string? sourceTitle, string path)
     {
-        var map = Read(path, out var damaged);
+        // A brief lock on the file is retried; if it stays locked, stop with a clear message instead of treating it as damaged
+        // (which would move a good file aside and start over with only this entry).
+        Dictionary<string, List<FormsMapEntry>> map;
+        bool damaged;
+        for (var attempt = 1; ; attempt++)
+        {
+            try { map = Read(path, out damaged, throwOnIo: true); break; }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException && attempt < 4) { Thread.Sleep(250 * attempt); }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { throw new IOException(Loc.T("Forms_MapInUse"), ex); }
+        }
         if (damaged)
         {
             // Rewriting from an empty map would wipe every earlier source -> copy entry (the Flows tool relies on them).

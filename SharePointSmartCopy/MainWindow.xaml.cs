@@ -496,14 +496,18 @@ public partial class MainWindow : Window
 
     private void ModeFlows_Click(object sender, RoutedEventArgs e)
         => new FlowsDialog(VM.SpService, (url, isSource, ct) => VM.PrepareSiteAccessAsync(url, isSource, ct),
-            isSource => isSource ? VM.SignedInUser : VM.TargetSignedInUser,
+            isSource => isSource || !VM.IsMultiTenant ? VM.SignedInUser : VM.TargetSignedInUser,   // single tenant: one shared sign-in
             isSource => (isSource ? VM.AuthService : VM.TargetAuthService).TenantId,
             (ct, force) => VM.TargetAuthService.GetFormsTokenAsync(ct, force),
             (ct, force) => VM.AuthService.GetFormsTokenAsync(ct, force),
             ct => VM.SignInSourceForToolsAsync(ct),
             ct => VM.SignInTargetForToolsAsync(ct),
             (isSource, ct) => VM.GetConnectedRootAsync(isSource, ct),
-            VM.SourceUrl, VM.TargetUrl, VM.IsMultiTenant) { Owner = this }.ShowDialog();
+            // Live flow copy: single tenant uses the one shared sign-in for both sides; two tenants use each side's own.
+            (isSource, ct) => (isSource || !VM.IsMultiTenant ? VM.AuthService : VM.TargetAuthService).GetFlowTokenAsync(ct),
+            (isSource, ct) => (isSource || !VM.IsMultiTenant ? VM.AuthService : VM.TargetAuthService).GetPowerAppsTokenAsync(ct),
+            VM.SourceUrl, VM.TargetUrl, VM.IsMultiTenant,
+            (isSource, org, ct) => (isSource || !VM.IsMultiTenant ? VM.AuthService : VM.TargetAuthService).GetDataverseTokenAsync(org, ct)) { Owner = this }.ShowDialog();
 
     // ── Step 4 Copy log column sorting ───────────────────────────────────────────
 

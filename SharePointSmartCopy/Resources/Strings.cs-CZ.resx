@@ -1499,4 +1499,116 @@ Při opakovaném kopírování se z každého vytvoří druhá kopie. Pokračova
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Přihlášení může směřovat pouze do tohoto adresáře.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Chcete-li připojit web v jiném tenantu, vyberte v Nastavení jinou registraci aplikace (s prázdným ID tenanta nebo nastaveným na tento tenant) nebo použijte režim Více tenantů.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Pouze struktura: sloupce, zobrazení, nastavení a typy obsahu se zkopírují, ale žádné soubory ani položky seznamu.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Aktualizovat také seznamy, které v cíli již existují: nahradit stejnojmenná zobrazení (a výchozí zobrazení), nastavení seznamu a pravidla a formátování sloupců</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Aktualizovat existující seznamy</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Existující seznam byl aktualizován podle zdroje.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Vynechat z toků (v cíli není)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Vynecháno z toků</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>Počet sloupců, které budou vynechány z kroků toků, protože cílový seznam takový sloupec nemá: {0} ({1}). Chcete-li je zachovat, přidejte sloupec do cílového seznamu a klikněte na Zkontrolovat znovu, nebo zvolte jiný sloupec.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Sloupec &quot;{0}&quot; v cílovém seznamu &quot;{1}&quot; neexistuje, takže jej kroky toků již nezapisují. Přidejte sloupec do seznamu a spusťte to znovu, nebo přidejte pole do těchto kroků v Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>V cílovém seznamu &quot;{0}&quot; jsou sloupce {1} všechny namapovány na &quot;{2}&quot; v kroku &quot;{4}&quot; toku &quot;{3}&quot;. Zvolte pro všechny kromě jednoho jiný cílový sloupec, nebo ostatní vynechejte.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Zkontrolujte: cílový seznam nemá sloupec pro tato pole, takže je kroky již nezapisují. Hodnoty, které nesla, nejsou v cíli nikde uloženy.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Tento formulář není v tenantu, ke kterému jste přihlášeni</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Přihlásit se…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Každé připojení se spáruje s jedním z vašich existujících připojení v cíli. Připojení bez shody necháme na vás, abyste je nastavili v Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Připojení se nepárují: po vytvoření toků je nastavte jednotlivě v Power Automate.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Zobrazení &quot;{0}&quot;: nastavení {1} nelze použít: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Zobrazení &quot;{0}&quot;: filtr, řazení nebo seskupení podle sloupců, které cíl nemá, bylo vynecháno ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Sloupce webu typu vyhledávání nebyly vytvořeny, protože jejich seznam v cíli není: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Sloupce webu typu vyhledávání</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Kopírovat z prostředí Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Použít exportované balíčky (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Vyberte toky ve zdrojovém prostředí a nástroj je vytvoří v cílovém prostředí, již odkazující na weby, seznamy a formuláře cíle. Toky se vytvářejí vypnuté, takže nic neběží, dokud je nezkontrolujete.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Přihlásit se a načíst prostředí</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Kopírovat z (zdrojové prostředí)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Přihlásit se k cílovému tenantu</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Cíl je jiný tenant: přihlaste se k němu účtem, který tam může vytvářet toky, a poté zvolte prostředí.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Kopírovat do (cílové prostředí)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Vybrat vše</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Nevybírat nic</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Načítání prostředí...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Načítání toků...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>V {0} nebyly nalezeny žádné toky.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>Počet toků v {1}: {0}. Zaškrtněte ty, které chcete kopírovat.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Žádný z vybraných toků nebylo možné přečíst.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Vytváření toků v cíli...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Vytvořit toky v cíli</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Každý tok se vytvoří v cílovém prostředí vypnutý, takže nic neběží, dokud jej nezkontrolujete. Sestava se uloží do složky níže.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Použít moje existující připojení v cílovém prostředí, pokud existuje</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>Počet toků, které budou vytvořeny v {2}: {0} (zkopírováno z {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Toky se vytvářejí vypnuté. Každý z nich po zkontrolování zapněte.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Nalezeno zdrojových prostředí: {0}, cílových: {1}.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Čtení toků ({0}) z {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Vytváření toků ({0}) v {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Připojení se nepodařilo spárovat, takže se toky vytvářejí bez nich. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Vytvořeno: {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Vytvořeno (vypnuto)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Vytvořeno, připojení k nastavení: {0}</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>Připojení nespárovaná s připojením v cíli: {0}. Otevřete každý tok v Power Automate a vyberte připojení.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>Toky, které se nepodařilo vytvořit: {0}. Důvod najdete v protokolu aktivit.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Registrace aplikace zatím nemá oprávnění Power Automate (nebo Power Apps). Požádejte správce, aby je přidal a udělil souhlas, a zkuste to znovu.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Vašemu účtu chybí role zabezpečení Dataverse v cílovém prostředí ({0}). Požádejte správce, aby vám přidělil roli Environment Maker (nebo System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Váš účet nemá přístup k tomuto prostředí nebo toku.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Cíl tok odmítl: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Prostředí nebo tok nebyly nalezeny.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate vrátil chybu: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Hotovo: vytvořeno toků: {0}</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Vytvořeno v {0}, vypnuto. Nic nezůstalo odkazovat na zdroj.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Hotovo: vytvořeno toků: {0}, některé položky vyžadují vaši kontrolu</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Vytvořeno v {0}, vypnuto. Otevřete sestavu, kde uvidíte hodnoty stále odkazující na zdroj, připojení k nastavení a položky, které nástroj nepřepisuje.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Otevřete sestavu a zkontrolujte, co je označeno ke kontrole.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>V Power Automate (cíl) otevřete každý nový tok, opravte připojení, na které upozorňuje, a zapněte jej.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Každý tok otestujte, než vypnete originál ve zdroji.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Soubor uložených ID formulářů je používán (jinou kopií aplikace nebo jiným programem). Za chvíli to zkuste znovu.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Zrušeno před kontrolou obrázků: zkontrolujte pozadí, logo a obrázek záhlaví kopie.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Nejprve zvolte cílové prostředí v kroku Balíčky.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Zdroj a cíl jsou stejné prostředí ({0}), takže se kopie vytvoří vedle původních toků. Pokračovat?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Již vytvořeno (dřívější pokus)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Zrušeno. Před zrušením bylo vytvořeno toků: {0}; sestava je uvádí.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>Toky ({0}) již byly vytvořeny při dřívějším pokusu a znovu se nevytvořily.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>Toky ({0}) byly zaškrtnuty po prohledání a nevytvořily se. Vraťte se na Balíčky a klikněte na Další, aby se zahrnuly.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Zrušeno: toky ({0}) nebyly vytvořeny.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Zkontrolujte: tyto sloupce byly z kroků vynechány, protože je cílový seznam nemá, ale některý krok podle nich stále filtruje, řadí nebo vybírá. Import funguje; tento krok selže při spuštění toku, dokud se jeho dotaz nezmění v Power Automate nebo dokud se sloupec nepřidá do seznamu.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Zkontrolujte: tento soubor toku nebylo možné přečíst, takže byl zkopírován do nového balíčku beze změny a stále odkazuje na zdroj.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>Počet odkazů v dotazech, které stále uvádějí sloupec vynechaný proto, že jej cílový seznam nemá: {0}. Tyto kroky selžou při spuštění toku; změňte jejich filtr nebo řazení v Power Automate, nebo přidejte sloupec do seznamu.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Požadavek na Power Automate vypršel. Zkontrolujte připojení a zkuste to znovu.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Moje toky (mimo řešení)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Čtení řešení cílového prostředí…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Řešení cílového prostředí se nepodařilo přečíst, takže se toky vytvoří mimo jakékoli řešení: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Vytvořit v</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Zvolte řešení, ve kterém se toky vytvoří (budou pak podporovat řešení a mohou se přesouvat spolu s ním). Každé připojení používá odpovídající odkaz na připojení v cíli; pokud žádný není, přidá se do řešení.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Vytvořeno (vypnuto) v řešení {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Požadavek vypršel.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>možnosti se liší</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>možností: {0} z {1}</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>Počet otázek s obrázky (u otázky nebo jejích možností): {0}. Kopírují se jako odkazy na obrázky zdrojového formuláře, takže se přestanou zobrazovat, pokud se zdrojový formulář smaže nebo je kopie v jiném tenantu. Přidejte tyto obrázky do kopie znovu.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Odpovědi</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Formulář {0} z {1}: {2} (otázka {3} z {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} min {1} s</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} s</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - migrováno</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Zadejte adresu cílového webu, např. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: připojení {1} v cíli používá &quot;{2}&quot;.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Připojení používaná v cíli</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>V cílovém seznamu &quot;{0}&quot; jsou sloupce {1} všechny namapovány na &quot;{2}&quot; v {3} krocích (například v kroku &quot;{5}&quot; toku &quot;{4}&quot;). Zvolte pro všechny kromě jednoho jiný cílový sloupec, nebo ostatní vynechejte.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>Toky, o které se nepokusilo: {0}. Kopírování se zastavilo po chybě, která by stejným způsobem způsobila selhání všech zbývajících toků (viz protokol aktivit). Opravte ji a znovu stiskněte Zápis; již vytvořené toky se přeskočí.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Není zadán žádný cílový web, takže každý web zůstane tak, jak je. Zadejte alespoň jeden cílový web ve sloupci Do, nebo znovu stiskněte Další, chcete-li weby ponechat beze změny.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Žádná shoda: &quot;{0}&quot; už používá {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Vynecháno: &quot;{0}&quot; už používá {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>Počet sloupců, které budou vynechány z kroků toků, protože jejich cílový sloupec už používá jiný sloupec (v závorkách): {0} ({1}). Pokud to nechcete, změňte cílový sloupec u jednoho z nich.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Sloupec &quot;{0}&quot; je vynechán z kroků na seznamu &quot;{1}&quot;: do jeho cílového sloupce &quot;{2}&quot; už zapisuje sloupec &quot;{3}&quot;. Pokud to nechcete, změňte cílový sloupec u jednoho z nich v kroku Seznamy a sloupce.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Složka sestavy</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Živé kopírování vytváří toky přímo v cílovém prostředí, takže se do tohoto počítače neukládají žádné soubory toků. Tato složka přijímá pouze sestavu kopírování: webovou stránku a textový soubor, které uvádějí, co se v jednotlivých tocích změnilo, které sloupce byly vynechány, která připojení byla spárována a co ještě vyžaduje vaši kontrolu. Uchovejte ji spolu s dokumentací k migraci. Je to jediný písemný záznam o provedených změnách.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Každý tok se vytvoří v cílovém prostředí vypnutý, takže nic neběží, dokud jej nezkontrolujete.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Nejprve vyberte složku sestavy.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Kopírovat toky</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Zkopírovat toky do cíle</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Zkontrolujte seznam níže, vyberte, kam sestavu uložit, a poté toky zkopírujte.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Nástroj použije vaše mapování na kopii každého toku a vytvoří ji v cílovém prostředí vypnutou, takže nic neběží, dokud ji nezkontrolujete. Původní toky se nemění. Sestava všeho, co bylo změněno, vynecháno nebo ještě vyžaduje vaši kontrolu, se uloží do složky sestavy. Poté otevřete každý nový tok v Power Automate, opravte všechna připojení, na která upozorní, a zapněte jej.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Připraveno ke kopírování?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Přihlaste se k cílovému tenantu a zobrazte jeho prostředí</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Nejprve načtěte prostředí</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Pro cílový účet nebyla nalezena žádná prostředí Power Automate. Účet potřebuje licenci Power Automate nebo přístup k prostředí tam. Zkuste se přihlásit znovu jiným účtem.</value></data>
 </root>

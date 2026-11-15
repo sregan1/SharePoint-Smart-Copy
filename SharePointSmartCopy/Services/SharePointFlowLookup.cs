@@ -52,6 +52,14 @@ public sealed class SharePointFlowLookup : IFlowSiteLookup
         return await _sp.GetListIdByTitleAsync(siteUrl, title, ct);
     }
 
+    // The same lookup on the SOURCE side (a flow that names a list by its title): prepared with the source sign-in, because in
+    // two-tenant mode the source host is registered to that sign-in and asking for it as the target throws "same tenant".
+    public async Task<string?> GetSourceListIdByTitleAsync(string siteUrl, string title, CancellationToken ct)
+    {
+        await PrepareSiteAsync(siteUrl, true, ct);
+        return await _sp.GetListIdByTitleAsync(siteUrl, title, ct);
+    }
+
     public async Task<IReadOnlyList<FlowListInfo>> GetTargetListsAsync(string siteUrl, CancellationToken ct)
     {
         try

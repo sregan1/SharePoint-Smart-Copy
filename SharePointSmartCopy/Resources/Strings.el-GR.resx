@@ -1499,4 +1499,116 @@
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Μισθωτής: {0}. Η σύνδεση μπορεί να γίνει μόνο σε αυτόν τον κατάλογο.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Για να συνδέσετε έναν ιστότοπο σε διαφορετικό μισθωτή, επιλέξτε άλλη εγγραφή εφαρμογής στις Ρυθμίσεις (με κενό Tenant ID ή ορισμένο σε αυτόν τον μισθωτή) ή χρησιμοποιήστε τη λειτουργία Πολλοί μισθωτές.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Μόνο δομή: αντιγράφονται στήλες, προβολές, ρυθμίσεις και τύποι περιεχομένου, αλλά όχι αρχεία ή στοιχεία λίστας.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Να ενημερώνονται επίσης οι λίστες που υπάρχουν ήδη στον προορισμό: αντικατάσταση προβολών με το ίδιο όνομα (και της προεπιλεγμένης προβολής), ρυθμίσεων λίστας, καθώς και κανόνων και μορφοποίησης στηλών</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Ενημέρωση υπαρχουσών λιστών</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Η υπάρχουσα λίστα ενημερώθηκε ώστε να ταιριάζει με την πηγή.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Εξαίρεση από τις ροές (δεν υπάρχει στον προορισμό)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Εξαιρέθηκε από τις ροές</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} στήλες θα εξαιρεθούν από τα βήματα των ροών, επειδή η λίστα προορισμού δεν έχει τέτοια στήλη: {1}. Για να τη διατηρήσετε, προσθέστε τη στήλη στη λίστα προορισμού και κάντε κλικ στο «Έλεγχος ξανά» ή επιλέξτε άλλη στήλη.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Η στήλη «{0}» δεν υπάρχει στη λίστα προορισμού «{1}», επομένως τα βήματα των ροών δεν την εγγράφουν πλέον. Προσθέστε τη στήλη στη λίστα και εκτελέστε το ξανά ή προσθέστε το πεδίο σε αυτά τα βήματα στο Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>Στη λίστα προορισμού «{0}», οι στήλες {1} αντιστοιχίζονται όλες στο «{2}» στο βήμα «{4}» της ροής «{3}». Επιλέξτε διαφορετική στήλη προορισμού για όλες εκτός από μία ή εξαιρέστε τις υπόλοιπες.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Έλεγχος: η λίστα προορισμού δεν έχει στήλη για αυτά τα πεδία, επομένως τα βήματα δεν τα εγγράφουν πλέον. Οι τιμές που περιείχαν δεν αποθηκεύονται πουθενά στον προορισμό.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Αυτή η φόρμα δεν ανήκει στον μισθωτή στον οποίο έχετε συνδεθεί</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Σύνδεση…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Κάθε σύνδεση αντιστοιχίζεται με μία από τις υπάρχουσες συνδέσεις σας στον προορισμό. Όσες δεν έχουν αντιστοιχία πρέπει να τις ορίσετε εσείς στο Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Οι συνδέσεις δεν αντιστοιχίζονται: ορίστε καθεμία στο Power Automate αφού δημιουργηθούν οι ροές.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Προβολή «{0}»: η ρύθμιση {1} δεν μπόρεσε να εφαρμοστεί: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Προβολή «{0}»: το φίλτρο, η ταξινόμηση ή η ομαδοποίηση σε στήλες που δεν υπάρχουν στον προορισμό παραλείφθηκε ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Οι στήλες ιστοτόπου αναζήτησης δεν δημιουργήθηκαν επειδή η λίστα τους δεν υπάρχει στον προορισμό: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Στήλες ιστοτόπου αναζήτησης</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Αντιγραφή από περιβάλλον Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Χρήση εξαγόμενων πακέτων (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Επιλέξτε ροές στο περιβάλλον πηγής και το εργαλείο τις δημιουργεί στο περιβάλλον προορισμού, ήδη στραμμένες στους ιστοτόπους, τις λίστες και τις φόρμες του προορισμού. Οι ροές δημιουργούνται απενεργοποιημένες, ώστε να μην εκτελείται τίποτα μέχρι να τις ελέγξετε.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Σύνδεση και φόρτωση περιβαλλόντων</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Αντιγραφή από (περιβάλλον πηγής)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Σύνδεση στον μισθωτή προορισμού</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Ο προορισμός είναι διαφορετικός μισθωτής: συνδεθείτε σε αυτόν με λογαριασμό που μπορεί να δημιουργεί ροές εκεί και, στη συνέχεια, επιλέξτε το περιβάλλον.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Αντιγραφή σε (περιβάλλον προορισμού)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Επιλογή όλων</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Καμία επιλογή</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Φόρτωση περιβαλλόντων...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Φόρτωση ροών...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Δεν βρέθηκαν ροές στο {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} ροές στο {1}. Επιλέξτε αυτές που θέλετε να αντιγράψετε.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση καμίας από τις επιλεγμένες ροές.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Δημιουργία ροών στον προορισμό...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Δημιουργία ροών στον προορισμό</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Κάθε ροή δημιουργείται στο περιβάλλον προορισμού απενεργοποιημένη, ώστε να μην εκτελείται τίποτα μέχρι να την ελέγξετε. Η αναφορά αποθηκεύεται στον φάκελο παρακάτω.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Χρήση των υπαρχουσών συνδέσεών μου στο περιβάλλον προορισμού όταν υπάρχει</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} ροές θα δημιουργηθούν στο {2} (αντιγράφηκαν από το {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Οι ροές δημιουργούνται απενεργοποιημένες. Ενεργοποιήστε καθεμία αφού την ελέγξετε.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Βρέθηκαν {0} περιβάλλοντα πηγής και {1} περιβάλλοντα προορισμού.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Ανάγνωση {0} ροών από το {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Δημιουργία {0} ροών στο {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Οι συνδέσεις δεν μπόρεσαν να αντιστοιχιστούν, επομένως οι ροές δημιουργούνται χωρίς αυτές. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Δημιουργήθηκε: {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Δημιουργήθηκε (απενεργοποιημένη)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Δημιουργήθηκε, {0} συνδέσεις προς ορισμό</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} συνδέσεις δεν αντιστοιχίστηκαν με σύνδεση στον προορισμό. Ανοίξτε κάθε ροή στο Power Automate και επιλέξτε μια σύνδεση.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} ροές δεν μπόρεσαν να δημιουργηθούν. Δείτε το αρχείο καταγραφής δραστηριότητας για τον λόγο.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Η εγγραφή της εφαρμογής δεν έχει ακόμη την άδεια Power Automate (ή Power Apps). Ζητήστε από έναν διαχειριστή να την προσθέσει και να παραχωρήσει συγκατάθεση και δοκιμάστε ξανά.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Ο λογαριασμός σας δεν έχει ρόλο ασφαλείας Dataverse στο περιβάλλον προορισμού ({0}). Ζητήστε από έναν διαχειριστή να σας δώσει τον ρόλο Environment Maker (ή System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Ο λογαριασμός σας δεν έχει πρόσβαση σε αυτό το περιβάλλον ή αυτή τη ροή.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Ο προορισμός απέρριψε τη ροή: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Το περιβάλλον ή η ροή δεν βρέθηκε.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Το Power Automate επέστρεψε σφάλμα: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Ολοκληρώθηκε: δημιουργήθηκαν {0} ροές</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Δημιουργήθηκαν στο {0}, απενεργοποιημένες. Τίποτα δεν έμεινε να δείχνει στην πηγή.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Ολοκληρώθηκε: δημιουργήθηκαν {0} ροές, ορισμένα στοιχεία χρειάζονται έλεγχο</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Δημιουργήθηκαν στο {0}, απενεργοποιημένες. Ανοίξτε την αναφορά για να δείτε τιμές που εξακολουθούν να δείχνουν στην πηγή, συνδέσεις προς ορισμό και στοιχεία που το εργαλείο δεν ξαναγράφει.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Ανοίξτε την αναφορά και ελέγξτε ό,τι επισημαίνεται για έλεγχο.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Στο Power Automate (προορισμός), ανοίξτε κάθε νέα ροή, διορθώστε όποια σύνδεση επισημαίνεται και ενεργοποιήστε την.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Δοκιμάστε κάθε ροή πριν απενεργοποιήσετε το πρωτότυπο στην πηγή.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Το αρχείο αποθηκευμένων αναγνωριστικών φορμών χρησιμοποιείται (από άλλο αντίγραφο της εφαρμογής ή άλλο πρόγραμμα). Δοκιμάστε ξανά σε λίγο.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Ακυρώθηκε πριν από τον έλεγχο των εικόνων: ελέγξτε το φόντο, το λογότυπο και την εικόνα κεφαλίδας του αντιγράφου.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Επιλέξτε πρώτα το περιβάλλον προορισμού στο βήμα «Πακέτα».</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Η πηγή και ο προορισμός είναι το ίδιο περιβάλλον ({0}), επομένως τα αντίγραφα θα δημιουργηθούν δίπλα στις αρχικές ροές. Συνέχεια;</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Έχει ήδη δημιουργηθεί (προηγούμενη προσπάθεια)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Ακυρώθηκε. Δημιουργήθηκαν {0} ροές πριν από την ακύρωση· η αναφορά τις παραθέτει.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} ροές είχαν ήδη δημιουργηθεί σε προηγούμενη προσπάθεια και δεν δημιουργήθηκαν ξανά.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} ροές επιλέχθηκαν μετά τη σάρωση και δεν δημιουργήθηκαν. Επιστρέψτε στο «Πακέτα» και πατήστε «Επόμενο» για να τις συμπεριλάβετε.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Ακυρώθηκε: {0} ροές δεν δημιουργήθηκαν.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Έλεγχος: αυτές οι στήλες εξαιρέθηκαν από τα βήματα επειδή η λίστα προορισμού δεν τις έχει, αλλά κάποιο βήμα εξακολουθεί να φιλτράρει, να ταξινομεί ή να επιλέγει με βάση αυτές. Η εισαγωγή λειτουργεί· αυτό το βήμα αποτυγχάνει όταν εκτελείται η ροή, μέχρι να αλλάξει το ερώτημά του στο Power Automate ή να προστεθεί η στήλη στη λίστα.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Έλεγχος: αυτό το αρχείο ροής δεν ήταν δυνατό να διαβαστεί, επομένως αντιγράφηκε στο νέο πακέτο αναλλοίωτο και εξακολουθεί να δείχνει στην πηγή.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} αναφορές ερωτημάτων εξακολουθούν να κατονομάζουν στήλη που εξαιρέθηκε επειδή η λίστα προορισμού δεν την έχει. Αυτά τα βήματα αποτυγχάνουν όταν εκτελείται η ροή· αλλάξτε το φίλτρο ή την ταξινόμησή τους στο Power Automate ή προσθέστε τη στήλη στη λίστα.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Το αίτημα προς το Power Automate έληξε. Ελέγξτε τη σύνδεση και δοκιμάστε ξανά.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Οι ροές μου (όχι σε λύση)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Ανάγνωση των λύσεων του περιβάλλοντος προορισμού…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Οι λύσεις του περιβάλλοντος προορισμού δεν μπόρεσαν να διαβαστούν, επομένως οι ροές θα δημιουργηθούν εκτός οποιασδήποτε λύσης: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Δημιουργία σε</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Επιλέξτε μια λύση για να δημιουργήσετε τις ροές μέσα σε αυτήν (έτσι υποστηρίζουν λύσεις και μπορούν να μετακινηθούν μαζί της). Κάθε σύνδεση χρησιμοποιεί την αντίστοιχη αναφορά σύνδεσης του προορισμού· αν δεν υπάρχει, προστίθεται μία στη λύση.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Δημιουργήθηκε (απενεργοποιημένη) στη λύση {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Το αίτημα έληξε.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>οι επιλογές διαφέρουν</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} από {1} επιλογές</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} ερωτήσεις έχουν εικόνες (στην ερώτηση ή στις επιλογές της). Αντιγράφονται ως σύνδεσμοι προς τις εικόνες της φόρμας πηγής, επομένως παύουν να εμφανίζονται αν διαγραφεί η φόρμα πηγής ή όταν το αντίγραφο βρίσκεται σε άλλον μισθωτή. Προσθέστε ξανά αυτές τις εικόνες στο αντίγραφο.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Απαντήσεις</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Φόρμα {0} από {1}: {2} (ερώτηση {3} από {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0}λ {1}δ</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0}δ</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - μεταφέρθηκε</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Πληκτρολογήστε τη διεύθυνση του ιστοτόπου προορισμού, π.χ. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: η σύνδεση {1} χρησιμοποιεί «{2}» στον προορισμό.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Συνδέσεις που χρησιμοποιούνται στον προορισμό</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>Στη λίστα προορισμού «{0}», οι στήλες {1} αντιστοιχίζονται όλες στο «{2}» σε {3} βήματα (για παράδειγμα στο βήμα «{5}» της ροής «{4}»). Επιλέξτε διαφορετική στήλη προορισμού για όλες εκτός από μία ή εξαιρέστε τις υπόλοιπες.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} ροές δεν επιχειρήθηκαν: η αντιγραφή σταμάτησε μετά από σφάλμα που θα απέτρεπε με τον ίδιο τρόπο κάθε υπόλοιπη ροή (δείτε το αρχείο καταγραφής δραστηριότητας). Διορθώστε το και πατήστε ξανά Εγγραφή· οι ροές που έχουν ήδη δημιουργηθεί παραλείπονται.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Δεν έχει πληκτρολογηθεί ιστότοπος προορισμού, οπότε κάθε ιστότοπος μένει ως έχει. Πληκτρολογήστε τουλάχιστον έναν ιστότοπο προορισμού στη στήλη Προς ή πατήστε ξανά Επόμενο για να διατηρήσετε τους ιστότοπους αμετάβλητους.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Καμία αντιστοιχία: η &quot;{0}&quot; χρησιμοποιείται ήδη από {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Εξαιρέθηκε: η &quot;{0}&quot; χρησιμοποιείται ήδη από {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} στήλες θα εξαιρεθούν από τα βήματα των ροών, επειδή η στήλη προορισμού με την οποία αντιστοιχίστηκαν χρησιμοποιείται ήδη από άλλη στήλη (σε παρένθεση): {1}. Αλλάξτε τον προορισμό μίας από τις δύο στήλες αν δεν το θέλετε αυτό.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Η στήλη &quot;{0}&quot; εξαιρείται από τα βήματα στη λίστα &quot;{1}&quot;: η στήλη προορισμού της &quot;{2}&quot; εγγράφεται ήδη από τη &quot;{3}&quot;. Αλλάξτε τον προορισμό μίας από τις δύο στήλες στο βήμα Λίστες και στήλες αν δεν το θέλετε αυτό.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Φάκελος αναφοράς</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Η ζωντανή αντιγραφή δημιουργεί τις ροές απευθείας στο περιβάλλον προορισμού, επομένως δεν αποθηκεύονται αρχεία ροών σε αυτόν τον υπολογιστή. Αυτός ο φάκελος λαμβάνει μόνο την αναφορά αντιγραφής: μια ιστοσελίδα και ένα αρχείο κειμένου που καταγράφουν τι άλλαξε σε κάθε ροή, τις στήλες που παραλείφθηκαν, τις συνδέσεις που αντιστοιχίστηκαν και τι χρειάζεται ακόμη τον έλεγχό σας. Φυλάξτε την μαζί με τα αρχεία μετεγκατάστασής σας. Είναι η μοναδική γραπτή καταγραφή των αλλαγών.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Κάθε ροή δημιουργείται στο περιβάλλον προορισμού απενεργοποιημένη, ώστε να μην εκτελείται τίποτα μέχρι να την ελέγξετε.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Επιλέξτε πρώτα έναν φάκελο αναφοράς.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Αντιγραφή ροών</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Αντιγραφή των ροών στον προορισμό</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Ελέγξτε τη λίστα παρακάτω, επιλέξτε πού θα αποθηκευτεί η αναφορά και στη συνέχεια αντιγράψτε τις ροές.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Το εργαλείο εφαρμόζει την αντιστοίχισή σας σε ένα αντίγραφο κάθε ροής και τη δημιουργεί στο περιβάλλον προορισμού απενεργοποιημένη, ώστε να μην εκτελείται τίποτα μέχρι να την ελέγξετε. Οι αρχικές ροές σας δεν αλλάζουν. Μια αναφορά με ό,τι άλλαξε, παραλείφθηκε ή χρειάζεται ακόμη τον έλεγχό σας αποθηκεύεται στον φάκελο αναφοράς. Στη συνέχεια, ανοίξτε κάθε νέα ροή στο Power Automate, διορθώστε όποια σύνδεση επισημαίνει και ενεργοποιήστε την.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Έτοιμο για αντιγραφή;</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Συνδεθείτε στον μισθωτή προορισμού για να εμφανιστούν τα περιβάλλοντά του</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Φορτώστε πρώτα τα περιβάλλοντα</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Δεν βρέθηκαν περιβάλλοντα Power Automate για τον λογαριασμό προορισμού. Χρειάζεται άδεια Power Automate ή πρόσβαση σε ένα περιβάλλον εκεί. Δοκιμάστε να συνδεθείτε ξανά με άλλον λογαριασμό.</value></data>
 </root>

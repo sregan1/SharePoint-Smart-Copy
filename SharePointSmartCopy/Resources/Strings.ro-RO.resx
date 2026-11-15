@@ -1499,4 +1499,116 @@ Copierea din nou creează o a doua copie a fiecăruia. Continuați?</value></dat
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Autentificarea se poate face doar în acest director.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Pentru a conecta un site dintr-un alt tenant, alegeți o altă înregistrare de aplicație în Setări (cu ID tenant gol sau setat la acel tenant) sau utilizați modul Multi-tenant.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Doar structura: coloanele, vizualizările, setările și tipurile de conținut sunt copiate, dar fără fișiere sau elemente de listă.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Actualizați și listele care există deja în destinație: înlocuiți vizualizările cu același nume (și vizualizarea implicită), setările listei, regulile și formatarea coloanelor</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Actualizare liste existente</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Lista existentă a fost actualizată pentru a corespunde sursei.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Omitere din fluxuri (nu există în destinație)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Omisă din fluxuri</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} coloane vor fi omise din pașii fluxurilor, deoarece lista destinație nu are o astfel de coloană: {1}. Pentru a le păstra, adăugați coloana în lista destinație și faceți clic pe Verificare din nou sau alegeți altă coloană.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Coloana &quot;{0}&quot; nu există în lista destinație &quot;{1}&quot;, deci pașii fluxurilor nu o mai scriu. Adăugați coloana în listă și rulați din nou sau adăugați câmpul în acei pași în Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>În lista destinație &quot;{0}&quot;, coloanele {1} sunt toate mapate la &quot;{2}&quot; în pasul &quot;{4}&quot; al fluxului &quot;{3}&quot;. Alegeți o altă coloană destinație pentru toate, cu excepția uneia, sau omiteți-le pe celelalte.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>De verificat: lista destinație nu are o coloană pentru aceste câmpuri, deci pașii nu le mai scriu. Valorile pe care le conțineau nu sunt salvate nicăieri în destinație.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Acest formular nu se află în tenantul în care sunteți autentificat</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Autentificați-vă…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Fiecare conexiune este asociată cu una dintre conexiunile dvs. existente din destinație. Cele fără corespondent rămân de setat de dvs. în Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Conexiunile nu sunt asociate: setați fiecare conexiune în Power Automate după crearea fluxurilor.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Vizualizarea &quot;{0}&quot;: setarea {1} nu a putut fi aplicată: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Vizualizarea &quot;{0}&quot;: filtrul, sortarea sau gruparea după coloane pe care destinația nu le are a fost omisă ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Coloanele de site de tip căutare nu au fost create, deoarece lista lor nu există în destinație: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Coloane de site de tip căutare</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Copiere dintr-un mediu Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Folosire pachete exportate (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Alegeți fluxurile din mediul sursă, iar instrumentul le creează în mediul destinație, indicând deja spre site-urile, listele și formularele destinației. Fluxurile sunt create dezactivate, deci nimic nu rulează până când le verificați.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Autentificare și încărcare medii</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Copiere din (mediu sursă)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Autentificare în tenantul destinație</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Destinația este un alt tenant: autentificați-vă în el cu un cont care poate crea fluxuri acolo, apoi alegeți mediul.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Copiere în (mediu destinație)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Selectare totală</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Anulare selecție</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Se încarcă mediile...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Se încarcă fluxurile...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Nu s-au găsit fluxuri în {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} fluxuri în {1}. Bifați-le pe cele de copiat.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Niciunul dintre fluxurile selectate nu a putut fi citit.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Se creează fluxurile în destinație...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Creare fluxuri în destinație</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Fiecare flux este creat în mediul destinație dezactivat, deci nimic nu rulează până când îl verificați. Raportul este salvat în folderul de mai jos.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Folosire conexiunile mele existente din mediul destinație, când există una</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} fluxuri vor fi create în {2} (copiate din {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Fluxurile sunt create dezactivate. Activați fiecare flux după ce îl verificați.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Găsite {0} medii sursă și {1} medii destinație.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Se citesc {0} fluxuri din {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Se creează {0} fluxuri în {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Conexiunile nu au putut fi asociate, deci fluxurile sunt create fără ele. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Creat: {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Creat (dezactivat)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Creat, {0} conexiuni de setat</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} conexiuni nu au fost asociate cu o conexiune din destinație. Deschideți fiecare flux în Power Automate și selectați o conexiune.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} fluxuri nu au putut fi create. Consultați jurnalul de activitate pentru motiv.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Înregistrarea aplicației nu are încă permisiunea Power Automate (sau Power Apps). Rugați un administrator să o adauge și să acorde consimțământul, apoi încercați din nou.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Contului dvs. îi lipsește un rol de securitate Dataverse în mediul destinație ({0}). Rugați un administrator să vă acorde rolul Environment Maker (sau System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Contul dvs. nu are acces la acest mediu sau flux.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Destinația a respins fluxul: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Mediul sau fluxul nu a fost găsit.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate a returnat o eroare: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Gata: {0} fluxuri create</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Create în {0}, dezactivate. Nimic nu a rămas indicând spre sursă.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Gata: {0} fluxuri create, unele elemente necesită verificarea dvs.</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Create în {0}, dezactivate. Deschideți raportul pentru a vedea valorile care încă indică spre sursă, conexiunile de setat și elementele pe care instrumentul nu le rescrie.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Deschideți raportul și verificați ce este marcat pentru revizuire.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>În Power Automate (destinație), deschideți fiecare flux nou, corectați conexiunea semnalată și activați-l.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Testați fiecare flux înainte de a-l dezactiva pe cel original din sursă.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Fișierul cu ID-urile de formulare salvate este în uz (de altă copie a aplicației sau de alt program). Încercați din nou peste puțin timp.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Anulat înainte de verificarea imaginilor: verificați fundalul, sigla și imaginea de antet ale copiei.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Alegeți mai întâi mediul destinație la pasul Pachete.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Sursa și destinația sunt același mediu ({0}), deci copiile vor fi create lângă fluxurile originale. Continuați?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Deja creat (încercare anterioară)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Anulat. {0} fluxuri au fost create înainte de anulare; raportul le listează.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} fluxuri fuseseră deja create la o încercare anterioară și nu au fost create din nou.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} fluxuri au fost bifate după scanare și nu au fost create. Reveniți la Pachete și faceți clic pe Următorul pentru a le include.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Anulat: {0} fluxuri nu au fost create.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>De verificat: aceste coloane au fost omise din pași deoarece lista destinație nu le are, dar un pas încă filtrează, sortează sau selectează după ele. Importul funcționează; acel pas eșuează la rularea fluxului până când interogarea lui este modificată în Power Automate sau coloana este adăugată în listă.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>De verificat: acest fișier de flux nu a putut fi citit, deci a fost copiat în noul pachet nemodificat și încă indică spre sursă.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} referințe din interogări încă menționează o coloană care a fost omisă deoarece lista destinație nu o are. Acești pași eșuează la rularea fluxului; modificați filtrul sau sortarea lor în Power Automate sau adăugați coloana în listă.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Solicitarea către Power Automate a expirat. Verificați conexiunea și încercați din nou.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Fluxurile mele (în afara unei soluții)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Se citesc soluțiile mediului destinație…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Soluțiile mediului destinație nu au putut fi citite, deci fluxurile vor fi create în afara oricărei soluții: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Creare în</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Alegeți o soluție în care să fie create fluxurile (vor fi atunci compatibile cu soluțiile și se pot muta odată cu soluția). Fiecare conexiune folosește referința de conexiune potrivită din destinație; dacă nu există una, se adaugă una în soluție.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Creat (dezactivat) în soluția {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Solicitarea a expirat.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>opțiunile diferă</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} din {1} opțiuni</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} întrebări au imagini (la întrebare sau la variantele ei). Sunt copiate ca linkuri către imaginile formularului sursă, deci nu se mai afișează dacă formularul sursă este șters sau dacă copia este în alt tenant. Adăugați din nou aceste imagini în copie.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Răspunsuri</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Formularul {0} din {1}: {2} (întrebarea {3} din {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} min {1} s</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} s</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - migrat</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Introduceți adresa site-ului destinație, de ex. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: conexiunea {1} folosește &quot;{2}&quot; în destinație.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Conexiuni folosite în destinație</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>În lista destinație &quot;{0}&quot;, coloanele {1} sunt toate mapate la &quot;{2}&quot; în {3} pași (de exemplu, pasul &quot;{5}&quot; al fluxului &quot;{4}&quot;). Alegeți o altă coloană destinație pentru toate, cu excepția uneia, sau omiteți-le pe celelalte.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} fluxuri nu au fost încercate: copierea s-a oprit după o eroare care ar fi făcut să eșueze în același mod toate fluxurile rămase (consultați jurnalul de activitate). Remediați-o și apăsați din nou Scriere; fluxurile deja create sunt omise.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Nu este introdus niciun site destinație, așa că fiecare site rămâne ca atare. Introduceți cel puțin un site destinație în coloana La sau apăsați din nou Următorul pentru a păstra site-urile neschimbate.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Fără potrivire: &quot;{0}&quot; este deja folosită de {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Omisă: &quot;{0}&quot; este deja folosită de {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} coloane vor fi omise din pașii fluxurilor, deoarece coloana destinație cu care s-au potrivit este deja folosită de altă coloană (în paranteze): {1}. Schimbați destinația uneia dintre coloane dacă nu doriți acest lucru.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Coloana &quot;{0}&quot; este omisă din pașii de pe &quot;{1}&quot;: coloana sa destinație &quot;{2}&quot; este deja scrisă de &quot;{3}&quot;. Schimbați destinația uneia dintre coloane în pasul Liste și coloane dacă nu doriți acest lucru.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Folder pentru raport</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Copierea directă creează fluxurile direct în mediul destinație, deci niciun fișier de flux nu este salvat pe acest computer. Acest folder primește doar raportul de copiere: o pagină web și un fișier text care listează ce s-a modificat în fiecare flux, coloanele omise, conexiunile potrivite și ce mai trebuie verificat de dumneavoastră. Păstrați-l împreună cu evidențele migrării. Este singura evidență scrisă a ceea ce s-a modificat.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Fiecare flux este creat în mediul destinație dezactivat, deci nimic nu rulează până când îl verificați.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Alegeți mai întâi un folder pentru raport.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Copiază fluxurile</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Copiați fluxurile în destinație</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Verificați lista de mai jos, alegeți unde se salvează raportul, apoi copiați fluxurile.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Instrumentul aplică maparea dumneavoastră pe o copie a fiecărui flux și îl creează în mediul destinație, dezactivat, deci nimic nu rulează până când îl verificați. Fluxurile originale nu sunt modificate. Un raport cu tot ce a fost modificat, omis sau mai trebuie verificat este salvat în folderul pentru raport. Apoi deschideți fiecare flux nou în Power Automate, corectați conexiunea semnalată și activați-l.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Gata de copiere?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Autentificați-vă în tenantul destinație pentru a-i lista mediile</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Încărcați mai întâi mediile</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Nu au fost găsite medii Power Automate pentru contul destinație. Are nevoie de o licență Power Automate sau de acces la un mediu de acolo. Încercați să vă autentificați din nou cu alt cont.</value></data>
 </root>

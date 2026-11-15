@@ -54,7 +54,7 @@ Choose from four copy scopes in a step-by-step wizard:
 | Tool | What it does |
 |---|---|
 | **Forms** | Copies Microsoft Forms (all question types including Ranking and Likert, branching, quiz type, settings, theme, logo and background images) and exports responses to Excel. Uses the *unofficial* Microsoft Forms API and needs the delegated Microsoft Forms permission on your app registration |
-| **Flows** | Rewrites exported Power Automate packages for the target tenant: sites, lists (matched by name through your connections), columns, copied forms, and email domains. Connections must be recreated after import |
+| **Flows** | Rewrites exported Power Automate packages (including solution exports) or copies flows live between environments, for the target tenant: sites, lists (matched by name through your connections), columns (a column the target list lacks is left out of the steps that write it, with a warning), copied forms, and email domains; live copy can create the flows inside a Dataverse solution. Connections must be recreated after a package import |
 
 **All scopes:**
 - Custom column values copied in both **Migration API** and **Enhanced REST** modes — including **Person/User**, **Managed Metadata**, **Lookup**, **Hyperlink**, and **Currency** columns
@@ -77,6 +77,7 @@ Choose from four copy scopes in a step-by-step wizard:
 
 **Libraries, Lists and Site scopes — structure of new lists and libraries:**
 - **Lookups and managed metadata** — lookup values are matched by the original item (duplicate titles no longer collapse), looked-up lists and child-web lookups are carried along, projected lookup fields are recreated, and a managed-metadata term set can be copied to a different tenant through Microsoft Graph (optional `TermStore.ReadWrite.All` permission); the Column mapping dialog shows what each lookup and managed-metadata column is bound to
+- **Update existing lists** — optional, off by default: a list or library that already exists on the target can be brought in line with the source (same-named views and the default view, list settings, column rules and formatting), and the results mark it as updated
 - **Structure to copy** — the Options step lists every kind of structure that is recreated (views, list settings, content types, column rules, templates, and in Site scope site columns, navigation and settings) with a checkbox for each, and the report records what a run copied
 - **Views** — shared views are recreated with their filter, sorting, grouping, columns and order, paging, totals, formatting and default view; calendar, Gantt, datasheet and board views are created with their own type
 - **List settings** — content approval, check-out, attachments, open in browser, folder creation, search visibility, draft visibility, item-level security, and the list's validation rule
@@ -160,8 +161,11 @@ Every sign-in asks for the two Microsoft Graph permissions, so they are needed f
 | Site Pages (always Enhanced REST) | ✔ | ✔ | — | — | — |
 | **Compare**, and verifying a copy | ✔ | ✔ | — | — | — |
 | **Forms** tool | ✔ | ✔ | — | ✔ | — |
-| **Flows** tool | ✔ | ✔ | — | optional* | — |
+| **Flows** tool (packages) | ✔ | ✔ | — | optional* | — |
+| **Flows** tool (live copy between environments) | ✔ | ✔ | — | optional* | — ‡ |
 | Browsing saved History, Settings (local only; verifying a run signs in like Compare) | — | — | — | — | — |
+
+‡ Live copy also needs **Power Automate Service** → delegated `Flows.Read.All` and `Flows.Manage.All`, and **PowerApps Service** → delegated `User`. To create flows inside a solution, add **Dataverse** → delegated `user_impersonation` (optional). In an environment with Dataverse the account also needs a security role that can create flows and read connection references (for example *Environment Maker*).
 
 \* The Flows tool only uses Microsoft Forms to look up form titles and the target account's forms. Without the permission those lookups report an error and you paste each new form's ID or edit-page link instead; everything else in Flows works.
 

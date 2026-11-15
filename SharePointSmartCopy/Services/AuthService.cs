@@ -51,6 +51,16 @@ public class AuthService
         return accounts.FirstOrDefault();
     }
 
+    // The account the Forms tool's "Sign in again" chose. Forms tokens refresh from it, not from the pinned (SharePoint)
+    // account, so a copy that runs long enough for a refresh keeps creating forms in the chosen account. Null = the pinned one.
+    private string? _formsAccountId;
+    private async Task<IAccount?> GetFormsAccountAsync()
+    {
+        if (_formsAccountId is null) return await GetPinnedAccountAsync();
+        var accounts = (await _app!.GetAccountsAsync()).ToList();
+        return accounts.FirstOrDefault(a => a.HomeAccountId.Identifier == _formsAccountId) ?? await GetPinnedAccountAsync();
+    }
+
     private readonly string[] _scopes =
     [
         "Sites.ReadWrite.All",
@@ -74,6 +84,7 @@ public class AuthService
             .Build();
         _authResult = null;
         _pinnedAccountId = null;
+        _formsAccountId = null;
         FormsUserName = null;
         _tokenCache.Clear();
     }
@@ -195,7 +206,7 @@ public class AuthService
             if (!forceRefresh && TryGetCachedToken(cacheKey, out var cachedToken))
                 return cachedToken;
 
-            var account = await GetPinnedAccountAsync();
+            var account = await GetFormsAccountAsync();
             if (account != null)
             {
                 try
@@ -222,6 +233,87 @@ public class AuthService
             _pinnedAccountId ??= authResult.Account?.HomeAccountId?.Identifier;
             _tokenCache[cacheKey] = authResult;
             FormsUserName = authResult.Account?.Username ?? FormsUserName;
+            return authResult.AccessToken;
+        }
+        finally { _refreshLock.Release(); }
+    }
+
+    // The Forms tool's "Sign in again": always opens the account picker (so another account can be chosen), replaces the
+    // cached Forms token with the new account's, and remembers its name.
+    public async Task<string> SignInFormsAsync(CancellationToken cancellationToken = default)
+    {
+        if (_app == null)
+            throw new InvalidOperationException(Loc.T("Svc_Auth_NotConfiguredSignIn"));
+        await _refreshLock.WaitAsync(cancellationToken);
+        try
+        {
+            _tokenCache.TryRemove(FormsScope, out _);
+            var result = await _app.AcquireTokenInteractive(new[] { FormsScope })
+                .WithPrompt(Prompt.SelectAccount)
+                .ExecuteAsync(cancellationToken);
+            _pinnedAccountId ??= result.Account?.HomeAccountId?.Identifier;
+            _formsAccountId = result.Account?.HomeAccountId?.Identifier;   // later Forms refreshes come from this account
+            _tokenCache[FormsScope] = result;
+            FormsUserName = result.Account?.Username ?? FormsUserName;
+            return result.AccessToken;
+        }
+        finally { _refreshLock.Release(); }
+    }
+
+    // Tokens for the Power Automate flow-copy feature. Each is a separate resource, so the app registration needs
+    // the matching delegated permission consented: "Power Automate Service" (Flows.Read.All, Flows.Manage.All) for the
+    // Flow management API, "PowerApps Service" (User) for connection listings, and "Dataverse" (user_impersonation)
+    // for reading solution-aware flows. Without it MSAL throws MsalServiceException (AADSTS650057); callers translate it.
+    private const string FlowScope = "https://service.flow.microsoft.com/.default";
+    private const string PowerAppsScope = "https://service.powerapps.com/.default";
+
+    public Task<string> GetFlowTokenAsync(CancellationToken cancellationToken = default, bool forceRefresh = false) =>
+        GetResourceTokenAsync(FlowScope, cancellationToken, forceRefresh);
+
+    public Task<string> GetPowerAppsTokenAsync(CancellationToken cancellationToken = default, bool forceRefresh = false) =>
+        GetResourceTokenAsync(PowerAppsScope, cancellationToken, forceRefresh);
+
+    // orgUrl is the environment's Dataverse API address, e.g. https://org123.api.crm.dynamics.com
+    public Task<string> GetDataverseTokenAsync(string orgUrl, CancellationToken cancellationToken = default, bool forceRefresh = false) =>
+        GetResourceTokenAsync(orgUrl.TrimEnd('/') + "/.default", cancellationToken, forceRefresh);
+
+    // Same single-flight / pinned-account / silent-then-interactive behavior as GetFormsTokenAsync, for any resource scope.
+    private async Task<string> GetResourceTokenAsync(string scope, CancellationToken cancellationToken, bool forceRefresh)
+    {
+        if (_app == null)
+            throw new InvalidOperationException(Loc.T("Svc_Auth_NotConfiguredSignIn"));
+
+        var scopes = new[] { scope };
+        if (!forceRefresh && TryGetCachedToken(scope, out var fastToken))
+            return fastToken;
+
+        await _refreshLock.WaitAsync(cancellationToken);
+        try
+        {
+            if (!forceRefresh && TryGetCachedToken(scope, out var cachedToken))
+                return cachedToken;
+
+            var account = await GetPinnedAccountAsync();
+            if (account != null)
+            {
+                try
+                {
+                    var result = await _app.AcquireTokenSilent(scopes, account)
+                        .WithForceRefresh(forceRefresh)
+                        .ExecuteAsync(cancellationToken);
+                    _tokenCache[scope] = result;
+                    return result.AccessToken;
+                }
+                catch (MsalUiRequiredException) { /* fall through to interactive (first use of a resource shows consent) */ }
+            }
+
+            var interactive = _app.AcquireTokenInteractive(scopes);
+            interactive = account != null
+                ? interactive.WithAccount(account)
+                : interactive.WithPrompt(Prompt.SelectAccount);
+            var authResult = await interactive.ExecuteAsync(cancellationToken);
+            _pinnedAccountId ??= authResult.Account?.HomeAccountId?.Identifier;
+            _tokenCache[scope] = authResult;
             return authResult.AccessToken;
         }
         finally { _refreshLock.Release(); }
@@ -281,6 +373,7 @@ public class AuthService
             await _app.RemoveAsync(account);
         _authResult = null;
         _pinnedAccountId = null;
+        _formsAccountId = null;
         FormsUserName = null;
         _tokenCache.Clear();
     }

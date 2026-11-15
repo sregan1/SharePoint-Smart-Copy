@@ -1499,4 +1499,116 @@ Sao chép lại sẽ tạo bản sao thứ hai cho mỗi biểu mẫu. Tiếp t�
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Chỉ có thể đăng nhập vào thư mục này.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Để kết nối một site ở tenant khác, hãy chọn đăng ký ứng dụng khác trong Cài đặt (với Tenant ID để trống hoặc đặt thành tenant đó), hoặc dùng chế độ đa tenant.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Chỉ cấu trúc: cột, dạng xem, cài đặt và loại nội dung được sao chép, nhưng không có tệp hoặc mục danh sách.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Đồng thời cập nhật các danh sách đã có ở đích: thay thế các dạng xem cùng tên (và dạng xem mặc định), cài đặt danh sách, cùng quy tắc và định dạng của cột</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Cập nhật danh sách hiện có</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Đã cập nhật danh sách hiện có cho khớp với nguồn.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Loại khỏi các luồng (không có ở đích)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Đã loại khỏi các luồng</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} cột sẽ bị loại khỏi các bước của luồng vì danh sách đích không có cột đó: {1}. Hãy thêm cột vào danh sách đích rồi bấm Kiểm tra lại, hoặc chọn cột khác, để giữ lại.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Cột &quot;{0}&quot; không tồn tại trong danh sách đích &quot;{1}&quot;, nên các bước của luồng không còn ghi vào cột này. Hãy thêm cột vào danh sách rồi chạy lại, hoặc thêm trường vào các bước đó trong Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>Trong danh sách đích &quot;{0}&quot;, các cột {1} đều được ánh xạ tới &quot;{2}&quot; ở bước &quot;{4}&quot; của &quot;{3}&quot;. Hãy chọn cột đích khác cho tất cả trừ một cột, hoặc loại bỏ các cột còn lại.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Cần xem lại: danh sách đích không có cột cho các trường này, nên các bước không còn ghi chúng. Các giá trị mà chúng chứa không được lưu ở bất kỳ đâu trên đích.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Biểu mẫu này không thuộc tenant mà bạn đang đăng nhập</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Đăng nhập…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Mỗi kết nối được khớp với một trong các kết nối hiện có của bạn ở đích. Kết nối nào không khớp sẽ để bạn thiết lập trong Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Các kết nối không được khớp: hãy thiết lập từng kết nối trong Power Automate sau khi các luồng được tạo.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Dạng xem &apos;{0}&apos;: không thể áp dụng cài đặt {1}: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Dạng xem &quot;{0}&quot;: bộ lọc, sắp xếp hoặc nhóm theo các cột mà đích không có đã bị loại bỏ ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Chưa tạo các cột tra cứu của trang web vì danh sách của chúng không có ở đích: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Cột tra cứu của trang web</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Sao chép từ môi trường Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Dùng các gói đã xuất (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Chọn các luồng trong môi trường nguồn và công cụ sẽ tạo chúng trong môi trường đích, đã trỏ sẵn tới các trang web, danh sách và biểu mẫu của đích. Các luồng được tạo ở trạng thái tắt, nên sẽ không có gì chạy cho đến khi bạn xem xét.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Đăng nhập và tải môi trường</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Sao chép từ (môi trường nguồn)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Đăng nhập vào tenant đích</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Đích là một tenant khác: hãy đăng nhập vào đó bằng tài khoản có thể tạo luồng ở đó, rồi chọn môi trường.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Sao chép đến (môi trường đích)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Chọn tất cả</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Bỏ chọn tất cả</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Đang tải môi trường...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Đang tải luồng...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Không tìm thấy luồng nào trong {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} luồng trong {1}. Hãy đánh dấu các luồng cần sao chép.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Không đọc được luồng nào trong số đã chọn.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Đang tạo luồng ở đích...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Tạo luồng ở đích</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Mỗi luồng được tạo trong môi trường đích ở trạng thái tắt, nên sẽ không có gì chạy cho đến khi bạn xem xét. Báo cáo được lưu trong thư mục bên dưới.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Dùng các kết nối hiện có của tôi trong môi trường đích khi có</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} luồng sẽ được tạo trong {2} (sao chép từ {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Các luồng được tạo ở trạng thái tắt. Hãy bật từng luồng sau khi bạn xem xét.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Tìm thấy {0} môi trường nguồn và {1} môi trường đích.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Đang đọc {0} luồng từ {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Đang tạo {0} luồng trong {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Không thể khớp các kết nối, nên các luồng được tạo mà không có chúng. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Đã tạo {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Đã tạo (tắt)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Đã tạo, {0} kết nối cần thiết lập</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} kết nối không được khớp với kết nối nào ở đích. Hãy mở từng luồng trong Power Automate và chọn một kết nối.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>Không thể tạo {0} luồng. Xem nhật ký hoạt động để biết lý do.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Đăng ký ứng dụng chưa có quyền Power Automate (hoặc Power Apps). Hãy nhờ quản trị viên thêm quyền này và cấp sự đồng ý, rồi thử lại.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Tài khoản của bạn thiếu vai trò bảo mật Dataverse trong môi trường đích ({0}). Hãy nhờ quản trị viên cấp cho bạn vai trò Environment Maker (hoặc System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Tài khoản của bạn không có quyền truy cập môi trường hoặc luồng này.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Đích đã từ chối luồng: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Không tìm thấy môi trường hoặc luồng.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate trả về lỗi: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Hoàn tất: đã tạo {0} luồng</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Đã tạo trong {0}, ở trạng thái tắt. Không còn gì trỏ tới nguồn.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Hoàn tất: đã tạo {0} luồng, một số mục cần bạn xem xét</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Đã tạo trong {0}, ở trạng thái tắt. Hãy mở báo cáo để xem các giá trị vẫn trỏ tới nguồn, các kết nối cần thiết lập và các mục mà công cụ không viết lại.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Mở báo cáo và kiểm tra những gì được đánh dấu cần xem xét.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Trong Power Automate (đích), mở từng luồng mới, sửa mọi kết nối được đánh dấu và bật luồng.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Hãy thử từng luồng trước khi tắt luồng gốc ở nguồn.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Tệp ID biểu mẫu đã lưu đang được sử dụng (bởi một bản sao khác của ứng dụng hoặc chương trình khác). Hãy thử lại sau giây lát.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Đã hủy trước khi kiểm tra hình ảnh: hãy xem hình nền, logo và hình ảnh tiêu đề của bản sao.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Hãy chọn môi trường đích ở bước Gói trước.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Nguồn và đích là cùng một môi trường ({0}), nên các bản sao sẽ được tạo cạnh các luồng gốc. Tiếp tục?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Đã tạo (lần thử trước)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Đã hủy. {0} luồng đã được tạo trước khi hủy; báo cáo liệt kê chúng.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} luồng đã được tạo ở lần thử trước và không được tạo lại.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} luồng được đánh dấu sau khi quét và không được tạo. Hãy quay lại Gói và nhấn Tiếp theo để đưa chúng vào.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Đã hủy: {0} luồng không được tạo.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Cần xem lại: các cột này đã bị loại khỏi các bước vì danh sách đích không có chúng, nhưng một bước vẫn lọc, sắp xếp hoặc chọn theo chúng. Việc nhập vẫn thành công; bước đó sẽ lỗi khi luồng chạy cho đến khi truy vấn của nó được thay đổi trong Power Automate hoặc cột được thêm vào danh sách.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Cần xem lại: không đọc được tệp luồng này, nên nó được sao chép vào gói mới nguyên trạng và vẫn trỏ tới nguồn.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} tham chiếu truy vấn vẫn nêu tên một cột đã bị loại vì danh sách đích không có. Các bước đó sẽ lỗi khi luồng chạy; hãy thay đổi bộ lọc hoặc sắp xếp của chúng trong Power Automate, hoặc thêm cột vào danh sách.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Yêu cầu tới Power Automate đã hết thời gian chờ. Hãy kiểm tra kết nối và thử lại.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Các luồng của tôi (không thuộc giải pháp)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Đang đọc các giải pháp của môi trường đích…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Không đọc được các giải pháp của môi trường đích, nên các luồng sẽ được tạo ngoài mọi giải pháp: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Tạo trong</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Chọn một giải pháp để tạo các luồng bên trong nó (khi đó chúng nhận biết giải pháp và có thể di chuyển cùng giải pháp). Mỗi kết nối dùng tham chiếu kết nối khớp của đích; nếu chưa có thì một tham chiếu được thêm vào giải pháp.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Đã tạo (tắt) trong giải pháp {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Yêu cầu đã hết thời gian chờ.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>các tùy chọn khác nhau</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} trong {1} tùy chọn</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} câu hỏi có hình ảnh (trên câu hỏi hoặc các lựa chọn của nó). Chúng được sao chép dưới dạng liên kết tới hình ảnh của biểu mẫu nguồn, nên sẽ không còn hiển thị nếu biểu mẫu nguồn bị xóa hoặc khi bản sao ở tenant khác. Hãy thêm lại các hình ảnh đó vào bản sao.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Phản hồi</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Biểu mẫu {0}/{1}: {2} (câu hỏi {3}/{4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0}p {1}giây</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0}giây</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - đã di chuyển</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Nhập địa chỉ trang web đích, ví dụ https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: kết nối {1} dùng &quot;{2}&quot; ở đích.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Các kết nối được dùng ở đích</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>Trong danh sách đích &quot;{0}&quot;, các cột {1} đều được ánh xạ tới &quot;{2}&quot; ở {3} bước (ví dụ bước &quot;{5}&quot; của &quot;{4}&quot;). Hãy chọn cột đích khác cho tất cả trừ một cột, hoặc loại bỏ các cột còn lại.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} luồng chưa được thử: quá trình sao chép đã dừng sau một lỗi sẽ khiến mọi luồng còn lại thất bại theo cùng một cách (xem nhật ký hoạt động). Hãy khắc phục rồi nhấn Ghi lần nữa; các luồng đã tạo sẽ được bỏ qua.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Chưa nhập trang web đích nào, nên mọi trang web vẫn giữ nguyên. Hãy nhập ít nhất một trang web đích vào cột Sang, hoặc nhấn Tiếp theo lần nữa để giữ nguyên các trang web.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Không khớp: &quot;{0}&quot; đã được {1} dùng</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Đã loại: &quot;{0}&quot; đã được {1} dùng</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} cột sẽ bị loại khỏi các bước của luồng vì cột đích mà chúng khớp đã được một cột khác (trong ngoặc) dùng: {1}. Hãy đổi đích của một trong hai cột nếu đó không phải điều bạn muốn.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Cột &quot;{0}&quot; bị loại khỏi các bước trên &quot;{1}&quot;: cột đích &quot;{2}&quot; của nó đã được &quot;{3}&quot; ghi. Hãy đổi đích của một trong hai cột ở bước Danh sách và cột nếu đó không phải điều bạn muốn.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Thư mục báo cáo</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Sao chép trực tiếp tạo các luồng ngay trong môi trường đích, nên không có tệp luồng nào được lưu trên máy tính này. Thư mục này chỉ nhận báo cáo sao chép: một trang web và một tệp văn bản liệt kê những gì đã thay đổi trong từng luồng, các cột bị bỏ qua, các kết nối đã được khớp và những gì vẫn cần bạn xem xét. Hãy giữ nó cùng hồ sơ di chuyển của bạn. Đây là bản ghi bằng văn bản duy nhất về những gì đã thay đổi.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Mỗi luồng được tạo trong môi trường đích ở trạng thái tắt, nên sẽ không có gì chạy cho đến khi bạn xem xét.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Hãy chọn thư mục báo cáo trước.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Sao chép luồng</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Sao chép các luồng sang đích</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Kiểm tra danh sách bên dưới, chọn nơi lưu báo cáo, rồi sao chép các luồng.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Công cụ áp dụng ánh xạ của bạn cho một bản sao của từng luồng và tạo luồng đó trong môi trường đích ở trạng thái tắt, nên sẽ không có gì chạy cho đến khi bạn xem xét. Các luồng gốc của bạn không bị thay đổi. Báo cáo về mọi thứ đã thay đổi, bị bỏ qua hoặc vẫn cần xem xét được lưu trong thư mục báo cáo. Sau đó, mở từng luồng mới trong Power Automate, sửa mọi kết nối được đánh dấu và bật luồng.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Sẵn sàng sao chép?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Đăng nhập vào tenant đích để liệt kê các môi trường</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Hãy tải môi trường trước</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Không tìm thấy môi trường Power Automate nào cho tài khoản đích. Tài khoản cần có giấy phép Power Automate hoặc quyền truy cập vào một môi trường ở đó. Hãy thử đăng nhập lại bằng tài khoản khác.</value></data>
 </root>

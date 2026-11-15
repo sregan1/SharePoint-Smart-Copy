@@ -1499,4 +1499,116 @@
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Тенант: {0}. Вхід можливий лише до цього каталогу.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Щоб підключити сайт в іншому тенанті, виберіть у розділі «Налаштування» іншу реєстрацію додатка (з порожнім ID тенанта або з цим тенантом) або скористайтеся багатотенантним режимом.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Лише структура: стовпці, подання, параметри та типи вмісту копіюються, але без файлів і елементів списку.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Також оновлювати списки, які вже існують у призначенні: замінювати подання з такими самими іменами (і подання за замовчуванням), параметри списку, а також правила та форматування стовпців</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Оновлювати наявні списки</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Наявний список оновлено відповідно до джерела.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Виключити з потоків (немає в призначенні)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Виключено з потоків</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>Стовпців, які буде виключено з кроків потоків: {0}, оскільки в цільовому списку немає такого стовпця: {1}. Щоб зберегти його, додайте стовпець до цільового списку та натисніть «Перевірити знову» або виберіть інший стовпець.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Стовпця «{0}» немає в цільовому списку «{1}», тому кроки потоків більше не записують його. Додайте стовпець до списку та запустіть це знову або додайте поле до цих кроків у Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>У цільовому списку «{0}» стовпці {1} зіставлено з «{2}» у кроці «{4}» потоку «{3}». Виберіть інший цільовий стовпець для всіх, крім одного, або виключіть решту.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Перевірте: у цільовому списку немає стовпця для цих полів, тому кроки більше не записують їх. Значення, які вони містили, ніде не зберігаються в призначенні.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Ця форма не в тенанті, до якого ви ввійшли</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Увійти…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Кожне підключення зіставляється з одним із ваших наявних підключень у призначенні. Підключення без відповідності потрібно буде налаштувати самостійно в Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Підключення не зіставляються: налаштуйте кожне з них у Power Automate після створення потоків.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Подання «{0}»: не вдалося застосувати параметр {1}: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Подання «{0}»: фільтр, сортування або групування за стовпцями, яких немає в призначенні, виключено ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Стовпці сайту типу «підстановка» не створено, оскільки їхнього списку немає в призначенні: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Стовпці сайту типу «підстановка»</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Копіювати із середовища Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Використовувати експортовані пакети (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Виберіть потоки у вихідному середовищі, і програма створить їх у цільовому середовищі, одразу вказуючи на сайти, списки та форми призначення. Потоки створюються вимкненими, тому нічого не запускається, доки ви їх не перевірите.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Увійти та завантажити середовища</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Копіювати з (вихідне середовище)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Увійти в цільовий тенант</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Призначення в іншому тенанті: увійдіть у нього з обліковим записом, який може створювати там потоки, потім виберіть середовище.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Копіювати в (цільове середовище)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Вибрати все</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Зняти вибір</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Завантаження середовищ...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Завантаження потоків...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Потоки не знайдено в {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>Потоків у {1}: {0}. Позначте ті, які потрібно скопіювати.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Не вдалося прочитати жоден із вибраних потоків.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Створення потоків у призначенні...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Створити потоки в призначенні</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Кожен потік створюється в цільовому середовищі вимкненим, тому нічого не запускається, доки ви його не перевірите. Звіт зберігається в папці нижче.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Використовувати мої наявні підключення в цільовому середовищі, якщо вони є</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>Потоків буде створено: {0} у {2} (скопійовано з {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Потоки створюються вимкненими. Увімкніть кожен після перевірки.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Знайдено середовищ: джерел {0}, призначень {1}.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Читання потоків ({0}) із {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Створення потоків ({0}) у {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Не вдалося зіставити підключення, тому потоки створено без них. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Створено: {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Створено (вимкнено)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Створено, підключень для налаштування: {0}</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>Підключень, не зіставлених із підключенням у призначенні: {0}. Відкрийте кожен потік у Power Automate і виберіть підключення.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>Потоків, які не вдалося створити: {0}. Причину дивіться в журналі дій.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Реєстрація програми ще не має дозволу Power Automate (або Power Apps). Попросіть адміністратора додати його та надати згоду, потім повторіть спробу.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>У вашого облікового запису немає ролі безпеки Dataverse в цільовому середовищі ({0}). Попросіть адміністратора надати вам роль Environment Maker (або System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Ваш обліковий запис не має доступу до цього середовища або потоку.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Призначення відхилило потік: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Середовище або потік не знайдено.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate повернув помилку: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Готово: створено потоків: {0}</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Створено в {0}, вимкнено. Нічого не залишилося, що вказує на джерело.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Готово: створено потоків: {0}, деякі елементи потребують перевірки</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Створено в {0}, вимкнено. Відкрийте звіт, щоб побачити значення, які досі вказують на джерело, підключення для налаштування та елементи, які програма не перезаписує.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Відкрийте звіт і перевірте елементи, позначені для перевірки.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>У Power Automate (призначення) відкрийте кожен новий потік, виправте позначене підключення та увімкніть потік.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Протестуйте кожен потік, перш ніж вимикати оригінал у джерелі.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Файл збережених ідентифікаторів форм використовується (іншою копією програми або іншою програмою). Повторіть спробу за мить.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Скасовано до перевірки зображень: перевірте тло, логотип і зображення заголовка копії.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Спочатку виберіть цільове середовище на кроці «Пакети».</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Джерело та призначення в одному середовищі ({0}), тому копії буде створено поруч з оригінальними потоками. Продовжити?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Уже створено (попередня спроба)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Скасовано. До скасування створено потоків: {0}; вони перелічені у звіті.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>Потоків, уже створених під час попередньої спроби та не створених повторно: {0}.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>Потоків, позначених після сканування та не створених: {0}. Поверніться до кроку «Пакети» й натисніть «Далі», щоб включити їх.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Скасовано: потоків не створено: {0}.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Перевірте: ці стовпці виключено з кроків, оскільки їх немає в цільовому списку, але крок усе ще фільтрує, сортує або вибирає за ними. Імпорт працює; цей крок завершиться помилкою під час запуску потоку, доки запит не буде змінено в Power Automate або стовпець не буде додано до списку.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Перевірте: не вдалося прочитати цей файл потоку, тому його скопійовано в новий пакет без змін, і він і далі вказує на джерело.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>Посилань на стовпець у запитах: {0}, а стовпець виключено, оскільки його немає в цільовому списку. Ці кроки завершаться помилкою під час запуску потоку; змініть їхній фільтр або сортування в Power Automate чи додайте стовпець до списку.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Час очікування запиту до Power Automate минув. Перевірте підключення та повторіть спробу.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Мої потоки (не в рішенні)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Читання рішень цільового середовища…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Не вдалося прочитати рішення цільового середовища, тому потоки буде створено поза будь-яким рішенням: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Створити в</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Виберіть рішення, щоб створити потоки всередині нього (тоді вони враховують рішення й можуть переміщуватися разом з ним). Кожне підключення використовує відповідне посилання на підключення в призначенні; якщо його немає, воно додається до рішення.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Створено (вимкнено) в рішенні {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Час очікування запиту минув.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>параметри відрізняються</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>Параметрів: {0} з {1}</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>Запитань із зображеннями (у запитанні або його варіантах відповіді): {0}. Їх скопійовано як посилання на зображення вихідної форми, тому вони перестануть відображатися, якщо вихідну форму буде видалено або якщо копія в іншому тенанті. Додайте ці зображення до копії знову.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Відповіді</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Форма {0} з {1}: {2} (запитання {3} з {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} хв {1} с</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} с</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - перенесено</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Введіть адресу сайту призначення, наприклад https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: підключення {1} використовує «{2}» у призначенні.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Підключення, що використовуються в призначенні</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>У цільовому списку «{0}» стовпці {1} зіставлено з «{2}» у {3} кроках (наприклад, у кроці «{5}» потоку «{4}»). Виберіть інший цільовий стовпець для всіх, крім одного, або виключіть решту.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>Потоків, спробу створення яких не виконано: {0}. Копіювання зупинилося після помилки, через яку всі решта потоків завершилися б помилкою так само (див. журнал дій). Виправте її та знову натисніть «Запис»; уже створені потоки пропускаються.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Цільовий сайт не введено, тому кожен сайт залишається як є. Введіть принаймні один цільовий сайт у стовпці «До» або знову натисніть «Далі», щоб залишити сайти без змін.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Немає відповідності: &quot;{0}&quot; уже використовує {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Виключено: &quot;{0}&quot; уже використовує {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>Стовпців, які буде виключено з кроків потоків, оскільки зіставлений цільовий стовпець уже використовує інший стовпець (у дужках): {0} ({1}). Якщо це не те, що вам потрібно, змініть цільовий стовпець одного з них.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Стовпець &quot;{0}&quot; виключено з кроків для списку &quot;{1}&quot;: у його цільовий стовпець &quot;{2}&quot; уже записує &quot;{3}&quot;. Якщо це не те, що вам потрібно, змініть цільовий стовпець одного з них на кроці «Списки й стовпці».</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Папка звіту</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Пряме копіювання створює потоки безпосередньо в цільовому середовищі, тому файли потоків на цьому комп’ютері не зберігаються. Ця папка отримує лише звіт про копіювання: вебсторінку й текстовий файл зі списком змін у кожному потоці, пропущених стовпців, зіставлених підключень і того, що ще потрібно перевірити. Зберігайте його разом із записами про міграцію. Це єдиний письмовий запис про внесені зміни.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Кожен потік створюється в цільовому середовищі вимкненим, тому нічого не запускається, доки ви його не перевірите.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Спершу виберіть папку звіту.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Копіювати потоки</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Копіювання потоків у призначення</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Перегляньте список нижче, виберіть, де зберегти звіт, а потім скопіюйте потоки.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Інструмент застосовує ваше зіставлення до копії кожного потоку й створює його в цільовому середовищі вимкненим, тому нічого не запускається, доки ви його не перевірите. Початкові потоки не змінюються. Звіт про все, що було змінено, пропущено або ще потребує перевірки, зберігається в папці звіту. Після цього відкрийте кожен новий потік у Power Automate, виправте позначене підключення та увімкніть потік.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Готові копіювати?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Увійдіть у цільовий тенант, щоб переглянути його середовища</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Спочатку завантажте середовища</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Для цільового облікового запису не знайдено середовищ Power Automate. Потрібна ліцензія Power Automate або доступ до середовища там. Спробуйте ввійти знову з іншим обліковим записом.</value></data>
 </root>

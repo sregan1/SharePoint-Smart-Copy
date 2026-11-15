@@ -1499,4 +1499,116 @@ Kopiering igen opretter en ekstra kopi af hver. Fortsæt?</value></data>
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Lejer: {0}. Logon kan kun gå til dette bibliotek.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Hvis du vil forbinde et websted på en anden lejer, skal du vælge en anden appregistrering i Indstillinger (med Lejer-id tomt eller angivet til den pågældende lejer) eller bruge tilstanden Flere lejere.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Kun struktur: kolonner, visninger, indstillinger og indholdstyper kopieres, men ingen filer eller listeelementer.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Opdater også lister, der allerede findes på målet: erstat visninger med samme navn (og standardvisningen), listeindstillinger samt kolonneregler og formatering</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Opdater eksisterende lister</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Eksisterende liste opdateret, så den svarer til kilden.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Udelad fra flowene (findes ikke på målet)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Udeladt fra flowene</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} kolonne(r) udelades fra flowenes trin, fordi mållisten ikke har en sådan kolonne: {1}. Tilføj kolonnen til mållisten, og klik på Kontroller igen, eller vælg en anden kolonne, for at beholde den.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Kolonnen &quot;{0}&quot; findes ikke på mållisten &quot;{1}&quot;, så flowenes trin skriver den ikke længere. Tilføj kolonnen til listen, og kør dette igen, eller tilføj feltet til de trin i Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>På mållisten &quot;{0}&quot; er kolonnerne {1} alle tilknyttet &quot;{2}&quot; i trinnet &quot;{4}&quot; i &quot;{3}&quot;. Vælg en anden målkolonne for alle undtagen én, eller udelad de øvrige.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Gennemse: mållisten har ingen kolonne til disse felter, så trinnene skriver dem ikke længere. De værdier, de indeholdt, gemmes ingen steder på målet.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Denne formular findes ikke i den lejer, du er logget på</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Log på…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Hver forbindelse matches med en af dine eksisterende forbindelser på målet. Enhver uden match overlades til dig at angive i Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Forbindelser matches ikke: angiv hver enkelt i Power Automate, når flowene er oprettet.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Visning &apos;{0}&apos;: indstillingen {1} kunne ikke anvendes: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Visning &quot;{0}&quot;: filteret, sorteringen eller grupperingen på kolonner, som målet ikke har, blev udeladt ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Opslagswebstedskolonner blev ikke oprettet, fordi deres liste ikke findes på målet: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Opslagswebstedskolonner</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Kopier fra et Power Automate-miljø</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Brug eksporterede pakker (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Vælg flows i kildemiljøet, så opretter værktøjet dem i målmiljøet, allerede peget mod målets websteder, lister og formularer. Flows oprettes slået fra, så intet kører, før du har gennemgået det.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Log på og indlæs miljøer</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Kopier fra (kildemiljø)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Log på målets lejer</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Målet er en anden lejer: log på den med en konto, der kan oprette flows der, og vælg derefter miljøet.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Kopier til (målmiljø)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Markér alle</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Fravælg alle</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Indlæser miljøer...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Indlæser flows...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Ingen flows fundet i {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} flows i {1}. Markér dem, der skal kopieres.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Ingen af de valgte flows kunne læses.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Opretter flows på målet...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Opret flows på målet</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Hvert flow oprettes i målmiljøet slået fra, så intet kører, før du gennemgår det. Rapporten gemmes i mappen nedenfor.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Brug mine eksisterende forbindelser i målmiljøet, når der findes en</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} flow(s) oprettes i {2} (kopieret fra {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Flows oprettes slået fra. Slå hvert flow til, når du har gennemgået det.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Fandt {0} kilde- og {1} målmiljø(er).</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Læser {0} flow(s) fra {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Opretter {0} flow(s) i {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Forbindelserne kunne ikke matches, så flowene oprettes uden dem. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Oprettede {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Oprettet (slået fra)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Oprettet, {0} forbindelse(r) skal angives</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} forbindelse(r) blev ikke matchet med en forbindelse på målet. Åbn hvert flow i Power Automate, og vælg en forbindelse.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} flow(s) kunne ikke oprettes. Se aktivitetsloggen for årsagen.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Appregistreringen har endnu ikke tilladelsen til Power Automate (eller Power Apps). Bed en administrator tilføje den og give samtykke, og prøv igen.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Din konto mangler en sikkerhedsrolle i Dataverse i målmiljøet ({0}). Bed en administrator give dig rollen Environment Maker (eller System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Din konto har ikke adgang til dette miljø eller flow.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Målet afviste flowet: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Miljøet eller flowet blev ikke fundet.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate returnerede en fejl: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Færdig: {0} flow(s) oprettet</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Oprettet i {0}, slået fra. Intet peger stadig på kilden.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Færdig: {0} flow(s) oprettet, nogle elementer skal gennemgås af dig</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Oprettet i {0}, slået fra. Åbn rapporten for at se værdier, der stadig peger på kilden, forbindelser, der skal angives, og elementer, som værktøjet ikke omskriver.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Åbn rapporten, og kontroller, hvad der er markeret til gennemgang.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Åbn hvert nyt flow i Power Automate (målet), ret eventuelle markerede forbindelser, og slå det til.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Test hvert flow, før du slår originalen fra i kilden.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Filen med gemte formular-id&apos;er er i brug (af en anden kopi af appen eller et andet program). Prøv igen om lidt.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Annulleret, før billederne blev kontrolleret: se kopiens baggrund, logo og overskriftsbillede.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Vælg først målmiljøet i trinnet Pakker.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Kilden og målet er det samme miljø ({0}), så kopierne oprettes ved siden af de oprindelige flows. Fortsæt?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Allerede oprettet (tidligere forsøg)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Annulleret. {0} flow(s) blev oprettet før annulleringen; rapporten viser dem.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} flow(s) var allerede oprettet ved et tidligere forsøg og blev ikke oprettet igen.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} flow(s) blev markeret efter scanningen og blev ikke oprettet. Gå tilbage til Pakker, og tryk på Næste for at medtage dem.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Annulleret: {0} flow(s) blev ikke oprettet.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Gennemse: disse kolonner blev udeladt fra trinnene, fordi mållisten ikke har dem, men et trin filtrerer, sorterer eller vælger stadig på dem. Importen virker; det trin mislykkes, når flowet kører, indtil dets forespørgsel ændres i Power Automate, eller kolonnen føjes til listen.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Gennemse: denne flowfil kunne ikke læses, så den blev kopieret uændret til den nye pakke og peger stadig på kilden.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} forespørgselsreference(r) angiver stadig en kolonne, der blev udeladt, fordi mållisten ikke har den. Disse trin mislykkes, når flowet kører; ret deres filter eller sortering i Power Automate, eller tilføj kolonnen til listen.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Anmodningen til Power Automate fik timeout. Kontroller forbindelsen, og prøv igen.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Mine flows (ikke i en løsning)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Læser målmiljøets løsninger…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Målmiljøets løsninger kunne ikke læses, så flowene oprettes uden for enhver løsning: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Opret i</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Vælg en løsning for at oprette flowene i den (de bliver så løsningsbevidste og kan flyttes med løsningen). Hver forbindelse bruger målets tilsvarende forbindelsesreference; der tilføjes en til løsningen, når der ikke er nogen.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Oprettet (slået fra) i løsningen {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Anmodningen fik timeout.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>valgmulighederne er forskellige</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} af {1} valgmuligheder</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} spørgsmål har billeder (på spørgsmålet eller dets svarmuligheder). De kopieres som links til kildeformularens billeder, så de holder op med at blive vist, hvis kildeformularen slettes, eller når kopien er i en anden lejer. Tilføj billederne igen i kopien.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Svar</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Formular {0} af {1}: {2} (spørgsmål {3} af {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} min. {1} sek.</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} sek.</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - migreret</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Skriv målwebstedets adresse, f.eks. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: forbindelsen {1} bruger &quot;{2}&quot; på målet.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Forbindelser, der bruges på målet</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>På mållisten &quot;{0}&quot; er kolonnerne {1} alle tilknyttet &quot;{2}&quot; i {3} trin (for eksempel trinnet &quot;{5}&quot; i &quot;{4}&quot;). Vælg en anden målkolonne for alle undtagen én, eller udelad de øvrige.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} flow(s) blev ikke forsøgt: kopieringen stoppede efter en fejl, der ville få alle resterende flows til at mislykkes på samme måde (se aktivitetsloggen). Ret den, og tryk på Skriv igen; flows, der allerede er oprettet, springes over.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Der er ikke indtastet noget målwebsted, så alle websteder forbliver som de er. Indtast mindst ét målwebsted i kolonnen Til, eller tryk på Næste igen for at lade webstederne være uændrede.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Intet match: &quot;{0}&quot; bruges allerede af {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Udeladt: &quot;{0}&quot; bruges allerede af {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} kolonne(r) udelades fra flowenes trin, fordi den målkolonne, de matchede, allerede bruges af en anden kolonne (i parentes): {1}. Skift målet for en af kolonnerne, hvis det ikke er det, du ønsker.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Kolonnen &quot;{0}&quot; udelades fra trinnene på &quot;{1}&quot;: dens målkolonne &quot;{2}&quot; skrives allerede af &quot;{3}&quot;. Skift målet for en af kolonnerne i trinnet Lister og kolonner, hvis det ikke er det, du ønsker.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Rapportmappe</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Live-kopiering opretter flowene direkte i målmiljøet, så der gemmes ingen flowfiler på denne computer. Denne mappe modtager kun kopirapporten: en webside og en tekstfil med en oversigt over, hvad der blev ændret i hvert flow, de udeladte kolonner, de forbindelser, der blev matchet, og hvad der stadig kræver din gennemgang. Opbevar den sammen med dine migreringsoptegnelser. Den er den eneste skriftlige optegnelse over, hvad der blev ændret.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Hvert flow oprettes i målmiljøet slået fra, så intet kører, før du gennemgår det.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Vælg først en rapportmappe.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Kopiér flows</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Kopiér flowene til målet</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Kontrollér listen nedenfor, vælg, hvor rapporten skal gemmes, og kopiér derefter flowene.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Værktøjet anvender din tilknytning på en kopi af hvert flow og opretter det i målmiljøet slået fra, så intet kører, før du har gennemgået det. Dine oprindelige flows ændres ikke. En rapport over alt, der blev ændret, udeladt eller stadig kræver din gennemgang, gemmes i rapportmappen. Åbn bagefter hvert nyt flow i Power Automate, ret eventuelle forbindelser, det markerer, og slå det til.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Klar til at kopiere?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Log på målets lejer for at vise dens miljøer</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Indlæs miljøerne først</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Der blev ikke fundet nogen Power Automate-miljøer for målkontoen. Den skal have en Power Automate-licens eller adgang til et miljø der. Prøv at logge på igen med en anden konto.</value></data>
 </root>

@@ -27,6 +27,21 @@ public sealed class FlowMapping
     // name can map differently on different lists; this wins over `Columns` for that list's steps.
     public Dictionary<string, Dictionary<string, string>> ListColumns { get; set; } = new();
 
+    // How a step writes each TARGET column (key = SOURCE list GUID, then the target column's internal name): "Value" for a
+    // choice column (item/<Column>/Value), "" for a plain column such as text, number, date or yes/no (item/<Column>). A step
+    // that wrote a choice column on the source and now writes a text column (or the reverse) must change its key, or the
+    // import fails with "The API operation does not contain a definition for parameter 'item/<Column>/Value'".
+    public Dictionary<string, Dictionary<string, string>> TargetColumnSuffixes { get; set; } = new();
+
+    // The key suffix a SharePoint column type is written with, or null when the tool does not adjust that type (person, lookup,
+    // link, multi-choice ... keep whatever the flow already has).
+    public static string? ValueSuffixFor(string typeAsString) => typeAsString switch
+    {
+        "Choice" => "Value",
+        "Text" or "Note" or "Number" or "Integer" or "Currency" or "DateTime" or "Boolean" or "Counter" => "",
+        _ => null,
+    };
+
     // Values for columns the TARGET list requires but a "Create item" step does not set (key = SOURCE list GUID, then the
     // target column's internal name). The rewriter adds `item/<column>` with this value to every Create item step on that list
     // that lacks it, because a required column left out makes the import fail ("missing required property").
@@ -96,6 +111,10 @@ public sealed class FlowMapping
     // list) gets a rename only when EVERY list that uses that column renames it the same way, because a
     // contradictory global rename would corrupt the lists that keep the name. Returns a note for each conflict.
     // Existing entries are left alone, so manual edits win.
+    // A column the target list does not have, "mapped" to this: the Create item steps stop sending it (the report lists it). It
+    // can never be a real column name (internal names have no brackets), so it cannot clash with a target column.
+    public const string OmitColumn = "[omit]";
+
     public List<string> ApplyColumnChoices(IEnumerable<ColumnChoice> choices)
     {
         var notes = new List<string>();
@@ -111,6 +130,8 @@ public sealed class FlowMapping
 
         foreach (var g in all.GroupBy(c => c.SourceColumn, StringComparer.Ordinal))
         {
+            // A column left out of one list's steps is never renamed everywhere else.
+            if (g.Any(c => c.TargetColumn == OmitColumn)) continue;
             var targets = g.Select(c => string.IsNullOrWhiteSpace(c.TargetColumn) ? c.SourceColumn : c.TargetColumn!).Distinct().ToList();
             if (targets.Count == 1 && targets[0] != g.Key)
             {

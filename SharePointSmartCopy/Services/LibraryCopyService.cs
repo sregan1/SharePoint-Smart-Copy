@@ -328,7 +328,8 @@ public class LibraryCopyService(SharePointService spService)
     // Everything about a new list's structure beyond its columns: settings, column rules and formatting, content types,
     // then views. Each part is best effort; what could not be done becomes a note (read with ViewFailuresFor).
     // For a list or library that already exists on the target: only ADD what is missing (content types the list lacks, views
-    // whose title it does not have). Existing views, settings, column rules, the template and default values are left alone.
+    // whose title it does not have). Existing views, settings, column rules, the template and default values are left alone,
+    // unless Structure.UpdateExisting is on: then same-named views, the default view, list settings and column rules are replaced.
     public Task AddMissingStructureAsync(LibraryDefinition def, string targetSiteUrl, string targetListId, bool isLibrary) =>
         CopyListStructureAsync(def, targetSiteUrl, targetListId, isLibrary, additive: true);
 
@@ -344,11 +345,12 @@ public class LibraryCopyService(SharePointService spService)
         // Order matters: content types before column rules (columns may be recreated to put them on a type, which would lose a
         // rule applied earlier), and both before the views (which list the columns).
         var steps = new List<Func<Task>>();
-        if (!additive && Structure.ListSettings) steps.Add(() => CopyListSettingsAsync(def.Title, srcBase, srcSite, tgtBase, tgtSite, isLibrary, notes));
+        var update = additive && Structure.UpdateExisting;   // existing list, and the user asked for it to be brought in line
+        if ((!additive || update) && Structure.ListSettings) steps.Add(() => CopyListSettingsAsync(def.Title, srcBase, srcSite, tgtBase, tgtSite, isLibrary, notes));
         if (Structure.ContentTypes) steps.Add(() => CopyContentTypesAsync(srcBase, srcSite, tgtBase, tgtSite, notes, recreateColumns: !additive, isLibrary: isLibrary));
         steps.Add(() => CopyProjectedFieldsAsync(srcBase, srcSite, tgtBase, tgtSite, notes));
-        if (!additive && Structure.ColumnRules) steps.Add(() => CopyColumnRulesAsync(srcBase, srcSite, tgtBase, tgtSite, notes));
-        if (Structure.Views) steps.Add(() => CopyViewsAsync(def, targetSiteUrl, targetListId, notes, additive));
+        if ((!additive || update) && Structure.ColumnRules) steps.Add(() => CopyColumnRulesAsync(srcBase, srcSite, tgtBase, tgtSite, notes));
+        if (Structure.Views) steps.Add(() => CopyViewsAsync(def, targetSiteUrl, targetListId, notes, additive, update));
         if (isLibrary && !additive && Structure.Templates)
         {
             steps.Add(() => CopyDocumentTemplateAsync(srcBase, srcSite, tgtBase, tgtSite, notes));
@@ -524,7 +526,7 @@ public class LibraryCopyService(SharePointService spService)
             // A column made on this site carries the site's own ID as its source; the built-in ones carry Microsoft's schema address.
             if (!System.Text.RegularExpressions.Regex.IsMatch(xml, "SourceID=\"\\{[0-9a-fA-F-]{36}\\}\"")) continue;
             // A lookup points at a list of the source site; managed metadata ids belong to the source tenant's term store.
-            if (type.StartsWith("Lookup", StringComparison.OrdinalIgnoreCase)) continue;
+            if (type.StartsWith("Lookup", StringComparison.OrdinalIgnoreCase)) continue;   // created later, once the lists exist (CopySiteLookupColumnsAsync)
             if (spService.IsCrossTenant && type.StartsWith("TaxonomyField", StringComparison.OrdinalIgnoreCase)) continue;
             try
             {
@@ -539,6 +541,67 @@ public class LibraryCopyService(SharePointService spService)
             catch (System.Xml.XmlException) { failed.Add(internalName); }
         }
         if (failed.Count > 0) notes.Add(Loc.T("Svc_Site_ColumnsFailed", string.Join(", ", failed)));
+    }
+
+    // Site columns of type Lookup / LookupMulti, created AFTER the lists of the copy exist: a lookup column points at a list, and
+    // at the target that list is only there once the lists have been copied. The list is found by title (the source GUID means
+    // nothing at the target). Same-web lookups only; one whose list is not on the target is listed in the returned notes.
+    public async Task<List<string>> CopySiteLookupColumnsAsync(string sourceSiteUrl, string targetSiteUrl, CancellationToken ct = default)
+    {
+        var notes = new List<string>();
+        if (!Structure.SiteDefinitions) return notes;
+        var src = sourceSiteUrl.TrimEnd('/');
+        var tgt = targetSiteUrl.TrimEnd('/');
+        try
+        {
+            var (ok, body) = await SpRestAsync(HttpMethod.Get, $"{src}/_api/web/fields?$filter=Hidden eq false&$select=InternalName,Group,TypeAsString,SchemaXml", src);
+            if (!ok) return notes;
+            var existing = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var (tok, tBody) = await SpRestAsync(HttpMethod.Get, $"{tgt}/_api/web/fields?$select=InternalName", tgt);
+            if (tok)
+                using (var td = JsonDocument.Parse(tBody))
+                    foreach (var f in td.RootElement.GetProperty("value").EnumerateArray())
+                        existing.Add(f.GetProperty("InternalName").GetString() ?? "");
+            var tgtWebId = await GetWebIdAsync(tgt);
+            var failed = new List<string>();
+            var noList = new List<string>();
+            using var doc = JsonDocument.Parse(body);
+            foreach (var f in doc.RootElement.GetProperty("value").EnumerateArray())
+            {
+                ct.ThrowIfCancellationRequested();
+                var internalName = f.GetProperty("InternalName").GetString() ?? "";
+                var xml = f.TryGetProperty("SchemaXml", out var sx) ? sx.GetString() : null;
+                var group = f.TryGetProperty("Group", out var g) ? g.GetString() ?? "" : "";
+                var type = f.TryGetProperty("TypeAsString", out var ty) ? ty.GetString() ?? "" : "";
+                if (internalName.Length == 0 || string.IsNullOrEmpty(xml) || existing.Contains(internalName) || group.StartsWith("_Hidden", StringComparison.OrdinalIgnoreCase)) continue;
+                if (!type.StartsWith("Lookup", StringComparison.OrdinalIgnoreCase)) continue;
+                if (!System.Text.RegularExpressions.Regex.IsMatch(xml, "SourceID=\"\\{[0-9a-fA-F-]{36}\\}\"")) continue;   // made on this site only
+                try
+                {
+                    var el = System.Xml.Linq.XElement.Parse(xml);
+                    if (el.Attribute("FieldRef") != null) continue;   // projected field: added below, once its primary lookup exists
+                    var srcListGuid = (el.Attribute("List")?.Value ?? "").Trim('{', '}');
+                    var lookupWeb = (el.Attribute("WebId")?.Value ?? "").Trim('{', '}');
+                    if (!Guid.TryParse(srcListGuid, out _)) { failed.Add(internalName); continue; }   // "Self": nothing to point at
+                    var (tgtListId, tgtOtherWebId) = await ResolveTargetLookupAsync(tgt, src, srcListGuid, lookupWeb);
+                    if (string.IsNullOrEmpty(tgtListId)) { noList.Add(internalName); continue; }
+                    el.SetAttributeValue("List", $"{{{tgtListId.Trim('{', '}')}}}");
+                    var webForField = tgtOtherWebId ?? tgtWebId;
+                    if (webForField != null) el.SetAttributeValue("WebId", webForField);
+                    foreach (var attr in new[] { "SourceID", "ColName", "RowOrdinal", "Version" }) el.Attribute(attr)?.Remove();
+                    var json = JsonSerializer.Serialize(new { parameters = new { SchemaXml = el.ToString(System.Xml.Linq.SaveOptions.DisableFormatting) } });
+                    var (cok, _) = await SpRestAsync(HttpMethod.Post, $"{tgt}/_api/web/fields/createfieldasxml", tgt, json);
+                    if (!cok) failed.Add(internalName);
+                }
+                catch (System.Xml.XmlException) { failed.Add(internalName); }
+            }
+            // The extra columns a site lookup shows from its list: added to the site (web) columns now that the primaries exist.
+            await CopyProjectedFieldsAsync($"{src}/_api/web", src, $"{tgt}/_api/web", tgt, notes);
+            if (noList.Count > 0) notes.Add(Loc.T("Svc_Site_LookupListMissing", string.Join(", ", noList)));
+            if (failed.Count > 0) notes.Add(Loc.T("Svc_Site_ColumnsFailed", string.Join(", ", failed)));
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException) { notes.Add(Short(ex.Message)); }
+        return notes;
     }
 
     private async Task CopySiteContentTypesAsync(string src, string tgt, List<string> notes)
@@ -849,8 +912,8 @@ public class LibraryCopyService(SharePointService spService)
     // collection, and not every setup accepts column links, so failures are listed as notes.
     // REST cannot link an existing column to a content type (every call shape was refused on a live site), but a column created
     // with "add to all content types" lands on every type the list has. So on a list this copy has just created (it is still
-    // empty), each column the source type has is deleted and created again from its own definition with that option. Lookup
-    // and managed-metadata columns are not touched (they carry ties to other lists / the term store). Returns the columns that
+    // empty), each column the source type has is deleted and created again from its own definition with that option. Managed-metadata
+    // columns are not touched (they carry ties to the term store); lookup columns are recreated like the rest. Returns the columns that
     // are still not on the type.
     private async Task<List<string>> LinkColumnsToTypeAsync(string tgtBase, string tgtSite, string listCtId, List<string> columns)
     {
@@ -870,7 +933,10 @@ public class LibraryCopyService(SharePointService spService)
                     type = r.GetProperty("TypeAsString").GetString() ?? "";
                     locked = Bool(r, "Hidden") || Bool(r, "ReadOnlyField") || Bool(r, "Sealed");
                 }
-                if (locked || xml.Length == 0 || type.StartsWith("Lookup", StringComparison.OrdinalIgnoreCase) || type.StartsWith("TaxonomyField", StringComparison.OrdinalIgnoreCase))
+                // A lookup is safe to recreate from its own schema: the target column already points at the TARGET list (and the list
+                // is still empty). A column another column depends on (a projected lookup field) is left for the report.
+                if (locked || xml.Length == 0 || type.StartsWith("TaxonomyField", StringComparison.OrdinalIgnoreCase)
+                    || xml.Contains("FieldRef=", StringComparison.OrdinalIgnoreCase))
                 { stillLacking.Add(col); continue; }
                 var (dok, _) = await SpRestAsync(HttpMethod.Post, fieldUrl, tgtSite, null, xMethod: "DELETE");
                 if (!dok) { stillLacking.Add(col); continue; }
@@ -960,7 +1026,61 @@ public class LibraryCopyService(SharePointService spService)
         }
     }
 
-    private async Task CopyViewsAsync(LibraryDefinition def, string targetSiteUrl, string targetListId, List<string> notes, bool additive = false)
+    // Points the column names in a view's query or totals at the target's internal names (source name -> target name).
+    private static string RenameViewFields(string xml, Dictionary<string, string> renames)
+    {
+        if (renames.Count == 0 || string.IsNullOrEmpty(xml)) return xml;
+        return System.Text.RegularExpressions.Regex.Replace(xml, "(FieldRef\\s[^>]*?Name=\")([^\"]+)(\")",
+            m => renames.TryGetValue(m.Groups[2].Value, out var to) ? m.Groups[1].Value + to + m.Groups[3].Value : m.Value);
+    }
+
+    // Takes the parts of a view's query (filter, sort, grouping) that name a column the target does not have out of the query.
+    // A sort or grouping column that is missing is removed from that clause (an empty clause goes); a filter that uses a missing
+    // column is removed as a whole, since half a filter would change which items show. Returns the query to use and the missing
+    // column names. A query that cannot be read is returned unchanged.
+    private static string TrimViewQuery(string query, HashSet<string> targetFields, out List<string> missing)
+    {
+        missing = [];
+        if (string.IsNullOrWhiteSpace(query)) return query;
+        try
+        {
+            var root = System.Xml.Linq.XElement.Parse("<Q>" + query + "</Q>");
+            string? NameOf(System.Xml.Linq.XElement e) => (string?)e.Attribute("Name");
+            var changed = false;
+            foreach (var clause in root.Elements().ToList())
+            {
+                var refs = clause.DescendantsAndSelf("FieldRef").ToList();
+                var bad = refs.Where(r => NameOf(r) is { Length: > 0 } n && !targetFields.Contains(n)).ToList();
+                if (bad.Count == 0) continue;
+                changed = true;
+                foreach (var b in bad) if (!missing.Contains(NameOf(b)!, StringComparer.OrdinalIgnoreCase)) missing.Add(NameOf(b)!);
+                if (clause.Name.LocalName == "Where") clause.Remove();
+                else
+                {
+                    foreach (var b in bad) b.Remove();
+                    if (!clause.Elements("FieldRef").Any()) clause.Remove();
+                }
+            }
+            return changed ? string.Concat(root.Nodes().Select(n => n.ToString(System.Xml.Linq.SaveOptions.DisableFormatting))) : query;
+        }
+        catch (System.Xml.XmlException) { return query; }
+    }
+
+    // A view's column totals (its Aggregations XML): totals on a column the target does not have are taken out.
+    private static string TrimViewAggregations(string xml, HashSet<string> targetFields)
+    {
+        try
+        {
+            var root = System.Xml.Linq.XElement.Parse(xml);
+            var bad = root.Descendants("FieldRef").Where(r => (string?)r.Attribute("Name") is { Length: > 0 } n && !targetFields.Contains(n)).ToList();
+            if (bad.Count == 0) return xml;
+            foreach (var b in bad) b.Remove();
+            return root.Elements().Any() ? root.ToString(System.Xml.Linq.SaveOptions.DisableFormatting) : "";
+        }
+        catch (System.Xml.XmlException) { return xml; }
+    }
+
+    private async Task CopyViewsAsync(LibraryDefinition def, string targetSiteUrl, string targetListId, List<string> notes, bool additive = false, bool update = false)
     {
         try
         {
@@ -980,11 +1100,31 @@ public class LibraryCopyService(SharePointService spService)
                         targetViews[v.GetProperty("Title").GetString() ?? ""] = v.GetProperty("Id").GetString() ?? "";
 
             var targetFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            (ok, var tfBody) = await SpRestAsync(HttpMethod.Get, $"{tgtBase}/fields?$select=InternalName", targetSiteUrl);
+            var targetByTitle = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            (ok, var tfBody) = await SpRestAsync(HttpMethod.Get, $"{tgtBase}/fields?$select=InternalName,Title", targetSiteUrl);
             if (ok)
                 using (var d = JsonDocument.Parse(tfBody))
                     foreach (var f in d.RootElement.GetProperty("value").EnumerateArray())
-                        if (f.TryGetProperty("InternalName", out var n) && n.GetString() is { } s) targetFields.Add(s);
+                        if (f.TryGetProperty("InternalName", out var n) && n.GetString() is { } s)
+                        {
+                            targetFields.Add(s);
+                            var t = f.TryGetProperty("Title", out var tt) ? tt.GetString() ?? "" : "";
+                            if (t.Length > 0 && !targetByTitle.ContainsKey(t)) targetByTitle[t] = s;
+                        }
+
+            // A column the copy made under a different internal name than the source's (an older copy named new columns after
+            // their display title) is matched by its title, so views, filters and sorts still find it.
+            var renames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            (ok, var sfBody) = await SpRestAsync(HttpMethod.Get, $"{srcBase}/fields?$select=InternalName,Title", srcSite);
+            if (ok)
+                using (var d = JsonDocument.Parse(sfBody))
+                    foreach (var f in d.RootElement.GetProperty("value").EnumerateArray())
+                    {
+                        var inName = f.TryGetProperty("InternalName", out var n) ? n.GetString() ?? "" : "";
+                        var title = f.TryGetProperty("Title", out var tt) ? tt.GetString() ?? "" : "";
+                        if (inName.Length > 0 && !targetFields.Contains(inName) && targetByTitle.TryGetValue(title, out var other))
+                            renames[inName] = other;
+                    }
 
             using var doc = JsonDocument.Parse(viewsBody);
             foreach (var v in doc.RootElement.GetProperty("value").EnumerateArray())
@@ -994,7 +1134,7 @@ public class LibraryCopyService(SharePointService spService)
                 {
                     if (title.Length == 0) continue;
                     if (Bool(v, "PersonalView") || Bool(v, "Hidden")) continue;
-                    if (additive && targetViews.ContainsKey(title)) continue;   // an existing list keeps the views it has
+                    if (additive && !update && targetViews.ContainsKey(title)) continue;   // an existing list keeps the views it has
                     var type =v.TryGetProperty("ViewType", out var vt) ? vt.GetString() : null;
                     // Calendar, Gantt and datasheet views are created with their own view kind (and the view's own XML data);
                     // modern board/calendar views carry a ViewType2 name. Any other kind is skipped with a note.
@@ -1009,19 +1149,30 @@ public class LibraryCopyService(SharePointService spService)
                     }
                     var srcViewId = v.GetProperty("Id").GetString();
                     var query = v.TryGetProperty("ViewQuery", out var q) ? q.GetString() ?? "" : "";
-                    var isDefault = Bool(v, "DefaultView") && !additive;   // never changes an existing list's default view
+                    query = RenameViewFields(query, renames);
+                    // A filter, sort or grouping on a column the target lacks is accepted by SharePoint but then the view will not
+                    // render ("one or more field types are not installed properly"). Those parts are left out, with a note.
+                    query = TrimViewQuery(query, targetFields, out var trimmed);
+                    if (trimmed.Count > 0) notes.Add(Loc.T("Svc_View_QueryTrimmed", title, string.Join(", ", trimmed)));
+                    var isDefault = Bool(v, "DefaultView") && (!additive || update);   // never changes an existing list's default view
                     var rowLimit = v.TryGetProperty("RowLimit", out var rl) && rl.TryGetInt32(out var rlv) ? rlv : 30;
 
                     // The view's columns, in order.
                     var (fok, fBody) = await SpRestAsync(HttpMethod.Get, $"{srcBase}/views('{srcViewId}')/viewfields", srcSite);
                     var fields = new List<string>();
                     if (fok) using (var fd = JsonDocument.Parse(fBody)) fields = ReadStrings(fd.RootElement);
+                    fields = fields.Select(f => renames.TryGetValue(f, out var other) ? other : f).ToList();
 
                     // The properties that go onto the view (the ones the source has).
                     var props = new Dictionary<string, object?> { ["RowLimit"] = rowLimit, ["Paged"] = !v.TryGetProperty("Paged", out var pg) || pg.ValueKind != JsonValueKind.False };
                     foreach (var name in new[] { "Aggregations", "AggregationsStatus", "Formats", "CustomFormatter" })
                         if (v.TryGetProperty(name, out var pv) && pv.ValueKind == JsonValueKind.String && !string.IsNullOrEmpty(pv.GetString()))
-                            props[name] = pv.GetString();
+                        {
+                            // Every view reports AggregationsStatus "Off" (no totals), and SharePoint refuses to have that value set back
+                            // ("Value does not fall within the expected range"), which made it refuse the whole batch of view settings.
+                            if (name == "AggregationsStatus" && string.Equals(pv.GetString(), "Off", StringComparison.OrdinalIgnoreCase)) continue;
+                            props[name] = name == "Aggregations" ? TrimViewAggregations(RenameViewFields(pv.GetString()!, renames), targetFields) : pv.GetString();
+                        }
                     if (isDefault) props["DefaultView"] = true;
 
                     var queryDropped = false;
@@ -1049,19 +1200,27 @@ public class LibraryCopyService(SharePointService spService)
                         using var created = JsonDocument.Parse(addBody);
                         targetViewId = created.RootElement.GetProperty("Id").GetString()!;
                     }
-                    else if (query.Length > 0)
+                    else if (query.Length > 0 || update)
                         props["ViewQuery"] = query;   // an existing view of that name (the built-in one) takes the source's filter
 
                     var mergeUrl = $"{tgtBase}/views('{targetViewId}')";
+                    // One bad setting makes SharePoint refuse the whole batch ("Value does not fall within the expected range"), which
+                    // used to take the filter down with it. The basics go first, then the filter, then every other setting on its own,
+                    // so a failure costs only that setting and the note says which one.
+                    var optional = new[] { "Aggregations", "AggregationsStatus", "Formats", "CustomFormatter", "ViewData", "ViewType2" };
+                    var separate = new List<KeyValuePair<string, object?>>();
+                    foreach (var name in new[] { "ViewQuery" }.Concat(optional))
+                        if (props.TryGetValue(name, out var pval)) { separate.Add(new(name, pval)); props.Remove(name); }
                     (ok, var mergeBody) = await SpRestAsync(HttpMethod.Post, mergeUrl, targetSiteUrl, JsonSerializer.Serialize(props), merge: true);
-                    if (!ok && props.ContainsKey("ViewQuery"))
-                    {
-                        props.Remove("ViewQuery");
-                        queryDropped = true;
-                        (ok, mergeBody) = await SpRestAsync(HttpMethod.Post, mergeUrl, targetSiteUrl, JsonSerializer.Serialize(props), merge: true);
-                    }
                     if (!ok) notes.Add(Loc.T("Svc_View_SettingsFail", title, Short(mergeBody)));
-                    if (queryDropped) notes.Add(Loc.T("Svc_View_QueryDropped", title));
+                    foreach (var (name, pval) in separate)
+                    {
+                        var (pok, pbody) = await SpRestAsync(HttpMethod.Post, mergeUrl, targetSiteUrl, JsonSerializer.Serialize(new Dictionary<string, object?> { [name] = pval }), merge: true);
+                        if (pok) continue;
+                        if (name == "ViewQuery") notes.Add(Loc.T("Svc_View_QueryDropped", title));
+                        else notes.Add(Loc.T("Svc_View_PropFail", title, name, Short(pbody)));
+                    }
+                    if (queryDropped) notes.Add(Loc.T("Svc_View_QueryDropped", title));   // a new view whose filter had to be left out at creation
 
                     // Columns: only ones the target has, in the source's order.
                     if (fields.Count > 0)
@@ -1199,27 +1358,25 @@ public class LibraryCopyService(SharePointService spService)
         await AddColumnToDefaultViewAsync(siteUrl, listId, actualInternalName);
     }
 
-    // Recreates a Lookup/LookupMulti column bound to the TARGET list equivalent to the source's
-    // lookup list (matched by title — the source column stores the source list's GUID, which is
-    // meaningless at the target). Throws with an actionable message when the list can't be
-    // resolved, instead of silently degrading the column to Text as the old fallthrough did.
-    private async Task CreateLookupColumnAsync(string siteUrl, string listId, ColumnDefinition col, string? sourceSiteUrl)
+    // Finds the TARGET list (and its web, when it is not the target site's own web) that equals a source lookup list. The source
+    // column stores the source list's GUID, which means nothing at the target, so the list is matched by title. A lookup can point
+    // at a list in another web of the same site collection: the source web is found from the column's WebId and the same
+    // relative web is used at the target. Returns nulls when the list cannot be resolved.
+    private async Task<(string? ListId, string? WebId)> ResolveTargetLookupAsync(string siteUrl, string? sourceSiteUrl, string? lookupListId, string? lookupWebId)
     {
         string? targetLookupListId = null;
         string? targetLookupWebId  = null;
-        if (!string.IsNullOrEmpty(col.LookupListId) && !string.IsNullOrEmpty(sourceSiteUrl))
+        if (!string.IsNullOrEmpty(lookupListId) && !string.IsNullOrEmpty(sourceSiteUrl))
         {
-            // A lookup can point at a list in another web of the same site collection. The source web
-            // is found from the column's WebId; the same relative web is used at the target.
             var srcLookupWeb = sourceSiteUrl.TrimEnd('/');
             var tgtLookupWeb = siteUrl.TrimEnd('/');
-            if (!string.IsNullOrEmpty(col.LookupWebId))
+            if (!string.IsNullOrEmpty(lookupWebId))
             {
                 var ownWebId = await GetWebIdAsync(srcLookupWeb);
-                if (ownWebId != null && !string.Equals(ownWebId, col.LookupWebId, StringComparison.OrdinalIgnoreCase))
+                if (ownWebId != null && !string.Equals(ownWebId, lookupWebId, StringComparison.OrdinalIgnoreCase))
                 {
                     var (ok, body) = await SpRestAsync(HttpMethod.Get,
-                        $"{srcLookupWeb}/_api/site/openWebById('{col.LookupWebId}')?$select=Url", srcLookupWeb);
+                        $"{srcLookupWeb}/_api/site/openWebById('{lookupWebId}')?$select=Url", srcLookupWeb);
                     if (ok)
                     {
                         using var d = JsonDocument.Parse(body);
@@ -1239,7 +1396,7 @@ public class LibraryCopyService(SharePointService spService)
                 }
             }
 
-            var srcListTitle = await spService.GetListTitleByIdAsync(srcLookupWeb, col.LookupListId!);
+            var srcListTitle = await spService.GetListTitleByIdAsync(srcLookupWeb, lookupListId!);
             if (!string.IsNullOrEmpty(srcListTitle))
             {
                 targetLookupListId = await spService.GetListIdByTitleAsync(tgtLookupWeb, srcListTitle!);
@@ -1248,6 +1405,16 @@ public class LibraryCopyService(SharePointService spService)
                     targetLookupWebId = await GetWebIdAsync(tgtLookupWeb);
             }
         }
+        return (targetLookupListId, targetLookupWebId);
+    }
+
+    // Recreates a Lookup/LookupMulti column bound to the TARGET list equivalent to the source's
+    // lookup list (matched by title — the source column stores the source list's GUID, which is
+    // meaningless at the target). Throws with an actionable message when the list can't be
+    // resolved, instead of silently degrading the column to Text as the old fallthrough did.
+    private async Task CreateLookupColumnAsync(string siteUrl, string listId, ColumnDefinition col, string? sourceSiteUrl)
+    {
+        var (targetLookupListId, targetLookupWebId) = await ResolveTargetLookupAsync(siteUrl, sourceSiteUrl, col.LookupListId, col.LookupWebId);
         if (string.IsNullOrEmpty(targetLookupListId))
             throw new Exception(
                 Loc.T("Svc_Lib_LookupNotCreated", col.DisplayName));
@@ -1276,6 +1443,8 @@ public class LibraryCopyService(SharePointService spService)
         public bool ContentTypes { get; set; } = true;
         public bool ColumnRules { get; set; } = true;
         public bool Templates { get; set; } = true;
+        // Existing lists: also overwrite same-named views, the default view, list settings and column rules/formatting.
+        public bool UpdateExisting { get; set; } = false;
         public bool SiteDefinitions { get; set; } = true;
         public bool Navigation { get; set; } = true;
         public bool SiteSettings { get; set; } = true;
@@ -1401,7 +1570,10 @@ public class LibraryCopyService(SharePointService spService)
     private async Task PostCreateFieldAsXmlAsync(string siteUrl, string listId, string schemaXml, ColumnDefinition col)
     {
         var url  = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/fields/createfieldasxml";
-        var json = JsonSerializer.Serialize(new { parameters = new { SchemaXml = schemaXml } });
+        // Options 8 = use the Name in the XML as the internal name. Without it SharePoint derives the internal name from the
+        // DisplayName ("AssignedTo" became "Assigned_x0020_to"), and every view, filter and value writer that uses the
+        // source's internal name then misses the column.
+        var json = JsonSerializer.Serialize(new { parameters = new { SchemaXml = schemaXml, Options = 8 } });
 
         using var resp = await spService.SendSharePointRequestAsync(token =>
         {

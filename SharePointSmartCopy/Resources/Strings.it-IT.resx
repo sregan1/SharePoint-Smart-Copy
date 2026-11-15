@@ -1499,4 +1499,116 @@ Copiando di nuovo si crea una seconda copia di ciascuno. Continuare?</value></da
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. L'accesso può essere effettuato solo a questa directory.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Per connettere un sito di un altro tenant, scegli un'altra registrazione app in Impostazioni (con ID tenant vuoto o impostato su quel tenant) oppure usa la modalità Multi-tenant.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Solo struttura: vengono copiati colonne, viste, impostazioni e tipi di contenuto, ma nessun file né elemento di elenco.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Aggiorna anche le liste già esistenti nella destinazione: sostituisce le viste con lo stesso nome (e la vista predefinita), le impostazioni della lista e le regole e la formattazione delle colonne</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Aggiorna liste esistenti</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Lista esistente aggiornata per corrispondere all&apos;origine.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Escludi dai flussi (non presente nella destinazione)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Esclusa dai flussi</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} colonna/e verranno escluse dai passaggi dei flussi perché la lista di destinazione non ha questa colonna: {1}. Aggiungi la colonna alla lista di destinazione e fai di nuovo clic su Verifica, oppure scegli un&apos;altra colonna, per mantenerla.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>La colonna &quot;{0}&quot; non esiste nella lista di destinazione &quot;{1}&quot;, quindi i passaggi dei flussi non la scrivono più. Aggiungi la colonna alla lista ed esegui di nuovo, oppure aggiungi il campo a questi passaggi in Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>Nella lista di destinazione &quot;{0}&quot;, le colonne {1} sono tutte mappate a &quot;{2}&quot; nel passaggio &quot;{4}&quot; di &quot;{3}&quot;. Scegli un&apos;altra colonna di destinazione per tutte tranne una, oppure escludi le altre.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Da rivedere: la lista di destinazione non ha una colonna per questi campi, quindi i passaggi non li scrivono più. I valori che contenevano non vengono salvati da nessuna parte nella destinazione.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Questo modulo non si trova nel tenant con cui hai effettuato l&apos;accesso</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Accedi…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Ogni connessione viene associata a una delle tue connessioni esistenti nella destinazione. Quelle senza corrispondenza restano da impostare in Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Le connessioni non vengono associate: imposta ciascuna in Power Automate dopo la creazione dei flussi.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Vista &apos;{0}&apos;: impossibile applicare l&apos;impostazione {1}: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Vista &quot;{0}&quot;: il filtro, l&apos;ordinamento o il raggruppamento su colonne che la destinazione non ha è stato escluso ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Colonne sito di ricerca non create perché la loro lista non è nella destinazione: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Colonne sito di ricerca</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Copia da un ambiente Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Usa pacchetti esportati (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Scegli i flussi nell&apos;ambiente di origine e lo strumento li crea nell&apos;ambiente di destinazione, già puntati ai siti, alle liste e ai moduli della destinazione. I flussi vengono creati disattivati, quindi nulla viene eseguito finché non li hai verificati.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Accedi e carica gli ambienti</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Copia da (ambiente di origine)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Accedi al tenant di destinazione</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>La destinazione è un altro tenant: accedi con un account che può creare flussi al suo interno, poi scegli l&apos;ambiente.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Copia in (ambiente di destinazione)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Seleziona tutto</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Deseleziona tutto</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Caricamento degli ambienti...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Caricamento dei flussi...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Nessun flusso trovato in {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} flussi in {1}. Seleziona quelli da copiare.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Nessuno dei flussi selezionati ha potuto essere letto.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Creazione dei flussi nella destinazione...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Crea flussi nella destinazione</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Ogni flusso viene creato disattivato nell&apos;ambiente di destinazione, quindi nulla viene eseguito finché non lo verifichi. Il report viene salvato nella cartella qui sotto.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Usa le mie connessioni esistenti nell&apos;ambiente di destinazione quando ce n&apos;è una</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} flussi verranno creati in {2} (copiati da {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>I flussi vengono creati disattivati. Attiva ciascuno dopo la verifica.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Trovati {0} ambienti di origine e {1} di destinazione.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Lettura di {0} flussi da {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Creazione di {0} flussi in {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Impossibile associare le connessioni, quindi i flussi vengono creati senza di esse. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Creato {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Creato (disattivato)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Creato, {0} connessione/i da impostare</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} connessione/i non sono state associate a una connessione nella destinazione. Apri ogni flusso in Power Automate e seleziona una connessione.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>Impossibile creare {0} flussi. Il motivo è indicato nel registro attività.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>La registrazione dell&apos;app non ha ancora l&apos;autorizzazione per Power Automate (o Power Apps). Chiedi a un amministratore di aggiungerla e concedere il consenso, poi riprova.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Al tuo account manca un ruolo di sicurezza Dataverse nell&apos;ambiente di destinazione ({0}). Chiedi a un amministratore di assegnarti il ruolo Environment Maker (o System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Il tuo account non ha accesso a questo ambiente o flusso.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>La destinazione ha rifiutato il flusso: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Ambiente o flusso non trovato.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate ha restituito un errore: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Completato: {0} flussi creati</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Creati in {0}, disattivati. Nulla punta più all&apos;origine.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Completato: {0} flussi creati, alcuni elementi richiedono la tua verifica</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Creati in {0}, disattivati. Apri il report per vedere i valori che puntano ancora all&apos;origine, le connessioni da impostare e gli elementi che lo strumento non riscrive.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Apri il report e controlla ciò che è contrassegnato da rivedere.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>In Power Automate (destinazione), apri ogni nuovo flusso, correggi le connessioni segnalate e attivalo.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Testa ogni flusso prima di disattivare l&apos;originale nell&apos;origine.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Il file degli ID modulo salvati è in uso (da un&apos;altra copia dell&apos;app o da un altro programma). Riprova tra un momento.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Annullato prima del controllo delle immagini: verifica lo sfondo, il logo e l&apos;immagine di intestazione della copia.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Scegli prima l&apos;ambiente di destinazione nel passaggio Pacchetti.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>L&apos;origine e la destinazione sono lo stesso ambiente ({0}), quindi le copie verranno create accanto ai flussi originali. Continuare?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Già creato (tentativo precedente)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Annullato. {0} flussi sono stati creati prima dell&apos;annullamento; il report li elenca.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} flussi erano già stati creati in un tentativo precedente e non sono stati creati di nuovo.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} flussi sono stati selezionati dopo la scansione e non sono stati creati. Torna a Pacchetti e premi Avanti per includerli.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Annullato: {0} flussi non sono stati creati.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Da rivedere: queste colonne sono state escluse dai passaggi perché la lista di destinazione non le ha, ma un passaggio filtra, ordina o seleziona ancora su di esse. L&apos;importazione funziona; quel passaggio non riesce all&apos;esecuzione del flusso finché la sua query non viene modificata in Power Automate o la colonna non viene aggiunta alla lista.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Da rivedere: questo file di flusso non ha potuto essere letto, quindi è stato copiato invariato nel nuovo pacchetto e punta ancora all&apos;origine.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} riferimento/i di query indicano ancora una colonna esclusa perché la lista di destinazione non la ha. Questi passaggi non riescono all&apos;esecuzione del flusso; cambia il loro filtro o ordinamento in Power Automate oppure aggiungi la colonna alla lista.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>La richiesta a Power Automate è scaduta. Controlla la connessione e riprova.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>I miei flussi (non in una soluzione)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Lettura delle soluzioni dell&apos;ambiente di destinazione…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Impossibile leggere le soluzioni dell&apos;ambiente di destinazione, quindi i flussi verranno creati fuori da qualsiasi soluzione: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Crea in</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Scegli una soluzione per creare i flussi al suo interno (così sono compatibili con le soluzioni e possono spostarsi con la soluzione). Ogni connessione usa il riferimento di connessione corrispondente della destinazione; se non ce n&apos;è nessuno, ne viene aggiunto uno alla soluzione.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Creato (disattivato) nella soluzione {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>La richiesta è scaduta.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>le opzioni differiscono</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} di {1} opzioni</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} domanda/e hanno immagini (nella domanda o nelle sue scelte). Vengono copiate come collegamenti alle immagini del modulo di origine, quindi non vengono più mostrate se il modulo di origine viene eliminato o se la copia è in un altro tenant. Aggiungi di nuovo queste immagini nella copia.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Risposte</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Modulo {0} di {1}: {2} (domanda {3} di {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} min {1} s</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} s</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - migrato</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Digita l&apos;indirizzo del sito di destinazione, ad es. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: la connessione {1} usa &quot;{2}&quot; nella destinazione.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Connessioni usate nella destinazione</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>Nella lista di destinazione &quot;{0}&quot;, le colonne {1} sono tutte mappate a &quot;{2}&quot; in {3} passaggi (ad esempio il passaggio &quot;{5}&quot; di &quot;{4}&quot;). Scegli un&apos;altra colonna di destinazione per tutte tranne una, oppure escludi le altre.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} flussi non sono stati tentati: la copia si è interrotta dopo un errore che farebbe fallire allo stesso modo tutti i flussi rimanenti (vedi il registro attività). Correggilo e premi di nuovo Scrittura; i flussi già creati vengono ignorati.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Nessun sito di destinazione è stato digitato, quindi ogni sito resta com&apos;è. Digita almeno un sito di destinazione nella colonna A, oppure premi di nuovo Avanti per lasciare i siti invariati.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Nessuna corrispondenza: &quot;{0}&quot; è già usata da {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Esclusa: &quot;{0}&quot; è già usata da {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} colonna/e verranno escluse dai passaggi dei flussi perché la colonna di destinazione a cui corrispondono è già usata da un&apos;altra colonna (tra parentesi): {1}. Cambia la destinazione di una delle due colonne se non è quello che vuoi.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>La colonna &quot;{0}&quot; è esclusa dai passaggi su &quot;{1}&quot;: la sua colonna di destinazione &quot;{2}&quot; è già scritta da &quot;{3}&quot;. Cambia la destinazione di una delle due colonne nel passaggio Liste e colonne se non è quello che vuoi.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Cartella del report</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>La copia live crea i flussi direttamente nell&apos;ambiente di destinazione, quindi nessun file di flusso viene salvato su questo computer. Questa cartella riceve solo il report di copia: una pagina web e un file di testo che elencano cosa è stato modificato in ogni flusso, le colonne omesse, le connessioni abbinate e ciò che richiede ancora la tua verifica. Conservala insieme ai tuoi registri di migrazione. È l&apos;unica registrazione scritta di ciò che è stato modificato.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Ogni flusso viene creato disattivato nell&apos;ambiente di destinazione, quindi nulla viene eseguito finché non lo verifichi.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Scegli prima una cartella per il report.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Copia flussi</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Copia i flussi nella destinazione</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Controlla l&apos;elenco qui sotto, scegli dove salvare il report, quindi copia i flussi.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Lo strumento applica il tuo mapping a una copia di ogni flusso e lo crea disattivato nell&apos;ambiente di destinazione, quindi nulla viene eseguito finché non lo hai verificato. I flussi originali non vengono modificati. Un report di tutto ciò che è stato modificato, omesso o richiede ancora la tua verifica viene salvato nella cartella del report. Poi apri ogni nuovo flusso in Power Automate, correggi le connessioni segnalate e attivalo.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Pronto per copiare?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Accedi al tenant di destinazione per elencarne gli ambienti</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Carica prima gli ambienti</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Nessun ambiente Power Automate trovato per l&apos;account di destinazione. Serve una licenza Power Automate o l&apos;accesso a un ambiente al suo interno. Prova ad accedere di nuovo con un altro account.</value></data>
 </root>

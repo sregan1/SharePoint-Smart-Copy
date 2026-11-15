@@ -1499,4 +1499,116 @@ Beim erneuten Kopieren wird von jedem eine zweite Kopie erstellt. Fortfahren?</v
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Mandant: {0}. Die Anmeldung kann nur bei diesem Verzeichnis erfolgen.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Um eine Website in einem anderen Mandanten zu verbinden, wählen Sie in den Einstellungen eine andere App-Registrierung aus (mit leerer Mandanten-ID oder auf diesen Mandanten festgelegt) oder verwenden Sie den Modus Mehrere Mandanten.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Nur Struktur: Spalten, Ansichten, Einstellungen und Inhaltstypen werden kopiert, jedoch keine Dateien oder Listenelemente.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Aktualisieren Sie auch Listen, die im Ziel bereits vorhanden sind: Ansichten mit gleichem Namen (und die Standardansicht), Listeneinstellungen sowie Spaltenregeln und -formatierung werden ersetzt</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Vorhandene Listen aktualisieren</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Vorhandene Liste wurde an die Quelle angepasst.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Aus den Flows weglassen (nicht im Ziel)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Aus den Flows weggelassen</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} Spalte(n) werden aus den Schritten der Flows weggelassen, weil die Zielliste keine solche Spalte hat: {1}. Fügen Sie die Spalte der Zielliste hinzu und klicken Sie erneut auf „Prüfen“ oder wählen Sie eine andere Spalte, um sie beizubehalten.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Die Spalte &quot;{0}&quot; existiert in der Zielliste &quot;{1}&quot; nicht, daher schreiben die Schritte der Flows sie nicht mehr. Fügen Sie die Spalte der Liste hinzu und führen Sie dies erneut aus, oder fügen Sie das Feld in Power Automate zu diesen Schritten hinzu.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>In der Zielliste &quot;{0}&quot; sind die Spalten {1} im Schritt &quot;{4}&quot; von &quot;{3}&quot; alle &quot;{2}&quot; zugeordnet. Wählen Sie für alle bis auf eine eine andere Zielspalte oder lassen Sie die übrigen weg.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Prüfen: Die Zielliste hat keine Spalte für diese Felder, daher schreiben die Schritte sie nicht mehr. Die darin enthaltenen Werte werden im Ziel nirgends gespeichert.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Dieses Formular befindet sich nicht in dem Mandanten, bei dem Sie angemeldet sind</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Anmelden…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Jede Verbindung wird einer Ihrer vorhandenen Verbindungen im Ziel zugeordnet. Verbindungen ohne Entsprechung müssen Sie selbst in Power Automate festlegen.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Verbindungen werden nicht zugeordnet: Legen Sie jede Verbindung in Power Automate fest, nachdem die Flows erstellt wurden.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Ansicht &apos;{0}&apos;: Die Einstellung {1} konnte nicht angewendet werden: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Ansicht &quot;{0}&quot;: Filter, Sortierung oder Gruppierung nach Spalten, die das Ziel nicht hat, wurden weggelassen ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Nachschlage-Sitespalten wurden nicht erstellt, weil ihre Liste nicht im Ziel vorhanden ist: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Nachschlage-Sitespalten</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Aus einer Power Automate-Umgebung kopieren</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Exportierte Pakete (.zip) verwenden</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Wählen Sie Flows in der Quellumgebung aus, und das Tool erstellt sie in der Zielumgebung, bereits mit Verweisen auf die Sites, Listen und Formulare des Ziels. Flows werden ausgeschaltet erstellt, daher wird nichts ausgeführt, bevor Sie es geprüft haben.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Anmelden und Umgebungen laden</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Kopieren von (Quellumgebung)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Beim Zielmandanten anmelden</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Das Ziel ist ein anderer Mandant: Melden Sie sich mit einem Konto an, das dort Flows erstellen kann, und wählen Sie dann die Umgebung.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Kopieren nach (Zielumgebung)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Alle auswählen</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Keine auswählen</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Umgebungen werden geladen...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Flows werden geladen...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Keine Flows in {0} gefunden.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{1} enthält {0} Flows. Aktivieren Sie die Kontrollkästchen der zu kopierenden.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Keiner der ausgewählten Flows konnte gelesen werden.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Flows werden im Ziel erstellt...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Flows im Ziel erstellen</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Jeder Flow wird in der Zielumgebung ausgeschaltet erstellt, daher wird nichts ausgeführt, bevor Sie ihn prüfen. Der Bericht wird im Ordner unten gespeichert.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Meine vorhandenen Verbindungen in der Zielumgebung verwenden, sofern vorhanden</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} Flow(s) werden in {2} erstellt (kopiert aus {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Flows werden ausgeschaltet erstellt. Schalten Sie jeden Flow nach der Prüfung ein.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>{0} Quell- und {1} Zielumgebung(en) gefunden.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>{0} Flow(s) werden aus {1} gelesen</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>{0} Flow(s) werden in {1} erstellt</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Verbindungen konnten nicht zugeordnet werden, daher werden die Flows ohne sie erstellt. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>{0} erstellt</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Erstellt (ausgeschaltet)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Erstellt, {0} Verbindung(en) festzulegen</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} Verbindung(en) wurden keiner Verbindung im Ziel zugeordnet. Öffnen Sie jeden Flow in Power Automate und wählen Sie eine Verbindung aus.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} Flow(s) konnten nicht erstellt werden. Den Grund finden Sie im Aktivitätsprotokoll.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Die App-Registrierung hat die Berechtigung für Power Automate (oder Power Apps) noch nicht. Bitten Sie einen Administrator, sie hinzuzufügen und die Zustimmung zu erteilen, und versuchen Sie es dann erneut.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Ihrem Konto fehlt in der Zielumgebung eine Dataverse-Sicherheitsrolle ({0}). Bitten Sie einen Administrator, Ihnen die Rolle „Environment Maker“ (oder „System Administrator“) zuzuweisen.</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Ihr Konto hat keinen Zugriff auf diese Umgebung oder diesen Flow.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Das Ziel hat den Flow abgelehnt: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Die Umgebung oder der Flow wurde nicht gefunden.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate hat einen Fehler zurückgegeben: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Fertig: {0} Flow(s) erstellt</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>In {0} erstellt, ausgeschaltet. Nichts verweist mehr auf die Quelle.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Fertig: {0} Flow(s) erstellt, einige Elemente müssen geprüft werden</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>In {0} erstellt, ausgeschaltet. Öffnen Sie den Bericht, um Werte zu sehen, die noch auf die Quelle verweisen, festzulegende Verbindungen und Elemente, die das Tool nicht umschreibt.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Öffnen Sie den Bericht und prüfen Sie, was zur Prüfung markiert ist.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Öffnen Sie in Power Automate (Ziel) jeden neuen Flow, beheben Sie jede gemeldete Verbindung und schalten Sie ihn ein.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Testen Sie jeden Flow, bevor Sie das Original in der Quelle ausschalten.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Die gespeicherte Datei mit den Formular-IDs wird verwendet (von einer anderen Kopie der App oder einem anderen Programm). Versuchen Sie es gleich noch einmal.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Abgebrochen, bevor die Bilder geprüft wurden: Prüfen Sie Hintergrund, Logo und Kopfzeilenbild der Kopie.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Wählen Sie zuerst im Schritt „Pakete“ die Zielumgebung.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Quelle und Ziel sind dieselbe Umgebung ({0}), daher werden die Kopien neben den ursprünglichen Flows erstellt. Fortfahren?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Bereits erstellt (früherer Versuch)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Abgebrochen. {0} Flow(s) wurden vor dem Abbruch erstellt; der Bericht listet sie auf.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} Flow(s) waren bereits bei einem früheren Versuch erstellt worden und wurden nicht erneut erstellt.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} Flow(s) wurden nach dem Scan aktiviert und nicht erstellt. Gehen Sie zurück zu „Pakete“ und klicken Sie auf „Weiter“, um sie einzubeziehen.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Abgebrochen: {0} Flow(s) wurden nicht erstellt.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Prüfen: Diese Spalten wurden aus den Schritten weggelassen, weil die Zielliste sie nicht hat, aber ein Schritt filtert, sortiert oder wählt noch danach aus. Der Import funktioniert; dieser Schritt schlägt bei der Ausführung des Flows fehl, bis seine Abfrage in Power Automate geändert oder die Spalte der Liste hinzugefügt wird.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Prüfen: Diese Flow-Datei konnte nicht gelesen werden, daher wurde sie unverändert in das neue Paket kopiert und verweist weiterhin auf die Quelle.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} Abfrageverweis(e) nennen noch eine Spalte, die weggelassen wurde, weil die Zielliste sie nicht hat. Diese Schritte schlagen bei der Ausführung des Flows fehl; ändern Sie ihren Filter oder ihre Sortierung in Power Automate oder fügen Sie die Spalte der Liste hinzu.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Die Anforderung an Power Automate ist abgelaufen. Prüfen Sie die Verbindung und versuchen Sie es erneut.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Meine Flows (nicht in einer Lösung)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Lösungen der Zielumgebung werden gelesen…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Die Lösungen der Zielumgebung konnten nicht gelesen werden, daher werden die Flows außerhalb jeder Lösung erstellt: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Erstellen in</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Wählen Sie eine Lösung, um die Flows darin zu erstellen (sie sind dann lösungsbezogen und können mit der Lösung verschoben werden). Jede Verbindung verwendet den passenden Verbindungsverweis des Ziels; falls keiner vorhanden ist, wird einer zur Lösung hinzugefügt.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Erstellt (aus) in der Lösung {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Die Anforderung ist abgelaufen.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>Optionen unterscheiden sich</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} von {1} Optionen</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} Frage(n) enthalten Bilder (bei der Frage oder ihren Antworten). Sie werden als Links zu den Bildern des Quellformulars kopiert und werden daher nicht mehr angezeigt, wenn das Quellformular gelöscht wird oder die Kopie in einem anderen Mandanten liegt. Fügen Sie diese Bilder in der Kopie erneut hinzu.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Antworten</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Formular {0} von {1}: {2} (Frage {3} von {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} Min. {1} Sek.</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} Sek.</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - migriert</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Geben Sie die Adresse der Zielsite ein, z. B. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: Die Verbindung {1} verwendet im Ziel &quot;{2}&quot;.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Im Ziel verwendete Verbindungen</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>In der Zielliste &quot;{0}&quot; sind die Spalten {1} in {3} Schritten alle &quot;{2}&quot; zugeordnet (zum Beispiel im Schritt &quot;{5}&quot; von &quot;{4}&quot;). Wählen Sie für alle bis auf eine eine andere Zielspalte oder lassen Sie die übrigen weg.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} Flow(s) wurden nicht versucht: Das Kopieren wurde nach einem Fehler beendet, der jeden verbleibenden Flow auf dieselbe Weise fehlschlagen lassen würde (siehe Aktivitätsprotokoll). Beheben Sie ihn und drücken Sie erneut auf Schreiben; bereits erstellte Flows werden übersprungen.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Es ist keine Ziel-Site eingegeben, daher bleibt jede Site, wie sie ist. Geben Sie mindestens eine Ziel-Site in der Spalte Nach ein, oder drücken Sie erneut auf Weiter, um die Sites unverändert zu lassen.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Keine Übereinstimmung: &quot;{0}&quot; wird bereits von {1} verwendet</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Weggelassen: &quot;{0}&quot; wird bereits von {1} verwendet</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} Spalte(n) werden aus den Schritten der Flows weggelassen, weil die ihnen zugeordnete Zielspalte bereits von einer anderen Spalte verwendet wird (in Klammern): {1}. Ändern Sie das Ziel einer der beiden Spalten, wenn Sie das nicht möchten.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Die Spalte &quot;{0}&quot; wird aus den Schritten für &quot;{1}&quot; weggelassen: Ihre Zielspalte &quot;{2}&quot; wird bereits von &quot;{3}&quot; geschrieben. Ändern Sie das Ziel einer der beiden Spalten im Schritt „Listen und Spalten“, wenn Sie das nicht möchten.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Berichtsordner</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Beim Live-Kopieren werden die Flows direkt in der Zielumgebung erstellt, daher werden keine Flowdateien auf diesem Computer gespeichert. Dieser Ordner erhält nur den Kopierbericht: eine Webseite und eine Textdatei mit einer Auflistung, was in jedem Flow geändert wurde, welche Spalten ausgelassen wurden, welche Verbindungen zugeordnet wurden und was noch Ihrer Prüfung bedarf. Bewahren Sie ihn zusammen mit Ihren Migrationsunterlagen auf. Er ist die einzige schriftliche Aufzeichnung der vorgenommenen Änderungen.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Jeder Flow wird in der Zielumgebung ausgeschaltet erstellt, daher wird nichts ausgeführt, bevor Sie ihn prüfen.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Wählen Sie zuerst einen Berichtsordner aus.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Flows kopieren</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Flows in das Ziel kopieren</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Prüfen Sie die Liste unten, wählen Sie den Speicherort für den Bericht aus und kopieren Sie dann die Flows.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Das Tool wendet Ihre Zuordnung auf eine Kopie jedes Flows an und erstellt ihn ausgeschaltet in der Zielumgebung, daher wird nichts ausgeführt, bevor Sie ihn geprüft haben. Ihre ursprünglichen Flows werden nicht geändert. Ein Bericht über alles, was geändert oder ausgelassen wurde oder noch Ihrer Prüfung bedarf, wird im Berichtsordner gespeichert. Öffnen Sie anschließend jeden neuen Flow in Power Automate, beheben Sie alle markierten Verbindungen und schalten Sie ihn ein.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Bereit zum Kopieren?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Beim Zielmandanten anmelden, um dessen Umgebungen aufzulisten</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Zuerst die Umgebungen laden</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Für das Zielkonto wurden keine Power Automate-Umgebungen gefunden. Es benötigt eine Power Automate-Lizenz oder Zugriff auf eine Umgebung dort. Melden Sie sich erneut mit einem anderen Konto an.</value></data>
 </root>

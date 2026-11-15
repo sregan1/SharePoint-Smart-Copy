@@ -1499,4 +1499,116 @@
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>ผู้เช่า: {0} การลงชื่อเข้าใช้ทำได้เฉพาะไดเรกทอรีนี้เท่านั้น</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>หากต้องการเชื่อมต่อไซต์ในผู้เช่ารายอื่น ให้เลือกการลงทะเบียนแอปอื่นในการตั้งค่า (โดยให้ Tenant ID ว่างไว้หรือตั้งเป็นผู้เช่ารายนั้น) หรือใช้โหมดหลายผู้เช่า</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>เฉพาะโครงสร้าง: ระบบจะคัดลอกคอลัมน์ มุมมอง การตั้งค่า และประเภทเนื้อหา แต่จะไม่คัดลอกไฟล์หรือรายการในรายการ</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>อัปเดตรายการที่มีอยู่แล้วในปลายทางด้วย: แทนที่มุมมองที่มีชื่อเดียวกัน (และมุมมองเริ่มต้น) การตั้งค่ารายการ และกฎและการจัดรูปแบบของคอลัมน์</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>อัปเดตรายการที่มีอยู่</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>อัปเดตรายการที่มีอยู่ให้ตรงกับต้นทางแล้ว</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>ละไว้จากโฟลว์ (ไม่มีในปลายทาง)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>ละไว้จากโฟลว์</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>คอลัมน์ {0} รายการจะถูกละไว้จากขั้นตอนของโฟลว์ เพราะรายการปลายทางไม่มีคอลัมน์ดังกล่าว: {1} เพิ่มคอลัมน์ลงในรายการปลายทางแล้วคลิกตรวจสอบอีกครั้ง หรือเลือกคอลัมน์อื่นเพื่อเก็บไว้</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>คอลัมน์ &quot;{0}&quot; ไม่มีในรายการปลายทาง &quot;{1}&quot; ขั้นตอนของโฟลว์จึงไม่เขียนคอลัมน์นี้อีกต่อไป เพิ่มคอลัมน์ลงในรายการแล้วเรียกใช้อีกครั้ง หรือเพิ่มฟิลด์ลงในขั้นตอนเหล่านั้นใน Power Automate</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>ในรายการปลายทาง &quot;{0}&quot; คอลัมน์ {1} ถูกแมปไปยัง &quot;{2}&quot; ทั้งหมดในขั้นตอน &quot;{4}&quot; ของ &quot;{3}&quot; เลือกคอลัมน์ปลายทางอื่นสำหรับทุกคอลัมน์ยกเว้นหนึ่งคอลัมน์ หรือละคอลัมน์ที่เหลือไว้</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>ตรวจสอบ: รายการปลายทางไม่มีคอลัมน์สำหรับฟิลด์เหล่านี้ ขั้นตอนจึงไม่เขียนฟิลด์เหล่านี้อีกต่อไป ค่าที่ฟิลด์เหล่านั้นมีอยู่จะไม่ถูกบันทึกไว้ที่ใดในปลายทาง</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>ฟอร์มนี้ไม่ได้อยู่ในผู้เช่าที่คุณลงชื่อเข้าใช้</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>ลงชื่อเข้าใช้…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>การเชื่อมต่อแต่ละรายการจะถูกจับคู่กับการเชื่อมต่อที่มีอยู่ของคุณในปลายทาง รายการที่ไม่มีคู่จะปล่อยให้คุณตั้งค่าใน Power Automate</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>ไม่มีการจับคู่การเชื่อมต่อ: ตั้งค่าแต่ละรายการใน Power Automate หลังจากสร้างโฟลว์แล้ว</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>มุมมอง &apos;{0}&apos;: ไม่สามารถใช้การตั้งค่า {1} ได้: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>มุมมอง &quot;{0}&quot;: ตัวกรอง การเรียงลำดับ หรือการจัดกลุ่มบนคอลัมน์ที่ปลายทางไม่มีถูกละไว้ ({1})</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>ไม่ได้สร้างคอลัมน์ไซต์การค้นหา เพราะรายการของคอลัมน์เหล่านั้นไม่อยู่ในปลายทาง: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>คอลัมน์ไซต์การค้นหา</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>คัดลอกจากสภาพแวดล้อม Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>ใช้แพ็กเกจที่ส่งออก (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>เลือกโฟลว์ในสภาพแวดล้อมต้นทาง แล้วเครื่องมือจะสร้างโฟลว์เหล่านั้นในสภาพแวดล้อมปลายทาง โดยชี้ไปยังไซต์ รายการ และฟอร์มของปลายทางอยู่แล้ว โฟลว์จะถูกสร้างแบบปิดอยู่ จึงไม่มีอะไรทำงานจนกว่าคุณจะตรวจสอบ</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>ลงชื่อเข้าใช้และโหลดสภาพแวดล้อม</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>คัดลอกจาก (สภาพแวดล้อมต้นทาง)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>ลงชื่อเข้าใช้ผู้เช่าปลายทาง</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>ปลายทางเป็นผู้เช่าอื่น: ลงชื่อเข้าใช้ด้วยบัญชีที่สร้างโฟลว์ที่นั่นได้ แล้วเลือกสภาพแวดล้อม</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>คัดลอกไปยัง (สภาพแวดล้อมปลายทาง)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>เลือกทั้งหมด</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>ไม่เลือกเลย</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>กำลังโหลดสภาพแวดล้อม...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>กำลังโหลดโฟลว์...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>ไม่พบโฟลว์ใน {0}</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} โฟลว์ใน {1} ทำเครื่องหมายรายการที่ต้องการคัดลอก</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>ไม่สามารถอ่านโฟลว์ที่เลือกได้เลย</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>กำลังสร้างโฟลว์ในปลายทาง...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>สร้างโฟลว์ในปลายทาง</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>โฟลว์แต่ละรายการจะถูกสร้างในสภาพแวดล้อมปลายทางแบบปิดอยู่ จึงไม่มีอะไรทำงานจนกว่าคุณจะตรวจสอบ รายงานจะถูกบันทึกในโฟลเดอร์ด้านล่าง</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>ใช้การเชื่อมต่อที่มีอยู่ของฉันในสภาพแวดล้อมปลายทางเมื่อมี</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>จะสร้าง {0} โฟลว์ใน {2} (คัดลอกจาก {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>โฟลว์ถูกสร้างแบบปิดอยู่ เปิดแต่ละรายการหลังจากตรวจสอบแล้ว</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>พบสภาพแวดล้อมต้นทาง {0} รายการและปลายทาง {1} รายการ</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>กำลังอ่าน {0} โฟลว์จาก {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>กำลังสร้าง {0} โฟลว์ใน {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>ไม่สามารถจับคู่การเชื่อมต่อได้ จึงสร้างโฟลว์โดยไม่มีการเชื่อมต่อ {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>สร้าง {0} แล้ว</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>สร้างแล้ว (ปิดอยู่)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>สร้างแล้ว ต้องตั้งค่า {0} การเชื่อมต่อ</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} การเชื่อมต่อไม่ได้จับคู่กับการเชื่อมต่อในปลายทาง เปิดแต่ละโฟลว์ใน Power Automate แล้วเลือกการเชื่อมต่อ</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>ไม่สามารถสร้าง {0} โฟลว์ได้ ดูสาเหตุในบันทึกกิจกรรม</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>การลงทะเบียนแอปยังไม่มีสิทธิ์ของ Power Automate (หรือ Power Apps) ขอให้ผู้ดูแลระบบเพิ่มสิทธิ์และให้ความยินยอม แล้วลองอีกครั้ง</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>บัญชีของคุณไม่มีบทบาทความปลอดภัยของ Dataverse ในสภาพแวดล้อมปลายทาง ({0}) ขอให้ผู้ดูแลระบบมอบบทบาท Environment Maker (หรือ System Administrator) ให้คุณ</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>บัญชีของคุณไม่มีสิทธิ์เข้าถึงสภาพแวดล้อมหรือโฟลว์นี้</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>ปลายทางปฏิเสธโฟลว์: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>ไม่พบสภาพแวดล้อมหรือโฟลว์</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate ส่งคืนข้อผิดพลาด: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>เสร็จสิ้น: สร้าง {0} โฟลว์แล้ว</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>สร้างใน {0} แล้ว ปิดอยู่ ไม่มีสิ่งใดเหลือที่ชี้ไปยังต้นทาง</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>เสร็จสิ้น: สร้าง {0} โฟลว์แล้ว บางรายการต้องให้คุณตรวจสอบ</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>สร้างใน {0} แล้ว ปิดอยู่ เปิดรายงานเพื่อดูค่าที่ยังชี้ไปยังต้นทาง การเชื่อมต่อที่ต้องตั้งค่า และรายการที่เครื่องมือไม่เขียนใหม่</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>เปิดรายงานและตรวจสอบรายการที่ทำเครื่องหมายให้ตรวจสอบ</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>ใน Power Automate (ปลายทาง) เปิดแต่ละโฟลว์ใหม่ แก้ไขการเชื่อมต่อที่ระบุ แล้วเปิดโฟลว์</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>ทดสอบแต่ละโฟลว์ก่อนปิดโฟลว์ต้นฉบับในต้นทาง</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>ไฟล์รหัสฟอร์มที่บันทึกไว้กำลังถูกใช้งาน (โดยแอปอีกสำเนาหนึ่งหรือโปรแกรมอื่น) ลองอีกครั้งในอีกสักครู่</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>ยกเลิกก่อนตรวจสอบรูปภาพ: ดูพื้นหลัง โลโก้ และรูปภาพส่วนหัวของสำเนา</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>เลือกสภาพแวดล้อมปลายทางในขั้นตอนแพ็กเกจก่อน</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>ต้นทางและปลายทางเป็นสภาพแวดล้อมเดียวกัน ({0}) สำเนาจึงจะถูกสร้างไว้ข้างโฟลว์ต้นฉบับ ดำเนินการต่อหรือไม่</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>สร้างไว้แล้ว (ความพยายามก่อนหน้า)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>ยกเลิกแล้ว สร้าง {0} โฟลว์ไว้ก่อนการยกเลิก รายงานแสดงรายการเหล่านั้น</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} โฟลว์ถูกสร้างไว้แล้วในความพยายามก่อนหน้า และไม่ได้สร้างซ้ำ</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} โฟลว์ถูกทำเครื่องหมายหลังการสแกนและไม่ได้สร้าง กลับไปที่แพ็กเกจแล้วกดถัดไปเพื่อรวมโฟลว์เหล่านั้น</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>ยกเลิกแล้ว: ไม่ได้สร้าง {0} โฟลว์</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>ตรวจสอบ: คอลัมน์เหล่านี้ถูกละไว้จากขั้นตอน เพราะรายการปลายทางไม่มีคอลัมน์เหล่านี้ แต่ยังมีขั้นตอนที่กรอง เรียงลำดับ หรือเลือกตามคอลัมน์เหล่านั้น การนำเข้าทำงานได้ แต่ขั้นตอนนั้นจะล้มเหลวเมื่อโฟลว์ทำงาน จนกว่าจะเปลี่ยนคิวรีใน Power Automate หรือเพิ่มคอลัมน์ลงในรายการ</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>ตรวจสอบ: ไม่สามารถอ่านไฟล์โฟลว์นี้ได้ จึงคัดลอกลงในแพ็กเกจใหม่โดยไม่เปลี่ยนแปลงและยังชี้ไปยังต้นทาง</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>การอ้างอิงคิวรี {0} รายการยังระบุคอลัมน์ที่ถูกละไว้ เพราะรายการปลายทางไม่มีคอลัมน์นี้ ขั้นตอนเหล่านั้นจะล้มเหลวเมื่อโฟลว์ทำงาน เปลี่ยนตัวกรองหรือการเรียงลำดับใน Power Automate หรือเพิ่มคอลัมน์ลงในรายการ</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>คำขอไปยัง Power Automate หมดเวลา ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>โฟลว์ของฉัน (ไม่อยู่ในโซลูชัน)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>กำลังอ่านโซลูชันของสภาพแวดล้อมปลายทาง…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>ไม่สามารถอ่านโซลูชันของสภาพแวดล้อมปลายทางได้ จึงจะสร้างโฟลว์นอกโซลูชันใด ๆ: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>สร้างใน</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>เลือกโซลูชันเพื่อสร้างโฟลว์ภายในโซลูชันนั้น (โฟลว์จะรับรู้โซลูชันและย้ายไปพร้อมโซลูชันได้) การเชื่อมต่อแต่ละรายการใช้การอ้างอิงการเชื่อมต่อที่ตรงกันของปลายทาง หากไม่มีจะเพิ่มหนึ่งรายการลงในโซลูชัน</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>สร้างแล้ว (ปิดอยู่) ในโซลูชัน {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>คำขอหมดเวลา</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>ตัวเลือกต่างกัน</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} จาก {1} ตัวเลือก</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} คำถามมีรูปภาพ (ในคำถามหรือตัวเลือก) รูปภาพถูกคัดลอกเป็นลิงก์ไปยังรูปภาพของฟอร์มต้นทาง จึงจะไม่แสดงอีกหากลบฟอร์มต้นทาง หรือเมื่อสำเนาอยู่ในผู้เช่าอื่น เพิ่มรูปภาพเหล่านั้นอีกครั้งในสำเนา</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>การตอบกลับ</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>ฟอร์ม {0} จาก {1}: {2} (คำถาม {3} จาก {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} นาที {1} วิ</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} วิ</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - ย้ายแล้ว</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>พิมพ์ที่อยู่ไซต์ปลายทาง เช่น https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: การเชื่อมต่อ {1} ใช้ &quot;{2}&quot; ในปลายทาง</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>การเชื่อมต่อที่ใช้ในปลายทาง</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>ในรายการปลายทาง &quot;{0}&quot; คอลัมน์ {1} ถูกแมปไปยัง &quot;{2}&quot; ทั้งหมดใน {3} ขั้นตอน (เช่น ขั้นตอน &quot;{5}&quot; ของ &quot;{4}&quot;) เลือกคอลัมน์ปลายทางอื่นสำหรับทุกคอลัมน์ยกเว้นหนึ่งคอลัมน์ หรือละคอลัมน์ที่เหลือไว้</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>ไม่ได้พยายามสร้าง {0} โฟลว์: การคัดลอกหยุดลงหลังเกิดข้อผิดพลาดที่จะทำให้โฟลว์ที่เหลือทั้งหมดล้มเหลวในแบบเดียวกัน (ดูบันทึกกิจกรรม) แก้ไขแล้วกด เขียน อีกครั้ง โฟลว์ที่สร้างไว้แล้วจะถูกข้าม</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>ไม่ได้พิมพ์ไซต์ปลายทางใด ๆ ไซต์ทั้งหมดจึงคงไว้ตามเดิม พิมพ์ไซต์ปลายทางอย่างน้อยหนึ่งไซต์ในคอลัมน์ ไปยัง หรือกด ถัดไป อีกครั้งเพื่อคงไซต์ไว้โดยไม่เปลี่ยนแปลง</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>ไม่มีรายการที่ตรงกัน: &quot;{0}&quot; ถูกใช้โดย {1} อยู่แล้ว</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>ละไว้: &quot;{0}&quot; ถูกใช้โดย {1} อยู่แล้ว</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>คอลัมน์ {0} รายการจะถูกละไว้จากขั้นตอนของโฟลว์ เพราะคอลัมน์ปลายทางที่ตรงกันถูกใช้โดยคอลัมน์อื่น (ในวงเล็บ) อยู่แล้ว: {1} หากไม่ต้องการเช่นนั้น ให้เปลี่ยนปลายทางของคอลัมน์ใดคอลัมน์หนึ่ง</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>คอลัมน์ &quot;{0}&quot; ถูกละไว้จากขั้นตอนใน &quot;{1}&quot;: คอลัมน์ปลายทาง &quot;{2}&quot; ถูกเขียนโดย &quot;{3}&quot; อยู่แล้ว หากไม่ต้องการเช่นนั้น ให้เปลี่ยนปลายทางของคอลัมน์ใดคอลัมน์หนึ่งในขั้นตอนรายการและคอลัมน์</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>โฟลเดอร์รายงาน</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>การคัดลอกแบบสดจะสร้างโฟลว์โดยตรงในสภาพแวดล้อมปลายทาง จึงไม่มีไฟล์โฟลว์ถูกบันทึกบนคอมพิวเตอร์เครื่องนี้ โฟลเดอร์นี้รับเฉพาะรายงานการคัดลอก ซึ่งเป็นหน้าเว็บและไฟล์ข้อความที่แสดงสิ่งที่เปลี่ยนแปลงในแต่ละโฟลว์ คอลัมน์ที่ถูกละไว้ การเชื่อมต่อที่จับคู่ได้ และสิ่งที่ยังต้องให้คุณตรวจสอบ โปรดเก็บไว้พร้อมบันทึกการย้ายข้อมูลของคุณ เพราะเป็นบันทึกที่เป็นลายลักษณ์อักษรเพียงรายการเดียวของสิ่งที่เปลี่ยนแปลง</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>โฟลว์แต่ละรายการจะถูกสร้างในสภาพแวดล้อมปลายทางแบบปิดอยู่ จึงไม่มีอะไรทำงานจนกว่าคุณจะตรวจสอบ</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>เลือกโฟลเดอร์รายงานก่อน</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>คัดลอกโฟลว์</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>คัดลอกโฟลว์ไปยังปลายทาง</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>ตรวจสอบรายการด้านล่าง เลือกตำแหน่งที่จะบันทึกรายงาน แล้วคัดลอกโฟลว์</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>เครื่องมือจะนำการแมปของคุณไปใช้กับสำเนาของแต่ละโฟลว์ และสร้างในสภาพแวดล้อมปลายทางแบบปิดอยู่ จึงไม่มีอะไรทำงานจนกว่าคุณจะตรวจสอบ โฟลว์ต้นฉบับของคุณจะไม่ถูกเปลี่ยนแปลง รายงานของทุกสิ่งที่เปลี่ยนแปลง ละไว้ หรือยังต้องตรวจสอบ จะถูกบันทึกในโฟลเดอร์รายงาน หลังจากนั้น ให้เปิดแต่ละโฟลว์ใหม่ใน Power Automate แก้ไขการเชื่อมต่อที่ถูกทำเครื่องหมาย แล้วเปิดโฟลว์</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>พร้อมคัดลอกหรือยัง</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>ลงชื่อเข้าใช้ผู้เช่าปลายทางเพื่อแสดงรายการสภาพแวดล้อม</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>โหลดสภาพแวดล้อมก่อน</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>ไม่พบสภาพแวดล้อม Power Automate สำหรับบัญชีปลายทาง ต้องมีใบอนุญาต Power Automate หรือสิทธิ์เข้าถึงสภาพแวดล้อมที่นั่น ลองลงชื่อเข้าใช้อีกครั้งด้วยบัญชีอื่น</value></data>
 </root>

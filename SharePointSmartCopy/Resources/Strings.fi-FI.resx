@@ -1499,4 +1499,116 @@ Uudelleen kopioiminen luo jokaisesta toisen kopion. Jatketaanko?</value></data>
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Vuokraaja: {0}. Kirjautuminen voi kohdistua vain tähän hakemistoon.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Jos haluat yhdistää sivuston toisessa vuokraajassa, valitse Asetuksissa toinen sovellusrekisteröinti (jonka Vuokraajan tunnus on tyhjä tai määritetty kyseiselle vuokraajalle) tai käytä Usea vuokraaja -tilaa.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Vain rakenne: sarakkeet, näkymät, asetukset ja sisältötyypit kopioidaan, mutta ei tiedostoja tai luettelon kohteita.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Päivitä myös kohteessa jo olevat luettelot: korvaa samannimiset näkymät (ja oletusnäkymä), luettelon asetukset sekä sarakesäännöt ja -muotoilut</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Päivitä olemassa olevat luettelot</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Olemassa oleva luettelo päivitettiin vastaamaan lähdettä.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Jätä pois työnkuluista (ei kohteessa)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Jätetty pois työnkuluista</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} saraketta jätetään pois työnkulkujen vaiheista, koska kohdeluettelossa ei ole sellaista saraketta: {1}. Säilytä ne lisäämällä sarake kohdeluetteloon ja valitsemalla Tarkista uudelleen tai valitse toinen sarake.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Saraketta &quot;{0}&quot; ei ole kohdeluettelossa &quot;{1}&quot;, joten työnkulkujen vaiheet eivät enää kirjoita sitä. Lisää sarake luetteloon ja suorita tämä uudelleen tai lisää kenttä näihin vaiheisiin Power Automatessa.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>Kohdeluettelossa &quot;{0}&quot; sarakkeet {1} on yhdistetty kaikki sarakkeeseen &quot;{2}&quot; työnkulun &quot;{3}&quot; vaiheessa &quot;{4}&quot;. Valitse kaikille paitsi yhdelle eri kohdesarake tai jätä muut pois.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Tarkista: kohdeluettelossa ei ole saraketta näille kentille, joten vaiheet eivät enää kirjoita niitä. Niiden sisältämiä arvoja ei tallenneta mihinkään kohteessa.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Tämä lomake ei ole vuokraajassa, johon olet kirjautunut</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Kirjaudu…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Jokainen yhteys yhdistetään johonkin nykyisistä yhteyksistäsi kohteessa. Ne, joille ei löydy vastinetta, jäävät sinun määritettäväksi Power Automatessa.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Yhteyksiä ei yhdistetä: määritä jokainen Power Automatessa työnkulkujen luomisen jälkeen.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Näkymä &quot;{0}&quot;: asetusta {1} ei voitu ottaa käyttöön: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Näkymä &quot;{0}&quot;: suodatin, lajittelu tai ryhmittely sarakkeilla, joita kohteessa ei ole, jätettiin pois ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Hakusivustosarakkeita ei luotu, koska niiden luetteloa ei ole kohteessa: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Hakusivustosarakkeet</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Kopioi Power Automate -ympäristöstä</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Käytä vietyjä paketteja (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Valitse työnkulut lähdeympäristöstä, niin työkalu luo ne kohdeympäristöön valmiiksi kohteen sivustoihin, luetteloihin ja lomakkeisiin osoittaen. Työnkulut luodaan pois päältä, joten mikään ei suoriteta ennen kuin olet tarkistanut ne.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Kirjaudu ja lataa ympäristöt</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Kopioi kohteesta (lähdeympäristö)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Kirjaudu kohdevuokraajaan</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Kohde on eri vuokraaja: kirjaudu siihen tilillä, joka voi luoda siellä työnkulkuja, ja valitse sitten ympäristö.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Kopioi kohteeseen (kohdeympäristö)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Valitse kaikki</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Poista valinnat</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Ladataan ympäristöjä...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Ladataan työnkulkuja...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Työnkulkuja ei löytynyt kohteesta {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} työnkulkua kohteessa {1}. Valitse kopioitavat.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Yhtäkään valituista työnkuluista ei voitu lukea.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Luodaan työnkulkuja kohteeseen...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Luo työnkulut kohteeseen</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Jokainen työnkulku luodaan kohdeympäristöön pois päältä, joten mikään ei suoriteta ennen kuin olet tarkistanut sen. Raportti tallennetaan alla olevaan kansioon.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Käytä omia olemassa olevia yhteyksiä kohdeympäristössä, kun sellainen on</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} työnkulkua luodaan kohteeseen {2} (kopioitu kohteesta {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Työnkulut luodaan pois päältä. Ota jokainen käyttöön tarkistettuasi sen.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Löytyi {0} lähde- ja {1} kohdeympäristöä.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Luetaan {0} työnkulkua kohteesta {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Luodaan {0} työnkulkua kohteeseen {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Yhteyksiä ei voitu yhdistää, joten työnkulut luodaan ilman niitä. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Luotu {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Luotu (pois päältä)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Luotu, {0} yhteyttä määritettävänä</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} yhteyttä ei yhdistetty kohteen yhteyteen. Avaa jokainen työnkulku Power Automatessa ja valitse yhteys.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} työnkulkua ei voitu luoda. Syy näkyy toimintolokissa.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Sovelluksen rekisteröinnillä ei vielä ole Power Automate- (tai Power Apps -) oikeutta. Pyydä järjestelmänvalvojaa lisäämään se ja myöntämään suostumus, ja yritä sitten uudelleen.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Tililtäsi puuttuu Dataverse-suojausrooli kohdeympäristössä ({0}). Pyydä järjestelmänvalvojaa antamaan sinulle Environment Maker -rooli (tai System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Tililläsi ei ole käyttöoikeutta tähän ympäristöön tai työnkulkuun.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Kohde hylkäsi työnkulun: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Ympäristöä tai työnkulkua ei löytynyt.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate palautti virheen: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Valmis: {0} työnkulkua luotu</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Luotu kohteeseen {0}, pois päältä. Mikään ei jäänyt osoittamaan lähteeseen.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Valmis: {0} työnkulkua luotu, osa kohteista vaatii tarkistuksesi</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Luotu kohteeseen {0}, pois päältä. Avaa raportti nähdäksesi arvot, jotka osoittavat yhä lähteeseen, määritettävät yhteydet ja kohteet, joita työkalu ei kirjoita uudelleen.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Avaa raportti ja tarkista tarkistettavaksi merkityt kohteet.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Avaa Power Automatessa (kohde) jokainen uusi työnkulku, korjaa sen ilmoittama yhteys ja ota se käyttöön.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Testaa jokainen työnkulku, ennen kuin poistat alkuperäisen käytöstä lähteessä.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Tallennettujen lomaketunnusten tiedosto on käytössä (toisessa sovelluksen kopiossa tai toisessa ohjelmassa). Yritä hetken kuluttua uudelleen.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Peruutettu ennen kuvien tarkistusta: tarkista kopion tausta, logo ja otsikkokuva.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Valitse ensin kohdeympäristö Paketit-vaiheessa.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Lähde ja kohde ovat sama ympäristö ({0}), joten kopiot luodaan alkuperäisten työnkulkujen viereen. Jatketaanko?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Jo luotu (aiempi yritys)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Peruutettu. {0} työnkulkua luotiin ennen peruutusta; raportissa ne on lueteltu.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} työnkulkua oli jo luotu aiemmalla yrityksellä, eikä niitä luotu uudelleen.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} työnkulkua valittiin skannauksen jälkeen, eikä niitä luotu. Palaa Paketit-vaiheeseen ja valitse Seuraava, niin ne otetaan mukaan.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Peruutettu: {0} työnkulkua ei luotu.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Tarkista: nämä sarakkeet jätettiin pois vaiheista, koska kohdeluettelossa ei ole niitä, mutta jokin vaihe suodattaa, lajittelee tai valitsee niiden mukaan edelleen. Tuonti onnistuu; kyseinen vaihe epäonnistuu työnkulun suorituksessa, kunnes sen kysely muutetaan Power Automatessa tai sarake lisätään luetteloon.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Tarkista: tätä työnkulkutiedostoa ei voitu lukea, joten se kopioitiin uuteen pakettiin muuttamattomana ja osoittaa yhä lähteeseen.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} kyselyviittausta nimeää yhä sarakkeen, joka jätettiin pois, koska kohdeluettelossa ei ole sitä. Nämä vaiheet epäonnistuvat työnkulun suorituksessa; muuta niiden suodatinta tai lajittelua Power Automatessa tai lisää sarake luetteloon.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Power Automate -pyyntö aikakatkaistiin. Tarkista yhteys ja yritä uudelleen.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Omat työnkulkuni (ei ratkaisussa)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Luetaan kohdeympäristön ratkaisuja…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Kohdeympäristön ratkaisuja ei voitu lukea, joten työnkulut luodaan ratkaisujen ulkopuolelle: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Luo kohteeseen</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Valitse ratkaisu, johon työnkulut luodaan (ne ovat silloin ratkaisutietoisia ja voivat siirtyä ratkaisun mukana). Jokainen yhteys käyttää kohteen vastaavaa yhteysviittausta; jos sellaista ei ole, ratkaisuun lisätään yksi.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Luotu (pois päältä) ratkaisuun {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Pyyntö aikakatkaistiin.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>vaihtoehdot poikkeavat</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0}/{1} vaihtoehtoa</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} kysymyksessä on kuvia (kysymyksessä tai sen vaihtoehdoissa). Ne kopioidaan linkkeinä lähdelomakkeen kuviin, joten ne eivät enää näy, jos lähdelomake poistetaan tai kopio on toisessa vuokraajassa. Lisää nämä kuvat uudelleen kopioon.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Vastaukset</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Lomake {0}/{1}: {2} (kysymys {3}/{4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} min {1} s</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} s</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - siirretty</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Kirjoita kohdesivuston osoite, esim. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: {1}-yhteys käyttää kohteessa yhteyttä &quot;{2}&quot;.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Kohteessa käytetyt yhteydet</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>Kohdeluettelossa &quot;{0}&quot; sarakkeet {1} on yhdistetty kaikki sarakkeeseen &quot;{2}&quot; {3} vaiheessa (esimerkiksi työnkulun &quot;{4}&quot; vaiheessa &quot;{5}&quot;). Valitse kaikille paitsi yhdelle eri kohdesarake tai jätä muut pois.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} työnkulkua ei yritetty: kopiointi pysähtyi virheeseen, joka olisi epäonnistuttanut kaikki jäljellä olevat työnkulut samalla tavalla (katso toimintoloki). Korjaa se ja paina Kirjoita uudelleen; jo luodut työnkulut ohitetaan.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Kohdesivustoa ei ole kirjoitettu, joten jokainen sivusto pysyy ennallaan. Kirjoita vähintään yksi kohdesivusto Mihin-sarakkeeseen tai paina Seuraava uudelleen jättääksesi sivustot ennalleen.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Ei vastaavuutta: &quot;{0}&quot; on jo sarakkeen {1} käytössä</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Jätetty pois: &quot;{0}&quot; on jo sarakkeen {1} käytössä</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} saraketta jätetään pois työnkulkujen vaiheista, koska niiden kohdesarake on jo toisen sarakkeen käytössä (suluissa): {1}. Vaihda jommankumman sarakkeen kohde, jos et halua tätä.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Sarake &quot;{0}&quot; jätetään pois luettelon &quot;{1}&quot; vaiheista: sen kohdesarakkeeseen &quot;{2}&quot; kirjoittaa jo sarake &quot;{3}&quot;. Vaihda jommankumman sarakkeen kohde Luettelot ja sarakkeet -vaiheessa, jos et halua tätä.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Raporttikansio</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Live-kopiointi luo työnkulut suoraan kohdeympäristöön, joten tälle tietokoneelle ei tallenneta työnkulkutiedostoja. Tähän kansioon tallennetaan vain kopiointiraportti: verkkosivu ja tekstitiedosto, joissa luetellaan, mitä kussakin työnkulussa muutettiin, mitkä sarakkeet jätettiin pois, mitkä yhteydet täsmättiin ja mikä vaatii vielä tarkistustasi. Säilytä se siirtotietojesi mukana. Se on ainoa kirjallinen tallenne tehdyistä muutoksista.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Jokainen työnkulku luodaan kohdeympäristöön pois päältä, joten mikään ei suoriteta ennen kuin olet tarkistanut sen.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Valitse ensin raporttikansio.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Kopioi työnkulut</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Kopioi työnkulut kohteeseen</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Tarkista alla oleva luettelo, valitse raportin tallennuspaikka ja kopioi sitten työnkulut.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Työkalu käyttää määritystäsi jokaisen työnkulun kopioon ja luo sen kohdeympäristöön pois päältä, joten mikään ei suoriteta ennen kuin olet tarkistanut sen. Alkuperäiset työnkulkusi eivät muutu. Raportti kaikesta, mitä muutettiin, jätettiin pois tai mikä vaatii vielä tarkistustasi, tallennetaan raporttikansioon. Avaa sen jälkeen jokainen uusi työnkulku Power Automatessa, korjaa sen ilmoittamat yhteydet ja kytke se päälle.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Valmis kopioimaan?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Kirjaudu kohdevuokraajaan nähdäksesi sen ympäristöt</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Lataa ympäristöt ensin</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Kohdetilille ei löytynyt Power Automate -ympäristöjä. Tarvitaan Power Automate -lisenssi tai pääsy ympäristöön siellä. Yritä kirjautua uudelleen toisella tilillä.</value></data>
 </root>

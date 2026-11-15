@@ -1499,4 +1499,116 @@
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>租户: {0}。登录只能进入此目录。</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>若要连接其他租户上的站点,请在“设置”中选择另一个应用注册(其租户 ID 为空或设置为该租户),或使用多租户模式。</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>仅结构:复制列、视图、设置和内容类型,但不复制任何文件或列表项。</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>同时更新目标上已存在的列表: 替换同名视图(和默认视图)、列表设置以及列规则和格式</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>更新现有列表</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>已按源更新现有列表。</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>从流中排除(目标上没有)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>已从流中排除</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>由于目标列表没有对应的列,{0} 个列将从流的步骤中排除: {1}。若要保留,请将该列添加到目标列表并单击“重新检查”,或选择其他列。</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>目标列表“{1}”上不存在列“{0}”,因此流的步骤不再写入该列。请将该列添加到列表后重新运行,或在 Power Automate 中将该字段添加到这些步骤。</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>在目标列表“{0}”上,列 {1} 在“{3}”的步骤“{4}”中都映射到了“{2}”。请为其中除一个以外的所有列选择不同的目标列,或将其余的排除。</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>请检查: 目标列表没有这些字段对应的列,因此步骤不再写入它们。它们原有的值不会保存在目标的任何位置。</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>此表单不在你登录的租户中</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>登录…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>每个连接都会与目标中你现有的某个连接匹配。没有匹配的连接将留给你在 Power Automate 中设置。</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>不匹配连接: 创建流之后,请在 Power Automate 中设置每个连接。</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>视图“{0}”: 无法应用设置 {1}: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>视图“{0}”: 对目标没有的列的筛选、排序或分组已被排除({1})。</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>未创建查阅站点列,因为它们的列表不在目标上: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>查阅站点列</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>从 Power Automate 环境复制</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>使用导出的包(.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>在源环境中选择流,工具会在目标环境中创建它们,并使其已指向目标的站点、列表和表单。流创建后处于关闭状态,因此在你检查之前不会运行任何内容。</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>登录并加载环境</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>复制自(源环境)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>登录目标租户</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>目标是另一个租户: 请使用可在该租户中创建流的帐户登录,然后选择环境。</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>复制到(目标环境)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>全选</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>全部不选</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>正在加载环境...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>正在加载流...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>在 {0} 中未找到流。</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{1} 中有 {0} 个流。请勾选要复制的流。</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>所选流均无法读取。</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>正在目标中创建流...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>在目标中创建流</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>每个流都会以关闭状态在目标环境中创建,因此在你检查之前不会运行任何内容。报告将保存在下面的文件夹中。</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>目标环境中有现有连接时使用我的现有连接</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>将在 {2} 中创建 {0} 个流(复制自 {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>流创建后处于关闭状态。检查后请逐个将其打开。</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>找到 {0} 个源环境和 {1} 个目标环境。</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>正在从 {1} 读取 {0} 个流</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>正在 {1} 中创建 {0} 个流</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>无法匹配连接,因此将在不带连接的情况下创建流。{0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>已创建 {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>已创建(关闭)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>已创建,有 {0} 个连接待设置</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} 个连接未与目标中的连接匹配。请在 Power Automate 中打开每个流并选择连接。</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>无法创建 {0} 个流。原因请参阅活动日志。</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>应用注册尚无 Power Automate(或 Power Apps)权限。请让管理员添加该权限并授予同意,然后重试。</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>你的帐户在目标环境({0})中缺少 Dataverse 安全角色。请让管理员授予你 Environment Maker 角色(或 System Administrator)。</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>你的帐户无权访问此环境或流。</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>目标拒绝了该流: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>未找到环境或流。</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate 返回了错误: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>完成: 已创建 {0} 个流</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>已在 {0} 中创建,处于关闭状态。没有任何内容仍指向源。</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>完成: 已创建 {0} 个流,部分项目需要你检查</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>已在 {0} 中创建,处于关闭状态。请打开报告,查看仍指向源的值、待设置的连接以及工具不会重写的项目。</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>打开报告,检查标记为需检查的内容。</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>在 Power Automate(目标)中,打开每个新流,修复其标记的任何连接,然后将其打开。</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>在关闭源中的原始流之前,请先测试每个流。</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>已保存的表单 ID 文件正在使用中(被应用的另一个副本或其他程序占用)。请稍后重试。</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>在检查图像之前已取消: 请查看副本的背景、徽标和页眉图像。</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>请先在“包”步骤中选择目标环境。</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>源和目标是同一个环境({0}),因此副本将创建在原始流旁边。是否继续?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>已创建(之前的尝试)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>已取消。取消之前已创建 {0} 个流;报告中列出了它们。</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>有 {0} 个流在之前的尝试中已创建,未再次创建。</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>有 {0} 个流是在扫描之后被勾选的,未创建。请返回“包”并单击“下一步”以包含它们。</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>已取消: 未创建 {0} 个流。</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>请检查: 这些列因目标列表没有而被排除在步骤之外,但某个步骤仍在对它们进行筛选、排序或选择。导入可以成功;在 Power Automate 中更改其查询或将该列添加到列表之前,该步骤会在流运行时失败。</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>请检查: 无法读取此流文件,因此它按原样复制到了新包中,仍指向源。</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} 个查询引用仍指向因目标列表没有而被排除的列。这些步骤会在流运行时失败;请在 Power Automate 中更改其筛选或排序,或将该列添加到列表。</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>对 Power Automate 的请求超时。请检查连接后重试。</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>我的流(不在解决方案中)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>正在读取目标环境的解决方案…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>无法读取目标环境的解决方案,因此将在任何解决方案之外创建流: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>创建于</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>选择一个解决方案,即可在其中创建流(这样它们会感知解决方案,并可随解决方案移动)。每个连接使用目标中匹配的连接引用;没有时会将其添加到解决方案。</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>已在解决方案 {0} 中创建(关闭)</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>请求超时。</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>选项不同</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{1} 个选项中的 {0} 个</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>有 {0} 个问题带有图像(在问题或其选项上)。它们以指向源表单图像的链接形式复制,因此如果源表单被删除,或副本位于另一个租户,它们将不再显示。请在副本中重新添加这些图像。</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>响应</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>表单 {0}/{1}: {2}(问题 {3}/{4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0}分{1}秒</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0}秒</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - 已迁移</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>键入目标站点地址,例如 https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: {1} 连接在目标中使用“{2}”。</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>目标中使用的连接</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>在目标列表“{0}”上,列 {1} 在 {3} 个步骤中都映射到了“{2}”(例如“{4}”的步骤“{5}”)。请为其中除一个以外的所有列选择不同的目标列,或将其余的排除。</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} 个流未尝试: 复制在出现一个会使所有剩余流以同样方式失败的错误后停止(请参阅活动日志)。请修复后再次按“写入”;已创建的流将被跳过。</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>未输入任何目标站点,因此每个站点都保持原样。请在“到”列中至少输入一个目标站点,或再次按“下一步”以保持站点不变。</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>无匹配: &quot;{0}&quot; 已被 {1} 使用</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>已排除: &quot;{0}&quot; 已被 {1} 使用</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>由于匹配到的目标列已被另一列(括号内)使用,{0} 个列将从流的步骤中排除: {1}。如果这不是您想要的,请更改其中任一列的目标。</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>列&quot;{0}&quot;已从&quot;{1}&quot;的步骤中排除: 其目标列&quot;{2}&quot;已由&quot;{3}&quot;写入。如果这不是您想要的,请在“列表和列”步骤中更改其中任一列的目标。</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>报告文件夹</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>实时复制会直接在目标环境中创建流,因此不会在此计算机上保存任何流文件。此文件夹仅接收复制报告:一个网页和一个文本文件,列出每个流中更改的内容、省略的列、已匹配的连接,以及仍需你检查的内容。请将其与迁移记录一起保存。它是所做更改的唯一书面记录。</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>每个流都会以关闭状态在目标环境中创建,因此在你检查之前不会运行任何内容。</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>请先选择报告文件夹。</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>复制流</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>将流复制到目标</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>检查下面的列表,选择报告的保存位置,然后复制流。</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>该工具会将你的映射应用于每个流的副本,并以关闭状态在目标环境中创建它,因此在你检查之前不会运行任何内容。你的原始流不会被更改。所有已更改、已省略或仍需检查的内容的报告会保存在报告文件夹中。之后,在 Power Automate 中打开每个新流,修复其标记的任何连接,然后将其打开。</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>准备复制?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>登录目标租户以列出其环境</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>请先加载环境</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>未找到目标帐户的 Power Automate 环境。它需要 Power Automate 许可证或对该处环境的访问权限。请尝试使用其他帐户重新登录。</value></data>
 </root>

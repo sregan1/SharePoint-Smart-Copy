@@ -1499,4 +1499,116 @@
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>المستأجر: {0}. يمكن أن يتم تسجيل الدخول إلى هذا الدليل فقط.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>لتوصيل موقع على مستأجر مختلف، اختر تسجيل تطبيق آخر في الإعدادات (يكون معرّف المستأجر فيه فارغًا أو معيّنًا لذلك المستأجر)، أو استخدم وضع عدة مستأجرين.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>البنية فقط: يتم نسخ الأعمدة وطرق العرض والإعدادات وأنواع المحتوى، ولكن دون أي ملفات أو عناصر قائمة.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>حدّث أيضًا القوائم الموجودة بالفعل في الهدف: استبدل طرق العرض التي تحمل الاسم نفسه (وطريقة العرض الافتراضية) وإعدادات القائمة وقواعد الأعمدة وتنسيقها</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>تحديث القوائم الموجودة</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>تم تحديث القائمة الموجودة لتطابق المصدر.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>استبعاد من التدفقات (غير موجود في الهدف)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>مستبعد من التدفقات</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>سيتم استبعاد {0} عمود من خطوات التدفقات لأن قائمة الهدف لا تحتوي على هذا العمود: {1}. أضف العمود إلى قائمة الهدف وانقر على «فحص» مرة أخرى، أو اختر عمودًا آخر، للإبقاء عليه.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>العمود &quot;{0}&quot; غير موجود في قائمة الهدف &quot;{1}&quot;، لذلك لم تعد خطوات التدفقات تكتبه. أضف العمود إلى القائمة ثم شغّل هذا مرة أخرى، أو أضف الحقل إلى تلك الخطوات في Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>في قائمة الهدف &quot;{0}&quot;، تم تعيين الأعمدة {1} جميعها إلى &quot;{2}&quot; في الخطوة &quot;{4}&quot; من &quot;{3}&quot;. اختر عمود هدف مختلفًا لجميعها باستثناء واحد، أو استبعد الباقي.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>مراجعة: لا تحتوي قائمة الهدف على عمود لهذه الحقول، لذلك لم تعد الخطوات تكتبها. القيم التي كانت تحملها غير محفوظة في أي مكان في الهدف.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>هذا النموذج ليس في المستأجر الذي سجّلت الدخول إليه</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>تسجيل الدخول…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>تتم مطابقة كل اتصال مع أحد اتصالاتك الموجودة في الهدف. أي اتصال ليس له مطابق يُترك لك لتعيينه في Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>لا تتم مطابقة الاتصالات: عيّن كل اتصال في Power Automate بعد إنشاء التدفقات.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>طريقة العرض &apos;{0}&apos;: تعذر تطبيق الإعداد {1}: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>طريقة العرض &quot;{0}&quot;: تم استبعاد عامل التصفية أو الفرز أو التجميع على أعمدة غير موجودة في الهدف ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>لم يتم إنشاء أعمدة موقع البحث لأن قائمتها غير موجودة في الهدف: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>أعمدة موقع البحث</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>النسخ من بيئة Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>استخدام الحزم المصدّرة (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>اختر تدفقات في بيئة المصدر وتنشئها الأداة في بيئة الهدف، مع توجيهها مسبقًا إلى مواقع الهدف وقوائمه ونماذجه. تُنشأ التدفقات متوقفة، فلا يعمل شيء إلى أن تراجعه.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>تسجيل الدخول وتحميل البيئات</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>النسخ من (بيئة المصدر)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>تسجيل الدخول إلى مستأجر الهدف</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>الهدف مستأجر مختلف: سجّل الدخول إليه بحساب يمكنه إنشاء التدفقات هناك، ثم اختر البيئة.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>النسخ إلى (بيئة الهدف)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>تحديد الكل</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>إلغاء التحديد</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>جارٍ تحميل البيئات...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>جارٍ تحميل التدفقات...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>لم يتم العثور على تدفقات في {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} تدفق في {1}. ضع علامة على التدفقات المراد نسخها.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>تعذرت قراءة أي من التدفقات المحددة.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>جارٍ إنشاء التدفقات في الهدف...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>إنشاء التدفقات في الهدف</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>يُنشأ كل تدفق في بيئة الهدف متوقفًا، فلا يعمل شيء إلى أن تراجعه. يُحفظ التقرير في المجلد أدناه.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>استخدام اتصالاتي الموجودة في بيئة الهدف عند وجودها</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>سيتم إنشاء {0} تدفق في {2} (منسوخة من {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>تُنشأ التدفقات متوقفة. شغّل كل واحد منها بعد مراجعته.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>تم العثور على {0} بيئة مصدر و{1} بيئة هدف.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>قراءة {0} تدفق من {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>إنشاء {0} تدفق في {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>تعذرت مطابقة الاتصالات، لذلك تُنشأ التدفقات بدونها. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>تم إنشاء {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>تم الإنشاء (متوقف)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>تم الإنشاء، {0} اتصال لتعيينه</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>لم تتم مطابقة {0} اتصال مع اتصال في الهدف. افتح كل تدفق في Power Automate واختر اتصالًا.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>تعذر إنشاء {0} تدفق. راجع سجل النشاط لمعرفة السبب.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>تسجيل التطبيق لا يملك أذونات Power Automate (أو Power Apps) بعد. اطلب من مسؤول إضافتها ومنح الموافقة، ثم حاول مرة أخرى.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>حسابك يفتقر إلى دور أمان Dataverse في بيئة الهدف ({0}). اطلب من مسؤول منحك دور Environment Maker (أو System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>ليس لحسابك حق الوصول إلى هذه البيئة أو هذا التدفق.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>رفض الهدف التدفق: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>لم يتم العثور على البيئة أو التدفق.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>أرجع Power Automate خطأ: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>تم: تم إنشاء {0} تدفق</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>تم الإنشاء في {0}، متوقفة. لم يتبقَّ أي شيء يشير إلى المصدر.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>تم: تم إنشاء {0} تدفق، وبعض العناصر تحتاج إلى مراجعتك</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>تم الإنشاء في {0}، متوقفة. افتح التقرير لمعرفة القيم التي لا تزال تشير إلى المصدر والاتصالات المطلوب تعيينها والعناصر التي لا تعيد الأداة كتابتها.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>افتح التقرير وتحقق مما هو معلّم للمراجعة.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>في Power Automate (الهدف)، افتح كل تدفق جديد، وأصلح أي اتصال يشير إليه، ثم شغّله.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>اختبر كل تدفق قبل إيقاف الأصلي في المصدر.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>ملف معرّفات النماذج المحفوظة قيد الاستخدام (من نسخة أخرى من التطبيق أو برنامج آخر). حاول مرة أخرى بعد قليل.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>أُلغي قبل فحص الصور: تحقق من خلفية النسخة وشعارها وصورة رأسها.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>اختر بيئة الهدف في خطوة الحزم أولًا.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>المصدر والهدف هما البيئة نفسها ({0})، لذلك ستُنشأ النسخ بجانب التدفقات الأصلية. هل تريد المتابعة؟</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>تم إنشاؤه بالفعل (محاولة سابقة)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>أُلغي. تم إنشاء {0} تدفق قبل الإلغاء؛ يسردها التقرير.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>كان {0} تدفق قد أُنشئ في محاولة سابقة ولم يُنشأ مرة أخرى.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>وُضعت علامة على {0} تدفق بعد الفحص ولم يتم إنشاؤها. ارجع إلى الحزم واضغط التالي لتضمينها.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>أُلغي: لم يتم إنشاء {0} تدفق.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>مراجعة: تم استبعاد هذه الأعمدة من الخطوات لأن قائمة الهدف لا تحتوي عليها، لكن لا تزال هناك خطوة تصفّي أو ترتّب أو تحدد بناءً عليها. يعمل الاستيراد؛ تفشل تلك الخطوة عند تشغيل التدفق إلى أن يُغيَّر استعلامها في Power Automate أو يُضاف العمود إلى القائمة.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>مراجعة: تعذرت قراءة ملف هذا التدفق، لذلك نُسخ إلى الحزمة الجديدة دون تغيير ولا يزال يشير إلى المصدر.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>لا يزال {0} مرجع استعلام يذكر عمودًا تم استبعاده لأن قائمة الهدف لا تحتوي عليه. تفشل تلك الخطوات عند تشغيل التدفق؛ غيّر عامل التصفية أو الفرز فيها في Power Automate، أو أضف العمود إلى القائمة.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>انتهت مهلة الطلب إلى Power Automate. تحقق من الاتصال وحاول مرة أخرى.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>تدفقاتي (ليست في حل)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>جارٍ قراءة حلول بيئة الهدف…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>تعذرت قراءة حلول بيئة الهدف، لذلك ستُنشأ التدفقات خارج أي حل: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>إنشاء في</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>اختر حلًا لإنشاء التدفقات داخله (تصبح عندئذٍ مدركة للحل ويمكن نقلها معه). يستخدم كل اتصال مرجع الاتصال المطابق في الهدف؛ ويُضاف مرجع إلى الحل عند عدم وجود أي مرجع.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>تم الإنشاء (متوقف) في الحل {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>انتهت مهلة الطلب.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>الخيارات مختلفة</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} من {1} خيارات</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} سؤال لها صور (في السؤال أو في اختياراته). تُنسخ كروابط إلى صور النموذج المصدر، لذلك تتوقف عن الظهور إذا حُذف النموذج المصدر أو عندما تكون النسخة في مستأجر آخر. أضف تلك الصور مرة أخرى في النسخة.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>الردود</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>النموذج {0} من {1}: {2} (السؤال {3} من {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0}د {1}ث</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0}ث</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - تم الترحيل</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>اكتب عنوان موقع الهدف، مثل https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: يستخدم الاتصال {1} &quot;{2}&quot; في الهدف.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>الاتصالات المستخدمة في الهدف</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>في قائمة الهدف &quot;{0}&quot;، تم تعيين الأعمدة {1} جميعها إلى &quot;{2}&quot; في {3} من الخطوات (على سبيل المثال الخطوة &quot;{5}&quot; من &quot;{4}&quot;). اختر عمود هدف مختلفًا لجميعها باستثناء واحد، أو استبعد الباقي.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>لم تتم محاولة إنشاء {0} تدفق: توقف النسخ بعد خطأ كان سيُفشل كل التدفقات المتبقية بالطريقة نفسها (راجع سجل النشاط). أصلحه واضغط &quot;كتابة&quot; مرة أخرى؛ سيتم تخطي التدفقات التي أُنشئت بالفعل.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>لم يُكتب أي موقع هدف، لذا يبقى كل موقع كما هو. اكتب موقع هدف واحدًا على الأقل في عمود &quot;إلى&quot;، أو اضغط &quot;التالي&quot; مرة أخرى لإبقاء المواقع دون تغيير.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>لا توجد مطابقة: &quot;{0}&quot; مستخدم بالفعل بواسطة {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>مستبعد: &quot;{0}&quot; مستخدم بالفعل بواسطة {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>سيتم استبعاد {0} عمود من خطوات التدفقات لأن عمود الهدف الذي طابقه مستخدم بالفعل بواسطة عمود آخر (بين قوسين): {1}. غيّر عمود الهدف لأي من العمودين إذا لم يكن هذا ما تريده.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>العمود &quot;{0}&quot; مستبعد من الخطوات في &quot;{1}&quot;: عمود الهدف &quot;{2}&quot; يكتبه بالفعل العمود &quot;{3}&quot;. غيّر عمود الهدف لأي من العمودين في خطوة القوائم والأعمدة إذا لم يكن هذا ما تريده.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>مجلد التقرير</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>يُنشئ النسخ المباشر التدفقات مباشرةً في بيئة الهدف، لذا لا تُحفظ أي ملفات تدفقات على هذا الكمبيوتر. يستقبل هذا المجلد تقرير النسخ فقط: صفحة ويب وملفًا نصيًا يسردان ما تغيّر في كل تدفق، والأعمدة المستبعدة، والاتصالات التي تمت مطابقتها، وما لا يزال يحتاج إلى مراجعتك. احتفظ به مع سجلات الترحيل الخاصة بك. إنه السجل المكتوب الوحيد لما تغيّر.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>يُنشأ كل تدفق في بيئة الهدف متوقفًا، فلا يعمل شيء إلى أن تراجعه.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>اختر مجلد التقرير أولاً.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>نسخ التدفقات</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>نسخ التدفقات إلى الهدف</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>راجع القائمة أدناه، ثم اختر مكان حفظ التقرير، ثم انسخ التدفقات.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>تطبّق الأداة التعيين الخاص بك على نسخة من كل تدفق وتنشئها في بيئة الهدف متوقفةً، فلا يعمل شيء إلى أن تراجعها. لا تتغير التدفقات الأصلية. يُحفظ في مجلد التقرير تقرير بكل ما تغيّر أو استُبعد أو لا يزال يحتاج إلى مراجعتك. بعد ذلك، افتح كل تدفق جديد في Power Automate، وأصلح أي اتصال يشير إليه، ثم شغّله.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>هل أنت جاهز للنسخ؟</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>سجّل الدخول إلى مستأجر الهدف لعرض بيئاته</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>حمّل البيئات أولاً</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>لم يتم العثور على بيئات Power Automate للحساب الهدف. يحتاج إلى ترخيص Power Automate أو إلى صلاحية الوصول إلى بيئة هناك. حاول تسجيل الدخول مرة أخرى بحساب آخر.</value></data>
 </root>

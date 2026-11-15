@@ -143,6 +143,7 @@ public partial class SettingsDialog : Window
             CopyContentTypes = _original.CopyContentTypes,
             CopyColumnRules = _original.CopyColumnRules,
             CopyTemplates = _original.CopyTemplates,
+            UpdateExistingStructure = _original.UpdateExistingStructure,
             CopySiteDefinitions = _original.CopySiteDefinitions,
             CopySiteSettings = _original.CopySiteSettings,
             CopyPermissions         = _original.CopyPermissions,

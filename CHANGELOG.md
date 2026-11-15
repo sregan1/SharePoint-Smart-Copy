@@ -4,6 +4,42 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 4.1.4 — 2026-11-15
+
+### Added
+
+- **Flows: live copy between Power Automate environments** — choose flows in a source environment and create them (off) in a target environment, through the same scan, mapping and report as packages. Solution-aware flows are listed and read; in an environment with Dataverse the flows can be created inside a chosen solution (**Create in**), with the target's connection references. Needs the Power Automate Service and PowerApps Service permissions (and optionally Dataverse `user_impersonation`); see the README.
+- **Flows: columns the target list lacks are left out of the steps that write them** — instead of failing on import, with a card note, a **To review** line and a ⚠ section in the report. A column that is only filtered on or read in an expression is reported and no longer blocks Next. Two columns of a step mapped to one target column are flagged.
+- **Update existing lists to match the source** (Structure to copy, off by default) — replaces same-named views and the default view, list settings, and column rules and formatting on lists and libraries that already exist; updated rows show as Success.
+- **Lookup columns**: lookup site columns are created after the lists exist (bound by list title, child webs included, with their projected fields), and lookup columns on a content type are recreated on a new list.
+- **Flows**: a **Sign in…** button and a typed **To** site for Single tenant mode, Alt+Left / Alt+Right for Back / Next, Enter commits a pasted list ID, a report of which connection each reference was bound to, and a safe retry (flows already created are skipped).
+- **Flows: an empty target-environment list explains itself** — with two tenants the list stays empty until you sign in to the target tenant, so the box now says so; a signed-in account that lists no environments gets a message naming the usual causes (no Power Automate license, no access).
+- **Flows, live copy wording**: the last step is now headed **Copy the flows to the target**, its button reads **Copy flows**, and the folder card is called **Report folder** and says what it is for (live copy saves no flow files, only the report). Before, it reused the package wording, including a line saying nothing is sent to either tenant.
+- **Forms**: a note on how many questions carry images that still point at the source, a question-level progress count, **Sign in again** can switch the target account, and the list header says only your own forms are listed.
+
+### Changed
+
+- **Disconnect** on the Connect step signs the account out, so the next Connect asks for a sign-in.
+- The Flows form check in Single tenant mode compares the form's tenant with the signed-in tenant, so a package exported from another tenant can be imported.
+- A column you chose yourself (or a loaded mapping) now wins over an automatic match to the same target column, which steps aside and says which column took it; one conflict that affects 19 steps is one line ("in 19 steps"), not 19.
+- Power Automate calls follow paging, retry throttling and brief service errors, and report a timeout as an error instead of a cancel. A connection counts as connected only when every status is OK.
+- A copied view's filter, sort, grouping and totals on a column the target lacks are left out (with a note), and view settings are applied one at a time, so one rejected setting no longer drops the filter. `AggregationsStatus = Off` is no longer sent (SharePoint rejects it).
+- New columns created from XML (person, choice, managed metadata, lookup) keep the source's internal name.
+
+### Fixed
+
+- **A brief file lock no longer wipes the saved form IDs** (Forms ↔ Flows map).
+- **A form is no longer lost when you cancel during its image check.**
+- A column drop-down on the Lists & columns step no longer crashes (*Can only change SelectedItems collection in multiple selection modes*); grid edits refresh after the input settles.
+- A site URL is no longer rewritten inside a longer name (`sites/HR` in `sites/HR%20Team` or `sites/HR.Team`); a per-list column rename is no longer renamed again by a global one; embedded `@{…}` expressions and `''` inside OData text no longer confuse column renames; loop and trigger reads of a column are renamed; a list named by title is matched; one unreadable flow file no longer stops a package.
+- **Creating flows is never retried after a gateway error** — a 502, 503 or 504 (or a dropped connection) does not say whether the create went through, and a second try could make a duplicate flow; only throttling (429), where nothing was processed, is retried. Reads are still retried.
+- **Forms "Sign in again" keeps the account you chose** — before, the chosen account lasted only until the first token refresh, after which forms were created in the old one while the screen named the new one.
+- Cancelling a live copy before any flow is created no longer shows a "0 flows created" result, a role or permission error that stops the copy lists the flows that were not attempted, and copying into the environment you read from asks first.
+- Cancelling a live copy still writes its report; a Live Write with no target environment says why.
+- **A choice column mapped to a text, number, date or yes/no column no longer fails the import** with *The API operation does not contain a definition for parameter 'item/<column>/Value'*. The step's key now follows the target column's type (a choice is written as `item/<column>/Value`, the others as `item/<column>`), the required values the tool adds do the same, and the report lists each key that changed form.
+
+---
+
 ## 4.1.3 — 2026-11-06
 
 ### Added

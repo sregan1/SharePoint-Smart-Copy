@@ -1499,4 +1499,116 @@ Yeniden kopyalamak her birinin ikinci bir kopyasını oluşturur. Devam edilsin 
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Kiracı: {0}. Oturum açma yalnızca bu dizine yapılabilir.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Farklı bir kiracıdaki siteyi bağlamak için Ayarlar'da başka bir uygulama kaydı seçin (Kiracı Kimliği boş veya o kiracıya ayarlı olan) ya da Çok kiracılı modunu kullanın.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Yalnızca yapı: sütunlar, görünümler, ayarlar ve içerik türleri kopyalanır, ancak dosya veya liste öğesi kopyalanmaz.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Hedefte zaten var olan listeleri de güncelle: aynı ada sahip görünümleri (ve varsayılan görünümü), liste ayarlarını, sütun kurallarını ve biçimlendirmesini değiştir</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Mevcut listeleri güncelle</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Mevcut liste kaynakla eşleşecek şekilde güncellendi.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Akışların dışında bırak (hedefte yok)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Akışların dışında bırakıldı</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>Hedef listede böyle bir sütun olmadığı için {0} sütun akışların adımlarının dışında bırakılacak: {1}. Sütunu korumak için hedef listeye ekleyin ve Yeniden denetle&apos;ye tıklayın veya başka bir sütun seçin.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>“{0}” sütunu “{1}” hedef listesinde yok, bu nedenle akışların adımları artık bu sütuna yazmıyor. Sütunu listeye ekleyip bunu yeniden çalıştırın veya alanı Power Automate&apos;te bu adımlara ekleyin.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>“{0}” hedef listesinde {1} sütunlarının hepsi, “{3}” akışının “{4}” adımında “{2}” ile eşleştirilmiş. Biri hariç hepsi için farklı bir hedef sütun seçin veya diğerlerini dışarıda bırakın.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Gözden geçirin: hedef listede bu alanlar için sütun yok, bu nedenle adımlar artık bunlara yazmıyor. Bu alanların taşıdığı değerler hedefte hiçbir yere kaydedilmez.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Bu form, oturum açtığınız kiracıda değil</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Oturum aç…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Her bağlantı, hedefteki mevcut bağlantılarınızdan biriyle eşleştirilir. Eşleşmeyenleri Power Automate&apos;te kendiniz ayarlamanız gerekir.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Bağlantılar eşleştirilmez: akışlar oluşturulduktan sonra her birini Power Automate&apos;te ayarlayın.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>“{0}” görünümü: {1} ayarı uygulanamadı: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>“{0}” görünümü: hedefte olmayan sütunlardaki filtre, sıralama veya gruplama dışarıda bırakıldı ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Liste kaynakları hedefte olmadığı için arama site sütunları oluşturulmadı: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Arama site sütunları</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Bir Power Automate ortamından kopyala</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Dışa aktarılan paketleri (.zip) kullan</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Kaynak ortamdaki akışları seçin; araç bunları hedef ortamda, hedefin sitelerine, listelerine ve formlarına zaten işaret edecek şekilde oluşturur. Akışlar kapalı olarak oluşturulur, böylece siz gözden geçirene kadar hiçbir şey çalışmaz.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Oturum aç ve ortamları yükle</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Kopyalanacak yer (kaynak ortam)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Hedef kiracıda oturum aç</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Hedef farklı bir kiracı: orada akış oluşturabilen bir hesapla oturum açın, ardından ortamı seçin.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Kopyalanacak yer (hedef ortam)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Tümünü seç</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Hiçbirini seçme</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Ortamlar yükleniyor...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Akışlar yükleniyor...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>{0} içinde akış bulunamadı.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{1} içinde {0} akış var. Kopyalanacakları işaretleyin.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Seçilen akışların hiçbiri okunamadı.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Akışlar hedefte oluşturuluyor...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Akışları hedefte oluştur</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Her akış hedef ortamda kapalı olarak oluşturulur, böylece siz gözden geçirene kadar hiçbir şey çalışmaz. Rapor aşağıdaki klasöre kaydedilir.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Varsa hedef ortamdaki mevcut bağlantılarımı kullan</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{2} içinde {0} akış oluşturulacak ({1} kaynağından kopyalandı)</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Akışlar kapalı olarak oluşturulur. Gözden geçirdikten sonra her birini açın.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>{0} kaynak ve {1} hedef ortam bulundu.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>{1} içinden {0} akış okunuyor</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>{1} içinde {0} akış oluşturuluyor</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Bağlantılar eşleştirilemedi, bu nedenle akışlar bağlantısız oluşturuldu. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Oluşturuldu: {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Oluşturuldu (kapalı)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Oluşturuldu, ayarlanacak {0} bağlantı var</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} bağlantı hedefteki bir bağlantıyla eşleştirilemedi. Her akışı Power Automate&apos;te açıp bir bağlantı seçin.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} akış oluşturulamadı. Nedeni için etkinlik günlüğüne bakın.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Uygulama kaydında henüz Power Automate (veya Power Apps) izni yok. Bir yöneticiden izni eklemesini ve onay vermesini isteyin, ardından yeniden deneyin.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Hesabınızın hedef ortamda ({0}) Dataverse güvenlik rolü eksik. Bir yöneticiden size Environment Maker (veya System Administrator) rolünü vermesini isteyin.</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Hesabınızın bu ortama veya akışa erişimi yok.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Hedef akışı reddetti: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Ortam veya akış bulunamadı.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate bir hata döndürdü: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Bitti: {0} akış oluşturuldu</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>{0} içinde oluşturuldu, kapalı. Kaynağı gösteren hiçbir şey kalmadı.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Bitti: {0} akış oluşturuldu, bazı öğelerin gözden geçirilmesi gerekiyor</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>{0} içinde oluşturuldu, kapalı. Hâlâ kaynağı gösteren değerleri, ayarlanacak bağlantıları ve aracın yeniden yazmadığı öğeleri görmek için raporu açın.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Raporu açın ve gözden geçirilmek üzere işaretlenenleri kontrol edin.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Power Automate&apos;te (hedef) her yeni akışı açın, işaretlenen bağlantıları düzeltin ve akışı açın.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Kaynaktaki orijinali kapatmadan önce her akışı test edin.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Kaydedilmiş form kimlikleri dosyası kullanımda (uygulamanın başka bir kopyası veya başka bir program tarafından). Birazdan yeniden deneyin.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Görseller denetlenmeden önce iptal edildi: kopyanın arka planına, logosuna ve üst bilgi görseline bakın.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Önce Paketler adımında hedef ortamı seçin.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Kaynak ve hedef aynı ortam ({0}), bu nedenle kopyalar özgün akışların yanında oluşturulacak. Devam edilsin mi?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Zaten oluşturuldu (önceki deneme)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>İptal edildi. İptalden önce {0} akış oluşturuldu; rapor bunları listeler.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} akış önceki bir denemede zaten oluşturulmuştu ve yeniden oluşturulmadı.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} akış taramadan sonra işaretlendi ve oluşturulmadı. Dahil etmek için Paketler adımına dönüp İleri&apos;ye basın.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>İptal edildi: {0} akış oluşturulmadı.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Gözden geçirin: hedef listede olmadığı için bu sütunlar adımların dışında bırakıldı, ancak bir adım hâlâ bunlara göre filtreliyor, sıralıyor veya seçiyor. İçe aktarma çalışır; bu adım, sorgusu Power Automate&apos;te değiştirilene veya sütun listeye eklenene kadar akış çalışırken başarısız olur.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Gözden geçirin: bu akış dosyası okunamadı, bu nedenle yeni pakete değiştirilmeden kopyalandı ve hâlâ kaynağı gösteriyor.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} sorgu başvurusu, hedef listede olmadığı için dışarıda bırakılan bir sütunun adını hâlâ içeriyor. Bu adımlar akış çalışırken başarısız olur; filtrelerini veya sıralamalarını Power Automate&apos;te değiştirin ya da sütunu listeye ekleyin.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Power Automate&apos;e yapılan istek zaman aşımına uğradı. Bağlantıyı denetleyip yeniden deneyin.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Akışlarım (çözümde değil)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Hedef ortamın çözümleri okunuyor…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Hedef ortamın çözümleri okunamadı, bu nedenle akışlar hiçbir çözümün dışında oluşturulacak: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Şurada oluştur</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Akışları içinde oluşturmak için bir çözüm seçin (böylece çözüm bilinçli olurlar ve çözümle birlikte taşınabilirler). Her bağlantı hedefin eşleşen bağlantı başvurusunu kullanır; yoksa çözüme bir tane eklenir.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>{0} çözümünde oluşturuldu (kapalı)</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>İstek zaman aşımına uğradı.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>seçenekler farklı</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{1} seçenekten {0} tanesi</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} soruda görsel var (soruda veya seçeneklerinde). Kaynak formun görsellerine bağlantı olarak kopyalanırlar, bu nedenle kaynak form silinirse veya kopya başka bir kiracıdaysa görünmez olurlar. Bu görselleri kopyaya yeniden ekleyin.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Yanıtlar</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Form {0}/{1}: {2} (soru {3}/{4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} dk {1} sn</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} sn</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - taşındı</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Hedef site adresini yazın, örn. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: {1} bağlantısı hedefte “{2}” kullanıyor.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Hedefte kullanılan bağlantılar</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>“{0}” hedef listesinde {1} sütunlarının hepsi, {3} adımda “{2}” ile eşleştirilmiş (örneğin “{4}” akışının “{5}” adımı). Biri hariç hepsi için farklı bir hedef sütun seçin veya diğerlerini dışarıda bırakın.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} akış denenmedi: kopyalama, kalan tüm akışları aynı şekilde başarısız kılacak bir hatadan sonra durdu (etkinlik günlüğüne bakın). Hatayı düzeltin ve yeniden Yaz&apos;a basın; zaten oluşturulmuş akışlar atlanır.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Hiçbir hedef site yazılmadı, bu nedenle her site olduğu gibi kalır. Hedef sütununa en az bir hedef site yazın veya siteleri değiştirmeden bırakmak için yeniden İleri&apos;ye basın.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Eşleşme yok: &quot;{0}&quot; zaten {1} tarafından kullanılıyor</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Dışarıda bırakıldı: &quot;{0}&quot; zaten {1} tarafından kullanılıyor</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>Eşleştikleri hedef sütun zaten başka bir sütun (parantez içinde) tarafından kullanıldığı için {0} sütun akışların adımlarının dışında bırakılacak: {1}. İstediğiniz bu değilse sütunlardan birinin hedefini değiştirin.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>&quot;{0}&quot; sütunu &quot;{1}&quot; üzerindeki adımların dışında bırakıldı: hedef sütunu &quot;{2}&quot; zaten &quot;{3}&quot; tarafından yazılıyor. İstediğiniz bu değilse Listeler ve sütunlar adımında sütunlardan birinin hedefini değiştirin.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Rapor klasörü</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Canlı kopyalama akışları doğrudan hedef ortamda oluşturur, bu nedenle bu bilgisayara hiçbir akış dosyası kaydedilmez. Bu klasör yalnızca kopyalama raporunu alır: her akışta nelerin değiştirildiğini, dışarıda bırakılan sütunları, eşleştirilen bağlantıları ve hâlâ gözden geçirmeniz gerekenleri listeleyen bir web sayfası ve bir metin dosyası. Geçiş kayıtlarınızla birlikte saklayın. Nelerin değiştirildiğine dair tek yazılı kayıttır.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Her akış hedef ortamda kapalı olarak oluşturulur, böylece siz gözden geçirene kadar hiçbir şey çalışmaz.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Önce bir rapor klasörü seçin.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Akışları kopyala</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Akışları hedefe kopyalayın</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Aşağıdaki listeyi denetleyin, raporun nereye kaydedileceğini seçin, ardından akışları kopyalayın.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Araç, eşlemenizi her akışın bir kopyasına uygular ve akışı hedef ortamda kapalı olarak oluşturur, böylece siz gözden geçirene kadar hiçbir şey çalışmaz. Özgün akışlarınız değiştirilmez. Değiştirilen, dışarıda bırakılan veya hâlâ gözden geçirilmesi gereken her şeyin raporu rapor klasörüne kaydedilir. Ardından Power Automate&apos;te her yeni akışı açın, işaretlenen bağlantıları düzeltin ve akışı açın.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Kopyalamaya hazır mı?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Ortamlarını listelemek için hedef kiracıda oturum açın</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Önce ortamları yükleyin</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Hedef hesap için Power Automate ortamı bulunamadı. Power Automate lisansı veya orada bir ortama erişim gerekir. Başka bir hesapla yeniden oturum açmayı deneyin.</value></data>
 </root>

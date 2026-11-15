@@ -1499,4 +1499,116 @@ Ponowne kopiowanie tworzy drugą kopię każdego z nich. Kontynuować?</value></
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Logowanie może odbywać się tylko do tego katalogu.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Aby połączyć witrynę w innym tenancie, wybierz w Ustawieniach inną rejestrację aplikacji (z pustym Tenant ID lub ustawionym na ten tenant) albo użyj trybu wielu tenantów.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Tylko struktura: kopiowane są kolumny, widoki, ustawienia i typy zawartości, ale bez plików i elementów listy.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Zaktualizuj także listy, które już istnieją w celu: zastąp widoki o tych samych nazwach (oraz widok domyślny), ustawienia listy oraz reguły i formatowanie kolumn</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Aktualizuj istniejące listy</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Istniejąca lista została zaktualizowana zgodnie ze źródłem.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Pomiń w przepływach (brak w celu)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Pominięto w przepływach</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>Kolumny pominięte w krokach przepływów: {0}, ponieważ lista docelowa nie ma takiej kolumny: {1}. Aby je zachować, dodaj kolumnę do listy docelowej i kliknij Sprawdź ponownie albo wybierz inną kolumnę.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Kolumna &quot;{0}&quot; nie istnieje na liście docelowej &quot;{1}&quot;, więc kroki przepływów już jej nie zapisują. Dodaj kolumnę do listy i uruchom to ponownie albo dodaj pole do tych kroków w Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>Na liście docelowej &quot;{0}&quot; kolumny {1} są mapowane na &quot;{2}&quot; w kroku &quot;{4}&quot; przepływu &quot;{3}&quot;. Wybierz inną kolumnę docelową dla wszystkich oprócz jednej albo pomiń pozostałe.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Do sprawdzenia: lista docelowa nie ma kolumny dla tych pól, więc kroki już ich nie zapisują. Wartości, które przenosiły, nie są nigdzie zapisane w celu.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Ten formularz nie należy do tenanta, w którym jesteś zalogowany</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Zaloguj się…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Każde połączenie jest dopasowywane do jednego z Twoich istniejących połączeń w celu. Połączenia bez dopasowania musisz ustawić samodzielnie w Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Połączenia nie są dopasowywane: ustaw każde z nich w Power Automate po utworzeniu przepływów.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Widok &quot;{0}&quot;: nie można zastosować ustawienia {1}: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Widok &quot;{0}&quot;: filtr, sortowanie lub grupowanie według kolumn, których nie ma w celu, zostało pominięte ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Nie utworzono kolumn wyszukiwania witryny, ponieważ ich listy nie ma w celu: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Kolumny wyszukiwania witryny</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Kopiuj ze środowiska Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Użyj wyeksportowanych pakietów (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Wybierz przepływy w środowisku źródłowym, a narzędzie utworzy je w środowisku docelowym, już wskazujące witryny, listy i formularze celu. Przepływy są tworzone jako wyłączone, więc nic nie działa, dopóki ich nie sprawdzisz.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Zaloguj się i załaduj środowiska</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Kopiuj z (środowisko źródłowe)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Zaloguj się do tenanta docelowego</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Cel to inny tenant: zaloguj się do niego kontem, które może tworzyć tam przepływy, a następnie wybierz środowisko.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Kopiuj do (środowisko docelowe)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Zaznacz wszystko</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Odznacz wszystko</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Ładowanie środowisk...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Ładowanie przepływów...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Nie znaleziono przepływów w {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>Przepływy w {1}: {0}. Zaznacz te do skopiowania.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Nie można było odczytać żadnego z wybranych przepływów.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Tworzenie przepływów w celu...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Utwórz przepływy w celu</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Każdy przepływ jest tworzony w środowisku docelowym jako wyłączony, więc nic nie działa, dopóki go nie sprawdzisz. Raport jest zapisywany w folderze poniżej.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Użyj moich istniejących połączeń w środowisku docelowym, jeśli takie istnieje</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>Przepływy do utworzenia w {2}: {0} (skopiowane z {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Przepływy są tworzone jako wyłączone. Włącz każdy z nich po sprawdzeniu.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Znaleziono środowiska: źródłowe {0}, docelowe {1}.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Odczytywanie przepływów ({0}) z {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Tworzenie przepływów ({0}) w {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Nie można dopasować połączeń, więc przepływy są tworzone bez nich. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Utworzono {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Utworzono (wyłączony)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Utworzono, połączenia do ustawienia: {0}</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>Połączenia niedopasowane do połączenia w celu: {0}. Otwórz każdy przepływ w Power Automate i wybierz połączenie.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>Nie można utworzyć przepływów: {0}. Przyczynę znajdziesz w dzienniku aktywności.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Rejestracja aplikacji nie ma jeszcze uprawnienia do Power Automate (lub Power Apps). Poproś administratora o jego dodanie i udzielenie zgody, a następnie spróbuj ponownie.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Twoje konto nie ma roli zabezpieczeń Dataverse w środowisku docelowym ({0}). Poproś administratora o nadanie roli Environment Maker (lub System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Twoje konto nie ma dostępu do tego środowiska lub przepływu.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Cel odrzucił przepływ: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Nie znaleziono środowiska lub przepływu.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate zwrócił błąd: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Gotowe: utworzono przepływów: {0}</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Utworzono w {0} jako wyłączone. Nic nie wskazuje już na źródło.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Gotowe: utworzono przepływów: {0}, niektóre elementy wymagają sprawdzenia</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Utworzono w {0} jako wyłączone. Otwórz raport, aby zobaczyć wartości nadal wskazujące źródło, połączenia do ustawienia i elementy, których narzędzie nie przepisuje.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Otwórz raport i sprawdź elementy oznaczone do przeglądu.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>W Power Automate (cel) otwórz każdy nowy przepływ, popraw oznaczone połączenie i włącz go.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Przetestuj każdy przepływ, zanim wyłączysz oryginał w źródle.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Plik zapisanych identyfikatorów formularzy jest używany (przez inną kopię aplikacji lub inny program). Spróbuj ponownie za chwilę.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Anulowano przed sprawdzeniem obrazów: sprawdź tło, logo i obraz nagłówka kopii.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Najpierw wybierz środowisko docelowe w kroku Pakiety.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Źródło i cel to to samo środowisko ({0}), więc kopie zostaną utworzone obok oryginalnych przepływów. Kontynuować?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Już utworzono (wcześniejsza próba)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Anulowano. Przed anulowaniem utworzono przepływów: {0}; raport je wymienia.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>Przepływy ({0}) zostały już utworzone we wcześniejszej próbie i nie utworzono ich ponownie.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>Przepływy ({0}) zaznaczono po skanowaniu i nie zostały utworzone. Wróć do kroku Pakiety i kliknij Dalej, aby je uwzględnić.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Anulowano: nie utworzono przepływów: {0}.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Do sprawdzenia: te kolumny pominięto w krokach, ponieważ lista docelowa ich nie ma, ale któryś krok nadal filtruje, sortuje lub wybiera według nich. Import działa; ten krok kończy się błędem podczas uruchomienia przepływu, dopóki nie zmienisz jego zapytania w Power Automate lub nie dodasz kolumny do listy.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Do sprawdzenia: nie można było odczytać pliku tego przepływu, więc skopiowano go do nowego pakietu bez zmian i nadal wskazuje źródło.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>Odwołania w zapytaniach ({0}) nadal wskazują kolumnę, którą pominięto, ponieważ lista docelowa jej nie ma. Te kroki kończą się błędem podczas uruchomienia przepływu; zmień ich filtr lub sortowanie w Power Automate albo dodaj kolumnę do listy.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Żądanie do Power Automate przekroczyło limit czasu. Sprawdź połączenie i spróbuj ponownie.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Moje przepływy (poza rozwiązaniem)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Odczytywanie rozwiązań środowiska docelowego…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Nie można odczytać rozwiązań środowiska docelowego, więc przepływy zostaną utworzone poza rozwiązaniem: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Utwórz w</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Wybierz rozwiązanie, aby utworzyć w nim przepływy (będą wtedy świadome rozwiązania i mogą być przenoszone razem z nim). Każde połączenie używa pasującego odwołania do połączenia w celu; jeśli go nie ma, jest dodawane do rozwiązania.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Utworzono (wyłączony) w rozwiązaniu {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Upłynął limit czasu żądania.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>opcje się różnią</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>opcje: {0} z {1}</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>Pytania z obrazami (na pytaniu lub jego odpowiedziach): {0}. Są kopiowane jako linki do obrazów formularza źródłowego, więc przestaną się wyświetlać po usunięciu formularza źródłowego lub gdy kopia jest w innym tenancie. Dodaj te obrazy ponownie w kopii.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Odpowiedzi</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Formularz {0} z {1}: {2} (pytanie {3} z {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} min {1} s</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} s</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - zmigrowano</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Wpisz adres witryny docelowej, np. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: połączenie {1} używa w celu &quot;{2}&quot;.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Połączenia używane w celu</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>Na liście docelowej &quot;{0}&quot; kolumny {1} są mapowane na &quot;{2}&quot; w {3} krokach (na przykład w kroku &quot;{5}&quot; przepływu &quot;{4}&quot;). Wybierz inną kolumnę docelową dla wszystkich oprócz jednej albo pomiń pozostałe.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>Przepływy, których nie podjęto: {0}. Kopiowanie zatrzymało się po błędzie, który w ten sam sposób spowodowałby niepowodzenie wszystkich pozostałych przepływów (zobacz dziennik aktywności). Napraw go i ponownie naciśnij Zapis; już utworzone przepływy są pomijane.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Nie wpisano żadnej witryny docelowej, więc każda witryna pozostaje bez zmian. Wpisz co najmniej jedną witrynę docelową w kolumnie Do lub ponownie naciśnij Dalej, aby pozostawić witryny bez zmian.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Brak dopasowania: &quot;{0}&quot; jest już używana przez {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Pominięto: &quot;{0}&quot; jest już używana przez {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>Kolumny pominięte w krokach przepływów, ponieważ dopasowana kolumna docelowa jest już używana przez inną kolumnę (w nawiasach): {0} ({1}). Jeśli nie tego chcesz, zmień cel jednej z tych kolumn.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Kolumna &quot;{0}&quot; jest pominięta w krokach na liście &quot;{1}&quot;: do jej kolumny docelowej &quot;{2}&quot; zapisuje już kolumna &quot;{3}&quot;. Jeśli nie tego chcesz, zmień cel jednej z tych kolumn w kroku Listy i kolumny.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Folder raportu</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Kopiowanie na żywo tworzy przepływy bezpośrednio w środowisku docelowym, więc żadne pliki przepływów nie są zapisywane na tym komputerze. Ten folder otrzymuje tylko raport z kopiowania: stronę internetową i plik tekstowy z listą zmian w każdym przepływie, pominiętych kolumn, dopasowanych połączeń oraz elementów, które nadal wymagają sprawdzenia. Przechowuj go razem z dokumentacją migracji. To jedyny pisemny zapis wprowadzonych zmian.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Każdy przepływ jest tworzony w środowisku docelowym jako wyłączony, więc nic nie działa, dopóki go nie sprawdzisz.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Najpierw wybierz folder raportu.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Kopiuj przepływy</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Skopiuj przepływy do celu</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Sprawdź poniższą listę, wybierz miejsce zapisu raportu, a następnie skopiuj przepływy.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Narzędzie stosuje Twoje mapowanie do kopii każdego przepływu i tworzy go w środowisku docelowym jako wyłączony, więc nic nie działa, dopóki go nie sprawdzisz. Oryginalne przepływy nie są zmieniane. Raport ze wszystkim, co zmieniono, pominięto lub nadal wymaga sprawdzenia, jest zapisywany w folderze raportu. Potem otwórz każdy nowy przepływ w Power Automate, popraw oznaczone połączenia i włącz go.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Gotowe do kopiowania?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Zaloguj się do tenanta docelowego, aby wyświetlić jego środowiska</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Najpierw załaduj środowiska</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Nie znaleziono środowisk Power Automate dla konta docelowego. Wymaga ono licencji Power Automate lub dostępu do środowiska tam. Spróbuj zalogować się ponownie innym kontem.</value></data>
 </root>

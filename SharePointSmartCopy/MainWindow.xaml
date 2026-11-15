@@ -608,7 +608,7 @@
                         <TextBlock Text=" · " Foreground="{DynamicResource TextPlaceholderBrush}" FontSize="13" VerticalAlignment="Center"
                                    Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
                         <Button Content="{loc:Loc Ui_Disconnect}" Style="{StaticResource LinkBtn}"
-                                Command="{Binding DisconnectSourceCommand}"
+                                Command="{Binding SignOutAndDisconnectSourceCommand}"
                                 Foreground="{DynamicResource TextTertiaryBrush}" FontSize="13" Padding="0" VerticalAlignment="Center"
                                 Visibility="{Binding SourceConnected, Converter={StaticResource BoolToVis}}"/>
                     </WrapPanel>
@@ -1239,6 +1239,10 @@
                             <CheckBox IsChecked="{Binding CopyTemplates}" Margin="0,0,0,6" FontSize="13"
                                       AutomationProperties.Name="{loc:Loc Ui_StructTemplatesLong}">
                                 <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructTemplatesLong}"/>
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding UpdateExistingStructure}" Margin="0,0,0,6" FontSize="13"
+                                      AutomationProperties.Name="{loc:Loc Ui_StructUpdateExistingLong}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructUpdateExistingLong}"/>
                             </CheckBox>
                             <CheckBox IsChecked="{Binding CopySiteDefinitions}" Margin="0,0,0,6" FontSize="13"
                                       Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}"

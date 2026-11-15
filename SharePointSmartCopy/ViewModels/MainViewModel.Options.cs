@@ -141,6 +141,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool _copyListSettings = true;
     [ObservableProperty] private bool _copyContentTypes = true;
     [ObservableProperty] private bool _copyColumnRules = true;
+    [ObservableProperty] private bool _updateExistingStructure;
     [ObservableProperty] private bool _copyTemplates = true;
     [ObservableProperty] private bool _copySiteDefinitions = true;
     [ObservableProperty] private bool _copySiteSettings = true;

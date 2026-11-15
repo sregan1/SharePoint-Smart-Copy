@@ -1499,4 +1499,116 @@
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>टेनेंट: {0}। साइन-इन केवल इसी डायरेक्टरी में हो सकता है।</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>किसी दूसरे टेनेंट की साइट कनेक्ट करने के लिए, सेटिंग्स में कोई अन्य ऐप रजिस्ट्रेशन चुनें (जिसका टेनेंट ID खाली हो या उसी टेनेंट पर सेट हो), या मल्टी-टेनेंट मोड का उपयोग करें।</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>केवल संरचना: कॉलम, दृश्य, सेटिंग और सामग्री प्रकार कॉपी किए जाते हैं, लेकिन कोई फ़ाइल या सूची आइटम नहीं।</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>लक्ष्य पर पहले से मौजूद सूचियों को भी अपडेट करें: समान नाम वाले व्यू (और डिफ़ॉल्ट व्यू), सूची सेटिंग, और कॉलम नियम व फ़ॉर्मेटिंग बदलें</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>मौजूदा सूचियाँ अपडेट करें</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>मौजूदा सूची को स्रोत के अनुसार अपडेट किया गया।</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>फ़्लो से बाहर रखें (लक्ष्य पर नहीं है)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>फ़्लो से बाहर रखा गया</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} कॉलम फ़्लो के चरणों से बाहर रखे जाएँगे क्योंकि लक्ष्य सूची में ऐसा कॉलम नहीं है: {1}। उसे रखने के लिए लक्ष्य सूची में कॉलम जोड़ें और फिर से जाँचें पर क्लिक करें, या कोई दूसरा कॉलम चुनें।</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>कॉलम &quot;{0}&quot; लक्ष्य सूची &quot;{1}&quot; में मौजूद नहीं है, इसलिए फ़्लो के चरण अब उसे नहीं लिखते। सूची में कॉलम जोड़ें और इसे फिर से चलाएँ, या Power Automate में उन चरणों में फ़ील्ड जोड़ें।</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>लक्ष्य सूची &quot;{0}&quot; में, कॉलम {1} सभी &quot;{3}&quot; के चरण &quot;{4}&quot; में &quot;{2}&quot; से मैप किए गए हैं। एक को छोड़कर बाकी सभी के लिए कोई दूसरा लक्ष्य कॉलम चुनें, या बाकी को बाहर रखें।</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>समीक्षा करें: लक्ष्य सूची में इन फ़ील्ड के लिए कोई कॉलम नहीं है, इसलिए चरण अब इन्हें नहीं लिखते। इनमें जो मान थे वे लक्ष्य पर कहीं सहेजे नहीं गए हैं।</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>यह फ़ॉर्म उस टेनेंट में नहीं है जिसमें आपने साइन इन किया है</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>साइन इन करें…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>हर कनेक्शन को लक्ष्य में आपके मौजूदा कनेक्शन में से किसी एक से मिलाया जाता है। जिसका कोई मेल नहीं है, उसे Power Automate में सेट करने के लिए आप पर छोड़ दिया जाता है।</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>कनेक्शन मिलाए नहीं जाते: फ़्लो बनने के बाद हर एक को Power Automate में सेट करें।</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>व्यू &apos;{0}&apos;: सेटिंग {1} लागू नहीं की जा सकी: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>व्यू &quot;{0}&quot;: उन कॉलम पर फ़िल्टर, सॉर्ट या ग्रुपिंग जो लक्ष्य पर नहीं हैं, बाहर रखी गई ({1})।</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>लुकअप साइट कॉलम नहीं बनाए गए क्योंकि उनकी सूची लक्ष्य पर नहीं है: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>लुकअप साइट कॉलम</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Power Automate एनवायरमेंट से कॉपी करें</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>एक्सपोर्ट किए गए पैकेज (.zip) उपयोग करें</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>स्रोत एनवायरमेंट में फ़्लो चुनें और टूल उन्हें लक्ष्य एनवायरमेंट में बनाता है, जो पहले से लक्ष्य की साइटों, सूचियों और फ़ॉर्म की ओर इंगित करते हैं। फ़्लो बंद बनाए जाते हैं, इसलिए आपकी समीक्षा तक कुछ नहीं चलता।</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>साइन इन करें और एनवायरमेंट लोड करें</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>यहाँ से कॉपी करें (स्रोत एनवायरमेंट)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>लक्ष्य टेनेंट में साइन इन करें</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>लक्ष्य एक अलग टेनेंट है: वहाँ फ़्लो बना सकने वाले खाते से उसमें साइन इन करें, फिर एनवायरमेंट चुनें।</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>यहाँ कॉपी करें (लक्ष्य एनवायरमेंट)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>सभी चुनें</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>कुछ न चुनें</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>एनवायरमेंट लोड हो रहे हैं...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>फ़्लो लोड हो रहे हैं...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>{0} में कोई फ़्लो नहीं मिला।</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{1} में {0} फ़्लो। कॉपी करने वालों पर निशान लगाएँ।</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>चुने गए फ़्लो में से कोई भी पढ़ा नहीं जा सका।</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>लक्ष्य में फ़्लो बनाए जा रहे हैं...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>लक्ष्य में फ़्लो बनाएँ</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>हर फ़्लो लक्ष्य एनवायरमेंट में बंद बनाया जाता है, इसलिए आपकी समीक्षा तक कुछ नहीं चलता। रिपोर्ट नीचे दिए फ़ोल्डर में सहेजी जाती है।</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>लक्ष्य एनवायरमेंट में मेरे मौजूदा कनेक्शन उपयोग करें, जहाँ कोई हो</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} फ़्लो {2} में बनाए जाएँगे ({1} से कॉपी किए गए)</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>फ़्लो बंद बनाए जाते हैं। समीक्षा के बाद हर एक को चालू करें।</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>{0} स्रोत और {1} लक्ष्य एनवायरमेंट मिले।</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>{1} से {0} फ़्लो पढ़े जा रहे हैं</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>{1} में {0} फ़्लो बनाए जा रहे हैं</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>कनेक्शन मिलाए नहीं जा सके, इसलिए फ़्लो उनके बिना बनाए जाते हैं। {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>{0} बनाया गया</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>बनाया गया (बंद)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>बनाया गया, सेट करने के लिए {0} कनेक्शन</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} कनेक्शन लक्ष्य के किसी कनेक्शन से नहीं मिलाए गए। हर फ़्लो को Power Automate में खोलें और एक कनेक्शन चुनें।</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} फ़्लो नहीं बनाए जा सके। कारण के लिए गतिविधि लॉग देखें।</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>ऐप पंजीकरण के पास अभी Power Automate (या Power Apps) की अनुमति नहीं है। किसी व्यवस्थापक से इसे जोड़ने और सहमति देने को कहें, फिर दोबारा प्रयास करें।</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>आपके खाते में लक्ष्य एनवायरमेंट ({0}) में Dataverse सुरक्षा भूमिका नहीं है। किसी व्यवस्थापक से आपको Environment Maker (या System Administrator) भूमिका देने को कहें।</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>आपके खाते के पास इस एनवायरमेंट या फ़्लो की पहुँच नहीं है।</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>लक्ष्य ने फ़्लो अस्वीकार कर दिया: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>एनवायरमेंट या फ़्लो नहीं मिला।</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate ने त्रुटि लौटाई: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>पूर्ण: {0} फ़्लो बनाए गए</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>{0} में बनाए गए, बंद। कुछ भी स्रोत की ओर इंगित नहीं छोड़ा गया।</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>पूर्ण: {0} फ़्लो बनाए गए, कुछ आइटम को आपकी समीक्षा चाहिए</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>{0} में बनाए गए, बंद। जो मान अब भी स्रोत की ओर इंगित करते हैं, जो कनेक्शन सेट करने हैं, और जिन आइटम को टूल दोबारा नहीं लिखता, उन्हें देखने के लिए रिपोर्ट खोलें।</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>रिपोर्ट खोलें और समीक्षा के लिए चिह्नित आइटम जाँचें।</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Power Automate (लक्ष्य) में, हर नया फ़्लो खोलें, उसके बताए किसी भी कनेक्शन को ठीक करें, और उसे चालू करें।</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>स्रोत में मूल फ़्लो को बंद करने से पहले हर फ़्लो का परीक्षण करें।</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>सहेजी गई फ़ॉर्म ID फ़ाइल उपयोग में है (ऐप की किसी दूसरी कॉपी या किसी अन्य प्रोग्राम द्वारा)। थोड़ी देर में फिर प्रयास करें।</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>छवियाँ जाँचे जाने से पहले रद्द किया गया: कॉपी की पृष्ठभूमि, लोगो और हेडर छवि देखें।</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>पहले पैकेज चरण में लक्ष्य एनवायरमेंट चुनें।</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>स्रोत और लक्ष्य एक ही एनवायरमेंट ({0}) हैं, इसलिए कॉपी मूल फ़्लो के बगल में बनाई जाएँगी। जारी रखें?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>पहले ही बनाया जा चुका (पिछला प्रयास)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>रद्द किया गया। रद्द करने से पहले {0} फ़्लो बनाए गए; रिपोर्ट में उनकी सूची है।</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} फ़्लो पिछले प्रयास में पहले ही बनाए जा चुके थे और दोबारा नहीं बनाए गए।</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} फ़्लो स्कैन के बाद चुने गए थे और नहीं बनाए गए। पैकेज पर वापस जाएँ और उन्हें शामिल करने के लिए आगे दबाएँ।</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>रद्द किया गया: {0} फ़्लो नहीं बनाए गए।</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>समीक्षा करें: ये कॉलम चरणों से बाहर रखे गए क्योंकि लक्ष्य सूची में नहीं हैं, लेकिन कोई चरण अब भी उन पर फ़िल्टर, सॉर्ट या चयन करता है। इम्पोर्ट काम करता है; फ़्लो चलने पर वह चरण तब तक विफल रहता है जब तक Power Automate में उसकी क्वेरी न बदली जाए या कॉलम सूची में न जोड़ा जाए।</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>समीक्षा करें: यह फ़्लो फ़ाइल पढ़ी नहीं जा सकी, इसलिए उसे बिना बदलाव के नए पैकेज में कॉपी किया गया और वह अब भी स्रोत की ओर इंगित करती है।</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} क्वेरी संदर्भ अब भी ऐसे कॉलम का नाम देते हैं जिसे बाहर रखा गया क्योंकि लक्ष्य सूची में वह नहीं है। फ़्लो चलने पर वे चरण विफल होते हैं; Power Automate में उनका फ़िल्टर या सॉर्ट बदलें, या कॉलम को सूची में जोड़ें।</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Power Automate को अनुरोध का समय समाप्त हो गया। कनेक्शन जाँचें और दोबारा प्रयास करें।</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>मेरे फ़्लो (किसी सॉल्यूशन में नहीं)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>लक्ष्य एनवायरमेंट के सॉल्यूशन पढ़े जा रहे हैं…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>लक्ष्य एनवायरमेंट के सॉल्यूशन पढ़े नहीं जा सके, इसलिए फ़्लो किसी सॉल्यूशन के बाहर बनाए जाएँगे: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>यहाँ बनाएँ</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>फ़्लो को किसी सॉल्यूशन के अंदर बनाने के लिए एक सॉल्यूशन चुनें (तब वे सॉल्यूशन-अवेयर होते हैं और सॉल्यूशन के साथ जा सकते हैं)। हर कनेक्शन लक्ष्य के मेल खाते कनेक्शन संदर्भ का उपयोग करता है; कोई न हो तो सॉल्यूशन में एक जोड़ा जाता है।</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>सॉल्यूशन {0} में बनाया गया (बंद)</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>अनुरोध का समय समाप्त हो गया।</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>विकल्प अलग हैं</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{1} में से {0} विकल्प</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} प्रश्नों में छवियाँ हैं (प्रश्न या उसके विकल्पों पर)। वे स्रोत फ़ॉर्म की छवियों के लिंक के रूप में कॉपी होती हैं, इसलिए स्रोत फ़ॉर्म हटाने पर या कॉपी दूसरे टेनेंट में होने पर वे दिखना बंद हो जाती हैं। कॉपी में उन छवियों को फिर से जोड़ें।</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>प्रतिक्रियाएँ</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>फ़ॉर्म {0} / {1}: {2} (प्रश्न {3} / {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} मि {1} से</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} से</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - माइग्रेट किया गया</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>लक्ष्य साइट का पता लिखें, जैसे https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: {1} कनेक्शन लक्ष्य में &quot;{2}&quot; का उपयोग करता है।</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>लक्ष्य में उपयोग किए गए कनेक्शन</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>लक्ष्य सूची &quot;{0}&quot; में, कॉलम {1} सभी &quot;{2}&quot; से {3} चरणों में मैप किए गए हैं (उदाहरण के लिए &quot;{4}&quot; का चरण &quot;{5}&quot;)। एक को छोड़कर बाकी सभी के लिए कोई दूसरा लक्ष्य कॉलम चुनें, या बाकी को बाहर रखें।</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} फ़्लो का प्रयास नहीं किया गया: कॉपी एक ऐसी त्रुटि के बाद रुक गई जो बाकी सभी फ़्लो को उसी तरह विफल कर देती (गतिविधि लॉग देखें)। उसे ठीक करें और फिर से लिखें दबाएँ; पहले से बनाए गए फ़्लो छोड़ दिए जाते हैं।</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>कोई लक्ष्य साइट टाइप नहीं की गई है, इसलिए हर साइट जैसी है वैसी रहती है। को कॉलम में कम से कम एक लक्ष्य साइट टाइप करें, या साइटों को अपरिवर्तित रखने के लिए फिर से अगला दबाएँ।</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>कोई मेल नहीं: &quot;{0}&quot; पहले से {1} द्वारा उपयोग में है</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>बाहर रखा गया: &quot;{0}&quot; पहले से {1} द्वारा उपयोग में है</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} कॉलम फ़्लो के चरणों से बाहर रखे जाएँगे क्योंकि जिस लक्ष्य कॉलम से उनका मेल हुआ, वह पहले से किसी दूसरे कॉलम (कोष्ठक में) द्वारा उपयोग में है: {1}। यदि आप यह नहीं चाहते, तो किसी एक कॉलम का लक्ष्य बदलें।</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>कॉलम &quot;{0}&quot; को &quot;{1}&quot; के चरणों से बाहर रखा गया है: उसका लक्ष्य कॉलम &quot;{2}&quot; पहले से &quot;{3}&quot; द्वारा लिखा जाता है। यदि आप यह नहीं चाहते, तो सूचियाँ और कॉलम चरण पर किसी एक कॉलम का लक्ष्य बदलें।</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>रिपोर्ट फ़ोल्डर</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>लाइव कॉपी फ़्लो को सीधे लक्ष्य एनवायरमेंट में बनाती है, इसलिए इस कंप्यूटर पर कोई फ़्लो फ़ाइल सहेजी नहीं जाती। यह फ़ोल्डर केवल कॉपी रिपोर्ट प्राप्त करता है: एक वेब पेज और एक टेक्स्ट फ़ाइल, जिनमें हर फ़्लो में क्या बदला गया, कौन-से कॉलम छोड़े गए, कौन-से कनेक्शन मिलान किए गए और किन चीज़ों की समीक्षा अभी बाकी है, इसकी सूची होती है। इसे अपने माइग्रेशन रिकॉर्ड के साथ रखें। क्या बदला गया, इसका यही एकमात्र लिखित रिकॉर्ड है।</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>हर फ़्लो लक्ष्य एनवायरमेंट में बंद बनाया जाता है, इसलिए आपकी समीक्षा करने तक कुछ नहीं चलता।</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>पहले रिपोर्ट फ़ोल्डर चुनें।</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>फ़्लो कॉपी करें</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>फ़्लो को लक्ष्य में कॉपी करें</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>नीचे दी गई सूची देखें, रिपोर्ट सहेजने की जगह चुनें, फिर फ़्लो कॉपी करें।</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>टूल आपकी मैपिंग को हर फ़्लो की एक कॉपी पर लागू करता है और उसे लक्ष्य एनवायरमेंट में बंद बनाता है, इसलिए आपकी समीक्षा करने तक कुछ नहीं चलता। आपके मूल फ़्लो नहीं बदलते। जो कुछ बदला गया, छोड़ा गया या जिसकी समीक्षा अभी बाकी है, उसकी रिपोर्ट रिपोर्ट फ़ोल्डर में सहेजी जाती है। इसके बाद Power Automate में हर नया फ़्लो खोलें, उसके द्वारा चिह्नित किसी भी कनेक्शन को ठीक करें और उसे चालू करें।</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>कॉपी करने के लिए तैयार?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>लक्ष्य टेनेंट के एनवायरमेंट की सूची देखने के लिए उसमें साइन इन करें</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>पहले एनवायरमेंट लोड करें</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>लक्ष्य खाते के लिए कोई Power Automate एनवायरमेंट नहीं मिला। इसके लिए Power Automate लाइसेंस या वहाँ किसी एनवायरमेंट तक पहुँच चाहिए। किसी दूसरे खाते से फिर से साइन इन करके देखें।</value></data>
 </root>

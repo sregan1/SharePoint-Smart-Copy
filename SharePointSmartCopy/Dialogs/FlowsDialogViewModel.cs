@@ -1,9 +1,23 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SharePointSmartCopy.Localization;
+using SharePointSmartCopy.Services;
 using SharePointSmartCopy.Workflows;
 
 namespace SharePointSmartCopy.Dialogs;
+
+// One flow in the live picker on the Packages step.
+public sealed partial class LiveFlowRow : ObservableObject
+{
+    public string Name { get; init; } = string.Empty;          // the flow's id
+    public string DisplayName { get; init; } = string.Empty;
+    public string State { get; init; } = string.Empty;
+    [ObservableProperty] private bool _isSelected;
+    // Set once this flow has been created in a target environment, so pressing Write again (after another flow failed)
+    // does not create it a second time there.
+    public string? CreatedIn { get; set; }
+    public string? CreatedId { get; set; }
+}
 
 // A short message with a level (Ready / Look / Error / Info), shown as a status chip.
 public partial class StatusMessage : ObservableObject
@@ -38,10 +52,12 @@ public partial class FlowsDialogViewModel : ObservableObject
     {
         PackageRows.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasPackages));
         ReviewItems.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasReviewItems));
+        LiveFlows.CollectionChanged += (_, _) => RaiseLiveSelectionChanged();
         TargetConn.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(SideConnection.State)) { OnPropertyChanged(nameof(ShowSignInTargetFirst)); OnPropertyChanged(nameof(ShowChangeTarget)); OnPropertyChanged(nameof(CanNext)); }
         };
+        SourceConn.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(SideConnection.State)) OnPropertyChanged(nameof(ShowSignInSingle)); };
         MatchSummary.PropertyChanged += (_, _) => OnPropertyChanged(nameof(HasMatchSummary));
     }
 
@@ -121,7 +137,9 @@ public partial class FlowsDialogViewModel : ObservableObject
     // ── Sites step ──
     // Which side is signing in right now ("source", "target" or ""), so that side's button shows Cancel instead.
     [ObservableProperty, NotifyPropertyChangedFor(nameof(ShowSignInSource), nameof(ShowCancelSource), nameof(ShowSignInTarget),
-        nameof(ShowCancelTarget), nameof(IsConnecting), nameof(ShowSignInTargetFirst), nameof(ShowChangeTarget))] private string _connectingSide = string.Empty;
+        nameof(ShowCancelTarget), nameof(IsConnecting), nameof(ShowSignInTargetFirst), nameof(ShowChangeTarget), nameof(ShowSignInSingle))] private string _connectingSide = string.Empty;
+    // Single tenant, nobody signed in yet: one "Sign in…" button (there is only one sign-in, shared by source and target).
+    public bool ShowSignInSingle => IsSingleTenant && ConnectingSide != "source" && SourceConn.State != "Connected";
     public bool IsConnecting => ConnectingSide.Length > 0;
     public bool ShowSignInSource => IsMultiTenant && ConnectingSide != "source";
     public bool ShowCancelSource => ConnectingSide == "source";
@@ -130,7 +148,7 @@ public partial class FlowsDialogViewModel : ObservableObject
     public bool ShowSignInTargetFirst => ShowSignInTarget && TargetConn.State != "Connected";
     public bool ShowChangeTarget => ShowSignInTarget && TargetConn.State == "Connected";
     public bool ShowCancelTarget => ConnectingSide == "target";
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(IsSingleTenant), nameof(ShowSignInSource), nameof(ShowSignInTarget), nameof(ShowSignInTargetFirst), nameof(ShowChangeTarget), nameof(CanNext))] private bool _isMultiTenant;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(IsSingleTenant), nameof(ShowSignInSource), nameof(ShowSignInTarget), nameof(ShowSignInTargetFirst), nameof(ShowChangeTarget), nameof(ShowSignInSingle), nameof(CanNext))] private bool _isMultiTenant;
     public bool IsSingleTenant => !IsMultiTenant;
     // The one warning shown under the connections, chosen by priority.
     [ObservableProperty, NotifyPropertyChangedFor(nameof(HasSourceWarning))] private string _sourceWarning = string.Empty;
@@ -141,6 +159,41 @@ public partial class FlowsDialogViewModel : ObservableObject
     [ObservableProperty] private bool _showManualHost;
     // The advanced "read lists from" column of the sites table.
     [ObservableProperty] private bool _showReadFrom;
+
+    // ── Packages step: where the flows come from ──
+    // "Live" = pick flows in a source Power Automate environment and create them in a target environment;
+    // "Zip" = exported package files (the original workflow, to be deprecated).
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(IsLiveSource), nameof(IsZipSource), nameof(CanNext), nameof(NextButtonText))] private string _sourceMode = "Live";
+    public bool IsLiveSource => SourceMode == "Live";
+    public bool IsZipSource => SourceMode == "Zip";
+
+    public ObservableCollection<FlowEnvironment> SourceEnvironments { get; } = [];
+    public ObservableCollection<FlowEnvironment> TargetEnvironments { get; } = [];
+    public ObservableCollection<LiveFlowRow> LiveFlows { get; } = [];
+    [ObservableProperty] private FlowEnvironment? _sourceEnv;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext))] private FlowEnvironment? _targetEnv;
+    // Write step, target environment with Dataverse: the solution the copies are created in ("My flows" = none).
+    public ObservableCollection<FlowSolution> TargetSolutions { get; } = [];
+    [ObservableProperty] private FlowSolution? _targetSolution;
+    [ObservableProperty] private bool _hasTargetSolutions;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasSolutionsNote))] private string _solutionsNote = string.Empty;
+    public bool HasSolutionsNote => SolutionsNote.Length > 0;
+    // Shown under the pickers: loading, how many flows, or why nothing is listed.
+    [ObservableProperty] private string _liveStatusText = string.Empty;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(HasLiveEnvironments))] private bool _liveEnvironmentsLoaded;
+    public bool HasLiveEnvironments => LiveEnvironmentsLoaded;
+    public bool HasLiveFlows => LiveFlows.Count > 0;
+    public int LiveSelectedCount => LiveFlows.Count(f => f.IsSelected);
+    // Bind each flow's connections to the signed-in user's existing connections in the target (otherwise they are created
+    // unbound and the user fixes them in Power Automate).
+    [ObservableProperty] private bool _bindConnections = true;
+
+    public void RaiseLiveSelectionChanged()
+    {
+        OnPropertyChanged(nameof(LiveSelectedCount));
+        OnPropertyChanged(nameof(HasLiveFlows));
+        OnPropertyChanged(nameof(CanNext));
+    }
 
     // ── Packages step ──
     public bool HasPackages => PackageRows.Count > 0;
@@ -178,14 +231,17 @@ public partial class FlowsDialogViewModel : ObservableObject
     public bool ShowBack => CurrentStep is >= 1 and <= 5;
     public bool ShowNext => CurrentStep <= 4;
     public bool ShowStartOver => CurrentStep == 5;
-    public string NextButtonText => CurrentStep == 4 ? Loc.T("Flows_WriteButton") : Loc.T("Ui_Next");
+    // The last step writes packages (zip) or creates the flows in the target (live): the button says which.
+    public string NextButtonText => CurrentStep == 4 ? Loc.T(IsLiveSource ? "Flows_Live_CopyButton" : "Flows_WriteButton") : Loc.T("Ui_Next");
     // Why Next is off on a step that checks the flows will work (empty = nothing in the way).
     [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext), nameof(HasBlockReason))] private string _blockReason = string.Empty;
     public bool HasBlockReason => BlockReason.Length > 0;
 
     public bool CanNext => !IsBusy && CurrentStep switch
     {
-        0 => HasScan && FlowCount > 0 && BlockReason.Length == 0,
+        // Live: flows ticked and a target chosen (the scan runs when Next is pressed). Zip: the packages were scanned.
+        0 => IsLiveSource ? LiveSelectedCount > 0 && TargetEnv is not null
+                          : HasScan && FlowCount > 0 && BlockReason.Length == 0,
         4 => OutputPath.Trim().Length > 0,
         1 or 2 or 3 => BlockReason.Length == 0,   // the steps that check the flows will work before going on
         _ => false,
@@ -200,38 +256,40 @@ public partial class FlowsDialogViewModel : ObservableObject
     partial void OnHasScanChanged(bool value) { OnPropertyChanged(nameof(NoSites)); OnPropertyChanged(nameof(NoForms)); }
 
     // Fills the report step. The review items are what the tool could not settle by itself, each with the step that can fix it.
-    public void Finish(int packages, int replacements, IReadOnlyList<ReviewItem> review, TimeSpan elapsed, string outDir)
+    public void Finish(int packages, int replacements, IReadOnlyList<ReviewItem> review, TimeSpan elapsed, string outDir, bool live = false)
     {
+        var p = live ? "Flows_Live_" : "Flows_";   // live copies create flows instead of writing packages
         PackagesWritten = packages;
         Replacements = replacements;
         ReviewItems.Clear();
         foreach (var r in review) ReviewItems.Add(r);
         ReviewCount = review.Count;
         DurationLabel = Loc.T("Flows_Took", elapsed.TotalMinutes >= 1
-            ? $"{(int)elapsed.TotalMinutes}m {elapsed.Seconds}s"
-            : $"{Math.Max(1, (int)Math.Round(elapsed.TotalSeconds))}s");
+            ? Loc.T("Common_DurMinSec", (int)elapsed.TotalMinutes, elapsed.Seconds)
+            : Loc.T("Common_DurSec", Math.Max(1, (int)Math.Round(elapsed.TotalSeconds))));
 
         if (review.Count == 0)
         {
             Outcome = "Success";
-            ResultHeadline = Loc.T("Flows_ResultSuccess", packages);
-            ResultSubline = Loc.T("Flows_ResultSuccessSub", outDir);
+            ResultHeadline = Loc.T(p + "ResultSuccess", packages);
+            ResultSubline = Loc.T(p + "ResultSuccessSub", outDir);
         }
         else
         {
             Outcome = "Partial";
-            ResultHeadline = Loc.T("Flows_ResultReview", packages);
-            ResultSubline = Loc.T("Flows_ResultReviewSub", outDir);
+            ResultHeadline = Loc.T(p + "ResultReview", packages);
+            ResultSubline = Loc.T(p + "ResultReviewSub", outDir);
         }
 
         NextSteps.Clear();
-        for (var i = 1; i <= 4; i++) NextSteps.Add(new NextStepItem(i.ToString(), Loc.T("Flows_NextStep" + i)));
+        for (var i = 1; i <= (live ? 3 : 4); i++) NextSteps.Add(new NextStepItem(i.ToString(), Loc.T(p + "NextStep" + i)));
         CurrentStep = 5;
     }
 
     public void Reset()
     {
         CurrentStep = 0;
+        LiveFlows.Clear(); RaiseLiveSelectionChanged(); LiveStatusText = string.Empty;
         PackageRows.Clear(); HasScan = false; FlowCount = 0; ScanSummaryText = string.Empty; ResourcesHeaderText = string.Empty;
         HasSites = false; HasCards = false; HasForms = false; HasValues = false; HasAutofill = false;
         MatchSummary.Text = string.Empty;

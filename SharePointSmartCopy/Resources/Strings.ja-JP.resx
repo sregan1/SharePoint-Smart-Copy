@@ -1499,4 +1499,116 @@
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>テナント: {0}。サインインできるのはこのディレクトリのみです。</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>別のテナントのサイトに接続するには、[設定] で別のアプリの登録を選択するか (テナント ID を空にするか、そのテナントに設定したもの)、マルチテナント モードを使用してください。</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>構造のみ: 列、ビュー、設定、コンテンツ タイプはコピーされますが、ファイルやリスト アイテムはコピーされません。</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>コピー先にすでに存在するリストも更新します: 同名のビュー (および既定のビュー)、リスト設定、列の規則と書式を置き換えます</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>既存のリストを更新</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>既存のリストをコピー元に合わせて更新しました。</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>フローから除外 (コピー先にない)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>フローから除外</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>コピー先リストに該当する列がないため、{0} 個の列がフローのステップから除外されます: {1}。残すには、コピー先リストに列を追加して [再チェック] をクリックするか、別の列を選択してください。</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>列 &quot;{0}&quot; はコピー先リスト &quot;{1}&quot; に存在しないため、フローのステップはこの列に書き込まなくなりました。列をリストに追加してもう一度実行するか、Power Automate でそれらのステップにフィールドを追加してください。</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>コピー先リスト &quot;{0}&quot; で、列 {1} がすべて &quot;{3}&quot; のステップ &quot;{4}&quot; の &quot;{2}&quot; にマップされています。1 つを除いてほかの列には別のコピー先の列を選択するか、除外してください。</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>確認: コピー先リストにこれらのフィールドに対応する列がないため、ステップはそれらを書き込まなくなりました。それらが保持していた値はコピー先のどこにも保存されません。</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>このフォームは、サインインしているテナントにありません</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>サインイン…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>各接続は、コピー先にある既存の接続のいずれかと照合されます。一致しないものは、Power Automate で設定するために残されます。</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>接続は照合されません: フローの作成後に、Power Automate で各接続を設定してください。</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>ビュー &apos;{0}&apos;: 設定 {1} を適用できませんでした: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>ビュー &quot;{0}&quot;: コピー先にない列に対するフィルター、並べ替え、グループ化は除外されました ({1})。</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>参照サイト列は、そのリストがコピー先にないため作成されませんでした: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>参照サイト列</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Power Automate 環境からコピー</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>エクスポートしたパッケージ (.zip) を使用</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>コピー元の環境でフローを選択すると、ツールがコピー先の環境にフローを作成し、コピー先のサイト、リスト、フォームをすでに参照する状態にします。フローはオフの状態で作成されるため、確認するまで何も実行されません。</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>サインインして環境を読み込む</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>コピー元 (コピー元の環境)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>コピー先のテナントにサインイン</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>コピー先は別のテナントです: そこでフローを作成できるアカウントでサインインしてから、環境を選択してください。</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>コピー先 (コピー先の環境)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>すべて選択</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>選択解除</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>環境を読み込んでいます...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>フローを読み込んでいます...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>{0} にフローが見つかりません。</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{1} に {0} 個のフローがあります。コピーするものにチェックを入れてください。</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>選択したフローはどれも読み取れませんでした。</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>コピー先にフローを作成しています...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>コピー先にフローを作成</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>各フローはオフの状態でコピー先の環境に作成されるため、確認するまで何も実行されません。レポートは下のフォルダーに保存されます。</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>コピー先の環境に既存の接続がある場合はそれを使用する</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{1} からコピーした {0} 個のフローが {2} に作成されます</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>フローはオフの状態で作成されます。確認後に、それぞれをオンにしてください。</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>コピー元 {0} 件、コピー先 {1} 件の環境が見つかりました。</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>{1} から {0} 個のフローを読み取っています</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>{1} に {0} 個のフローを作成しています</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>接続を照合できなかったため、接続なしでフローが作成されます。{0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>{0} を作成しました</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>作成済み (オフ)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>作成済み、設定が必要な接続: {0} 件</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} 件の接続がコピー先の接続と照合されませんでした。各フローを Power Automate で開き、接続を選択してください。</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} 個のフローを作成できませんでした。理由はアクティビティ ログを参照してください。</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>アプリの登録に Power Automate (または Power Apps) のアクセス許可がまだありません。管理者にアクセス許可の追加と同意の付与を依頼してから、もう一度お試しください。</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>アカウントに、コピー先の環境 ({0}) の Dataverse セキュリティ ロールがありません。管理者に Environment Maker ロール (または System Administrator) の付与を依頼してください。</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>アカウントにこの環境またはフローへのアクセス権がありません。</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>コピー先がフローを拒否しました: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>環境またはフローが見つかりませんでした。</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate でエラーが返されました: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>完了: {0} 個のフローを作成しました</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>{0} にオフの状態で作成しました。コピー元を参照したままのものはありません。</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>完了: {0} 個のフローを作成しました。確認が必要な項目があります</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>{0} にオフの状態で作成しました。レポートを開いて、コピー元を参照したままの値、設定が必要な接続、ツールが書き換えない項目を確認してください。</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>レポートを開いて、確認対象としてマークされた項目をチェックします。</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Power Automate (コピー先) で、新しい各フローを開き、フラグが付いた接続を修正してから、オンにします。</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>コピー元の元のフローをオフにする前に、各フローをテストしてください。</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>保存されたフォーム ID ファイルは使用中です (アプリの別のコピーまたは別のプログラムによって)。しばらくしてからもう一度お試しください。</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>画像のチェック前にキャンセルされました: コピーの背景、ロゴ、ヘッダー画像を確認してください。</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>先に [パッケージ] ステップでコピー先の環境を選択してください。</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>コピー元とコピー先が同じ環境 ({0}) のため、コピーは元のフローの隣に作成されます。続行しますか?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>作成済み (以前の試行)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>キャンセルしました。キャンセル前に {0} 個のフローが作成されました。レポートに一覧があります。</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} 個のフローは以前の試行で作成済みのため、再作成されませんでした。</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} 個のフローはスキャン後にチェックされたため、作成されませんでした。[パッケージ] に戻り、[次へ] を押して含めてください。</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>キャンセル: {0} 個のフローは作成されませんでした。</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>確認: コピー先リストにこれらの列がないためステップから除外されましたが、ステップがまだそれらでフィルター、並べ替え、選択を行っています。インポートは成功しますが、Power Automate でクエリを変更するか列をリストに追加するまで、フローの実行時にそのステップは失敗します。</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>確認: このフロー ファイルを読み取れなかったため、新しいパッケージにそのままコピーされ、コピー元を参照したままです。</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} 件のクエリ参照が、コピー先リストにないため除外された列をまだ指しています。フローの実行時にそれらのステップは失敗します。Power Automate でフィルターまたは並べ替えを変更するか、列をリストに追加してください。</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Power Automate への要求がタイムアウトしました。接続を確認してもう一度お試しください。</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>自分のフロー (ソリューション外)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>コピー先環境のソリューションを読み取っています…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>コピー先環境のソリューションを読み取れなかったため、フローはソリューション外に作成されます: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>作成先</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>ソリューションを選択すると、その中にフローが作成されます (ソリューション対応となり、ソリューションと一緒に移動できます)。各接続はコピー先の対応する接続参照を使用し、ない場合はソリューションに追加されます。</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>ソリューション {0} に作成済み (オフ)</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>要求がタイムアウトしました。</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>オプションが異なります</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{1} 個中 {0} 個のオプション</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} 個の質問に画像があります (質問または選択肢)。コピー元フォームの画像へのリンクとしてコピーされるため、コピー元フォームを削除したり、コピーが別のテナントにあったりすると表示されなくなります。コピーで画像をもう一度追加してください。</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>回答</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>フォーム {0}/{1}: {2} (質問 {3}/{4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0}分{1}秒</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0}秒</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - 移行済み</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>コピー先のサイトのアドレスを入力してください (例: https://contoso.sharepoint.com/sites/HR)</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: {1} 接続はコピー先で &quot;{2}&quot; を使用します。</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>コピー先で使用される接続</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>コピー先リスト &quot;{0}&quot; で、列 {1} がすべて {3} 個のステップで &quot;{2}&quot; にマップされています (例: &quot;{4}&quot; のステップ &quot;{5}&quot;)。1 つを除いてほかの列には別のコピー先の列を選択するか、除外してください。</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} 個のフローは試行されませんでした: 残りのすべてのフローが同じように失敗するエラーが発生したため、コピーを停止しました (アクティビティ ログを参照してください)。修正してからもう一度 [書き込み] を押してください。作成済みのフローはスキップされます。</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>コピー先サイトが入力されていないため、すべてのサイトはそのままになります。[変更後] 列に少なくとも 1 つのコピー先サイトを入力するか、サイトを変更しない場合はもう一度 [次へ] を押してください。</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>一致なし: &quot;{0}&quot; は {1} が既に使用</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>除外: &quot;{0}&quot; は {1} が既に使用</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>一致したコピー先の列が既に別の列 (かっこ内) で使用されているため、{0} 個の列がフローのステップから除外されます: {1}。これが意図と異なる場合は、いずれかの列のコピー先を変更してください。</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>列 &quot;{0}&quot; は &quot;{1}&quot; のステップから除外されています: コピー先の列 &quot;{2}&quot; には既に &quot;{3}&quot; が書き込んでいます。これが意図と異なる場合は、[リストと列] ステップでいずれかの列のコピー先を変更してください。</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>レポート フォルダー</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>ライブ コピーはフローをコピー先の環境に直接作成するため、このコンピューターにフロー ファイルは保存されません。このフォルダーが受け取るのはコピー レポートのみです。コピー レポートは、各フローで変更された内容、除外された列、一致した接続、まだ確認が必要な項目を一覧にした Web ページとテキスト ファイルです。移行の記録と一緒に保管してください。変更内容を記した唯一の書面による記録です。</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>各フローはオフの状態でコピー先の環境に作成されるため、確認するまで何も実行されません。</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>先にレポート フォルダーを選択してください。</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>フローをコピー</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>フローをコピー先にコピー</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>下の一覧を確認し、レポートの保存先を選択して、フローをコピーしてください。</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>このツールは、各フローのコピーにマッピングを適用し、オフの状態でコピー先の環境に作成するため、確認するまで何も実行されません。元のフローは変更されません。変更された内容、除外された内容、まだ確認が必要な内容のレポートがレポート フォルダーに保存されます。その後、新しい各フローを Power Automate で開き、フラグが付いた接続を修正して、オンにしてください。</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>コピーの準備はできましたか?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>コピー先のテナントにサインインして環境を一覧表示</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>先に環境を読み込んでください</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>コピー先のアカウントに対する Power Automate 環境が見つかりませんでした。Power Automate のライセンス、またはそこでの環境へのアクセスが必要です。別のアカウントで再度サインインしてください。</value></data>
 </root>

@@ -1499,4 +1499,116 @@
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>租用戶: {0}。登入只能進入此目錄。</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>若要連線到其他租用戶上的網站,請在「設定」中選擇另一個應用程式註冊(其租用戶識別碼為空白或設定為該租用戶),或使用多租用戶模式。</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>僅結構:會複製欄、檢視、設定和內容類型,但不會複製任何檔案或清單項目。</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>同時更新目標上已存在的清單: 取代同名檢視(和預設檢視)、清單設定,以及欄規則和格式</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>更新現有清單</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>已依來源更新現有清單。</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>從流程中排除(目標上沒有)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>已從流程中排除</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>由於目標清單沒有對應的欄,{0} 個欄將從流程的步驟中排除: {1}。若要保留,請將該欄新增至目標清單並按一下「重新檢查」,或選擇其他欄。</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>目標清單「{1}」上不存在欄「{0}」,因此流程的步驟不再寫入該欄。請將該欄新增至清單後重新執行,或在 Power Automate 中將該欄位新增至這些步驟。</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>在目標清單「{0}」上,欄 {1} 在「{3}」的步驟「{4}」中都對應到「{2}」。請為其中除一個以外的所有欄選擇不同的目標欄,或將其餘的排除。</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>請檢閱: 目標清單沒有這些欄位對應的欄,因此步驟不再寫入它們。它們原有的值不會儲存在目標的任何位置。</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>此表單不在您登入的租用戶中</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>登入…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>每個連線都會與目標中您現有的某個連線比對。沒有符合的連線會留給您在 Power Automate 中設定。</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>不比對連線: 建立流程之後,請在 Power Automate 中設定每個連線。</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>檢視「{0}」: 無法套用設定 {1}: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>檢視「{0}」: 對目標沒有的欄的篩選、排序或群組已被排除({1})。</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>未建立查閱網站欄,因為它們的清單不在目標上: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>查閱網站欄</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>從 Power Automate 環境複製</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>使用匯出的套件(.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>在來源環境中選擇流程,工具會在目標環境中建立它們,並使其已指向目標的網站、清單和表單。流程建立後處於關閉狀態,因此在您檢閱之前不會執行任何內容。</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>登入並載入環境</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>複製自(來源環境)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>登入目標租用戶</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>目標是另一個租用戶: 請使用可在該租用戶中建立流程的帳戶登入,然後選擇環境。</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>複製到(目標環境)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>全選</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>全部不選</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>正在載入環境...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>正在載入流程...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>在 {0} 中找不到流程。</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{1} 中有 {0} 個流程。請勾選要複製的流程。</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>所選流程均無法讀取。</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>正在目標中建立流程...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>在目標中建立流程</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>每個流程都會以關閉狀態在目標環境中建立,因此在您檢閱之前不會執行任何內容。報告將儲存在下方的資料夾中。</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>目標環境中有現有連線時使用我的現有連線</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>將在 {2} 中建立 {0} 個流程(複製自 {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>流程建立後處於關閉狀態。檢閱後請逐一將其開啟。</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>找到 {0} 個來源環境和 {1} 個目標環境。</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>正在從 {1} 讀取 {0} 個流程</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>正在 {1} 中建立 {0} 個流程</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>無法比對連線,因此將在不含連線的情況下建立流程。{0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>已建立 {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>已建立(關閉)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>已建立,有 {0} 個連線待設定</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} 個連線未與目標中的連線比對成功。請在 Power Automate 中開啟每個流程並選擇連線。</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>無法建立 {0} 個流程。原因請參閱活動記錄。</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>應用程式註冊尚無 Power Automate(或 Power Apps)權限。請請系統管理員新增該權限並授與同意,然後再試一次。</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>您的帳戶在目標環境({0})中缺少 Dataverse 安全性角色。請請系統管理員授與您 Environment Maker 角色(或 System Administrator)。</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>您的帳戶無權存取此環境或流程。</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>目標拒絕了該流程: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>找不到環境或流程。</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate 傳回錯誤: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>完成: 已建立 {0} 個流程</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>已在 {0} 中建立,處於關閉狀態。沒有任何內容仍指向來源。</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>完成: 已建立 {0} 個流程,部分項目需要您檢閱</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>已在 {0} 中建立,處於關閉狀態。請開啟報告,查看仍指向來源的值、待設定的連線,以及工具不會改寫的項目。</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>開啟報告,檢查標示為需檢閱的內容。</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>在 Power Automate(目標)中,開啟每個新流程,修正其標示的任何連線,然後將其開啟。</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>在關閉來源中的原始流程之前,請先測試每個流程。</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>已儲存的表單 ID 檔案正在使用中(被應用程式的另一個複本或其他程式佔用)。請稍後再試一次。</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>在檢查影像之前已取消: 請查看複本的背景、標誌和頁首影像。</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>請先在「套件」步驟中選擇目標環境。</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>來源和目標是同一個環境({0}),因此複本將建立在原始流程旁邊。是否繼續?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>已建立(先前的嘗試)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>已取消。取消之前已建立 {0} 個流程;報告中列出了它們。</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>有 {0} 個流程在先前的嘗試中已建立,未再次建立。</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>有 {0} 個流程是在掃描之後被勾選的,未建立。請返回「套件」並按一下「下一步」以包含它們。</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>已取消: 未建立 {0} 個流程。</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>請檢閱: 這些欄因目標清單沒有而被排除在步驟之外,但某個步驟仍在對它們進行篩選、排序或選取。匯入可以成功;在 Power Automate 中變更其查詢或將該欄新增至清單之前,該步驟會在流程執行時失敗。</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>請檢閱: 無法讀取此流程檔案,因此它依原樣複製到了新套件中,仍指向來源。</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} 個查詢參考仍指向因目標清單沒有而被排除的欄。這些步驟會在流程執行時失敗;請在 Power Automate 中變更其篩選或排序,或將該欄新增至清單。</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>對 Power Automate 的要求逾時。請檢查連線後再試一次。</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>我的流程(不在解決方案中)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>正在讀取目標環境的解決方案…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>無法讀取目標環境的解決方案,因此將在任何解決方案之外建立流程: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>建立於</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>選擇一個解決方案,即可在其中建立流程(這樣它們會感知解決方案,並可隨解決方案移動)。每個連線使用目標中相符的連線參考;沒有時會將其新增至解決方案。</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>已在解決方案 {0} 中建立(關閉)</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>要求逾時。</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>選項不同</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{1} 個選項中的 {0} 個</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>有 {0} 個問題含有影像(在問題或其選項上)。它們以指向來源表單影像的連結形式複製,因此如果來源表單被刪除,或複本位於另一個租用戶,它們將不再顯示。請在複本中重新新增這些影像。</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>回應</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>表單 {0}/{1}: {2}(問題 {3}/{4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0}分{1}秒</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0}秒</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - 已移轉</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>輸入目標網站位址,例如 https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: {1} 連線在目標中使用「{2}」。</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>目標中使用的連線</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>在目標清單「{0}」上,欄 {1} 在 {3} 個步驟中都對應到「{2}」(例如「{4}」的步驟「{5}」)。請為其中除一個以外的所有欄選擇不同的目標欄,或將其餘的排除。</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} 個流程未嘗試: 複製在發生一個會讓所有剩餘流程以相同方式失敗的錯誤後停止(請參閱活動記錄)。請修正後再按一次「寫入」;已建立的流程會略過。</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>未輸入任何目標網站,因此每個網站都維持原樣。請在「到」欄中至少輸入一個目標網站,或再按一次「下一步」以保持網站不變。</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>無相符項目: &quot;{0}&quot; 已由 {1} 使用</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>已排除: &quot;{0}&quot; 已由 {1} 使用</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>由於相符的目標欄已由另一欄(括號內)使用,{0} 個欄將從流程的步驟中排除: {1}。如果這不是您想要的,請變更其中任一欄的目標。</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>欄&quot;{0}&quot;已從&quot;{1}&quot;的步驟中排除: 其目標欄&quot;{2}&quot;已由&quot;{3}&quot;寫入。如果這不是您想要的,請在「清單與欄」步驟中變更其中任一欄的目標。</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>報告資料夾</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>即時複製會直接在目標環境中建立流程,因此不會在此電腦上儲存任何流程檔案。此資料夾僅接收複製報告:一個網頁和一個文字檔,列出每個流程中變更的內容、省略的欄位、已比對的連線,以及仍需您檢閱的內容。請將其與移轉記錄一併保存。它是所做變更的唯一書面記錄。</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>每個流程都會以關閉狀態在目標環境中建立,因此在您檢閱之前不會執行任何內容。</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>請先選擇報告資料夾。</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>複製流程</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>將流程複製到目標</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>檢查下方的清單,選擇報告的儲存位置,然後複製流程。</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>此工具會將您的對應套用至每個流程的副本,並以關閉狀態在目標環境中建立,因此在您檢閱之前不會執行任何內容。您的原始流程不會變更。所有已變更、已省略或仍需檢閱的內容報告會儲存在報告資料夾中。之後,在 Power Automate 中開啟每個新流程,修正其標示的任何連線,然後將其開啟。</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>準備複製?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>登入目標租用戶以列出其環境</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>請先載入環境</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>找不到目標帳戶的 Power Automate 環境。它需要 Power Automate 授權或該處環境的存取權。請嘗試使用其他帳戶重新登入。</value></data>
 </root>

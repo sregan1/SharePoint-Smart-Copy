@@ -114,6 +114,7 @@ public class AppSettings
     public bool      CopyContentTypes { get; set; } = true;
     public bool      CopyColumnRules { get; set; } = true;
     public bool      CopyTemplates { get; set; } = true;
+    public bool      UpdateExistingStructure { get; set; } = false;
     public bool      CopySiteDefinitions { get; set; } = true;
     public bool      CopySiteSettings { get; set; } = true;
     public bool      CopyPermissions      { get; set; } = false;

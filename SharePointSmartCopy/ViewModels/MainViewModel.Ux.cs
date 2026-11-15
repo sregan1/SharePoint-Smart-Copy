@@ -219,12 +219,20 @@ public partial class MainViewModel
         catch (OperationCanceledException) { throw; }
         catch { return null; }
     }
+    // Single tenant: source and target are one sign-in. Opens the sign-in window, then both sides show that account.
+    private async Task<string?> SignInSharedForToolsAsync(CancellationToken ct)
+    {
+        await AuthService.GetAccessTokenAsync(forceInteractive: true, cancellationToken: ct);
+        SignedInUser = AuthService.UserName ?? SignedInUser;
+        TargetSignedInUser = SignedInUser;
+        return await AuthService.GetRootSiteUrlAsync(ct);
+    }
     // The Flows tool's "Change source…": the same for the source side. Always opens the sign-in window, so the source
     // account (and with it the source tenant) can be changed, then reads that tenant's SharePoint root address and
     // registers the host with the source sign-in. Returns the address, e.g. https://contoso.sharepoint.com.
     public async Task<string?> SignInSourceForToolsAsync(CancellationToken ct = default)
     {
-        if (!IsMultiTenant) return null;
+        if (!IsMultiTenant) return await SignInSharedForToolsAsync(ct);
         await AuthService.GetAccessTokenAsync(forceInteractive: true, cancellationToken: ct);
         SignedInUser = AuthService.UserName ?? SignedInUser;
         var root = await AuthService.GetRootSiteUrlAsync(ct);
@@ -237,7 +245,7 @@ public partial class MainViewModel
     // https://fabrikam.sharepoint.com. Multi-tenant only (single tenant has one sign-in and nothing to infer).
     public async Task<string?> SignInTargetForToolsAsync(CancellationToken ct = default)
     {
-        if (!IsMultiTenant) return null;
+        if (!IsMultiTenant) return await SignInSharedForToolsAsync(ct);
         await TargetAuthService.GetAccessTokenAsync(forceInteractive: true, cancellationToken: ct);
         TargetSignedInUser = TargetAuthService.UserName ?? TargetSignedInUser;
         var root = await TargetAuthService.GetRootSiteUrlAsync(ct);

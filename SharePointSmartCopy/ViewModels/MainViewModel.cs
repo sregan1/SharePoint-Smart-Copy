@@ -82,6 +82,7 @@ public partial class MainViewModel : ObservableObject
         CopyContentTypes = Settings.CopyContentTypes;
         CopyColumnRules = Settings.CopyColumnRules;
         CopyTemplates = Settings.CopyTemplates;
+        UpdateExistingStructure = Settings.UpdateExistingStructure;
         CopySiteDefinitions = Settings.CopySiteDefinitions;
         CopySiteSettings = Settings.CopySiteSettings;
         CopyLibraryContent  = Settings.CopyLibraryContent;

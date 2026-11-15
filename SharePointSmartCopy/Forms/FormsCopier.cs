@@ -40,8 +40,12 @@ public sealed class FormsCopier
     private readonly FormsApiClient _target;
     private readonly Action<string> _log;
 
-    public FormsCopier(FormsApiClient source, FormsApiClient target, Action<string> log)
+    private readonly Action<int, int>? _questionProgress;
+
+    // questionProgress (optional): called after each question with (copied so far, total), so a big form shows life.
+    public FormsCopier(FormsApiClient source, FormsApiClient target, Action<string> log, Action<int, int>? questionProgress = null)
     {
+        _questionProgress = questionProgress;
         _source = source;
         _target = target;
         _log = log;
@@ -86,7 +90,7 @@ public sealed class FormsCopier
         var copied = 0;
         try
         {
-            await CopyContentAsync(src, sourceFormId, questions, newId, warnings, ct, n => copied = n);
+            await CopyContentAsync(src, sourceFormId, questions, newId, warnings, ct, n => { copied = n; _questionProgress?.Invoke(n, questions.Count); });
         }
         catch (OperationCanceledException)
         {
@@ -109,6 +113,14 @@ public sealed class FormsCopier
         // costs the image check, and the form is reported with a warning instead.
         Dictionary<string, string?> missingImages;
         try { missingImages = await MissingImagesAsync(src, newId, ct); }
+        catch (OperationCanceledException)
+        {
+            // The content is all there; only the image check was cut short. Report the form as copied (so it is recorded
+            // in the ID map and the results) and say the images were not checked. The caller's next pass sees the cancel.
+            _log($"cancelled during the image check: {newId}");
+            warnings.Add(Loc.T("Forms_Cp_ImageCheckCancelled"));
+            missingImages = [];
+        }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
             _log($"image check failed: {ex.Message}");
@@ -120,6 +132,11 @@ public sealed class FormsCopier
                 notes.Add(savedAt is null ? Loc.T("Forms_Cp_ImageNote", label) : Loc.T("Forms_Cp_ImageSaved", label, savedAt));
         if (src["type"]?.GetValue<string>() == "quiz")
             notes.Add(Loc.T("Forms_Cp_QuizNote"));
+        // Images on questions and on their choices are carried as links to the SOURCE form's images (only the form's own
+        // background, logo and header image are uploaded again): say so, so nothing breaks unnoticed later.
+        var withImages = questions.Count(q => q is JsonObject qo && (HasImage(qo, "image")
+            || (qo["questionInfo"] is { } qi && Canonical(qi).Contains("\"resourceId\"", StringComparison.Ordinal))));
+        if (withImages > 0) notes.Add(Loc.T("Forms_Cp_QuestionImagesNote", withImages));
 
         return new FormCopyResult(true, newId, questions.Count, copied, warnings, notes, null);
     }
@@ -205,6 +222,12 @@ public sealed class FormsCopier
         {
             _log($"  verify skipped: {ex.Message}");
         }
+        catch (OperationCanceledException)
+        {
+            // The form is complete by now; only the count check was cut short. Returning (instead of throwing) lets the caller
+            // report the form as copied and record it, so the next run does not copy it again.
+            _log("  verify skipped: cancelled");
+        }
     }
 
     // Ranking and Likert questions can come back from the service with default content (one "Option 1", no rating scale) when
@@ -247,7 +270,7 @@ public sealed class FormsCopier
         if (gst != 200 || !SameInfo(after?["questionInfo"], info))
         {
             _log($"    {type} still differs from the source after the repair");
-            warnings.Add(Loc.T("Forms_Cp_OptionsFail", title, type, "options differ"));
+            warnings.Add(Loc.T("Forms_Cp_OptionsFail", title, type, Loc.T("Forms_Cp_OptionsDiffer")));
         }
     }
 
@@ -337,7 +360,7 @@ public sealed class FormsCopier
             (st, body) = await _target.SendRawAsync(HttpMethod.Delete, url, null, ct);
             FormsCopyTrace.Write($"CHOICE extra default DELETE {url} -> {st}{Environment.NewLine}  answer: {body}");
         }
-        if (failed > 0) warnings.Add(Loc.T("Forms_Cp_OptionsFail", title, type, $"{failed} of {wanted.Count} options"));
+        if (failed > 0) warnings.Add(Loc.T("Forms_Cp_OptionsFail", title, type, Loc.T("Forms_Cp_OptionsCount", failed, wanted.Count)));
     }
 
     // The image property of a form is read-only in practice: patching the form returns 204 and changes nothing, because the file

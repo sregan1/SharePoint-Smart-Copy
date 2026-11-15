@@ -60,6 +60,17 @@ public partial class MainViewModel : ObservableObject
     }
 
     // Adds what could not be copied of the list's/library's views (filled in when the list was created) to its result line.
+    // A list or library that already existed is normally reported as skipped (only what it lacked was added). With "Update existing
+    // lists" on, its structure was brought in line with the source, so it is reported as a success that says so.
+    private void MarkExistingUpdated(CopyResult result, string existsMessage, bool structureApplied)
+    {
+        if (!UpdateExistingStructure || !structureApplied || result.Status == CopyStatus.Failed) return;
+        result.Status = CopyStatus.Success;
+        var rest = result.ErrorMessage ?? string.Empty;
+        if (rest.StartsWith(existsMessage, StringComparison.Ordinal)) rest = rest[existsMessage.Length..].TrimStart();
+        result.ErrorMessage = string.IsNullOrEmpty(rest) ? Loc.T("VM_ExistingUpdated") : Loc.T("VM_ExistingUpdated") + " " + rest;
+    }
+
     private void AppendViewNotes(CopyResult result, string title)
     {
         var notes = _libraryCopyService.ViewFailuresFor(title);
@@ -172,7 +183,7 @@ public partial class MainViewModel : ObservableObject
                 catch (OperationCanceledException) { throw; }
                 catch (LibraryAlreadyExistsException alreadyEx)
                 {
-                    listResult.Status       = CopyStatus.Skipped;
+                    // Stays "Copying" while the existing list is brought up to date; the final status is set below.
                     listResult.ErrorMessage = alreadyEx.Message;
 
                     if (!string.IsNullOrEmpty(alreadyEx.ListId) && definition.Columns.Count > 0)
@@ -202,6 +213,7 @@ public partial class MainViewModel : ObservableObject
 
                     if (listResult.Status != CopyStatus.Failed)
                         listResult.Status = CopyStatus.Skipped;
+                    MarkExistingUpdated(listResult, alreadyEx.Message, !string.IsNullOrEmpty(alreadyEx.ListId) && EffectiveCopyCustomColumns);
                 }
                 catch (Exception ex)
                 {
@@ -235,7 +247,7 @@ public partial class MainViewModel : ObservableObject
         _libraryCopyService.Structure = new LibraryCopyService.StructureOptions
         {
             Views = CopyViews, ListSettings = CopyListSettings, ContentTypes = CopyContentTypes, ColumnRules = CopyColumnRules,
-            Templates = CopyTemplates, SiteDefinitions = CopySiteDefinitions, Navigation = CopyNavigation, SiteSettings = CopySiteSettings,
+            UpdateExisting = UpdateExistingStructure, Templates = CopyTemplates, SiteDefinitions = CopySiteDefinitions, Navigation = CopyNavigation, SiteSettings = CopySiteSettings,
         };
         _libraryCopyService.TermStore = new TermStoreCopyService(AuthService, IsMultiTenant ? TargetAuthService : AuthService);
 
@@ -665,7 +677,7 @@ public partial class MainViewModel : ObservableObject
                 }
                 catch (LibraryAlreadyExistsException alreadyEx)
                 {
-                    libResult.Status       = CopyStatus.Skipped;
+                    // Stays "Copying" while the existing library is brought up to date; the final status is set below.
                     libResult.ErrorMessage = alreadyEx.Message;
 
                     // Sync schema: add any source columns missing from the existing target library
@@ -777,6 +789,9 @@ public partial class MainViewModel : ObservableObject
                         }
                         StatusMessage = string.Empty;
                     }
+                    if (libResult.Status != CopyStatus.Failed)
+                        libResult.Status = CopyStatus.Skipped;
+                    MarkExistingUpdated(libResult, alreadyEx.Message, !string.IsNullOrEmpty(alreadyEx.ServerRelativeUrl) && EffectiveCopyCustomColumns);
                 }
                 catch (Exception ex)
                 {
@@ -886,7 +901,7 @@ public partial class MainViewModel : ObservableObject
                 catch (OperationCanceledException) { throw; }
                 catch (LibraryAlreadyExistsException alreadyEx)
                 {
-                    listResult.Status       = CopyStatus.Skipped;
+                    // Stays "Copying" while the existing list is brought up to date; the final status is set below.
                     listResult.ErrorMessage = alreadyEx.Message;
 
                     if (!string.IsNullOrEmpty(alreadyEx.ListId) && def.Columns.Count > 0)
@@ -916,6 +931,7 @@ public partial class MainViewModel : ObservableObject
 
                     if (listResult.Status != CopyStatus.Failed)
                         listResult.Status = CopyStatus.Skipped;
+                    MarkExistingUpdated(listResult, alreadyEx.Message, !string.IsNullOrEmpty(alreadyEx.ListId) && EffectiveCopyCustomColumns);
                 }
                 catch (Exception ex)
                 {
@@ -1044,6 +1060,31 @@ public partial class MainViewModel : ObservableObject
                     StatusMessage = Loc.T("VM_SitePagesWarning", ex.Message);
                 }
                 StatusMessage = string.Empty;
+            }
+
+            // Site scope: lookup site columns, now that the lists they point at exist on the target.
+            if (IsSiteScope && CopySiteDefinitions)
+            {
+                _copyCts.Token.ThrowIfCancellationRequested();
+                try
+                {
+                    var lookupNotes = await _libraryCopyService.CopySiteLookupColumnsAsync(
+                        SourceUrl.TrimEnd('/'), TargetUrl.TrimEnd('/'), _copyCts.Token);
+                    if (lookupNotes.Count > 0)
+                    {
+                        var lookupResult = new CopyResult
+                        {
+                            FileName     = Loc.T("VM_SiteLookupColumns"),
+                            SourcePath   = SourceUrl.TrimEnd('/'),
+                            TargetPath   = TargetUrl.TrimEnd('/'),
+                            Status       = CopyStatus.Success,
+                            ErrorMessage = string.Join("; ", lookupNotes.Take(5)),
+                        };
+                        System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(lookupResult));
+                    }
+                }
+                catch (OperationCanceledException) { throw; }
+                catch { /* best effort */ }
             }
 
             // For Site scope: copy navigation (Quick Launch + Top Navigation Bar).

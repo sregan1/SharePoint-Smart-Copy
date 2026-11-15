@@ -18,6 +18,7 @@ public interface IFlowSiteLookup
     Task<string?> GetSourceListTitleAsync(string siteUrl, string listId, CancellationToken ct);
     // GUID of a list in the TARGET site, by title (null = not found).
     Task<string?> GetTargetListIdAsync(string siteUrl, string title, CancellationToken ct);
+    Task<string?> GetSourceListIdByTitleAsync(string siteUrl, string title, CancellationToken ct);
     // All lists and libraries on a TARGET site, so the user can pick one when the name differs.
     Task<IReadOnlyList<FlowListInfo>> GetTargetListsAsync(string siteUrl, CancellationToken ct);
     // The columns of a list (editable ones, built-in such as Title included), by GUID.
@@ -219,7 +220,17 @@ public static partial class FlowMappingResolver
 
             var readSite = ReadSite(site);
             progress?.Invoke(Loc.T("Flows_Prog_ReadingSource", listId, readSite));
-            var title = await lookup.GetSourceListTitleAsync(readSite, listId, ct);
+            // A flow can name a list by its title instead of its GUID: the title is then known, and the source list's own ID
+            // (needed for its columns) is found by that title.
+            var byTitle = !Guid.TryParse(listId, out _);
+            var sourceId = listId;
+            string? title;
+            if (byTitle)
+            {
+                title = listId;
+                sourceId = await lookup.GetSourceListIdByTitleAsync(readSite, listId, ct) ?? listId;
+            }
+            else title = await lookup.GetSourceListTitleAsync(readSite, listId, ct);
             var manual = listOverrides is not null && listOverrides.TryGetValue(listId, out var chosen) && !string.IsNullOrWhiteSpace(chosen) ? chosen : null;
             if (title is null && manual is null)
             {
@@ -245,8 +256,10 @@ public static partial class FlowMappingResolver
                 if (result.TargetListsBySite.TryGetValue(targetSite, out var known) && MatchListByTitle(title!, known) is { } hit) targetId = hit.Id;
                 targetId ??= await lookup.GetTargetListIdAsync(targetSite, title!, ct);
             }
-            var sourceCols = title is null ? [] : await lookup.GetSourceColumnsAsync(readSite, listId, ct);
-            var sourceKnown = title is not null;
+            var sourceCols = title is null || (byTitle && sourceId == listId) ? [] : await lookup.GetSourceColumnsAsync(readSite, sourceId, ct);
+            // A list named by title whose source list could not be found has no readable columns: its names must then be kept
+            // (not dropped as "built-in"), the same as for an unreadable source list.
+            var sourceKnown = title is not null && !(byTitle && sourceId == listId);
             if (targetId is null)
                 return new(new(site, listId, title, targetSite, null, ListMatchStatus.TargetListNotFound), [], null, sourceCols, UsedNames(site, listId, sourceCols, sourceKnown));
 

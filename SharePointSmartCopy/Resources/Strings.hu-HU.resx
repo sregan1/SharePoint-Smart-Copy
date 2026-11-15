@@ -1499,4 +1499,116 @@ Az ismételt másolás mindegyikből második másolatot hoz létre. Folytatja?<
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Bérlő: {0}. A bejelentkezés csak ebbe a címtárba irányulhat.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Másik bérlő webhelyének csatlakoztatásához válasszon másik alkalmazásregisztrációt a Beállításokban (üres vagy az adott bérlőre beállított bérlőazonosítóval), vagy használja a Több bérlő módot.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Csak struktúra: az oszlopok, nézetek, beállítások és tartalomtípusok másolódnak, fájlok és listaelemek nélkül.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>A célon már létező listákat is frissítse: cserélje le az azonos nevű nézeteket (és az alapértelmezett nézetet), a lista beállításait, valamint az oszlopszabályokat és a formázást</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Meglévő listák frissítése</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>A meglévő lista frissítve lett a forrásnak megfelelően.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Kihagyás a folyamatokból (nincs a célon)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Kihagyva a folyamatokból</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} oszlop ki lesz hagyva a folyamatok lépéseiből, mert a céllistán nincs ilyen oszlop: {1}. A megtartásához adja hozzá az oszlopot a céllistához, és kattintson az Újraellenőrzés gombra, vagy válasszon másik oszlopot.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>A(z) &quot;{0}&quot; oszlop nem létezik a(z) &quot;{1}&quot; céllistán, ezért a folyamatok lépései már nem írják. Adja hozzá az oszlopot a listához, és futtassa újra, vagy adja hozzá a mezőt ezekhez a lépésekhez a Power Automate-ben.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>A(z) &quot;{0}&quot; céllistán a(z) {1} oszlopok mind a(z) &quot;{2}&quot; oszlophoz vannak leképezve a(z) &quot;{3}&quot; folyamat &quot;{4}&quot; lépésében. Válasszon másik célszlopot egy kivételével mindegyikhez, vagy hagyja ki a többit.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Ellenőrizendő: a céllistán nincs oszlop ezekhez a mezőkhöz, ezért a lépések már nem írják őket. Az általuk hordozott értékek sehol sincsenek mentve a célon.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Ez az űrlap nem abban a bérlőben van, amelybe be van jelentkezve</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Bejelentkezés…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Minden kapcsolat a célon lévő egyik meglévő kapcsolatához lesz társítva. Amelyikhez nincs találat, azt Önnek kell beállítania a Power Automate-ben.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>A kapcsolatok nincsenek társítva: a folyamatok létrehozása után mindegyiket állítsa be a Power Automate-ben.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>&quot;{0}&quot; nézet: a(z) {1} beállítás nem alkalmazható: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>&quot;{0}&quot; nézet: a célon nem létező oszlopokra vonatkozó szűrő, rendezés vagy csoportosítás ki lett hagyva ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>A keresési webhelyoszlopok nem lettek létrehozva, mert a listájuk nincs a célon: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Keresési webhelyoszlopok</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Másolás Power Automate-környezetből</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Exportált csomagok használata (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Válassza ki a folyamatokat a forráskörnyezetben, és az eszköz létrehozza őket a célkörnyezetben, már a cél webhelyeire, listáira és űrlapjaira mutatva. A folyamatok kikapcsolt állapotban jönnek létre, így semmi nem fut, amíg át nem nézi őket.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Bejelentkezés és környezetek betöltése</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Másolás innen (forráskörnyezet)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Bejelentkezés a célbérlőbe</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>A cél egy másik bérlő: jelentkezzen be olyan fiókkal, amely ott létrehozhat folyamatokat, majd válassza ki a környezetet.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Másolás ide (célkörnyezet)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Összes kijelölése</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Kijelölés megszüntetése</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Környezetek betöltése...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Folyamatok betöltése...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Nem található folyamat itt: {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} folyamat itt: {1}. Jelölje be a másolandókat.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>A kijelölt folyamatok egyike sem olvasható.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Folyamatok létrehozása a célon...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Folyamatok létrehozása a célon</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Minden folyamat kikapcsolt állapotban jön létre a célkörnyezetben, így semmi nem fut, amíg át nem nézi. A jelentés az alábbi mappába lesz mentve.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>A célkörnyezetben a meglévő kapcsolataim használata, ha van ilyen</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} folyamat jön létre itt: {2} (másolva innen: {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>A folyamatok kikapcsolt állapotban jönnek létre. Az áttekintés után kapcsolja be mindegyiket.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Található környezetek: {0} forrás és {1} cél.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>{0} folyamat beolvasása innen: {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>{0} folyamat létrehozása itt: {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>A kapcsolatokat nem sikerült társítani, ezért a folyamatok nélkülük jönnek létre. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Létrehozva: {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Létrehozva (kikapcsolva)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Létrehozva, {0} kapcsolat beállítandó</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} kapcsolat nem lett társítva a célon lévő kapcsolathoz. Nyissa meg az egyes folyamatokat a Power Automate-ben, és válasszon kapcsolatot.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} folyamatot nem sikerült létrehozni. Az okot lásd a tevékenységnaplóban.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Az alkalmazásregisztráció még nem rendelkezik a Power Automate (vagy Power Apps) engedéllyel. Kérje meg a rendszergazdát, hogy adja hozzá és adjon hozzájárulást, majd próbálja újra.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>A fiókjából hiányzik egy Dataverse-biztonsági szerepkör a célkörnyezetben ({0}). Kérje meg a rendszergazdát, hogy adja meg Önnek az Environment Maker (vagy System Administrator) szerepkört.</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>A fiókja nem fér hozzá ehhez a környezethez vagy folyamathoz.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>A cél elutasította a folyamatot: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>A környezet vagy a folyamat nem található.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>A Power Automate hibát adott vissza: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Kész: {0} folyamat létrehozva</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Létrehozva itt: {0}, kikapcsolva. Semmi sem maradt a forrásra mutatva.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Kész: {0} folyamat létrehozva, néhány elem áttekintést igényel</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Létrehozva itt: {0}, kikapcsolva. Nyissa meg a jelentést a forrásra még mutató értékek, a beállítandó kapcsolatok és az eszköz által át nem írt elemek megtekintéséhez.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Nyissa meg a jelentést, és ellenőrizze az áttekintésre megjelölt elemeket.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>A Power Automate-ben (cél) nyissa meg az egyes új folyamatokat, javítsa a jelzett kapcsolatot, és kapcsolja be a folyamatot.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Tesztelje az egyes folyamatokat, mielőtt kikapcsolja az eredetit a forráson.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>A mentett űrlapazonosítók fájlja használatban van (az alkalmazás egy másik példánya vagy egy másik program által). Próbálja újra egy pillanat múlva.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Megszakítva a képek ellenőrzése előtt: nézze meg a másolat hátterét, logóját és fejlécképét.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Előbb válassza ki a célkörnyezetet a Csomagok lépésben.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>A forrás és a cél ugyanaz a környezet ({0}), ezért a másolatok az eredeti folyamatok mellett jönnek létre. Folytatja?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Már létrehozva (korábbi kísérlet)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Megszakítva. A megszakítás előtt {0} folyamat jött létre; a jelentés felsorolja őket.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} folyamat már létre lett hozva egy korábbi kísérletnél, ezért nem jött létre újra.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} folyamatot a vizsgálat után jelöltek be, ezért nem jött létre. Lépjen vissza a Csomagok lépéshez, és kattintson a Tovább gombra, hogy belekerüljenek.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Megszakítva: {0} folyamat nem jött létre.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Ellenőrizendő: ezek az oszlopok ki lettek hagyva a lépésekből, mert a céllistán nincsenek meg, de egy lépés még mindig szűr, rendez vagy választ rájuk. Az importálás működik; ez a lépés hibával leáll a folyamat futásakor, amíg a lekérdezését meg nem változtatja a Power Automate-ben, vagy az oszlopot hozzá nem adja a listához.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Ellenőrizendő: ez a folyamatfájl nem olvasható, ezért változtatás nélkül került az új csomagba, és még mindig a forrásra mutat.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} lekérdezéshivatkozás még mindig olyan oszlopot nevez meg, amely ki lett hagyva, mert a céllistán nincs meg. Ezek a lépések hibával leállnak a folyamat futásakor; változtassa meg a szűrőjüket vagy rendezésüket a Power Automate-ben, vagy adja hozzá az oszlopot a listához.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>A Power Automate felé küldött kérés időtúllépést okozott. Ellenőrizze a kapcsolatot, és próbálja újra.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Saját folyamataim (nem megoldásban)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>A célkörnyezet megoldásainak beolvasása…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>A célkörnyezet megoldásait nem sikerült beolvasni, ezért a folyamatok megoldáson kívül jönnek létre: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Létrehozás itt</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Válasszon egy megoldást, amelyben a folyamatok létrejönnek (így megoldástudatosak lesznek, és a megoldással együtt mozgathatók). Minden kapcsolat a cél megfelelő kapcsolati hivatkozását használja; ha nincs, egy hozzá lesz adva a megoldáshoz.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Létrehozva (kikapcsolva) a(z) {0} megoldásban</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>A kérés időtúllépést okozott.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>a beállítások eltérnek</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} / {1} beállítás</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} kérdésben vannak képek (a kérdésben vagy a válaszlehetőségeiben). Hivatkozásként másolódnak a forrásűrlap képeire, ezért nem jelennek meg, ha a forrásűrlapot törlik, vagy ha a másolat másik bérlőben van. Adja hozzá újra ezeket a képeket a másolatban.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Válaszok</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>{0}. űrlap / {1}: {2} ({3}. kérdés / {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} p {1} mp</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} mp</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - migrálva</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Adja meg a célwebhely címét, pl. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: a(z) {1} kapcsolat a célon a(z) &quot;{2}&quot; kapcsolatot használja.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>A célon használt kapcsolatok</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>A(z) &quot;{0}&quot; céllistán a(z) {1} oszlopok mind a(z) &quot;{2}&quot; oszlophoz vannak leképezve {3} lépésben (például a(z) &quot;{4}&quot; folyamat &quot;{5}&quot; lépésében). Válasszon másik célszlopot egy kivételével mindegyikhez, vagy hagyja ki a többit.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} folyamatra nem történt kísérlet: a másolás egy olyan hiba után állt le, amely minden hátralévő folyamatot ugyanúgy meghiúsított volna (lásd a tevékenységnaplót). Javítsa ki, és nyomja meg újra az Írás gombot; a már létrehozott folyamatok kimaradnak.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Nincs beírva célwebhely, így minden webhely marad, ahogy van. Írjon be legalább egy célwebhelyet az Ide oszlopba, vagy nyomja meg újra a Tovább gombot, hogy a webhelyek változatlanok maradjanak.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Nincs egyezés: a(z) &quot;{0}&quot; oszlopot már {1} használja</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Kihagyva: a(z) &quot;{0}&quot; oszlopot már {1} használja</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} oszlop ki lesz hagyva a folyamatok lépéseiből, mert a hozzájuk rendelt céloszlopot már egy másik oszlop használja (zárójelben): {1}. Ha nem ezt szeretné, módosítsa valamelyik oszlop célját.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>A(z) &quot;{0}&quot; oszlop ki van hagyva a(z) &quot;{1}&quot; lista lépéseiből: a(z) &quot;{2}&quot; céloszlopába már a(z) &quot;{3}&quot; ír. Ha nem ezt szeretné, módosítsa valamelyik oszlop célját a Listák és oszlopok lépésben.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Jelentésmappa</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Az élő másolás közvetlenül a célkörnyezetben hozza létre a folyamatokat, ezért a számítógépen nem mentődnek folyamatfájlok. Ez a mappa csak a másolási jelentést kapja: egy weboldalt és egy szövegfájlt, amely felsorolja, mi változott az egyes folyamatokban, mely oszlopok maradtak ki, mely kapcsolatok lettek párosítva, és mi igényel még áttekintést. Őrizze meg a migrációs nyilvántartásaival együtt. Ez az egyetlen írásos nyilvántartás arról, hogy mi változott.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Minden folyamat kikapcsolt állapotban jön létre a célkörnyezetben, így semmi nem fut, amíg át nem nézi.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Először válasszon jelentésmappát.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Folyamatok másolása</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>A folyamatok másolása a célra</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Tekintse át az alábbi listát, válassza ki a jelentés mentési helyét, majd másolja a folyamatokat.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Az eszköz alkalmazza a leképezést minden folyamat egy másolatára, és kikapcsolt állapotban hozza létre a célkörnyezetben, így semmi nem fut, amíg át nem nézte. Az eredeti folyamatok nem változnak. A jelentés mindenről, ami megváltozott, kimaradt vagy még áttekintést igényel, a jelentésmappába mentődik. Ezután nyissa meg az új folyamatokat a Power Automate-ben, javítsa a jelzett kapcsolatokat, és kapcsolja be őket.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Készen áll a másolásra?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Jelentkezzen be a célbérlőbe a környezetei listázásához</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Először töltse be a környezeteket</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>A célfiókhoz nem található Power Automate-környezet. Power Automate-licenc vagy hozzáférés szükséges ott egy környezethez. Próbáljon meg újra bejelentkezni másik fiókkal.</value></data>
 </root>

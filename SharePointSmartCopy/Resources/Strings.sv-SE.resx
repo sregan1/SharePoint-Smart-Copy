@@ -1499,4 +1499,116 @@ Om du kopierar igen skapas en andra kopia av varje. Fortsätta?</value></data>
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Klientorganisation: {0}. Inloggning kan bara ske till den här katalogen.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Om du vill ansluta en webbplats i en annan klientorganisation väljer du en annan appregistrering i Inställningar (med Klientorganisations-ID tomt eller inställt på den klientorganisationen) eller använder läget Flera klientorganisationer.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Endast struktur: kolumner, vyer, inställningar och innehållstyper kopieras, men inga filer eller listobjekt.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Uppdatera även listor som redan finns i målet: ersätt vyer med samma namn (och standardvyn), listinställningar samt kolumnregler och formatering</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Uppdatera befintliga listor</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Befintlig lista uppdaterad så att den matchar källan.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Utelämna från flödena (finns inte i målet)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Utelämnad från flödena</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} kolumn(er) utelämnas från flödenas steg eftersom mållistan inte har någon sådan kolumn: {1}. Lägg till kolumnen i mållistan och klicka på Kontrollera igen, eller välj en annan kolumn, för att behålla den.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>Kolumnen &quot;{0}&quot; finns inte i mållistan &quot;{1}&quot;, så flödenas steg skriver den inte längre. Lägg till kolumnen i listan och kör detta igen, eller lägg till fältet i de stegen i Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>I mållistan &quot;{0}&quot; är kolumnerna {1} alla mappade till &quot;{2}&quot; i steget &quot;{4}&quot; i &quot;{3}&quot;. Välj en annan målkolumn för alla utom en, eller utelämna de andra.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Granska: mållistan har ingen kolumn för dessa fält, så stegen skriver dem inte längre. Värdena de innehöll sparas inte någonstans i målet.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Det här formuläret finns inte i den klientorganisation du är inloggad på</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Logga in…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Varje anslutning matchas mot en av dina befintliga anslutningar i målet. Alla som saknar matchning lämnas åt dig att ange i Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Anslutningar matchas inte: ange var och en i Power Automate när flödena har skapats.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Vy &apos;{0}&apos;: inställningen {1} kunde inte tillämpas: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Vy &quot;{0}&quot;: filtret, sorteringen eller grupperingen på kolumner som målet saknar utelämnades ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Webbplatskolumner av typen sökning skapades inte eftersom deras lista inte finns i målet: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Webbplatskolumner av typen sökning</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Kopiera från en Power Automate-miljö</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Använd exporterade paket (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Välj flöden i källmiljön så skapar verktyget dem i målmiljön, redan riktade mot målets webbplatser, listor och formulär. Flöden skapas avstängda, så ingenting körs förrän du har granskat det.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Logga in och läs in miljöer</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Kopiera från (källmiljö)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Logga in på målklientorganisationen</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Målet är en annan klientorganisation: logga in på den med ett konto som kan skapa flöden där och välj sedan miljö.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Kopiera till (målmiljö)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Markera alla</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Avmarkera alla</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Läser in miljöer...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Läser in flöden...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Inga flöden hittades i {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} flöden i {1}. Markera de som ska kopieras.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Inget av de markerade flödena kunde läsas.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Skapar flöden i målet...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Skapa flöden i målet</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Varje flöde skapas avstängt i målmiljön, så ingenting körs förrän du granskar det. Rapporten sparas i mappen nedan.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Använd mina befintliga anslutningar i målmiljön när det finns någon</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} flöde(n) skapas i {2} (kopierade från {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Flöden skapas avstängda. Slå på varje flöde när du har granskat det.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Hittade {0} käll- och {1} målmiljö(er).</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Läser {0} flöde(n) från {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Skapar {0} flöde(n) i {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Anslutningarna kunde inte matchas, så flödena skapas utan dem. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Skapade {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Skapat (avstängt)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Skapat, {0} anslutning(ar) att ange</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} anslutning(ar) matchades inte mot någon anslutning i målet. Öppna varje flöde i Power Automate och välj en anslutning.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} flöde(n) kunde inte skapas. Se aktivitetsloggen för orsaken.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>Appregistreringen har inte behörigheten för Power Automate (eller Power Apps) ännu. Be en administratör lägga till den och bevilja medgivande, och försök sedan igen.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Ditt konto saknar en säkerhetsroll i Dataverse i målmiljön ({0}). Be en administratör ge dig rollen Environment Maker (eller System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Ditt konto har inte åtkomst till den här miljön eller det här flödet.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Målet avvisade flödet: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>Miljön eller flödet hittades inte.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate returnerade ett fel: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Klart: {0} flöde(n) skapade</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Skapade i {0}, avstängda. Ingenting pekar längre på källan.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Klart: {0} flöde(n) skapade, vissa objekt behöver granskas av dig</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Skapade i {0}, avstängda. Öppna rapporten för att se värden som fortfarande pekar på källan, anslutningar att ange och objekt som verktyget inte skriver om.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Öppna rapporten och kontrollera vad som är markerat för granskning.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Öppna varje nytt flöde i Power Automate (målet), åtgärda eventuell markerad anslutning och slå på det.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Testa varje flöde innan du stänger av originalet i källan.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Filen med sparade formulär-ID:n används (av en annan kopia av appen eller ett annat program). Försök igen om en stund.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Avbröts innan bilderna kontrollerades: titta på kopians bakgrund, logotyp och sidhuvudsbild.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Välj målmiljön i steget Paket först.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>Källan och målet är samma miljö ({0}), så kopiorna skapas bredvid de ursprungliga flödena. Fortsätta?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Redan skapat (tidigare försök)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Avbröts. {0} flöde(n) skapades före avbrottet; rapporten listar dem.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} flöde(n) hade redan skapats vid ett tidigare försök och skapades inte igen.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} flöde(n) markerades efter genomsökningen och skapades inte. Gå tillbaka till Paket och tryck på Nästa för att ta med dem.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Avbröts: {0} flöde(n) skapades inte.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Granska: dessa kolumner utelämnades från stegen eftersom mållistan inte har dem, men ett steg filtrerar, sorterar eller väljer fortfarande på dem. Importen fungerar; steget misslyckas när flödet körs tills dess fråga ändras i Power Automate eller kolumnen läggs till i listan.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Granska: den här flödesfilen kunde inte läsas, så den kopierades oförändrad till det nya paketet och pekar fortfarande på källan.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} frågereferens(er) anger fortfarande en kolumn som utelämnades eftersom mållistan inte har den. Dessa steg misslyckas när flödet körs; ändra deras filter eller sortering i Power Automate, eller lägg till kolumnen i listan.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Begäran till Power Automate översteg tidsgränsen. Kontrollera anslutningen och försök igen.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Mina flöden (inte i en lösning)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Läser målmiljöns lösningar…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Målmiljöns lösningar kunde inte läsas, så flödena skapas utanför alla lösningar: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Skapa i</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Välj en lösning för att skapa flödena i den (de blir då lösningsmedvetna och kan flyttas med lösningen). Varje anslutning använder målets motsvarande anslutningsreferens; en läggs till i lösningen när det inte finns någon.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Skapat (avstängt) i lösningen {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Begäran översteg tidsgränsen.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>alternativen skiljer sig</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} av {1} alternativ</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} fråga/frågor har bilder (på frågan eller dess svarsalternativ). De kopieras som länkar till källformulärets bilder, så de visas inte längre om källformuläret tas bort eller när kopian finns i en annan klientorganisation. Lägg till bilderna igen i kopian.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Svar</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Formulär {0} av {1}: {2} (fråga {3} av {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} min {1} s</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} s</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - migrerad</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Ange målwebbplatsens adress, t.ex. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: anslutningen {1} använder &quot;{2}&quot; i målet.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Anslutningar som används i målet</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>I mållistan &quot;{0}&quot; är kolumnerna {1} alla mappade till &quot;{2}&quot; i {3} steg (till exempel steget &quot;{5}&quot; i &quot;{4}&quot;). Välj en annan målkolumn för alla utom en, eller utelämna de andra.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} flöde(n) försöktes inte: kopieringen stoppades efter ett fel som skulle få alla återstående flöden att misslyckas på samma sätt (se aktivitetsloggen). Åtgärda det och tryck på Skriv igen; flöden som redan har skapats hoppas över.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Ingen målwebbplats är angiven, så alla webbplatser lämnas som de är. Ange minst en målwebbplats i kolumnen Till, eller tryck på Nästa igen för att lämna webbplatserna oförändrade.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Ingen matchning: &quot;{0}&quot; används redan av {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Utelämnad: &quot;{0}&quot; används redan av {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} kolumn(er) utelämnas från flödenas steg eftersom målkolumnen de matchade redan används av en annan kolumn (inom parentes): {1}. Ändra målet för någon av kolumnerna om det inte är vad du vill.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>Kolumnen &quot;{0}&quot; utelämnas från stegen på &quot;{1}&quot;: dess målkolumn &quot;{2}&quot; skrivs redan av &quot;{3}&quot;. Ändra målet för någon av kolumnerna i steget Listor och kolumner om det inte är vad du vill.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Rapportmapp</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Direktkopiering skapar flödena direkt i målmiljön, så inga flödesfiler sparas på den här datorn. Den här mappen tar bara emot kopieringsrapporten: en webbsida och en textfil som visar vad som ändrades i varje flöde, vilka kolumner som utelämnades, vilka anslutningar som matchades och vad som fortfarande behöver granskas. Behåll den tillsammans med dina migreringsunderlag. Det är den enda skriftliga dokumentationen över vad som ändrades.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Varje flöde skapas avstängt i målmiljön, så ingenting körs förrän du granskar det.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Välj en rapportmapp först.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Kopiera flöden</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Kopiera flödena till målet</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Kontrollera listan nedan, välj var rapporten ska sparas och kopiera sedan flödena.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>Verktyget tillämpar din mappning på en kopia av varje flöde och skapar det i målmiljön, avstängt, så ingenting körs förrän du har granskat det. Dina ursprungliga flöden ändras inte. En rapport över allt som ändrades, utelämnades eller fortfarande behöver granskas sparas i rapportmappen. Öppna sedan varje nytt flöde i Power Automate, åtgärda eventuell markerad anslutning och slå på det.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Redo att kopiera?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Logga in på målklientorganisationen för att visa dess miljöer</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Läs in miljöerna först</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Inga Power Automate-miljöer hittades för målkontot. Det behöver en Power Automate-licens eller åtkomst till en miljö där. Försök logga in igen med ett annat konto.</value></data>
 </root>

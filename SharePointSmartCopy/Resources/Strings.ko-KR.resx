@@ -1499,4 +1499,116 @@
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>테넌트: {0}. 이 디렉터리로만 로그인할 수 있습니다.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>다른 테넌트의 사이트를 연결하려면 설정에서 다른 앱 등록(테넌트 ID가 비어 있거나 해당 테넌트로 설정된 등록)을 선택하거나 다중 테넌트 모드를 사용하세요.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>구조만: 열, 보기, 설정, 콘텐츠 형식은 복사되지만 파일이나 목록 항목은 복사되지 않습니다.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>대상에 이미 있는 목록도 업데이트: 이름이 같은 보기(및 기본 보기), 목록 설정, 열 규칙과 서식을 바꿉니다</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>기존 목록 업데이트</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>기존 목록을 원본과 일치하도록 업데이트했습니다.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>흐름에서 제외 (대상에 없음)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>흐름에서 제외됨</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>대상 목록에 해당 열이 없으므로 열 {0}개가 흐름의 단계에서 제외됩니다: {1}. 유지하려면 대상 목록에 열을 추가하고 다시 확인을 클릭하거나 다른 열을 선택하세요.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>대상 목록 &quot;{1}&quot;에 열 &quot;{0}&quot;이(가) 없으므로 흐름의 단계에서 더 이상 이 열을 쓰지 않습니다. 목록에 열을 추가한 후 다시 실행하거나 Power Automate에서 해당 단계에 필드를 추가하세요.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>대상 목록 &quot;{0}&quot;에서 열 {1}이(가) 모두 &quot;{3}&quot;의 &quot;{4}&quot; 단계에서 &quot;{2}&quot;에 매핑되어 있습니다. 하나를 제외한 나머지는 다른 대상 열을 선택하거나 제외하세요.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>검토: 대상 목록에 이 필드에 대한 열이 없으므로 단계에서 더 이상 이 필드를 쓰지 않습니다. 해당 필드가 담고 있던 값은 대상 어디에도 저장되지 않습니다.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>이 양식은 로그인한 테넌트에 없습니다</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>로그인…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>각 연결은 대상의 기존 연결 중 하나와 일치시킵니다. 일치하는 항목이 없는 연결은 Power Automate에서 직접 설정하도록 남겨 둡니다.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>연결을 일치시키지 않습니다: 흐름을 만든 후 Power Automate에서 각 연결을 설정하세요.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>보기 &apos;{0}&apos;: 설정 {1}을(를) 적용할 수 없습니다: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>보기 &quot;{0}&quot;: 대상에 없는 열의 필터, 정렬 또는 그룹화를 제외했습니다({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>조회 사이트 열을 만들지 않았습니다. 해당 목록이 대상에 없습니다: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>조회 사이트 열</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Power Automate 환경에서 복사</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>내보낸 패키지(.zip) 사용</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>원본 환경에서 흐름을 선택하면 도구가 대상 환경에 흐름을 만들며, 이미 대상의 사이트, 목록, 양식을 가리키도록 설정됩니다. 흐름은 꺼진 상태로 만들어지므로 검토하기 전에는 아무것도 실행되지 않습니다.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>로그인 및 환경 로드</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>복사 원본(원본 환경)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>대상 테넌트에 로그인</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>대상은 다른 테넌트입니다. 그곳에서 흐름을 만들 수 있는 계정으로 로그인한 다음 환경을 선택하세요.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>복사 대상(대상 환경)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>모두 선택</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>선택 안 함</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>환경을 로드하는 중...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>흐름을 로드하는 중...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>{0}에서 흐름을 찾을 수 없습니다.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{1}에 흐름 {0}개가 있습니다. 복사할 항목을 선택하세요.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>선택한 흐름을 하나도 읽을 수 없습니다.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>대상에 흐름을 만드는 중...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>대상에 흐름 만들기</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>각 흐름은 대상 환경에 꺼진 상태로 만들어지므로 검토하기 전에는 아무것도 실행되지 않습니다. 보고서는 아래 폴더에 저장됩니다.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>대상 환경에 내 기존 연결이 있으면 사용</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>흐름 {0}개가 {2}에 만들어집니다({1}에서 복사됨)</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>흐름은 꺼진 상태로 만들어집니다. 검토한 후 각각 켜세요.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>원본 환경 {0}개와 대상 환경 {1}개를 찾았습니다.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>{1}에서 흐름 {0}개를 읽는 중</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>{1}에 흐름 {0}개를 만드는 중</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>연결을 일치시킬 수 없어 연결 없이 흐름을 만듭니다. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>{0} 생성됨</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>생성됨(꺼짐)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>생성됨, 설정할 연결 {0}개</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>연결 {0}개가 대상의 연결과 일치하지 않았습니다. Power Automate에서 각 흐름을 열고 연결을 선택하세요.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>흐름 {0}개를 만들 수 없습니다. 이유는 활동 로그를 참조하세요.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>앱 등록에 아직 Power Automate(또는 Power Apps) 권한이 없습니다. 관리자에게 권한을 추가하고 동의를 부여하도록 요청한 후 다시 시도하세요.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>대상 환경({0})에서 계정에 Dataverse 보안 역할이 없습니다. 관리자에게 Environment Maker(또는 System Administrator) 역할을 부여하도록 요청하세요.</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>계정에 이 환경 또는 흐름에 대한 액세스 권한이 없습니다.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>대상이 흐름을 거부했습니다: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>환경 또는 흐름을 찾을 수 없습니다.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate에서 오류를 반환했습니다: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>완료: 흐름 {0}개 생성됨</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>{0}에 꺼진 상태로 생성되었습니다. 원본을 가리키는 항목은 남아 있지 않습니다.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>완료: 흐름 {0}개 생성됨, 일부 항목은 검토가 필요합니다</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>{0}에 꺼진 상태로 생성되었습니다. 보고서를 열어 아직 원본을 가리키는 값, 설정할 연결, 도구가 다시 쓰지 않는 항목을 확인하세요.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>보고서를 열어 검토 대상으로 표시된 항목을 확인하세요.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Power Automate(대상)에서 새 흐름을 각각 열고 표시된 연결을 수정한 다음 켜세요.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>원본에서 원래 흐름을 끄기 전에 각 흐름을 테스트하세요.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>저장된 양식 ID 파일을 사용 중입니다(앱의 다른 복사본 또는 다른 프로그램에서). 잠시 후 다시 시도하세요.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>이미지를 확인하기 전에 취소됨: 복사본의 배경, 로고, 머리글 이미지를 확인하세요.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>먼저 패키지 단계에서 대상 환경을 선택하세요.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>원본과 대상이 같은 환경({0})이므로 복사본이 원래 흐름 옆에 만들어집니다. 계속하시겠습니까?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>이미 생성됨(이전 시도)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>취소됨. 취소 전에 흐름 {0}개가 만들어졌으며 보고서에 나열됩니다.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>흐름 {0}개는 이전 시도에서 이미 만들어졌으므로 다시 만들지 않았습니다.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>흐름 {0}개는 검사 후에 선택되어 만들어지지 않았습니다. 패키지로 돌아가 다음을 눌러 포함하세요.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>취소됨: 흐름 {0}개가 만들어지지 않았습니다.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>검토: 대상 목록에 없어서 이 열을 단계에서 제외했지만, 일부 단계는 여전히 이 열로 필터, 정렬 또는 선택합니다. 가져오기는 작동하지만, Power Automate에서 쿼리를 변경하거나 목록에 열을 추가할 때까지 흐름 실행 시 해당 단계가 실패합니다.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>검토: 이 흐름 파일을 읽을 수 없어 변경하지 않고 새 패키지에 복사했으며 여전히 원본을 가리킵니다.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>대상 목록에 없어서 제외된 열을 쿼리 참조 {0}개가 여전히 지정합니다. 해당 단계는 흐름 실행 시 실패합니다. Power Automate에서 필터 또는 정렬을 변경하거나 목록에 열을 추가하세요.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Power Automate에 대한 요청이 시간 초과되었습니다. 연결을 확인하고 다시 시도하세요.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>내 흐름(솔루션에 없음)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>대상 환경의 솔루션을 읽는 중…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>대상 환경의 솔루션을 읽을 수 없어 솔루션 밖에 흐름을 만듭니다: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>만들 위치</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>솔루션을 선택하면 그 안에 흐름을 만듭니다(그러면 솔루션 인식 흐름이 되어 솔루션과 함께 이동할 수 있음). 각 연결은 대상의 일치하는 연결 참조를 사용하며, 없으면 솔루션에 하나가 추가됩니다.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>솔루션 {0}에 생성됨(꺼짐)</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>요청 시간이 초과되었습니다.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>옵션이 다름</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>옵션 {1}개 중 {0}개</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>질문 {0}개에 이미지가 있습니다(질문 또는 선택 항목에). 원본 양식 이미지에 대한 링크로 복사되므로 원본 양식을 삭제하거나 복사본이 다른 테넌트에 있으면 표시되지 않습니다. 복사본에 해당 이미지를 다시 추가하세요.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>응답</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>양식 {0}/{1}: {2}(질문 {3}/{4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0}분 {1}초</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0}초</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - 마이그레이션됨</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>대상 사이트 주소를 입력하세요(예: https://contoso.sharepoint.com/sites/HR)</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: {1} 연결은 대상에서 &quot;{2}&quot;을(를) 사용합니다.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>대상에서 사용된 연결</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>대상 목록 &quot;{0}&quot;에서 열 {1}이(가) 모두 {3}개 단계에서 &quot;{2}&quot;에 매핑되어 있습니다(예: &quot;{4}&quot;의 &quot;{5}&quot; 단계). 하나를 제외한 나머지는 다른 대상 열을 선택하거나 제외하세요.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>흐름 {0}개는 시도되지 않았습니다. 나머지 모든 흐름이 같은 방식으로 실패할 오류가 발생하여 복사가 중지되었습니다(활동 로그 참조). 문제를 해결하고 쓰기를 다시 누르세요. 이미 만들어진 흐름은 건너뜁니다.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>입력된 대상 사이트가 없으므로 모든 사이트가 그대로 유지됩니다. 변경 후 열에 대상 사이트를 하나 이상 입력하거나, 사이트를 변경하지 않으려면 다음을 다시 누르세요.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>일치 항목 없음: &quot;{0}&quot;은(는) 이미 {1}이(가) 사용 중</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>제외됨: &quot;{0}&quot;은(는) 이미 {1}이(가) 사용 중</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>일치한 대상 열을 이미 다른 열(괄호 안)이 사용하고 있으므로 열 {0}개가 흐름의 단계에서 제외됩니다: {1}. 원하는 결과가 아니면 두 열 중 하나의 대상을 변경하세요.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>열 &quot;{0}&quot;은(는) &quot;{1}&quot;의 단계에서 제외됩니다: 대상 열 &quot;{2}&quot;에는 이미 &quot;{3}&quot;이(가) 쓰고 있습니다. 원하는 결과가 아니면 목록 및 열 단계에서 두 열 중 하나의 대상을 변경하세요.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>보고서 폴더</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>라이브 복사는 흐름을 대상 환경에 직접 만들기 때문에 이 컴퓨터에는 흐름 파일이 저장되지 않습니다. 이 폴더는 복사 보고서만 받습니다. 복사 보고서는 각 흐름에서 변경된 내용, 제외된 열, 일치된 연결, 아직 검토가 필요한 항목을 나열한 웹 페이지와 텍스트 파일입니다. 마이그레이션 기록과 함께 보관하세요. 변경된 내용에 대한 유일한 서면 기록입니다.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>각 흐름은 대상 환경에 꺼진 상태로 만들어지므로 검토하기 전에는 아무것도 실행되지 않습니다.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>먼저 보고서 폴더를 선택하세요.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>흐름 복사</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>흐름을 대상에 복사</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>아래 목록을 확인하고 보고서를 저장할 위치를 선택한 다음 흐름을 복사하세요.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>이 도구는 각 흐름의 복사본에 매핑을 적용하고 대상 환경에 꺼진 상태로 만들므로 검토하기 전에는 아무것도 실행되지 않습니다. 원래 흐름은 변경되지 않습니다. 변경되었거나 제외되었거나 아직 검토가 필요한 모든 내용의 보고서가 보고서 폴더에 저장됩니다. 그런 다음 Power Automate에서 각 새 흐름을 열고, 표시된 연결을 수정한 후 켜세요.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>복사할 준비가 되었나요?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>대상 테넌트에 로그인하여 환경 목록 보기</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>먼저 환경을 로드하세요</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>대상 계정에 대한 Power Automate 환경을 찾을 수 없습니다. Power Automate 라이선스 또는 해당 위치의 환경에 대한 액세스 권한이 필요합니다. 다른 계정으로 다시 로그인해 보세요.</value></data>
 </root>

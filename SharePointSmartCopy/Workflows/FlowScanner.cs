@@ -177,7 +177,7 @@ public static partial class FlowScanner
             if (connector == "shared_sharepointonline")
             {
                 if (key == "dataset") scan.Findings.Add(new(FindingKind.SiteUrl, s, where));
-                else if (key == "table") scan.Findings.Add(new(FindingKind.ListId, s, where, "SharePoint list GUID", site, list));
+                else if (key == "table") scan.Findings.Add(new(FindingKind.ListId, s, where, Guid.TryParse(s, out _) ? "SharePoint list GUID" : "SharePoint list named by its title", site, list));
                 else if (key.StartsWith("item/")) scan.Findings.Add(new(FindingKind.ColumnName, ColumnOf(key), where, "written column (internal name)", site, list));
                 else if (key is "$filter" or "$orderby" or "$select") scan.Findings.Add(new(FindingKind.QueryFilter, s, where, "OData query uses column internal names", site, list));
                 else if (key is "folderPath" or "path" && s.StartsWith('/')) scan.Findings.Add(new(FindingKind.FilePath, s, where));
@@ -232,7 +232,7 @@ public static partial class FlowScanner
 
         foreach (Match m in ColumnExpr().Matches(s))
         {
-            var name = m.Groups[1].Value;
+            var name = m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value;
             if (QuestionName().IsMatch(name) || ExprNoise.Contains(name)) continue;
             scan.Findings.Add(new(FindingKind.ColumnExpression, name, path, "property read in an expression (column internal name?)"));
         }
@@ -248,12 +248,15 @@ public static partial class FlowScanner
     private static readonly HashSet<string> ExprNoise = new(StringComparer.OrdinalIgnoreCase)
     {
         "value", "responder", "responses", "attachments", "outcome", "submitDate", "ID", "mail", "{Link}", "{Name}", "{FullPath}",
+        "resourceData", "responseId", "formId", "headers", "body",
     };
 
     [GeneratedRegex(@"https?://[\w.-]+\.sharepoint\.com/[^\s""'<>\\)]*", RegexOptions.IgnoreCase)] private static partial Regex SpUrl();
     [GeneratedRegex(@"body/(r[0-9a-f]{32})")] private static partial Regex Question();
     [GeneratedRegex(@"^r[0-9a-f]{32}$")] private static partial Regex QuestionName();
-    [GeneratedRegex(@"\['body/([^'/]+)'\]")] private static partial Regex ColumnExpr();
+    // 'body/<Column>' reads, and the reads of an item inside a loop or of the trigger's item (items('Apply_to_each')?['Col'],
+    // item()?['Col'], triggerBody()?['Col']).
+    [GeneratedRegex(@"\['body/([^'/]+)'\]|(?:items\('[^']*'\)|item\(\)|triggerBody\(\))\?\['([^'/]+)'\]")] private static partial Regex ColumnExpr();
     [GeneratedRegex(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")] private static partial Regex EmailAddr();
     [GeneratedRegex(@"@\{[^}]*\}|@[A-Za-z]+\([^)]*\)(?:\?\[[^\]]*\])*")] private static partial Regex ExprBlock();
 

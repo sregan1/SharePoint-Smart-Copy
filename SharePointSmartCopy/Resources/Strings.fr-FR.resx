@@ -1499,4 +1499,116 @@ Une nouvelle copie crée un second exemplaire de chacun. Continuer ?</value></da
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant : {0}. La connexion ne peut aboutir qu'à ce répertoire.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Pour connecter un site d'un autre tenant, choisissez une autre inscription d'application dans les Paramètres (avec l'ID de tenant vide ou défini sur ce tenant) ou utilisez le mode Multi-tenant.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Structure uniquement : les colonnes, affichages, paramètres et types de contenu sont copiés, mais aucun fichier ni élément de liste.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Mettre aussi à jour les listes qui existent déjà sur la cible : remplacer les vues de même nom (et la vue par défaut), les paramètres de liste, ainsi que les règles et la mise en forme des colonnes</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Mettre à jour les listes existantes</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Liste existante mise à jour pour correspondre à la source.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Omettre des flux (absente de la cible)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Omise des flux</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} colonne(s) seront omises des étapes des flux, car la liste cible n&apos;a pas de telle colonne : {1}. Ajoutez la colonne à la liste cible et cliquez de nouveau sur Vérifier, ou choisissez une autre colonne, pour la conserver.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>La colonne &quot;{0}&quot; n&apos;existe pas dans la liste cible &quot;{1}&quot;, donc les étapes des flux ne l&apos;écrivent plus. Ajoutez la colonne à la liste et relancez, ou ajoutez le champ à ces étapes dans Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>Dans la liste cible &quot;{0}&quot;, les colonnes {1} sont toutes mappées à &quot;{2}&quot; dans l&apos;étape &quot;{4}&quot; de &quot;{3}&quot;. Choisissez une autre colonne cible pour toutes sauf une, ou omettez les autres.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>À vérifier : la liste cible n&apos;a pas de colonne pour ces champs, donc les étapes ne les écrivent plus. Les valeurs qu&apos;ils contenaient ne sont enregistrées nulle part sur la cible.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Ce formulaire n&apos;est pas dans le tenant auquel vous êtes connecté</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Se connecter…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Chaque connexion est associée à l&apos;une de vos connexions existantes dans la cible. Celles sans correspondance sont à définir par vous dans Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Les connexions ne sont pas associées : définissez chacune dans Power Automate après la création des flux.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Vue &apos;{0}&apos; : le paramètre {1} n&apos;a pas pu être appliqué : {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Vue &quot;{0}&quot; : le filtre, le tri ou le regroupement sur des colonnes absentes de la cible a été omis ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Colonnes de site de type lookup non créées, car leur liste n&apos;est pas sur la cible : {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Colonnes de site de type lookup</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Copier depuis un environnement Power Automate</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Utiliser des packages exportés (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Choisissez des flux dans l&apos;environnement source et l&apos;outil les crée dans l&apos;environnement cible, déjà pointés vers les sites, listes et formulaires de la cible. Les flux sont créés désactivés : rien ne s&apos;exécute avant votre vérification.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Se connecter et charger les environnements</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Copier depuis (environnement source)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Se connecter au tenant cible</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>La cible est un autre tenant : connectez-vous-y avec un compte pouvant y créer des flux, puis choisissez l&apos;environnement.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Copier vers (environnement cible)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Tout sélectionner</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Ne rien sélectionner</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Chargement des environnements...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Chargement des flux...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Aucun flux trouvé dans {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} flux dans {1}. Cochez ceux à copier.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Aucun des flux sélectionnés n&apos;a pu être lu.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Création des flux dans la cible...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Créer les flux dans la cible</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Chaque flux est créé désactivé dans l&apos;environnement cible : rien ne s&apos;exécute avant votre vérification. Le rapport est enregistré dans le dossier ci-dessous.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Utiliser mes connexions existantes dans l&apos;environnement cible quand il y en a une</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} flux seront créés dans {2} (copiés depuis {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Les flux sont créés désactivés. Activez chacun après vérification.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>{0} environnement(s) source et {1} cible trouvés.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Lecture de {0} flux depuis {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0} : {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Création de {0} flux dans {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Les connexions n&apos;ont pas pu être associées, donc les flux sont créés sans elles. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>{0} créé</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Créé (désactivé)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Créé, {0} connexion(s) à définir</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} connexion(s) n&apos;ont pas été associées à une connexion de la cible. Ouvrez chaque flux dans Power Automate et sélectionnez une connexion.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} flux n&apos;ont pas pu être créés. Consultez le journal d&apos;activité pour en connaître la raison.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>L&apos;inscription d&apos;application n&apos;a pas encore l&apos;autorisation Power Automate (ou Power Apps). Demandez à un administrateur de l&apos;ajouter et d&apos;accorder le consentement, puis réessayez.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Il manque à votre compte un rôle de sécurité Dataverse dans l&apos;environnement cible ({0}). Demandez à un administrateur de vous attribuer le rôle Environment Maker (ou System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Votre compte n&apos;a pas accès à cet environnement ou à ce flux.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>La cible a rejeté le flux : {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>L&apos;environnement ou le flux est introuvable.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate a renvoyé une erreur : {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Terminé : {0} flux créés</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Créés dans {0}, désactivés. Plus rien ne pointe vers la source.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Terminé : {0} flux créés, certains éléments sont à vérifier</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Créés dans {0}, désactivés. Ouvrez le rapport pour voir les valeurs pointant encore vers la source, les connexions à définir et les éléments que l&apos;outil ne réécrit pas.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Ouvrez le rapport et vérifiez ce qui est marqué à vérifier.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Dans Power Automate (cible), ouvrez chaque nouveau flux, corrigez toute connexion signalée et activez-le.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Testez chaque flux avant de désactiver l&apos;original dans la source.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Le fichier des ID de formulaire enregistrés est en cours d&apos;utilisation (par une autre copie de l&apos;application ou un autre programme). Réessayez dans un instant.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Annulé avant la vérification des images : consultez l&apos;arrière-plan, le logo et l&apos;image d&apos;en-tête de la copie.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Choisissez d&apos;abord l&apos;environnement cible à l&apos;étape Packages.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>La source et la cible sont le même environnement ({0}), donc les copies seront créées à côté des flux d&apos;origine. Continuer ?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Déjà créé (tentative précédente)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Annulé. {0} flux ont été créés avant l&apos;annulation ; le rapport les liste.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} flux avaient déjà été créés lors d&apos;une tentative précédente et n&apos;ont pas été recréés.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} flux ont été cochés après l&apos;analyse et n&apos;ont pas été créés. Revenez à Packages et cliquez sur Suivant pour les inclure.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Annulé : {0} flux n&apos;ont pas été créés.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>À vérifier : ces colonnes ont été omises des étapes, car la liste cible ne les a pas, mais une étape filtre, trie ou sélectionne encore dessus. L&apos;importation fonctionne ; cette étape échoue à l&apos;exécution du flux tant que sa requête n&apos;est pas modifiée dans Power Automate ou que la colonne n&apos;est pas ajoutée à la liste.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>À vérifier : ce fichier de flux n&apos;a pas pu être lu, donc il a été copié tel quel dans le nouveau package et pointe toujours vers la source.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} référence(s) de requête citent encore une colonne omise, car la liste cible ne l&apos;a pas. Ces étapes échouent à l&apos;exécution du flux ; modifiez leur filtre ou tri dans Power Automate, ou ajoutez la colonne à la liste.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>La requête vers Power Automate a expiré. Vérifiez la connexion et réessayez.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Mes flux (hors solution)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Lecture des solutions de l&apos;environnement cible…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>Les solutions de l&apos;environnement cible n&apos;ont pas pu être lues, donc les flux seront créés hors de toute solution : {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Créer dans</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Choisissez une solution pour y créer les flux (ils sont alors compatibles avec les solutions et peuvent suivre la solution). Chaque connexion utilise la référence de connexion correspondante de la cible ; une est ajoutée à la solution s&apos;il n&apos;y en a pas.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Créé (désactivé) dans la solution {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>La requête a expiré.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>les options diffèrent</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} option(s) sur {1}</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} question(s) contiennent des images (dans la question ou ses choix). Elles sont copiées sous forme de liens vers les images du formulaire source, donc elles ne s&apos;affichent plus si le formulaire source est supprimé ou si la copie est dans un autre tenant. Ajoutez de nouveau ces images dans la copie.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Réponses</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Formulaire {0} sur {1} : {2} (question {3} sur {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0} min {1} s</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0} s</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - migré</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Saisissez l&apos;adresse du site cible, par ex. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0} : la connexion {1} utilise &quot;{2}&quot; dans la cible.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Connexions utilisées dans la cible</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>Dans la liste cible &quot;{0}&quot;, les colonnes {1} sont toutes mappées à &quot;{2}&quot; dans {3} étapes (par exemple l&apos;étape &quot;{5}&quot; de &quot;{4}&quot;). Choisissez une autre colonne cible pour toutes sauf une, ou omettez les autres.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} flux n&apos;ont pas été tentés : la copie s&apos;est arrêtée après une erreur qui ferait échouer de la même façon tous les flux restants (voir le journal d&apos;activité). Corrigez-la et appuyez de nouveau sur Écriture ; les flux déjà créés sont ignorés.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Aucun site cible n&apos;est saisi, donc chaque site reste tel quel. Saisissez au moins un site cible dans la colonne Vers, ou appuyez de nouveau sur Suivant pour laisser les sites inchangés.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Aucune correspondance : &quot;{0}&quot; est déjà utilisée par {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Omise : &quot;{0}&quot; est déjà utilisée par {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} colonne(s) seront omises des étapes des flux, car la colonne cible qui leur correspond est déjà utilisée par une autre colonne (entre parenthèses) : {1}. Changez la cible de l&apos;une des deux colonnes si ce n&apos;est pas ce que vous voulez.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>La colonne &quot;{0}&quot; est omise des étapes de &quot;{1}&quot; : sa colonne cible &quot;{2}&quot; est déjà écrite par &quot;{3}&quot;. Changez la cible de l&apos;une des deux colonnes à l&apos;étape Listes et colonnes si ce n&apos;est pas ce que vous voulez.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Dossier du rapport</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>La copie en direct crée les flux directement dans l&apos;environnement cible ; aucun fichier de flux n&apos;est donc enregistré sur cet ordinateur. Ce dossier reçoit uniquement le rapport de copie : une page web et un fichier texte listant ce qui a été modifié dans chaque flux, les colonnes omises, les connexions qui ont été mises en correspondance et ce qui nécessite encore votre vérification. Conservez-le avec vos archives de migration. C&apos;est la seule trace écrite de ce qui a été modifié.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Chaque flux est créé désactivé dans l&apos;environnement cible : rien ne s&apos;exécute avant votre vérification.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Choisissez d&apos;abord un dossier de rapport.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Copier les flux</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Copier les flux dans la cible</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Vérifiez la liste ci-dessous, choisissez où enregistrer le rapport, puis copiez les flux.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>L&apos;outil applique votre mappage à une copie de chaque flux et le crée désactivé dans l&apos;environnement cible : rien ne s&apos;exécute avant votre vérification. Vos flux d&apos;origine ne sont pas modifiés. Un rapport de tout ce qui a été modifié, omis ou nécessite encore votre vérification est enregistré dans le dossier du rapport. Ensuite, ouvrez chaque nouveau flux dans Power Automate, corrigez les connexions signalées et activez-le.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Prêt à copier ?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Connectez-vous au tenant cible pour lister ses environnements</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Chargez d&apos;abord les environnements</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Aucun environnement Power Automate n&apos;a été trouvé pour le compte cible. Il faut une licence Power Automate ou un accès à un environnement sur place. Essayez de vous reconnecter avec un autre compte.</value></data>
 </root>

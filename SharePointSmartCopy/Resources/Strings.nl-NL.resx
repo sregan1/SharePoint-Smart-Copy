@@ -1499,4 +1499,116 @@ Opnieuw kopiëren maakt van elk een tweede kopie. Doorgaan?</value></data>
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Aanmelden kan alleen bij deze directory.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>Als u een site in een andere tenant wilt verbinden, kiest u in Instellingen een andere app-registratie (met Tenant-ID leeg of ingesteld op die tenant) of gebruikt u de modus Meerdere tenants.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Alleen structuur: kolommen, weergaven, instellingen en inhoudstypen worden gekopieerd, maar geen bestanden of lijstitems.</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Werk ook lijsten bij die al in het doel bestaan: vervang weergaven met dezelfde naam (en de standaardweergave), de lijstinstellingen en de kolomregels en -opmaak</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Bestaande lijsten bijwerken</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Bestaande lijst bijgewerkt zodat deze overeenkomt met de bron.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Weglaten uit de flows (niet in het doel)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Weggelaten uit de flows</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} kolom(men) worden weggelaten uit de stappen van de flows omdat de doellijst zo&apos;n kolom niet heeft: {1}. Voeg de kolom toe aan de doellijst en klik op Opnieuw controleren, of kies een andere kolom, om deze te behouden.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>De kolom &quot;{0}&quot; bestaat niet in de doellijst &quot;{1}&quot;, dus de stappen van de flows schrijven deze niet meer. Voeg de kolom toe aan de lijst en voer dit opnieuw uit, of voeg het veld toe aan die stappen in Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>In de doellijst &quot;{0}&quot; zijn de kolommen {1} allemaal toegewezen aan &quot;{2}&quot; in de stap &quot;{4}&quot; van &quot;{3}&quot;. Kies voor alle behalve één een andere doelkolom, of laat de overige weg.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Controleren: de doellijst heeft geen kolom voor deze velden, dus de stappen schrijven ze niet meer. De waarden die ze bevatten worden nergens in het doel opgeslagen.</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>Dit formulier staat niet in de tenant waarbij u bent aangemeld</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Aanmelden…</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Elke verbinding wordt gekoppeld aan een van uw bestaande verbindingen in het doel. Een verbinding zonder overeenkomst moet u zelf instellen in Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Verbindingen worden niet gekoppeld: stel elke verbinding in Power Automate in nadat de flows zijn gemaakt.</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>Weergave &apos;{0}&apos;: de instelling {1} kon niet worden toegepast: {2}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>Weergave &quot;{0}&quot;: het filter, de sortering of groepering op kolommen die het doel niet heeft, is weggelaten ({1}).</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Opzoeksitekolommen niet gemaakt omdat hun lijst niet in het doel staat: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Opzoeksitekolommen</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Kopiëren vanuit een Power Automate-omgeving</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Geëxporteerde pakketten gebruiken (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Kies flows in de bronomgeving en het hulpmiddel maakt ze in de doelomgeving, al gericht op de sites, lijsten en formulieren van het doel. Flows worden uitgeschakeld gemaakt, zodat er niets wordt uitgevoerd totdat u ze hebt gecontroleerd.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Aanmelden en omgevingen laden</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Kopiëren van (bronomgeving)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Aanmelden bij doeltenant</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>Het doel is een andere tenant: meld u ernaar aan met een account waarmee u daar flows kunt maken en kies vervolgens de omgeving.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Kopiëren naar (doelomgeving)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Alles selecteren</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Niets selecteren</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Omgevingen laden...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Flows laden...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>Geen flows gevonden in {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} flows in {1}. Vink de flows aan die u wilt kopiëren.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>Geen van de geselecteerde flows kon worden gelezen.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Flows maken in het doel...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Flows maken in het doel</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Elke flow wordt uitgeschakeld gemaakt in de doelomgeving, zodat er niets wordt uitgevoerd totdat u de flow controleert. Het rapport wordt opgeslagen in de onderstaande map.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Mijn bestaande verbindingen in de doelomgeving gebruiken wanneer die er is</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} flow(s) worden gemaakt in {2} (gekopieerd uit {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Flows worden uitgeschakeld gemaakt. Schakel elke flow in nadat u deze hebt gecontroleerd.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>{0} bron- en {1} doelomgeving(en) gevonden.</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>{0} flow(s) lezen uit {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>{0} flow(s) maken in {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Verbindingen konden niet worden gekoppeld, dus de flows worden zonder verbindingen gemaakt. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>{0} gemaakt</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Gemaakt (uitgeschakeld)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Gemaakt, {0} verbinding(en) in te stellen</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} verbinding(en) zijn niet gekoppeld aan een verbinding in het doel. Open elke flow in Power Automate en selecteer een verbinding.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} flow(s) konden niet worden gemaakt. Zie het activiteitenlogboek voor de reden.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>De app-registratie heeft de machtiging voor Power Automate (of Power Apps) nog niet. Vraag een beheerder deze toe te voegen en toestemming te verlenen en probeer het opnieuw.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Uw account mist een Dataverse-beveiligingsrol in de doelomgeving ({0}). Vraag een beheerder u de rol Environment Maker (of System Administrator) te geven.</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Uw account heeft geen toegang tot deze omgeving of flow.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>Het doel heeft de flow geweigerd: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>De omgeving of flow is niet gevonden.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate heeft een fout geretourneerd: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Voltooid: {0} flow(s) gemaakt</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Gemaakt in {0}, uitgeschakeld. Niets verwijst nog naar de bron.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Voltooid: {0} flow(s) gemaakt, sommige items moeten door u worden gecontroleerd</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Gemaakt in {0}, uitgeschakeld. Open het rapport om waarden te zien die nog naar de bron verwijzen, in te stellen verbindingen en items die het hulpmiddel niet herschrijft.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Open het rapport en controleer wat is gemarkeerd voor controle.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>Open in Power Automate (doel) elke nieuwe flow, los eventuele gemarkeerde verbindingen op en schakel de flow in.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Test elke flow voordat u het origineel in de bron uitschakelt.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>Het bestand met opgeslagen formulier-ID&apos;s is in gebruik (door een andere kopie van de app of een ander programma). Probeer het zo meteen opnieuw.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Geannuleerd voordat de afbeeldingen waren gecontroleerd: controleer de achtergrond, het logo en de koptekstafbeelding van de kopie.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Kies eerst de doelomgeving in de stap Pakketten.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>De bron en het doel zijn dezelfde omgeving ({0}), dus de kopieën worden naast de oorspronkelijke flows gemaakt. Doorgaan?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Al gemaakt (eerdere poging)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Geannuleerd. {0} flow(s) zijn gemaakt vóór het annuleren; het rapport vermeldt ze.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} flow(s) waren al gemaakt bij een eerdere poging en zijn niet opnieuw gemaakt.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} flow(s) zijn aangevinkt na de scan en zijn niet gemaakt. Ga terug naar Pakketten en druk op Volgende om ze op te nemen.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Geannuleerd: {0} flow(s) zijn niet gemaakt.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Controleren: deze kolommen zijn weggelaten uit de stappen omdat de doellijst ze niet heeft, maar een stap filtert, sorteert of selecteert nog steeds op deze kolommen. De import werkt; die stap mislukt wanneer de flow wordt uitgevoerd totdat de query wordt gewijzigd in Power Automate of de kolom aan de lijst wordt toegevoegd.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Controleren: dit flowbestand kon niet worden gelezen, dus het is ongewijzigd gekopieerd naar het nieuwe pakket en verwijst nog naar de bron.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} queryverwijzing(en) noemen nog een kolom die is weggelaten omdat de doellijst deze niet heeft. Die stappen mislukken wanneer de flow wordt uitgevoerd; wijzig hun filter of sortering in Power Automate of voeg de kolom toe aan de lijst.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>Er is een time-out opgetreden bij de aanvraag naar Power Automate. Controleer de verbinding en probeer het opnieuw.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>Mijn flows (niet in een oplossing)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>De oplossingen van de doelomgeving lezen…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>De oplossingen van de doelomgeving konden niet worden gelezen, dus de flows worden buiten een oplossing gemaakt: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Maken in</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Kies een oplossing om de flows erin te maken (ze zijn dan oplossingsbewust en kunnen met de oplossing mee verhuizen). Elke verbinding gebruikt de overeenkomstige verbindingsreferentie van het doel; er wordt er een aan de oplossing toegevoegd als die er niet is.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Gemaakt (uit) in de oplossing {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>Er is een time-out opgetreden bij de aanvraag.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>opties verschillen</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} van {1} opties</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} vraag/vragen hebben afbeeldingen (bij de vraag of de keuzes). Ze worden gekopieerd als koppelingen naar de afbeeldingen van het bronformulier, dus ze worden niet meer weergegeven als het bronformulier wordt verwijderd of als de kopie in een andere tenant staat. Voeg die afbeeldingen opnieuw toe in de kopie.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Antwoorden</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Formulier {0} van {1}: {2} (vraag {3} van {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0}m {1}s</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0}s</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - gemigreerd</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Typ het adres van de doelsite, bijvoorbeeld https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: de verbinding {1} gebruikt &quot;{2}&quot; in het doel.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Verbindingen die in het doel worden gebruikt</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>In de doellijst &quot;{0}&quot; zijn de kolommen {1} allemaal toegewezen aan &quot;{2}&quot; in {3} stappen (bijvoorbeeld de stap &quot;{5}&quot; van &quot;{4}&quot;). Kies voor alle behalve één een andere doelkolom, of laat de overige weg.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} flow(s) zijn niet geprobeerd: het kopiëren is gestopt na een fout die elke resterende flow op dezelfde manier zou laten mislukken (zie het activiteitenlogboek). Los het op en druk opnieuw op Schrijven; flows die al zijn gemaakt, worden overgeslagen.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>Er is geen doelsite ingevoerd, dus elke site blijft zoals die is. Voer ten minste één doelsite in de kolom Naar in, of druk opnieuw op Volgende om de sites ongewijzigd te laten.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>Geen overeenkomst: &quot;{0}&quot; wordt al gebruikt door {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Weggelaten: &quot;{0}&quot; wordt al gebruikt door {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} kolom(men) worden weggelaten uit de stappen van de flows omdat de doelkolom waarmee ze overeenkwamen al door een andere kolom wordt gebruikt (tussen haakjes): {1}. Wijzig het doel van een van beide kolommen als dit niet is wat u wilt.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>De kolom &quot;{0}&quot; wordt weggelaten uit de stappen op &quot;{1}&quot;: de doelkolom &quot;{2}&quot; wordt al geschreven door &quot;{3}&quot;. Wijzig het doel van een van beide kolommen in de stap Lijsten en kolommen als dit niet is wat u wilt.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Rapportmap</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Live kopiëren maakt de flows rechtstreeks in de doelomgeving, dus er worden geen flowbestanden op deze computer opgeslagen. Deze map ontvangt alleen het kopieerrapport: een webpagina en een tekstbestand met wat er in elke flow is gewijzigd, de weggelaten kolommen, de gekoppelde verbindingen en wat nog moet worden gecontroleerd. Bewaar het bij uw migratiegegevens. Het is het enige schriftelijke bewijs van wat er is gewijzigd.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Elke flow wordt uitgeschakeld gemaakt in de doelomgeving, zodat er niets wordt uitgevoerd totdat u de flow controleert.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Kies eerst een rapportmap.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Flows kopiëren</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>De flows naar het doel kopiëren</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Controleer de onderstaande lijst, kies waar het rapport moet worden opgeslagen en kopieer daarna de flows.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>De tool past uw toewijzing toe op een kopie van elke flow en maakt die uitgeschakeld aan in de doelomgeving, zodat er niets wordt uitgevoerd totdat u de flow hebt gecontroleerd. Uw oorspronkelijke flows worden niet gewijzigd. Een rapport van alles wat is gewijzigd, weggelaten of nog moet worden gecontroleerd, wordt opgeslagen in de rapportmap. Open daarna elke nieuwe flow in Power Automate, los eventuele gemarkeerde verbindingen op en schakel de flow in.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Klaar om te kopiëren?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Meld u aan bij de doeltenant om de omgevingen weer te geven</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Laad eerst de omgevingen</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Er zijn geen Power Automate-omgevingen gevonden voor het doelaccount. Het heeft een Power Automate-licentie of toegang tot een omgeving daar nodig. Probeer u opnieuw aan te melden met een ander account.</value></data>
 </root>

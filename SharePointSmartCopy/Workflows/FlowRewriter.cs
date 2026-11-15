@@ -18,6 +18,14 @@ public static partial class FlowRewriter
     // cannot tell which list a "body/Title" belongs to, so it can also rename the same-named column of a different list.
     // The report asks the user to review these (see ToMarkdown).
     public const string GlobalColumnCategory = "Column (anywhere)";
+    // The fields a step stopped writing because the target list has no such column.
+    public const string OmittedCategory = "Column left out (not on the target list)";
+    // A left-out column the step still names in its $filter / $orderby / $select: the import works, the step fails at run time.
+    public const string OmittedQueryCategory = "Column left out but still used in a query (fails when the flow runs)";
+    // A flow file in the package that could not be read: copied unchanged.
+    // A written field whose key changed shape because the target column is of another kind (choice <-> text, number, date...).
+    public const string ValueFormCategory = "Column value form changed (the target column is of another type)";
+    public const string UnreadableCategory = "Not rewritten (the flow file could not be read)";
 
     public static List<Change> Apply(JsonObject flow, FlowMapping map)
     {
@@ -44,7 +52,7 @@ public static partial class FlowRewriter
 
         // Global column renames (apply to expressions anywhere) and per-list renames (apply to the SharePoint
         // operation that targets that list: written fields and OData query text). Per-list wins over global.
-        var activeColumns = FlowMapping.Active(map.Columns).ToList();
+        var activeColumns = FlowMapping.Active(map.Columns).Where(c => c.Value != FlowMapping.OmitColumn).ToList();
         var globalColumns = activeColumns.Count > 0
             ? ColumnReplacer(activeColumns, queryWords: false, (cat, from, to, n) => Hit(cat == "Column" ? GlobalColumnCategory : cat, from, to, n))
             : null;
@@ -59,6 +67,18 @@ public static partial class FlowRewriter
 
         var requiredValues = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
         foreach (var kv in map.RequiredValues) requiredValues[kv.Key] = kv.Value;
+        var suffixMap = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var kv in map.TargetColumnSuffixes) suffixMap[kv.Key] = kv.Value;
+
+        // A list the flow names by TITLE (the step's table is a name, not a GUID): only that exact table value is replaced. A
+        // title is ordinary text, so it is never replaced anywhere else in the flow.
+        var titleLists = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var (from, to) in FlowMapping.Active(map.Lists))
+            if (!Guid.TryParse(from, out _)) titleLists[from] = to;
+
+        // Query strings ($filter / $orderby / $select) already rewritten for their operation's own list: the global pass
+        // must not rename them a second time (a per-list A -> B followed by a global B -> C).
+        var handledQueries = new HashSet<JsonNode>(ReferenceEqualityComparer.Instance);
 
         void Walk(JsonNode node)
         {
@@ -68,12 +88,23 @@ public static partial class FlowRewriter
                     if (o["inputs"] is JsonObject inp && inp["parameters"] is JsonObject prm && IsSharePoint(inp["host"]))
                     {
                         var cols = EffectiveColumns(prm, activeColumns, perList);
+                        var stepList = prm["table"] is JsonValue stv && stv.TryGetValue<string>(out var stepTable) ? stepTable : null;
+                        var suffixes = stepList is not null && suffixMap.TryGetValue(stepList, out var stepSuffixes) ? stepSuffixes : null;
+                        if (cols.Count > 0 || suffixes is not null)
+                            RenameColumnKeys(prm, cols, suffixes, Hit);          // written fields: item/<Column>[/Value]
                         if (cols.Count > 0)
                         {
-                            RenameColumnKeys(prm, cols, Hit);          // written fields: item/<Column>[/Value]
-                            RewriteQueryParameters(prm, cols, Hit);    // $filter / $orderby / $select
+                            RewriteQueryParameters(prm, cols.Where(c => c.Value != FlowMapping.OmitColumn).ToList(), Hit);    // $filter / $orderby / $select
+                            ReportOmittedInQueries(prm, cols, Hit);
+                            foreach (var q in new[] { "$filter", "$orderby", "$select" })
+                                if (prm[q] is JsonValue qv) handledQueries.Add(qv);
                         }
-                        AddRequiredValues(inp, prm, requiredValues, Hit);
+                        AddRequiredValues(inp, prm, requiredValues, suffixes, Hit);
+                        if (prm["table"] is JsonValue tbv && tbv.TryGetValue<string>(out var tbl) && titleLists.TryGetValue(tbl, out var toList))
+                        {
+                            prm["table"] = toList;
+                            Hit("List", tbl, toList, 1);
+                        }
                     }
 
                     foreach (var key in o.Select(kv => kv.Key).ToList())
@@ -82,7 +113,7 @@ public static partial class FlowRewriter
                         if (child is JsonValue v && v.TryGetValue<string>(out var s))
                         {
                             var t = Transform(s);
-                            if (globalColumns is not null) t = globalColumns(t);
+                            if (globalColumns is not null && !handledQueries.Contains(v)) t = globalColumns(t);
                             if (t != s) o[key] = t;
                         }
                         else if (child is not null) Walk(child);
@@ -111,7 +142,7 @@ public static partial class FlowRewriter
     // A "Create item" step on a list whose target requires a column the step does not set gets that column, with the value the
     // user typed. Runs before the list ID is replaced, so the table is still the source list's GUID.
     private static void AddRequiredValues(JsonObject inp, JsonObject prm, Dictionary<string, Dictionary<string, string>> required,
-                                          Action<string, string, string, int> hit)
+                                          Dictionary<string, string>? suffixes, Action<string, string, string, int> hit)
     {
         if (inp["host"]?["operationId"]?.GetValue<string>() != "PostItem" || prm.ContainsKey("item")) return;
         if (prm["table"] is not JsonValue tv || !tv.TryGetValue<string>(out var table) || !required.TryGetValue(table, out var values)) return;
@@ -119,28 +150,63 @@ public static partial class FlowRewriter
         {
             var has = prm.Select(kv => kv.Key).Any(k => k == "item/" + column || k.StartsWith("item/" + column + "/", StringComparison.Ordinal));
             if (has) continue;
-            prm["item/" + column] = value;
+            // A choice column takes its value under /Value.
+            prm["item/" + column + (suffixes is not null && suffixes.TryGetValue(column, out var shape) && shape.Length > 0 ? "/" + shape : "")] = value;
             hit("Required value", column, value, 1);
         }
+    }
+
+    // A column left out of the steps (not on the target list) that this step still names in its query text: the import works,
+    // but the step fails when the flow runs. Nothing is removed from a query (that would change which items it finds); it is
+    // reported instead.
+    private static void ReportOmittedInQueries(JsonObject prm, List<KeyValuePair<string, string>> cols, Action<string, string, string, int> hit)
+    {
+        foreach (var (column, _) in cols.Where(c => c.Value == FlowMapping.OmitColumn))
+            foreach (var key in new[] { "$filter", "$orderby", "$select" })
+                if (prm[key] is JsonValue v && v.TryGetValue<string>(out var text)
+                    && Regex.IsMatch(text, $@"(?<![\w]){Regex.Escape(column)}(?![\w])"))
+                    hit(OmittedQueryCategory, column, key, 1);
     }
 
     private static bool IsSharePoint(JsonNode? host) =>
         (host as JsonObject)?["apiId"]?.GetValue<string>()?.EndsWith("shared_sharepointonline", StringComparison.Ordinal) == true;
 
-    private static void RenameColumnKeys(JsonObject prm, List<KeyValuePair<string, string>> cols, Action<string, string, string, int> hit)
+    private static void RenameColumnKeys(JsonObject prm, List<KeyValuePair<string, string>> cols, Dictionary<string, string>? suffixes,
+                                         Action<string, string, string, int> hit)
     {
         var keys = prm.Select(kv => kv.Key).Where(k => k.StartsWith("item/", StringComparison.Ordinal)).ToList();
+        // A column the target list does not have, chosen as "leave out": the step stops writing it (item/<Column> and
+        // item/<Column>/Value), because the import would otherwise fail on a field the list has no definition for.
+        foreach (var key in keys.ToList())
+        {
+            var rest0 = key["item/".Length..];
+            var slash0 = rest0.IndexOf('/');
+            var col0 = slash0 > 0 ? rest0[..slash0] : rest0;
+            if (cols.FirstOrDefault(c => c.Key == col0) is { Key: not null } m0 && m0.Value == FlowMapping.OmitColumn)
+            {
+                prm.Remove(key);
+                keys.Remove(key);
+                hit(OmittedCategory, col0, "(left out)", 1);
+            }
+        }
         // Plan every rename first, then apply them together: moving keys one at a time let A->B overwrite a step's own
         // B value, and a chain A->B, B->C moved A's value on to C.
-        var plan = new Dictionary<string, (string NewKey, string Col, string NewCol)>(StringComparer.Ordinal);
+        var plan = new Dictionary<string, (string NewKey, string Col, string NewCol, bool Shape)>(StringComparer.Ordinal);
         foreach (var key in keys)
         {
             var rest = key["item/".Length..];
             var slash = rest.IndexOf('/');
             var col = slash > 0 ? rest[..slash] : rest;
             var map = cols.FirstOrDefault(c => c.Key == col);
-            if (map.Key is null) continue;
-            plan[key] = ("item/" + map.Value + (slash > 0 ? rest[slash..] : ""), col, map.Value);
+            var newCol = map.Key is null ? col : map.Value;
+            var oldTail = slash > 0 ? rest[slash..] : "";
+            var newTail = oldTail;
+            // A plain field and a choice field differ in the key: item/Col against item/Col/Value. The target column's own kind
+            // decides, so a choice written as .../Value into a text column (or the reverse) is corrected here.
+            if (suffixes is not null && suffixes.TryGetValue(newCol, out var want) && (oldTail is "" or "/Value"))
+                newTail = want.Length > 0 ? "/" + want : "";
+            if (map.Key is null && newTail == oldTail) continue;
+            plan[key] = ("item/" + newCol + newTail, col, newCol, newTail != oldTail);
         }
         // A rename whose new key is already taken (by a key that stays, or by another rename) would overwrite a value:
         // leave that key alone and say so. Repeat, because leaving one key in place can block another rename.
@@ -166,7 +232,8 @@ public static partial class FlowRewriter
         foreach (var (oldKey, p) in plan)
         {
             prm[p.NewKey] = values[oldKey];   // JsonObject keeps insertion order; moved to the end, which is harmless for parameters
-            hit("Column", p.Col, p.NewCol, 1);
+            if (p.Col != p.NewCol) hit("Column", p.Col, p.NewCol, 1);
+            if (p.Shape) hit(ValueFormCategory, oldKey, p.NewKey, 1);
         }
     }
 
@@ -194,15 +261,18 @@ public static partial class FlowRewriter
     }
 
     // One simultaneous pass, so a rename can never be renamed again (A->B together with B->C stays A->B).
-    // Matches 'body/<Column>' reads (optionally followed by /Value, /Id ...) and, for OData query text,
-    // bare column names. triggerBody()?['<Column>'] style reads are not touched. The regex is built once per
-    // caller, not once per string.
+    // Matches 'body/<Column>' reads (optionally followed by /Value, /Id ...), the reads of an item inside a loop or of the
+    // trigger's item (items('Apply_to_each')?['<Column>'], item()?['<Column>'], triggerBody()?['<Column>']) and, for OData
+    // query text, bare column names. The regex is built once per caller, not once per string.
     private static Func<string, string> ColumnReplacer(List<KeyValuePair<string, string>> cols, bool queryWords, Action<string, string, string, int> hit)
     {
         if (cols.Count == 0) return s => s;
         var lookup = cols.GroupBy(c => c.Key, StringComparer.Ordinal).ToDictionary(g => g.Key, g => g.First().Value, StringComparer.Ordinal);
         var names = string.Join("|", lookup.Keys.OrderByDescending(k => k.Length).Select(Regex.Escape));
-        var rxBody = new Regex($@"(?<=body/)(?<n>{names})(?=['/])");
+        var rxBody = new Regex($@"(?<=body/)(?<n>{names})(?=['/])|(?<=(?:items\('[^']*'\)|item\(\)|triggerBody\(\))\?\[')(?<n>{names})(?=')");
+        // Inside a step's query, only 'body/<Column>' reads are renamed in quoted text and embedded expressions: a loop or
+        // trigger read there (triggerBody()?['Title']) belongs to another list, and this step's own mapping must not touch it.
+        var rxBodyOnly = new Regex($@"(?<=body/)(?<n>{names})(?=['/])");
         var rxWords = queryWords ? new Regex($@"(?<=body/)(?<n>{names})(?=['/])|(?<![\w])(?<n>{names})(?![\w])") : rxBody;
         string Sub(Regex rx, string text) => rx.Replace(text, m =>
         {
@@ -214,21 +284,53 @@ public static partial class FlowRewriter
         if (!queryWords) return s => Sub(rxBody, s);
         // OData text: a bare word is a column only OUTSIDE single-quoted literals ("Category eq 'Approval'" must keep its
         // value). The 'body/<Column>' form is safe everywhere, so quoted stretches still get that one.
+        // An embedded expression (Title eq '@{triggerBody()?['Title']}') is not OData: its own quotes must not flip the
+        // literal/column state, and the names inside it are the trigger's or another step's, so only 'body/<Column>' reads
+        // are renamed there. Inside a literal, '' is an escaped quote, not its end.
         return s =>
         {
             var sb = new System.Text.StringBuilder(s.Length);
             var inQuote = false;
             var segStart = 0;
+            void Flush(int end) { if (end > segStart) sb.Append(Sub(inQuote ? rxBodyOnly : rxWords, s[segStart..end])); }
             for (var i = 0; i < s.Length; i++)
             {
+                if (s[i] == '@' && i + 1 < s.Length && s[i + 1] == '{')
+                {
+                    Flush(i);
+                    var end = ExpressionEnd(s, i + 2);
+                    sb.Append(Sub(rxBodyOnly, s[i..end]));
+                    segStart = end;
+                    i = end - 1;
+                    continue;
+                }
                 if (s[i] != '\'') continue;
-                sb.Append(Sub(inQuote ? rxBody : rxWords, s[segStart..i])).Append('\'');
+                if (inQuote && i + 1 < s.Length && s[i + 1] == '\'') { i++; continue; }   // '' inside a literal
+                Flush(i);
+                sb.Append('\'');
                 segStart = i + 1;
                 inQuote = !inQuote;
             }
-            sb.Append(Sub(inQuote ? rxBody : rxWords, s[segStart..]));
+            Flush(s.Length);
             return sb.ToString();
         };
+    }
+
+    // The index just past the '}' that closes an "@{" expression starting at `from` (braces inside the expression's own
+    // quoted strings do not count). Unclosed: the end of the text.
+    private static int ExpressionEnd(string s, int from)
+    {
+        var depth = 1;
+        var quoted = false;
+        for (var i = from; i < s.Length; i++)
+        {
+            var c = s[i];
+            if (c == '\'') { quoted = !quoted; continue; }
+            if (quoted) continue;
+            if (c == '{') depth++;
+            else if (c == '}' && --depth == 0) return i + 1;
+        }
+        return s.Length;
     }
 
     private sealed record ValueRule(string Category, string From, string To);
@@ -248,10 +350,12 @@ public static partial class FlowRewriter
                 entries.Add((new ValueRule(cat, from, to), pattern(Regex.Escape(from))));
         }
 
+        // A site name continues with a letter, digit, "_", "~", "-", "%" (an encoded space: sites/HR%20Team) or "." + more name
+        // (sites/HR.Team); anything else (a space, a quote, "/", the end of a sentence) ends it.
         // A tenant-root site (no path) must not also rewrite the sub-sites under it (/sites/X, /teams/X) that have their own row.
-        Add("Site", map.Sites, e => $@"(?i:{e})(?![A-Za-z0-9_~-]){(e.IndexOf('/', e.IndexOf("//", StringComparison.Ordinal) + 2) < 0 ? "(?!/(?i:sites|teams)/)" : "")}");
+        Add("Site", map.Sites, e => $@"(?i:{e})(?![A-Za-z0-9_~%-])(?!\.[A-Za-z0-9_~%-]){(e.IndexOf('/', e.IndexOf("//", StringComparison.Ordinal) + 2) < 0 ? "(?!/(?i:sites|teams)/)" : "")}");
         // The GUID is also found URL-encoded in a link ("%7B<guid>%7D"), where the "B" of "%7B" is a hex digit.
-        Add("List", map.Lists, e => $@"(?:(?<![0-9A-Fa-f-])|(?<=%7[Bb]))(?i:{e})(?![0-9A-Fa-f-])");
+        Add("List", map.Lists.Where(kv => Guid.TryParse(kv.Key, out _)).ToDictionary(kv => kv.Key, kv => kv.Value), e => $@"(?:(?<![0-9A-Fa-f-])|(?<=%7[Bb]))(?i:{e})(?![0-9A-Fa-f-])");
         Add("Form", map.Forms, e => $@"(?<![A-Za-z0-9_-]){e}(?![A-Za-z0-9_-])");
         Add("Email", map.Emails, e => $@"(?<![\w.%+-])(?i:{e})(?![\w-]|\.[\w-])");
         Add("Text", map.Text, e => e);
@@ -283,9 +387,16 @@ public static partial class FlowRewriter
             using (var ms = new MemoryStream()) { using var s = entry.Open(); s.CopyTo(ms); bytes = ms.ToArray(); }
 
             // Only entries that really hold a flow are rewritten (a Workflows/ file without a definition is copied as-is).
-            var json = FlowScanner.IsFlowEntry(entry.FullName)
-                ? FlowScanner.TryParseFlow(Encoding.UTF8.GetString(bytes).TrimStart('﻿'))
-                : null;
+            JsonObject? json = null;
+            if (FlowScanner.IsFlowEntry(entry.FullName))
+            {
+                try { json = FlowScanner.TryParseFlow(Encoding.UTF8.GetString(bytes).TrimStart('﻿')); }
+                catch (Exception ex) when (ex is JsonException or InvalidOperationException or FormatException)
+                {
+                    // Copied unchanged, and the report says so, instead of failing the whole package.
+                    results.Add((FlowScanner.NameFromEntry(entry.FullName), [new Change(UnreadableCategory, entry.FullName, ex.Message, 1)]));
+                }
+            }
             if (json is not null)
             {
                 var hasBom = bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF;
@@ -307,7 +418,29 @@ public static partial class FlowRewriter
     // (mapped or not), so the report can flag anything left pointing at the source tenant. Values deliberately
     // mapped to themselves (a site or list that is not moving) are not leftovers, and neither is a URL under a
     // target site that happens to start with a source URL (sites/HR -> sites/HR-New).
-    public static List<Finding> FindLeftovers(string rewrittenZip, FlowMapping map)
+    public static List<Finding> FindLeftovers(string rewrittenZip, FlowMapping map) =>
+        FindLeftoversCore(FlowScanner.ScanPackage(rewrittenZip), () => ReadFlowTexts(rewrittenZip), map);
+
+    // Same check for flows that never touched a zip (live copy): the rewritten flow JSON objects, by display name.
+    public static List<Finding> FindLeftovers(IEnumerable<(string Name, JsonObject Flow)> rewrittenFlows, FlowMapping map)
+    {
+        var flows = rewrittenFlows.ToList();
+        var scans = flows.Select(f => FlowScanner.ScanFlow(f.Name, f.Flow, false, f.Name));
+        return FindLeftoversCore(scans, () => flows.Select(f => (f.Name, f.Flow.ToJsonString())), map);
+    }
+
+    private static IEnumerable<(string Name, string Text)> ReadFlowTexts(string zipPath)
+    {
+        using var zip = ZipFile.OpenRead(zipPath);
+        foreach (var entry in zip.Entries)
+        {
+            if (entry.FullName.EndsWith('/') || !FlowScanner.IsFlowEntry(entry.FullName)) continue;
+            using var reader = new StreamReader(entry.Open(), Encoding.UTF8);
+            yield return (entry.FullName, reader.ReadToEnd());
+        }
+    }
+
+    private static List<Finding> FindLeftoversCore(IEnumerable<FlowScan> scans, Func<IEnumerable<(string Name, string Text)>> rawFlowTexts, FlowMapping map)
     {
         static IEnumerable<string> Moving(Dictionary<string, string> m, StringComparison cmp) =>
             m.Where(kv => !string.Equals(kv.Key.TrimEnd('/'), kv.Value.Trim().TrimEnd('/'), cmp)).Select(kv => kv.Key);
@@ -325,7 +458,7 @@ public static partial class FlowRewriter
             sourceSites.Any(k => IsUrlUnder(value, k)) && !targetSites.Any(t => IsUrlUnder(value, t) && t.Length >= LongestSource(value));
         int LongestSource(string value) => sourceSites.Where(k => IsUrlUnder(value, k)).Max(k => k.Length);
 
-        var leftovers = FlowScanner.ScanPackage(rewrittenZip)
+        var leftovers = scans
             .SelectMany(s => s.Findings)
             .Where(f => f.Kind != FindingKind.ConnectionRef
                         && (ignoreCase.Contains(f.Value) || exact.Contains(f.Value) || IsSourceSite(f.Value)))
@@ -333,7 +466,7 @@ public static partial class FlowRewriter
 
         // A site URL can also sit URL-encoded inside a link ("https%3A%2F%2Fcontoso.sharepoint.com%2Fsites%2FHR"). The
         // rewrite does not change that form, and the scan above does not see it, so look for it in the raw text and flag it.
-        if (sourceSites.Count > 0) leftovers.AddRange(FindEncodedSiteUrls(rewrittenZip, IsSourceSite));
+        if (sourceSites.Count > 0) leftovers.AddRange(FindEncodedSiteUrls(rawFlowTexts(), IsSourceSite));
         return leftovers;
     }
 
@@ -342,24 +475,18 @@ public static partial class FlowRewriter
 
     // URL-encoded http(s) addresses in the flows of a package whose decoded form is a moving source site (same test as the
     // plain-text leftovers, so a sub-site with its own target is not flagged).
-    private static List<Finding> FindEncodedSiteUrls(string zipPath, Func<string, bool> isSourceSite)
+    private static List<Finding> FindEncodedSiteUrls(IEnumerable<(string Name, string Text)> flowTexts, Func<string, bool> isSourceSite)
     {
         var found = new List<Finding>();
-        using var zip = ZipFile.OpenRead(zipPath);
-        foreach (var entry in zip.Entries)
-        {
-            if (entry.FullName.EndsWith('/') || !FlowScanner.IsFlowEntry(entry.FullName)) continue;
-            string text;
-            using (var reader = new StreamReader(entry.Open(), Encoding.UTF8)) text = reader.ReadToEnd();
+        foreach (var (name, text) in flowTexts)
             foreach (Match m in EncodedUrlRegex().Matches(text))
             {
                 string decoded;
                 try { decoded = Uri.UnescapeDataString(m.Value); }
                 catch (UriFormatException) { continue; }
                 if (isSourceSite(decoded))
-                    found.Add(new Finding(FindingKind.SiteUrl, m.Value, entry.FullName, "URL-encoded"));
+                    found.Add(new Finding(FindingKind.SiteUrl, m.Value, name, "URL-encoded"));
             }
-        }
         return found;
     }
 
@@ -382,6 +509,9 @@ public static partial class FlowRewriter
                 sb.Append('\n');
                 // Warning only: this pass renames matching column names anywhere, so check each one belongs to the list that renamed it.
                 if (g.Key == GlobalColumnCategory) sb.Append("⚠ ").Append(Loc.T("Flows_Rep_GlobalColumnWarn")).Append("\n\n");
+                if (g.Key == OmittedCategory) sb.Append("⚠ ").Append(Loc.T("Flows_Rep_OmittedWarn")).Append("\n\n");
+                if (g.Key == OmittedQueryCategory) sb.Append("⚠ ").Append(Loc.T("Flows_Rep_OmittedQueryWarn")).Append("\n\n");
+                if (g.Key == UnreadableCategory) sb.Append("⚠ ").Append(Loc.T("Flows_Rep_UnreadableWarn")).Append("\n\n");
             }
         }
         if (leftovers.Count > 0)

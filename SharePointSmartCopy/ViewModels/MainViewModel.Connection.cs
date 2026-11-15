@@ -100,6 +100,20 @@ public partial class MainViewModel : ObservableObject
         IsBusy             = false;
     }
 
+    // The Disconnect button on the first screen: also signs out, so the next Connect asks for a fresh sign-in instead of
+    // silently reusing the remembered account. (DisconnectSource itself is also called internally, without signing out.)
+    [RelayCommand]
+    private async Task SignOutAndDisconnectSourceAsync()
+    {
+        _connectSourceCts?.Cancel();
+        try { await AuthService.SignOutAsync(); } catch { /* a failed sign-out still disconnects */ }
+        _signedInTenant = string.Empty;
+        SignedInUser    = string.Empty;
+        DisconnectSource();
+        // Single tenant: the target shares this sign-in, which is now gone.
+        if (ReferenceEquals(TargetAuthService, AuthService)) DisconnectTarget();
+    }
+
     [RelayCommand]
     private void DisconnectSource()
     {

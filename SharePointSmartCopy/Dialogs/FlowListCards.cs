@@ -35,6 +35,9 @@ public partial class ColumnMapRow : ObservableObject
     [ObservableProperty] private string _selected = string.Empty;
     // True once the user changed the dropdown (as opposed to the automatic match filling it in).
     public bool UserEdited { get; private set; }
+    // Set when this row's automatic match was dropped because another column (chosen by the user, loaded, or a better
+    // automatic match) already goes to that target column: (the other column, the target column it kept).
+    public (string Column, string Target)? Yielded { get; set; }
 
     // The automatic match (or a loaded mapping) filling the row in, which is not a user edit.
     public void SetAuto(string selected)
@@ -42,6 +45,11 @@ public partial class ColumnMapRow : ObservableObject
         _auto = true;
         try { Selected = selected; }
         finally { _auto = false; }
+        if (IsUsed && selected == FlowMapping.OmitColumn)
+        {
+            StatusLevel = "Look";
+            StatusText = Loc.T("Flows_ColumnStatus_Omitted");
+        }
     }
 
     // Puts back a choice the user made earlier (kept across "Match again").
@@ -58,10 +66,12 @@ public partial class ColumnMapRow : ObservableObject
     {
         if (_auto) return;
         UserEdited = true;
+        Yielded = null;   // the user decided; the automatic story no longer applies
         if (IsUsed)
         {
-            StatusLevel = NeedsLook ? "Look" : "Ready";
-            StatusText = Loc.T(string.IsNullOrEmpty(value) ? "Flows_ColumnStatus_Unchanged" : "Flows_ColumnStatus_Chosen");
+            var omitted = value == FlowMapping.OmitColumn;
+            StatusLevel = omitted || NeedsLook ? "Look" : "Ready";
+            StatusText = Loc.T(omitted ? "Flows_ColumnStatus_Omitted" : string.IsNullOrEmpty(value) ? "Flows_ColumnStatus_Unchanged" : "Flows_ColumnStatus_Chosen");
         }
         UserChanged?.Invoke();
     }
@@ -93,6 +103,9 @@ public partial class ListCard : ObservableObject
     public bool AlreadyOnTarget { get; set; }
     public IReadOnlyList<FlowColumnInfo> SourceColumns { get; set; } = [];
     public HashSet<string> Used { get; set; } = new(StringComparer.Ordinal);
+    // The columns a step WRITES on this list (item/<Column>). Only those make an import fail when the target list lacks the
+    // column; a column that is only filtered on or read in an expression fails later, when the flow runs.
+    public HashSet<string> Written { get; set; } = new(StringComparer.Ordinal);
     // The "Create item" steps on this list, and the columns of the chosen target list (with which are required).
     public IReadOnlyList<CreateItemStep> CreateSteps { get; set; } = [];
     private IReadOnlyList<FlowColumnInfo> _targetCols = [];
@@ -185,10 +198,22 @@ public partial class ListCard : ObservableObject
     [RelayCommand]
     private void Toggle() => IsExpanded = !IsExpanded;
 
-    partial void OnShowAllColumnsChanged(bool value)
+    partial void OnShowAllColumnsChanged(bool value) => DeferRefresh();
+
+    // Edits inside the column grid (a drop-down, a typed value, the "show all" box) arrive while a control is still finishing
+    // its own change; refreshing the grid right then replaces that control and WPF throws ("Can only change SelectedItems
+    // collection in multiple selection modes"). So the refresh runs once the input has settled, and several quick changes
+    // (typing) share one refresh.
+    private bool _refreshPending;
+    private void DeferRefresh()
     {
-        ColumnsView.Refresh();
-        UpdateColumnCounts();
+        if (_refreshPending) return;
+        _refreshPending = true;
+        System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            _refreshPending = false;
+            Refresh(_targetColumnCount);
+        }), System.Windows.Threading.DispatcherPriority.Background);
     }
 
     partial void OnPickedChanged(TargetListOption? value)
@@ -240,7 +265,7 @@ public partial class ListCard : ObservableObject
     {
         Columns.Clear();
         _targetCols = targetCols;
-        var options = new List<ColumnOption> { new(string.Empty, Loc.T("Flows_LeaveUnchanged")) };
+        var options = new List<ColumnOption> { new(string.Empty, Loc.T("Flows_LeaveUnchanged")), new(FlowMapping.OmitColumn, Loc.T("Flows_LeaveOut")) };
         options.AddRange(targetCols.OrderBy(t => t.DisplayName, StringComparer.OrdinalIgnoreCase)
             .Select(t => new ColumnOption(t.InternalName, t.DisplayName == t.InternalName ? t.InternalName : $"{t.DisplayName} ({t.InternalName})")));
 
@@ -249,13 +274,53 @@ public partial class ListCard : ObservableObject
             ColumnMatchStatus.NotFoundInTarget => 0, ColumnMatchStatus.Similar => 1, ColumnMatchStatus.Renamed => 2, _ => 3,
         };
 
+        var matches = new Dictionary<string, (string? Target, ColumnMatchStatus Match)>(StringComparer.Ordinal);
+        foreach (var src in SourceColumns)
+            matches[src.InternalName] = targetCols.Count == 0
+                ? (null, ColumnMatchStatus.NotFoundInTarget)
+                : FlowMappingResolver.MatchColumn(src.InternalName, src, targetCols);
+
+        // A target column can take one source column per step. A choice the user made (or a loaded mapping) wins: an automatic
+        // match to the same target is dropped, so the user is never blocked by a conflict they did not make. Between two
+        // automatic matches, the better one keeps the target. A dropped row says which column took its target.
+        var chosen = new Dictionary<string, string?>(StringComparer.Ordinal);
+        foreach (var c in SourceColumns) chosen[c.InternalName] = preferred?.Invoke(SourceListId, c.InternalName, options);
+        var yielded = new Dictionary<string, (string Column, string Target)>(StringComparer.Ordinal);
+        var claimed = new Dictionary<string, string>(StringComparer.Ordinal);   // target column -> the chosen source column
+        foreach (var c in SourceColumns.Where(c => Used.Contains(c.InternalName) && chosen[c.InternalName] is { Length: > 0 } t && t != FlowMapping.OmitColumn))
+            claimed.TryAdd(chosen[c.InternalName]!, c.InternalName);
+        foreach (var c in SourceColumns.Where(c => Used.Contains(c.InternalName) && chosen[c.InternalName] is null
+                                                   && matches[c.InternalName].Target is { Length: > 0 } t && claimed.ContainsKey(t)))
+        {
+            yielded[c.InternalName] = (claimed[matches[c.InternalName].Target!], matches[c.InternalName].Target!);
+            matches[c.InternalName] = (null, ColumnMatchStatus.NotFoundInTarget);
+        }
+        foreach (var group in SourceColumns
+                     .Where(c => Used.Contains(c.InternalName) && matches[c.InternalName].Target is { Length: > 0 } && chosen[c.InternalName] is null)
+                     .GroupBy(c => matches[c.InternalName].Target!, StringComparer.Ordinal)
+                     .Where(g => g.Count() > 1).ToList())
+        {
+            var targetCol = targetCols.First(t => t.InternalName == group.Key);
+            int Score(FlowColumnInfo c)
+            {
+                var baseRank = matches[c.InternalName].Match switch { ColumnMatchStatus.Same => 0, ColumnMatchStatus.Renamed => 2, _ => 4 };
+                var n = FlowMappingResolver.NormalizeColumnName(c.InternalName);
+                var exact = n == FlowMappingResolver.NormalizeColumnName(targetCol.InternalName) || n == FlowMappingResolver.NormalizeColumnName(targetCol.DisplayName);
+                return baseRank - (exact ? 1 : 0);
+            }
+            var winner = group.OrderBy(Score).ThenBy(c => c.InternalName, StringComparer.Ordinal).First();
+            foreach (var loser in group.Where(c => c != winner))
+            {
+                yielded[loser.InternalName] = (winner.InternalName, group.Key);
+                matches[loser.InternalName] = (null, ColumnMatchStatus.NotFoundInTarget);
+            }
+        }
+
         var rows = new List<ColumnMapRow>();
         foreach (var src in SourceColumns)
         {
             var used = Used.Contains(src.InternalName);
-            var (target, match) = targetCols.Count == 0
-                ? ((string?)null, ColumnMatchStatus.NotFoundInTarget)
-                : FlowMappingResolver.MatchColumn(src.InternalName, src, targetCols);
+            var (target, match) = matches[src.InternalName];
             var level = !used ? "Info" : match is ColumnMatchStatus.Same or ColumnMatchStatus.Renamed ? "Ready" : "Look";
             var row = new ColumnMapRow
             {
@@ -268,8 +333,21 @@ public partial class ListCard : ObservableObject
                 StatusText = used ? Loc.T("Flows_ColumnStatus_" + match) : Loc.T("Flows_ColumnNotUsed"),
                 StatusLevel = level,
             };
-            row.SetAuto(preferred?.Invoke(SourceListId, src.InternalName, options) ?? target ?? string.Empty);
-            row.UserChanged += () => Refresh(_targetColumnCount);
+            // A used column the target list has no counterpart for is left out of the flows' steps (the import would fail on it
+            // otherwise), and the card and the report say so. Only judged when the target's columns were read.
+            var noCounterpart = used && match == ColumnMatchStatus.NotFoundInTarget && targetCols.Count > 0
+                                && Written.Contains(src.InternalName) && !SystemColumns.Contains(src.InternalName);
+            row.SetAuto(chosen[src.InternalName] ?? target ?? (noCounterpart ? FlowMapping.OmitColumn : string.Empty));
+            if (used && yielded.TryGetValue(src.InternalName, out var y))
+            {
+                row.Yielded = y;
+                var targetLabel = targetCols.FirstOrDefault(t => t.InternalName == y.Target)?.DisplayName ?? y.Target;
+                row.StatusLevel = "Look";
+                row.StatusText = Loc.T(row.Selected == FlowMapping.OmitColumn ? "Flows_ColumnStatus_YieldedOmitted" : "Flows_ColumnStatus_Yielded", targetLabel, y.Column);
+            }
+            // Not at once: the change arrives while the drop-down is still finishing its own selection, and refreshing the grid
+            // right then replaces that very drop-down ("Can only change SelectedItems collection in multiple selection modes").
+            row.UserChanged += DeferRefresh;
             rows.Add(row);
         }
         // Used columns first, the ones that need the user at the top; then the rest alphabetically.
@@ -312,8 +390,29 @@ public partial class ListCard : ObservableObject
         var listName = Picked?.Title is { Length: > 0 } t ? t : TargetListId;
 
         foreach (var row in Columns.Where(c => c.IsUsed && !SystemColumns.Contains(c.SourceColumn)))
-            if (!targetNames.Contains(Mapped(row.SourceColumn)))
+        {
+            var to = Mapped(row.SourceColumn);
+            if (to != FlowMapping.OmitColumn && !targetNames.Contains(to) && Written.Contains(row.SourceColumn))
                 found.Add(Loc.T("Flows_Block_ColumnMissing", row.SourceLabel, listName));
+        }
+
+        // Two columns of one Create item step sent to the same target column: the second rename would overwrite the first's
+        // value, so the rewrite leaves it as it is and the import fails on it. Say so here instead.
+        // The same conflict in 19 steps is ONE line ("in 19 steps"), not 19.
+        var conflicts = new Dictionary<string, (string Columns, string Target, List<CreateItemStep> Steps)>(StringComparer.Ordinal);
+        foreach (var step in CreateSteps.Where(s => s.ColumnsKnown))
+            foreach (var g in step.Columns.Distinct(StringComparer.Ordinal).GroupBy(Mapped, StringComparer.Ordinal)
+                         .Where(g => g.Count() > 1 && g.Key != FlowMapping.OmitColumn))
+            {
+                var names = string.Join(", ", g.OrderBy(n => n, StringComparer.Ordinal));
+                var key = names + ">" + g.Key;
+                if (!conflicts.TryGetValue(key, out var c)) conflicts[key] = c = (names, g.Key, []);
+                c.Steps.Add(step);
+            }
+        foreach (var (names, target, steps) in conflicts.Values)
+            found.Add(steps.Count == 1
+                ? Loc.T("Flows_Block_DuplicateTarget", listName, names, target, steps[0].FlowName, steps[0].StepName)
+                : Loc.T("Flows_Block_DuplicateTargetSteps", listName, names, target, steps.Count, steps[0].FlowName, steps[0].StepName));
 
         // A required column of the target list that a Create item step does not set: the import fails. A typed value fixes it
         // (the rewriter adds it to those steps); otherwise the list must make the column optional.
@@ -344,10 +443,20 @@ public partial class ListCard : ObservableObject
             {
                 if (e.PropertyName != nameof(RequiredFixRow.Value)) return;
                 _fixValues[row.Column] = row.Value;
-                Refresh(_targetColumnCount);
+                DeferRefresh();
             };
             RequiredFixes.Add(row);
         }
+    }
+
+    // How a step writes each column of the chosen target list ("Value" for a choice column, "" for text, number, date, yes/no):
+    // the rewriter uses it to fix a key such as item/Progress/Value when the target column is not a choice column.
+    public Dictionary<string, string> TargetColumnSuffixes()
+    {
+        var d = new Dictionary<string, string>(StringComparer.Ordinal);
+        foreach (var t in _targetCols)
+            if (FlowMapping.ValueSuffixFor(t.TypeName) is { } suffix) d[t.InternalName] = suffix;
+        return d;
     }
 
     // Recomputes the summary line, the chip, the collapsed header line, and why the grid is empty if it is. The chip is
@@ -367,14 +476,20 @@ public partial class ListCard : ObservableObject
         var targetTitle = Picked?.Title is { Length: > 0 } t ? t : TargetListId;
 
         var unread = hasTarget && usedRows.Count > 0 && targetColumnCount == 0 ? Loc.T("Flows_CardTargetColumnsUnread") : string.Empty;
-        TargetNote = string.Join(" ", new[] { TargetBaseNote, unread }.Where(s => s.Length > 0));
+        var leftOut = usedRows.Where(c => c.Selected == FlowMapping.OmitColumn && c.Yielded is null).Select(c => c.SourceColumn).ToList();
+        var leftOutNote = leftOut.Count > 0 ? Loc.T("Flows_Card_Omitted", leftOut.Count, string.Join(", ", leftOut)) : string.Empty;
+        var yieldedRows = usedRows.Where(c => c.Selected == FlowMapping.OmitColumn && c.Yielded is not null).ToList();
+        var yieldedNote = yieldedRows.Count > 0
+            ? Loc.T("Flows_Card_Yielded", yieldedRows.Count, string.Join(", ", yieldedRows.Select(c => $"{c.SourceColumn} ({c.Yielded!.Value.Column})")))
+            : string.Empty;
+        TargetNote = string.Join(" ", new[] { TargetBaseNote, unread, leftOutNote, yieldedNote }.Where(s => s.Length > 0));
 
         SummaryText = Columns.Count == 0 ? Loc.T("Flows_CardSummaryNoColumns")
             : !hasTarget ? Loc.T("Flows_CardSummaryNoTarget")
             : onTargetNow ? Loc.T("Flows_CardSummaryOnTarget", usedRows.Count)
             : usedRows.Count == 0 ? Loc.T("Flows_CardSummaryNoUse", Columns.Count)
             : Loc.T("Flows_CardSummary", Columns.Count, usedRows.Count, Count(ColumnMatchStatus.Same), Count(ColumnMatchStatus.Renamed),
-                    Count(ColumnMatchStatus.Similar), Count(ColumnMatchStatus.NotFoundInTarget));
+                    Count(ColumnMatchStatus.Similar), usedRows.Count(c => c.Match == ColumnMatchStatus.NotFoundInTarget && string.IsNullOrEmpty(c.Selected)));
 
         EmptyColumnsText = Columns.Count > 0 && !HasVisibleColumns ? Loc.T("Flows_CardEmptyNoneUsed")
             : Columns.Count > 0 ? string.Empty

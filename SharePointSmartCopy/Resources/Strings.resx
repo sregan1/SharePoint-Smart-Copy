@@ -76,6 +76,8 @@
   <data name="Ui_StructListSettingsLong" xml:space="preserve"><value>List settings (approval, check-out, attachments, folders, item-level security)</value></data>
   <data name="Ui_StructContentTypesLong" xml:space="preserve"><value>Content types and their document templates</value></data>
   <data name="Ui_StructColumnRulesLong" xml:space="preserve"><value>Column validation rules and formatting</value></data>
+  <data name="Ui_StructUpdateExistingLong" xml:space="preserve"><value>Also update lists that already exist on the target: replace same-named views (and the default view), list settings, and column rules and formatting</value></data>
+  <data name="Ui_StructUpdateExisting" xml:space="preserve"><value>Update existing lists</value></data>
   <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Library template and folder default values</value></data>
   <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Site columns and site content types</value></data>
   <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Site settings (description, quick launch, tree view and more)</value></data>
@@ -212,6 +214,7 @@
   <data name="VM_StatusPending" xml:space="preserve"><value>⏳ Pending</value></data>
   <data name="VM_StatusProcessing" xml:space="preserve"><value>⟳ Processing…</value></data>
   <data name="VM_StatusFailed" xml:space="preserve"><value>❌ Failed</value></data>
+  <data name="VM_ExistingUpdated" xml:space="preserve"><value>Existing list updated to match the source.</value></data>
   <data name="VM_StatusSkipped" xml:space="preserve"><value>⏭ Skipped</value></data>
   <data name="VM_StatusCancelledSymbol" xml:space="preserve"><value>⊘ Cancelled</value></data>
   <data name="VM_StatusSuccess" xml:space="preserve"><value>✅ Success</value></data>
@@ -967,6 +970,12 @@ Original packages are untouched. Connections are NOT migrated; recreate and re-s
   <data name="Flows_Handling_ConnectionOnly" xml:space="preserve"><value>Connection only (recreate it)</value></data>
   <data name="Flows_ColumnsHeader" xml:space="preserve"><value>Column mapping</value></data>
   <data name="Flows_ColumnsHint" xml:space="preserve"><value>A column appears here when a flow writes to it, filters or sorts on it, or reads it in an expression, on a list that was matched. The target column is chosen by automatic matching (same name, then same display name, then a similar name). You only need to act on rows marked "Similar name" or "No match"; change any row from its dropdown, or choose "(leave unchanged)" to keep the source name. Built-in columns such as Title are not listed because they exist everywhere.</value></data>
+  <data name="Flows_LeaveOut" xml:space="preserve"><value>Leave out of the flows (not on the target)</value></data>
+  <data name="Flows_ColumnStatus_Omitted" xml:space="preserve"><value>Left out of the flows</value></data>
+  <data name="Flows_Card_Omitted" xml:space="preserve"><value>{0} column(s) will be left out of the flows' steps because the target list has no such column: {1}. Add the column to the target list and click Check again, or choose another column, to keep it.</value></data>
+  <data name="Flows_FollowUpColumnLeftOut" xml:space="preserve"><value>The column "{0}" does not exist on the target list "{1}", so the flows' steps no longer write it. Add the column to the list and run this again, or add the field to those steps in Power Automate.</value></data>
+  <data name="Flows_Block_DuplicateTarget" xml:space="preserve"><value>On the target list "{0}", the columns {1} are all mapped to "{2}" in the step "{4}" of "{3}". Choose a different target column for all but one of them, or leave the others out.</value></data>
+  <data name="Flows_Rep_OmittedWarn" xml:space="preserve"><value>Review: the target list has no column for these fields, so the steps no longer write them. The values they carried are not saved anywhere on the target.</value></data>
   <data name="Flows_LeaveUnchanged" xml:space="preserve"><value>(leave unchanged)</value></data>
   <data name="Flows_ColumnStatus_Similar" xml:space="preserve"><value>Similar name: please check</value></data>
   <data name="Flows_NotResolvedYet" xml:space="preserve"><value>(not matched yet)</value></data>
@@ -999,7 +1008,7 @@ Original packages are untouched. Connections are NOT migrated; recreate and re-s
   <data name="Forms_LogCopied" xml:space="preserve"><value>The log was copied to the clipboard.</value></data>
   <data name="Forms_LogCopyFailed" xml:space="preserve"><value>The log could not be copied because another program is using the clipboard. Try again.</value></data>
   <data name="Forms_CopyOneForm" xml:space="preserve"><value>Start copying 1 form</value></data>
-  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>What is copied: the questions, branching, settings and theme. What is not: responses (use Export responses on the first step to save them to Excel), collaborators and who the form is shared with. Each copy is a new form owned by the target account, and images may need to be added again.</value></data>
+  <data name="Forms_NotCopiedNote" xml:space="preserve"><value>What is copied: the questions, branching, settings and theme. What is not: responses (use Export responses on the first step to save them to Excel), collaborators and who the form is shared with. Only forms owned by the signed-in account are listed: forms owned by a group, or only shared with you, do not appear. Each copy is a new form owned by the target account, and images may need to be added again.</value></data>
   <data name="Forms_NextRewriteFlows" xml:space="preserve"><value>Next: if flows use these forms, open Rewrite Flows from the main window. It reads the form IDs saved by this copy and points each flow at the new form.</value></data>
   <data name="Forms_CancelCopyBody" xml:space="preserve"><value>Stop copying now? The form being copied right now is cut off and may be left half-built in the target account; delete it in Microsoft Forms if it is. Forms that are already finished are kept.</value></data>
   <data name="Forms_CopyMore" xml:space="preserve"><value>Copy more forms</value></data>
@@ -1131,6 +1140,7 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Flows_FormNoteBadId" xml:space="preserve"><value>Not a form ID or edit-page link</value></data>
   <data name="Flows_FormNoteSameAsSource" xml:space="preserve"><value>Same as the source form</value></data>
   <data name="Flows_FormNoteSameTenant" xml:space="preserve"><value>This form is in the source tenant, not the target</value></data>
+  <data name="Flows_FormNoteNotSignedInTenant" xml:space="preserve"><value>This form is not in the tenant you are signed in to</value></data>
   <data name="Flows_FormNoteOtherTenant" xml:space="preserve"><value>This form is in a different tenant than the source</value></data>
   <data name="Flows_FormNoteFromCopy" xml:space="preserve"><value>From the Forms copy of {0} to {1}</value></data>
   <data name="Flows_FormNoteFromCopyOld" xml:space="preserve"><value>From an earlier Forms copy</value></data>
@@ -1205,6 +1215,7 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Flows_ConfirmStartOverBody" xml:space="preserve"><value>Start over? The packages, the scan and everything you filled in are discarded. Packages already written to the output folder are not deleted.</value></data>
   <data name="Flows_ConfirmCloseBody" xml:space="preserve"><value>Close Rewrite Flows? The mapping you built so far is lost (use Save mapping first to keep it).</value></data>
   <data name="Flows_Gate_Forms" xml:space="preserve"><value>⚠ {0} form(s) need a valid target form ID to continue.</value></data>
+  <data name="Flows_ConnSignInSingle" xml:space="preserve"><value>Sign in…</value></data>
   <data name="Flows_ConnChangeSource" xml:space="preserve"><value>Change source…</value></data>
   <data name="Flows_LogConnectedSource" xml:space="preserve"><value>Signed in as {0}. The source tenant's SharePoint address is {1}.</value></data>
   <data name="Flows_ConnSourceDone" xml:space="preserve"><value>Source connection changed to {0}. The sites listed below must be on this tenant.</value></data>
@@ -1288,6 +1299,8 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Flows_Chk_Columns" xml:space="preserve"><value>{0} column mapping(s) still need a look.</value></data>
   <data name="Flows_Chk_ColumnsReady" xml:space="preserve"><value>All column mappings are settled.</value></data>
   <data name="Flows_Chk_Connections" xml:space="preserve"><value>Connections are not copied between tenants: recreate them in Power Automate after importing.</value></data>
+  <data name="Flows_Chk_LiveConnectionsBind" xml:space="preserve"><value>Each connection is matched to one of your existing connections in the target. Any that has no match is left for you to set in Power Automate.</value></data>
+  <data name="Flows_Chk_LiveConnectionsKeep" xml:space="preserve"><value>Connections are not matched: set each one in Power Automate after the flows are created.</value></data>
   <data name="Flows_Chk_Email" xml:space="preserve"><value>Email: every address on {0} becomes {1}.</value></data>
   <data name="Flows_Chk_Forms" xml:space="preserve"><value>{0} of {1} form(s) point at a new form.</value></data>
   <data name="Flows_Chk_Lists" xml:space="preserve"><value>{0} of {1} list(s) have a target list.</value></data>
@@ -1472,7 +1485,9 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Svc_View_ReadFail" xml:space="preserve"><value>Views could not be copied: {0}</value></data>
   <data name="Svc_View_Skipped" xml:space="preserve"><value>View '{0}' was not copied (a {1} view)</value></data>
   <data name="Svc_View_CreateFail" xml:space="preserve"><value>View '{0}' could not be created: {1}</value></data>
+  <data name="Svc_View_PropFail" xml:space="preserve"><value>View '{0}': the setting {1} could not be applied: {2}</value></data>
   <data name="Svc_View_SettingsFail" xml:space="preserve"><value>View '{0}' was created but some settings could not be applied: {1}</value></data>
+  <data name="Svc_View_QueryTrimmed" xml:space="preserve"><value>View "{0}": the filter, sort or grouping on columns the target does not have was left out ({1}).</value></data>
   <data name="Svc_View_QueryDropped" xml:space="preserve"><value>View '{0}': its filter or sorting could not be applied and was left out</value></data>
   <data name="Svc_View_FieldsMissing" xml:space="preserve"><value>View '{0}': columns not in the target were left out: {1}</value></data>
   <data name="VM_ViewsNotes" xml:space="preserve"><value>{0} note(s) on views, settings or content types: {1}</value></data>
@@ -1485,6 +1500,8 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Svc_Lib_DefaultsFailed" xml:space="preserve"><value>The library's folder default values could not be copied.</value></data>
   <data name="Svc_Lib_DefaultsReceiverFailed" xml:space="preserve"><value>The folder default values were copied, but the rule that applies them to new files could not be added.</value></data>
   <data name="Svc_Site_ColumnsReadFail" xml:space="preserve"><value>Site columns could not be read: {0}</value></data>
+  <data name="Svc_Site_LookupListMissing" xml:space="preserve"><value>Lookup site columns not created because their list is not on the target: {0}</value></data>
+  <data name="VM_SiteLookupColumns" xml:space="preserve"><value>Lookup site columns</value></data>
   <data name="Svc_Site_ColumnsFailed" xml:space="preserve"><value>Site columns that could not be created: {0}</value></data>
   <data name="Svc_Site_TypesReadFail" xml:space="preserve"><value>Site content types could not be read: {0}</value></data>
   <data name="Svc_Site_TypesFailed" xml:space="preserve"><value>Site content types that could not be created: {0}</value></data>
@@ -1499,4 +1516,99 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Ui_SingleTenantFixedTenant" xml:space="preserve"><value>Tenant: {0}. Sign-in can only go to this directory.</value></data>
   <data name="Ui_SingleTenantFixedHint" xml:space="preserve"><value>To connect a site on a different tenant, choose another app registration in Settings (its Tenant ID empty or set to that tenant), or use Multi-tenant mode.</value></data>
   <data name="Ui_StructureOnlyCaption" xml:space="preserve"><value>Structure only: columns, views, settings and content types are copied, but no files or list items.</value></data>
+  <data name="Flows_Live_ModeLive" xml:space="preserve"><value>Copy from a Power Automate environment</value></data>
+  <data name="Flows_Live_ModeZip" xml:space="preserve"><value>Use exported packages (.zip)</value></data>
+  <data name="Flows_Live_Intro" xml:space="preserve"><value>Pick flows in the source environment and the tool creates them in the target environment, already pointing at the target&apos;s sites, lists and forms. Flows are created turned off, so nothing runs until you have reviewed it.</value></data>
+  <data name="Flows_Live_LoadEnvs" xml:space="preserve"><value>Sign in and load environments</value></data>
+  <data name="Flows_Live_FromEnv" xml:space="preserve"><value>Copy from (source environment)</value></data>
+  <data name="Flows_Live_SignInTarget" xml:space="preserve"><value>Sign in to target tenant</value></data>
+  <data name="Flows_Live_TargetNeedsSignIn" xml:space="preserve"><value>The target is a different tenant: sign in to it with an account that can create flows there, then choose the environment.</value></data>
+  <data name="Flows_Live_ToEnv" xml:space="preserve"><value>Copy to (target environment)</value></data>
+  <data name="Flows_Live_SelectAll" xml:space="preserve"><value>Select all</value></data>
+  <data name="Flows_Live_SelectNone" xml:space="preserve"><value>Select none</value></data>
+  <data name="Flows_Live_LoadingEnvs" xml:space="preserve"><value>Loading environments...</value></data>
+  <data name="Flows_Live_LoadingFlows" xml:space="preserve"><value>Loading flows...</value></data>
+  <data name="Flows_Live_NoFlows" xml:space="preserve"><value>No flows found in {0}.</value></data>
+  <data name="Flows_Live_FlowCount" xml:space="preserve"><value>{0} flows in {1}. Tick the ones to copy.</value></data>
+  <data name="Flows_Live_NothingScanned" xml:space="preserve"><value>None of the selected flows could be read.</value></data>
+  <data name="Flows_Live_Creating" xml:space="preserve"><value>Creating flows in the target...</value></data>
+  <data name="Flows_Live_WriteHeader" xml:space="preserve"><value>Create flows in the target</value></data>
+  <data name="Flows_Live_WriteHint" xml:space="preserve"><value>Each flow is created in the target environment turned off, so nothing runs until you review it. The report is saved in the folder below.</value></data>
+  <data name="Flows_Live_BindConnections" xml:space="preserve"><value>Use my existing connections in the target environment when there is one</value></data>
+  <data name="Flows_Chk_LiveFlows" xml:space="preserve"><value>{0} flow(s) will be created in {2} (copied from {1})</value></data>
+  <data name="Flows_Chk_LiveStopped" xml:space="preserve"><value>Flows are created turned off. Turn each one on after you review it.</value></data>
+  <data name="Flows_Live_LogEnvs" xml:space="preserve"><value>Found {0} source and {1} target environment(s).</value></data>
+  <data name="Flows_Live_LogFetching" xml:space="preserve"><value>Reading {0} flow(s) from {1}</value></data>
+  <data name="Flows_Live_LogFlowFailed" xml:space="preserve"><value>{0}: {1}</value></data>
+  <data name="Flows_Live_LogCreateStart" xml:space="preserve"><value>Creating {0} flow(s) in {1}</value></data>
+  <data name="Flows_Live_LogBindUnavailable" xml:space="preserve"><value>Connections could not be matched, so flows are created without them. {0}</value></data>
+  <data name="Flows_Live_LogCreated" xml:space="preserve"><value>Created {0}</value></data>
+  <data name="Flows_Live_Created" xml:space="preserve"><value>Created (turned off)</value></data>
+  <data name="Flows_Live_CreatedUnbound" xml:space="preserve"><value>Created, {0} connection(s) to set</value></data>
+  <data name="Flows_Live_Review_Unbound" xml:space="preserve"><value>{0} connection(s) were not matched to a connection in the target. Open each flow in Power Automate and select a connection.</value></data>
+  <data name="Flows_Live_Review_Failed" xml:space="preserve"><value>{0} flow(s) could not be created. See the activity log for the reason.</value></data>
+  <data name="Flows_Live_ErrConsent" xml:space="preserve"><value>The app registration does not have the Power Automate (or Power Apps) permission yet. Ask an administrator to add it and grant consent, then try again.</value></data>
+  <data name="Flows_Live_ErrRole" xml:space="preserve"><value>Your account is missing a Dataverse security role in the target environment ({0}). Ask an administrator to give you the Environment Maker role (or System Administrator).</value></data>
+  <data name="Flows_Live_ErrForbidden" xml:space="preserve"><value>Your account does not have access to this environment or flow.</value></data>
+  <data name="Flows_Live_ErrInvalid" xml:space="preserve"><value>The target rejected the flow: {0}</value></data>
+  <data name="Flows_Live_ErrNotFound" xml:space="preserve"><value>The environment or flow was not found.</value></data>
+  <data name="Flows_Live_ErrOther" xml:space="preserve"><value>Power Automate returned an error: {0}</value></data>
+  <data name="Flows_Live_ResultSuccess" xml:space="preserve"><value>Done: {0} flow(s) created</value></data>
+  <data name="Flows_Live_ResultSuccessSub" xml:space="preserve"><value>Created in {0}, turned off. Nothing was left pointing at the source.</value></data>
+  <data name="Flows_Live_ResultReview" xml:space="preserve"><value>Done: {0} flow(s) created, some items need your review</value></data>
+  <data name="Flows_Live_ResultReviewSub" xml:space="preserve"><value>Created in {0}, turned off. Open the report to see values still pointing at the source, connections to set, and items the tool does not rewrite.</value></data>
+  <data name="Flows_Live_NextStep1" xml:space="preserve"><value>Open the report and check what is marked for review.</value></data>
+  <data name="Flows_Live_NextStep2" xml:space="preserve"><value>In Power Automate (target), open each new flow, fix any connection it flags, and turn it on.</value></data>
+  <data name="Flows_Live_NextStep3" xml:space="preserve"><value>Test each flow before you turn off the original in the source.</value></data>
+  <data name="Forms_MapInUse" xml:space="preserve"><value>The saved form IDs file is in use (by another copy of the app or another program). Try again in a moment.</value></data>
+  <data name="Forms_Cp_ImageCheckCancelled" xml:space="preserve"><value>Cancelled before the images were checked: look at the copy's background, logo and header image.</value></data>
+  <data name="Flows_Live_NoTargetEnv" xml:space="preserve"><value>Choose the target environment on the Packages step first.</value></data>
+  <data name="Flows_Live_SameEnvBody" xml:space="preserve"><value>The source and target are the same environment ({0}), so the copies will be created next to the original flows. Continue?</value></data>
+  <data name="Flows_Live_AlreadyCreated" xml:space="preserve"><value>Already created (earlier attempt)</value></data>
+  <data name="Flows_Live_LogCancelled" xml:space="preserve"><value>Cancelled. {0} flow(s) were created before the cancel; the report lists them.</value></data>
+  <data name="Flows_Live_ReportName" xml:space="preserve"><value>copy-report - {0} to {1} - {2}</value></data>
+  <data name="Flows_Live_Review_AlreadyCreated" xml:space="preserve"><value>{0} flow(s) had already been created on an earlier attempt and were not created again.</value></data>
+  <data name="Flows_Live_Review_NotScanned" xml:space="preserve"><value>{0} flow(s) were ticked after the scan and were not created. Go back to Packages and press Next to include them.</value></data>
+  <data name="Flows_Live_Review_Cancelled" xml:space="preserve"><value>Cancelled: {0} flow(s) were not created.</value></data>
+  <data name="Flows_Rep_OmittedQueryWarn" xml:space="preserve"><value>Review: these columns were left out of the steps because the target list does not have them, but a step still filters, sorts or selects on them. The import works; that step fails when the flow runs until its query is changed in Power Automate or the column is added to the list.</value></data>
+  <data name="Flows_Rep_UnreadableWarn" xml:space="preserve"><value>Review: this flow file could not be read, so it was copied into the new package unchanged and still points at the source.</value></data>
+  <data name="Flows_Review_OmittedInQuery" xml:space="preserve"><value>{0} query reference(s) still name a column that was left out because the target list does not have it. Those steps fail when the flow runs; change their filter or sort in Power Automate, or add the column to the list.</value></data>
+  <data name="Flows_Live_ErrTimeout" xml:space="preserve"><value>The request to Power Automate timed out. Check the connection and try again.</value></data>
+  <data name="Flows_Live_NoSolution" xml:space="preserve"><value>My flows (not in a solution)</value></data>
+  <data name="Flows_Live_LoadingSolutions" xml:space="preserve"><value>Reading the target environment's solutions…</value></data>
+  <data name="Flows_Live_SolutionsUnavailable" xml:space="preserve"><value>The target environment's solutions could not be read, so the flows will be created outside any solution: {0}</value></data>
+  <data name="Flows_Live_SolutionLabel" xml:space="preserve"><value>Create in</value></data>
+  <data name="Flows_Live_SolutionHint" xml:space="preserve"><value>Choose a solution to create the flows inside it (they are then solution-aware and can move with the solution). Each connection uses the target's matching connection reference; one is added to the solution when there is none.</value></data>
+  <data name="Flows_Live_CreatedInSolution" xml:space="preserve"><value>Created (off) in the solution {0}</value></data>
+  <data name="Forms_ErrTimeout" xml:space="preserve"><value>The request timed out.</value></data>
+  <data name="Forms_Cp_OptionsDiffer" xml:space="preserve"><value>options differ</value></data>
+  <data name="Forms_Cp_OptionsCount" xml:space="preserve"><value>{0} of {1} options</value></data>
+  <data name="Forms_Cp_QuestionImagesNote" xml:space="preserve"><value>{0} question(s) have images (on the question or its choices). They are copied as links to the source form's images, so they stop showing if the source form is deleted or when the copy is in another tenant. Add those images again in the copy.</value></data>
+  <data name="Forms_SheetResponses" xml:space="preserve"><value>Responses</value></data>
+  <data name="Forms_ProgressQuestion" xml:space="preserve"><value>Form {0} of {1}: {2} (question {3} of {4})</value></data>
+  <data name="Common_DurMinSec" xml:space="preserve"><value>{0}m {1}s</value></data>
+  <data name="Common_DurSec" xml:space="preserve"><value>{0}s</value></data>
+  <data name="Flows_SaveAsSuffix" xml:space="preserve"><value> - migrated</value></data>
+  <data name="Flows_TargetSitePlaceholder" xml:space="preserve"><value>Type the target site address, e.g. https://contoso.sharepoint.com/sites/HR</value></data>
+  <data name="Flows_Live_LogBound" xml:space="preserve"><value>{0}: the {1} connection uses "{2}" in the target.</value></data>
+  <data name="Flows_Live_ReportConnections" xml:space="preserve"><value>Connections used in the target</value></data>
+  <data name="Flows_Block_DuplicateTargetSteps" xml:space="preserve"><value>On the target list "{0}", the columns {1} are all mapped to "{2}" in {3} steps (for example the step "{5}" of "{4}"). Choose a different target column for all but one of them, or leave the others out.</value></data>
+  <data name="Flows_Live_Review_NotAttempted" xml:space="preserve"><value>{0} flow(s) were not attempted: the copy stopped after an error that would fail every remaining flow the same way (see the activity log). Fix it and press Write again; flows already created are skipped.</value></data>
+  <data name="Flows_Gate_SitesSingle" xml:space="preserve"><value>No target site is typed, so every site stays as it is. Type at least one target site in the To column, or press Next again to keep the sites unchanged.</value></data>
+  <data name="Flows_ColumnStatus_Yielded" xml:space="preserve"><value>No match: "{0}" is already used by {1}</value></data>
+  <data name="Flows_ColumnStatus_YieldedOmitted" xml:space="preserve"><value>Left out: "{0}" is already used by {1}</value></data>
+  <data name="Flows_Card_Yielded" xml:space="preserve"><value>{0} column(s) will be left out of the flows' steps because the target column they matched is already used by another column (in brackets): {1}. Change either column's target if that is not what you want.</value></data>
+  <data name="Flows_FollowUpColumnYielded" xml:space="preserve"><value>The column "{0}" is left out of the steps on "{1}": its target column "{2}" is already written by "{3}". Change either column's target on the Lists &amp; columns step if that is not what you want.</value></data>
+  <data name="Flows_Live_ReportFolder" xml:space="preserve"><value>Report folder</value></data>
+  <data name="Flows_Live_ReportFolderHint" xml:space="preserve"><value>Live copy creates the flows directly in the target environment, so no flow files are saved on this computer. This folder only receives the copy report: a web page and a text file listing what was changed in each flow, the columns left out, the connections that were matched, and what still needs your review. Keep it with your migration records. It is the only written record of what was changed.</value></data>
+  <data name="Flows_Live_WriteHint2" xml:space="preserve"><value>Each flow is created in the target environment turned off, so nothing runs until you review it.</value></data>
+  <data name="Flows_Live_NoOutput" xml:space="preserve"><value>Choose a report folder first.</value></data>
+  <data name="Flows_Live_CopyButton" xml:space="preserve"><value>Copy flows</value></data>
+  <data name="Flows_Live_WriteStepHeader" xml:space="preserve"><value>Copy the flows to the target</value></data>
+  <data name="Flows_Live_What5" xml:space="preserve"><value>Check the list below, choose where to save the report, then copy the flows.</value></data>
+  <data name="Flows_Live_Why5" xml:space="preserve"><value>The tool applies your mapping to a copy of each flow and creates it in the target environment, turned off, so nothing runs until you have reviewed it. Your original flows are not changed. A report of everything that was changed, left out or still needs your review is saved in the report folder. Afterward, open each new flow in Power Automate, fix any connection it flags, and turn it on.</value></data>
+  <data name="Flows_Live_ReadyToCopy" xml:space="preserve"><value>Ready to copy?</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Sign in to the target tenant to list its environments</value></data>
+  <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Load the environments first</value></data>
+  <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>No Power Automate environments were found for the target account. It needs a Power Automate license or access to an environment there. Try signing in again with another account.</value></data>
 </root>

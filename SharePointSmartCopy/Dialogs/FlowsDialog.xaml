@@ -174,6 +174,109 @@
                 <StackPanel Margin="0,0,12,0">
                     <local:FlowStepIntro Title="{loc:Loc Flows_PackagesHeader}" What="{loc:Loc Flows_What1}" Why="{loc:Loc Flows_Why1}"/>
 
+                    <!-- Where the flows come from -->
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <RadioButton GroupName="FlowSource" Content="{loc:Loc Flows_Live_ModeLive}" IsChecked="{Binding IsLiveSource, Mode=OneWay}"
+                                     Click="SourceModeLive_Click" Margin="0,0,20,0" IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        <RadioButton GroupName="FlowSource" Content="{loc:Loc Flows_Live_ModeZip}" IsChecked="{Binding IsZipSource, Mode=OneWay}"
+                                     Click="SourceModeZip_Click" IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                    </StackPanel>
+
+                    <!-- Live: pick flows in a source environment, create them in a target environment -->
+                    <StackPanel Margin="0,12,0,0" Visibility="{Binding IsLiveSource, Converter={StaticResource BoolToVis}}">
+                        <Border Style="{StaticResource InfoBanner}" Padding="12,8">
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Flows_Live_Intro}"/>
+                        </Border>
+                        <Button Style="{StaticResource PrimaryBtn}" Content="{loc:Loc Flows_Live_LoadEnvs}" Click="LoadEnvironments_Click"
+                                HorizontalAlignment="Left" Margin="0,12,0,0" IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                        <Grid Margin="0,12,0,0" Visibility="{Binding HasLiveEnvironments, Converter={StaticResource BoolToVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="24"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="{loc:Loc Flows_Live_FromEnv}" Style="{StaticResource FieldLabel}"/>
+                                <ComboBox ItemsSource="{Binding SourceEnvironments}" DisplayMemberPath="DisplayName" SelectedItem="{Binding SourceEnv, Mode=TwoWay}"
+                                          IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}" AutomationProperties.Name="{loc:Loc Flows_Live_FromEnv}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="{loc:Loc Flows_Live_ToEnv}" Style="{StaticResource FieldLabel}"/>
+                                <!-- An empty list says why, right inside the box, instead of showing nothing -->
+                                <Grid>
+                                    <ComboBox ItemsSource="{Binding TargetEnvironments}" DisplayMemberPath="DisplayName" SelectedItem="{Binding TargetEnv, Mode=TwoWay}"
+                                              IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}" AutomationProperties.Name="{loc:Loc Flows_Live_ToEnv}"/>
+                                    <TextBlock Text="{loc:Loc Flows_Live_TargetEnvPlaceholderMulti}" IsHitTestVisible="False" VerticalAlignment="Center" Margin="10,0,34,0"
+                                               TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextPlaceholderBrush}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding TargetEnvironments.Count}" Value="0"/>
+                                                            <Condition Binding="{Binding IsMultiTenant}" Value="True"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                    <TextBlock Text="{loc:Loc Flows_Live_TargetEnvPlaceholderSingle}" IsHitTestVisible="False" VerticalAlignment="Center" Margin="10,0,34,0"
+                                               TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextPlaceholderBrush}">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding TargetEnvironments.Count}" Value="0"/>
+                                                            <Condition Binding="{Binding IsMultiTenant}" Value="False"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </MultiDataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Grid>
+                                <!-- Two tenants: the target is a separate sign-in -->
+                                <StackPanel Visibility="{Binding IsMultiTenant, Converter={StaticResource BoolToVis}}" Margin="0,6,0,0">
+                                    <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_Live_SignInTarget}" Click="LiveSignInTarget_Click"
+                                            HorizontalAlignment="Left" IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                                    <TextBlock Text="{loc:Loc Flows_Live_TargetNeedsSignIn}" FontSize="12" TextWrapping="Wrap" Margin="0,4,0,0"
+                                               Foreground="{DynamicResource TextSecondaryBrush}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                        <TextBlock FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}"
+                                   Text="{Binding LiveStatusText}"/>
+                        <StackPanel Visibility="{Binding HasLiveFlows, Converter={StaticResource BoolToVis}}">
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,4">
+                                <Button Style="{StaticResource LinkBtn}" Content="{loc:Loc Flows_Live_SelectAll}" Click="LiveSelectAll_Click"/>
+                                <Button Style="{StaticResource LinkBtn}" Content="{loc:Loc Flows_Live_SelectNone}" Click="LiveSelectNone_Click" Margin="8,0,0,0"/>
+                            </StackPanel>
+                            <ListBox ItemsSource="{Binding LiveFlows}" MaxHeight="260" HorizontalContentAlignment="Stretch"
+                                     Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderLightBrush}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="2,3">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Content="{Binding DisplayName}"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding State}" FontSize="12" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Zip packages (the original workflow) -->
+                    <StackPanel Visibility="{Binding IsZipSource, Converter={StaticResource BoolToVis}}">
                     <!-- First-time help: how to get a package. Gone once a package is added. -->
                     <Border Style="{StaticResource InfoBanner}" Margin="0,10,0,0" Padding="12,8"
                             Visibility="{Binding HasPackages, Converter={StaticResource InvBoolToVis}}">
@@ -226,6 +329,8 @@
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
+
+                    </StackPanel>
 
                     <TextBlock FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondaryBrush}"
                                Text="{Binding ScanSummaryText}"/>
@@ -296,6 +401,9 @@
                                 <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_ConnChangeSource}" Click="ConnectSource_Click"
                                         Visibility="{Binding ShowSignInSource, Converter={StaticResource BoolToVis}}"
                                         IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                                <Button Style="{StaticResource PrimaryBtn}" Content="{loc:Loc Flows_ConnSignInSingle}" Click="ConnectSource_Click"
+                                        Visibility="{Binding ShowSignInSingle, Converter={StaticResource BoolToVis}}"
+                                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
                                 <Button Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Flows_CancelSignIn}" Click="CancelRun_Click"
                                         Visibility="{Binding ShowCancelSource, Converter={StaticResource BoolToVis}}"/>
                             </StackPanel>
@@ -357,7 +465,15 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="{loc:Loc Flows_ColFrom}" Binding="{Binding Source}" IsReadOnly="True" Width="*"/>
                             <DataGridTextColumn x:Name="ReadFromColumn" Header="{loc:Loc Flows_ColReadFrom}" Binding="{Binding ReadFrom, UpdateSourceTrigger=LostFocus}" Width="*" Visibility="Collapsed"/>
-                            <DataGridTextColumn Header="{loc:Loc Flows_ColTo}" Binding="{Binding Target, UpdateSourceTrigger=LostFocus}" Width="*"/>
+                            <DataGridTemplateColumn Header="{loc:Loc Flows_ColTo}" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Style="{StaticResource WatermarkTextBox}" Tag="{loc:Loc Flows_TargetSitePlaceholder}"
+                                                 Text="{Binding Target, UpdateSourceTrigger=PropertyChanged}" Margin="2,1"
+                                                 AutomationProperties.Name="{loc:Loc Flows_ColTo}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTemplateColumn Header="{loc:Loc Flows_ColStatus}" Width="230">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -505,7 +621,7 @@
                                                         <ComboBox ItemsSource="{Binding TargetLists}" DisplayMemberPath="Title" SelectedItem="{Binding Picked, Mode=TwoWay}"
                                                                   AutomationProperties.Name="{loc:Loc Flows_CardTargetList}"/>
                                                         <TextBlock Text="{loc:Loc Flows_CardOrId}" FontSize="12" Margin="0,8,0,2" Foreground="{DynamicResource TextSecondaryBrush}"/>
-                                                        <TextBox Text="{Binding TargetListId, UpdateSourceTrigger=LostFocus}" Style="{StaticResource BaseTextBox}"/>
+                                                        <TextBox Text="{Binding TargetListId, UpdateSourceTrigger=LostFocus}" Style="{StaticResource BaseTextBox}" KeyDown="ListIdBox_KeyDown"/>
                                                         <TextBlock Text="{Binding TargetNote}" FontSize="12" TextWrapping="Wrap" Margin="0,8,0,0"
                                                                    Visibility="{Binding HasTargetNote, Converter={StaticResource BoolToVis}}"/>
                                                     </StackPanel>
@@ -740,12 +856,19 @@
             <ScrollViewer Visibility="{Binding CurrentStep, Converter={StaticResource EqToVis}, ConverterParameter=4}"
                           VerticalScrollBarVisibility="Auto">
                 <StackPanel MaxWidth="760" HorizontalAlignment="Center" Margin="0,0,12,0">
-                    <local:FlowStepIntro Title="{loc:Loc Flows_WriteHeader}" What="{loc:Loc Flows_What5}" Why="{loc:Loc Flows_Why5}"/>
+                    <local:FlowStepIntro Title="{loc:Loc Flows_WriteHeader}" What="{loc:Loc Flows_What5}" Why="{loc:Loc Flows_Why5}"
+                                         Visibility="{Binding IsZipSource, Converter={StaticResource BoolToVis}}"/>
+                    <!-- Live copy creates the flows in the target, so it has its own wording: no packages, and something IS sent -->
+                    <local:FlowStepIntro Title="{loc:Loc Flows_Live_WriteStepHeader}" What="{loc:Loc Flows_Live_What5}" Why="{loc:Loc Flows_Live_Why5}"
+                                         Visibility="{Binding IsLiveSource, Converter={StaticResource BoolToVis}}"/>
 
                     <!-- Ready to write? Each line says where things stand; a line that needs a look links to its step. -->
                     <Border Style="{StaticResource Card}" Margin="0,14,0,0">
                         <StackPanel>
-                            <TextBlock Text="{loc:Loc Flows_ReadyToWrite}" Style="{StaticResource CardHeader}"/>
+                            <TextBlock Text="{loc:Loc Flows_ReadyToWrite}" Style="{StaticResource CardHeader}"
+                                       Visibility="{Binding IsZipSource, Converter={StaticResource BoolToVis}}"/>
+                            <TextBlock Text="{loc:Loc Flows_Live_ReadyToCopy}" Style="{StaticResource CardHeader}"
+                                       Visibility="{Binding IsLiveSource, Converter={StaticResource BoolToVis}}"/>
                             <ItemsControl ItemsSource="{Binding Checklist}" Margin="0,8,0,0">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -770,7 +893,14 @@
 
                     <Border Style="{StaticResource Card}" Margin="0,12,0,0">
                         <StackPanel>
-                            <TextBlock Text="{loc:Loc Flows_OutputFolder}" Style="{StaticResource CardHeader}"/>
+                            <TextBlock Text="{loc:Loc Flows_OutputFolder}" Style="{StaticResource CardHeader}"
+                                       Visibility="{Binding IsZipSource, Converter={StaticResource BoolToVis}}"/>
+                            <!-- Live copy writes no flow files: the folder only receives the report, and the card says so -->
+                            <TextBlock Text="{loc:Loc Flows_Live_ReportFolder}" Style="{StaticResource CardHeader}"
+                                       Visibility="{Binding IsLiveSource, Converter={StaticResource BoolToVis}}"/>
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,0" Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="{loc:Loc Flows_Live_ReportFolderHint}"
+                                       Visibility="{Binding IsLiveSource, Converter={StaticResource BoolToVis}}"/>
                             <Grid Margin="0,8,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -785,8 +915,29 @@
                         </StackPanel>
                     </Border>
 
+                    <!-- Live: what writing does -->
+                    <Border Style="{StaticResource Card}" Margin="0,12,0,0" Visibility="{Binding IsLiveSource, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="{loc:Loc Flows_Live_WriteHeader}" Style="{StaticResource CardHeader}"/>
+                            <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,8" Foreground="{DynamicResource TextSecondaryBrush}"
+                                       Text="{loc:Loc Flows_Live_WriteHint2}"/>
+                            <CheckBox Content="{loc:Loc Flows_Live_BindConnections}" IsChecked="{Binding BindConnections, Mode=TwoWay}"/>
+                            <StackPanel Margin="0,12,0,0" Visibility="{Binding HasTargetSolutions, Converter={StaticResource BoolToVis}}">
+                                <TextBlock Text="{loc:Loc Flows_Live_SolutionLabel}" FontWeight="SemiBold"/>
+                                <ComboBox ItemsSource="{Binding TargetSolutions}" DisplayMemberPath="DisplayName" SelectedItem="{Binding TargetSolution, Mode=TwoWay}"
+                                          Margin="0,4,0,0" MaxWidth="460" HorizontalAlignment="Left" MinWidth="280"
+                                          IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"
+                                          AutomationProperties.Name="{loc:Loc Flows_Live_SolutionLabel}"/>
+                                <TextBlock Text="{loc:Loc Flows_Live_SolutionHint}" TextWrapping="Wrap" FontSize="12" Margin="0,4,0,0"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding SolutionsNote}" TextWrapping="Wrap" FontSize="12" Margin="0,8,0,0"
+                                       Visibility="{Binding HasSolutionsNote, Converter={StaticResource BoolToVis}}"/>
+                        </StackPanel>
+                    </Border>
+
                     <!-- Names: each package is saved as a new .zip; the name is editable per package -->
-                    <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+                    <Border Style="{StaticResource Card}" Margin="0,12,0,0" Visibility="{Binding IsZipSource, Converter={StaticResource BoolToVis}}">
                         <StackPanel>
                             <TextBlock Text="{loc:Loc Flows_OutputName}" Style="{StaticResource CardHeader}"/>
                             <TextBlock TextWrapping="Wrap" FontSize="12" Margin="0,4,0,8" Foreground="{DynamicResource TextSecondaryBrush}"
