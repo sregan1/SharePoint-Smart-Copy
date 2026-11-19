@@ -81,6 +81,28 @@
   <data name="Ui_StructTemplatesLong" xml:space="preserve"><value>Library template and folder default values</value></data>
   <data name="Ui_StructSiteDefsLong" xml:space="preserve"><value>Site columns and site content types</value></data>
   <data name="Ui_StructSiteSettingsLong" xml:space="preserve"><value>Site settings (description, quick launch, tree view and more)</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Select all</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Clear all</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Checks every standard option above. Options that need extra permissions, and "Update existing lists", stay as they are.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Unchecks every structure option, including the ones that need extra permissions.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Needs extra permissions</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Off by default. Turn on only if your tenant admin has granted the permission; otherwise this step reports an error.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Existing lists</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint rejected these columns, so they were left out of the new item: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>No user mapping set</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>This is a multi-tenant copy and no user mapping is set. People (authors, editors, person columns, permissions) are looked up in the target tenant by the same email address, and anyone who does not exist there is left out or replaced.
+
+Yes: copy anyway
+No: open the user mapping first
+Cancel: go back</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>View "{0}" was broken on the target (it pointed at columns that are not there) and was rebuilt from the source.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Permissions needed to copy term sets:
+• Microsoft Graph, delegated: TermStore.ReadWrite.All on the target app registration, and TermStore.Read.All on the source one
+• Admin consent granted for them
+• A term store role (such as Term Store Administrator) for the account signed in to the target</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>How to copy</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} of {1} selected)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>No user mapping is set. People (authors, editors, person columns, permissions) are matched in the target tenant by the same email address, and anyone who does not exist there is left out or replaced.</value></data>
   <data name="Ui_StructViews" xml:space="preserve"><value>Views</value></data>
   <data name="Ui_StructListSettings" xml:space="preserve"><value>List settings</value></data>
   <data name="Ui_StructContentTypes" xml:space="preserve"><value>Content types</value></data>

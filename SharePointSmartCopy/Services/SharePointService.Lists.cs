@@ -370,6 +370,7 @@ public partial class SharePointService
         var body      = JsonSerializer.Serialize(simpleFields);
 
         string? newItemId = null;
+        string? skippedFieldsWarning = null;
         using (var resp = await SendSharePointRequestAsync(token =>
         {
             var r = new HttpRequestMessage(HttpMethod.Post, createUrl);
@@ -382,16 +383,80 @@ public partial class SharePointService
             if (!resp.IsSuccessStatusCode)
             {
                 var errBody = await resp.Content.ReadAsStringAsync(ct);
-                throw new HttpRequestException(Loc.T("Svc_Sp_CreateItemFailed", (int)resp.StatusCode, resp.ReasonPhrase, errBody));
+                // "Invalid data has been used to update the list item" never names the column. Rather than lose the
+                // whole item (an Events item, say, carrying a recurrence or calendar-internal column that SharePoint
+                // refuses), create it with its Title and write the other columns one at a time.
+                if (IsInvalidFieldDataError(resp.StatusCode, errBody) && simpleFields.Count > 1)
+                {
+                    (newItemId, skippedFieldsWarning) = await CreateItemFieldByFieldAsync(createUrl, siteUrl, simpleFields, ct);
+                    if (newItemId == null)
+                        throw new HttpRequestException(Loc.T("Svc_Sp_CreateItemFailed", (int)resp.StatusCode, resp.ReasonPhrase, errBody));
+                }
+                else
+                    throw new HttpRequestException(Loc.T("Svc_Sp_CreateItemFailed", (int)resp.StatusCode, resp.ReasonPhrase, errBody));
             }
-            var respBody = await resp.Content.ReadAsStringAsync(ct);
-            using var doc = JsonDocument.Parse(respBody);
-            newItemId = doc.RootElement.TryGetProperty("Id", out var ip) ? ip.GetRawText() : null;
+            else
+            {
+                var respBody = await resp.Content.ReadAsStringAsync(ct);
+                using var doc = JsonDocument.Parse(respBody);
+                newItemId = doc.RootElement.TryGetProperty("Id", out var ip) ? ip.GetRawText() : null;
+            }
         }
 
         if (newItemId == null) return (null, null);
         var fieldError = await ValidateUpdateItemFieldsAsync(siteUrl, listId, newItemId, complexFields, createdDate, modifiedDate, ct);
+        if (skippedFieldsWarning != null)
+            fieldError = fieldError == null ? skippedFieldsWarning : $"{skippedFieldsWarning} {fieldError}";
         return (newItemId, fieldError);
+    }
+
+    private static bool IsInvalidFieldDataError(System.Net.HttpStatusCode status, string body) =>
+        status == System.Net.HttpStatusCode.BadRequest &&
+        (body.Contains("-2147024809", StringComparison.Ordinal) || body.Contains("may be read only", StringComparison.OrdinalIgnoreCase));
+
+    // Creates the item from Title alone, then MERGEs every other column separately. A column SharePoint rejects is
+    // left out and named in the returned warning; everything else is still written.
+    private async Task<(string? Id, string? Warning)> CreateItemFieldByFieldAsync(
+        string createUrl, string siteUrl, Dictionary<string, object?> simpleFields, CancellationToken ct)
+    {
+        var seed = new Dictionary<string, object?>();
+        if (simpleFields.TryGetValue("Title", out var title)) seed["Title"] = title;
+
+        string? id;
+        using (var resp = await SendSharePointRequestAsync(token =>
+        {
+            var r = new HttpRequestMessage(HttpMethod.Post, createUrl);
+            r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+            r.Content = new StringContent(JsonSerializer.Serialize(seed), System.Text.Encoding.UTF8, "application/json");
+            return r;
+        }, siteUrl, cancellationToken: ct))
+        {
+            if (!resp.IsSuccessStatusCode) return (null, null);
+            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+            id = doc.RootElement.TryGetProperty("Id", out var ip) ? ip.GetRawText() : null;
+        }
+        if (id == null) return (null, null);
+
+        var itemUrl = $"{createUrl}({id})";
+        var rejected = new List<string>();
+        foreach (var (name, value) in simpleFields)
+        {
+            if (name == "Title") continue;
+            var one = JsonSerializer.Serialize(new Dictionary<string, object?> { [name] = value });
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Post, itemUrl);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                r.Headers.Add("X-HTTP-Method", "MERGE");
+                r.Headers.Add("If-Match", "*");
+                r.Content = new StringContent(one, System.Text.Encoding.UTF8, "application/json");
+                return r;
+            }, siteUrl, cancellationToken: ct);
+            if (!resp.IsSuccessStatusCode) rejected.Add(name);
+        }
+        return (id, rejected.Count > 0 ? Loc.T("Svc_Sp_ColumnsRejectedOnCreate", string.Join(", ", rejected)) : null);
     }
 
     // Splits person/taxonomy values (which require ValidateUpdateListItem) from fields

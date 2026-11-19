@@ -1611,4 +1611,26 @@
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Συνδεθείτε στον μισθωτή προορισμού για να εμφανιστούν τα περιβάλλοντά του</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Φορτώστε πρώτα τα περιβάλλοντα</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Δεν βρέθηκαν περιβάλλοντα Power Automate για τον λογαριασμό προορισμού. Χρειάζεται άδεια Power Automate ή πρόσβαση σε ένα περιβάλλον εκεί. Δοκιμάστε να συνδεθείτε ξανά με άλλον λογαριασμό.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Επιλογή όλων</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Απαλοιφή όλων</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Επιλέγει όλες τις βασικές επιλογές παραπάνω. Οι επιλογές που απαιτούν επιπλέον δικαιώματα και η «Ενημέρωση υπαρχουσών λιστών» παραμένουν ως έχουν.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Καταργεί την επιλογή όλων των επιλογών δομής, συμπεριλαμβανομένων εκείνων που απαιτούν επιπλέον δικαιώματα.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Απαιτούνται επιπλέον δικαιώματα</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Απενεργοποιημένο από προεπιλογή. Ενεργοποιήστε το μόνο αν ο διαχειριστής του μισθωτή έχει εκχωρήσει το δικαίωμα· διαφορετικά αυτό το βήμα αναφέρει σφάλμα.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Υπάρχουσες λίστες</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>Το SharePoint απέρριψε αυτές τις στήλες, γι&apos; αυτό παραλείφθηκαν από το νέο στοιχείο: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Δεν έχει οριστεί αντιστοίχιση χρηστών</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Πρόκειται για αντιγραφή μεταξύ μισθωτών και δεν έχει οριστεί αντιστοίχιση χρηστών. Τα άτομα (συντάκτες, επεξεργαστές, στήλες ατόμων, δικαιώματα) αναζητούνται στον μισθωτή προορισμού με την ίδια διεύθυνση email και όσα δεν υπάρχουν εκεί παραλείπονται ή αντικαθίστανται.
+
+Ναι: αντιγραφή παρ&apos; όλα αυτά
+Όχι: πρώτα άνοιγμα της αντιστοίχισης χρηστών
+Άκυρο: επιστροφή</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Η προβολή «{0}» ήταν κατεστραμμένη στον προορισμό (παρέπεμπε σε στήλες που δεν υπάρχουν) και δημιουργήθηκε ξανά από την πηγή.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Δικαιώματα που απαιτούνται για την αντιγραφή συνόλων όρων:
+• Microsoft Graph, εκχωρημένα: TermStore.ReadWrite.All στην καταχώριση εφαρμογής προορισμού και TermStore.Read.All σε αυτή της πηγής
+• Εκχωρημένη συγκατάθεση διαχειριστή για αυτά
+• Ρόλος αποθήκης όρων (όπως Διαχειριστής αποθήκης όρων) για τον λογαριασμό που έχει συνδεθεί στον προορισμό</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Τρόπος αντιγραφής</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>(επιλέχθηκαν {0} από {1})</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Δεν έχει οριστεί αντιστοίχιση χρηστών. Τα άτομα (συντάκτες, επεξεργαστές, στήλες ατόμων, δικαιώματα) αναζητούνται στον μισθωτή προορισμού με την ίδια διεύθυνση email και όσα δεν υπάρχουν εκεί παραλείπονται ή αντικαθίστανται.</value></data>
 </root>

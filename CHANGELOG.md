@@ -4,6 +4,27 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 4.1.5 — 2026-11-18
+
+### Added
+
+- **Select all / Clear all for Structure to copy** — one click checks or unchecks the whole list. *Select all* leaves the two deliberate opt-ins (term sets and *Update existing lists*) alone; *Clear all* unchecks everything.
+- **A warning before a multi-tenant copy with no user mapping** — with no domain swap and no explicit pairs, every author, editor, person column and permission principal is written to the target unchanged, and anyone who does not exist there is silently dropped or replaced; the first sign was the unresolved-users list after the run. The prompt (Copy anyway / Open user mapping / Cancel) appears only when the run writes people (Preserve metadata, Copy permissions or custom columns). A matching note on the Target step (multi-tenant, no mapping) with an **Identity mapping…** link gives the heads-up earlier, before the Options step.
+- **A plain re-copy repairs views that cannot render** — a view that already exists on the target is checked before it is skipped: a filter, sort or grouping on a column the list does not have (read from the XML, so it works in any language), or SharePoint saying its field types are not installed properly, makes the app rebuild that view from the source and say so in the report. Lists copied by an older version named a column after its title (`Assigned_x0020_to`), which broke every `[Me]` view; before, repairing them meant knowing to tick *Update existing lists*.
+
+### Changed
+
+- **Copy managed-metadata term sets is now off by default and sits in its own "Needs extra permissions" group** (different-tenant mode), because it needs the optional `TermStore.ReadWrite.All` permission and a term-store role on the target. Hovering the group heading or the ⓘ next to the checkbox lists exactly what is needed (Graph `TermStore.ReadWrite.All` on the target and `TermStore.Read.All` on the source, admin consent, and a term-store role for the target account). *Update existing lists* moved under its own "Existing lists" heading. A setting you saved earlier keeps its value.
+- **Options screen: Preserve metadata and Copy mode moved out of Advanced options** into a visible **How to copy** card — they decide how faithful the copy is, but sat collapsed where most people never looked. **Structure to copy** is now collapsed by default and shows *N of M selected* in its header; Advanced options keeps only the tuning (re-apply folder metadata, custom column values, parallel copies).
+
+### Fixed
+
+- **A second Site Copy no longer creates "Site Assets (2)"** — a library was only recognized as existing when SharePoint refused the create, and then by title alone, so anything that slipped past (a system library, a differing title) produced a duplicate. The target is now checked first, by title and by URL name (`SiteAssets`), and the copy adds to the library that is there. Confirmed on a live tenant by copying twice and by retitling the target library.
+- **Copy permissions stays visible when you turn off content copy** — the list and library permissions are copied with the structure, but the checkbox was hidden along with the file options, so a structure-only copy could apply permissions you could not see or change.
+- **One rejected column no longer loses a list item** — SharePoint answers *Invalid data has been used to update the list item* without naming the column (seen on an Events item). The item is now created from its Title and the other columns are written one at a time; a column SharePoint refuses is left out and named in the item's result.
+
+---
+
 ## 4.1.4 — 2026-11-15
 
 ### Added

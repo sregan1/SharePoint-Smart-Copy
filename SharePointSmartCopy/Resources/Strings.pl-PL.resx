@@ -1611,4 +1611,26 @@ Ponowne kopiowanie tworzy drugą kopię każdego z nich. Kontynuować?</value></
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Zaloguj się do tenanta docelowego, aby wyświetlić jego środowiska</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Najpierw załaduj środowiska</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Nie znaleziono środowisk Power Automate dla konta docelowego. Wymaga ono licencji Power Automate lub dostępu do środowiska tam. Spróbuj zalogować się ponownie innym kontem.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Zaznacz wszystko</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Wyczyść wszystko</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Zaznacza wszystkie standardowe opcje powyżej. Opcje wymagające dodatkowych uprawnień oraz &quot;Aktualizuj istniejące listy&quot; pozostają bez zmian.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Odznacza wszystkie opcje struktury, także te wymagające dodatkowych uprawnień.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Wymaga dodatkowych uprawnień</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Domyślnie wyłączone. Włącz tylko wtedy, gdy administrator dzierżawy przyznał uprawnienie; w przeciwnym razie ten krok zgłosi błąd.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Istniejące listy</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>Usługa SharePoint odrzuciła te kolumny, więc pominięto je w nowym elemencie: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Nie ustawiono mapowania użytkowników</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>To kopiowanie między dzierżawami i nie ustawiono mapowania użytkowników. Osoby (autorzy, edytorzy, kolumny osób, uprawnienia) są wyszukiwane w dzierżawie docelowej według tego samego adresu e-mail, a osoby, których tam nie ma, są pomijane lub zastępowane.
+
+Tak: kopiuj mimo to
+Nie: najpierw otwórz mapowanie użytkowników
+Anuluj: wróć</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Widok &quot;{0}&quot; był uszkodzony w miejscu docelowym (wskazywał kolumny, których tam nie ma) i został odbudowany ze źródła.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Uprawnienia potrzebne do kopiowania zestawów terminów:
+• Microsoft Graph, delegowane: TermStore.ReadWrite.All w rejestracji aplikacji docelowej i TermStore.Read.All w źródłowej
+• Przyznana zgoda administratora na te uprawnienia
+• Rola magazynu terminów (np. Term Store Administrator) dla konta zalogowanego w miejscu docelowym</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Sposób kopiowania</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>(zaznaczono {0} z {1})</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Nie ustawiono mapowania użytkowników. Osoby (autorzy, edytorzy, kolumny osób, uprawnienia) są wyszukiwane w dzierżawie docelowej według tego samego adresu e-mail, a osoby, których tam nie ma, są pomijane lub zastępowane.</value></data>
 </root>

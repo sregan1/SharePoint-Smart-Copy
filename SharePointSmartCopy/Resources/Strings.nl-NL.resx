@@ -1611,4 +1611,26 @@ Opnieuw kopiëren maakt van elk een tweede kopie. Doorgaan?</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Meld u aan bij de doeltenant om de omgevingen weer te geven</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Laad eerst de omgevingen</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Er zijn geen Power Automate-omgevingen gevonden voor het doelaccount. Het heeft een Power Automate-licentie of toegang tot een omgeving daar nodig. Probeer u opnieuw aan te melden met een ander account.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Alles selecteren</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Alles wissen</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Vinkt alle standaardopties hierboven aan. Opties die extra machtigingen nodig hebben en &quot;Bestaande lijsten bijwerken&quot; blijven ongewijzigd.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Schakelt alle structuuropties uit, ook die met extra machtigingen.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Extra machtigingen nodig</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Standaard uitgeschakeld. Schakel dit alleen in als uw tenantbeheerder de machtiging heeft verleend; anders meldt deze stap een fout.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Bestaande lijsten</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint heeft deze kolommen geweigerd, dus ze zijn weggelaten uit het nieuwe item: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Geen gebruikerstoewijzing ingesteld</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Dit is een kopie tussen meerdere tenants en er is geen gebruikerstoewijzing ingesteld. Personen (auteurs, editors, personenkolommen, machtigingen) worden in de doeltenant opgezocht op basis van hetzelfde e-mailadres, en wie daar niet bestaat, wordt weggelaten of vervangen.
+
+Ja: toch kopiëren
+Nee: eerst de gebruikerstoewijzing openen
+Annuleren: terug</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>De weergave &quot;{0}&quot; was beschadigd in het doel (verwees naar kolommen die er niet zijn) en is opnieuw opgebouwd vanuit de bron.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Machtigingen die nodig zijn om termensets te kopiëren:
+• Microsoft Graph, gedelegeerd: TermStore.ReadWrite.All op de app-registratie van het doel en TermStore.Read.All op die van de bron
+• Beheerderstoestemming verleend voor deze machtigingen
+• Een rol voor de termenopslag (zoals Term Store Administrator) voor het account dat is aangemeld bij het doel</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Kopieermethode</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} van {1} geselecteerd)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Er is geen gebruikerstoewijzing ingesteld. Personen (auteurs, editors, personenkolommen, machtigingen) worden in de doeltenant opgezocht op basis van hetzelfde e-mailadres, en wie daar niet bestaat, wordt weggelaten of vervangen.</value></data>
 </root>

@@ -1611,4 +1611,26 @@
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>登录目标租户以列出其环境</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>请先加载环境</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>未找到目标帐户的 Power Automate 环境。它需要 Power Automate 许可证或对该处环境的访问权限。请尝试使用其他帐户重新登录。</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>全选</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>全部清除</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>选中上方所有标准选项。需要额外权限的选项和“更新现有列表”保持不变。</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>取消选中所有结构选项,包括需要额外权限的选项。</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>需要额外权限</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>默认关闭。仅当租户管理员已授予权限时才启用;否则此步骤将报告错误。</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>现有列表</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint 拒绝了这些列,因此它们未包含在新项目中:{0}。</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>未设置用户映射</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>这是多租户复制,且未设置用户映射。人员(创建者、编辑者、人员列、权限)将按相同的电子邮件地址在目标租户中查找,不存在的人员将被忽略或替换。
+
+是: 仍然复制
+否: 先打开用户映射
+取消: 返回</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>视图“{0}”在目标上已损坏(指向不存在的列),已从源重新生成。</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>复制术语集所需的权限:
+• Microsoft Graph,委托的: 目标应用注册上的 TermStore.ReadWrite.All,以及源应用注册上的 TermStore.Read.All
+• 已为其授予管理员同意
+• 登录到目标的帐户需具有术语存储角色(如 Term Store Administrator)</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>复制方式</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>(已选 {0}/{1})</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>未设置用户映射。人员(创建者、编辑者、人员列、权限)将按相同的电子邮件地址在目标租户中查找,不存在的人员将被忽略或替换。</value></data>
 </root>

@@ -1611,4 +1611,26 @@
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Увійдіть у цільовий тенант, щоб переглянути його середовища</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Спочатку завантажте середовища</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Для цільового облікового запису не знайдено середовищ Power Automate. Потрібна ліцензія Power Automate або доступ до середовища там. Спробуйте ввійти знову з іншим обліковим записом.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Вибрати все</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Зняти все</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Позначає всі стандартні параметри вище. Параметри, що потребують додаткових дозволів, і «Оновлювати наявні списки» не змінюються.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Знімає позначки з усіх параметрів структури, зокрема з тих, що потребують додаткових дозволів.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Потрібні додаткові дозволи</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>За замовчуванням вимкнено. Вмикайте, лише якщо адміністратор клієнта надав дозвіл; інакше на цьому кроці виникне помилка.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Наявні списки</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint відхилив ці стовпці, тому їх не включено до нового елемента: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Зіставлення користувачів не задано</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Це копіювання між клієнтами, і зіставлення користувачів не задано. Користувачів (авторів, редакторів, стовпці типу «Користувач», дозволи) шукають у цільовому клієнті за тією самою адресою електронної пошти, а відсутніх там пропускають або замінюють.
+
+Так: усе одно копіювати
+Ні: спочатку відкрити зіставлення користувачів
+Скасувати: повернутися</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Подання «{0}» у цільовому розташуванні було пошкоджене (посилалося на відсутні стовпці) і створене заново з джерела.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Дозволи, потрібні для копіювання наборів термінів:
+• Microsoft Graph, делеговані: TermStore.ReadWrite.All для реєстрації цільового застосунку та TermStore.Read.All для вихідного
+• Надана для них згода адміністратора
+• Роль у сховищі термінів (наприклад, Term Store Administrator) для облікового запису, що виконав вхід до цільового клієнта</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Спосіб копіювання</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>(вибрано {0} з {1})</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Зіставлення користувачів не задано. Користувачів (авторів, редакторів, стовпці типу «Користувач», дозволи) шукають у цільовому клієнті за тією самою адресою електронної пошти, а відсутніх там пропускають або замінюють.</value></data>
 </root>

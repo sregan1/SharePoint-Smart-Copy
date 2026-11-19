@@ -1611,4 +1611,26 @@ Hvis du kopierer igjen, opprettes en ny kopi av hvert. Fortsette?</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Logg på målleietakeren for å vise miljøene</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Last inn miljøene først</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Fant ingen Power Automate-miljøer for målkontoen. Den trenger en Power Automate-lisens eller tilgang til et miljø der. Prøv å logge på igjen med en annen konto.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Merk alle</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Fjern alle</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Merker alle standardalternativene ovenfor. Alternativer som krever ekstra tillatelser, og &quot;Oppdater eksisterende lister&quot;, forblir som de er.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Fjerner merkingen av alle strukturalternativer, også de som krever ekstra tillatelser.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Krever ekstra tillatelser</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Av som standard. Slå på bare hvis leietakeradministratoren har gitt tillatelsen; ellers rapporterer dette trinnet en feil.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Eksisterende lister</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint avviste disse kolonnene, så de ble utelatt fra det nye elementet: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Ingen brukertilordning er angitt</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Dette er en kopiering mellom flere leietakere, og ingen brukertilordning er angitt. Personer (opprettere, redigerere, personkolonner, tillatelser) slås opp i målleietakeren med samme e-postadresse, og alle som ikke finnes der, utelates eller erstattes.
+
+Ja: kopier likevel
+Nei: åpne brukertilordningen først
+Avbryt: gå tilbake</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Visningen &quot;{0}&quot; var ødelagt på målet (den pekte på kolonner som ikke finnes) og ble gjenoppbygd fra kilden.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Tillatelser som trengs for å kopiere termsett:
+• Microsoft Graph, delegert: TermStore.ReadWrite.All på målets appregistrering og TermStore.Read.All på kildens
+• Administratorsamtykke gitt for dem
+• En termlagerrolle (for eksempel Term Store Administrator) for kontoen som er logget på målet</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Slik kopierer du</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} av {1} valgt)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Ingen brukertilordning er angitt. Personer (opprettere, redigerere, personkolonner, tillatelser) slås opp i målleietakeren med samme e-postadresse, og alle som ikke finnes der, utelates eller erstattes.</value></data>
 </root>

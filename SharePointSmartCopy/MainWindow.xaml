@@ -838,6 +838,17 @@
                                 Click="IdentityMapping_Click" Margin="16,0,0,0" Padding="0" FontSize="12" VerticalAlignment="Center"/>
                     </WrapPanel>
 
+                    <!-- Multi-tenant with no user mapping: a heads-up now, before the Options step, instead of only at Start Copy -->
+                    <Border Style="{StaticResource WarningBanner}" Margin="0,10,0,0"
+                            Visibility="{Binding ShowNoUserMappingNote, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="{loc:Loc Ui_NoUserMappingNote}" TextWrapping="Wrap" FontSize="12"
+                                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            <Button Content="{loc:Loc Ui_IdentityMappingButton}" Style="{StaticResource LinkBtn}"
+                                    Click="IdentityMapping_Click" HorizontalAlignment="Left" Margin="0,4,0,0" Padding="0" FontSize="12"/>
+                        </StackPanel>
+                    </Border>
+
                     <TextBlock Text="{loc:Loc Ui_TargetSiteUrl}" Style="{StaticResource FieldLabel}" Margin="0,6,0,4"/>
                     <TextBox x:Name="TargetUrlBox" FlowDirection="LeftToRight"
                              Text="{Binding TargetUrl, UpdateSourceTrigger=PropertyChanged}"
@@ -1121,22 +1132,23 @@
                                         </StackPanel>
                                     </RadioButton>
                                 </StackPanel>
-                                <!-- ── Permissions ─── -->
-                                <CheckBox IsChecked="{Binding CopyPermissions, Mode=TwoWay}" Margin="0,0,0,0" FontSize="13"
-                                          AutomationProperties.Name="{loc:Loc Ui2_AutoCopyPermissions}">
-                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyPermissions}" VerticalAlignment="Center"/>
-                                        <TextBlock Style="{StaticResource ToolTipIcon}">
-                                            <TextBlock.ToolTip>
-                                                <ToolTip MaxWidth="280">
-                                                    <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                               Text="{loc:Loc Ui_CopiesUniqueRoleAssignmentsFor}"/>
-                                                </ToolTip>
-                                            </TextBlock.ToolTip>
-                                        </TextBlock>
-                                    </WrapPanel>
-                                </CheckBox>
                             </StackPanel>
+
+                            <!-- ── Permissions: also applies to a structure-only copy (the list or library itself), so it is not tied to the content switch ── -->
+                            <CheckBox IsChecked="{Binding CopyPermissions, Mode=TwoWay}" Margin="0,0,0,0" FontSize="13"
+                                      AutomationProperties.Name="{loc:Loc Ui2_AutoCopyPermissions}">
+                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyPermissions}" VerticalAlignment="Center"/>
+                                    <TextBlock Style="{StaticResource ToolTipIcon}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip MaxWidth="280">
+                                                <TextBlock TextWrapping="Wrap" FontSize="12"
+                                                           Text="{loc:Loc Ui_CopiesUniqueRoleAssignmentsFor}"/>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </WrapPanel>
+                            </CheckBox>
                         </StackPanel>
                     </Border>
 
@@ -1171,6 +1183,64 @@
                                     </TextBlock>
                                 </WrapPanel>
                             </CheckBox>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ── How to copy: the two choices that decide how faithful the copy is. They used to sit collapsed
+                         in "Advanced options", where most people never looked. ── -->
+                    <Border Style="{StaticResource Card}" Margin="0,8,0,0">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock Text="&#xE713;" Style="{StaticResource CardHeaderGlyph}"/>
+                                <TextBlock Text="{loc:Loc Ui_HowToCopy}" Style="{StaticResource CardHeader}"/>
+                            </StackPanel>
+                            <CheckBox IsChecked="{Binding PreserveMetadata}" Margin="0,0,0,10" FontSize="12"
+                                      AutomationProperties.Name="{loc:Loc Ui2_AutoPreserveMetadata}">
+                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_PreserveMetadata}" VerticalAlignment="Center"/>
+                                    <TextBlock Style="{StaticResource ToolTipIcon}">
+                                        <TextBlock.ToolTip>
+                                            <ToolTip MaxWidth="280">
+                                                <TextBlock TextWrapping="Wrap" FontSize="12"
+                                                           Text="{loc:Loc Ui_PreservesCreatedByCreatedDate}"/>
+                                            </ToolTip>
+                                        </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </WrapPanel>
+                            </CheckBox>
+                            <StackPanel Visibility="{Binding IsPagesScope, Converter={StaticResource InvBoolToVis}}">
+                                <TextBlock Text="{loc:Loc Ui_CopyMode}" FontSize="12" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+                                <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,6"
+                                             IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=MigrationApi}">
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_MigrationApi}" VerticalAlignment="Center"/>
+                                        <Border Background="{DynamicResource AccentBrush}" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{loc:Loc Ui_Recommended}" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
+                                        </Border>
+                                        <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip>
+                                                    <TextBlock Text="{loc:Loc Ui_ExactVersionNumbersDatesAnd}" TextWrapping="Wrap" MaxWidth="260"/>
+                                                </ToolTip>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </WrapPanel>
+                                </RadioButton>
+                                <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,0"
+                                             IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=EnhancedRest}">
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_EnhancedRest}" VerticalAlignment="Center"/>
+                                        <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip>
+                                                    <TextBlock Text="{loc:Loc Ui_CorrectDatesAndEditorsPer}" TextWrapping="Wrap" MaxWidth="260"/>
+                                                </ToolTip>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </WrapPanel>
+                                </RadioButton>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
 
@@ -1211,15 +1281,29 @@
                     </Border>
 
                     <!-- Structure to copy (Library / Site scope): what is recreated next to the data -->
-                    <Expander Style="{StaticResource OptionsExpander}" Margin="0,8,0,0" IsExpanded="True"
+                    <Expander Style="{StaticResource OptionsExpander}" Margin="0,8,0,0"
                               Visibility="{Binding IsLibraryOrSiteScope, Converter={StaticResource BoolToVis}}">
                         <Expander.Header>
-                            <TextBlock Text="{loc:Loc Ui_StructureHeader}" FontSize="12" FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextTertiaryBrush}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{loc:Loc Ui_StructureHeader}" FontSize="12" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                <TextBlock Text="{Binding StructureCountText}" FontSize="12" Margin="8,0,0,0"
+                                           Foreground="{DynamicResource TextTertiaryBrush}"/>
+                            </StackPanel>
                         </Expander.Header>
                         <StackPanel>
-                            <TextBlock Text="{loc:Loc Ui_StructureIntro}" TextWrapping="Wrap" FontSize="12" Margin="0,0,0,8"
+                            <TextBlock Text="{loc:Loc Ui_StructureIntro}" TextWrapping="Wrap" FontSize="12" Margin="0,0,0,6"
                                        Foreground="{DynamicResource TextSecondaryBrush}"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <Button Style="{StaticResource LinkBtn}" Content="{loc:Loc Ui_StructSelectAll}"
+                                        Command="{Binding SelectAllStructureCommand}"
+                                        ToolTip="{loc:Loc Ui_StructSelectAllTip}"/>
+                                <TextBlock Text="|" Margin="6,0" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextTertiaryBrush}"/>
+                                <Button Style="{StaticResource LinkBtn}" Content="{loc:Loc Ui_StructSelectNone}"
+                                        Command="{Binding SelectNoneStructureCommand}"
+                                        ToolTip="{loc:Loc Ui_StructSelectNoneTip}"/>
+                            </StackPanel>
                             <CheckBox IsChecked="{Binding CopyViews}" Margin="0,0,0,6" FontSize="13"
                                       AutomationProperties.Name="{loc:Loc Ui_StructViewsLong}">
                                 <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructViewsLong}"/>
@@ -1239,10 +1323,6 @@
                             <CheckBox IsChecked="{Binding CopyTemplates}" Margin="0,0,0,6" FontSize="13"
                                       AutomationProperties.Name="{loc:Loc Ui_StructTemplatesLong}">
                                 <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructTemplatesLong}"/>
-                            </CheckBox>
-                            <CheckBox IsChecked="{Binding UpdateExistingStructure}" Margin="0,0,0,6" FontSize="13"
-                                      AutomationProperties.Name="{loc:Loc Ui_StructUpdateExistingLong}">
-                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructUpdateExistingLong}"/>
                             </CheckBox>
                             <CheckBox IsChecked="{Binding CopySiteDefinitions}" Margin="0,0,0,6" FontSize="13"
                                       Visibility="{Binding IsSiteScope, Converter={StaticResource BoolToVis}}"
@@ -1264,11 +1344,40 @@
                                       AutomationProperties.Name="{loc:Loc Ui_CopyLookupDependencies}">
                                 <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyLookupDependencies}"/>
                             </CheckBox>
-                            <CheckBox IsChecked="{Binding CopyTermSets}" Margin="0,0,0,6" FontSize="13"
-                                      Visibility="{Binding IsMultiTenant, Converter={StaticResource BoolToVis}}"
-                                      AutomationProperties.Name="{loc:Loc Ui_CopyTermSets}">
-                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyTermSets}"/>
+                            <Separator Margin="0,4,0,8"/>
+                            <TextBlock Text="{loc:Loc Ui_StructModifiesHeader}" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
+                            <CheckBox IsChecked="{Binding UpdateExistingStructure}" Margin="0,0,0,6" FontSize="13"
+                                      AutomationProperties.Name="{loc:Loc Ui_StructUpdateExistingLong}">
+                                <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_StructUpdateExistingLong}"/>
                             </CheckBox>
+
+                            <!-- Needs a Graph permission beyond the standard sign-in: off by default, multi-tenant only -->
+                            <StackPanel Visibility="{Binding IsMultiTenant, Converter={StaticResource BoolToVis}}">
+                                <Separator Margin="0,4,0,8"/>
+                                <TextBlock Text="{loc:Loc Ui_StructExtraPermsHeader}" FontSize="12" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,2">
+                                    <TextBlock.ToolTip>
+                                        <ToolTip MaxWidth="320">
+                                            <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Ui_StructPermTip}"/>
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                                <TextBlock Text="{loc:Loc Ui_StructExtraPermsNote}" Style="{StaticResource OptionCaption}" Margin="0,0,0,6"/>
+                                <CheckBox IsChecked="{Binding CopyTermSets}" Margin="0,0,0,6" FontSize="13"
+                                          AutomationProperties.Name="{loc:Loc Ui_CopyTermSets}">
+                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_CopyTermSets}" VerticalAlignment="Center"/>
+                                        <TextBlock Style="{StaticResource ToolTipIcon}">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip MaxWidth="320">
+                                                    <TextBlock TextWrapping="Wrap" FontSize="12" Text="{loc:Loc Ui_StructPermTip}"/>
+                                                </ToolTip>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </WrapPanel>
+                                </CheckBox>
+                            </StackPanel>
                         </StackPanel>
                     </Expander>
 
@@ -1283,20 +1392,6 @@
                             <TextBlock Text="{loc:Loc Ui_Metadata}" FontSize="12" FontWeight="SemiBold"
                                        Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
 
-                            <CheckBox IsChecked="{Binding PreserveMetadata}" Margin="0,0,0,8" FontSize="12"
-                                      AutomationProperties.Name="{loc:Loc Ui2_AutoPreserveMetadata}">
-                                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_PreserveMetadata}" VerticalAlignment="Center"/>
-                                    <TextBlock Style="{StaticResource ToolTipIcon}">
-                                        <TextBlock.ToolTip>
-                                            <ToolTip MaxWidth="280">
-                                                <TextBlock TextWrapping="Wrap" FontSize="12"
-                                                           Text="{loc:Loc Ui_PreservesCreatedByCreatedDate}"/>
-                                            </ToolTip>
-                                        </TextBlock.ToolTip>
-                                    </TextBlock>
-                                </WrapPanel>
-                            </CheckBox>
 
                             <!-- Only meaningful while Preserve metadata is on; disabled otherwise so its
                                  effect is never ambiguous. Off = big speed win on repeated mostly-skipped runs. -->
@@ -1367,38 +1462,6 @@
                             <!-- Copy mode + performance (not applicable to Pages scope) -->
                             <StackPanel Visibility="{Binding IsPagesScope, Converter={StaticResource InvBoolToVis}}">
                                 <Separator Margin="0,10,0,10" Background="{DynamicResource BorderLightBrush}"/>
-                                <TextBlock Text="{loc:Loc Ui_CopyMode}" FontSize="12" FontWeight="SemiBold"
-                                           Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,6"/>
-                                <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,6"
-                                             IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=MigrationApi}">
-                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_MigrationApi}" VerticalAlignment="Center"/>
-                                        <Border Background="{DynamicResource AccentBrush}" CornerRadius="3" Padding="4,1" Margin="6,0,0,0" VerticalAlignment="Center">
-                                            <TextBlock Text="{loc:Loc Ui_Recommended}" Foreground="White" FontSize="10" FontWeight="SemiBold"/>
-                                        </Border>
-                                        <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
-                                            <TextBlock.ToolTip>
-                                                <ToolTip>
-                                                    <TextBlock Text="{loc:Loc Ui_ExactVersionNumbersDatesAnd}" TextWrapping="Wrap" MaxWidth="260"/>
-                                                </ToolTip>
-                                            </TextBlock.ToolTip>
-                                        </TextBlock>
-                                    </WrapPanel>
-                                </RadioButton>
-                                <RadioButton GroupName="CopyMode" FontSize="12" Margin="0,0,0,12"
-                                             IsChecked="{Binding CopyMode, Converter={StaticResource EqToBool}, ConverterParameter=EnhancedRest}">
-                                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock TextWrapping="Wrap" Text="{loc:Loc Ui_EnhancedRest}" VerticalAlignment="Center"/>
-                                        <TextBlock Style="{StaticResource ToolTipIcon}" MouseLeftButtonDown="InfoIcon_Click">
-                                            <TextBlock.ToolTip>
-                                                <ToolTip>
-                                                    <TextBlock Text="{loc:Loc Ui_CorrectDatesAndEditorsPer}" TextWrapping="Wrap" MaxWidth="260"/>
-                                                </ToolTip>
-                                            </TextBlock.ToolTip>
-                                        </TextBlock>
-                                    </WrapPanel>
-                                </RadioButton>
-                                <Separator Margin="0,0,0,10" Background="{DynamicResource BorderLightBrush}"/>
                                 <TextBlock Text="{loc:Loc Ui_ParallelCopies}" FontSize="12" FontWeight="SemiBold"
                                            Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,2">

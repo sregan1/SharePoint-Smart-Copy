@@ -1611,4 +1611,26 @@
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>ลงชื่อเข้าใช้ผู้เช่าปลายทางเพื่อแสดงรายการสภาพแวดล้อม</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>โหลดสภาพแวดล้อมก่อน</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>ไม่พบสภาพแวดล้อม Power Automate สำหรับบัญชีปลายทาง ต้องมีใบอนุญาต Power Automate หรือสิทธิ์เข้าถึงสภาพแวดล้อมที่นั่น ลองลงชื่อเข้าใช้อีกครั้งด้วยบัญชีอื่น</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>เลือกทั้งหมด</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>ล้างทั้งหมด</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>เลือกตัวเลือกมาตรฐานทั้งหมดด้านบน ตัวเลือกที่ต้องใช้สิทธิ์เพิ่มเติมและ &quot;อัปเดตรายการที่มีอยู่&quot; จะคงเดิม</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>ยกเลิกการเลือกตัวเลือกโครงสร้างทั้งหมด รวมถึงตัวเลือกที่ต้องใช้สิทธิ์เพิ่มเติม</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>ต้องใช้สิทธิ์เพิ่มเติม</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>ปิดไว้ตามค่าเริ่มต้น เปิดเฉพาะเมื่อผู้ดูแลระบบผู้เช่าของคุณให้สิทธิ์แล้ว มิฉะนั้นขั้นตอนนี้จะรายงานข้อผิดพลาด</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>รายการที่มีอยู่</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint ปฏิเสธคอลัมน์เหล่านี้ จึงถูกละไว้จากรายการใหม่: {0}</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>ยังไม่ได้ตั้งค่าการแมปผู้ใช้</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>นี่คือการคัดลอกแบบหลายผู้เช่า และยังไม่ได้ตั้งค่าการแมปผู้ใช้ ระบบจะค้นหาบุคคล (ผู้สร้าง ผู้แก้ไข คอลัมน์บุคคล สิทธิ์) ในผู้เช่าเป้าหมายด้วยที่อยู่อีเมลเดียวกัน และผู้ที่ไม่มีอยู่ที่นั่นจะถูกละไว้หรือถูกแทนที่
+
+ใช่: คัดลอกต่อไป
+ไม่ใช่: เปิดการแมปผู้ใช้ก่อน
+ยกเลิก: กลับไป</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>มุมมอง &quot;{0}&quot; ที่ปลายทางเสียหาย (ชี้ไปยังคอลัมน์ที่ไม่มีอยู่) และถูกสร้างใหม่จากต้นทางแล้ว</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>สิทธิ์ที่จำเป็นสำหรับการคัดลอกชุดคำศัพท์:
+• Microsoft Graph แบบ delegated: TermStore.ReadWrite.All บนการลงทะเบียนแอปเป้าหมาย และ TermStore.Read.All บนแอปต้นทาง
+• ได้รับความยินยอมจากผู้ดูแลระบบสำหรับสิทธิ์เหล่านั้น
+• บทบาทของที่เก็บคำศัพท์ (เช่น Term Store Administrator) สำหรับบัญชีที่ลงชื่อเข้าใช้เป้าหมาย</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>วิธีการคัดลอก</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>(เลือกแล้ว {0} จาก {1})</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>ยังไม่ได้ตั้งค่าการแมปผู้ใช้ ระบบจะค้นหาบุคคล (ผู้สร้าง ผู้แก้ไข คอลัมน์บุคคล สิทธิ์) ในผู้เช่าเป้าหมายด้วยที่อยู่อีเมลเดียวกัน และผู้ที่ไม่มีอยู่ที่นั่นจะถูกละไว้หรือถูกแทนที่</value></data>
 </root>

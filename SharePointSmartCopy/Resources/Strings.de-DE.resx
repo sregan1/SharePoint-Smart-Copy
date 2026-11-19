@@ -1611,4 +1611,26 @@ Beim erneuten Kopieren wird von jedem eine zweite Kopie erstellt. Fortfahren?</v
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Beim Zielmandanten anmelden, um dessen Umgebungen aufzulisten</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Zuerst die Umgebungen laden</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Für das Zielkonto wurden keine Power Automate-Umgebungen gefunden. Es benötigt eine Power Automate-Lizenz oder Zugriff auf eine Umgebung dort. Melden Sie sich erneut mit einem anderen Konto an.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Alle auswählen</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Alle abwählen</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Aktiviert alle Standardoptionen oben. Optionen, die zusätzliche Berechtigungen benötigen, und „Vorhandene Listen aktualisieren“ bleiben unverändert.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Deaktiviert alle Strukturoptionen, auch die, die zusätzliche Berechtigungen benötigen.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Zusätzliche Berechtigungen erforderlich</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Standardmäßig deaktiviert. Nur aktivieren, wenn Ihr Mandantenadministrator die Berechtigung erteilt hat; andernfalls meldet dieser Schritt einen Fehler.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Vorhandene Listen</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint hat diese Spalten abgelehnt, daher wurden sie im neuen Element weggelassen: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Keine Benutzerzuordnung festgelegt</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Dies ist eine mandantenübergreifende Kopie, und es ist keine Benutzerzuordnung festgelegt. Personen (Autoren, Editoren, Personenspalten, Berechtigungen) werden im Zielmandanten anhand derselben E-Mail-Adresse gesucht; wer dort nicht existiert, wird weggelassen oder ersetzt.
+
+Ja: trotzdem kopieren
+Nein: zuerst die Benutzerzuordnung öffnen
+Abbrechen: zurück</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Die Ansicht „{0}“ war im Ziel fehlerhaft (sie verwies auf nicht vorhandene Spalten) und wurde aus der Quelle neu erstellt.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Zum Kopieren von Begriffsmengen erforderliche Berechtigungen:
+• Microsoft Graph, delegiert: TermStore.ReadWrite.All für die Ziel-App-Registrierung und TermStore.Read.All für die Quell-App-Registrierung
+• Erteilte Administratoreinwilligung dafür
+• Eine Rolle im Term Store (z. B. Term Store-Administrator) für das am Ziel angemeldete Konto</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>So wird kopiert</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} von {1} ausgewählt)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Es ist keine Benutzerzuordnung festgelegt. Personen (Autoren, Editoren, Personenspalten, Berechtigungen) werden im Zielmandanten anhand derselben E-Mail-Adresse gesucht; wer dort nicht existiert, wird weggelassen oder ersetzt.</value></data>
 </root>

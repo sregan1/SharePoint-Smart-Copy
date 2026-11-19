@@ -1611,4 +1611,26 @@ Az ismételt másolás mindegyikből második másolatot hoz létre. Folytatja?<
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Jelentkezzen be a célbérlőbe a környezetei listázásához</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Először töltse be a környezeteket</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>A célfiókhoz nem található Power Automate-környezet. Power Automate-licenc vagy hozzáférés szükséges ott egy környezethez. Próbáljon meg újra bejelentkezni másik fiókkal.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Összes kijelölése</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Kijelölés törlése</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Bejelöli a fenti összes alapbeállítást. A további engedélyeket igénylő beállítások és a &quot;Meglévő listák frissítése&quot; változatlanok maradnak.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Kikapcsol minden struktúrabeállítást, a további engedélyeket igénylőket is.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>További engedélyek szükségesek</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Alapértelmezés szerint ki van kapcsolva. Csak akkor kapcsolja be, ha a bérlői rendszergazda megadta az engedélyt; ellenkező esetben ez a lépés hibát jelez.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Meglévő listák</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>A SharePoint elutasította ezeket az oszlopokat, ezért kimaradtak az új elemből: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Nincs felhasználó-hozzárendelés</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Ez egy többbérlős másolás, és nincs beállítva felhasználó-hozzárendelés. A személyeket (létrehozók, szerkesztők, személyoszlopok, engedélyek) a rendszer ugyanazzal az e-mail-címmel keresi a célbérlőben, és aki ott nem létezik, kimarad vagy le lesz cserélve.
+
+Igen: másolás mindenképp
+Nem: előbb a felhasználó-hozzárendelés megnyitása
+Mégse: vissza</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>A(z) &quot;{0}&quot; nézet sérült volt a célon (olyan oszlopokra hivatkozott, amelyek nincsenek ott), ezért újra lett építve a forrásból.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>A kifejezéskészletek másolásához szükséges engedélyek:
+• Microsoft Graph, delegált: TermStore.ReadWrite.All a cél alkalmazásregisztrációján, és TermStore.Read.All a forrásén
+• Megadott rendszergazdai jóváhagyás hozzájuk
+• Kifejezéstár-szerepkör (például Term Store Administrator) a célhoz bejelentkezett fióknak</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>A másolás módja</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} / {1} kijelölve)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Nincs beállítva felhasználó-hozzárendelés. A személyeket (létrehozók, szerkesztők, személyoszlopok, engedélyek) a rendszer ugyanazzal az e-mail-címmel keresi a célbérlőben, és aki ott nem létezik, kimarad vagy le lesz cserélve.</value></data>
 </root>

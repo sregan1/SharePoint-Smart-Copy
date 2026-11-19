@@ -1611,4 +1611,26 @@ Yeniden kopyalamak her birinin ikinci bir kopyasını oluşturur. Devam edilsin 
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Ortamlarını listelemek için hedef kiracıda oturum açın</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Önce ortamları yükleyin</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Hedef hesap için Power Automate ortamı bulunamadı. Power Automate lisansı veya orada bir ortama erişim gerekir. Başka bir hesapla yeniden oturum açmayı deneyin.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Tümünü seç</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Tümünü temizle</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Yukarıdaki tüm standart seçenekleri işaretler. Ek izin gerektiren seçenekler ve &quot;Mevcut listeleri güncelle&quot; olduğu gibi kalır.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Ek izin gerektirenler dahil tüm yapı seçeneklerinin işaretini kaldırır.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Ek izin gerektirir</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Varsayılan olarak kapalıdır. Yalnızca kiracı yöneticiniz izni verdiyse açın; aksi halde bu adım hata bildirir.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Mevcut listeler</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint bu sütunları reddetti, bu nedenle yeni öğeye eklenmediler: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Kullanıcı eşlemesi ayarlanmamış</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Bu çok kiracılı bir kopyalama ve kullanıcı eşlemesi ayarlanmamış. Kişiler (yazarlar, düzenleyenler, kişi sütunları, izinler) hedef kiracıda aynı e-posta adresiyle aranır; orada bulunmayanlar atlanır veya değiştirilir.
+
+Evet: yine de kopyala
+Hayır: önce kullanıcı eşlemesini aç
+İptal: geri dön</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>&quot;{0}&quot; görünümü hedefte bozuktu (var olmayan sütunlara işaret ediyordu) ve kaynaktan yeniden oluşturuldu.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Terim kümelerini kopyalamak için gereken izinler:
+• Microsoft Graph, temsilci: hedef uygulama kaydında TermStore.ReadWrite.All ve kaynak uygulama kaydında TermStore.Read.All
+• Bunlar için verilmiş yönetici onayı
+• Hedefte oturum açan hesap için bir terim deposu rolü (örneğin Term Store Administrator)</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Nasıl kopyalanır</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} / {1} seçili)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Kullanıcı eşlemesi ayarlanmamış. Kişiler (yazarlar, düzenleyenler, kişi sütunları, izinler) hedef kiracıda aynı e-posta adresiyle aranır; orada bulunmayanlar atlanır veya değiştirilir.</value></data>
 </root>

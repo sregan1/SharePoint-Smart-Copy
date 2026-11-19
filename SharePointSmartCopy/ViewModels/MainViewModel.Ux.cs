@@ -15,6 +15,18 @@ public partial class MainViewModel
     // (demo mode, headless use) every action simply proceeds.
     public Func<string, string, bool>? ConfirmAction { get; set; }
 
+    // Set by the window: asks Continue / Open user mapping / Cancel. Returns true to carry on with the copy.
+    public Func<string, string, bool>? ConfirmNoUserMappingAction { get; set; }
+
+    // A multi-tenant copy that writes people (authors, editors, person columns, permissions) with no domain swap
+    // and no explicit pairs sends every identity to the target unchanged. Say so before the run, not after it.
+    private bool ConfirmUserMapping()
+    {
+        if (!IsMultiTenant || SpService.Identity.IsActive || ConfirmNoUserMappingAction == null) return true;
+        if (!PreserveMetadata && !CopyPermissions && !EffectiveCopyCustomColumns) return true;
+        return ConfirmNoUserMappingAction(Loc.T("Dlg_NoUserMappingTitle"), Loc.T("Dlg_NoUserMappingBody"));
+    }
+
     private bool Confirm(string titleKey, string bodyKey) =>
         ConfirmAction == null || ConfirmAction(Loc.T(titleKey), Loc.T(bodyKey));
 

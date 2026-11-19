@@ -1611,4 +1611,26 @@ Při opakovaném kopírování se z každého vytvoří druhá kopie. Pokračova
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Přihlaste se k cílovému tenantu a zobrazte jeho prostředí</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Nejprve načtěte prostředí</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Pro cílový účet nebyla nalezena žádná prostředí Power Automate. Účet potřebuje licenci Power Automate nebo přístup k prostředí tam. Zkuste se přihlásit znovu jiným účtem.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Vybrat vše</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Zrušit výběr</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Zaškrtne všechny standardní možnosti výše. Možnosti vyžadující další oprávnění a „Aktualizovat existující seznamy“ zůstanou beze změny.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Zruší zaškrtnutí všech možností struktury, včetně těch, které vyžadují další oprávnění.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Vyžaduje další oprávnění</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Ve výchozím nastavení vypnuto. Zapněte jen v případě, že správce tenanta oprávnění udělil; jinak tento krok skončí chybou.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Existující seznamy</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint tyto sloupce odmítl, proto byly z nové položky vynechány: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Není nastaveno mapování uživatelů</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Jde o kopii mezi tenanty a není nastaveno mapování uživatelů. Osoby (autoři, editoři, sloupce osob, oprávnění) se v cílovém tenantovi vyhledávají podle stejné e-mailové adresy a ty, které tam neexistují, se vynechají nebo nahradí.
+
+Ano: přesto kopírovat
+Ne: nejprve otevřít mapování uživatelů
+Storno: zpět</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Zobrazení „{0}“ bylo v cíli poškozené (odkazovalo na neexistující sloupce) a bylo znovu vytvořeno ze zdroje.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Oprávnění potřebná ke kopírování sad termínů:
+• Microsoft Graph, delegovaná: TermStore.ReadWrite.All v registraci cílové aplikace a TermStore.Read.All v registraci zdrojové
+• Udělený souhlas správce
+• Role úložiště termínů (například správce úložiště termínů) pro účet přihlášený k cíli</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Způsob kopírování</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>(vybráno {0} z {1})</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Není nastaveno mapování uživatelů. Osoby (autoři, editoři, sloupce osob, oprávnění) se v cílovém tenantovi vyhledávají podle stejné e-mailové adresy a ty, které tam neexistují, se vynechají nebo nahradí.</value></data>
 </root>

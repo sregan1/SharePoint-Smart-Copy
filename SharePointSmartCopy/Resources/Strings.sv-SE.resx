@@ -1611,4 +1611,26 @@ Om du kopierar igen skapas en andra kopia av varje. Fortsätta?</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Logga in på målklientorganisationen för att visa dess miljöer</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Läs in miljöerna först</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Inga Power Automate-miljöer hittades för målkontot. Det behöver en Power Automate-licens eller åtkomst till en miljö där. Försök logga in igen med ett annat konto.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Markera alla</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Avmarkera alla</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Markerar alla standardalternativ ovan. Alternativ som kräver extra behörigheter och &quot;Uppdatera befintliga listor&quot; lämnas som de är.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Avmarkerar alla strukturalternativ, även de som kräver extra behörigheter.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Kräver extra behörigheter</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Av som standard. Aktivera bara om klientadministratören har beviljat behörigheten; annars rapporterar det här steget ett fel.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Befintliga listor</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint avvisade dessa kolumner, så de utelämnades från det nya objektet: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Ingen användarmappning angiven</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Det här är en kopiering mellan flera klientorganisationer och ingen användarmappning är angiven. Personer (författare, redigerare, personkolumner, behörigheter) slås upp i målklientorganisationen med samma e-postadress, och de som inte finns där utelämnas eller ersätts.
+
+Ja: kopiera ändå
+Nej: öppna användarmappningen först
+Avbryt: gå tillbaka</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Vyn &quot;{0}&quot; var trasig på målet (den pekade på kolumner som inte finns) och återskapades från källan.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Behörigheter som krävs för att kopiera termuppsättningar:
+• Microsoft Graph, delegerade: TermStore.ReadWrite.All på målets appregistrering och TermStore.Read.All på källans
+• Administratörsmedgivande beviljat för dem
+• En termlagerroll (till exempel Term Store Administrator) för kontot som är inloggat på målet</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Hur du kopierar</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} av {1} markerade)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Ingen användarmappning är angiven. Personer (författare, redigerare, personkolumner, behörigheter) slås upp i målklientorganisationen med samma e-postadress, och de som inte finns där utelämnas eller ersätts.</value></data>
 </root>

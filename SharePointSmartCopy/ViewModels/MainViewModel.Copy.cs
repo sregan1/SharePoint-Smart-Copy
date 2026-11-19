@@ -559,6 +559,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task StartCopyAsync()
     {
+        if (!ConfirmUserMapping()) return;
         _hasFolderJobs       = CopyJobs.Any(j => j.IsFolder);
         IsCopying            = true;
         IsCopyComplete       = false;

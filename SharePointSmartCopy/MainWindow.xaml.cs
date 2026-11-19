@@ -49,6 +49,13 @@ public partial class MainWindow : Window
         VM.ConfirmAction = (title, message) =>
             MessageBox.Show(this, message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No)
                 == MessageBoxResult.Yes;
+        // Yes = copy anyway, No = open the user mapping (the copy does not start), Cancel = go back.
+        VM.ConfirmNoUserMappingAction = (title, message) =>
+        {
+            var choice = MessageBox.Show(this, message, title, MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+            if (choice == MessageBoxResult.No) OpenIdentityMapping(this, null);
+            return choice == MessageBoxResult.Yes;
+        };
         VM.PropertyChanged += Vm_PropertyChanged;
     }
 

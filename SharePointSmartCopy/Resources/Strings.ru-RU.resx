@@ -1611,4 +1611,26 @@
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Войдите в целевой клиент, чтобы получить список его сред</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Сначала загрузите среды</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Для целевой учетной записи не найдено сред Power Automate. Нужна лицензия Power Automate или доступ к среде там. Попробуйте войти снова с другой учетной записью.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Выбрать все</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Снять все</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Отмечает все стандартные параметры выше. Параметры, требующие дополнительных разрешений, и «Обновлять существующие списки» не изменяются.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Снимает отметки со всех параметров структуры, включая те, которым нужны дополнительные разрешения.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Требуются дополнительные разрешения</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>По умолчанию выключено. Включайте, только если администратор клиента предоставил разрешение; иначе на этом шаге возникнет ошибка.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Существующие списки</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint отклонил эти столбцы, поэтому они не вошли в новый элемент: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Сопоставление пользователей не задано</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Это копирование между клиентами, и сопоставление пользователей не задано. Пользователи (авторы, редакторы, столбцы с типом «Пользователь», разрешения) ищутся в целевом клиенте по тому же адресу электронной почты, а отсутствующие там пропускаются или заменяются.
+
+Да: все равно копировать
+Нет: сначала открыть сопоставление пользователей
+Отмена: вернуться</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Представление «{0}» в целевом расположении было повреждено (ссылалось на отсутствующие столбцы) и пересоздано из источника.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Разрешения, необходимые для копирования наборов терминов:
+• Microsoft Graph, делегированные: TermStore.ReadWrite.All для регистрации целевого приложения и TermStore.Read.All для исходного
+• Предоставленное для них согласие администратора
+• Роль в хранилище терминов (например, Term Store Administrator) для учетной записи, выполнившей вход в целевой клиент</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Способ копирования</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>(выбрано {0} из {1})</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Сопоставление пользователей не задано. Пользователи (авторы, редакторы, столбцы с типом «Пользователь», разрешения) ищутся в целевом клиенте по тому же адресу электронной почты, а отсутствующие там пропускаются или заменяются.</value></data>
 </root>

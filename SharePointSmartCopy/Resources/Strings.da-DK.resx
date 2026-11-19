@@ -1611,4 +1611,26 @@ Kopiering igen opretter en ekstra kopi af hver. Fortsæt?</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Log på målets lejer for at vise dens miljøer</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Indlæs miljøerne først</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Der blev ikke fundet nogen Power Automate-miljøer for målkontoen. Den skal have en Power Automate-licens eller adgang til et miljø der. Prøv at logge på igen med en anden konto.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Vælg alle</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Ryd alle</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Markerer alle standardindstillinger ovenfor. Indstillinger, der kræver ekstra tilladelser, og &quot;Opdater eksisterende lister&quot; forbliver uændrede.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Fjerner markeringen af alle strukturindstillinger, også dem der kræver ekstra tilladelser.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Kræver ekstra tilladelser</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Slået fra som standard. Slå kun til, hvis lejeradministratoren har givet tilladelsen; ellers rapporterer dette trin en fejl.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Eksisterende lister</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint afviste disse kolonner, så de blev udeladt fra det nye element: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Ingen brugertilknytning angivet</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Dette er en kopiering mellem lejere, og der er ikke angivet nogen brugertilknytning. Personer (forfattere, redaktører, personkolonner, tilladelser) slås op i mållejeren via samme mailadresse, og de, der ikke findes dér, udelades eller erstattes.
+
+Ja: kopiér alligevel
+Nej: åbn brugertilknytningen først
+Annuller: gå tilbage</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Visningen &quot;{0}&quot; var ødelagt på målet (den pegede på kolonner, der ikke findes) og blev genopbygget fra kilden.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Tilladelser, der kræves for at kopiere termsæt:
+• Microsoft Graph, delegeret: TermStore.ReadWrite.All på målets appregistrering og TermStore.Read.All på kildens
+• Administratorsamtykke givet til dem
+• En rolle i termlageret (f.eks. Term Store Administrator) til kontoen, der er logget på målet</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Sådan kopieres</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} af {1} valgt)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Der er ikke angivet nogen brugertilknytning. Personer (forfattere, redaktører, personkolonner, tilladelser) slås op i mållejeren via samme mailadresse, og de, der ikke findes dér, udelades eller erstattes.</value></data>
 </root>

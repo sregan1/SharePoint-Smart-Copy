@@ -1611,4 +1611,26 @@
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>コピー先のテナントにサインインして環境を一覧表示</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>先に環境を読み込んでください</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>コピー先のアカウントに対する Power Automate 環境が見つかりませんでした。Power Automate のライセンス、またはそこでの環境へのアクセスが必要です。別のアカウントで再度サインインしてください。</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>すべて選択</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>すべて解除</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>上の標準オプションをすべてオンにします。追加のアクセス許可が必要なオプションと「既存のリストを更新」は変更されません。</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>追加のアクセス許可が必要なものを含め、すべての構造オプションをオフにします。</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>追加のアクセス許可が必要</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>既定ではオフです。テナント管理者がアクセス許可を付与している場合にのみオンにしてください。付与されていない場合、この手順でエラーが報告されます。</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>既存のリスト</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint がこれらの列を拒否したため、新しいアイテムから除外されました: {0}。</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>ユーザー マッピングが設定されていません</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>これはマルチテナントのコピーですが、ユーザー マッピングが設定されていません。ユーザー (作成者、編集者、ユーザー列、アクセス許可) は同じメール アドレスでターゲット テナント内から検索され、存在しないユーザーは除外または置換されます。
+
+はい: このままコピーする
+いいえ: 先にユーザー マッピングを開く
+キャンセル: 戻る</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>ビュー &quot;{0}&quot; はターゲットで破損していた (存在しない列を参照していた) ため、ソースから再構築されました。</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>用語セットのコピーに必要なアクセス許可:
+• Microsoft Graph、委任: ターゲットのアプリ登録に TermStore.ReadWrite.All、ソースのアプリ登録に TermStore.Read.All
+• それらに対する管理者の同意が付与されていること
+• ターゲットにサインインしているアカウントの用語ストアのロール (Term Store Administrator など)</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>コピー方法</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({1} 件中 {0} 件を選択)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>ユーザー マッピングが設定されていません。ユーザー (作成者、編集者、ユーザー列、アクセス許可) は同じメール アドレスでターゲット テナント内から検索され、存在しないユーザーは除外または置換されます。</value></data>
 </root>

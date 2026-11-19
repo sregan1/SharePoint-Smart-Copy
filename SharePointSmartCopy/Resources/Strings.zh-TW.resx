@@ -1611,4 +1611,26 @@
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>登入目標租用戶以列出其環境</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>請先載入環境</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>找不到目標帳戶的 Power Automate 環境。它需要 Power Automate 授權或該處環境的存取權。請嘗試使用其他帳戶重新登入。</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>全選</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>全部清除</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>勾選上方所有標準選項。需要額外權限的選項和「更新現有清單」維持不變。</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>取消勾選所有結構選項,包括需要額外權限的選項。</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>需要額外權限</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>預設為關閉。僅在租用戶管理員已授與權限時才啟用,否則此步驟會回報錯誤。</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>現有清單</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint 拒絕了這些欄位,因此未包含在新項目中:{0}。</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>未設定使用者對應</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>這是多租用戶複製,且未設定使用者對應。人員(建立者、編輯者、人員欄位、權限)會依相同的電子郵件地址在目標租用戶中查閱,不存在的人員會被略過或取代。
+
+是: 仍要複製
+否: 先開啟使用者對應
+取消: 返回</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>檢視「{0}」在目標上已損毀(指向不存在的欄位),已從來源重新建立。</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>複製詞彙集所需的權限:
+• Microsoft Graph,委派: 目標應用程式註冊上的 TermStore.ReadWrite.All,以及來源應用程式註冊上的 TermStore.Read.All
+• 已為其授與管理員同意
+• 登入目標的帳戶需具有詞彙存放區角色(例如 Term Store Administrator)</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>複製方式</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>(已選取 {0}/{1})</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>未設定使用者對應。人員(建立者、編輯者、人員欄位、權限)會依相同的電子郵件地址在目標租用戶中查閱,不存在的人員會被略過或取代。</value></data>
 </root>

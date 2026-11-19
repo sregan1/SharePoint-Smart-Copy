@@ -1611,4 +1611,26 @@ Copiando di nuovo si crea una seconda copia di ciascuno. Continuare?</value></da
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Accedi al tenant di destinazione per elencarne gli ambienti</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Carica prima gli ambienti</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Nessun ambiente Power Automate trovato per l&apos;account di destinazione. Serve una licenza Power Automate o l&apos;accesso a un ambiente al suo interno. Prova ad accedere di nuovo con un altro account.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Seleziona tutto</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Deseleziona tutto</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Seleziona tutte le opzioni standard qui sopra. Le opzioni che richiedono autorizzazioni aggiuntive e &quot;Aggiorna liste esistenti&quot; restano invariate.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Deseleziona tutte le opzioni di struttura, comprese quelle che richiedono autorizzazioni aggiuntive.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Richiede autorizzazioni aggiuntive</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Disattivata per impostazione predefinita. Attivala solo se l&apos;amministratore del tenant ha concesso l&apos;autorizzazione; in caso contrario questo passaggio segnala un errore.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Liste esistenti</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint ha rifiutato queste colonne, quindi sono state escluse dal nuovo elemento: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Nessuna mappatura utenti impostata</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Questa è una copia multi-tenant e non è impostata alcuna mappatura utenti. Le persone (autori, editor, colonne persona, autorizzazioni) vengono cercate nel tenant di destinazione in base allo stesso indirizzo e-mail e chi non esiste viene escluso o sostituito.
+
+Sì: copia comunque
+No: apri prima la mappatura utenti
+Annulla: torna indietro</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>La vista &quot;{0}&quot; era danneggiata nella destinazione (faceva riferimento a colonne inesistenti) ed è stata ricreata dall&apos;origine.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Autorizzazioni necessarie per copiare i set di termini:
+• Microsoft Graph, delegata: TermStore.ReadWrite.All nella registrazione dell&apos;app di destinazione e TermStore.Read.All in quella di origine
+• Consenso amministratore concesso per tali autorizzazioni
+• Un ruolo dell&apos;archivio termini (ad esempio Term Store Administrator) per l&apos;account connesso alla destinazione</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Come copiare</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} di {1} selezionati)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Non è impostata alcuna mappatura utenti. Le persone (autori, editor, colonne persona, autorizzazioni) vengono cercate nel tenant di destinazione in base allo stesso indirizzo e-mail e chi non esiste viene escluso o sostituito.</value></data>
 </root>

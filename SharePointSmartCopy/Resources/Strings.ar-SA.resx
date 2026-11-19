@@ -1611,4 +1611,26 @@
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>سجّل الدخول إلى مستأجر الهدف لعرض بيئاته</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>حمّل البيئات أولاً</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>لم يتم العثور على بيئات Power Automate للحساب الهدف. يحتاج إلى ترخيص Power Automate أو إلى صلاحية الوصول إلى بيئة هناك. حاول تسجيل الدخول مرة أخرى بحساب آخر.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>تحديد الكل</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>مسح الكل</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>يحدد كل الخيارات القياسية أعلاه. تبقى الخيارات التي تحتاج إلى أذونات إضافية، و&quot;تحديث القوائم الموجودة&quot;، كما هي.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>يلغي تحديد كل خيارات البنية، بما فيها التي تحتاج إلى أذونات إضافية.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>يحتاج إلى أذونات إضافية</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>متوقف افتراضيًا. شغّله فقط إذا منح مسؤول المستأجر الإذن؛ وإلا تُبلغ هذه الخطوة عن خطأ.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>القوائم الموجودة</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>رفض SharePoint هذه الأعمدة، لذا تم استبعادها من العنصر الجديد: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>لم يتم تعيين مطابقة المستخدمين</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>هذه عملية نسخ بين عدة مستأجرين ولم يتم تعيين مطابقة المستخدمين. يتم البحث عن الأشخاص (المنشئين والمحررين وأعمدة الأشخاص والأذونات) في المستأجر الهدف بنفس عنوان البريد الإلكتروني، ويُستبعد أو يُستبدل من لا وجود له هناك.
+
+نعم: نسخ على أي حال
+لا: فتح مطابقة المستخدمين أولًا
+إلغاء: رجوع</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>كان العرض &quot;{0}&quot; معطلًا في الهدف (يشير إلى أعمدة غير موجودة) وتمت إعادة إنشائه من المصدر.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>الأذونات المطلوبة لنسخ مجموعات المصطلحات:
+• Microsoft Graph، مفوّضة: TermStore.ReadWrite.All على تسجيل التطبيق الهدف، وTermStore.Read.All على تسجيل المصدر
+• منح موافقة المسؤول عليها
+• دور في مخزن المصطلحات (مثل مسؤول مخزن المصطلحات) للحساب المسجّل الدخول به إلى الهدف</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>كيفية النسخ</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>(تم تحديد {0} من {1})</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>لم يتم تعيين مطابقة المستخدمين. يتم البحث عن الأشخاص (المنشئين والمحررين وأعمدة الأشخاص والأذونات) في المستأجر الهدف بنفس عنوان البريد الإلكتروني، ويُستبعد أو يُستبدل من لا وجود له هناك.</value></data>
 </root>

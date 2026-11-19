@@ -1611,4 +1611,26 @@ Al copiar de nuevo se crea una segunda copia de cada uno. ¿Continuar?</value></
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Inicie sesión en el inquilino de destino para ver sus entornos</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Cargue primero los entornos</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>No se encontraron entornos de Power Automate para la cuenta de destino. Necesita una licencia de Power Automate o acceso a un entorno allí. Intente iniciar sesión de nuevo con otra cuenta.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Seleccionar todo</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Borrar todo</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Marca todas las opciones estándar anteriores. Las opciones que necesitan permisos adicionales y &quot;Actualizar listas existentes&quot; no cambian.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Desmarca todas las opciones de estructura, incluidas las que necesitan permisos adicionales.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Necesita permisos adicionales</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Desactivado de forma predeterminada. Actívelo solo si el administrador del inquilino ha concedido el permiso; de lo contrario, este paso notifica un error.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Listas existentes</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint rechazó estas columnas, por lo que se omitieron del nuevo elemento: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>No hay asignación de usuarios</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Esta es una copia entre inquilinos y no hay ninguna asignación de usuarios. Las personas (autores, editores, columnas de persona, permisos) se buscan en el inquilino de destino por la misma dirección de correo electrónico, y las que no existen allí se omiten o se reemplazan.
+
+Sí: copiar de todos modos
+No: abrir primero la asignación de usuarios
+Cancelar: volver</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>La vista &quot;{0}&quot; estaba dañada en el destino (apuntaba a columnas que no existen) y se recreó a partir del origen.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Permisos necesarios para copiar conjuntos de términos:
+• Microsoft Graph, delegado: TermStore.ReadWrite.All en el registro de la aplicación de destino y TermStore.Read.All en el del origen
+• Consentimiento de administrador concedido para ellos
+• Un rol del almacén de términos (como Administrador del almacén de términos) para la cuenta con la que se inició sesión en el destino</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Cómo copiar</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} de {1} seleccionados)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>No hay ninguna asignación de usuarios. Las personas (autores, editores, columnas de persona, permisos) se buscan en el inquilino de destino por la misma dirección de correo electrónico, y las que no existen allí se omiten o se reemplazan.</value></data>
 </root>

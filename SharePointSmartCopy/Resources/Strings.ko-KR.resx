@@ -1611,4 +1611,26 @@
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>대상 테넌트에 로그인하여 환경 목록 보기</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>먼저 환경을 로드하세요</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>대상 계정에 대한 Power Automate 환경을 찾을 수 없습니다. Power Automate 라이선스 또는 해당 위치의 환경에 대한 액세스 권한이 필요합니다. 다른 계정으로 다시 로그인해 보세요.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>모두 선택</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>모두 해제</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>위의 모든 표준 옵션을 선택합니다. 추가 권한이 필요한 옵션과 &quot;기존 목록 업데이트&quot;는 그대로 유지됩니다.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>추가 권한이 필요한 옵션을 포함하여 모든 구조 옵션의 선택을 해제합니다.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>추가 권한 필요</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>기본적으로 꺼져 있습니다. 테넌트 관리자가 권한을 부여한 경우에만 켜세요. 그렇지 않으면 이 단계에서 오류가 보고됩니다.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>기존 목록</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint에서 이 열을 거부하여 새 항목에서 제외되었습니다: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>사용자 매핑이 설정되지 않음</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>다중 테넌트 복사이며 사용자 매핑이 설정되어 있지 않습니다. 사용자(작성자, 편집자, 사용자 열, 권한)는 동일한 이메일 주소로 대상 테넌트에서 검색되며, 그곳에 없는 사용자는 제외되거나 대체됩니다.
+
+예: 그래도 복사
+아니요: 먼저 사용자 매핑 열기
+취소: 돌아가기</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>&quot;{0}&quot; 보기가 대상에서 손상되어(없는 열을 참조함) 원본에서 다시 만들었습니다.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>용어 집합을 복사하는 데 필요한 권한:
+• Microsoft Graph, 위임됨: 대상 앱 등록에 TermStore.ReadWrite.All, 원본 앱 등록에 TermStore.Read.All
+• 해당 권한에 대한 관리자 동의 부여
+• 대상에 로그인한 계정의 용어 저장소 역할(예: Term Store Administrator)</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>복사 방법</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({1}개 중 {0}개 선택됨)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>사용자 매핑이 설정되어 있지 않습니다. 사용자(작성자, 편집자, 사용자 열, 권한)는 동일한 이메일 주소로 대상 테넌트에서 검색되며, 그곳에 없는 사용자는 제외되거나 대체됩니다.</value></data>
 </root>

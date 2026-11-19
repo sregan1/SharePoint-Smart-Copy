@@ -1611,4 +1611,26 @@
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>היכנס לדייר היעד כדי להציג את הסביבות שלו</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>טען תחילה את הסביבות</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>לא נמצאו סביבות Power Automate עבור חשבון היעד. נדרש רישיון Power Automate או גישה לסביבה שם. נסה להיכנס שוב עם חשבון אחר.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>בחר הכול</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>נקה הכול</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>מסמן את כל האפשרויות הרגילות שלמעלה. אפשרויות שדורשות הרשאות נוספות, ו&quot;עדכון רשימות קיימות&quot;, נשארות כפי שהן.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>מבטל את הסימון של כל אפשרויות המבנה, כולל אלה שדורשות הרשאות נוספות.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>דורש הרשאות נוספות</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>כבוי כברירת מחדל. הפעל רק אם מנהל הדייר העניק את ההרשאה; אחרת שלב זה ידווח על שגיאה.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>רשימות קיימות</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint דחה עמודות אלה, ולכן הן הושמטו מהפריט החדש: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>לא הוגדר מיפוי משתמשים</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>זוהי העתקה בין דיירים ולא הוגדר מיפוי משתמשים. אנשים (יוצרים, עורכים, עמודות אדם, הרשאות) נחפשים בדייר היעד לפי אותה כתובת דוא&quot;ל, ומי שאינו קיים שם מושמט או מוחלף.
+
+כן: העתק בכל זאת
+לא: פתח קודם את מיפוי המשתמשים
+ביטול: חזור</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>התצוגה &quot;{0}&quot; הייתה פגומה ביעד (היא הפנתה לעמודות שאינן קיימות) ונבנתה מחדש מהמקור.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>הרשאות הדרושות להעתקת ערכות מונחים:
+• Microsoft Graph, מואצלת: TermStore.ReadWrite.All ברישום האפליקציה של היעד, ו-TermStore.Read.All ברישום של המקור
+• הסכמת מנהל שהוענקה להן
+• תפקיד במאגר המונחים (כגון מנהל מאגר מונחים) עבור החשבון המחובר ליעד</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>אופן ההעתקה</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} מתוך {1} נבחרו)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>לא הוגדר מיפוי משתמשים. אנשים (יוצרים, עורכים, עמודות אדם, הרשאות) נחפשים בדייר היעד לפי אותה כתובת דוא&quot;ל, ומי שאינו קיים שם מושמט או מוחלף.</value></data>
 </root>

@@ -1611,4 +1611,26 @@ Copierea din nou creează o a doua copie a fiecăruia. Continuați?</value></dat
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Autentificați-vă în tenantul destinație pentru a-i lista mediile</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Încărcați mai întâi mediile</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Nu au fost găsite medii Power Automate pentru contul destinație. Are nevoie de o licență Power Automate sau de acces la un mediu de acolo. Încercați să vă autentificați din nou cu alt cont.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Selectează tot</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Deselectează tot</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Bifează toate opțiunile standard de mai sus. Opțiunile care necesită permisiuni suplimentare și &quot;Actualizare liste existente&quot; rămân neschimbate.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Debifează toate opțiunile de structură, inclusiv cele care necesită permisiuni suplimentare.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Necesită permisiuni suplimentare</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Dezactivat implicit. Activați numai dacă administratorul chiriașului a acordat permisiunea; în caz contrar, acest pas raportează o eroare.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Liste existente</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint a respins aceste coloane, deci au fost omise din noul element: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Nu este setată nicio mapare a utilizatorilor</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Aceasta este o copiere multi-tenant și nu este setată nicio mapare a utilizatorilor. Persoanele (autori, editori, coloane de tip persoană, permisiuni) sunt căutate în chiriașul țintă după aceeași adresă de e-mail, iar cele care nu există acolo sunt omise sau înlocuite.
+
+Da: copiază oricum
+Nu: deschide mai întâi maparea utilizatorilor
+Anulare: înapoi</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Vizualizarea &quot;{0}&quot; era defectă în destinație (indica spre coloane inexistente) și a fost reconstruită din sursă.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Permisiuni necesare pentru copierea seturilor de termeni:
+• Microsoft Graph, delegate: TermStore.ReadWrite.All pe înregistrarea aplicației țintă și TermStore.Read.All pe cea sursă
+• Consimțământ de administrator acordat pentru ele
+• Un rol de magazin de termeni (cum ar fi Term Store Administrator) pentru contul conectat la țintă</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Cum se copiază</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} din {1} selectate)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Nu este setată nicio mapare a utilizatorilor. Persoanele (autori, editori, coloane de tip persoană, permisiuni) sunt căutate în chiriașul țintă după aceeași adresă de e-mail, iar cele care nu există acolo sunt omise sau înlocuite.</value></data>
 </root>

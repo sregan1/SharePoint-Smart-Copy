@@ -1611,4 +1611,26 @@ Copiar novamente cria uma segunda cópia de cada um. Continuar?</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Inicie sessão no tenant de destino para listar os respetivos ambientes</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Carregue primeiro os ambientes</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Não foram encontrados ambientes do Power Automate para a conta de destino. Precisa de uma licença do Power Automate ou de acesso a um ambiente aí. Tente iniciar sessão novamente com outra conta.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Selecionar tudo</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Limpar tudo</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Seleciona todas as opções padrão acima. As opções que precisam de permissões extra e &quot;Atualizar listas existentes&quot; ficam como estão.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Desmarca todas as opções de estrutura, incluindo as que precisam de permissões extra.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Requer permissões extra</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Desativado por predefinição. Ative apenas se o administrador do inquilino tiver concedido a permissão; caso contrário, este passo comunicará um erro.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Listas existentes</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>O SharePoint rejeitou estas colunas, pelo que foram deixadas de fora do novo item: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Nenhum mapeamento de utilizadores definido</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Esta é uma cópia entre inquilinos e não está definido nenhum mapeamento de utilizadores. As pessoas (autores, editores, colunas de pessoa, permissões) são procuradas no inquilino de destino pelo mesmo endereço de e-mail, e quem não existir aí é omitido ou substituído.
+
+Sim: copiar mesmo assim
+Não: abrir primeiro o mapeamento de utilizadores
+Cancelar: voltar</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>A vista &quot;{0}&quot; estava danificada no destino (apontava para colunas inexistentes) e foi recriada a partir da origem.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Permissões necessárias para copiar conjuntos de termos:
+• Microsoft Graph, delegadas: TermStore.ReadWrite.All no registo da aplicação de destino e TermStore.Read.All no de origem
+• Consentimento do administrador concedido para as mesmas
+• Uma função do arquivo de termos (como Term Store Administrator) para a conta com sessão iniciada no destino</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Como copiar</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} de {1} selecionados)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Não está definido nenhum mapeamento de utilizadores. As pessoas (autores, editores, colunas de pessoa, permissões) são procuradas no inquilino de destino pelo mesmo endereço de e-mail, e quem não existir aí é omitido ou substituído.</value></data>
 </root>

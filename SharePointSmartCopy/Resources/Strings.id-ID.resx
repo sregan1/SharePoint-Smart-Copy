@@ -1611,4 +1611,26 @@ Menyalin lagi akan membuat salinan kedua dari masing-masing. Lanjutkan?</value><
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Masuk ke tenant target untuk menampilkan lingkungannya</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Muat lingkungan terlebih dahulu</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Tidak ada lingkungan Power Automate yang ditemukan untuk akun target. Akun tersebut memerlukan lisensi Power Automate atau akses ke sebuah lingkungan di sana. Coba masuk lagi dengan akun lain.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Pilih semua</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Hapus semua</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Mencentang setiap opsi standar di atas. Opsi yang memerlukan izin tambahan, dan &quot;Perbarui daftar yang ada&quot;, tidak berubah.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Menghapus centang semua opsi struktur, termasuk yang memerlukan izin tambahan.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Memerlukan izin tambahan</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Nonaktif secara default. Aktifkan hanya jika admin tenant Anda telah memberikan izin tersebut; jika tidak, langkah ini akan melaporkan kesalahan.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Daftar yang ada</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint menolak kolom-kolom ini, sehingga tidak disertakan pada item baru: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Pemetaan pengguna belum diatur</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Ini adalah penyalinan multi-tenant dan pemetaan pengguna belum diatur. Orang (pembuat, editor, kolom orang, izin) dicari di tenant target berdasarkan alamat email yang sama, dan siapa pun yang tidak ada di sana akan dilewati atau diganti.
+
+Ya: tetap salin
+Tidak: buka pemetaan pengguna dulu
+Batal: kembali</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Tampilan &quot;{0}&quot; rusak di target (merujuk ke kolom yang tidak ada) dan dibangun ulang dari sumber.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Izin yang diperlukan untuk menyalin set istilah:
+• Microsoft Graph, didelegasikan: TermStore.ReadWrite.All pada pendaftaran aplikasi target, dan TermStore.Read.All pada pendaftaran aplikasi sumber
+• Persetujuan admin diberikan untuk izin tersebut
+• Peran penyimpanan istilah (seperti Term Store Administrator) untuk akun yang masuk ke target</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Cara menyalin</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} dari {1} dipilih)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Pemetaan pengguna belum diatur. Orang (pembuat, editor, kolom orang, izin) dicari di tenant target berdasarkan alamat email yang sama, dan siapa pun yang tidak ada di sana akan dilewati atau diganti.</value></data>
 </root>

@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 4.1.4  ·  November 2026**
+**Version 4.1.5  ·  November 2026**
 
 ---
 
@@ -250,7 +250,7 @@ Configure how the copy operation should behave:
   - **If newer** — files are copied only when the source is more recently modified than the target. Files already up to date are recorded as Skipped.
 - **Copy versions** — when checked, SharePoint version history is copied alongside each file. Requires versioning to be enabled on the source library.
 - **Parallel copies** — controls how many files (or Migration API jobs) run simultaneously. The default of 8 is a good balance; raise to 8 or 16 on a fast connection for large batches.
-- **Preserve metadata** — when checked, folder Created/Modified dates, Author/Editor, and custom folder color are copied to the target. The **Re-apply folder metadata every run** option underneath it (on by default) controls whether that repair runs for every folder on every run, or only for folders receiving new files this run — turning it off speeds up repeated incremental runs on large libraries where most files are already up to date.
+- **Preserve metadata** — when checked, folder Created/Modified dates, Author/Editor, and custom folder color are copied to the target. The **Re-apply folder metadata every run** option (in Advanced options) (on by default) controls whether that repair runs for every folder on every run, or only for folders receiving new files this run — turning it off speeds up repeated incremental runs on large libraries where most files are already up to date.
 
 When **Copy versions** is enabled, two additional controls appear:
 
@@ -263,7 +263,7 @@ When **Copy versions** is enabled, two additional controls appear:
 
 History is replayed for items the run creates: the item is created from its oldest version, then each later version is written with its own values, Modified date and editor, so the target shows the same version labels (1.0, 2.0, 3.0…). Items that already exist on the target keep their own history and are updated in place as before. Text, number, choice, yes/no and date columns follow the history; people, lookup, taxonomy and link columns copy their current value only. If a version cannot be written, the item row says which part did not copy.
 
-The **Copy mode** selector is always available in Advanced options and controls how files are transferred:
+The **Copy mode** selector sits in the **How to copy** card on the Options step (next to *Preserve metadata*) and controls how files are transferred:
 
 - **Migration API (Recommended)** — version numbers on the target exactly match the source (1.0, 2.0, 3.0…), with the correct Modified date and editor per version, and correct folder creation/modification dates and Created By/Modified By. With Copy Versions off, only the current version is imported via the same fast batched path. Requires Site Collection Administrator on the target site. Hover the ⓘ icon for a summary.
 - **Enhanced REST** — correct dates and editors per version, but version numbers are 2× the source count (e.g. 2, 4, 6 for a 3-version file) due to a SharePoint REST constraint. No admin rights required. Hover the ⓘ icon for a summary.
@@ -278,7 +278,7 @@ In Library and Site scope, untick **Copy files and list items (content)** at the
 
 ### Choosing what structure is copied
 
-In Library and Site scope the Options step has a **Structure to copy** section (open by default, above *Advanced options*). Each checkbox is one kind of structure, all on by default:
+In Library and Site scope the Options step has a **Structure to copy** section (collapsed by default, with a count such as *8 of 10 selected* in its header, below *How to copy* and above *Advanced options*). Each checkbox is one kind of structure, on by default except *Update existing lists* and the term-set option. **Select all** and **Clear all** above the list check or uncheck every box; *Select all* leaves those two alone, *Clear all* unchecks them as well:
 
 ![The Options step of a Libraries and Lists copy with the Structure to copy section](SharePointSmartCopy/Docs/screenshots/04_options_library.png)
 
@@ -294,7 +294,7 @@ In Library and Site scope the Options step has a **Structure to copy** section (
 | **Navigation** (Site scope) | Quick Launch and top navigation |
 | **Site settings** (Site scope) | Description, quick launch, tree view and the other settings that can be written |
 | **Also copy lists that my lists look up** (Library scope) | Adds the custom lists that a selected list's Lookup columns point at |
-| **Copy managed-metadata term sets** (different-tenant mode) | Copies a managed-metadata column's term set to the target term store |
+| **Copy managed-metadata term sets** (different-tenant mode) | Off by default, in a separate *Needs extra permissions* group: copies a managed-metadata column's term set to the target term store. Needs the optional `TermStore.ReadWrite.All` permission |
 
 Columns themselves, projected lookup fields and the data are not switches: columns are always created, and *Copy files and list items (content)* above the section controls the data. The choices are remembered for the next run, and the run summary on the report (and in History) lists the structure that run copied, for example *Structure: Views, List settings, Content types*.
 
@@ -587,7 +587,15 @@ In **Single tenant** mode one sign-in serves every site. If you change the sourc
 
 ### A copied view says "One or more field types are not installed properly"
 
-The view's filter, sort, grouping or totals name a column the target list does not have, or the column exists under a different internal name (a column created by an older copy was named after its display title, for example `Assigned_x0020_to` instead of `AssignedTo`). New copies keep the source's internal names, and when a view is copied the tool matches such a column by its display title and leaves out anything that still has no column. To repair a list that was copied earlier, copy it again with **Update existing lists to match the source** ticked; the results list each view it rewrote or trimmed.
+The view's filter, sort, grouping or totals name a column the target list does not have, or the column exists under a different internal name (a column created by an older copy was named after its display title, for example `Assigned_x0020_to` instead of `AssignedTo`). New copies keep the source's internal names, and when a view is copied the tool matches such a column by its display title and leaves out anything that still has no column. To repair a list that was copied earlier, just copy it again: a view that cannot render is rebuilt from the source even with **Update existing lists to match the source** off (views that work are left alone unless that option is ticked), and the results list each view it rebuilt, rewrote or trimmed.
+
+### A multi-tenant copy asks "No user mapping set"
+
+Authors, editors, person columns and permissions are looked up in the target tenant by the same email address. With no domain swap and no explicit pairs set, anyone who does not exist there is left out or replaced. Choose **Yes** to copy anyway, **No** to open **Identity mapping…** first (the copy does not start), or **Cancel** to go back. The prompt does not appear when a mapping exists or the run writes no people.
+
+### A second Site Copy made "Site Assets (2)"
+
+Older versions only recognized an existing library when SharePoint refused to create a second one. The app now looks first and matches by title and by URL name, so a repeat copy adds to the library that is there. A duplicate made earlier has to be deleted (or its files moved) by hand.
 
 ### Cannot connect to source or target site
 
@@ -644,7 +652,7 @@ A managed-metadata column is bound to a **term set** in the tenant's term store,
 
 - **Same tenant:** the column is recreated with the same term set, and each value is written with its term GUID. Nothing else is needed.
 - **Different tenant:** the term store of the target does not have those GUIDs. The app copies the **term set** (group, set, terms with their hierarchy, labels in every language, synonyms, descriptions and custom properties) to the target through Microsoft Graph, builds a map from every source term to its new term, binds the column to the copy, and writes each value with the new term. The copy is repeatable: a group, set or term that is already at the target (matched by name) is reused. The run report gets a *Managed metadata* line: term sets copied (created / already there) and how many values were remapped or left out.
-- **The switch:** on the Options screen (different-tenant mode) **Copy managed-metadata term sets to the target tenant** is on by default. Turn it off to skip the term store entirely; the column is then reported as not created. The Column mapping dialog says under each managed-metadata column whether its term set will be copied.
+- **The switch:** on the Options screen (different-tenant mode) **Copy managed-metadata term sets to the target tenant** is off by default (it needs the extra permission below). Leave it off to skip the term store entirely; the column is then reported as not created. The Column mapping dialog says under each managed-metadata column whether its term set will be copied.
 - **What it needs:** the optional delegated Microsoft Graph permission `TermStore.ReadWrite.All` on the registration used for the target (admin consent; the source registration needs `TermStore.Read.All`) and a term store role (for example *Term Store Administrator*) for the signed-in target account. The first term set copy may show a consent prompt. Without them the column is **not created** and the report says so, instead of being skipped silently.
 - **Not copied:** term GUIDs themselves (Graph always assigns new ones), tagging availability, deprecation, term order, term store roles and Enterprise Keywords. A term set that belongs to only the source site collection is copied into the target site's own site-collection group.
 - A value whose term is not in the copied set (a term outside the column's branch, or one deleted at the source) is left out and counted.

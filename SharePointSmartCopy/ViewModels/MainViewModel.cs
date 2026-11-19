@@ -169,9 +169,15 @@ public partial class MainViewModel : ObservableObject
 
     // Identity translation only applies to cross-tenant copies; single-tenant always gets the no-op mapper.
     public void ApplyIdentityMapping()
-        => SpService.Identity = IsMultiTenant
+    {
+        SpService.Identity = IsMultiTenant
             ? IdentityMapper.FromSettings(Settings.IdentityMapping)
             : IdentityMapper.None;
+        OnPropertyChanged(nameof(ShowNoUserMappingNote));
+    }
+
+    // The note on the Target step: a multi-tenant copy with no domain swap and no user pairs.
+    public bool ShowNoUserMappingNote => IsMultiTenant && !SpService.Identity.IsActive;
 
     // Bound to the Single tenant / Multi-tenant tabs on the Source step. Switching resets both
     // connections, because routing is built per mode and hosts must be re-registered on connect.

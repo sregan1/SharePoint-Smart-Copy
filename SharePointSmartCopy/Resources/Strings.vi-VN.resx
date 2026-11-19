@@ -1611,4 +1611,26 @@ Sao chép lại sẽ tạo bản sao thứ hai cho mỗi biểu mẫu. Tiếp t�
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Đăng nhập vào tenant đích để liệt kê các môi trường</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Hãy tải môi trường trước</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Không tìm thấy môi trường Power Automate nào cho tài khoản đích. Tài khoản cần có giấy phép Power Automate hoặc quyền truy cập vào một môi trường ở đó. Hãy thử đăng nhập lại bằng tài khoản khác.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Chọn tất cả</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Bỏ chọn tất cả</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Chọn mọi tùy chọn tiêu chuẩn ở trên. Các tùy chọn cần thêm quyền và &quot;Cập nhật danh sách hiện có&quot; được giữ nguyên.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Bỏ chọn mọi tùy chọn cấu trúc, kể cả những tùy chọn cần thêm quyền.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Cần thêm quyền</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Mặc định tắt. Chỉ bật nếu quản trị viên tenant của bạn đã cấp quyền; nếu không, bước này sẽ báo lỗi.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Danh sách hiện có</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint đã từ chối các cột này nên chúng bị loại khỏi mục mới: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Chưa đặt ánh xạ người dùng</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Đây là bản sao nhiều tenant và chưa đặt ánh xạ người dùng. Mọi người (tác giả, người chỉnh sửa, cột người, quyền) được tìm trong tenant đích theo cùng địa chỉ email, và những ai không tồn tại ở đó sẽ bị bỏ qua hoặc thay thế.
+
+Có: vẫn sao chép
+Không: mở ánh xạ người dùng trước
+Hủy: quay lại</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Dạng xem &quot;{0}&quot; trên đích bị hỏng (trỏ đến các cột không tồn tại) và đã được dựng lại từ nguồn.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Quyền cần có để sao chép bộ thuật ngữ:
+• Microsoft Graph, được ủy quyền: TermStore.ReadWrite.All trên đăng ký ứng dụng đích và TermStore.Read.All trên đăng ký ứng dụng nguồn
+• Đã cấp sự đồng ý của quản trị viên cho các quyền đó
+• Một vai trò kho thuật ngữ (chẳng hạn Term Store Administrator) cho tài khoản đăng nhập vào đích</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Cách sao chép</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>(đã chọn {0}/{1})</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Chưa đặt ánh xạ người dùng. Mọi người (tác giả, người chỉnh sửa, cột người, quyền) được tìm trong tenant đích theo cùng địa chỉ email, và những ai không tồn tại ở đó sẽ bị bỏ qua hoặc thay thế.</value></data>
 </root>

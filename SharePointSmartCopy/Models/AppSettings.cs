@@ -108,7 +108,7 @@ public class AppSettings
     public bool      ReapplyFolderMetadataEveryRun { get; set; } = true;
     public bool      CopyNavigation       { get; set; } = true;
     public bool      CopyLookupDependencies { get; set; } = true;
-    public bool      CopyTermSets         { get; set; } = true;
+    public bool      CopyTermSets         { get; set; } = false;
     public bool      CopyViews { get; set; } = true;
     public bool      CopyListSettings { get; set; } = true;
     public bool      CopyContentTypes { get; set; } = true;

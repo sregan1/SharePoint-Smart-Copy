@@ -229,6 +229,7 @@ public partial class MainViewModel : ObservableObject
 
     private async Task StartLibraryCopyAsync()
     {
+        if (!ConfirmUserMapping()) return;
         IsCopying      = true;
         IsCopyComplete = false;
         CopyDuration   = string.Empty;

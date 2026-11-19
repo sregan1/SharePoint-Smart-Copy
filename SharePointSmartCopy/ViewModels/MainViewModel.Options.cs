@@ -136,7 +136,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool _remapPageWebPartUrls = true;
     [ObservableProperty] private bool _copyNavigation = true;
     [ObservableProperty] private bool _copyLookupDependencies = true;
-    [ObservableProperty] private bool _copyTermSets = true;
+    [ObservableProperty] private bool _copyTermSets;
     [ObservableProperty] private bool _copyViews = true;
     [ObservableProperty] private bool _copyListSettings = true;
     [ObservableProperty] private bool _copyContentTypes = true;
@@ -144,6 +144,52 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool _updateExistingStructure;
     [ObservableProperty] private bool _copyTemplates = true;
     [ObservableProperty] private bool _copySiteDefinitions = true;
+
+    // "N of M selected" for the collapsed Structure header: the standard options that apply to this scope. Term sets and
+    // "update existing lists" are opt-ins and not counted.
+    public string StructureCountText
+    {
+        get
+        {
+            var flags = new List<bool> { CopyViews, CopyListSettings, CopyContentTypes, CopyColumnRules, CopyTemplates };
+            if (IsSiteScope) flags.AddRange([CopySiteDefinitions, CopyNavigation, CopySiteSettings]);
+            if (IsLibraryScope) flags.Add(CopyLookupDependencies);
+            return Loc.T("Ui_StructCount", flags.Count(f => f), flags.Count);
+        }
+    }
+
+    private static readonly HashSet<string> StructureFlagNames =
+    [
+        nameof(CopyViews), nameof(CopyListSettings), nameof(CopyContentTypes), nameof(CopyColumnRules), nameof(CopyTemplates),
+        nameof(CopySiteDefinitions), nameof(CopyNavigation), nameof(CopySiteSettings), nameof(CopyLookupDependencies),
+        nameof(IsSiteScope), nameof(IsLibraryScope),
+    ];
+
+    protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName != null && StructureFlagNames.Contains(e.PropertyName)) OnPropertyChanged(nameof(StructureCountText));
+    }
+
+    // "Select all" checks the standard structure options only. Term sets (extra Graph permission) and
+    // "update existing lists" (overwrites target views and settings) are deliberate opt-ins.
+    [RelayCommand]
+    private void SelectAllStructure()
+    {
+        CopyViews = CopyListSettings = CopyContentTypes = CopyColumnRules = CopyTemplates = true;
+        CopyLookupDependencies = true;
+        CopySiteDefinitions = CopyNavigation = CopySiteSettings = true;
+    }
+
+    [RelayCommand]
+    private void SelectNoneStructure()
+    {
+        CopyViews = CopyListSettings = CopyContentTypes = CopyColumnRules = CopyTemplates = false;
+        CopyLookupDependencies = false;
+        CopySiteDefinitions = CopyNavigation = CopySiteSettings = false;
+        CopyTermSets = false;
+        UpdateExistingStructure = false;
+    }
     [ObservableProperty] private bool _copySiteSettings = true;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PermColumnWidth))]

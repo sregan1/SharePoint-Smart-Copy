@@ -78,7 +78,7 @@ Choose from four copy scopes in a step-by-step wizard:
 **Libraries, Lists and Site scopes — structure of new lists and libraries:**
 - **Lookups and managed metadata** — lookup values are matched by the original item (duplicate titles no longer collapse), looked-up lists and child-web lookups are carried along, projected lookup fields are recreated, and a managed-metadata term set can be copied to a different tenant through Microsoft Graph (optional `TermStore.ReadWrite.All` permission); the Column mapping dialog shows what each lookup and managed-metadata column is bound to
 - **Update existing lists** — optional, off by default: a list or library that already exists on the target can be brought in line with the source (same-named views and the default view, list settings, column rules and formatting), and the results mark it as updated
-- **Structure to copy** — the Options step lists every kind of structure that is recreated (views, list settings, content types, column rules, templates, and in Site scope site columns, navigation and settings) with a checkbox for each, and the report records what a run copied
+- **Structure to copy** — Select all / Clear all, the term-set copy (extra permission) off by default in its own group, and the Options step lists every kind of structure that is recreated (views, list settings, content types, column rules, templates, and in Site scope site columns, navigation and settings) with a checkbox for each, and the report records what a run copied
 - **Views** — shared views are recreated with their filter, sorting, grouping, columns and order, paging, totals, formatting and default view; calendar, Gantt, datasheet and board views are created with their own type
 - **List settings** — content approval, check-out, attachments, open in browser, folder creation, search visibility, draft visibility, item-level security, and the list's validation rule
 - **Column validation rules and formatting**
@@ -219,7 +219,7 @@ When copying files with version history enabled, two copy modes are available.
 | User lacks Site Collection Admin rights | Enhanced REST |
 | Need to see per-file progress in real time | Enhanced REST |
 
-The copy mode option appears in **Advanced options** on the Options screen when **Copy versions** is enabled.
+The copy mode option appears in the **How to copy** card on the Options screen when **Copy versions** is enabled.
 
 ### Migration API
 

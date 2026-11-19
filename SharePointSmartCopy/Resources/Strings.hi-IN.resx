@@ -1611,4 +1611,26 @@
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>लक्ष्य टेनेंट के एनवायरमेंट की सूची देखने के लिए उसमें साइन इन करें</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>पहले एनवायरमेंट लोड करें</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>लक्ष्य खाते के लिए कोई Power Automate एनवायरमेंट नहीं मिला। इसके लिए Power Automate लाइसेंस या वहाँ किसी एनवायरमेंट तक पहुँच चाहिए। किसी दूसरे खाते से फिर से साइन इन करके देखें।</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>सभी चुनें</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>सभी साफ़ करें</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>ऊपर के सभी मानक विकल्पों को चुनता है। अतिरिक्त अनुमतियों वाले विकल्प और &quot;मौजूदा सूचियाँ अपडेट करें&quot; जैसे हैं वैसे ही रहते हैं।</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>सभी संरचना विकल्पों का चयन हटाता है, उन विकल्पों का भी जिन्हें अतिरिक्त अनुमतियाँ चाहिए।</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>अतिरिक्त अनुमतियाँ आवश्यक</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>डिफ़ॉल्ट रूप से बंद। इसे तभी चालू करें जब आपके टेनेंट व्यवस्थापक ने अनुमति दी हो; अन्यथा यह चरण त्रुटि दर्शाता है।</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>मौजूदा सूचियाँ</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint ने इन कॉलम को अस्वीकार कर दिया, इसलिए इन्हें नए आइटम से छोड़ दिया गया: {0}।</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>उपयोगकर्ता मैपिंग सेट नहीं है</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>यह मल्टी-टेनेंट कॉपी है और कोई उपयोगकर्ता मैपिंग सेट नहीं है। लोगों (लेखक, संपादक, व्यक्ति कॉलम, अनुमतियाँ) को लक्ष्य टेनेंट में उसी ईमेल पते से खोजा जाता है, और जो वहाँ मौजूद नहीं हैं उन्हें छोड़ दिया जाता है या बदल दिया जाता है।
+
+हाँ: फिर भी कॉपी करें
+नहीं: पहले उपयोगकर्ता मैपिंग खोलें
+रद्द करें: वापस जाएँ</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>व्यू &quot;{0}&quot; लक्ष्य पर टूटा हुआ था (वह ऐसे कॉलम की ओर संकेत करता था जो मौजूद नहीं हैं) और उसे स्रोत से दोबारा बनाया गया।</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>शब्द समूह कॉपी करने के लिए आवश्यक अनुमतियाँ:
+• Microsoft Graph, delegated: लक्ष्य ऐप रजिस्ट्रेशन पर TermStore.ReadWrite.All और स्रोत वाले पर TermStore.Read.All
+• इनके लिए व्यवस्थापक सहमति दी गई हो
+• लक्ष्य में साइन इन किए गए खाते के लिए टर्म स्टोर की भूमिका (जैसे Term Store Administrator)</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>कॉपी कैसे करें</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({1} में से {0} चुने गए)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>कोई उपयोगकर्ता मैपिंग सेट नहीं है। लोगों (लेखक, संपादक, व्यक्ति कॉलम, अनुमतियाँ) को लक्ष्य टेनेंट में उसी ईमेल पते से खोजा जाता है, और जो वहाँ मौजूद नहीं हैं उन्हें छोड़ दिया जाता है या बदल दिया जाता है।</value></data>
 </root>

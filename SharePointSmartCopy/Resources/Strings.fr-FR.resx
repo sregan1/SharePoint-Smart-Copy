@@ -1611,4 +1611,26 @@ Une nouvelle copie crée un second exemplaire de chacun. Continuer ?</value></da
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Connectez-vous au tenant cible pour lister ses environnements</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Chargez d&apos;abord les environnements</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Aucun environnement Power Automate n&apos;a été trouvé pour le compte cible. Il faut une licence Power Automate ou un accès à un environnement sur place. Essayez de vous reconnecter avec un autre compte.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Tout sélectionner</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Tout désélectionner</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Coche toutes les options standard ci-dessus. Les options qui nécessitent des autorisations supplémentaires et « Mettre à jour les listes existantes » restent inchangées.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Décoche toutes les options de structure, y compris celles qui nécessitent des autorisations supplémentaires.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Nécessite des autorisations supplémentaires</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Désactivé par défaut. N&apos;activez cette option que si l&apos;administrateur de votre locataire a accordé l&apos;autorisation ; sinon, cette étape signale une erreur.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Listes existantes</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint a rejeté ces colonnes, elles ont donc été omises du nouvel élément : {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Aucun mappage d&apos;utilisateurs défini</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Il s&apos;agit d&apos;une copie multi-locataire et aucun mappage d&apos;utilisateurs n&apos;est défini. Les personnes (auteurs, éditeurs, colonnes de personnes, autorisations) sont recherchées dans le locataire cible par la même adresse e-mail, et celles qui n&apos;y existent pas sont omises ou remplacées.
+
+Oui : copier quand même
+Non : ouvrir d&apos;abord le mappage d&apos;utilisateurs
+Annuler : revenir en arrière</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>L&apos;affichage « {0} » était endommagé sur la cible (il pointait vers des colonnes inexistantes) et a été recréé à partir de la source.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Autorisations nécessaires pour copier les jeux de termes :
+• Microsoft Graph, déléguée : TermStore.ReadWrite.All sur l&apos;inscription d&apos;application cible et TermStore.Read.All sur celle de la source
+• Consentement administrateur accordé pour ces autorisations
+• Un rôle du magasin de termes (comme Administrateur du magasin de termes) pour le compte connecté à la cible</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Mode de copie</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} sur {1} sélectionné(s))</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Aucun mappage d&apos;utilisateurs n&apos;est défini. Les personnes (auteurs, éditeurs, colonnes de personnes, autorisations) sont recherchées dans le locataire cible par la même adresse e-mail, et celles qui n&apos;y existent pas sont omises ou remplacées.</value></data>
 </root>

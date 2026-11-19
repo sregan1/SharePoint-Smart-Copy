@@ -1611,4 +1611,26 @@ Uudelleen kopioiminen luo jokaisesta toisen kopion. Jatketaanko?</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Kirjaudu kohdevuokraajaan nähdäksesi sen ympäristöt</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Lataa ympäristöt ensin</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>Kohdetilille ei löytynyt Power Automate -ympäristöjä. Tarvitaan Power Automate -lisenssi tai pääsy ympäristöön siellä. Yritä kirjautua uudelleen toisella tilillä.</value></data>
+  <data name="Ui_StructSelectAll" xml:space="preserve"><value>Valitse kaikki</value></data>
+  <data name="Ui_StructSelectNone" xml:space="preserve"><value>Tyhjennä kaikki</value></data>
+  <data name="Ui_StructSelectAllTip" xml:space="preserve"><value>Valitsee kaikki yllä olevat vakiovalinnat. Valinnat, jotka tarvitsevat lisäoikeuksia, ja &quot;Päivitä olemassa olevat luettelot&quot; pysyvät ennallaan.</value></data>
+  <data name="Ui_StructSelectNoneTip" xml:space="preserve"><value>Poistaa kaikkien rakennevalintojen valinnan, myös ne, jotka tarvitsevat lisäoikeuksia.</value></data>
+  <data name="Ui_StructExtraPermsHeader" xml:space="preserve"><value>Tarvitsee lisäoikeuksia</value></data>
+  <data name="Ui_StructExtraPermsNote" xml:space="preserve"><value>Pois käytöstä oletuksena. Ota käyttöön vain, jos vuokraajan järjestelmänvalvoja on myöntänyt oikeuden; muuten tämä vaihe ilmoittaa virheen.</value></data>
+  <data name="Ui_StructModifiesHeader" xml:space="preserve"><value>Olemassa olevat luettelot</value></data>
+  <data name="Svc_Sp_ColumnsRejectedOnCreate" xml:space="preserve"><value>SharePoint hylkäsi nämä sarakkeet, joten ne jätettiin pois uudesta kohteesta: {0}.</value></data>
+  <data name="Dlg_NoUserMappingTitle" xml:space="preserve"><value>Käyttäjien yhdistämistä ei ole määritetty</value></data>
+  <data name="Dlg_NoUserMappingBody" xml:space="preserve"><value>Tämä on vuokraajien välinen kopiointi, eikä käyttäjien yhdistämistä ole määritetty. Henkilöt (tekijät, muokkaajat, henkilösarakkeet, oikeudet) haetaan kohdevuokraajasta samalla sähköpostiosoitteella, ja ne, joita siellä ei ole, jätetään pois tai korvataan.
+
+Kyllä: kopioi silti
+Ei: avaa ensin käyttäjien yhdistäminen
+Peruuta: palaa takaisin</value></data>
+  <data name="Svc_View_Repaired" xml:space="preserve"><value>Näkymä &quot;{0}&quot; oli rikki kohteessa (se viittasi sarakkeisiin, joita ei ole) ja se luotiin uudelleen lähteestä.</value></data>
+  <data name="Ui_StructPermTip" xml:space="preserve"><value>Termijoukkojen kopiointiin tarvittavat oikeudet:
+• Microsoft Graph, delegoitu: TermStore.ReadWrite.All kohdesovelluksen rekisteröinnissä ja TermStore.Read.All lähteen rekisteröinnissä
+• Näille myönnetty järjestelmänvalvojan suostumus
+• Termivaraston rooli (kuten termivaraston järjestelmänvalvoja) kohteeseen kirjautuneelle tilille</value></data>
+  <data name="Ui_HowToCopy" xml:space="preserve"><value>Kopiointitapa</value></data>
+  <data name="Ui_StructCount" xml:space="preserve"><value>({0} / {1} valittu)</value></data>
+  <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Käyttäjien yhdistämistä ei ole määritetty. Henkilöt (tekijät, muokkaajat, henkilösarakkeet, oikeudet) haetaan kohdevuokraajasta samalla sähköpostiosoitteella, ja ne, joita siellä ei ole, jätetään pois tai korvataan.</value></data>
 </root>

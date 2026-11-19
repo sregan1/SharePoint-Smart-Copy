@@ -43,6 +43,66 @@ public class LibraryCopyService(SharePointService spService)
         return [.. results];
     }
 
+    // The title of the target document library that is this one: same title, else same URL name. Null when there is none
+    // (or it cannot be told, in which case creating is still attempted and an "already exists" error is handled as before).
+    private async Task<string?> FindExistingLibraryTitleAsync(string baseUrl, string targetSiteUrl, LibraryDefinition definition)
+    {
+        try
+        {
+            var url = $"{baseUrl}/_api/web/lists?$select=Title,RootFolder/Name&$expand=RootFolder&$filter=BaseTemplate eq 101";
+            using var resp = await spService.SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, targetSiteUrl);
+            if (!resp.IsSuccessStatusCode) return null;
+            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
+            if (!doc.RootElement.TryGetProperty("value", out var lists)) return null;
+            string? byUrl = null;
+            foreach (var l in lists.EnumerateArray())
+            {
+                var title = l.TryGetProperty("Title", out var t) ? t.GetString() : null;
+                if (string.IsNullOrEmpty(title)) continue;
+                if (title.Equals(definition.Title, StringComparison.OrdinalIgnoreCase)) return title;
+                if (byUrl == null && definition.RootFolderName.Length > 0 &&
+                    l.TryGetProperty("RootFolder", out var rf) && rf.ValueKind == JsonValueKind.Object &&
+                    rf.TryGetProperty("Name", out var rn) &&
+                    string.Equals(rn.GetString(), definition.RootFolderName, StringComparison.OrdinalIgnoreCase))
+                    byUrl = title;
+            }
+            return byUrl;
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException) { return null; }
+    }
+
+    // The identifiers of a target library that already exists, as the exception callers use to carry on with it.
+    private async Task<LibraryAlreadyExistsException> ResolveExistingLibraryAsync(string targetSiteId, string targetSiteUrl, string title)
+    {
+        // Tier 1: Graph Drives API (normal libraries)
+        var existing = (await spService.GetLibrariesAsync(targetSiteId, targetSiteUrl))
+            .FirstOrDefault(d => d.Name.Equals(title, StringComparison.OrdinalIgnoreCase));
+        if (existing != null)
+        {
+            var existServerRel = await spService.GetLibraryServerRelativeUrlAsync(existing.DriveId);
+            return new LibraryAlreadyExistsException(existing.DriveId, existServerRel, listId: null);
+        }
+
+        // Tier 2: REST lookup: handles system libraries (Site Assets, Style Library) not in the Drives API
+        var node = await spService.GetLibraryNodeByTitleAsync(targetSiteId, targetSiteUrl, title);
+        if (node != null)
+        {
+            var serverRelUrl = node.ServerRelativePath
+                ?? (string.IsNullOrEmpty(node.DriveId) ? null
+                    : await spService.GetLibraryServerRelativeUrlAsync(node.DriveId));
+            return new LibraryAlreadyExistsException(node.DriveId, serverRelUrl, listId: null);
+        }
+
+        // Exists but unresolvable (e.g. Style Library with no Graph drive)
+        return new LibraryAlreadyExistsException(driveId: null, serverRelativeUrl: null, listId: null);
+    }
+
     // Creates a new document library at the target site matching the given definition.
     // Returns the new library's Graph drive ID and server-relative URL.
     // If a library with the same name already exists, throws LibraryAlreadyExistsException
@@ -53,6 +113,12 @@ public class LibraryCopyService(SharePointService spService)
         IEnumerable<ColumnMapping>? columnMappings = null)
     {
         var baseUrl = targetSiteUrl.TrimEnd('/');
+
+        // Look before creating, so running the copy again adds to the library that is already there instead of making
+        // "Site Assets (2)". Matched by title, or by URL name when the title differs (a renamed or localized library).
+        var existingTitle = await FindExistingLibraryTitleAsync(baseUrl, targetSiteUrl, definition);
+        if (existingTitle != null)
+            throw await ResolveExistingLibraryAsync(targetSiteId, targetSiteUrl, existingTitle);
 
         // Step 1: create the list
         var createBody = JsonSerializer.Serialize(new
@@ -75,29 +141,7 @@ public class LibraryCopyService(SharePointService spService)
         if (!createResp.IsSuccessStatusCode)
         {
             if (IsAlreadyExistsError(createRespBody))
-            {
-                // Tier 1: Graph Drives API (normal libraries)
-                var existing = (await spService.GetLibrariesAsync(targetSiteId, targetSiteUrl))
-                    .FirstOrDefault(d => d.Name.Equals(definition.Title, StringComparison.OrdinalIgnoreCase));
-                if (existing != null)
-                {
-                    var existServerRel = await spService.GetLibraryServerRelativeUrlAsync(existing.DriveId);
-                    throw new LibraryAlreadyExistsException(existing.DriveId, existServerRel, listId: null);
-                }
-
-                // Tier 2: REST lookup — handles system libraries (Site Assets, Style Library) not in Drives API
-                var node = await spService.GetLibraryNodeByTitleAsync(targetSiteId, targetSiteUrl, definition.Title);
-                if (node != null)
-                {
-                    var serverRelUrl = node.ServerRelativePath
-                        ?? (string.IsNullOrEmpty(node.DriveId) ? null
-                            : await spService.GetLibraryServerRelativeUrlAsync(node.DriveId));
-                    throw new LibraryAlreadyExistsException(node.DriveId, serverRelUrl, listId: null);
-                }
-
-                // Exists but unresolvable (e.g. Style Library with no Graph drive)
-                throw new LibraryAlreadyExistsException(driveId: null, serverRelativeUrl: null, listId: null);
-            }
+                throw await ResolveExistingLibraryAsync(targetSiteId, targetSiteUrl, definition.Title);
             throw new Exception(Loc.T("Svc_Lib_CreateLibHttp", definition.Title, (int)createResp.StatusCode, createRespBody[..Math.Min(200, createRespBody.Length)]));
         }
 
@@ -1134,7 +1178,15 @@ public class LibraryCopyService(SharePointService spService)
                 {
                     if (title.Length == 0) continue;
                     if (Bool(v, "PersonalView") || Bool(v, "Hidden")) continue;
-                    if (additive && !update && targetViews.ContainsKey(title)) continue;   // an existing list keeps the views it has
+                    // An existing list keeps the views it has, unless one is broken (an older copy left its filter pointing at
+                    // column names the target does not have, so it will not render): that one is rebuilt from the source.
+                    var repairing = false;
+                    if (additive && !update && targetViews.TryGetValue(title, out var existingViewId))
+                    {
+                        if (!await TargetViewIsBrokenAsync(tgtBase, existingViewId, targetSiteUrl, targetFields)) continue;
+                        repairing = true;
+                        notes.Add(Loc.T("Svc_View_Repaired", title));
+                    }
                     var type =v.TryGetProperty("ViewType", out var vt) ? vt.GetString() : null;
                     // Calendar, Gantt and datasheet views are created with their own view kind (and the view's own XML data);
                     // modern board/calendar views carry a ViewType2 name. Any other kind is skipped with a note.
@@ -1200,7 +1252,7 @@ public class LibraryCopyService(SharePointService spService)
                         using var created = JsonDocument.Parse(addBody);
                         targetViewId = created.RootElement.GetProperty("Id").GetString()!;
                     }
-                    else if (query.Length > 0 || update)
+                    else if (query.Length > 0 || update || repairing)
                         props["ViewQuery"] = query;   // an existing view of that name (the built-in one) takes the source's filter
 
                     var mergeUrl = $"{tgtBase}/views('{targetViewId}')";
@@ -1246,6 +1298,28 @@ public class LibraryCopyService(SharePointService spService)
         {
             notes.Add(Loc.T("Svc_View_ReadFail", Short(ex.Message)));
         }
+    }
+
+    // True when an existing target view cannot render: its filter, sort or grouping names a column the list does not have
+    // (checked from the XML, so it works in any display language), or SharePoint itself says its field types are not installed
+    // properly. Any failure to find out counts as "not broken": a view is never rebuilt on a guess.
+    private async Task<bool> TargetViewIsBrokenAsync(string tgtBase, string viewId, string siteUrl, HashSet<string> targetFields)
+    {
+        try
+        {
+            var (ok, body) = await SpRestAsync(HttpMethod.Get, $"{tgtBase}/views('{viewId}')?$select=ViewQuery", siteUrl);
+            if (ok)
+            {
+                using var d = JsonDocument.Parse(body);
+                var q = d.RootElement.TryGetProperty("ViewQuery", out var qe) ? qe.GetString() ?? "" : "";
+                if (q.Length > 0 && System.Xml.Linq.XElement.Parse("<Q>" + q + "</Q>").Descendants("FieldRef")
+                        .Any(r => (string?)r.Attribute("Name") is { Length: > 0 } n && !targetFields.Contains(n)))
+                    return true;
+            }
+            (ok, body) = await SpRestAsync(HttpMethod.Get, $"{tgtBase}/views('{viewId}')/renderashtml", siteUrl);
+            return ok && body.Contains("not installed properly", StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException) { return false; }
     }
 
     private static bool Bool(JsonElement e, string name) =>
@@ -1652,7 +1726,7 @@ public class LibraryCopyService(SharePointService spService)
     private async Task<LibraryDefinition> ReadListMetadataAsync(string siteUrl, string listId)
     {
         var url = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')" +
-                  "?$select=Title,Description,EnableVersioning,EnableMinorVersions,MajorVersionLimit";
+                  "?$select=Title,Description,EnableVersioning,EnableMinorVersions,MajorVersionLimit,RootFolder/Name&$expand=RootFolder";
 
         using var response = await spService.SendSharePointRequestAsync(token =>
         {
@@ -1672,6 +1746,8 @@ public class LibraryCopyService(SharePointService spService)
         {
             Title               = root.TryGetProperty("Title",               out var t)   ? t.GetString()   ?? "" : "",
             Description         = root.TryGetProperty("Description",         out var d)   ? d.GetString()   ?? "" : "",
+            RootFolderName      = root.TryGetProperty("RootFolder", out var rf) && rf.ValueKind == JsonValueKind.Object &&
+                                  rf.TryGetProperty("Name", out var rfn) ? rfn.GetString() ?? "" : "",
             EnableVersioning    = root.TryGetProperty("EnableVersioning",    out var ev)  && ev.GetBoolean(),
             EnableMinorVersions = root.TryGetProperty("EnableMinorVersions", out var emv) && emv.GetBoolean(),
             MajorVersionLimit   = root.TryGetProperty("MajorVersionLimit",   out var mvl) && mvl.TryGetInt32(out var mvlv) ? mvlv : 0,
