@@ -156,8 +156,9 @@ public partial class SharePointService
         // {name}/LookupId, is a 400, which used to abort the read and "copy" zero items.
         string BuildUrl(bool lookupIdOnly)
         {
-            var selectParts = new List<string> { "Id", "Title", "Created", "Modified" };
-            var expandParts = new List<string>();
+            // Author/Editor are read as emails so the copy can restore Created By / Modified By.
+            var selectParts = new List<string> { "Id", "Title", "Created", "Modified", "Author/EMail", "Author/Name", "Editor/EMail", "Editor/Name" };
+            var expandParts = new List<string> { "Author", "Editor" };
             foreach (var c in cols)
             {
                 if (SpColumnDef.IsUserType(c.FieldType))
@@ -226,9 +227,25 @@ public partial class SharePointService
                 {
                     var item = new Dictionary<string, object?>();
                     foreach (var prop in el.EnumerateObject())
+                    {
+                        if (prop.Name is "Author" or "Editor" && !colsByName.ContainsKey(prop.Name))
+                        {
+                            // Some accounts have no email on the site; their claims login is kept as a same-tenant fallback.
+                            string? email = null, login = null;
+                            if (prop.Value.ValueKind == JsonValueKind.Object)
+                            {
+                                if (prop.Value.TryGetProperty("EMail", out var em) && em.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(em.GetString()))
+                                    email = em.GetString();
+                                if (prop.Value.TryGetProperty("Name", out var nm) && nm.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(nm.GetString()))
+                                    login = nm.GetString();
+                            }
+                            item[prop.Name + "Email"] = email ?? login;
+                            continue;
+                        }
                         item[prop.Name] = colsByName.TryGetValue(prop.Name, out var col)
                             ? ParseFieldValue(prop.Value, col.FieldType, col.LookupShowField)
                             : ExtractJsonValue(prop.Value);
+                    }
                     result.Add(item);
                 }
 
@@ -358,7 +375,7 @@ public partial class SharePointService
         string siteUrl, string listId,
         Dictionary<string, object?> fields,
         string? createdDate, string? modifiedDate,
-        CancellationToken ct = default)
+        CancellationToken ct = default, string? createdByEmail = null, string? modifiedByEmail = null)
     {
         ct.ThrowIfCancellationRequested();
 
@@ -404,7 +421,9 @@ public partial class SharePointService
         }
 
         if (newItemId == null) return (null, null);
-        var fieldError = await ValidateUpdateItemFieldsAsync(siteUrl, listId, newItemId, complexFields, createdDate, modifiedDate, ct);
+        var fieldError = await ValidateUpdateItemFieldsAsync(siteUrl, listId, newItemId, complexFields, createdDate, modifiedDate, ct,
+            await ResolveItemPersonLoginAsync(siteUrl, modifiedByEmail, "editor", ct),
+            await ResolveItemPersonLoginAsync(siteUrl, createdByEmail, "author", ct));
         if (skippedFieldsWarning != null)
             fieldError = fieldError == null ? skippedFieldsWarning : $"{skippedFieldsWarning} {fieldError}";
         return (newItemId, fieldError);
@@ -479,6 +498,31 @@ public partial class SharePointService
         return (simple, complex);
     }
 
+    // Maps a source person's email to the target and resolves their login there. Cross-tenant, a person the target
+    // does not know is recorded for the report and left out (null) so the dates still land.
+    private async Task<string?> ResolveItemPersonLoginAsync(string siteUrl, string? sourceEmail, string role, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(sourceEmail)) return null;
+        // No email on file: the value is the source claims login. Across tenants it cannot be mapped, so the person is
+        // recorded and left out. Same tenant it is registered on the target site first (a person who never visited it is
+        // not in its user list, and naming them would fail the whole write, dates included).
+        if (!sourceEmail.Contains('@') || sourceEmail.StartsWith("i:0", StringComparison.Ordinal))
+        {
+            if (IsCrossTenant) { Unresolved.Record(sourceEmail, sourceEmail, role); return null; }
+            if (await EnsureUserAsync(siteUrl, sourceEmail, ct) != null)
+                return _ensuredLoginCache.TryGetValue($"{siteUrl}|{sourceEmail}", out var ensured) ? ensured : sourceEmail;
+            Unresolved.Record(sourceEmail, sourceEmail, role);
+            return null;
+        }
+        var mapped = Identity.MapEmail(sourceEmail);
+        if (string.IsNullOrEmpty(mapped)) return null;
+        var login = await ResolveTargetLoginAsync(siteUrl, mapped, ct);
+        if (login != null) return login;
+        // Not resolvable at the target: leave the person out (and report it) rather than send a login the site rejects.
+        Unresolved.Record(sourceEmail, mapped, role);
+        return null;
+    }
+
     // Applies complex field values and/or Created/Modified back-fill in one
     // ValidateUpdateListItem call (bNewDocumentUpdate avoids creating a new version).
     // Returns an error string if the write failed, or null on success.
@@ -486,7 +530,7 @@ public partial class SharePointService
         string siteUrl, string listId, string itemId,
         List<(string Name, object Value)> complexFields,
         string? createdDate, string? modifiedDate,
-        CancellationToken ct = default, string? editorLogin = null)
+        CancellationToken ct = default, string? editorLogin = null, string? authorLogin = null)
     {
         var formValues      = new List<object>();
         var submittedFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -541,6 +585,11 @@ public partial class SharePointService
             formValues.Add(new { FieldName = "Editor", FieldValue = JsonSerializer.Serialize(new[] { new { Key = editorLogin } }) });
             submittedFields.Add("Editor");
         }
+        if (!string.IsNullOrEmpty(authorLogin))
+        {
+            formValues.Add(new { FieldName = "Author", FieldValue = JsonSerializer.Serialize(new[] { new { Key = authorLogin } }) });
+            submittedFields.Add("Author");
+        }
         if (formValues.Count == 0) return lookupWarning;
 
         var payload = JsonSerializer.Serialize(new { formValues, bNewDocumentUpdate = true });
@@ -593,7 +642,7 @@ public partial class SharePointService
         string siteUrl, string listId, string itemId,
         Dictionary<string, object?> fields,
         string? createdDate, string? modifiedDate,
-        CancellationToken ct = default)
+        CancellationToken ct = default, string? createdByEmail = null, string? modifiedByEmail = null)
     {
         ct.ThrowIfCancellationRequested();
 
@@ -619,7 +668,9 @@ public partial class SharePointService
             throw new HttpRequestException(Loc.T("Svc_Sp_UpdateItemFailed", (int)resp.StatusCode, resp.ReasonPhrase, errBody));
         }
 
-        return await ValidateUpdateItemFieldsAsync(siteUrl, listId, itemId, complexFields, createdDate, modifiedDate, ct);
+        return await ValidateUpdateItemFieldsAsync(siteUrl, listId, itemId, complexFields, createdDate, modifiedDate, ct,
+            await ResolveItemPersonLoginAsync(siteUrl, modifiedByEmail, "editor", ct),
+            await ResolveItemPersonLoginAsync(siteUrl, createdByEmail, "author", ct));
     }
 
     // ── List item version history ─────────────────────────────────────────────────────────────
@@ -698,7 +749,7 @@ public partial class SharePointService
     public async Task<(string? Id, string? Warning, int Copied)> CreateListItemWithHistoryAsync(
         string siteUrl, string listId, IReadOnlyList<ListItemVersion> versions,
         Dictionary<string, object?> finalFields, string? createdDate, string? modifiedDate,
-        bool preserveMetadata, CancellationToken ct = default)
+        bool preserveMetadata, CancellationToken ct = default, string? createdByEmail = null)
     {
         if (versions.Count == 0) return (null, null, 0);
         var warnings = new List<string>();
@@ -843,7 +894,8 @@ public partial class SharePointService
 
         var (_, complex) = SplitComplexFields(finalFields);
         var finalError = await ValidateUpdateItemFieldsAsync(siteUrl, listId, itemId!, complex,
-            preserveMetadata ? createdDate : null, preserveMetadata ? modifiedDate : null, ct, lastEditorLogin);
+            preserveMetadata ? createdDate : null, preserveMetadata ? modifiedDate : null, ct, lastEditorLogin,
+            preserveMetadata ? await ResolveItemPersonLoginAsync(siteUrl, createdByEmail, "author", ct) : null);
         if (finalError != null) warnings.Add(finalError);
         return (itemId, warnings.Count > 0 ? string.Join("; ", warnings) : null, copied);
     }

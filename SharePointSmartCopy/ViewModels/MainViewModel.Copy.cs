@@ -995,6 +995,8 @@ public partial class MainViewModel : ObservableObject
 
             string? createdDate  = PreserveMetadata && item.TryGetValue("Created",  out var cd) ? cd?.ToString() : null;
             string? modifiedDate = PreserveMetadata && item.TryGetValue("Modified", out var md) ? md?.ToString() : null;
+            string? createdByEmail  = PreserveMetadata && item.TryGetValue("AuthorEmail", out var ae) ? ae?.ToString() : null;
+            string? modifiedByEmail = PreserveMetadata && item.TryGetValue("EditorEmail", out var ee) ? ee?.ToString() : null;
 
             // A blank/missing source title matches the target's blank-title items (stored under "").
             (string Id, DateTimeOffset? Modified)? existing =
@@ -1030,7 +1032,7 @@ public partial class MainViewModel : ObservableObject
                     var updateFieldError = await SpService.UpdateListItemAsync(
                         TargetUrl.TrimEnd('/'), targetListId, existing.Value.Id,
                         fields, createdDate, modifiedDate,
-                        _copyCts.Token);
+                        _copyCts.Token, createdByEmail, modifiedByEmail);
                     itemResult.Status       = CopyStatus.Success;
                     itemResult.ErrorMessage = updateFieldError != null ? Loc.T("VM_UpdatedFieldWarning", updateFieldError) : Loc.T("VM_Updated");
                 }
@@ -1054,7 +1056,7 @@ public partial class MainViewModel : ObservableObject
                                 var mappedVersions = srcVersions.Select(sv => sv with { Fields = MapToTarget(sv.Fields) }).ToList();
                                 var (historyId, historyIssues, historyCopied) = await SpService.CreateListItemWithHistoryAsync(
                                     TargetUrl.TrimEnd('/'), targetListId, mappedVersions, fields,
-                                    createdDate, modifiedDate, PreserveMetadata, _copyCts.Token);
+                                    createdDate, modifiedDate, PreserveMetadata, _copyCts.Token, createdByEmail);
                                 if (historyId != null)
                                 {
                                     newItemId = historyId;
@@ -1072,7 +1074,7 @@ public partial class MainViewModel : ObservableObject
                         (newItemId, createFieldError) = await SpService.CreateListItemAsync(
                             TargetUrl.TrimEnd('/'), targetListId,
                             fields, createdDate, modifiedDate,
-                            _copyCts.Token);
+                            _copyCts.Token, createdByEmail, modifiedByEmail);
                     resolvedTargetItemId    = newItemId;
                     itemResult.Status       = CopyStatus.Success;
                     itemResult.ErrorMessage = replayed

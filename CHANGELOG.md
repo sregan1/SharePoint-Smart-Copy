@@ -4,6 +4,14 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 4.1.6 — 2026-11-19
+
+### Fixed
+
+- **List items keep their Created By and Modified By** — with *Preserve metadata* on, a copied list item had its Created and Modified dates restored but its Author and Editor left as the account running the copy, because the list-item path never read or wrote those two people fields (libraries and folders already did). The source item's creator and last editor are now read, resolved on the target site and written in the same call as the dates, for new items, for existing items that are updated, and for the final pass of a version-history replay. A person the target site has never seen is added to it first (naming one that is not in its user list failed the whole write, dates included). Someone who cannot be resolved, such as a user that does not exist in a different tenant, is left out and listed in the unresolved-users report while the dates still land. An account with no email on the site is matched by its login. Confirmed on a live tenant by copying an item attributed to a second user, both as a new item and as an update of an existing one.
+
+---
+
 ## 4.1.5 — 2026-11-18
 
 ### Added
