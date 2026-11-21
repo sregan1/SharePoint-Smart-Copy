@@ -140,7 +140,8 @@ public class AuthService
             throw new InvalidOperationException(Loc.T("Svc_Auth_NotConfiguredSignIn"));
 
         var uri    = new Uri(siteUrl.TrimEnd('/'));
-        var scopes = new[] { $"{uri.Scheme}://{uri.Host}/{spScope}" };
+        // Always https: the scheme of a typed http:// address made every SharePoint call fail with AADSTS500011.
+        var scopes = new[] { $"https://{uri.Host}/{spScope}" };
         var cacheKey = scopes[0];
 
         if (!forceRefresh && TryGetCachedToken(cacheKey, out var fastToken))

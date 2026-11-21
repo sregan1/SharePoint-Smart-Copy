@@ -67,17 +67,118 @@ public partial class SharePointService
         item ??= await Graph.Drives[driveId].Items[itemId].GetAsync(cfg =>
             cfg.QueryParameters.Select = select);
 
+        // A person with no email and no UPN in Graph's identity (an account without a mailbox) would be dropped here and the copy
+        // stamped with the running account. SharePoint itself still knows their login: learn it once per person (see
+        // LearnIdentitiesAsync) and GetIdentityEmail then returns it everywhere.
+        await LearnIdentitiesAsync(item?.CreatedBy?.User, item?.LastModifiedBy?.User, driveId, itemId);
+        var createdByEmail  = GetIdentityEmail(item?.CreatedBy?.User);
+        var modifiedByEmail = GetIdentityEmail(item?.LastModifiedBy?.User);
+        // (A person Graph gives no id for cannot be remembered, so it is not looked up: a per-item read here would be the one
+        // cost that grows with the file count. Such a person is simply not restored.)
+
         return new FileMetadata
         {
             CreatedDateTime  = item?.CreatedDateTime,
-            CreatedByEmail   = GetIdentityEmail(item?.CreatedBy?.User),
+            CreatedByEmail   = createdByEmail,
             ModifiedDateTime = item?.LastModifiedDateTime,
-            ModifiedByEmail  = GetIdentityEmail(item?.LastModifiedBy?.User),
+            ModifiedByEmail  = modifiedByEmail,
             Size             = item?.Size,
             ColorTag         = colorTag,
             ColorHex         = colorHex,
             ContentTypeName  = contentTypeName,
         };
+    }
+
+    // Graph's createdBy/lastModifiedBy identity carries no email and no UPN for an account without a mailbox, so the regular
+    // engine used to drop the person and the copy was stamped with the running account. SharePoint still holds their login
+    // (i:0#.f|membership|upn). This learns it ONCE per person, keyed by their Graph user id: the first item that shows an
+    // unknown person costs one read of that item's Author/Editor, every later item (and every other call site, through
+    // GetIdentityEmail, which consults this table) costs a dictionary lookup. A failure is remembered briefly so a person
+    // with no usable login (a deleted account still has one; a system account does not) is not asked about once per item.
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, string> IdentityUpnById = new(StringComparer.OrdinalIgnoreCase);
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, DateTimeOffset> _identityLookupFailedUntil = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly TimeSpan IdentityLookupFailureMemory = TimeSpan.FromMinutes(5);
+
+    internal static string? UpnFromLogin(string? login) =>
+        login != null && login.StartsWith("i:0#.f|membership|", StringComparison.OrdinalIgnoreCase) ? login["i:0#.f|membership|".Length..] : null;
+
+    internal async Task LearnIdentitiesAsync(Microsoft.Graph.Models.Identity? created, Microsoft.Graph.Models.Identity? modified, string driveId, string itemId)
+    {
+        bool NeedsLookup(Microsoft.Graph.Models.Identity? i) =>
+            i?.Id != null && GetIdentityEmail(i) == null &&
+            !(_identityLookupFailedUntil.TryGetValue(i.Id, out var until) && until > DateTimeOffset.UtcNow);
+        var needCreated  = NeedsLookup(created);
+        // the same person as the creator is covered by the creator's lookup
+        var needModified = NeedsLookup(modified) && !(needCreated && string.Equals(created!.Id, modified!.Id, StringComparison.OrdinalIgnoreCase));
+        if (!needCreated && !needModified) return;
+
+        // Several walkers can meet the same new person at once. The first to register a person does the one read; the others wait
+        // for it instead of firing their own.
+        var done = new TaskCompletionSource();
+        var waits = new List<Task>();
+        var mineCreated = false; var mineModified = false;
+        if (needCreated)
+        {
+            if (_identityLookupsInFlight.TryAdd(created!.Id!, done.Task)) mineCreated = true;
+            else if (_identityLookupsInFlight.TryGetValue(created.Id!, out var other)) waits.Add(other);
+        }
+        if (needModified)
+        {
+            if (_identityLookupsInFlight.TryAdd(modified!.Id!, done.Task)) mineModified = true;
+            else if (_identityLookupsInFlight.TryGetValue(modified.Id!, out var other)) waits.Add(other);
+        }
+
+        if (mineCreated || mineModified)
+        {
+            try
+            {
+                var (author, editor) = await GetItemPersonLoginsAsync(driveId, itemId);
+                void Store(Microsoft.Graph.Models.Identity? who, string? login)
+                {
+                    var upn = UpnFromLogin(login);
+                    if (upn != null) IdentityUpnById[who!.Id!] = upn;
+                    else _identityLookupFailedUntil[who!.Id!] = DateTimeOffset.UtcNow + IdentityLookupFailureMemory;
+                }
+                if (mineCreated) Store(created, author);
+                if (mineModified) Store(modified, editor);
+            }
+            finally
+            {
+                if (mineCreated) _identityLookupsInFlight.TryRemove(created!.Id!, out _);
+                if (mineModified) _identityLookupsInFlight.TryRemove(modified!.Id!, out _);
+                done.TrySetResult();
+            }
+        }
+        if (waits.Count > 0) await Task.WhenAll(waits);
+    }
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Task> _identityLookupsInFlight = new(StringComparer.OrdinalIgnoreCase);
+
+    // The claims logins (i:0#.f|membership|upn) SharePoint holds for an item's Author and Editor. Null for either when it is
+    // not an ordinary user (a system account) or the read fails; never throws.
+    private async Task<(string? Author, string? Editor)> GetItemPersonLoginsAsync(string driveId, string itemId)
+    {
+        try
+        {
+            var ids = await GetSharePointIdsAsync(driveId, itemId);
+            if (ids == null) return (null, null);
+            var (siteUrl, listId, listItemId) = ids.Value;
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get,
+                    $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({listItemId})?$select=Author/Name,Editor/Name&$expand=Author,Editor");
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl);
+            if (!resp.IsSuccessStatusCode) return (null, null);
+            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
+            string? Login(string field) =>
+                doc.RootElement.TryGetProperty(field, out var p) && p.ValueKind == JsonValueKind.Object &&
+                p.TryGetProperty("Name", out var n) && n.GetString() is { } name &&
+                name.StartsWith("i:0#.f|membership|", StringComparison.OrdinalIgnoreCase) ? name : null;
+            return (Login("Author"), Login("Editor"));
+        }
+        catch { return (null, null); }
     }
 
     // Fetches each SOURCE folder's created/modified metadata for the migration manifest (folders
@@ -133,6 +234,7 @@ public partial class SharePointService
                 cfg.QueryParameters.Select = rootSelect, cancellationToken: ct);
             if (root != null)
             {
+                await LearnIdentitiesAsync(root.CreatedBy?.User, root.LastModifiedBy?.User, rootDriveId, "root");
                 result[string.Empty] = new FileMetadata
                 {
                     CreatedDateTime  = root.CreatedDateTime,
@@ -410,7 +512,7 @@ public partial class SharePointService
     public async Task<string?> CopyFolderNativeAsync(
         string sourceDriveId, string sourceItemId,
         string targetDriveId, string targetParentItemId, string name,
-        CancellationToken ct = default)
+        CancellationToken ct = default, bool includeVersionHistory = false)
     {
         try
         {
@@ -421,29 +523,47 @@ public partial class SharePointService
             if (!ReferenceEquals(sourceAuth, _router.ForDrive(targetDriveId)))
                 return Loc.T("Svc_Sp_NativeCopyCrossTenant");
 
-            var copyBody = JsonSerializer.Serialize(new
+            // With includeVersionHistory the request carries includeAllVersionHistory and NO name: Graph ignores the flag when
+            // a name is passed (a documented known issue), and the copy keeps the source name anyway — every caller passes the
+            // source item's own name. Without the flag only the newest version of each file is copied. If Graph rejects the
+            // flag the copy is retried the old way, so a version-history request can never turn a working copy into a failure.
+            string? monitorUrl = null;
+            var attempts = includeVersionHistory ? new[] { true, false } : new[] { false };
+            for (var i = 0; i < attempts.Length; i++)
             {
-                parentReference = new { driveId = targetDriveId, id = targetParentItemId },
-                name
-            });
-            var req = new HttpRequestMessage(HttpMethod.Post, $"{GraphBaseUrl}/drives/{sourceDriveId}/items/{sourceItemId}/copy")
-            {
-                Content = new System.Net.Http.StringContent(copyBody, System.Text.Encoding.UTF8, "application/json")
-            };
-            var batch = new BatchRequestContentCollection(Graph);
-            var stepId = batch.AddBatchRequestStep(req);
-            BatchResponseContentCollection batchResponse;
-            using (_router.Scope(sourceAuth))
-                batchResponse = await Graph.Batch.PostAsync(batch, ct);
-            using var http = await batchResponse.GetResponseByIdAsync(stepId);
+                var withHistory = attempts[i];
+                var copyBody = withHistory
+                    ? JsonSerializer.Serialize(new
+                    {
+                        parentReference = new { driveId = targetDriveId, id = targetParentItemId },
+                        includeAllVersionHistory = true
+                    })
+                    : JsonSerializer.Serialize(new
+                    {
+                        parentReference = new { driveId = targetDriveId, id = targetParentItemId },
+                        name
+                    });
+                var req = new HttpRequestMessage(HttpMethod.Post, $"{GraphBaseUrl}/drives/{sourceDriveId}/items/{sourceItemId}/copy")
+                {
+                    Content = new System.Net.Http.StringContent(copyBody, System.Text.Encoding.UTF8, "application/json")
+                };
+                var batch = new BatchRequestContentCollection(Graph);
+                var stepId = batch.AddBatchRequestStep(req);
+                BatchResponseContentCollection batchResponse;
+                using (_router.Scope(sourceAuth))
+                    batchResponse = await Graph.Batch.PostAsync(batch, ct);
+                using var http = await batchResponse.GetResponseByIdAsync(stepId);
 
-            if (http.StatusCode != System.Net.HttpStatusCode.Accepted)
-            {
+                if (http.StatusCode == System.Net.HttpStatusCode.Accepted)
+                {
+                    monitorUrl = http.Headers.Location?.ToString();
+                    break;
+                }
                 var body = await http.Content.ReadAsStringAsync(ct);
-                return Loc.T("Svc_Sp_NativeCopyFailedTo", (int)http.StatusCode, body[..Math.Min(body.Length, 300)]);
+                if (i == attempts.Length - 1)
+                    return Loc.T("Svc_Sp_NativeCopyFailedTo", (int)http.StatusCode, body[..Math.Min(body.Length, 300)]);
             }
 
-            var monitorUrl = http.Headers.Location?.ToString();
             if (string.IsNullOrEmpty(monitorUrl))
                 return Loc.T("Svc_Sp_NativeCopyStartedBut");
 
@@ -492,13 +612,155 @@ public partial class SharePointService
         }
     }
 
+    // A Document Set can only be copied into a library that has its content type; otherwise Graph fails the copy with
+    // e_depL_COPYMOVE_DOCSETCT_NOT_ADDED_TO_TARGET_LIST. For a Document Set source this makes sure the target library has the
+    // type (same name, derived from the Document Set base type), adding it when it is missing: content types are switched on for
+    // the library, the Document Sets site feature is activated, and the type is added from the site's available types. Returns
+    // null when the copy can go ahead (not a Document Set, the type is there, or it could not be checked, which must not block a
+    // copy that may well work) and a message when the type is missing and could not be added.
+    public async Task<string?> EnsureDocumentSetContentTypeAsync(
+        string sourceDriveId, string sourceItemId, string targetSiteUrl, string targetDriveId, CancellationToken ct = default)
+    {
+        try
+        {
+            var item = await Graph.Drives[sourceDriveId].Items[sourceItemId].GetAsync(cfg =>
+            {
+                cfg.QueryParameters.Select = ["id"];
+                cfg.QueryParameters.Expand = ["listItem($select=contentType)"];
+            }, ct);
+            var sourceCtId = item?.ListItem?.ContentType?.Id;
+            if (sourceCtId == null || !sourceCtId.StartsWith(DocumentSetContentTypeIdPrefix, StringComparison.OrdinalIgnoreCase)) return null;
+            var ctName = item?.ListItem?.ContentType?.Name ?? "Document Set";
+
+            var listId = await GetListIdFromDriveAsync(targetDriveId);
+            if (string.IsNullOrEmpty(listId)) return null;
+            var site = targetSiteUrl.TrimEnd('/');
+            var listUrl = $"{site}/_api/web/lists('{listId}')";
+
+            async Task<List<(string Id, string Name)>> ReadTypesAsync()
+            {
+                using var resp = await SendSharePointRequestAsync(token =>
+                {
+                    var r = new HttpRequestMessage(HttpMethod.Get, $"{listUrl}/contenttypes?$select=StringId,Name");
+                    r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                    return r;
+                }, site, cancellationToken: ct);
+                if (!resp.IsSuccessStatusCode) throw new HttpRequestException($"HTTP {(int)resp.StatusCode}");
+                using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync(ct));
+                return doc.RootElement.GetProperty("value").EnumerateArray()
+                    .Select(c => (Id: c.GetProperty("StringId").GetString() ?? "", Name: c.GetProperty("Name").GetString() ?? "")).ToList();
+            }
+            bool HasType(List<(string Id, string Name)> types) =>
+                types.Any(t => t.Name.Equals(ctName, StringComparison.OrdinalIgnoreCase) &&
+                               t.Id.StartsWith(DocumentSetContentTypeIdPrefix, StringComparison.OrdinalIgnoreCase));
+
+            if (HasType(await ReadTypesAsync())) return null;
+
+            async Task<(int Status, string Body)> PostAsync(string url, string json, string? method = null)
+            {
+                using var resp = await SendSharePointRequestAsync(token =>
+                {
+                    var r = new HttpRequestMessage(HttpMethod.Post, url);
+                    r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                    if (method != null) { r.Headers.Add("X-HTTP-Method", method); r.Headers.Add("If-Match", "*"); }
+                    r.Content = new System.Net.Http.StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                    return r;
+                }, site, cancellationToken: ct);
+                return ((int)resp.StatusCode, await resp.Content.ReadAsStringAsync(ct));
+            }
+
+            await PostAsync(listUrl, "{\"ContentTypesEnabled\":true}", "MERGE");
+            // the Document Sets site collection feature; an "already active" error is expected and harmless
+            await PostAsync($"{site}/_api/site/features/add", "{\"featureId\":\"3bae86a2-776d-499d-9db8-fa4cdc7884f8\",\"force\":false}");
+            // a library-level type id is the site type's id plus "00" and a 32-digit GUID; the site type is what gets added
+            var siteTypeId = System.Text.RegularExpressions.Regex.Replace(sourceCtId, "00[0-9A-Fa-f]{32}$", "");
+            var (addStatus, addBody) = await PostAsync($"{listUrl}/contenttypes/addavailablecontenttype(contentTypeId='{siteTypeId}')", "{}");
+            if (addStatus >= 300 && !siteTypeId.Equals(DocumentSetContentTypeIdPrefix, StringComparison.OrdinalIgnoreCase) &&
+                ctName.Equals("Document Set", StringComparison.OrdinalIgnoreCase))
+                (addStatus, addBody) = await PostAsync($"{listUrl}/contenttypes/addavailablecontenttype(contentTypeId='{DocumentSetContentTypeIdPrefix}')", "{}");
+
+            if (HasType(await ReadTypesAsync())) return null;
+            return Loc.T("Svc_DocSetCtMissing", ctName, addStatus >= 300 ? $"HTTP {addStatus}" : "not available on the target site");
+        }
+        catch (OperationCanceledException) { throw; }
+        catch { return null; }
+    }
+
+    // A native copy (see CopyFolderNativeAsync) carries the files and, with version history, their versions, but not the
+    // source's Created/Modified dates or Created By/Modified By: the copy is stamped with the copy time and the running
+    // account, for the folder AND everything inside it. Nothing else reaches into a special folder (the scan stops at it),
+    // so this walks the source and the copy side by side, matches items by name, and applies each source item's metadata to
+    // its copy with the same writer the other copy paths use. Children are done before their folder, because writing an item
+    // can move its parent's Modified. Returns one problem line per item that could not be restored (empty when all were).
+    public async Task<List<string>> RestoreNativeCopyMetadataAsync(
+        string sourceDriveId, string sourceItemId, string targetDriveId, string targetParentItemId, string name,
+        int maxParallel, CancellationToken ct = default)
+    {
+        var problems = new System.Collections.Concurrent.ConcurrentBag<string>();
+
+        string? targetId;
+        try
+        {
+            var copy = await Graph.Drives[targetDriveId].Items[targetParentItemId]
+                .ItemWithPath(Uri.EscapeDataString(name))
+                .GetAsync(cfg => cfg.QueryParameters.Select = ["id"], ct);
+            targetId = copy?.Id;
+        }
+        catch (Microsoft.Graph.Models.ODataErrors.ODataError ex) when (ex.ResponseStatusCode == 404) { targetId = null; }
+        if (targetId == null) return [Loc.T("Svc_NativeMetaTargetMissing", name)];
+
+        async Task ApplyAsync(string label, string srcId, string tgtId)
+        {
+            try
+            {
+                var meta = await GetFileMetadataAsync(sourceDriveId, srcId);
+                var error = await ApplyFileMetadataAsync(targetDriveId, tgtId, "", meta);
+                if (error != null) problems.Add($"{label}: {error}");
+            }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex) { problems.Add($"{label}: {ex.Message}"); }
+        }
+
+        async Task WalkAsync(string srcFolderId, string tgtFolderId, string path)
+        {
+            ct.ThrowIfCancellationRequested();
+            var srcKids = await GetChildrenAsync(sourceDriveId, srcFolderId, "", "", false);
+            var tgtKids = (await GetChildrenAsync(targetDriveId, tgtFolderId, "", "", false))
+                .GroupBy(k => k.Name, StringComparer.OrdinalIgnoreCase).ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+            var pairs = new List<(SharePointNode Src, SharePointNode Tgt)>();
+            foreach (var s in srcKids)
+            {
+                if (tgtKids.TryGetValue(s.Name, out var t)) pairs.Add((s, t));
+                else problems.Add($"{path}/{s.Name}: not found in the copy");
+            }
+            await Parallel.ForEachAsync(pairs, new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, Math.Min(maxParallel, 4)), CancellationToken = ct }, async (p, token) =>
+            {
+                var label = $"{path}/{p.Src.Name}";
+                if (p.Src.Type == NodeType.Folder && p.Tgt.Type == NodeType.Folder)
+                    await WalkAsync(p.Src.Id, p.Tgt.Id, label);
+                await ApplyAsync(label, p.Src.Id, p.Tgt.Id);
+            });
+        }
+
+        await WalkAsync(sourceItemId, targetId, name);
+        await ApplyAsync(name, sourceItemId, targetId);
+        return problems.ToList();
+    }
+
     public static string? GetIdentityEmail(Microsoft.Graph.Models.Identity? identity)
     {
-        if (identity?.AdditionalData == null) return null;
-        if (identity.AdditionalData.TryGetValue("email", out var email) && email != null)
-            return email.ToString();
-        if (identity.AdditionalData.TryGetValue("userPrincipalName", out var upn) && upn != null)
-            return upn.ToString();
+        if (identity == null) return null;
+        if (identity.AdditionalData != null)
+        {
+            if (identity.AdditionalData.TryGetValue("email", out var email) && email != null)
+                return email.ToString();
+            if (identity.AdditionalData.TryGetValue("userPrincipalName", out var upn) && upn != null)
+                return upn.ToString();
+        }
+        // an account without a mailbox: its UPN, learned from SharePoint earlier in the run (see LearnIdentitiesAsync)
+        if (identity.Id != null && IdentityUpnById.TryGetValue(identity.Id, out var learned)) return learned;
         return null;
     }
 
@@ -747,7 +1009,7 @@ public partial class SharePointService
             {
                 skipped.Add(Loc.T("Svc_Sp_AuthorNotAResolvable", createdByEmail));
                 resolvedCreatedBy = null;
-                if (IsCrossTenant) Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
+                if (IsCrossTenant || createdByEmail.Contains('|')) Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
             }
         }
         if (!string.IsNullOrEmpty(modifiedByEmail))
@@ -764,7 +1026,7 @@ public partial class SharePointService
                 {
                     skipped.Add(Loc.T("Svc_Sp_EditorNotAResolvable", modifiedByEmail));
                     resolvedModifiedBy = null;
-                    if (IsCrossTenant) Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
+                    if (IsCrossTenant || modifiedByEmail.Contains('|')) Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
                 }
             }
         }
@@ -1230,7 +1492,7 @@ public partial class SharePointService
             createdLogin = await ResolveTargetLoginAsync(siteUrl, createdByEmail);
             if (createdLogin == null)
             {
-                if (IsCrossTenant) Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
+                if (IsCrossTenant || createdByEmail.Contains('|')) Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
                 else createdLogin = $"i:0#.f|membership|{createdByEmail}";
             }
         }
@@ -1239,7 +1501,7 @@ public partial class SharePointService
             modifiedLogin = await ResolveTargetLoginAsync(siteUrl, modifiedByEmail);
             if (modifiedLogin == null)
             {
-                if (IsCrossTenant) Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
+                if (IsCrossTenant || modifiedByEmail.Contains('|')) Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
                 else modifiedLogin = $"i:0#.f|membership|{modifiedByEmail}";
             }
         }
@@ -1247,10 +1509,12 @@ public partial class SharePointService
             values.Add(("Modified", await FormatAsSiteLocalDateStringAsync(siteUrl, modified.Value)));
         if (created.HasValue)
             values.Add(("Created", await FormatAsSiteLocalDateStringAsync(siteUrl, created.Value)));
+        // A person column's documented formValues shape is a JSON array of {"Key": login}. The plain login string is accepted
+        // without an error but SharePoint then stamps the calling account (seen on list items and on Document Set contents).
         if (!string.IsNullOrEmpty(modifiedLogin))
-            values.Add(("Editor", modifiedLogin));
+            values.Add(("Editor", JsonSerializer.Serialize(new[] { new { Key = modifiedLogin } })));
         if (!string.IsNullOrEmpty(createdLogin))
-            values.Add(("Author", createdLogin));
+            values.Add(("Author", JsonSerializer.Serialize(new[] { new { Key = createdLogin } })));
         return values;
     }
 

@@ -178,7 +178,13 @@ public partial class SharePointService
     // user list by email. Null when the person cannot be found.
     internal async Task<string?> ResolveTargetLoginAsync(string siteUrl, string email, CancellationToken ct = default)
     {
-        if (email.Contains('|')) return email; // already a claims login
+        // Already a claims login: still register it on the target site first (a person who never visited it is not in its user
+        // list, and naming one makes the whole write fail), and use the login the site itself reports.
+        if (email.Contains('|'))
+        {
+            if (await EnsureUserAsync(siteUrl, email, ct) == null) return null;
+            return _ensuredLoginCache.TryGetValue($"{siteUrl}|{email}", out var knownLogin) ? knownLogin : email;
+        }
         var claims = $"i:0#.f|membership|{email}";
         var key    = $"{siteUrl}|{claims}";
         if (await EnsureUserAsync(siteUrl, claims, ct) != null)

@@ -722,6 +722,10 @@ public partial class SharePointService
             return email.GetString();
         if (user.TryGetProperty("userPrincipalName", out var upn) && upn.ValueKind == JsonValueKind.String)
             return upn.GetString();
+        // an account without a mailbox: its UPN, learned from SharePoint earlier in the run (see LearnIdentitiesAsync)
+        if (user.TryGetProperty("id", out var id) && id.ValueKind == JsonValueKind.String && id.GetString() is { } userId &&
+            IdentityUpnById.TryGetValue(userId, out var learned))
+            return learned;
         return null;
     }
 

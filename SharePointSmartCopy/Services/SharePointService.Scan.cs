@@ -338,6 +338,8 @@ public partial class SharePointService
             if (item.Id == null || item.Name == null) continue;
             if (IsSelfRootEntry(item) || excludedIds.Contains(item.Id)) continue;
 
+            // an author/editor with no email: learn their login from SharePoint once (a lookup afterwards), see LearnIdentitiesAsync
+            await LearnIdentitiesAsync(item.CreatedBy?.User, item.LastModifiedBy?.User, driveId, item.Id);
             var relativePath = FullRelativePath(item);
 
             if (IsFolderLike(item))
@@ -403,6 +405,8 @@ public partial class SharePointService
         {
             ct.ThrowIfCancellationRequested();
             if (item.Id == null || item.Name == null) continue;
+            // an author/editor with no email: learn their login from SharePoint once (a lookup afterwards), see LearnIdentitiesAsync
+            await LearnIdentitiesAsync(item.CreatedBy?.User, item.LastModifiedBy?.User, driveId, item.Id);
             var childPath = string.IsNullOrEmpty(basePath) ? item.Name : $"{basePath}/{item.Name}";
             if (IsFolderLike(item))
             {
@@ -498,6 +502,8 @@ public partial class SharePointService
         {
             ct.ThrowIfCancellationRequested();
             if (item.Id == null || item.Name == null) continue;
+            // an author/editor with no email: learn their login from SharePoint once (a lookup afterwards), see LearnIdentitiesAsync
+            await LearnIdentitiesAsync(item.CreatedBy?.User, item.LastModifiedBy?.User, driveId, item.Id);
             var childPath = string.IsNullOrEmpty(basePath) ? item.Name : $"{basePath}/{item.Name}";
             if (IsFolderLike(item))
             {

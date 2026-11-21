@@ -2,7 +2,7 @@
 
 *Copy files and folders between SharePoint Online sites*
 
-**Version 4.1.6  ·  November 2026**
+**Version 4.1.7  ·  November 2026**
 
 ---
 
@@ -250,7 +250,7 @@ Configure how the copy operation should behave:
   - **If newer** — files are copied only when the source is more recently modified than the target. Files already up to date are recorded as Skipped.
 - **Copy versions** — when checked, SharePoint version history is copied alongside each file. Requires versioning to be enabled on the source library.
 - **Parallel copies** — controls how many files (or Migration API jobs) run simultaneously. The default of 8 is a good balance; raise to 8 or 16 on a fast connection for large batches.
-- **Preserve metadata** — when checked, folder Created/Modified dates, Author/Editor, and custom folder color are copied to the target. List items keep their Created/Modified dates and Created By/Modified By too; a person who does not exist on the target is left out and listed in the unresolved-users report. The **Re-apply folder metadata every run** option (in Advanced options) (on by default) controls whether that repair runs for every folder on every run, or only for folders receiving new files this run — turning it off speeds up repeated incremental runs on large libraries where most files are already up to date.
+- **Preserve metadata** — when checked, folder Created/Modified dates, Author/Editor, and custom folder color are copied to the target. List items keep their Created/Modified dates and Created By/Modified By too; a person who does not exist on the target is left out and listed in the unresolved-users report. Document Sets are copied as Document Sets, with their version history, and (with Preserve metadata on) the dates and authors of the set and everything inside it are restored afterwards; if the target library lacks the Document Set content type the app adds it when it can. The **Re-apply folder metadata every run** option (in Advanced options) (on by default) controls whether that repair runs for every folder on every run, or only for folders receiving new files this run — turning it off speeds up repeated incremental runs on large libraries where most files are already up to date.
 
 When **Copy versions** is enabled, two additional controls appear:
 
@@ -596,6 +596,10 @@ Authors, editors, person columns and permissions are looked up in the target ten
 ### A second Site Copy made "Site Assets (2)"
 
 Older versions only recognized an existing library when SharePoint refused to create a second one. The app now looks first and matches by title and by URL name, so a repeat copy adds to the library that is there. A duplicate made earlier has to be deleted (or its files moved) by hand.
+
+### A Document Set or OneNote notebook row says dates or authors could not be restored
+
+These are copied by one server-side copy, so the app writes the original dates and authors back afterwards, item by item. If some could not be written, the row stays a success and names the first few items. The files and their versions are copied either way. Run the same copy again to retry (the notebook or set is skipped if it already exists, so use **Overwrite** to repeat it), and check **Map these users…** in the report when a person does not exist in the target. If a Document Set fails because the target library lacks its content type, the message says which type to add under Library settings, Advanced settings, *Allow management of content types*.
 
 ### Cannot connect to source or target site
 

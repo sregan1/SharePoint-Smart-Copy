@@ -49,7 +49,7 @@ public class LibraryCopyService(SharePointService spService)
     {
         try
         {
-            var url = $"{baseUrl}/_api/web/lists?$select=Title,RootFolder/Name&$expand=RootFolder&$filter=BaseTemplate eq 101";
+            var url = $"{baseUrl}/_api/web/lists?$select=Id,Title,RootFolder/Name&$expand=RootFolder&$filter=BaseTemplate eq 101";
             using var resp = await spService.SendSharePointRequestAsync(token =>
             {
                 var r = new HttpRequestMessage(HttpMethod.Get, url);
@@ -66,7 +66,11 @@ public class LibraryCopyService(SharePointService spService)
                 var title = l.TryGetProperty("Title", out var t) ? t.GetString() : null;
                 if (string.IsNullOrEmpty(title)) continue;
                 if (title.Equals(definition.Title, StringComparison.OrdinalIgnoreCase)) return title;
-                if (byUrl == null && definition.RootFolderName.Length > 0 &&
+                // A copy into the SAME site under a new title carries the source's URL name, so the source library itself would
+                // match by URL name and the copy be skipped as "already exists". The source is never the library it is copied to.
+                var isSourceLibrary = definition.SourceListId.Length > 0 && l.TryGetProperty("Id", out var lid) &&
+                    string.Equals(lid.GetString()?.Trim('{', '}'), definition.SourceListId.Trim('{', '}'), StringComparison.OrdinalIgnoreCase);
+                if (byUrl == null && !isSourceLibrary && definition.RootFolderName.Length > 0 &&
                     l.TryGetProperty("RootFolder", out var rf) && rf.ValueKind == JsonValueKind.Object &&
                     rf.TryGetProperty("Name", out var rn) &&
                     string.Equals(rn.GetString(), definition.RootFolderName, StringComparison.OrdinalIgnoreCase))

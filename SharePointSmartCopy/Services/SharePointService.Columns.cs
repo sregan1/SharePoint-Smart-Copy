@@ -277,7 +277,9 @@ public partial class SharePointService
                 // chunk 0 is as good as any, and every item appears in every chunk's page anyway.
                 if (chunk == 0 && systemMetadataOut != null)
                 {
-                    selectParts.AddRange(["Modified", "Editor/EMail", "Created", "Author/EMail"]);
+                    // Author/Name and Editor/Name (the claims login) ride in the same request: an account without an email has
+                    // an empty EMail, and its UPN, taken from the login, is then used instead of dropping the person.
+                    selectParts.AddRange(["Modified", "Editor/EMail", "Editor/Name", "Created", "Author/EMail", "Author/Name"]);
                     expandParts.AddRange(["Editor", "Author"]);
                 }
                 // Each item's content type name rides along on chunk 0 too (see DefaultContentTypeNames below).
@@ -388,10 +390,15 @@ public partial class SharePointService
                                     cp.ValueKind == JsonValueKind.String &&
                                     DateTimeOffset.TryParse(cp.GetString(), System.Globalization.CultureInfo.InvariantCulture,
                                         System.Globalization.DateTimeStyles.None, out var cv) ? cv : null;
-                                string? modifiedByEmail = item.TryGetProperty("Editor", out var ed) && ed.ValueKind == JsonValueKind.Object &&
-                                    ed.TryGetProperty("EMail", out var ee) ? ee.GetString() : null;
-                                string? createdByEmail = item.TryGetProperty("Author", out var au) && au.ValueKind == JsonValueKind.Object &&
-                                    au.TryGetProperty("EMail", out var ae) ? ae.GetString() : null;
+                                static string? PersonOf(JsonElement item, string field)
+                                {
+                                    if (!item.TryGetProperty(field, out var p) || p.ValueKind != JsonValueKind.Object) return null;
+                                    var mail = p.TryGetProperty("EMail", out var m) && m.ValueKind == JsonValueKind.String ? m.GetString() : null;
+                                    if (!string.IsNullOrWhiteSpace(mail)) return mail;
+                                    return UpnFromLogin(p.TryGetProperty("Name", out var n) && n.ValueKind == JsonValueKind.String ? n.GetString() : null);
+                                }
+                                string? modifiedByEmail = PersonOf(item, "Editor");
+                                string? createdByEmail  = PersonOf(item, "Author");
 
                                 systemMetadataOut[itemId] = new FileMetadata
                                 {

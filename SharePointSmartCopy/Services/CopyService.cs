@@ -328,6 +328,32 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             return !await spService.ChildExistsAsync(driveId, parentId, name);
         }
 
+        // The native copy itself, then (Preserve metadata on) the dates and authors of the folder and everything inside it:
+        // the native copy stamps all of them with the copy time and the running account. Version history rides along with the
+        // copy when versions are being copied. A restore that falls short is a warning on a successful row, not a failure.
+        async Task<(string? Error, string? Warning)> NativeCopyAsync(
+            string srcDriveId, string srcItemId, string tgtDriveId, string tgtParentId, string name, string tgtSiteUrl)
+        {
+            // A Document Set needs its content type on the target library first (a clear message, not Graph's raw failure)
+            var contentTypeProblem = await spService.EnsureDocumentSetContentTypeAsync(srcDriveId, srcItemId, tgtSiteUrl, tgtDriveId, cancellationToken);
+            if (contentTypeProblem != null) return (contentTypeProblem, null);
+            var error = await spService.CopyFolderNativeAsync(
+                srcDriveId, srcItemId, tgtDriveId, tgtParentId, name, cancellationToken, includeVersionHistory: copyVersions);
+            if (error != null || !preserveMetadata) return (error, null);
+            try
+            {
+                var problems = await spService.RestoreNativeCopyMetadataAsync(
+                    srcDriveId, srcItemId, tgtDriveId, tgtParentId, name, maxParallel, cancellationToken);
+                return (null, problems.Count == 0 ? null
+                    : Loc.T("Svc_NativeMetaPartial", name, problems.Count, string.Join("; ", problems.Take(3))));
+            }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception ex)
+            {
+                return (null, Loc.T("Svc_NativeMetaPartial", name, 1, ex.Message));
+            }
+        }
+
         spService.Throttled += onScanThrottle;
         try
         {
@@ -382,10 +408,10 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         }
                         else
                         {
-                            var copyError = await spService.CopyFolderNativeAsync(
-                                job.SourceDriveId, job.SourceItemId, job.TargetDriveId, parentId, job.SourceName, cancellationToken);
+                            var (copyError, copyWarning) = await NativeCopyAsync(
+                                job.SourceDriveId, job.SourceItemId, job.TargetDriveId, parentId, job.SourceName, job.TargetSiteUrl);
                             folderResult.Status       = copyError == null ? CopyStatus.Success : CopyStatus.Failed;
-                            folderResult.ErrorMessage = copyError;
+                            folderResult.ErrorMessage = copyError ?? copyWarning;
                             activityLog?.Report(copyError == null
                                 ? Loc.T("Svc_NativeDone", job.SourceName)
                                 : Loc.T("Svc_NativeFailedErr", job.SourceName, copyError));
@@ -474,10 +500,10 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 }
                                 else
                                 {
-                                    var copyError = await spService.CopyFolderNativeAsync(
-                                        driveId, itemId, job.TargetDriveId, parentId, name, cancellationToken);
+                                    var (copyError, copyWarning) = await NativeCopyAsync(
+                                        driveId, itemId, job.TargetDriveId, parentId, name, job.TargetSiteUrl);
                                     folderResult.Status       = copyError == null ? CopyStatus.Success : CopyStatus.Failed;
-                                    folderResult.ErrorMessage = copyError;
+                                    folderResult.ErrorMessage = copyError ?? copyWarning;
                                     activityLog?.Report(copyError == null
                                         ? Loc.T("Svc_NativeDone", name)
                                         : Loc.T("Svc_NativeFailedErr", name, copyError));
@@ -1361,7 +1387,9 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     CreatedDateTime  = isLast ? metadata.CreatedDateTime : null,
                     CreatedByEmail   = isLast ? metadata.CreatedByEmail : null,
                     ModifiedDateTime = versionDate,
-                    ModifiedByEmail  = versionEditorEmail,
+                    // The current version takes the item's own Modified By (what the file list shows): the version record's editor
+                    // can differ from it (content an earlier migration tool moved, or an item stamped after its last save).
+                    ModifiedByEmail  = isLast ? metadata.ModifiedByEmail ?? versionEditorEmail : versionEditorEmail,
                 };
                 var metaErr = await spService.ApplyFileMetadataAsync(
                     job.TargetDriveId, targetItemId, job.TargetSiteId, perVersionMeta);
@@ -1411,8 +1439,10 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         CreatedDateTime  = metadata.CreatedDateTime,
                         CreatedByEmail   = metadata.CreatedByEmail,
                         ModifiedDateTime = lastVersion.LastModifiedDateTime ?? metadata.ModifiedDateTime,
-                        ModifiedByEmail  = SharePointService.GetIdentityEmail(lastVersion.LastModifiedBy?.User)
-                                           ?? metadata.ModifiedByEmail,
+                        // The item's own Modified By wins over the last version record's editor (they can differ for content an earlier
+                        // migration tool moved); this re-stamp runs last, so taking the version editor here undid the right value.
+                        ModifiedByEmail  = metadata.ModifiedByEmail
+                                           ?? SharePointService.GetIdentityEmail(lastVersion.LastModifiedBy?.User),
                     };
                     var restampErr = await spService.ApplyFileMetadataAsync(
                         job.TargetDriveId, targetItemId, job.TargetSiteId, finalMeta);

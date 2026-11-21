@@ -1633,4 +1633,7 @@
   <data name="Ui_HowToCopy" xml:space="preserve"><value>Способ копирования</value></data>
   <data name="Ui_StructCount" xml:space="preserve"><value>(выбрано {0} из {1})</value></data>
   <data name="Ui_NoUserMappingNote" xml:space="preserve"><value>Сопоставление пользователей не задано. Пользователи (авторы, редакторы, столбцы с типом «Пользователь», разрешения) ищутся в целевом клиенте по тому же адресу электронной почты, а отсутствующие там пропускаются или заменяются.</value></data>
+  <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>Элемент «{0}» скопирован, но не удалось восстановить исходные даты и авторов (элементов: {1}): {2}</value></data>
+  <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>Элемент «{0}» скопирован, но затем не удалось найти копию, чтобы восстановить её даты и авторов.</value></data>
+  <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Это набор документов типа «{0}», но в целевой библиотеке нет этого типа контента, и добавить его не удалось ({1}). Добавьте тип контента в целевую библиотеку (Параметры библиотеки, Дополнительные параметры, разрешить управление типами контента) и повторите копирование.</value></data>
 </root>

@@ -790,9 +790,8 @@ public partial class SharePointService
             if (preserveMetadata)
                 foreach (var (name, val) in await BuildDateAndPersonFormValuesAsync(
                              siteUrl, v.Modified, i == 0 ? v.Modified : null, i == 0 ? v.EditorEmail : null, v.EditorEmail))
-                    // A person column's documented formValues shape is a JSON array of {"Key": login}; the plain login
-                    // string was accepted but stamped the calling account on every version.
-                    entries.Add((name, name is "Editor" or "Author" ? JsonSerializer.Serialize(new[] { new { Key = val } }) : val));
+                    // (the helper already returns person fields in the JSON-array shape ValidateUpdateListItem needs)
+                    entries.Add((name, val));
 
             var rejected = new List<string>();
             var skip = false;

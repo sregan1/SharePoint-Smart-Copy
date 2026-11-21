@@ -163,8 +163,12 @@ public class MigrationPackageBuilder
             var rawId = version.Id ?? (i + 1).ToString();
             var label = rawId.Contains('.') ? rawId : rawId + ".0";
             var modified  = version.LastModifiedDateTime ?? fileMetadata.ModifiedDateTime ?? DateTimeOffset.UtcNow;
-            var author    = SharePointService.GetIdentityEmail(version.LastModifiedBy?.User) ?? fileMetadata.CreatedByEmail;
-            var editor    = SharePointService.GetIdentityEmail(version.LastModifiedBy?.User) ?? fileMetadata.ModifiedByEmail;
+            // Older versions take their own editor. The CURRENT version takes the item's own Created By / Modified By (what the file
+            // list shows): the version record's editor can differ from it (content an earlier migration tool moved, or an item
+            // stamped after its last save), and using it replaced the file's real author with whoever saved the last version.
+            var versionEditor = SharePointService.GetIdentityEmail(version.LastModifiedBy?.User);
+            var author    = isLast ? fileMetadata.CreatedByEmail  ?? versionEditor : versionEditor ?? fileMetadata.CreatedByEmail;
+            var editor    = isLast ? fileMetadata.ModifiedByEmail ?? versionEditor : versionEditor ?? fileMetadata.ModifiedByEmail;
 
             entries.Add(new VersionEntry(
                 StreamId:          streamId,

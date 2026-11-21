@@ -35,12 +35,22 @@ public partial class MainViewModel : ObservableObject
         return (label.EndsWith("-my", StringComparison.OrdinalIgnoreCase) ? label[..^3] : label).ToLowerInvariant();
     }
 
+    // SharePoint Online only answers over https. A site typed as http:// let the Graph calls work but failed every SharePoint
+    // REST and Migration API call (AADSTS500011), leaving a half-finished copy. The address is corrected when Connect is
+    // pressed (not while typing, which would move the cursor), and the corrected text shows in the box.
+    private static string NormalizeSiteUrl(string url)
+    {
+        var trimmed = url?.Trim() ?? string.Empty;
+        return trimmed.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ? "https://" + trimmed["http://".Length..] : trimmed;
+    }
+
     [RelayCommand]
     private async Task ConnectSourceAsync()
     {
         _connectSourceCts?.Cancel();
         _connectSourceCts = new CancellationTokenSource();
         var ct = _connectSourceCts.Token;
+        SourceUrl = NormalizeSiteUrl(SourceUrl);
 
         SourceStatus       = Loc.T("VM_Connecting");
         ConnectionNotice   = string.Empty;
@@ -370,6 +380,7 @@ public partial class MainViewModel : ObservableObject
         _connectTargetCts?.Cancel();
         _connectTargetCts = new CancellationTokenSource();
         var ct = _connectTargetCts.Token;
+        TargetUrl = NormalizeSiteUrl(TargetUrl);
 
         TargetStatus       = Loc.T("VM_Connecting");
         TargetConnected    = false;

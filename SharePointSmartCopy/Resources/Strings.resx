@@ -492,6 +492,9 @@ Cancel: go back</value></data>
   <data name="Svc_NativeCopying" xml:space="preserve"><value>Copying special folder '{0}' natively (preserves notebook/package association)...</value></data>
   <data name="Svc_SkippedExists" xml:space="preserve"><value>⏭ Skipped '{0}' — already exists at target</value></data>
   <data name="Svc_NativeDone" xml:space="preserve"><value>✓ Native copy of '{0}' complete</value></data>
+  <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>'{0}' was copied, but the original dates and authors could not be restored for {1} item(s): {2}</value></data>
+  <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>This is a Document Set of type '{0}', but the target library does not have that content type and it could not be added ({1}). Add the content type to the target library (Library settings, Advanced settings, allow management of content types), then copy again.</value></data>
+  <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>'{0}' was copied, but the copy could not be found afterwards to restore its dates and authors.</value></data>
   <data name="Svc_NativeFailedErr" xml:space="preserve"><value>⚠ Native copy of '{0}' failed: {1}</value></data>
   <data name="Svc_ScanProgress" xml:space="preserve"><value>Scanning source: {0:N0} file(s) found so far...</value></data>
   <data name="Svc_EmptyFolderFailed" xml:space="preserve"><value>⚠ Creating empty folder '{0}' failed: {1}</value></data>
