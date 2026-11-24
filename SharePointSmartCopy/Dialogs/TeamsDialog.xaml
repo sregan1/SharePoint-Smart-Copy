@@ -206,11 +206,16 @@
                 <StackPanel x:Name="AdminPanel" Grid.Row="1" Margin="0,0,0,8">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{loc:Loc Teams_Admin_FindLabel}" VerticalAlignment="Center"/>
-                        <TextBox x:Name="PersonBox" Width="240" Margin="8,0,0,0" KeyDown="PersonBox_KeyDown"/>
+                        <TextBox x:Name="PersonBox" Width="240" Margin="8,0,0,0" KeyDown="PersonBox_KeyDown" TextChanged="PersonBox_TextChanged"/>
                         <Button x:Name="FindPersonButton" Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Teams_Admin_Find}" Click="FindPerson_Click" Margin="8,0,0,0"/>
                         <Button x:Name="AddChatsButton" Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Teams_Admin_AddChats}" Click="AddChats_Click" Margin="8,0,0,0" IsEnabled="False"/>
                     </StackPanel>
-                    <ListBox x:Name="PersonResults" MaxHeight="96" Margin="0,6,0,0" Visibility="Collapsed" SelectionMode="Extended" DisplayMemberPath="Label"
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                        <Button x:Name="ShowAllButton" Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Teams_Admin_ShowAll}" Click="ShowAllPeople_Click"/>
+                        <Button x:Name="PeopleSelectAllButton" Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Teams_SelectAll}" Click="PeopleSelectAll_Click" Margin="8,0,0,0"/>
+                        <Button x:Name="PeopleClearButton" Style="{StaticResource SecondaryBtn}" Content="{loc:Loc Teams_ClearSelection}" Click="PeopleClear_Click" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <ListBox x:Name="PersonResults" MaxHeight="150" Margin="0,6,0,0" Visibility="Collapsed" SelectionMode="Extended" DisplayMemberPath="Label"
                              SelectionChanged="PersonResults_SelectionChanged"/>
                     <TextBlock x:Name="PeopleChosenText" TextWrapping="Wrap" Margin="0,6,0,0" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}"/>
                 </StackPanel>

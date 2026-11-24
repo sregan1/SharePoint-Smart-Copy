@@ -1655,4 +1655,181 @@
   <data name="Teams_Error" xml:space="preserve"><value>ไม่สามารถอ่าน Teams ได้: {0}</value></data>
   <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>เครื่องมือ Teams ต้องใช้สิทธิ์ Microsoft Graph ที่มอบหมายต่อไปนี้ ซึ่งการลงทะเบียนแอปนี้ไม่มี: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All และ Chat.Read ในพอร์ทัล Azure ให้เปิดการลงทะเบียน ไปที่สิทธิ์ API เพิ่มสิทธิ์เหล่านี้ ให้ความยินยอมของผู้ดูแลระบบ แล้วรีสตาร์ทแอป ดู “Add API permissions” ใน README</value></data>
   <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>การคัดลอกแบบสดต้องใช้สิทธิ์ Power Automate Service ที่มอบหมาย Flows.Read.All และ Flows.Manage.All รวมถึง PowerApps Service User ซึ่งการลงทะเบียนแอปนี้ไม่มี ให้เพิ่มสิทธิ์เหล่านี้ในสิทธิ์ API ให้ความยินยอมของผู้ดูแลระบบ แล้วรีสตาร์ทแอป การคัดลอกจากแพ็กเกจที่ส่งออกทำงานได้โดยไม่ต้องมีสิทธิ์เหล่านี้</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ โฟลเดอร์ {0:N0} รายการ (รวม Document Sets) ไม่มีอีเมลใน Created By หรือ Modified By (บัญชีระบบ แอป SharePoint หรือบัญชีที่ถูกลบ): บุคคลนั้นจะถูกบันทึกเป็นบัญชีระบบเช่นเดียวกับไฟล์ แทนที่จะเป็นบัญชีที่นำเข้า</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ โฟลเดอร์ {0:N0} รายการไม่มีอีเมลใน Created By หรือ Modified By (บัญชีระบบ แอป SharePoint หรือบัญชีที่ถูกลบ): ทั้งสองจะถูกบันทึกเป็นบัญชีระบบเช่นเดียวกับไฟล์ แทนที่จะเป็นบัญชีที่นำเข้า</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>เพิ่มแชตของพวกเขา</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>แสดง {0} จาก {1} คน พิมพ์เพื่อกรองรายการ จากนั้นเลือกผู้คนแล้วคลิกเพิ่มแชตของพวกเขา</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>เพิ่ม {0} แชตแล้ว</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>โหลดแชตของ: {0} แล้ว (แสดง {1} รายการ) ทำเครื่องหมายแชตที่ต้องการคัดลอก</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>แชตของผู้คนที่เลือกไว้ด้านบน</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>หยุดแล้ว แสดง {0} แชตจนถึงตอนนี้</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>อ่านแชตของ {0} คนหรือไม่ อาจมีแชตจำนวนมากและใช้เวลานาน คุณสามารถหยุดได้ทุกเมื่อ แชตที่ใช้ร่วมกันระหว่างสองคนจะแสดงเพียงครั้งเดียว</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>มุมมองผู้ดูแลระบบไม่พร้อมใช้งาน ({0}) จึงแสดงทีมและแชตของคุณเองแทน</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>client secret ที่บันทึกไว้สำหรับการลงทะเบียนต้นทางถูกปฏิเสธ: วางค่า (Value) ของ secret ไม่ใช่ ID ของมัน ในการตั้งค่า</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>ค้นหาผู้คน</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>แชตของ:</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>กำลังอ่านแชตของ {0}…</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>กำลังอ่านแชต: เสร็จแล้ว {0} จาก {1} คน…</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>กำลังอ่านรายชื่อทุกคนในไดเรกทอรี…</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>แสดงเฉพาะทีมและแชตของคุณเอง หากต้องการแสดงทุกทีมในผู้เช่าและแชตของผู้คนที่คุณเลือก ให้บันทึก client secret สำหรับการลงทะเบียนแอปต้นทาง (การตั้งค่า)</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>ไม่พบผู้ที่ชื่อหรืออีเมลขึ้นต้นด้วย "{0}"</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>ตัวเลือก "แสดงเฉพาะทีมและแชตของฉัน" ถูกทำเครื่องหมายไว้ในขั้นตอนเชื่อมต่อ ยกเลิกเครื่องหมายเพื่อเลือกผู้คน</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>ไม่มี client secret ที่บันทึกไว้สำหรับการลงทะเบียนต้นทาง {0} ในการตั้งค่า ให้เลือกการลงทะเบียนนั้นและวาง secret ของมัน แล้วเปิดวิซาร์ดนี้ใหม่ (วิซาร์ดที่เปิดอยู่จะใช้การตั้งค่าเดิมที่เริ่มต้นไว้)</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>Microsoft ปฏิเสธ client secret ที่บันทึกไว้สำหรับการลงทะเบียนต้นทาง {0} จึงแสดงเฉพาะทีมและแชตของคุณเอง แก้ไข secret ในการตั้งค่าแล้วเปิดวิซาร์ดนี้ใหม่</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>การเลือกผู้คนต้องใช้มุมมองผู้ดูแลระบบ: บันทึก client secret สำหรับการลงทะเบียนแอปต้นทางในการตั้งค่า และอย่าทำเครื่องหมาย "แสดงเฉพาะทีมและแชตของฉัน" ในขั้นตอนเชื่อมต่อ</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>เลือกผู้คนอย่างน้อยหนึ่งคน แล้วคลิกเพิ่มแชตของพวกเขา</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>แสดงผู้คนทั้งหมด</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>หยุด</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(คัดลอกเสมอ)</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>คัดลอก {0} ทีมแล้ว</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>คัดลอก {0} จาก {1} ทีมแล้ว ดูรายละเอียดด้านล่าง</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>ทีม {0} จาก {1}: {2} → {3}</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>แชต {0} จาก {1}: {2}</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>แชตจะถูกคัดลอกเป็นแชตกลุ่มใหม่ที่มีผู้คนกลุ่มเดิม (ค้นหาในปลายทางจากอีเมลของพวกเขา) ข้อความของแชตจะถูกนำเข้าพร้อมเวลาและผู้เขียนเดิม และทุกคนในแชตใหม่จะเห็นประวัติทั้งหมด</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>เสร็จสิ้น แชตใหม่ {0}: {1} คน ข้อความ: นำเข้า {2} มีอยู่แล้ว {3} ล้มเหลว {4} โพสต์ในนามของคุณ {5} เนื่องจากไม่พบผู้เขียนที่ตรงกัน</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>แชต {0} ถูกคัดลอกแล้ว</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>กำลังสร้างสำเนาของแชต {0}…</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>กำลังค้นหาผู้คนของแชต {0} ในปลายทาง…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>ไม่ได้คัดลอกแชต {0}: ไม่พบผู้คนอื่นในแชตนี้ในปลายทาง</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>แชต {0}: ข้อความที่นำเข้าอยู่ในแชตแล้ว แต่ผู้คนในแชตอาจยังมองไม่เห็น เพราะแชร์ประวัติของแชตไม่สำเร็จ: {1} ให้สิทธิ์แอปพลิเคชัน ChatMember.ReadWrite.All แก่การลงทะเบียน (พร้อมความยินยอมของผู้ดูแลระบบ) แล้วเรียกใช้การคัดลอกแชตอีกครั้ง</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>กำลังทำให้ประวัติที่นำเข้าของแชต {0} มองเห็นได้สำหรับผู้คนในแชต…</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>คัดลอก {0} แชตแล้ว</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>คัดลอก {0} จาก {1} แชตแล้ว ดูรายละเอียดด้านล่าง</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>ทำเครื่องหมายทีมและแชตที่ต้องการคัดลอก แชนเนลของแต่ละทีมจะถูกทำเครื่องหมายด้วย: ยกเลิกเครื่องหมายแชนเนลที่ไม่ต้องการ จากนั้นคลิกถัดไป</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>ล้าง</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>บัญชีของคุณ</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>ยกเลิกการลงชื่อเข้าใช้แล้ว คลิกลองอีกครั้งเพื่อลองใหม่</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>ลงชื่อเข้าใช้ไม่สำเร็จ: {0} คลิกลองอีกครั้งเพื่อลองใหม่</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>ลงชื่อเข้าใช้ด้วยบัญชีที่มองเห็นทีมและแชตที่คุณต้องการคัดลอก สำเนาจะถูกสร้างในผู้เช่าเดียวกัน</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>ลงชื่อเข้าใช้ผู้เช่าต้นทาง (ที่ทีมอยู่ในขณะนี้) และผู้เช่าปลายทาง (ที่จะสร้างสำเนา) การลงชื่อเข้าใช้แต่ละครั้งจะเปิดเบราว์เซอร์ของคุณ คุณสามารถยกเลิกหนึ่งรายการแล้วลองใหม่ได้ และหากการลงชื่อเข้าใช้ล้มเหลว อีกรายการจะคงเดิม</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>ลงชื่อเข้าใช้ผู้เช่าทั้งสองเพื่อดำเนินการต่อ</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>ลงชื่อเข้าใช้เพื่อดำเนินการต่อ</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>ยังไม่ได้ลงชื่อเข้าใช้</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>การลงทะเบียนแอป: {0} (client ID {1})</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>ลองอีกครั้ง</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>ลงชื่อเข้าใช้</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>ลงชื่อเข้าใช้ด้วยบัญชีอื่น</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>ลงชื่อเข้าใช้เป็น {0} แล้ว</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>ผู้เช่าต้นทาง</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>ผู้เช่าปลายทาง</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>ผู้เช่า: {0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>กำลังค้นหา…</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>กำลังรอให้คุณลงชื่อเข้าใช้ให้เสร็จในเบราว์เซอร์ คลิกยกเลิกเพื่อหยุดรอ แล้วคลิกลองอีกครั้ง</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>คัดลอกอีกรายการ</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>ยกเลิกการคัดลอกแล้ว</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>คัดลอกเสร็จสิ้น</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>การคัดลอกหยุดลง: {0}</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>การคัดลอกทีมยังต้องใช้สิทธิ์ Microsoft Graph แบบ delegated เหล่านี้ในการลงทะเบียนแอปปลายทาง {0} เพิ่มสิทธิ์ภายใต้ API permissions ให้ความยินยอมของผู้ดูแลระบบ แล้วลองอีกครั้ง: {1} (พร้อมความยินยอมของผู้ดูแลระบบ)</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>การคัดลอกทีมยังต้องใช้สิทธิ์ Microsoft Graph แบบ delegated เหล่านี้ในการลงทะเบียนแอปปลายทาง {0} เพิ่มสิทธิ์ภายใต้ API permissions ให้ความยินยอมของผู้ดูแลระบบ แล้วลองอีกครั้ง: Team.Create, Channel.Create, ChannelMember.ReadWrite.All, TeamMember.ReadWrite.All, TeamSettings.ReadWrite.All (พร้อมความยินยอมของผู้ดูแลระบบ)</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0} (สำเนา)</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name} (สำเนา)</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>แสดงทีมและแชตที่คุณมองเห็น พร้อมระบุแชนเนลแต่ละรายการว่าเป็นแบบมาตรฐาน ส่วนตัว หรือที่แชร์ เลือกทีมเพื่อคัดลอกการตั้งค่า สมาชิก แชนเนล (รวมแชนเนลส่วนตัวและที่แชร์) ไฟล์ และข้อความ (หากคุณเลือก) ไปยังทีมใหม่ในผู้เช่าเดียวกันหรือในผู้เช่าปลายทาง เลือกแชตเพื่อคัดลอกแชตและข้อความของแชต ข้อความต้องใช้ client secret ของการลงทะเบียนปลายทาง (ดูการตั้งค่า) แชนเนลส่วนตัวและที่แชร์จะปรากฏเฉพาะเมื่อคุณเป็นสมาชิก</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>แมปผู้คน…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>พบสมาชิกทั้ง {0} คนในปลายทาง</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>กำลังตรวจสอบว่าใครจากทีมต้นทางมีอยู่ในผู้เช่าปลายทาง…</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …และอีก {0}</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>คัดลอก {0} ทีมและแชตแล้ว</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>คัดลอก {0} จาก {1} ทีมและแชตแล้ว ดูรายละเอียดด้านล่าง</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>ไม่ได้คัดลอกไฟล์แนบ: {0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>เตรียมข้อความ {0} ไม่ได้: {1}</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>ทำเครื่องหมายว่านำเข้าเสร็จสมบูรณ์ไม่ได้ แชนเนลจึงอาจยังแสดงแบนเนอร์การนำเข้า: {0}</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>การคัดลอกข้อความและแชตต้องใช้ client secret ของการลงทะเบียนแอปปลายทาง บันทึกไว้ในการตั้งค่า (การลงทะเบียนแอป Azure) และให้สิทธิ์แอปพลิเคชัน Microsoft Graph ชื่อ Teamwork.Migrate.All แก่การลงทะเบียนพร้อมความยินยอมของผู้ดูแลระบบ</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>นำเข้าข้อความ {0} ไม่ได้: {1}</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>โพสต์เดิมโดย {0}</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>วางการตอบกลับของข้อความ {0} ไม่ได้ เพราะข้อความนี้ถูกนำเข้าแล้วโดยการเรียกใช้ที่ถูกขัดจังหวะ และค้นหาไม่พบอีก เรียกใช้การคัดลอกอีกครั้งหลังเธรดเสร็จสมบูรณ์</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>การเริ่มนำเข้าตอบกลับว่า: {0} (ดำเนินการต่อ)</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>โพสต์โดยผู้เขียนที่ไม่ทราบชื่อ</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>สำเนาสองรายการจะใช้ชื่อ "{0}": กรุณาตั้งชื่อให้ต่างกัน</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>เมื่อมีหลายทีม ชื่อต้องมี {name} ซึ่งจะกลายเป็นชื่อทีมต้นฉบับ</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>ใส่ชื่อสำหรับทีมใหม่</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>ชื่อของสำเนา (ใช้ {name} แทนชื่อทีมต้นฉบับ)</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>สำเนาของแต่ละทีมจะใช้ชื่อนี้ เมื่อมีหลายทีม {name} จะกลายเป็นชื่อทีมต้นฉบับ และคุณยังเปลี่ยนแต่ละชื่อได้ในขั้นตอนถัดไป</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>ไฟล์</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>สมาชิกและเจ้าของ</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>ข้อความ</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>นำเข้าข้อความและการตอบกลับของแต่ละแชนเนลพร้อมเวลาและผู้เขียนเดิม ไฟล์แนบจะระบุชื่อไว้ในข้อความ ไม่ได้คัดลอก และไม่คัดลอกรีแอ็กชัน</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>การตั้งค่า</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>แสดงเฉพาะทีมและแชตของฉัน (แทนทุกทีมในผู้เช่า)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>แสดงเฉพาะทีมและแชตของบัญชีที่คุณลงชื่อเข้าใช้ โดยใช้การลงชื่อเข้าใช้นั้นเท่านั้น: ไม่ต้องใช้ client secret หรือสิทธิ์แอปพลิเคชัน</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>มีอยู่แล้ว</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>แชต</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>ทั่วไป</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>ผู้คน</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>ทีม</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>แชนเนล</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>แชต</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>รายละเอียด</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>ส่วน</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>ระยะเวลา</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>ล้มเหลว</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>ไฟล์</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>ข้ามไป</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>สมาชิก</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>ข้อความ</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>ไม่ได้คัดลอก (ไม่ได้เลือก)</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>ยังไม่เริ่ม: ทีมก่อนหน้าหยุดการคัดลอก</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>สร้าง {0} มีอยู่แล้ว {1}</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>สร้างแชตกลุ่ม "{0}" ในผู้เช่า {1} เจ้าของคือ {2}</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>คัดลอก {0} ล้มเหลว {1}</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>{0} ไม่มีรายการที่ตรงกันในปลายทางและถูกข้ามไป แมปไว้ที่การตั้งค่า &gt; การแมปข้อมูลประจำตัว แล้วเรียกใช้การคัดลอกอีกครั้ง</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>เพิ่ม {0}</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>นำเข้า {0} มีอยู่แล้ว {1} ล้มเหลว {2} โพสต์ในนามผู้ใช้ที่คัดลอก {3} เนื่องจากไม่พบผู้เขียนที่ตรงกัน</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>สร้าง "{0}" ในผู้เช่า {1} เจ้าของคือ {2}</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>ทีม</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>รายงานการคัดลอก</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>เปิดใน Teams</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>ทีมใหม่อยู่ในผู้เช่า {0} และมี {1} เป็นเจ้าของ เปิดทีม: {2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>ทีมใหม่อยู่ในผู้เช่า {0} และมี {1} เป็นเจ้าของ</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0} จาก {1}</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>คัดลอกแชต "{0}" เป็นแชตกลุ่มใหม่</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>คัดลอก {0} แชตเป็นแชตกลุ่มใหม่: {1}</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>แชนเนล</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>ชื่อของสำเนา</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>ทีม</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>รวม: {0}</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>ตรวจสอบชื่อของสำเนาด้านล่างและเปลี่ยนชื่อที่ต้องการ สำเนาที่ใช้ชื่อเดียวกับสำเนาก่อนหน้าจะดำเนินการต่อจากสำเนานั้น ส่วนชื่อที่ต่างออกไปจะสร้างทีมใหม่</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>เฉพาะทีมเปล่าและแชนเนลของทีม</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>คัดลอกทีม "{0}" เป็นทีมใหม่ชื่อ "{1}"</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>คัดลอก {0} ทีมเป็นทีมใหม่</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>{0} จาก {1} คนในทีมนี้ไม่มีบัญชีที่ตรงกันในปลายทาง หากไม่แมป พวกเขาจะถูกข้ามในการคัดลอก และจะแสดงรายชื่อในผลลัพธ์:
+{2}</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>เลือกทั้งหมด</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>เลือก {0} ทีม</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>เลือก {0} แชต</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>เลือก</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>เชื่อมต่อ</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>คัดลอก</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>ตัวเลือก</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>ผลลัพธ์</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>ตรวจสอบ</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>กำลังสร้างแชนเนล {0} ({1})…</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>กำลังสร้างทีม {0}…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>กำลังคัดลอกไฟล์ของ {0}…</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>ทีมจากการคัดลอกครั้งก่อนไม่มีอยู่แล้ว กำลังสร้างทีมใหม่</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>กำลังเพิ่มสมาชิก {0} คน…</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>กำลังคัดลอกข้อความของ {0}…</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>ชื่อ "{0}" ต่างจากสำเนาก่อนหน้า "{1}" จึงสร้างทีมใหม่ สำเนาก่อนหน้าจะคงเดิม</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>กำลังดำเนินการคัดลอกครั้งก่อนต่อไปยัง {0}</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>กำลังคัดลอกการตั้งค่าทีม…</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>เสร็จสิ้น ทีมใหม่ {0}: สร้างแชนเนล {1} มีอยู่แล้ว {2} เพิ่มสมาชิก {3} คัดลอกไฟล์ {4} ล้มเหลว {5}</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>ข้อความ: นำเข้า {0} มีอยู่แล้ว {1} ล้มเหลว {2} โพสต์ในนามของคุณ {3} เนื่องจากไม่พบผู้เขียนที่ตรงกันในปลายทาง</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>สำเนาจะถูกสร้างในบัญชีที่คุณลงชื่อเข้าใช้ ({0})</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>สำเนาจะถูกสร้างในผู้เช่าปลายทางในนาม {0} ผู้คนจะถูกจับคู่กับบัญชีปลายทางด้วยอีเมล โดยใช้การแมปข้อมูลประจำตัวของคุณ</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>{0} คนไม่มีรายการที่ตรงกันในปลายทางและถูกข้ามไป แมปไว้ที่การตั้งค่า &gt; การแมปข้อมูลประจำตัว แล้วเรียกใช้การคัดลอกอีกครั้ง:</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>ไม่ได้สร้างแชนเนล {0}: {1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>อ่านสมาชิกของ {0} ไม่ได้: {1}</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}: คัดลอกไฟล์ {1} ไฟล์ไม่สำเร็จ เรียกใช้การคัดลอกอีกครั้งเพื่อลองใหม่</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}: คัดลอกข้อความไม่ได้: {1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}: นำเข้า {1} ข้อความไม่สำเร็จ เรียกใช้การคัดลอกอีกครั้งเพื่อลองใหม่</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}: โฟลเดอร์ไฟล์ต้นทางไม่พร้อมใช้งาน จึงไม่ได้คัดลอกไฟล์</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}: โฟลเดอร์ไฟล์ใหม่ยังไม่พร้อม จึงไม่ได้คัดลอกไฟล์ เรียกใช้การคัดลอกอีกครั้งเพื่อลองใหม่</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>{0} คำเตือน:</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>สิ่งที่จะคัดลอก</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>คัดลอกข้อความนี้ให้ผู้ดูแลระบบของคุณ</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>คลิกขวาเพื่อคัดลอกข้อความนี้และส่งให้ผู้ดูแลระบบของคุณ</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>ลบ</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>บันทึก client secret แล้ว (เข้ารหัสสำหรับบัญชี Windows ของคุณ)</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Client secret (ไม่บังคับ สำหรับเครื่องมือ Teams)</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>เฉพาะเครื่องมือ Teams ที่ใช้ secret นี้ ในฐานะการลงชื่อเข้าใช้ระดับแอปพลิเคชัน (ไม่มีผู้ใช้) ในการลงทะเบียนเป้าหมาย ใช้เพื่อนำเข้าข้อความและแชต ซึ่ง Microsoft อนุญาตเฉพาะวิธีนี้ โดยใช้สิทธิ์แอปพลิเคชัน Graph ชื่อ Teamwork.Migrate.All (ความยินยอมของผู้ดูแลระบบ) ในการลงทะเบียนต้นทาง ช่วยให้เครื่องมือ Teams แสดงรายการทีมทั้งหมดในผู้เช่าและแชตของบุคคลที่คุณเลือก (มุมมองผู้ดูแลระบบ) สิทธิ์ต่าง ๆ อยู่ใน PERMISSIONS.md สร้าง secret ในการลงทะเบียนแอปนี้ภายใต้ Certificates &amp; secrets แล้ววางค่า (Value) ไม่ใช่ ID เว้นว่างไว้หากคุณไม่ต้องการทั้งสองอย่าง</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>เลือกการลงทะเบียนเพื่อแก้ไข การลงทะเบียนใดเป็นต้นทางและใดเป็นปลายทางจะเลือกในหน้าหลัก การเลือกหรือแก้ไขที่นี่ไม่เปลี่ยนค่านั้น</value></data>
 </root>

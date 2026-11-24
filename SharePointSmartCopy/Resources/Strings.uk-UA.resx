@@ -1655,4 +1655,181 @@
   <data name="Teams_Error" xml:space="preserve"><value>Не вдалося прочитати Teams: {0}</value></data>
   <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Для інструмента Teams потрібні такі делеговані дозволи Microsoft Graph, яких немає в цій реєстрації застосунку: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All і Chat.Read. На порталі Azure відкрийте реєстрацію, перейдіть до розділу «Дозволи API», додайте їх, надайте згоду адміністратора та перезапустіть застосунок. Див. «Add API permissions» у README.</value></data>
   <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Для копіювання в реальному часі потрібні делеговані дозволи Power Automate Service Flows.Read.All і Flows.Manage.All, а також PowerApps Service User, яких немає в цій реєстрації застосунку. Додайте їх у розділі «Дозволи API», надайте згоду адміністратора та перезапустіть застосунок. Копіювання з експортованих пакетів працює й без них.</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ Для {0:N0} папок (зокрема наборів документів) не було електронної адреси в полі «Створив» або «Змінив» (системний обліковий запис, застосунок SharePoint або видалений обліковий запис): цю особу позначено як системний обліковий запис, як і для файлів, замість облікового запису, що імпортує</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ Для {0:N0} папок не було електронної адреси в полі «Створив» або «Змінив» (системний обліковий запис, застосунок SharePoint або видалений обліковий запис): обидва позначено як системний обліковий запис, як і для файлів, замість облікового запису, що імпортує</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>Додати їхні чати</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>Показано {0} із {1} осіб. Введіть текст, щоб звузити список, потім виберіть людей і натисніть «Додати їхні чати».</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>Додано чатів: {0}.</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>Чати завантажено для: {0} (у списку {1}). Позначте ті, які потрібно скопіювати.</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>Чати вибраних вище людей</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>Зупинено. Наразі в списку чатів: {0}.</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>Прочитати чати {0} осіб? Чатів може бути дуже багато, і це займе певний час; зупинити можна будь-коли. Чат, спільний для двох із них, показується один раз.</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>Подання адміністратора недоступне ({0}); натомість показано ваші власні команди й чати.</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>секрет клієнта, збережений для вихідної реєстрації, відхилено: у «Налаштуваннях» вставте Значення секрету, а не його ID</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>Знайти людей</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>Чати користувачів:</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>Читання чатів: {0}…</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>Читання чатів: опрацьовано {0} із {1} осіб…</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>Читання всіх користувачів каталогу…</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>Показано лише ваші власні команди й чати. Щоб переглянути всі команди тенанта й чати вибраних людей, збережіть секрет клієнта для вихідної реєстрації застосунку («Налаштування»).</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>Не знайдено нікого, чиє ім’я або електронна адреса починається з «{0}».</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>На кроці «Підключення» позначено «Показувати лише мої команди й чати». Зніміть позначку, щоб вибрати людей.</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>Для вихідної реєстрації {0} не збережено секрет клієнта. У «Налаштуваннях» виберіть цю реєстрацію та вставте її секрет, потім знову відкрийте цей майстер (відкритий майстер зберігає налаштування, з якими він запустився).</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>Microsoft відхилила секрет клієнта, збережений для вихідної реєстрації {0}, тому показано лише ваші власні команди й чати. Виправте секрет у «Налаштуваннях» і знову відкрийте цей майстер.</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>Вибір людей потребує подання адміністратора: збережіть у «Налаштуваннях» секрет клієнта для вихідної реєстрації застосунку та не позначайте «Показувати лише мої команди й чати» на кроці «Підключення».</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>Виберіть одну або кілька осіб, потім натисніть «Додати їхні чати».</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>Показати всіх людей</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>Зупинити</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(копіюється завжди)</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>Скопійовано команд: {0}.</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>Скопійовано {0} із {1} команд. Подробиці нижче.</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>Команда {0} із {1}: {2} → {3}</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>Чат {0} із {1}: {2}</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>Чат копіюється як новий груповий чат із тими самими людьми (їх шукають у призначенні за електронною адресою). Його повідомлення імпортуються з початковим часом і автором, і всі в новому чаті бачать усю історію.</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>Готово. Новий чат {0}: осіб {1}; повідомлення: {2} імпортовано, {3} уже були, {4} не вдалося; {5} опубліковано від вашого імені, бо для автора немає відповідника.</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>Чат {0} уже скопійовано.</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>Створення копії чату {0}…</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>Пошук людей із чату {0} у призначенні…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>Чат {0} не скопійовано: жодного з інших його учасників не знайдено в призначенні.</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>Чат {0}: імпортовані повідомлення є в чаті, але його учасники можуть їх ще не бачити, бо не вдалося поділитися історією: {1}. Надайте реєстрації дозвіл застосунку ChatMember.ReadWrite.All (згода адміністратора) і знову запустіть копіювання чату.</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>Надання учасникам доступу до імпортованої історії чату {0}…</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>Скопійовано чатів: {0}.</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>Скопійовано {0} із {1} чатів. Подробиці нижче.</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>Позначте команди й чати для копіювання. Канали кожної команди також позначені: зніміть позначку з тих, які потрібно пропустити. Потім натисніть «Далі».</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>Очистити</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>Ваш обліковий запис</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>Вхід скасовано. Натисніть «Повторити», щоб спробувати ще раз.</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>Не вдалося увійти: {0}. Натисніть «Повторити», щоб спробувати ще раз.</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>Увійдіть із обліковим записом, який бачить команди й чати, що ви хочете скопіювати. Копію буде створено в тому самому тенанті.</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>Увійдіть у вихідний тенант (де зараз команда) і в тенант призначення (де буде створено копію). Кожен вхід відкриває браузер. Можна скасувати один вхід і повторити його, а невдалий вхід не впливає на інший.</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>Щоб продовжити, увійдіть в обидва тенанти.</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>Щоб продовжити, увійдіть.</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>Вхід не виконано.</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>Реєстрація застосунку: {0} (ID клієнта {1})</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>Повторити</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>Увійти</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>Увійти як інший користувач</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>Вхід виконано як {0}.</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>Вихідний тенант</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>Тенант призначення</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>Тенант: {0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>пошук…</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>Очікування завершення входу в браузері. Натисніть «Скасувати», щоб припинити очікування, потім «Повторити».</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>Копіювати ще</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>Копіювання скасовано.</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>Копіювання завершено.</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>Копіювання зупинено: {0}</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>Для копіювання команди цільова реєстрація застосунку {0} також потребує цих делегованих дозволів Microsoft Graph. Додайте їх у розділі «Дозволи API», надайте згоду адміністратора й повторіть спробу: {1} (зі згодою адміністратора).</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>Для копіювання команди цільова реєстрація застосунку {0} також потребує цих делегованих дозволів Microsoft Graph. Додайте їх у розділі «Дозволи API», надайте згоду адміністратора й повторіть спробу: Team.Create, Channel.Create, ChannelMember.ReadWrite.All, TeamMember.ReadWrite.All, TeamSettings.ReadWrite.All (зі згодою адміністратора).</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0} (копія)</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name} (копія)</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>Показує команди й чати, які ви бачите, з позначкою кожного каналу як стандартного, приватного або спільного. Виберіть команду, щоб скопіювати її налаштування, учасників, канали (зокрема приватні та спільні), файли і, за бажанням, повідомлення в нову команду в тому самому тенанті або в тенанті призначення. Виберіть чат, щоб скопіювати його разом із повідомленнями. Для повідомлень потрібен секрет клієнта цільової реєстрації (див. «Налаштування»). Приватні та спільні канали відображаються, лише якщо ви їхній учасник.</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>Зіставити людей…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>Усіх учасників ({0}) знайдено в призначенні.</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>Перевірка, хто з вихідної команди існує в тенанті призначення…</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …і ще {0}</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>Скопійовано команд і чатів: {0}.</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>Скопійовано {0} із {1} команд і чатів. Подробиці нижче.</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>Вкладення не скопійовано: {0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>Не вдалося підготувати повідомлення {0}: {1}</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>Не вдалося позначити імпорт як завершений, тому в каналі ще може відображатися банер імпорту: {0}</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>Для копіювання повідомлень і чатів потрібен секрет клієнта цільової реєстрації застосунку. Збережіть його в «Налаштуваннях» (реєстрації застосунків Azure) і надайте реєстрації дозвіл застосунку Microsoft Graph Teamwork.Migrate.All зі згодою адміністратора.</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>Не вдалося імпортувати повідомлення {0}: {1}</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>Спочатку опублікував(-ла) {0}</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>Відповіді на повідомлення {0} не вдалося розмістити, бо повідомлення вже було імпортовано перерваним запуском і його не вдалося знайти знову. Запустіть копіювання знову після завершення гілки.</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>Запуск імпорту повернув: {0} (продовження).</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>Опублікував невідомий автор</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>Дві копії мали б назву «{0}»: дайте кожній іншу назву.</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>Якщо команд кілька, назва має містити {name}, яке замінюється назвою початкової команди.</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>Введіть назву нової команди.</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>Назва копії (використайте {name} для назви початкової команди)</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>Копія кожної команди отримає цю назву. Якщо команд кілька, {name} замінюється назвою початкової команди, а кожну назву ще можна змінити на наступному кроці.</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>Файли</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>Учасники та власники</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>Повідомлення</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>Імпортує повідомлення й відповіді кожного каналу з початковим часом і автором. Вкладені файли згадуються в тексті, але не копіюються; реакції не копіюються.</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>Налаштування</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>Показувати лише мої команди й чати (замість усіх команд тенанта)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>Показує лише команди й чати облікового запису, з яким ви ввійшли, використовуючи лише цей вхід: секрет клієнта чи дозволи застосунку не потрібні.</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>Уже є</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>Чат</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>Загальне</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>Люди</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>Команда</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>Канали</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>Чати</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>Подробиці</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>Частина</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>Тривалість</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>Не вдалося</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>Файли</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>Пропущено</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>Учасники</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>Повідомлення</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>Не скопійовано (не вибрано).</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>Не розпочато: попередня команда зупинила копіювання.</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>Створено {0}, уже були {1}.</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>Створено груповий чат «{0}» у тенанті {1}, власник: {2}.</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>Скопійовано {0}, не вдалося {1}.</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>Для {0} немає відповідника в призначенні, тому цю особу пропущено. Зіставте її в розділі «Налаштування» &gt; «Зіставлення ідентичностей» і знову запустіть копіювання.</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>Додано {0}.</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>Імпортовано {0}, уже були {1}, не вдалося {2}, {3} опубліковано від імені користувача, який копіює, бо для автора немає відповідника.</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>Створено «{0}» у тенанті {1}, власник: {2}.</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>Команди</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>Звіт про копіювання</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>Відкрити в Teams</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>Нова команда в тенанті {0}, її власник: {1}. Відкрийте її: {2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>Нова команда в тенанті {0}, її власник: {1}.</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0} із {1}</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>Копіювати чат «{0}» як новий груповий чат.</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>Копіювати чати ({0}) як нові групові чати: {1}.</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>Канали</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>Назва копії</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>Команда</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>Зокрема: {0}.</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>Перевірте назви копій нижче та змініть ті, що потребують цього. Копія з такою самою назвою, як у попередньої копії, продовжує її; інша назва створює нову команду.</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>лише порожня команда та її канали</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>Копіювати команду «{0}» як нову команду з назвою «{1}».</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>Копіювати команди ({0}) як нові команди.</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>Для {0} із {1} осіб цієї команди немає відповідного облікового запису в призначенні. Без зіставлення їх буде пропущено в копії, а в результатах вони будуть перелічені:
+{2}</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>Вибрати все</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>Вибрано команд: {0}</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>Вибрано чатів: {0}</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>Вибір</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>Підключення</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>Копіювання</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>Параметри</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>Результати</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>Перегляд</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>Створення каналу {0} ({1})…</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>Створення команди {0}…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>Копіювання файлів команди {0}…</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>Команда з попереднього копіювання більше не існує; створюється нова.</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>Додавання учасників: {0}…</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>Копіювання повідомлень команди {0}…</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>Назва «{0}» відрізняється від попередньої копії «{1}», тому створюється нова команда. Попередня копія залишається без змін.</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>Продовження попереднього копіювання в {0}.</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>Копіювання налаштувань команди…</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>Готово. Нова команда {0}: створено каналів {1}, уже були {2}; додано учасників {3}; скопійовано файлів {4}, не вдалося {5}.</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>Повідомлення: {0} імпортовано, {1} уже були, {2} не вдалося; {3} опубліковано від вашого імені, бо для автора немає відповідника в призначенні.</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>Копію буде створено в обліковому записі, з яким ви ввійшли ({0}).</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>Копію буде створено в тенанті призначення від імені {0}. Людей зіставляють з обліковими записами призначення за електронною адресою з використанням вашого зіставлення ідентичностей.</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>Для {0} осіб немає відповідника в призначенні, тому їх пропущено. Зіставте їх у розділі «Налаштування» &gt; «Зіставлення ідентичностей» і знову запустіть копіювання:</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>Канал {0} не створено: {1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>Не вдалося прочитати учасників каналу {0}: {1}</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}: не вдалося скопіювати файлів: {1}. Запустіть копіювання знову, щоб повторити спробу.</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}: не вдалося скопіювати повідомлення: {1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}: не вдалося імпортувати повідомлень: {1}. Запустіть копіювання знову, щоб повторити спробу.</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}: папка вихідних файлів недоступна, тому файли не скопійовано.</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}: нова папка файлів ще не готова, тому файли не скопійовано. Запустіть копіювання знову, щоб повторити спробу.</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>Попередження: {0}</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>Що копіювати</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>Копіювати це повідомлення для адміністратора</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>Клацніть правою кнопкою миші, щоб скопіювати це повідомлення й надіслати його адміністратору.</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>Видалити</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>Секрет клієнта збережено (зашифровано для вашого облікового запису Windows).</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Секрет клієнта (необов’язково, для інструмента Teams)</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Цей секрет використовує лише інструмент Teams, як вхід від імені застосунку (без користувача). У реєстрації призначення він слугує для імпорту повідомлень і чатів, що Microsoft дозволяє лише так, з дозволом застосунку Graph Teamwork.Migrate.All (згода адміністратора). У реєстрації джерела він дає змогу інструменту Teams перелічити всі команди в оренді та чати вибраних вами людей (подання адміністратора); дозволи описано в PERMISSIONS.md. Створіть секрет у цій реєстрації застосунку в розділі «Сертифікати й секрети» та вставте його значення (Value), а не ідентифікатор (ID). Залиште порожнім, якщо вам не потрібне ні те, ні інше.</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Виберіть реєстрацію, щоб змінити її. Яка з них вихідна, а яка цільова, обирається на головному екрані; вибір чи зміна тут цього не змінює.</value></data>
 </root>

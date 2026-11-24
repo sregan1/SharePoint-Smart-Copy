@@ -1655,4 +1655,181 @@ Avbryt: gå tilbake</value></data>
   <data name="Teams_Error" xml:space="preserve"><value>Kunne ikke lese Teams: {0}</value></data>
   <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Teams-verktøyet krever disse delegerte Microsoft Graph-tillatelsene, som denne appregistreringen ikke har: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All og Chat.Read. Åpne registreringen i Azure-portalen, gå til API-tillatelser, legg dem til, gi administratorsamtykke og start appen på nytt. Se «Add API permissions» i README.</value></data>
   <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Direktekopiering krever de delegerte Power Automate Service-tillatelsene Flows.Read.All og Flows.Manage.All, samt PowerApps Service User, som denne appregistreringen ikke har. Legg dem til under API-tillatelser, gi administratorsamtykke og start appen på nytt. Kopiering fra eksporterte pakker fungerer uten dem.</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ {0:N0} mappe(r) (inkludert dokumentsett) hadde ingen e-postadresse for Opprettet av eller Endret av (en systemkonto, SharePoint-app eller en slettet konto): den personen stemples som systemkontoen, som for filer, i stedet for importkontoen</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ {0:N0} mappe(r) hadde ingen e-postadresse for Opprettet av eller Endret av (en systemkonto, SharePoint-app eller en slettet konto): begge stemples som systemkontoen, som for filer, i stedet for importkontoen</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>Legg til chattene deres</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>Viser {0} av {1} personer. Skriv for å begrense listen, velg deretter personer og klikk Legg til chattene deres.</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>{0} chatter lagt til.</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>Chatter lastet inn for: {0} ({1} i listen). Merk de som skal kopieres.</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>Chatter for personene som er valgt ovenfor</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>Stoppet. {0} chatter i listen så langt.</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>Lese chattene til {0} personer? Det kan være et svært stort antall chatter, og det tar en stund; du kan stoppe når som helst. En chat som to av dem deltar i, vises bare én gang.</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>Administratorvisningen er ikke tilgjengelig ({0}); viser i stedet dine egne team og chatter.</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>klienthemmeligheten som er lagret for kilderegistreringen, ble avvist: lim inn hemmelighetens verdi, ikke ID-en, i Innstillinger</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>Finn personer</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>Chatter for:</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>Leser chattene til {0}…</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>Leser chatter: {0} av {1} personer ferdig…</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>Leser alle i katalogen…</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>Bare dine egne team og chatter vises. Hvis du vil vise alle team i leietakeren og chattene til personer du velger, må du lagre en klienthemmelighet for kildeappregistreringen (Innstillinger).</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>Fant ingen hvis navn eller e-postadresse starter med "{0}".</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>"Vis bare mine egne team og chatter" er merket i trinnet Koble til. Fjern merkingen for å velge personer.</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>Det er ikke lagret noen klienthemmelighet for kilderegistreringen {0}. Velg den registreringen i Innstillinger, lim inn hemmeligheten, og åpne deretter denne veiviseren på nytt (en åpen veiviser beholder innstillingene den startet med).</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>Microsoft avviste klienthemmeligheten som er lagret for kilderegistreringen {0}, så bare dine egne team og chatter vises. Rett opp hemmeligheten i Innstillinger og åpne denne veiviseren på nytt.</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>Valg av personer krever administratorvisningen: lagre en klienthemmelighet for kildeappregistreringen i Innstillinger, og la "Vis bare mine egne team og chatter" være umerket i trinnet Koble til.</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>Velg én eller flere personer, og klikk deretter Legg til chattene deres.</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>Vis alle personer</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>Stopp</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(kopieres alltid)</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>{0} team kopiert.</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>{0} av {1} team kopiert. Se detaljene nedenfor.</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>Team {0} av {1}: {2} → {3}</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>Chat {0} av {1}: {2}</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>En chat kopieres som en ny gruppechat med de samme personene (funnet i målet via e-postadressen). Meldingene importeres med opprinnelig tidspunkt og avsender, og alle i den nye chatten kan se hele historikken.</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>Ferdig. Ny chat {0}: {1} personer; meldinger: {2} importert, {3} fantes allerede, {4} mislyktes; {5} lagt ut som deg fordi avsenderen ikke har noen samsvar.</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>Chatten {0} var allerede kopiert.</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>Oppretter kopien av chatten {0}…</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>Finner personene i chatten {0} i målet…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>Chatten {0} ble ikke kopiert: ingen av de andre personene ble funnet i målet.</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>Chat {0}: de importerte meldingene ligger i chatten, men personene ser dem kanskje ikke ennå fordi historikken ikke kunne deles: {1}. Gi registreringen programtillatelsen ChatMember.ReadWrite.All (administratorsamtykke) og kjør chatkopieringen på nytt.</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>Gjør den importerte historikken i chatten {0} synlig for personene i den…</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>{0} chatter kopiert.</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>{0} av {1} chatter kopiert. Se detaljene nedenfor.</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>Merk team og chatter som skal kopieres. Hvert teams kanaler er også merket: fjern merkingen for de som skal utelates. Klikk deretter Neste.</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>Fjern</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>Kontoen din</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>Pålogging avbrutt. Klikk Prøv igjen for å prøve på nytt.</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>Pålogging mislyktes: {0}. Klikk Prøv igjen for å prøve på nytt.</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>Logg på med kontoen som kan se teamene og chattene du vil kopiere. Kopien opprettes i samme leietaker.</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>Logg på kildeleietakeren (der teamet er nå) og målleietakeren (der kopien skal opprettes). Hver pålogging åpner nettleseren. Du kan avbryte én og prøve igjen, og en pålogging som mislykkes, lar den andre være som den er.</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>Logg på begge leietakerne for å fortsette.</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>Logg på for å fortsette.</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>Ikke logget på.</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>Appregistrering: {0} (klient-ID {1})</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>Prøv igjen</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>Logg på</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>Logg på som en annen</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>Logget på som {0}.</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>Kildeleietaker</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>Målleietaker</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>Leietaker: {0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>slår opp…</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>Venter på at du skal fullføre påloggingen i nettleseren. Klikk Avbryt for å slutte å vente, og deretter Prøv igjen.</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>Kopier en til</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>Kopiering avbrutt.</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>Kopiering fullført.</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>Kopieringen stoppet: {0}</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>Kopiering av et team krever også disse delegerte Microsoft Graph-tillatelsene på målappregistreringen {0}. Legg dem til under API-tillatelser, gi administratorsamtykke og prøv igjen: {1} (med administratorsamtykke).</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>Kopiering av et team krever også disse delegerte Microsoft Graph-tillatelsene på målappregistreringen {0}. Legg dem til under API-tillatelser, gi administratorsamtykke og prøv igjen: Team.Create, Channel.Create, ChannelMember.ReadWrite.All, TeamMember.ReadWrite.All, TeamSettings.ReadWrite.All (med administratorsamtykke).</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0} (kopi)</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name} (kopi)</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>Viser teamene og chattene du kan se, med hver kanal merket som standard, privat eller delt. Velg et team for å kopiere innstillingene, medlemmene, kanalene (inkludert private og delte), filene og, hvis du vil, meldingene til et nytt team, i samme leietaker eller i målleietakeren. Velg en chat for å kopiere den og meldingene i den. Meldinger krever målregistreringens klienthemmelighet (se Innstillinger). Private og delte kanaler vises bare hvis du er medlem.</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>Tilordne personer…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>Alle {0} medlemmer ble funnet i målet.</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>Sjekker hvem fra kildeteamet som finnes i målleietakeren…</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …og {0} til</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>{0} team og chatter kopiert.</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>{0} av {1} team og chatter kopiert. Se detaljene nedenfor.</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>Vedlegg ikke kopiert: {0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>Meldingen {0} kunne ikke klargjøres: {1}</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>Importen kunne ikke merkes som fullført, så kanalen kan fortsatt vise et importbanner: {0}</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>Kopiering av meldinger og chatter krever klienthemmeligheten til målappregistreringen. Lagre den under Innstillinger (Azure-appregistreringer), og gi registreringen Microsoft Graph-programtillatelsen Teamwork.Migrate.All med administratorsamtykke.</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>Meldingen {0} kunne ikke importeres: {1}</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>Opprinnelig lagt ut av {0}</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>Svarene på meldingen {0} kunne ikke plasseres fordi meldingen allerede var importert av en avbrutt kjøring og ikke kunne finnes igjen. Kjør kopieringen på nytt etter at tråden er fullført.</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>Start av importen svarte: {0} (fortsetter).</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>Lagt ut av en ukjent avsender</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>To kopier ville fått navnet "{0}": gi hver av dem et eget navn.</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>Med flere team må navnet inneholde {name}, som blir til det opprinnelige teamets navn.</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>Skriv inn et navn på det nye teamet.</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>Navn på kopien (bruk {name} for det opprinnelige teamets navn)</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>Kopien av hvert team får dette navnet. Med flere team blir {name} til det opprinnelige teamets navn, og du kan fortsatt endre hvert navn i neste trinn.</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>Filer</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>Medlemmer og eiere</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>Meldinger</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>Importerer meldingene og svarene i hver kanal med opprinnelig tidspunkt og avsender. Filvedlegg nevnes i teksten og kopieres ikke; reaksjoner kopieres ikke.</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>Innstillinger</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>Vis bare mine egne team og chatter (i stedet for alle team i leietakeren)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>Viser bare teamene og chattene til kontoen du logget på med, bare ved hjelp av den påloggingen: ingen klienthemmelighet eller programtillatelser er nødvendig.</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>Finnes allerede</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>Chat</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>Generelt</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>Personer</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>Team</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>Kanaler</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>Chatter</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>Detaljer</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>Del</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>Varighet</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>Mislyktes</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>Filer</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>Utelatt</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>Medlemmer</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>Meldinger</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>Ikke kopiert (ikke valgt).</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>Ikke startet: et tidligere team stoppet kopieringen.</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>{0} opprettet, {1} fantes allerede.</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>Opprettet gruppechatten "{0}" i leietakeren {1}, eid av {2}.</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>{0} kopiert, {1} mislyktes.</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>{0} har ingen samsvar i målet og ble utelatt. Tilordne dem under Innstillinger &gt; Identitetstilordning, og kjør deretter kopieringen på nytt.</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>{0} lagt til.</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>{0} importert, {1} fantes allerede, {2} mislyktes, {3} lagt ut som brukeren som kopierer, fordi avsenderen ikke har noen samsvar.</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>Opprettet "{0}" i leietakeren {1}, eid av {2}.</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>Team</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>Kopirapport</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>Åpne i Teams</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>Det nye teamet ligger i leietakeren {0} og eies av {1}. Åpne det: {2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>Det nye teamet ligger i leietakeren {0} og eies av {1}.</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0} av {1}</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>Kopier chatten "{0}" som en ny gruppechat.</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>Kopier {0} chatter som nye gruppechatter: {1}.</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>Kanaler</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>Navn på kopien</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>Team</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>Inkluderer: {0}.</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>Kontroller navnene på kopiene nedenfor, og endre de som trenger det. En kopi med samme navn som en tidligere kopi fortsetter den kopien; et annet navn oppretter et nytt team.</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>bare det tomme teamet og kanalene i det</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>Kopier teamet "{0}" som et nytt team med navnet "{1}".</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>Kopier {0} team som nye team.</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>{0} av de {1} personene i dette teamet har ingen samsvarende konto i målet. Uten en tilordning utelates de fra kopien, og de vises i resultatene:
+{2}</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>Velg alle</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>{0} team valgt</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>{0} chatter valgt</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>Velg</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>Koble til</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>Kopier</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>Alternativer</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>Resultater</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>Se gjennom</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>Oppretter kanalen {0} ({1})…</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>Oppretter teamet {0}…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>Kopierer filene i {0}…</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>Teamet fra den tidligere kopieringen finnes ikke lenger; oppretter et nytt.</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>Legger til {0} medlemmer…</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>Kopierer meldingene i {0}…</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>Navnet "{0}" er forskjellig fra den tidligere kopien "{1}", så det opprettes et nytt team. Den tidligere kopien blir som den er.</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>Fortsetter den tidligere kopieringen til {0}.</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>Kopierer teaminnstillinger…</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>Ferdig. Nytt team {0}: {1} kanaler opprettet, {2} fantes allerede; {3} medlemmer lagt til; {4} filer kopiert, {5} mislyktes.</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>Meldinger: {0} importert, {1} fantes allerede, {2} mislyktes; {3} lagt ut som deg fordi avsenderen ikke har noen samsvar i målet.</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>Kopien opprettes i kontoen du er logget på med ({0}).</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>Kopien opprettes i målleietakeren som {0}. Personer samsvares med målkontoer via e-postadressen, ved hjelp av identitetstilordningen din.</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>{0} personer har ingen samsvar i målet og ble utelatt. Tilordne dem under Innstillinger &gt; Identitetstilordning og kjør kopieringen på nytt:</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>Kanalen {0} ble ikke opprettet: {1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>Kunne ikke lese medlemmene i {0}: {1}</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}: {1} filer ble ikke kopiert. Kjør kopieringen på nytt for å prøve igjen.</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}: meldinger kunne ikke kopieres: {1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}: {1} meldinger ble ikke importert. Kjør kopieringen på nytt for å prøve dem igjen.</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}: kildens filmappe er ikke tilgjengelig, så filene ble ikke kopiert.</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}: den nye filmappen er ikke klar ennå, så filene ble ikke kopiert. Kjør kopieringen på nytt for å prøve igjen.</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>{0} advarsler:</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>Hva skal kopieres</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>Kopier denne meldingen til administratoren din</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>Høyreklikk for å kopiere denne meldingen og sende den til administratoren din.</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>Fjern</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>En klienthemmelighet er lagret (kryptert for Windows-kontoen din).</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Klienthemmelighet (valgfritt, for Teams-verktøyet)</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Bare Teams-verktøyet bruker denne hemmeligheten, som en programpålogging (uten bruker). På målregistreringen importerer det meldinger og chatter, noe Microsoft bare tillater på denne måten, med Graph-programtillatelsen Teamwork.Migrate.All (administratorsamtykke). På kilderegistreringen lar den Teams-verktøyet liste alle team i leieren og chattene til personene du velger (administratorvisningen); tillatelsene står i PERMISSIONS.md. Opprett hemmeligheten på denne appregistreringen under Sertifikater og hemmeligheter, og lim inn verdien (Value), ikke ID-en. La feltet stå tomt hvis du ikke trenger noen av delene.</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Velg en registrering for å redigere den. Hvilken som er kilden og hvilken som er målet, velges på startskjermen; å velge eller redigere en her endrer ikke det.</value></data>
 </root>

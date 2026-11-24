@@ -1655,4 +1655,181 @@ Annulla: torna indietro</value></data>
   <data name="Teams_Error" xml:space="preserve"><value>Impossibile leggere Teams: {0}</value></data>
   <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Lo strumento Teams richiede queste autorizzazioni delegate di Microsoft Graph, che questa registrazione dell’app non ha: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All e Chat.Read. Nel portale di Azure aprite la registrazione, andate in Autorizzazioni API, aggiungetele, concedete il consenso dell’amministratore e riavviate l’app. Vedere “Add API permissions” nel README.</value></data>
   <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>La copia dal vivo richiede le autorizzazioni delegate di Power Automate Service Flows.Read.All e Flows.Manage.All, oltre a PowerApps Service User, che questa registrazione dell’app non ha. Aggiungetele in Autorizzazioni API, concedete il consenso dell’amministratore e riavviate l’app. La copia da pacchetti esportati funziona anche senza di esse.</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ {0:N0} cartelle (inclusi i Document Set) non avevano un indirizzo e-mail per Creato da o Modificato da (un account di sistema, l'app SharePoint o un account eliminato): quella persona viene registrata come Account di sistema, come per i file, invece dell'account che importa</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ {0:N0} cartelle non avevano un indirizzo e-mail per Creato da o Modificato da (un account di sistema, l'app SharePoint o un account eliminato): entrambi vengono registrati come Account di sistema, come per i file, invece dell'account che importa</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>Aggiungi le loro chat</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>Vengono mostrate {0} persone su {1}. Digita per restringere l'elenco, poi seleziona le persone e fai clic su Aggiungi le loro chat.</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>{0} chat aggiunte.</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>Chat caricate per: {0} ({1} elencate). Seleziona quelle da copiare.</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>Chat delle persone scelte sopra</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>Interrotto. Finora {0} chat elencate.</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>Leggere le chat di {0} persone? Potrebbero essere moltissime chat e ci vorrà del tempo; puoi interrompere in qualsiasi momento. Una chat condivisa da due di loro viene elencata una sola volta.</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>La vista amministratore non è disponibile ({0}); vengono mostrati invece i tuoi team e le tue chat.</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>il segreto client salvato per la registrazione di origine è stato rifiutato: incolla il Valore del segreto, non il suo ID, in Impostazioni</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>Trova persone</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>Chat di:</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>Lettura delle chat di {0}…</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>Lettura delle chat: {0} persone su {1} completate…</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>Lettura di tutte le persone della directory…</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>Vengono mostrati solo i tuoi team e le tue chat. Per elencare tutti i team del tenant e le chat delle persone che scegli, salva un segreto client per la registrazione dell'app di origine (Impostazioni).</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>Nessuna persona trovata con nome o e-mail che inizia per "{0}".</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>"Mostra solo i miei team e le mie chat" è selezionato nel passaggio Connetti. Deselezionalo per scegliere le persone.</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>Nessun segreto client salvato per la registrazione di origine {0}. In Impostazioni, seleziona quella registrazione e incolla il suo segreto, poi riapri questa procedura guidata (una procedura già aperta mantiene le impostazioni con cui è stata avviata).</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>Microsoft ha rifiutato il segreto client salvato per la registrazione di origine {0}, quindi vengono mostrati solo i tuoi team e le tue chat. Correggi il segreto in Impostazioni e riapri questa procedura guidata.</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>La scelta delle persone richiede la vista amministratore: salva un segreto client per la registrazione dell'app di origine in Impostazioni e lascia deselezionato "Mostra solo i miei team e le mie chat" nel passaggio Connetti.</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>Seleziona una o più persone, poi fai clic su Aggiungi le loro chat.</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>Mostra tutte le persone</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>Interrompi</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(sempre copiato)</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>{0} team copiati.</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>{0} team su {1} copiati. Vedi i dettagli sotto.</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>Team {0} di {1}: {2} → {3}</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>Chat {0} di {1}: {2}</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>Una chat viene copiata come nuova chat di gruppo con le stesse persone (trovate nella destinazione tramite il loro indirizzo e-mail). I suoi messaggi vengono importati con data e ora e autore originali, e tutti i partecipanti della nuova chat vedono l'intera cronologia.</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>Fatto. Nuova chat {0}: {1} persone; messaggi: {2} importati, {3} già presenti, {4} non riusciti; {5} pubblicati a tuo nome perché l'autore non ha corrispondenza.</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>La chat {0} è già stata copiata.</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>Creazione della copia della chat {0}…</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>Ricerca nella destinazione delle persone della chat {0}…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>La chat {0} non è stata copiata: nessuna delle altre persone è stata trovata nella destinazione.</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>Chat {0}: i messaggi importati sono nella chat, ma le sue persone potrebbero non vederli ancora, perché non è stato possibile condividere la loro cronologia: {1}. Concedi alla registrazione l'autorizzazione dell'applicazione ChatMember.ReadWrite.All (consenso dell'amministratore) ed esegui di nuovo la copia della chat.</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>Rendo visibile alle sue persone la cronologia importata della chat {0}…</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>{0} chat copiate.</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>{0} chat su {1} copiate. Vedi i dettagli sotto.</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>Seleziona i team e le chat da copiare. Anche i canali di ogni team sono selezionati: deseleziona quelli da escludere. Poi fai clic su Avanti.</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>Deseleziona</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>Il tuo account</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>Accesso annullato. Fai clic su Riprova per riprovare.</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>Accesso non riuscito: {0}. Fai clic su Riprova per riprovare.</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>Accedi con l'account che può vedere i team e le chat che vuoi copiare. La copia viene eseguita nello stesso tenant.</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>Accedi al tenant di origine (dove si trova ora il team) e al tenant di destinazione (dove verrà creata la copia). Ogni accesso apre il browser. Puoi annullarne uno e riprovare, e un accesso non riuscito lascia l'altro invariato.</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>Accedi a entrambi i tenant per continuare.</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>Accedi per continuare.</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>Accesso non effettuato.</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>Registrazione app: {0} (ID client {1})</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>Riprova</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>Accedi</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>Accedi come un altro utente</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>Accesso effettuato come {0}.</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>Tenant di origine</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>Tenant di destinazione</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>Tenant: {0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>ricerca in corso…</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>In attesa che tu completi l'accesso nel browser. Fai clic su Annulla per smettere di attendere, poi su Riprova.</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>Copia un altro</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>Copia annullata.</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>Copia terminata.</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>La copia si è interrotta: {0}</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>Per copiare un team servono anche queste autorizzazioni delegate di Microsoft Graph sulla registrazione dell'app di destinazione {0}. Aggiungile in Autorizzazioni API, concedi il consenso dell'amministratore, poi riprova: {1} (con consenso dell'amministratore).</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>Per copiare un team servono anche queste autorizzazioni delegate di Microsoft Graph sulla registrazione dell'app di destinazione {0}. Aggiungile in Autorizzazioni API, concedi il consenso dell'amministratore, poi riprova: Team.Create, Channel.Create, ChannelMember.ReadWrite.All, TeamMember.ReadWrite.All, TeamSettings.ReadWrite.All (con consenso dell'amministratore).</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0} (copia)</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name} (copia)</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>Elenca i team e le chat che puoi vedere, con ogni canale contrassegnato come standard, privato o condiviso. Seleziona un team per copiarne impostazioni, membri, canali (inclusi quelli privati e condivisi), file e, se vuoi, messaggi in un nuovo team, nello stesso tenant o nel tenant di destinazione. Seleziona una chat per copiarla insieme ai suoi messaggi. I messaggi richiedono il segreto client della registrazione di destinazione (vedi Impostazioni). I canali privati e condivisi compaiono solo se ne sei membro.</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>Mappa persone…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>Tutti i {0} membri sono stati trovati nella destinazione.</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>Controllo di quali persone del team di origine esistono nel tenant di destinazione…</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …e altri {0}</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>{0} team e chat copiati.</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>{0} team e chat su {1} copiati. Vedi i dettagli sotto.</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>Allegato non copiato: {0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>Impossibile preparare il messaggio {0}: {1}</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>Impossibile contrassegnare l'importazione come completata, quindi il canale potrebbe mostrare ancora un banner di importazione: {0}</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>Per copiare messaggi e chat serve il segreto client della registrazione dell'app di destinazione. Salvalo in Impostazioni (Registrazioni app di Azure) e concedi alla registrazione l'autorizzazione dell'applicazione Microsoft Graph Teamwork.Migrate.All con consenso dell'amministratore.</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>Impossibile importare il messaggio {0}: {1}</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>Pubblicato originariamente da {0}</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>Non è stato possibile collocare le risposte al messaggio {0} perché il messaggio era già stato importato da un'esecuzione interrotta e non è stato più trovato. Esegui di nuovo la copia dopo il completamento del thread.</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>L'avvio dell'importazione ha risposto: {0} (si continua).</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>Pubblicato da un autore sconosciuto</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>Due copie si chiamerebbero "{0}": assegna a ciascuna un nome diverso.</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>Con più team il nome deve contenere {name}, che diventa il nome del team originale.</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>Inserisci un nome per il nuovo team.</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>Nome della copia (usa {name} per il nome del team originale)</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>La copia di ogni team riceve questo nome. Con più team, {name} diventa il nome del team originale, e puoi comunque modificare ogni nome nel passaggio successivo.</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>File</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>Membri e proprietari</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>Messaggi</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>Importa i messaggi e le risposte di ogni canale con data e ora e autore originali. Gli allegati sono indicati per nome nel testo, non copiati; le reazioni non vengono copiate.</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>Impostazioni</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>Mostra solo i miei team e le mie chat (invece di tutti i team del tenant)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>Elenca solo i team e le chat dell'account con cui hai effettuato l'accesso, usando solo quell'accesso: non servono segreto client né autorizzazioni dell'applicazione.</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>Già presenti</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>Chat</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>Generale</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>Persone</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>Team</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>Canali</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>Chat</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>Dettagli</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>Parte</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>Durata</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>Non riusciti</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>File</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>Esclusi</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>Membri</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>Messaggi</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>Non copiato (non selezionato).</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>Non avviato: un team precedente ha interrotto la copia.</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>{0} creati, {1} già presenti.</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>Creata la chat di gruppo "{0}" nel tenant {1}, di proprietà di {2}.</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>{0} copiati, {1} non riusciti.</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>{0} non ha corrispondenza nella destinazione ed è stato escluso. Mappalo in Impostazioni &gt; Mapping identità, poi esegui di nuovo la copia.</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>{0} aggiunti.</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>{0} importati, {1} già presenti, {2} non riusciti, {3} pubblicati come l'utente che copia perché l'autore non ha corrispondenza.</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>Creato "{0}" nel tenant {1}, di proprietà di {2}.</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>Team</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>Report di copia</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>Apri in Teams</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>Il nuovo team si trova nel tenant {0} ed è di proprietà di {1}. Aprilo: {2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>Il nuovo team si trova nel tenant {0} ed è di proprietà di {1}.</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0} di {1}</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>Copia la chat "{0}" come nuova chat di gruppo.</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>Copia {0} chat come nuove chat di gruppo: {1}.</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>Canali</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>Nome della copia</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>Team</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>Include: {0}.</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>Controlla qui sotto i nomi delle copie e modifica quelli che servono. Una copia con lo stesso nome di una copia precedente prosegue quella copia; un nome diverso crea un nuovo team.</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>solo il team vuoto e i suoi canali</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>Copia il team "{0}" come nuovo team chiamato "{1}".</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>Copia {0} team come nuovi team.</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>{0} delle {1} persone di questo team non hanno un account corrispondente nella destinazione. Senza un mapping vengono escluse dalla copia ed elencate nei risultati:
+{2}</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>Seleziona tutto</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>{0} team selezionati</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>{0} chat selezionate</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>Scelta</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>Connessione</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>Copia</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>Opzioni</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>Risultati</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>Revisione</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>Creazione del canale {0} ({1})…</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>Creazione del team {0}…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>Copia dei file di {0}…</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>Il team della copia precedente non esiste più; ne viene creato uno nuovo.</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>Aggiunta di {0} membri…</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>Copia dei messaggi di {0}…</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>Il nome "{0}" è diverso dalla copia precedente "{1}", quindi viene creato un nuovo team. La copia precedente resta invariata.</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>Prosecuzione della copia precedente in {0}.</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>Copia delle impostazioni del team…</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>Fatto. Nuovo team {0}: {1} canali creati, {2} già presenti; {3} membri aggiunti; {4} file copiati, {5} non riusciti.</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>Messaggi: {0} importati, {1} già presenti, {2} non riusciti; {3} pubblicati a tuo nome perché l'autore non ha corrispondenza nella destinazione.</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>La copia verrà creata nell'account con cui hai effettuato l'accesso ({0}).</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>La copia verrà creata nel tenant di destinazione, come {0}. Le persone vengono associate agli account di destinazione tramite l'indirizzo e-mail, usando il tuo mapping identità.</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>{0} persone non hanno corrispondenza nella destinazione e sono state escluse. Mappale in Impostazioni &gt; Mapping identità ed esegui di nuovo la copia:</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>Il canale {0} non è stato creato: {1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>Impossibile leggere i membri di {0}: {1}</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}: {1} file non sono stati copiati. Esegui di nuovo la copia per riprovare.</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}: impossibile copiare i messaggi: {1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}: {1} messaggi non sono stati importati. Esegui di nuovo la copia per riprovare.</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}: la cartella dei file di origine non è disponibile, quindi i suoi file non sono stati copiati.</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}: la nuova cartella dei file non è ancora pronta, quindi i suoi file non sono stati copiati. Esegui di nuovo la copia per riprovare.</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>{0} avvisi:</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>Cosa copiare</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>Copia questo messaggio per il tuo amministratore</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>Fai clic con il pulsante destro per copiare questo messaggio e inviarlo al tuo amministratore.</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>Rimuovi</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>Un segreto client è salvato (crittografato per il tuo account Windows).</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Segreto client (facoltativo, per lo strumento Teams)</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Solo lo strumento Teams usa questo segreto, come accesso come applicazione (senza utente). Nella registrazione di destinazione importa messaggi e chat, cosa che Microsoft consente solo in questo modo, con l'autorizzazione dell'applicazione Graph Teamwork.Migrate.All (consenso dell'amministratore). Nella registrazione di origine consente allo strumento Teams di elencare tutti i team del tenant e le chat delle persone che scegli (la vista amministratore); le autorizzazioni sono in PERMISSIONS.md. Crea il segreto in questa registrazione app in Certificati e segreti e incolla il suo valore (Value), non il suo ID. Lascialo vuoto se non ti serve nessuna delle due cose.</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Seleziona una registrazione per modificarla. Quale sia l'origine e quale la destinazione si sceglie nella schermata iniziale; selezionarne o modificarne una qui non cambia questa scelta.</value></data>
 </root>

@@ -1655,4 +1655,181 @@
   <data name="Teams_Error" xml:space="preserve"><value>无法读取 Teams：{0}</value></data>
   <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Teams 工具需要以下委托的 Microsoft Graph 权限，但此应用注册中没有：Team.ReadBasic.All、Channel.ReadBasic.All、TeamMember.Read.All 和 Chat.Read。请在 Azure 门户中打开该注册，转到“API 权限”，添加这些权限，授予管理员同意，然后重启应用。请参阅 README 中的“Add API permissions”。</value></data>
   <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>实时复制需要委托的 Power Automate Service 权限 Flows.Read.All 和 Flows.Manage.All，以及 PowerApps Service User，但此应用注册中没有这些权限。请在“API 权限”中添加它们，授予管理员同意，然后重启应用。从导出的包进行复制不需要这些权限。</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ {0:N0} 个文件夹(包括文档集)的创建者或修改者没有电子邮件(系统帐户、SharePoint 应用或已删除的帐户):该人员与文件一样记为系统帐户,而不是导入帐户</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ {0:N0} 个文件夹的创建者或修改者没有电子邮件(系统帐户、SharePoint 应用或已删除的帐户):二者与文件一样均记为系统帐户,而不是导入帐户</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>添加其聊天</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>显示 {1} 人中的 {0} 人。输入内容以缩小列表范围,然后选择人员并单击“添加其聊天”。</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>已添加 {0} 个聊天。</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>已加载聊天:{0}(列出 {1} 个)。请勾选要复制的聊天。</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>上方所选人员的聊天</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>已停止。到目前为止已列出 {0} 个聊天。</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>要读取 {0} 人的聊天吗?聊天数量可能非常多,需要一些时间;您可以随时停止。两人共有的聊天只列出一次。</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>管理员视图不可用({0});改为显示您自己的团队和聊天。</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>源注册中保存的客户端密码被拒绝:请在“设置”中粘贴密码的值,而不是其 ID</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>查找人员</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>聊天对象:</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>正在读取 {0} 的聊天…</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>正在读取聊天:已完成 {1} 人中的 {0} 人…</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>正在读取目录中的所有人员…</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>仅显示您自己的团队和聊天。若要列出租户中的所有团队以及所选人员的聊天,请为源应用注册保存客户端密码(设置)。</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>未找到姓名或电子邮件以“{0}”开头的人员。</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>“连接”步骤中已勾选“仅显示我自己的团队和聊天”。取消勾选后才能选择人员。</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>未为源注册 {0} 保存客户端密码。请在“设置”中选择该注册并粘贴其密码,然后重新打开此向导(已打开的向导会保留其启动时的设置)。</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>Microsoft 拒绝了源注册 {0} 中保存的客户端密码,因此仅显示您自己的团队和聊天。请在“设置”中修复密码,然后重新打开此向导。</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>选择人员需要管理员视图:请在“设置”中为源应用注册保存客户端密码,并在“连接”步骤中保持“仅显示我自己的团队和聊天”未勾选。</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>选择一个或多个人员,然后单击“添加其聊天”。</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>显示所有人员</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>停止</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(始终复制)</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>已复制 {0} 个团队。</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>已复制 {1} 个团队中的 {0} 个。详细信息见下方。</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>团队 {0}/{1}:{2} → {3}</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>聊天 {0}/{1}:{2}</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>聊天将复制为包含相同人员的新群聊(在目标中按电子邮件查找)。消息将以原始时间和作者导入,新聊天中的所有人都可以看到完整历史记录。</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>完成。新聊天 {0}:{1} 人;消息:已导入 {2} 条,已存在 {3} 条,失败 {4} 条;因作者无匹配项,{5} 条以您的身份发布。</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>聊天 {0} 已复制。</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>正在创建聊天 {0} 的副本…</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>正在目标中查找聊天 {0} 的人员…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>聊天 {0} 未复制:在目标中找不到其他任何人员。</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>聊天 {0}:导入的消息已在聊天中,但由于无法共享其历史记录,相关人员可能暂时看不到:{1}。请为该注册授予应用程序权限 ChatMember.ReadWrite.All(管理员同意),然后再次运行聊天复制。</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>正在使聊天 {0} 的导入历史记录对相关人员可见…</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>已复制 {0} 个聊天。</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>已复制 {1} 个聊天中的 {0} 个。详细信息见下方。</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>勾选要复制的团队和聊天。每个团队的频道也已勾选:取消勾选要排除的频道。然后单击“下一步”。</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>清除</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>您的帐户</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>登录已取消。请单击“重试”再试一次。</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>登录失败:{0}。请单击“重试”再试一次。</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>请使用可查看要复制的团队和聊天的帐户登录。副本将在同一租户中创建。</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>请登录源租户(团队当前所在位置)和目标租户(将创建副本的位置)。每次登录都会打开浏览器。您可以取消其中一个并重试,登录失败不会影响另一个。</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>请登录两个租户以继续。</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>请登录以继续。</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>未登录。</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>应用注册:{0}(客户端 ID {1})</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>重试</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>登录</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>以其他用户身份登录</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>已以 {0} 身份登录。</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>源租户</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>目标租户</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>租户:{0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>正在查找…</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>正在等待您在浏览器中完成登录。单击“取消”可停止等待,然后单击“重试”。</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>复制其他项</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>复制已取消。</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>复制已完成。</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>复制已停止:{0}</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>复制团队还需要目标应用注册 {0} 具有以下委托的 Microsoft Graph 权限。请在“API 权限”下添加这些权限,授予管理员同意,然后重试:{1}(需管理员同意)。</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>复制团队还需要目标应用注册 {0} 具有以下委托的 Microsoft Graph 权限。请在“API 权限”下添加这些权限,授予管理员同意,然后重试:Team.Create、Channel.Create、ChannelMember.ReadWrite.All、TeamMember.ReadWrite.All、TeamSettings.ReadWrite.All(需管理员同意)。</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0}(副本)</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name}(副本)</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>列出您可以看到的团队和聊天,并将每个频道标记为标准、专用或共享。选择团队,可将其设置、成员、频道(包括专用和共享频道)、文件以及(如果选择)消息复制到同一租户或目标租户中的新团队。选择聊天,可复制该聊天及其消息。复制消息需要目标注册的客户端密码(请参阅“设置”)。专用和共享频道仅在您是成员时才会显示。</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>映射人员…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>在目标中找到了全部 {0} 位成员。</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>正在检查源团队中的人员是否存在于目标租户中…</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …以及另外 {0} 人</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>已复制 {0} 个团队和聊天。</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>已复制 {1} 个团队和聊天中的 {0} 个。详细信息见下方。</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>附件未复制:{0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>无法准备消息 {0}:{1}</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>无法将导入标记为完成,因此频道中可能仍显示导入横幅:{0}</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>复制消息和聊天需要目标应用注册的客户端密码。请将其保存在“设置”(Azure 应用注册)下,并为该注册授予 Microsoft Graph 应用程序权限 Teamwork.Migrate.All(需管理员同意)。</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>无法导入消息 {0}:{1}</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>原始发布者:{0}</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>无法放置对消息 {0} 的回复,因为该消息已由中断的运行导入,且无法再次找到。请在线程完成后再次运行复制。</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>启动导入时返回:{0}(继续)。</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>由未知作者发布</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>两个副本将被命名为“{0}”:请为每个副本指定不同的名称。</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>选择多个团队时,名称必须包含 {name},它将替换为原团队的名称。</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>请输入新团队的名称。</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>副本名称(使用 {name} 表示原团队的名称)</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>每个团队的副本都将使用此名称。选择多个团队时,{name} 将变为原团队的名称,您仍可在下一步中更改每个名称。</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>文件</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>成员和所有者</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>消息</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>按原始时间和作者导入每个频道的消息和回复。文件附件不会复制,仅在文本中注明名称;表情回应也不会复制。</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>设置</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>仅显示我自己的团队和聊天(而不是租户中的所有团队)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>仅使用该登录凭据,列出您登录所用帐户的团队和聊天:无需客户端密码或应用程序权限。</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>已存在</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>聊天</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>常规</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>人员</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>团队</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>频道</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>聊天</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>详细信息</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>部分</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>持续时间</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>失败</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>文件</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>已排除</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>成员</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>消息</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>未复制(未选择)。</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>未开始:前一个团队中止了复制。</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>已创建 {0} 个,已存在 {1} 个。</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>已在租户 {1} 中创建群聊“{0}”,所有者为 {2}。</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>已复制 {0} 个,失败 {1} 个。</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>{0} 在目标中没有匹配项,已被排除。请在“设置”&gt;“标识映射”下映射此人员,然后再次运行复制。</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>已添加 {0} 人。</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>已导入 {0} 条,已存在 {1} 条,失败 {2} 条,因作者无匹配项,{3} 条以执行复制的用户身份发布。</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>已在租户 {1} 中创建“{0}”,所有者为 {2}。</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>团队</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>复制报告</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>在 Teams 中打开</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>新团队位于租户 {0} 中,所有者为 {1}。打开:{2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>新团队位于租户 {0} 中,所有者为 {1}。</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0}/{1}</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>将聊天“{0}”复制为新群聊。</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>将 {0} 个聊天复制为新群聊:{1}。</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>频道</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>副本名称</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>团队</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>包括:{0}。</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>请检查下面各副本的名称,并更改需要更改的名称。与先前副本同名的副本将继续该副本,名称不同则创建新团队。</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>仅空团队及其频道</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>将团队“{0}”复制为名为“{1}”的新团队。</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>将 {0} 个团队复制为新团队。</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>此团队的 {1} 位人员中,有 {0} 位在目标中没有匹配的帐户。如果不进行映射,他们将被排除在复制之外,并列在结果中:
+{2}</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>全选</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>已选择 {0} 个团队</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>已选择 {0} 个聊天</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>选择</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>连接</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>复制</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>选项</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>结果</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>查看</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>正在创建频道 {0}({1})…</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>正在创建团队 {0}…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>正在复制 {0} 的文件…</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>上次复制的团队已不存在;正在创建新团队。</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>正在添加 {0} 位成员…</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>正在复制 {0} 的消息…</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>名称“{0}”与先前的副本“{1}”不同,因此将创建新团队。先前的副本保持不变。</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>正在继续先前复制到 {0} 的操作。</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>正在复制团队设置…</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>完成。新团队 {0}:已创建 {1} 个频道,已存在 {2} 个;已添加 {3} 位成员;已复制 {4} 个文件,失败 {5} 个。</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>消息:已导入 {0} 条,已存在 {1} 条,失败 {2} 条;因目标中无匹配的作者,{3} 条以您的身份发布。</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>副本将在您登录所用的帐户({0})中创建。</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>副本将以 {0} 的身份在目标租户中创建。人员将通过电子邮件并使用您的标识映射与目标帐户匹配。</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>有 {0} 位人员在目标中没有匹配项,已被排除。请在“设置”&gt;“标识映射”下映射他们,然后再次运行复制:</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>未创建频道 {0}:{1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>无法读取 {0} 的成员:{1}</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}:{1} 个文件复制失败。请再次运行复制以重试。</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}:无法复制消息:{1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}:{1} 条消息导入失败。请再次运行复制以重试。</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}:源文件文件夹不可用,因此未复制其文件。</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}:新的文件文件夹尚未就绪,因此未复制其文件。请再次运行复制以重试。</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>{0} 条警告:</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>要复制的内容</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>复制此消息以发送给管理员</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>右键单击以复制此消息并发送给管理员。</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>删除</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>已保存客户端密码(已针对您的 Windows 帐户加密)。</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>客户端密码(可选,用于 Teams 工具)</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>只有 Teams 工具会使用此密码,作为应用程序登录(无用户)。在目标注册中,它用于导入消息和聊天,Microsoft 仅允许以这种方式、并使用 Graph 应用程序权限 Teamwork.Migrate.All(需管理员同意)来执行此操作。在源注册中,它让 Teams 工具列出租户中的所有团队以及您所选人员的聊天(管理员视图);权限请参阅 PERMISSIONS.md。请在此应用注册的“证书和密码”下创建密码,并粘贴其值(Value),而不是其 ID。如果两者都不需要,请留空。</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>选择一个注册进行编辑。哪个是源、哪个是目标在主屏幕上选择;在此处选择或编辑注册不会更改该设置。</value></data>
 </root>

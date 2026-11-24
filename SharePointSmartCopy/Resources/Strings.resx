@@ -1659,10 +1659,10 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Teams_Error" xml:space="preserve"><value>Could not read Teams: {0}</value></data>
   <data name="Tool_CopyForAdmin" xml:space="preserve"><value>Copy this message for your administrator</value></data>
   <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>Right-click to copy this message and send it to your administrator.</value></data>
-  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Client secret (optional, for copying Teams messages)</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Client secret (optional, for the Teams tool)</value></data>
   <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>A client secret is saved (encrypted for your Windows account).</value></data>
   <data name="Ui_ClientSecretClear" xml:space="preserve"><value>Remove</value></data>
-  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Only the Teams tool uses this, to import messages and chats: Microsoft allows that only for an application sign-in with the Graph application permission Teamwork.Migrate.All (admin consent). Create the secret on this app registration under Certificates &amp; secrets. Leave it empty if you do not copy messages.</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Only the Teams tool uses this secret, as an application sign-in (no user). On the target registration it imports messages and chats, which Microsoft allows only this way, with the Graph application permission Teamwork.Migrate.All (admin consent). On the source registration it lets the Teams tool list every team in the tenant and the chats of the people you choose (the administrator view); the permissions are in PERMISSIONS.md. Create the secret on this app registration under Certificates &amp; secrets and paste its Value, not its ID. Leave it empty if you need neither.</value></data>
   <data name="Teams_OptMessages" xml:space="preserve"><value>Messages</value></data>
   <data name="Teams_OptMessagesTip" xml:space="preserve"><value>Imports each channel's messages and replies with their original time and author. File attachments are named in the text, not copied; reactions are not copied.</value></data>
   <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>Copying messages and chats needs the target app registration's client secret. Save it under Settings (Azure app registrations), and give the registration the Microsoft Graph application permission Teamwork.Migrate.All with admin consent.</value></data>
@@ -1822,4 +1822,14 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Teams_Admin_Fallback" xml:space="preserve"><value>The administrator view is unavailable ({0}); showing your own teams and chats instead.</value></data>
   <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>the client secret saved for the source registration was rejected: paste the secret's Value, not its ID, in Settings</value></data>
   <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>Choosing people needs the administrator view: save a client secret for the source app registration in Settings, and leave "Only show my own teams and chats" unticked on the Connect step.</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>Show all people</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>Reading everyone in the directory…</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>Showing {0} of {1} people. Type to narrow the list, then select people and click Add their chats.</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>Read the chats of {0} people? This can be a very large number of chats and takes a while; you can stop it at any time. A chat shared by two of them is listed once.</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>Stop</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>Reading chats: {0} of {1} people done…</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>Stopped. {0} chats listed so far.</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>No client secret is saved for the source registration {0}. In Settings, select that registration and paste its secret, then reopen this wizard (an open wizard keeps the settings it started with).</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>Microsoft rejected the client secret saved for the source registration {0}, so only your own teams and chats are shown. Fix the secret in Settings and reopen this wizard.</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>"Only show my own teams and chats" is ticked on the Connect step. Untick it to choose people.</value></data>
 </root>

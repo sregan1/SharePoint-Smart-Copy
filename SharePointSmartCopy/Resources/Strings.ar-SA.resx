@@ -1655,4 +1655,181 @@
   <data name="Teams_Error" xml:space="preserve"><value>تعذرت قراءة Teams: {0}</value></data>
   <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>تحتاج أداة Teams إلى أذونات Microsoft Graph المفوَّضة التالية، وتسجيل التطبيق هذا لا يتضمنها: Team.ReadBasic.All وChannel.ReadBasic.All وTeamMember.Read.All وChat.Read. في مدخل Azure افتح التسجيل، وانتقل إلى أذونات واجهة برمجة التطبيقات، وأضفها، وامنح موافقة المسؤول، ثم أعد تشغيل التطبيق. راجع «إضافة أذونات واجهة برمجة التطبيقات» في ملف README.</value></data>
   <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>يتطلب النسخ المباشر أذونات Power Automate Service المفوَّضة Flows.Read.All وFlows.Manage.All، بالإضافة إلى PowerApps Service User، وتسجيل التطبيق هذا لا يتضمنها. أضفها ضمن أذونات واجهة برمجة التطبيقات، وامنح موافقة المسؤول، ثم أعد تشغيل التطبيق. النسخ من الحزم المصدَّرة يعمل بدونها.</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ لم يكن لدى {0:N0} مجلد(ات) (بما في ذلك مجموعات المستندات) بريد إلكتروني للمنشئ أو المعدِّل (حساب نظام أو تطبيق SharePoint أو حساب محذوف): يُسجَّل هذا الشخص كحساب النظام، كما في الملفات، بدلاً من حساب الاستيراد</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ لم يكن لدى {0:N0} مجلد(ات) بريد إلكتروني للمنشئ أو المعدِّل (حساب نظام أو تطبيق SharePoint أو حساب محذوف): يُسجَّل كلاهما كحساب النظام، كما في الملفات، بدلاً من حساب الاستيراد</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>إضافة محادثاتهم</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>عرض {0} من {1} شخص. اكتب لتضييق القائمة، ثم حدّد الأشخاص وانقر على إضافة محادثاتهم.</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>تمت إضافة {0} محادثة.</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>تم تحميل المحادثات لـ: {0} ({1} مدرجة). حدّد ما تريد نسخه.</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>محادثات الأشخاص المحددين أعلاه</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>تم الإيقاف. {0} محادثة مدرجة حتى الآن.</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>هل تريد قراءة محادثات {0} شخص؟ قد يكون عدد المحادثات كبيرًا جدًا ويستغرق وقتًا؛ يمكنك إيقاف العملية في أي وقت. المحادثة المشتركة بين اثنين منهم تُدرج مرة واحدة.</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>عرض المسؤول غير متاح ({0})؛ يتم عرض فرقك ومحادثاتك الخاصة بدلاً من ذلك.</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>تم رفض سر العميل المحفوظ لتسجيل المصدر: الصق قيمة السر (Value) وليس معرّفه (ID) في الإعدادات</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>بحث عن أشخاص</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>محادثات:</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>جارٍ قراءة محادثات {0}…</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>جارٍ قراءة المحادثات: اكتمل {0} من {1} شخص…</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>جارٍ قراءة جميع الأشخاص في الدليل…</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>لا تُعرض سوى فرقك ومحادثاتك الخاصة. لعرض كل الفرق في المستأجر ومحادثات الأشخاص الذين تختارهم، احفظ سر عميل لتسجيل تطبيق المصدر (الإعدادات).</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>لم يتم العثور على أحد يبدأ اسمه أو بريده الإلكتروني بـ "{0}".</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>الخيار "إظهار فرقي ومحادثاتي فقط" محدد في خطوة الاتصال. ألغِ تحديده لاختيار الأشخاص.</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>لا يوجد سر عميل محفوظ لتسجيل المصدر {0}. في الإعدادات، حدّد هذا التسجيل والصق سره، ثم أعد فتح هذا المعالج (يحتفظ المعالج المفتوح بالإعدادات التي بدأ بها).</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>رفضت Microsoft سر العميل المحفوظ لتسجيل المصدر {0}، لذلك لا تُعرض سوى فرقك ومحادثاتك الخاصة. صحّح السر في الإعدادات وأعد فتح هذا المعالج.</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>يتطلب اختيار الأشخاص عرض المسؤول: احفظ سر عميل لتسجيل تطبيق المصدر في الإعدادات، واترك الخيار "إظهار فرقي ومحادثاتي فقط" غير محدد في خطوة الاتصال.</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>حدّد شخصًا واحدًا أو أكثر، ثم انقر على إضافة محادثاتهم.</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>عرض جميع الأشخاص</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>إيقاف</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(يُنسخ دائمًا)</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>تم نسخ {0} فريق.</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>تم نسخ {0} من {1} فريق. راجع التفاصيل أدناه.</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>الفريق {0} من {1}: {2} → {3}</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>المحادثة {0} من {1}: {2}</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>تُنسخ المحادثة كمحادثة جماعية جديدة بالأشخاص أنفسهم (يتم العثور عليهم في الهدف من خلال بريدهم الإلكتروني). تُستورد رسائلها بوقتها الأصلي ومؤلفها الأصلي، ويستطيع كل من في المحادثة الجديدة رؤية السجل الكامل.</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>تم. المحادثة الجديدة {0}: {1} شخص؛ الرسائل: {2} مستوردة، {3} موجودة مسبقًا، {4} فشلت؛ {5} نُشرت باسمك لعدم وجود مطابقة للمؤلف.</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>تم نسخ المحادثة {0} مسبقًا.</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>جارٍ إنشاء نسخة من المحادثة {0}…</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>جارٍ البحث عن أشخاص المحادثة {0} في الهدف…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>لم تُنسخ المحادثة {0}: تعذر العثور على أي من الأشخاص الآخرين فيها في الهدف.</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>المحادثة {0}: الرسائل المستوردة موجودة في المحادثة لكن قد لا يراها أشخاصها بعد، لأنه تعذرت مشاركة سجلها: {1}. امنح التسجيل إذن التطبيق ChatMember.ReadWrite.All (بموافقة المسؤول) وشغّل نسخ المحادثة مرة أخرى.</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>جارٍ جعل السجل المستورد للمحادثة {0} مرئيًا لأشخاصها…</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>تم نسخ {0} محادثة.</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>تم نسخ {0} من {1} محادثة. راجع التفاصيل أدناه.</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>حدّد الفرق والمحادثات المراد نسخها. تُحدَّد قنوات كل فريق أيضًا: ألغِ تحديد ما تريد استبعاده. ثم انقر على التالي.</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>مسح</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>حسابك</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>تم إلغاء تسجيل الدخول. انقر على إعادة المحاولة للمحاولة مرة أخرى.</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>فشل تسجيل الدخول: {0}. انقر على إعادة المحاولة للمحاولة مرة أخرى.</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>سجّل الدخول بالحساب الذي يستطيع رؤية الفرق والمحادثات التي تريد نسخها. يتم النسخ في المستأجر نفسه.</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>سجّل الدخول إلى مستأجر المصدر (حيث يوجد الفريق الآن) وإلى مستأجر الهدف (حيث ستُنشأ النسخة). يفتح كل تسجيل دخول المتصفح. يمكنك إلغاء أحدهما وإعادة المحاولة، ولا يؤثر فشل أحدهما على الآخر.</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>سجّل الدخول إلى كلا المستأجرين للمتابعة.</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>سجّل الدخول للمتابعة.</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>لم يتم تسجيل الدخول.</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>تسجيل التطبيق: {0} (client ID {1})</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>إعادة المحاولة</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>تسجيل الدخول</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>تسجيل الدخول بحساب آخر</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>تم تسجيل الدخول باسم {0}.</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>مستأجر المصدر</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>مستأجر الهدف</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>المستأجر: {0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>جارٍ البحث…</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>في انتظار إكمال تسجيل الدخول في المتصفح. انقر على إلغاء لإيقاف الانتظار، ثم إعادة المحاولة.</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>نسخ آخر</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>تم إلغاء النسخ.</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>اكتمل النسخ.</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>توقف النسخ: {0}</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>يتطلب نسخ فريق أيضًا أذونات Microsoft Graph المفوَّضة التالية في تسجيل تطبيق الهدف {0}. أضفها ضمن أذونات API، وامنح موافقة المسؤول، ثم حاول مرة أخرى: {1} (بموافقة المسؤول).</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>يتطلب نسخ فريق أيضًا أذونات Microsoft Graph المفوَّضة التالية في تسجيل تطبيق الهدف {0}. أضفها ضمن أذونات API، وامنح موافقة المسؤول، ثم حاول مرة أخرى: Team.Create، Channel.Create، ChannelMember.ReadWrite.All، TeamMember.ReadWrite.All، TeamSettings.ReadWrite.All (بموافقة المسؤول).</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0} (نسخة)</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name} (نسخة)</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>يعرض الفرق والمحادثات التي يمكنك رؤيتها، مع تمييز كل قناة كقياسية أو خاصة أو مشتركة. حدّد فريقًا لنسخ إعداداته وأعضائه وقنواته (بما في ذلك الخاصة والمشتركة) وملفاته، ورسائله إن اخترت ذلك، إلى فريق جديد في المستأجر نفسه أو في مستأجر الهدف. حدّد محادثة لنسخها مع رسائلها. تتطلب الرسائل سر عميل تسجيل الهدف (راجع الإعدادات). لا تظهر القنوات الخاصة والمشتركة إلا إذا كنت عضوًا فيها.</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>تعيين الأشخاص…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>تم العثور على جميع الأعضاء ({0}) في الهدف.</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>جارٍ التحقق من وجود أعضاء فريق المصدر في مستأجر الهدف…</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …و{0} آخرين</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>تم نسخ {0} من الفرق والمحادثات.</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>تم نسخ {0} من {1} من الفرق والمحادثات. راجع التفاصيل أدناه.</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>لم يُنسخ المرفق: {0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>تعذر تجهيز الرسالة {0}: {1}</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>تعذر وضع علامة اكتمال على الاستيراد، لذا قد تظل القناة تعرض شعار الاستيراد: {0}</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>يتطلب نسخ الرسائل والمحادثات سر عميل تسجيل تطبيق الهدف. احفظه ضمن الإعدادات (تسجيلات تطبيقات Azure)، وامنح التسجيل إذن تطبيق Microsoft Graph باسم Teamwork.Migrate.All بموافقة المسؤول.</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>تعذر استيراد الرسالة {0}: {1}</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>نشرها في الأصل {0}</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>تعذر وضع الردود على الرسالة {0} لأن الرسالة كانت قد استُوردت في تشغيل متقطع وتعذر العثور عليها مرة أخرى. شغّل النسخ مرة أخرى بعد اكتمال السلسلة.</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>أجاب بدء الاستيراد: {0} (جارٍ المتابعة).</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>نشرها مؤلف غير معروف</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>ستحمل نسختان الاسم "{0}": امنح كل واحدة اسمًا مختلفًا.</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>عند نسخ عدة فرق يجب أن يحتوي الاسم على {name}، الذي يصبح اسم الفريق الأصلي.</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>أدخل اسمًا للفريق الجديد.</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>اسم النسخة (استخدم {name} لاسم الفريق الأصلي)</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>تحمل نسخة كل فريق هذا الاسم. عند نسخ عدة فرق يصبح {name} اسم الفريق الأصلي، ويمكنك تغيير كل اسم في الخطوة التالية.</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>الملفات</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>الأعضاء والمالكون</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>الرسائل</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>يستورد رسائل كل قناة وردودها بوقتها الأصلي ومؤلفها الأصلي. تُذكر المرفقات بالاسم في النص ولا تُنسخ؛ ولا تُنسخ التفاعلات.</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>الإعدادات</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>إظهار فرقي ومحادثاتي فقط (بدلاً من كل فريق في المستأجر)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>يعرض فقط فرق ومحادثات الحساب الذي سجّلت الدخول به، باستخدام تسجيل الدخول هذا وحده: لا حاجة إلى سر عميل أو أذونات تطبيق.</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>موجود مسبقًا</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>محادثة</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>عام</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>الأشخاص</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>فريق</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>القنوات</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>المحادثات</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>التفاصيل</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>الجزء</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>المدة</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>فشل</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>الملفات</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>مستبعد</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>الأعضاء</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>الرسائل</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>لم يُنسخ (غير محدد).</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>لم يبدأ: أوقف فريق سابق عملية النسخ.</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>تم إنشاء {0}، {1} موجودة مسبقًا.</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>تم إنشاء المحادثة الجماعية "{0}" في المستأجر {1}، ومالكها {2}.</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>تم نسخ {0}، وفشل {1}.</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>لا توجد مطابقة لـ {0} في الهدف وتم استبعاده. عيّنه ضمن الإعدادات &gt; تعيين الهوية، ثم شغّل النسخ مرة أخرى.</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>تمت إضافة {0}.</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>تم استيراد {0}، {1} موجودة مسبقًا، فشلت {2}، ونُشرت {3} باسم المستخدم الذي ينسخ لعدم وجود مطابقة للمؤلف.</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>تم إنشاء "{0}" في المستأجر {1}، ومالكه {2}.</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>الفرق</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>تقرير النسخ</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>فتح في Teams</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>الفريق الجديد في المستأجر {0} ومالكه {1}. افتحه: {2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>الفريق الجديد في المستأجر {0} ومالكه {1}.</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0} من {1}</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>نسخ المحادثة "{0}" كمحادثة جماعية جديدة.</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>نسخ {0} محادثة كمحادثات جماعية جديدة: {1}.</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>القنوات</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>اسم النسخة</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>الفريق</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>يشمل: {0}.</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>راجع أسماء النسخ أدناه وغيّر ما يلزم. النسخة التي تحمل اسم نسخة سابقة تتابع تلك النسخة؛ أما الاسم المختلف فينشئ فريقًا جديدًا.</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>الفريق الفارغ وقنواته فقط</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>نسخ الفريق "{0}" كفريق جديد باسم "{1}".</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>نسخ {0} فريق كفرق جديدة.</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>{0} من أصل {1} شخص في هذا الفريق ليس لهم حساب مطابق في الهدف. بدون تعيين سيُستبعدون من النسخ، وسيُدرجون في النتائج:
+{2}</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>تحديد الكل</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>تم تحديد {0} فريق</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>تم تحديد {0} محادثة</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>اختيار</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>اتصال</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>نسخ</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>خيارات</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>النتائج</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>مراجعة</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>جارٍ إنشاء القناة {0} ({1})…</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>جارٍ إنشاء الفريق {0}…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>جارٍ نسخ ملفات {0}…</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>الفريق من النسخ السابق لم يعد موجودًا؛ جارٍ إنشاء فريق جديد.</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>جارٍ إضافة {0} عضو…</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>جارٍ نسخ رسائل {0}…</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>الاسم "{0}" مختلف عن النسخة السابقة "{1}"، لذا سيُنشأ فريق جديد. تُترك النسخة السابقة كما هي.</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>جارٍ متابعة النسخ السابق إلى {0}.</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>جارٍ نسخ إعدادات الفريق…</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>تم. الفريق الجديد {0}: تم إنشاء {1} قناة، {2} موجودة مسبقًا؛ تمت إضافة {3} عضو؛ تم نسخ {4} ملف، وفشل {5}.</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>الرسائل: {0} مستوردة، {1} موجودة مسبقًا، {2} فشلت؛ {3} نُشرت باسمك لعدم وجود مطابقة للمؤلف في الهدف.</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>ستُنشأ النسخة في الحساب الذي سجّلت الدخول به ({0}).</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>ستُنشأ النسخة في مستأجر الهدف، باسم {0}. تتم مطابقة الأشخاص مع حسابات الهدف عبر بريدهم الإلكتروني، باستخدام تعيين الهوية لديك.</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>لا توجد مطابقة في الهدف لـ {0} شخص وتم استبعادهم. عيّنهم ضمن الإعدادات &gt; تعيين الهوية وشغّل النسخ مرة أخرى:</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>لم تُنشأ القناة {0}: {1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>تعذرت قراءة أعضاء {0}: {1}</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}: فشل نسخ {1} ملف. شغّل النسخ مرة أخرى لإعادة المحاولة.</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}: تعذر نسخ الرسائل: {1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}: فشل استيراد {1} رسالة. شغّل النسخ مرة أخرى لإعادة محاولتها.</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}: مجلد ملفات المصدر غير متاح، لذا لم تُنسخ ملفاته.</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}: مجلد الملفات الجديد غير جاهز بعد، لذا لم تُنسخ ملفاته. شغّل النسخ مرة أخرى لإعادة المحاولة.</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>{0} تحذيرات:</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>ما المراد نسخه</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>نسخ هذه الرسالة لمسؤولك</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>انقر بزر الماوس الأيمن لنسخ هذه الرسالة وإرسالها إلى مسؤولك.</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>إزالة</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>تم حفظ سر العميل (مشفّر لحساب Windows الخاص بك).</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>سر العميل (اختياري، لأداة Teams)</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>تستخدم أداة Teams فقط هذا السر لتسجيل دخول التطبيق (بدون مستخدم). في تسجيل الهدف تستورد به الرسائل والمحادثات، وهو ما تسمح به Microsoft بهذه الطريقة فقط، مع إذن تطبيق Graph باسم Teamwork.Migrate.All (موافقة المسؤول). وفي تسجيل المصدر تتيح لأداة Teams عرض جميع الفرق في المستأجر ومحادثات الأشخاص الذين تختارهم (عرض المسؤول)؛ والأذونات مذكورة في PERMISSIONS.md. أنشئ السر في تسجيل التطبيق هذا ضمن الشهادات والأسرار (Certificates &amp; secrets) والصق قيمته (Value) وليس معرّفه (ID). اتركه فارغًا إذا لم تحتج إلى أي منهما.</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>حدّد تسجيلاً لتحريره. يتم اختيار المصدر والهدف من الشاشة الرئيسية؛ ولا يغيّر تحديد تسجيل أو تحريره هنا ذلك.</value></data>
 </root>

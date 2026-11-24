@@ -1655,4 +1655,181 @@ Mégse: vissza</value></data>
   <data name="Teams_Error" xml:space="preserve"><value>A Teams nem olvasható: {0}</value></data>
   <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>A Teams eszközhöz szükség van ezekre a delegált Microsoft Graph-engedélyekre, amelyekkel ez az alkalmazásregisztráció nem rendelkezik: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All és Chat.Read. Nyissa meg a regisztrációt az Azure Portalon, lépjen az API-engedélyek részre, adja hozzá őket, adjon rendszergazdai hozzájárulást, majd indítsa újra az alkalmazást. Lásd az „Add API permissions” részt a README-ben.</value></data>
   <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Az élő másoláshoz szükség van a delegált Power Automate Service engedélyekre (Flows.Read.All és Flows.Manage.All), valamint a PowerApps Service User engedélyre, amelyekkel ez az alkalmazásregisztráció nem rendelkezik. Adja hozzá őket az API-engedélyeknél, adjon rendszergazdai hozzájárulást, majd indítsa újra az alkalmazást. Az exportált csomagokból való másolás ezek nélkül is működik.</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ {0:N0} mappánál (a dokumentumkészleteket is beleértve) hiányzott az e-mail-cím a Létrehozó vagy a Módosító mezőből (rendszerfiók, SharePoint-alkalmazás vagy törölt fiók): ezt a személyt a fájlokhoz hasonlóan a rendszerfiók néven rögzítjük az importáló fiók helyett</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ {0:N0} mappánál hiányzott az e-mail-cím a Létrehozó vagy a Módosító mezőből (rendszerfiók, SharePoint-alkalmazás vagy törölt fiók): mindkettőt a fájlokhoz hasonlóan a rendszerfiók néven rögzítjük az importáló fiók helyett</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>Csevegéseik hozzáadása</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>{1} személyből {0} látható. Gépeléssel szűkítheti a listát, majd jelölje ki a személyeket, és kattintson a Csevegéseik hozzáadása gombra.</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>{0} csevegés hozzáadva.</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>Csevegések betöltve: {0} ({1} listázva). Jelölje be a másolandókat.</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>A fent kiválasztott személyek csevegései</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>Leállítva. Eddig {0} csevegés listázva.</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>Beolvassa {0} személy csevegéseit? Ez nagyon sok csevegés lehet, és időbe telik; bármikor leállíthatja. A két személy által megosztott csevegés csak egyszer jelenik meg.</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>A rendszergazdai nézet nem érhető el ({0}); helyette a saját csapatai és csevegései láthatók.</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>a forrásregisztrációhoz mentett ügyféltitkot elutasították: a Beállításokban a titok Értékét illessze be, ne az azonosítóját</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>Személyek keresése</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>Csevegések:</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>{0} csevegéseinek beolvasása…</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>Csevegések beolvasása: {0}/{1} személy kész…</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>A címtár összes személyének beolvasása…</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>Csak a saját csapatai és csevegései láthatók. A bérlő összes csapatának és a kiválasztott személyek csevegéseinek listázásához mentsen ügyféltitkot a forrás-alkalmazásregisztrációhoz (Beállítások).</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>Nem található olyan személy, akinek a neve vagy e-mail-címe „{0}” szöveggel kezdődik.</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>A Kapcsolódás lépésben be van jelölve a „Csak a saját csapataim és csevegéseim megjelenítése”. Törölje a jelölést a személyek kiválasztásához.</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>A(z) {0} forrásregisztrációhoz nincs mentve ügyféltitok. A Beállításokban válassza ki a regisztrációt, illessze be a titkot, majd nyissa meg újra ezt a varázslót (a megnyitott varázsló az indításkori beállításokat használja).</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>A Microsoft elutasította a(z) {0} forrásregisztrációhoz mentett ügyféltitkot, ezért csak a saját csapatai és csevegései láthatók. Javítsa ki a titkot a Beállításokban, majd nyissa meg újra a varázslót.</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>A személyek kiválasztásához rendszergazdai nézet kell: mentsen ügyféltitkot a forrás-alkalmazásregisztrációhoz a Beállításokban, és a Kapcsolódás lépésben ne jelölje be a „Csak a saját csapataim és csevegéseim megjelenítése” lehetőséget.</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>Jelöljön ki egy vagy több személyt, majd kattintson a Csevegéseik hozzáadása gombra.</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>Minden személy megjelenítése</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>Leállítás</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(mindig másolódik)</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>{0} csapat átmásolva.</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>{1} csapatból {0} átmásolva. Részletek alább.</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>{0}. csapat ({1} közül): {2} → {3}</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>{0}. csevegés ({1} közül): {2}</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>A csevegés új csoportos csevegésként másolódik ugyanazokkal a személyekkel (a célban az e-mail-címük alapján keresi meg őket). Az üzenetek az eredeti időponttal és szerzővel importálódnak, és az új csevegés minden résztvevője látja a teljes előzményt.</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>Kész. Új csevegés {0}: {1} személy; üzenetek: {2} importálva, {3} már megvolt, {4} sikertelen; {5} az Ön nevében lett közzétéve, mert a szerzőhöz nincs egyezés.</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>A(z) {0} csevegés már át lett másolva.</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>A(z) {0} csevegés másolatának létrehozása…</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>A(z) {0} csevegés személyeinek keresése a célban…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>A(z) {0} csevegés nem lett átmásolva: a többi résztvevő egyike sem található a célban.</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>{0} csevegés: az importált üzenetek a csevegésben vannak, de a résztvevők még nem feltétlenül látják őket, mert az előzmény megosztása nem sikerült: {1}. Adja meg a regisztrációnak a ChatMember.ReadWrite.All alkalmazásengedélyt (rendszergazdai jóváhagyással), és futtassa újra a csevegés másolását.</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>A(z) {0} csevegés importált előzményének láthatóvá tétele a résztvevők számára…</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>{0} csevegés átmásolva.</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>{1} csevegésből {0} átmásolva. Részletek alább.</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>Jelölje be a másolandó csapatokat és csevegéseket. Az egyes csapatok csatornái is be vannak jelölve: törölje a jelölést a kihagyandóknál. Ezután kattintson a Tovább gombra.</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>Törlés</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>Az Ön fiókja</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>A bejelentkezés megszakítva. Kattintson az Újra gombra az újrapróbáláshoz.</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>A bejelentkezés sikertelen: {0}. Kattintson az Újra gombra az újrapróbáláshoz.</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>Jelentkezzen be olyan fiókkal, amely látja a másolni kívánt csapatokat és csevegéseket. A másolat ugyanabban a bérlőben jön létre.</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>Jelentkezzen be a forrásbérlőbe (ahol a csapat jelenleg van) és a célbérlőbe (ahol a másolat létrejön). Mindegyik bejelentkezés megnyitja a böngészőt. Bármelyiket megszakíthatja és újra megpróbálhatja, és a sikertelen bejelentkezés nem érinti a másikat.</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>A folytatáshoz jelentkezzen be mindkét bérlőbe.</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>A folytatáshoz jelentkezzen be.</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>Nincs bejelentkezve.</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>Alkalmazásregisztráció: {0} (ügyfél-azonosító: {1})</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>Újra</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>Bejelentkezés</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>Bejelentkezés más fiókkal</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>Bejelentkezve mint {0}.</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>Forrásbérlő</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>Célbérlő</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>Bérlő: {0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>keresés…</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>Várakozás a böngészőben történő bejelentkezés befejezésére. A Mégse gombbal leállíthatja a várakozást, majd kattintson az Újra gombra.</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>Másolás újra</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>A másolás megszakítva.</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>A másolás befejeződött.</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>A másolás leállt: {0}</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>Egy csapat másolásához a(z) {0} célalkalmazás-regisztrációnak ezekre a delegált Microsoft Graph-engedélyekre is szüksége van. Adja hozzá őket az API-engedélyeknél, adjon rendszergazdai jóváhagyást, majd próbálja újra: {1} (rendszergazdai jóváhagyással).</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>Egy csapat másolásához a(z) {0} célalkalmazás-regisztrációnak ezekre a delegált Microsoft Graph-engedélyekre is szüksége van. Adja hozzá őket az API-engedélyeknél, adjon rendszergazdai jóváhagyást, majd próbálja újra: Team.Create, Channel.Create, ChannelMember.ReadWrite.All, TeamMember.ReadWrite.All, TeamSettings.ReadWrite.All (rendszergazdai jóváhagyással).</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0} (másolat)</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name} (másolat)</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>Felsorolja a látható csapatokat és csevegéseket, minden csatornát standard, privát vagy megosztott jelöléssel. Válasszon egy csapatot, és átmásolhatja a beállításait, tagjait, csatornáit (a privát és megosztott csatornákat is), fájljait és igény szerint az üzeneteit egy új csapatba, ugyanabban a bérlőben vagy a célbérlőben. Válasszon egy csevegést, és átmásolhatja az üzeneteivel együtt. Az üzenetekhez a célregisztráció ügyféltitka szükséges (lásd Beállítások). A privát és megosztott csatornák csak akkor jelennek meg, ha tagjuk Ön.</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>Személyek leképezése…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>Mind a(z) {0} tag megtalálható a célban.</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>Annak ellenőrzése, hogy a forráscsapat tagjai léteznek-e a célbérlőben…</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …és még {0}</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>{0} csapat és csevegés átmásolva.</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>{1} csapatból és csevegésből {0} átmásolva. Részletek alább.</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>A melléklet nem lett átmásolva: {0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>A(z) {0} üzenetet nem sikerült előkészíteni: {1}</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>Az importot nem sikerült késznek jelölni, ezért a csatornán még megjelenhet az importálási szalag: {0}</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>Az üzenetek és csevegések másolásához a célalkalmazás-regisztráció ügyféltitka szükséges. Mentse a Beállításokban (Azure-alkalmazásregisztrációk), és adja meg a regisztrációnak a Microsoft Graph Teamwork.Migrate.All alkalmazásengedélyt rendszergazdai jóváhagyással.</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>A(z) {0} üzenetet nem sikerült importálni: {1}</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>Eredeti feladó: {0}</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>A(z) {0} üzenetre adott válaszokat nem lehetett elhelyezni, mert az üzenetet egy megszakadt futtatás már importálta, és nem található meg újra. Futtassa újra a másolást a szál befejezése után.</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>Az importálás indítása a következő választ adta: {0} (folytatás).</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>Ismeretlen szerző közzétette</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>Két másolat neve „{0}” lenne: adjon mindegyiknek más nevet.</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>Több csapat esetén a névnek tartalmaznia kell a {name} szöveget, amely az eredeti csapat nevére cserélődik.</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>Adja meg az új csapat nevét.</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>A másolat neve (az eredeti csapat nevéhez használja a {name} szöveget)</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>Minden csapat másolata ezt a nevet kapja. Több csapat esetén a {name} az eredeti csapat nevére cserélődik, és a következő lépésben még módosíthatja az egyes neveket.</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>Fájlok</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>Tagok és tulajdonosok</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>Üzenetek</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>Importálja az egyes csatornák üzeneteit és válaszait az eredeti időponttal és szerzővel. A fájlmellékletek a szövegben szerepelnek, nem másolódnak; a reakciók nem másolódnak.</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>Beállítások</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>Csak a saját csapataim és csevegéseim megjelenítése (a bérlő összes csapata helyett)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>Csak a bejelentkezéshez használt fiók csapatait és csevegéseit listázza, kizárólag ezzel a bejelentkezéssel: nincs szükség ügyféltitokra vagy alkalmazásengedélyekre.</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>Már megvolt</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>Csevegés</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>Általános</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>Személyek</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>Csapat</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>Csatornák</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>Csevegések</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>Részletek</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>Rész</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>Időtartam</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>Sikertelen</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>Fájlok</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>Kihagyva</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>Tagok</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>Üzenetek</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>Nem másolva (nincs kijelölve).</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>Nem indult el: egy korábbi csapat leállította a másolást.</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>{0} létrehozva, {1} már megvolt.</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>Létrehozta a(z) „{0}” csoportos csevegést a(z) {1} bérlőben, tulajdonos: {2}.</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>{0} átmásolva, {1} sikertelen.</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>{0} személyhez nincs egyezés a célban, ezért ki lett hagyva. Képezze le a Beállítások &gt; Identitásleképezés alatt, majd futtassa újra a másolást.</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>{0} hozzáadva.</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>{0} importálva, {1} már megvolt, {2} sikertelen, {3} a másoló felhasználó nevében lett közzétéve, mert a szerzőhöz nincs egyezés.</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>Létrehozta a(z) „{0}” csapatot a(z) {1} bérlőben, tulajdonos: {2}.</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>Csapatok</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>Másolási jelentés</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>Megnyitás a Teamsben</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>Az új csapat a(z) {0} bérlőben van, tulajdonosa: {1}. Megnyitás: {2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>Az új csapat a(z) {0} bérlőben van, tulajdonosa: {1}.</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0}/{1}</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>A(z) „{0}” csevegés másolása új csoportos csevegésként.</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>{0} csevegés másolása új csoportos csevegésként: {1}.</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>Csatornák</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>A másolat neve</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>Csapat</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>Tartalma: {0}.</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>Ellenőrizze lent a másolatok nevét, és módosítsa, ha kell. Egy korábbi másolattal azonos nevű másolat annak folytatása; más név új csapatot hoz létre.</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>csak az üres csapat és csatornái</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>A(z) „{0}” csapat másolása új, „{1}” nevű csapatként.</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>{0} csapat másolása új csapatként.</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>A csapat {1} tagjából {0} személyhez nincs megfelelő fiók a célban. Leképezés nélkül kimaradnak a másolatból, és az eredmények között szerepelnek:
+{2}</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>Összes kijelölése</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>{0} csapat kijelölve</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>{0} csevegés kijelölve</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>Választás</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>Kapcsolódás</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>Másolás</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>Beállítások</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>Eredmények</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>Áttekintés</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>A(z) {0} csatorna létrehozása ({1})…</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>A(z) {0} csapat létrehozása…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>A(z) {0} fájljainak másolása…</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>A korábbi másolatból származó csapat már nem létezik; új létrehozása.</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>{0} tag hozzáadása…</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>A(z) {0} üzeneteinek másolása…</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>A(z) „{0}” név eltér a korábbi „{1}” másolattól, ezért új csapat jön létre. A korábbi másolat változatlan marad.</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>A korábbi másolás folytatása ide: {0}.</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>A csapat beállításainak másolása…</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>Kész. Új csapat {0}: {1} csatorna létrehozva, {2} már megvolt; {3} tag hozzáadva; {4} fájl átmásolva, {5} sikertelen.</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>Üzenetek: {0} importálva, {1} már megvolt, {2} sikertelen; {3} az Ön nevében lett közzétéve, mert a szerzőhöz nincs egyezés a célban.</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>A másolat abban a fiókban jön létre, amellyel bejelentkezett ({0}).</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>A másolat a célbérlőben jön létre, mint {0}. A személyeket az e-mail-címük alapján rendeli a célfiókokhoz, az identitásleképezés felhasználásával.</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>{0} személyhez nincs egyezés a célban, ezért ki lettek hagyva. Képezze le őket a Beállítások &gt; Identitásleképezés alatt, és futtassa újra a másolást:</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>A(z) {0} csatorna nem lett létrehozva: {1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>A(z) {0} tagjait nem sikerült beolvasni: {1}</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}: {1} fájl másolása sikertelen. Az újrapróbálkozáshoz futtassa újra a másolást.</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}: az üzeneteket nem sikerült átmásolni: {1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}: {1} üzenet importálása sikertelen. Az újrapróbálkozáshoz futtassa újra a másolást.</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}: a forrásfájlok mappája nem érhető el, ezért a fájlok nem lettek átmásolva.</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}: az új fájlmappa még nem áll készen, ezért a fájlok nem lettek átmásolva. Az újrapróbálkozáshoz futtassa újra a másolást.</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>{0} figyelmeztetés:</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>Mit másoljon</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>Üzenet másolása a rendszergazdának</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>Kattintson a jobb gombbal az üzenet másolásához, majd küldje el a rendszergazdának.</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>Eltávolítás</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>Az ügyféltitok mentve van (a Windows-fiókjához titkosítva).</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Ügyféltitok (nem kötelező, a Teams eszközhöz)</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Ezt a titkot csak a Teams eszköz használja, alkalmazásként történő bejelentkezésként (felhasználó nélkül). A célregisztrációnál ezzel importálja az üzeneteket és csevegéseket, amit a Microsoft kizárólag így enged, a Teamwork.Migrate.All Graph-alkalmazásengedéllyel (rendszergazdai jóváhagyás). A forrásregisztrációnál ezzel listázza a Teams eszköz a bérlő összes csapatát és a kiválasztott személyek csevegéseit (rendszergazdai nézet); az engedélyek a PERMISSIONS.md fájlban találhatók. A titkot ennél az alkalmazásregisztrációnál hozza létre a Tanúsítványok és titkos kódok alatt, és az értékét (Value) illessze be, ne az azonosítóját (ID). Hagyja üresen, ha egyikre sincs szüksége.</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Jelöljön ki egy regisztrációt a szerkesztéséhez. Azt, hogy melyik a forrás és melyik a cél, a kezdőképernyőn kell megadni; az itteni kijelölés vagy szerkesztés ezt nem módosítja.</value></data>
 </root>

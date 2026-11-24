@@ -131,6 +131,15 @@ public sealed class TeamsApiClient
             Str(u!, "id"), Str(u!, "displayName"), StrOrNull(u!, "mail") ?? StrOrNull(u!, "userPrincipalName"))).ToList();
     }
 
+    // Administrator view: everyone in the directory (pages of 999), for the "show all people" list.
+    public async Task<List<UserInfo>> ListAllUsersAsync(CancellationToken ct = default)
+    {
+        var rows = await GetAllPagesAsync($"{Base}/users?$select=id,displayName,mail,userPrincipalName&$top=999", ct);
+        return rows.Select(u => new UserInfo(
+            Str(u, "id"), Str(u, "displayName"), StrOrNull(u, "mail") ?? StrOrNull(u, "userPrincipalName")))
+            .OrderBy(u => u.DisplayName, StringComparer.CurrentCultureIgnoreCase).ToList();
+    }
+
     // Administrator view: the chats one person takes part in, with who is in each (one request, members expanded).
     public async Task<List<ChatInfo>> ListUserChatsAsync(string userId, CancellationToken ct = default)
     {

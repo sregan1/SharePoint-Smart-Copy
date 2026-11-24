@@ -1655,4 +1655,181 @@ Hủy: quay lại</value></data>
   <data name="Teams_Error" xml:space="preserve"><value>Không thể đọc Teams: {0}</value></data>
   <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Công cụ Teams cần các quyền Microsoft Graph được ủy quyền sau mà bản đăng ký ứng dụng này không có: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All và Chat.Read. Trong cổng Azure, hãy mở bản đăng ký, vào Quyền API, thêm các quyền này, cấp sự đồng ý của quản trị viên rồi khởi động lại ứng dụng. Xem “Add API permissions” trong README.</value></data>
   <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Sao chép trực tiếp cần các quyền Power Automate Service được ủy quyền Flows.Read.All và Flows.Manage.All, cùng PowerApps Service User, mà bản đăng ký ứng dụng này không có. Hãy thêm chúng trong Quyền API, cấp sự đồng ý của quản trị viên rồi khởi động lại ứng dụng. Việc sao chép từ gói đã xuất vẫn hoạt động mà không cần các quyền này.</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ {0:N0} thư mục (bao gồm Document Sets) không có email ở Created By hoặc Modified By (tài khoản hệ thống, ứng dụng SharePoint hoặc tài khoản đã bị xóa): người đó được ghi là Tài khoản hệ thống, giống như với tệp, thay vì tài khoản nhập</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ {0:N0} thư mục không có email ở Created By hoặc Modified By (tài khoản hệ thống, ứng dụng SharePoint hoặc tài khoản đã bị xóa): cả hai được ghi là Tài khoản hệ thống, giống như với tệp, thay vì tài khoản nhập</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>Thêm cuộc trò chuyện của họ</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>Đang hiển thị {0} trong {1} người. Nhập để thu hẹp danh sách, sau đó chọn người rồi bấm Thêm cuộc trò chuyện của họ.</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>Đã thêm {0} cuộc trò chuyện.</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>Đã tải cuộc trò chuyện của: {0} (liệt kê {1}). Đánh dấu những cuộc cần sao chép.</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>Cuộc trò chuyện của những người đã chọn ở trên</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>Đã dừng. Hiện đã liệt kê {0} cuộc trò chuyện.</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>Đọc cuộc trò chuyện của {0} người? Số cuộc trò chuyện có thể rất lớn và mất nhiều thời gian; bạn có thể dừng bất cứ lúc nào. Cuộc trò chuyện chung của hai người trong số họ chỉ được liệt kê một lần.</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>Chế độ xem quản trị viên không khả dụng ({0}); thay vào đó đang hiển thị các nhóm và cuộc trò chuyện của riêng bạn.</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>client secret đã lưu cho đăng ký nguồn bị từ chối: hãy dán Value của secret, không phải ID của nó, trong Cài đặt</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>Tìm người</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>Cuộc trò chuyện của:</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>Đang đọc cuộc trò chuyện của {0}…</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>Đang đọc cuộc trò chuyện: đã xong {0} trong {1} người…</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>Đang đọc tất cả mọi người trong thư mục…</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>Chỉ hiển thị các nhóm và cuộc trò chuyện của riêng bạn. Để liệt kê mọi nhóm trong tenant và cuộc trò chuyện của những người bạn chọn, hãy lưu client secret cho đăng ký ứng dụng nguồn (Cài đặt).</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>Không tìm thấy ai có tên hoặc email bắt đầu bằng "{0}".</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>"Chỉ hiển thị nhóm và cuộc trò chuyện của tôi" đang được đánh dấu ở bước Kết nối. Hãy bỏ đánh dấu để chọn người.</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>Chưa lưu client secret nào cho đăng ký nguồn {0}. Trong Cài đặt, hãy chọn đăng ký đó và dán secret của nó, rồi mở lại trình hướng dẫn này (trình hướng dẫn đang mở giữ nguyên cài đặt lúc bắt đầu).</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>Microsoft đã từ chối client secret đã lưu cho đăng ký nguồn {0}, vì vậy chỉ hiển thị các nhóm và cuộc trò chuyện của riêng bạn. Hãy sửa secret trong Cài đặt và mở lại trình hướng dẫn này.</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>Việc chọn người cần chế độ xem quản trị viên: hãy lưu client secret cho đăng ký ứng dụng nguồn trong Cài đặt, và để bỏ đánh dấu "Chỉ hiển thị nhóm và cuộc trò chuyện của tôi" ở bước Kết nối.</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>Chọn một hoặc nhiều người, sau đó bấm Thêm cuộc trò chuyện của họ.</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>Hiển thị tất cả mọi người</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>Dừng</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(luôn được sao chép)</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>Đã sao chép {0} nhóm.</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>Đã sao chép {0} trong {1} nhóm. Xem chi tiết bên dưới.</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>Nhóm {0} trong {1}: {2} → {3}</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>Cuộc trò chuyện {0} trong {1}: {2}</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>Cuộc trò chuyện được sao chép thành một cuộc trò chuyện nhóm mới với cùng những người đó (tìm ở đích theo email của họ). Tin nhắn được nhập với thời gian và tác giả gốc, và mọi người trong cuộc trò chuyện mới đều xem được toàn bộ lịch sử.</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>Hoàn tất. Cuộc trò chuyện mới {0}: {1} người; tin nhắn: đã nhập {2}, đã có sẵn {3}, thất bại {4}; {5} được đăng dưới tên bạn vì không có tác giả khớp.</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>Cuộc trò chuyện {0} đã được sao chép.</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>Đang tạo bản sao của cuộc trò chuyện {0}…</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>Đang tìm những người của cuộc trò chuyện {0} ở đích…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>Cuộc trò chuyện {0} chưa được sao chép: không tìm thấy người nào khác trong đó ở đích.</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>Cuộc trò chuyện {0}: các tin nhắn đã nhập nằm trong cuộc trò chuyện nhưng những người trong đó có thể chưa thấy, vì không chia sẻ được lịch sử của chúng: {1}. Hãy cấp cho đăng ký quyền ứng dụng ChatMember.ReadWrite.All (có sự đồng ý của quản trị viên) và chạy lại việc sao chép cuộc trò chuyện.</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>Đang làm cho lịch sử đã nhập của cuộc trò chuyện {0} hiển thị với những người trong đó…</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>Đã sao chép {0} cuộc trò chuyện.</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>Đã sao chép {0} trong {1} cuộc trò chuyện. Xem chi tiết bên dưới.</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>Đánh dấu các nhóm và cuộc trò chuyện cần sao chép. Các kênh của mỗi nhóm cũng được đánh dấu: hãy bỏ đánh dấu những kênh cần loại trừ. Sau đó bấm Tiếp theo.</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>Xóa chọn</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>Tài khoản của bạn</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>Đã hủy đăng nhập. Bấm Thử lại để thử lần nữa.</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>Đăng nhập thất bại: {0}. Bấm Thử lại để thử lần nữa.</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>Đăng nhập bằng tài khoản có thể thấy các nhóm và cuộc trò chuyện bạn muốn sao chép. Bản sao được tạo trong cùng tenant.</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>Đăng nhập vào tenant nguồn (nơi nhóm hiện đang ở) và tenant đích (nơi bản sao sẽ được tạo). Mỗi lần đăng nhập sẽ mở trình duyệt. Bạn có thể hủy một lần và thử lại, và nếu một lần đăng nhập thất bại thì lần kia vẫn giữ nguyên.</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>Đăng nhập vào cả hai tenant để tiếp tục.</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>Đăng nhập để tiếp tục.</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>Chưa đăng nhập.</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>Đăng ký ứng dụng: {0} (client ID {1})</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>Thử lại</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>Đăng nhập</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>Đăng nhập bằng tài khoản khác</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>Đã đăng nhập với tư cách {0}.</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>Tenant nguồn</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>Tenant đích</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>Tenant: {0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>đang tìm…</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>Đang chờ bạn hoàn tất đăng nhập trong trình duyệt. Bấm Hủy để ngừng chờ, rồi bấm Thử lại.</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>Sao chép mục khác</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>Đã hủy sao chép.</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>Sao chép hoàn tất.</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>Quá trình sao chép đã dừng: {0}</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>Sao chép một nhóm cũng cần các quyền Microsoft Graph ủy quyền (delegated) sau trên đăng ký ứng dụng đích {0}. Hãy thêm chúng trong API permissions, cấp sự đồng ý của quản trị viên, rồi thử lại: {1} (có sự đồng ý của quản trị viên).</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>Sao chép một nhóm cũng cần các quyền Microsoft Graph ủy quyền (delegated) sau trên đăng ký ứng dụng đích {0}. Hãy thêm chúng trong API permissions, cấp sự đồng ý của quản trị viên, rồi thử lại: Team.Create, Channel.Create, ChannelMember.ReadWrite.All, TeamMember.ReadWrite.All, TeamSettings.ReadWrite.All (có sự đồng ý của quản trị viên).</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0} (bản sao)</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name} (bản sao)</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>Liệt kê các nhóm và cuộc trò chuyện bạn có thể thấy, với mỗi kênh được đánh dấu là chuẩn, riêng tư hoặc được chia sẻ. Chọn một nhóm để sao chép cài đặt, thành viên, kênh (gồm cả kênh riêng tư và được chia sẻ), tệp và, nếu bạn chọn, tin nhắn sang một nhóm mới, trong cùng tenant hoặc trong tenant đích. Chọn một cuộc trò chuyện để sao chép nó cùng tin nhắn. Tin nhắn cần client secret của đăng ký đích (xem Cài đặt). Kênh riêng tư và kênh được chia sẻ chỉ hiện nếu bạn là thành viên.</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>Ánh xạ người…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>Đã tìm thấy tất cả {0} thành viên ở đích.</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>Đang kiểm tra ai trong nhóm nguồn có mặt trong tenant đích…</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …và {0} người khác</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>Đã sao chép {0} nhóm và cuộc trò chuyện.</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>Đã sao chép {0} trong {1} nhóm và cuộc trò chuyện. Xem chi tiết bên dưới.</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>Chưa sao chép tệp đính kèm: {0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>Không thể chuẩn bị tin nhắn {0}: {1}</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>Không thể đánh dấu hoàn tất việc nhập, nên kênh có thể vẫn hiện biểu ngữ nhập: {0}</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>Sao chép tin nhắn và cuộc trò chuyện cần client secret của đăng ký ứng dụng đích. Hãy lưu nó trong Cài đặt (đăng ký ứng dụng Azure), và cấp cho đăng ký quyền ứng dụng Microsoft Graph Teamwork.Migrate.All có sự đồng ý của quản trị viên.</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>Không thể nhập tin nhắn {0}: {1}</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>Ban đầu do {0} đăng</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>Không thể đặt các phản hồi của tin nhắn {0} vì tin nhắn đã được nhập bởi một lần chạy bị gián đoạn và không tìm lại được. Hãy chạy lại việc sao chép sau khi chuỗi hoàn tất.</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>Việc bắt đầu nhập trả về: {0} (tiếp tục).</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>Do một tác giả không xác định đăng</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>Hai bản sao sẽ cùng tên "{0}": hãy đặt tên khác nhau cho mỗi bản.</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>Với nhiều nhóm, tên phải chứa {name}, sẽ trở thành tên nhóm gốc.</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>Nhập tên cho nhóm mới.</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>Tên của bản sao (dùng {name} cho tên nhóm gốc)</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>Bản sao của mỗi nhóm nhận tên này. Với nhiều nhóm, {name} trở thành tên nhóm gốc, và bạn vẫn có thể đổi từng tên ở bước tiếp theo.</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>Tệp</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>Thành viên và chủ sở hữu</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>Tin nhắn</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>Nhập tin nhắn và phản hồi của mỗi kênh với thời gian và tác giả gốc. Tệp đính kèm chỉ được nêu tên trong văn bản, không được sao chép; biểu cảm (reaction) không được sao chép.</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>Cài đặt</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>Chỉ hiển thị nhóm và cuộc trò chuyện của tôi (thay vì mọi nhóm trong tenant)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>Chỉ liệt kê các nhóm và cuộc trò chuyện của tài khoản bạn đã đăng nhập, chỉ dùng lần đăng nhập đó: không cần client secret hay quyền ứng dụng.</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>Đã có sẵn</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>Cuộc trò chuyện</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>Chung</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>Người</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>Nhóm</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>Kênh</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>Cuộc trò chuyện</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>Chi tiết</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>Phần</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>Thời lượng</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>Thất bại</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>Tệp</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>Bị bỏ qua</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>Thành viên</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>Tin nhắn</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>Chưa sao chép (không được chọn).</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>Chưa bắt đầu: một nhóm trước đó đã dừng việc sao chép.</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>Đã tạo {0}, đã có sẵn {1}.</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>Đã tạo cuộc trò chuyện nhóm "{0}" trong tenant {1}, do {2} sở hữu.</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>Đã sao chép {0}, thất bại {1}.</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>{0} không có tài khoản khớp ở đích và bị bỏ qua. Hãy ánh xạ trong Cài đặt &gt; Ánh xạ danh tính, rồi chạy lại việc sao chép.</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>Đã thêm {0}.</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>Đã nhập {0}, đã có sẵn {1}, thất bại {2}, {3} được đăng dưới tên người dùng sao chép vì không có tác giả khớp.</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>Đã tạo "{0}" trong tenant {1}, do {2} sở hữu.</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>Nhóm</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>Báo cáo sao chép</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>Mở trong Teams</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>Nhóm mới nằm trong tenant {0} và do {1} sở hữu. Mở nhóm: {2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>Nhóm mới nằm trong tenant {0} và do {1} sở hữu.</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0} trong {1}</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>Sao chép cuộc trò chuyện "{0}" thành một cuộc trò chuyện nhóm mới.</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>Sao chép {0} cuộc trò chuyện thành các cuộc trò chuyện nhóm mới: {1}.</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>Kênh</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>Tên của bản sao</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>Nhóm</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>Bao gồm: {0}.</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>Kiểm tra tên các bản sao bên dưới và đổi những tên cần thiết. Bản sao trùng tên với một bản sao trước đó sẽ tiếp tục bản sao đó; tên khác sẽ tạo nhóm mới.</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>chỉ nhóm trống và các kênh của nó</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>Sao chép nhóm "{0}" thành một nhóm mới tên "{1}".</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>Sao chép {0} nhóm thành các nhóm mới.</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>{0} trong số {1} người của nhóm này không có tài khoản khớp ở đích. Nếu không ánh xạ, họ sẽ bị bỏ qua khi sao chép và được liệt kê trong kết quả:
+{2}</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>Chọn tất cả</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>Đã chọn {0} nhóm</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>Đã chọn {0} cuộc trò chuyện</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>Chọn</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>Kết nối</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>Sao chép</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>Tùy chọn</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>Kết quả</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>Xem lại</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>Đang tạo kênh {0} ({1})…</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>Đang tạo nhóm {0}…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>Đang sao chép tệp của {0}…</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>Nhóm từ lần sao chép trước không còn tồn tại; đang tạo nhóm mới.</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>Đang thêm {0} thành viên…</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>Đang sao chép tin nhắn của {0}…</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>Tên "{0}" khác với bản sao trước "{1}", nên một nhóm mới được tạo. Bản sao trước được giữ nguyên.</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>Đang tiếp tục lần sao chép trước vào {0}.</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>Đang sao chép cài đặt nhóm…</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>Hoàn tất. Nhóm mới {0}: đã tạo {1} kênh, đã có sẵn {2}; đã thêm {3} thành viên; đã sao chép {4} tệp, thất bại {5}.</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>Tin nhắn: đã nhập {0}, đã có sẵn {1}, thất bại {2}; {3} được đăng dưới tên bạn vì không có tác giả khớp ở đích.</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>Bản sao sẽ được tạo trong tài khoản bạn đã đăng nhập ({0}).</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>Bản sao sẽ được tạo trong tenant đích, với tư cách {0}. Người được khớp với tài khoản ở đích theo email, dựa trên ánh xạ danh tính của bạn.</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>{0} người không có tài khoản khớp ở đích và bị bỏ qua. Hãy ánh xạ họ trong Cài đặt &gt; Ánh xạ danh tính và chạy lại việc sao chép:</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>Chưa tạo kênh {0}: {1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>Không đọc được thành viên của {0}: {1}</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}: {1} tệp không sao chép được. Chạy lại việc sao chép để thử lại.</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}: không sao chép được tin nhắn: {1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}: {1} tin nhắn không nhập được. Chạy lại việc sao chép để thử lại.</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}: thư mục tệp nguồn không khả dụng nên tệp của nó chưa được sao chép.</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}: thư mục tệp mới chưa sẵn sàng nên tệp của nó chưa được sao chép. Chạy lại việc sao chép để thử lại.</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>{0} cảnh báo:</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>Nội dung cần sao chép</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>Sao chép thông báo này cho quản trị viên của bạn</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>Bấm chuột phải để sao chép thông báo này và gửi cho quản trị viên của bạn.</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>Xóa</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>Đã lưu một client secret (được mã hóa cho tài khoản Windows của bạn).</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Client secret (tùy chọn, cho công cụ Teams)</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Chỉ công cụ Teams dùng secret này, như một đăng nhập kiểu ứng dụng (không có người dùng). Trên đăng ký đích, nó dùng để nhập tin nhắn và cuộc trò chuyện, điều mà Microsoft chỉ cho phép theo cách này, cùng quyền ứng dụng Graph Teamwork.Migrate.All (có sự đồng ý của quản trị viên). Trên đăng ký nguồn, nó cho phép công cụ Teams liệt kê mọi nhóm trong tenant và cuộc trò chuyện của những người bạn chọn (chế độ xem quản trị viên); các quyền có trong PERMISSIONS.md. Hãy tạo secret trên đăng ký ứng dụng này trong Certificates &amp; secrets và dán Value của nó, không phải ID. Để trống nếu bạn không cần cả hai.</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Chọn một đăng ký để chỉnh sửa. Đăng ký nào là nguồn và đăng ký nào là đích được chọn ở màn hình chính; việc chọn hoặc chỉnh sửa ở đây không thay đổi điều đó.</value></data>
 </root>

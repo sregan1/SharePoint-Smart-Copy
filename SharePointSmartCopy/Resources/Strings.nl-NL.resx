@@ -1655,4 +1655,181 @@ Annuleren: terug</value></data>
   <data name="Teams_Error" xml:space="preserve"><value>Teams kan niet worden gelezen: {0}</value></data>
   <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>De Teams-tool heeft deze gedelegeerde Microsoft Graph-machtigingen nodig, die deze app-registratie niet heeft: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All en Chat.Read. Open de registratie in de Azure-portal, ga naar API-machtigingen, voeg ze toe, geef beheerderstoestemming en start de app opnieuw. Zie ‘Add API permissions’ in de README.</value></data>
   <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Live kopiëren heeft de gedelegeerde Power Automate Service-machtigingen Flows.Read.All en Flows.Manage.All nodig, plus PowerApps Service User, die deze app-registratie niet heeft. Voeg ze toe onder API-machtigingen, geef beheerderstoestemming en start de app opnieuw. Kopiëren vanuit geëxporteerde pakketten werkt zonder deze machtigingen.</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ Bij {0:N0} map(pen) (inclusief documentensets) ontbrak het e-mailadres voor Gemaakt door of Gewijzigd door (een systeemaccount, SharePoint-app of een verwijderd account): die persoon wordt, net als bij bestanden, vastgelegd als het systeemaccount in plaats van het importerende account</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ Bij {0:N0} map(pen) ontbrak het e-mailadres voor Gemaakt door of Gewijzigd door (een systeemaccount, SharePoint-app of een verwijderd account): beide worden, net als bij bestanden, vastgelegd als het systeemaccount in plaats van het importerende account</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>Hun chats toevoegen</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>{0} van {1} personen weergegeven. Typ om de lijst te beperken, selecteer vervolgens personen en klik op Hun chats toevoegen.</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>{0} chats toegevoegd.</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>Chats geladen voor: {0} ({1} in de lijst). Vink de chats aan die u wilt kopiëren.</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>Chats van de hierboven gekozen personen</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>Gestopt. Tot nu toe {0} chats in de lijst.</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>De chats van {0} personen lezen? Dit kan een zeer groot aantal chats zijn en duurt even; u kunt het op elk moment stoppen. Een chat die twee van hen delen, wordt maar één keer vermeld.</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>De beheerdersweergave is niet beschikbaar ({0}); in plaats daarvan worden uw eigen teams en chats weergegeven.</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>het clientgeheim dat voor de bronregistratie is opgeslagen, is geweigerd: plak in Instellingen de waarde van het geheim, niet de ID</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>Personen zoeken</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>Chats van:</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>De chats van {0} lezen…</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>Chats lezen: {0} van {1} personen klaar…</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>Iedereen in de map lezen…</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>Alleen uw eigen teams en chats worden weergegeven. Om alle teams in de tenant en de chats van gekozen personen te tonen, slaat u een clientgeheim op voor de bronapp-registratie (Instellingen).</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>Niemand gevonden van wie de naam of het e-mailadres begint met "{0}".</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>"Alleen mijn eigen teams en chats weergeven" is aangevinkt in de stap Verbinden. Schakel dit uit om personen te kiezen.</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>Er is geen clientgeheim opgeslagen voor de bronregistratie {0}. Selecteer die registratie in Instellingen en plak het geheim, en open deze wizard daarna opnieuw (een geopende wizard behoudt de instellingen waarmee hij is gestart).</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>Microsoft heeft het clientgeheim geweigerd dat voor de bronregistratie {0} is opgeslagen, dus alleen uw eigen teams en chats worden weergegeven. Herstel het geheim in Instellingen en open deze wizard opnieuw.</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>Voor het kiezen van personen is de beheerdersweergave nodig: sla in Instellingen een clientgeheim op voor de bronapp-registratie en laat "Alleen mijn eigen teams en chats weergeven" uitgeschakeld in de stap Verbinden.</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>Selecteer een of meer personen en klik vervolgens op Hun chats toevoegen.</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>Alle personen weergeven</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>Stoppen</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(altijd gekopieerd)</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>{0} teams gekopieerd.</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>{0} van {1} teams gekopieerd. Zie de details hieronder.</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>Team {0} van {1}: {2} → {3}</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>Chat {0} van {1}: {2}</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>Een chat wordt gekopieerd als een nieuwe groepschat met dezelfde personen (in het doel gevonden via hun e-mailadres). De berichten worden geïmporteerd met hun oorspronkelijke tijd en auteur, en iedereen in de nieuwe chat kan de volledige geschiedenis zien.</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>Klaar. Nieuwe chat {0}: {1} personen; berichten: {2} geïmporteerd, {3} al aanwezig, {4} mislukt; {5} geplaatst als u omdat de auteur geen overeenkomst heeft.</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>Chat {0} was al gekopieerd.</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>De kopie van chat {0} wordt gemaakt…</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>De personen van chat {0} worden in het doel gezocht…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>Chat {0} is niet gekopieerd: geen van de andere personen is in het doel gevonden.</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>Chat {0}: de geïmporteerde berichten staan in de chat, maar de personen kunnen ze mogelijk nog niet zien, omdat de geschiedenis niet kon worden gedeeld: {1}. Geef de registratie de toepassingsmachtiging ChatMember.ReadWrite.All (beheerderstoestemming) en voer het kopiëren van de chat opnieuw uit.</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>De geïmporteerde geschiedenis van chat {0} wordt zichtbaar gemaakt voor de personen in de chat…</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>{0} chats gekopieerd.</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>{0} van {1} chats gekopieerd. Zie de details hieronder.</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>Vink de teams en chats aan die u wilt kopiëren. De kanalen van elk team zijn ook aangevinkt: schakel de kanalen uit die u wilt weglaten. Klik vervolgens op Volgende.</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>Wissen</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>Uw account</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>Aanmelden geannuleerd. Klik op Opnieuw proberen om het nogmaals te proberen.</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>Aanmelden mislukt: {0}. Klik op Opnieuw proberen om het nogmaals te proberen.</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>Meld u aan met het account dat de teams en chats kan zien die u wilt kopiëren. De kopie wordt in dezelfde tenant gemaakt.</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>Meld u aan bij de brontenant (waar het team nu staat) en bij de doeltenant (waar de kopie wordt gemaakt). Bij elke aanmelding wordt uw browser geopend. U kunt een aanmelding annuleren en opnieuw proberen, en een aanmelding die mislukt, laat de andere ongemoeid.</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>Meld u aan bij beide tenants om door te gaan.</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>Meld u aan om door te gaan.</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>Niet aangemeld.</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>App-registratie: {0} (client-ID {1})</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>Opnieuw proberen</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>Aanmelden</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>Aanmelden als iemand anders</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>Aangemeld als {0}.</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>Brontenant</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>Doeltenant</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>Tenant: {0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>wordt opgezocht…</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>Wachten tot u het aanmelden in uw browser hebt voltooid. Klik op Annuleren om niet langer te wachten en klik daarna op Opnieuw proberen.</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>Nog een kopiëren</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>Kopiëren geannuleerd.</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>Kopiëren voltooid.</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>Het kopiëren is gestopt: {0}</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>Voor het kopiëren van een team zijn ook deze gedelegeerde Microsoft Graph-machtigingen nodig voor de doelapp-registratie {0}. Voeg ze toe onder API-machtigingen, verleen beheerderstoestemming en probeer het opnieuw: {1} (met beheerderstoestemming).</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>Voor het kopiëren van een team zijn ook deze gedelegeerde Microsoft Graph-machtigingen nodig voor de doelapp-registratie {0}. Voeg ze toe onder API-machtigingen, verleen beheerderstoestemming en probeer het opnieuw: Team.Create, Channel.Create, ChannelMember.ReadWrite.All, TeamMember.ReadWrite.All, TeamSettings.ReadWrite.All (met beheerderstoestemming).</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0} (kopie)</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name} (kopie)</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>Toont de teams en chats die u kunt zien, met elk kanaal gemarkeerd als standaard, privé of gedeeld. Selecteer een team om de instellingen, leden, kanalen (inclusief privé- en gedeelde kanalen), bestanden en, als u wilt, berichten te kopiëren naar een nieuw team, in dezelfde tenant of in de doeltenant. Selecteer een chat om deze en de berichten ervan te kopiëren. Voor berichten is het clientgeheim van de doelregistratie nodig (zie Instellingen). Privé- en gedeelde kanalen verschijnen alleen als u lid bent.</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>Personen toewijzen…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>Alle {0} leden zijn in het doel gevonden.</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>Controleren wie van het bronteam in de doeltenant bestaat…</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …en nog {0}</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>{0} teams en chats gekopieerd.</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>{0} van {1} teams en chats gekopieerd. Zie de details hieronder.</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>Bijlage niet gekopieerd: {0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>Bericht {0} kon niet worden voorbereid: {1}</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>De import kon niet als voltooid worden gemarkeerd, dus het kanaal toont mogelijk nog een importbanner: {0}</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>Voor het kopiëren van berichten en chats is het clientgeheim van de doelapp-registratie nodig. Sla het op onder Instellingen (Azure-app-registraties) en geef de registratie de Microsoft Graph-toepassingsmachtiging Teamwork.Migrate.All met beheerderstoestemming.</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>Bericht {0} kon niet worden geïmporteerd: {1}</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>Oorspronkelijk geplaatst door {0}</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>De antwoorden op bericht {0} konden niet worden geplaatst, omdat het bericht al door een onderbroken uitvoering was geïmporteerd en niet opnieuw kon worden gevonden. Voer het kopiëren opnieuw uit nadat de thread is voltooid.</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>Het starten van de import gaf als antwoord: {0} (wordt voortgezet).</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>Geplaatst door een onbekende auteur</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>Twee kopieën zouden "{0}" heten: geef elk een andere naam.</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>Bij meerdere teams moet de naam {name} bevatten, dat de naam van het oorspronkelijke team wordt.</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>Voer een naam in voor het nieuwe team.</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>Naam van de kopie (gebruik {name} voor de naam van het oorspronkelijke team)</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>De kopie van elk team krijgt deze naam. Bij meerdere teams wordt {name} de naam van het oorspronkelijke team, en u kunt elke naam nog wijzigen in de volgende stap.</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>Bestanden</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>Leden en eigenaren</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>Berichten</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>Importeert de berichten en antwoorden van elk kanaal met hun oorspronkelijke tijd en auteur. Bestandsbijlagen worden in de tekst genoemd en niet gekopieerd; reacties worden niet gekopieerd.</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>Instellingen</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>Alleen mijn eigen teams en chats weergeven (in plaats van alle teams in de tenant)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>Toont alleen de teams en chats van het account waarmee u zich hebt aangemeld, met alleen die aanmelding: geen clientgeheim of toepassingsmachtigingen nodig.</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>Al aanwezig</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>Chat</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>Algemeen</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>Personen</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>Team</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>Kanalen</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>Chats</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>Details</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>Onderdeel</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>Duur</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>Mislukt</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>Bestanden</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>Weggelaten</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>Leden</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>Berichten</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>Niet gekopieerd (niet geselecteerd).</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>Niet gestart: een eerder team heeft het kopiëren gestopt.</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>{0} gemaakt, {1} al aanwezig.</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>De groepschat "{0}" is gemaakt in tenant {1}, met {2} als eigenaar.</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>{0} gekopieerd, {1} mislukt.</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>{0} heeft geen overeenkomst in het doel en is weggelaten. Wijs deze persoon toe onder Instellingen &gt; Identiteitstoewijzing en voer het kopiëren daarna opnieuw uit.</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>{0} toegevoegd.</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>{0} geïmporteerd, {1} al aanwezig, {2} mislukt, {3} geplaatst als de kopiërende gebruiker omdat de auteur geen overeenkomst heeft.</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>"{0}" is gemaakt in tenant {1}, met {2} als eigenaar.</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>Kopieerrapport</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>Openen in Teams</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>Het nieuwe team staat in tenant {0} en heeft {1} als eigenaar. Open het: {2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>Het nieuwe team staat in tenant {0} en heeft {1} als eigenaar.</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0} van {1}</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>Kopieer de chat "{0}" als een nieuwe groepschat.</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>Kopieer {0} chats als nieuwe groepschats: {1}.</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>Kanalen</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>Naam van de kopie</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>Team</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>Inclusief: {0}.</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>Controleer hieronder de namen van de kopieën en wijzig de namen waar nodig. Een kopie met dezelfde naam als een eerdere kopie zet die kopie voort; een andere naam maakt een nieuw team.</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>alleen het lege team en de kanalen ervan</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>Kopieer het team "{0}" als een nieuw team met de naam "{1}".</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>Kopieer {0} teams als nieuwe teams.</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>{0} van de {1} personen in dit team hebben geen overeenkomend account in het doel. Zonder toewijzing worden ze weggelaten uit de kopie en worden ze vermeld in de resultaten:
+{2}</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>Alles selecteren</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>{0} team(s) geselecteerd</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>{0} chat(s) geselecteerd</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>Kiezen</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>Verbinden</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>Kopiëren</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>Opties</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>Resultaten</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>Controleren</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>Kanaal {0} ({1}) wordt gemaakt…</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>Het team {0} wordt gemaakt…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>De bestanden van {0} worden gekopieerd…</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>Het team van de eerdere kopie bestaat niet meer; er wordt een nieuw team gemaakt.</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>{0} leden worden toegevoegd…</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>De berichten van {0} worden gekopieerd…</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>De naam "{0}" verschilt van de eerdere kopie "{1}", dus er wordt een nieuw team gemaakt. De eerdere kopie blijft ongewijzigd.</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>De eerdere kopie wordt voortgezet in {0}.</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>Teaminstellingen worden gekopieerd…</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>Klaar. Nieuw team {0}: {1} kanalen gemaakt, {2} al aanwezig; {3} leden toegevoegd; {4} bestanden gekopieerd, {5} mislukt.</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>Berichten: {0} geïmporteerd, {1} al aanwezig, {2} mislukt; {3} geplaatst als u omdat de auteur geen overeenkomst heeft in het doel.</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>De kopie wordt gemaakt in het account waarmee u bent aangemeld ({0}).</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>De kopie wordt gemaakt in de doeltenant, als {0}. Personen worden op basis van hun e-mailadres gekoppeld aan doelaccounts, met behulp van uw identiteitstoewijzing.</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>{0} personen hebben geen overeenkomst in het doel en zijn weggelaten. Wijs ze toe onder Instellingen &gt; Identiteitstoewijzing en voer het kopiëren opnieuw uit:</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>Kanaal {0} is niet gemaakt: {1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>De leden van {0} konden niet worden gelezen: {1}</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}: {1} bestanden konden niet worden gekopieerd. Voer het kopiëren opnieuw uit om het nogmaals te proberen.</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}: berichten konden niet worden gekopieerd: {1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}: {1} berichten konden niet worden geïmporteerd. Voer het kopiëren opnieuw uit om ze opnieuw te proberen.</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}: de bronmap met bestanden is niet beschikbaar, dus de bestanden zijn niet gekopieerd.</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}: de nieuwe map met bestanden is nog niet klaar, dus de bestanden zijn niet gekopieerd. Voer het kopiëren opnieuw uit om het nogmaals te proberen.</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>{0} waarschuwingen:</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>Wat te kopiëren</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>Dit bericht kopiëren voor uw beheerder</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>Klik met de rechtermuisknop om dit bericht te kopiëren en naar uw beheerder te sturen.</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>Verwijderen</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>Er is een clientgeheim opgeslagen (versleuteld voor uw Windows-account).</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Clientgeheim (optioneel, voor de Teams-tool)</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Alleen de Teams-tool gebruikt dit geheim, als toepassingsaanmelding (zonder gebruiker). Bij de doelregistratie importeert het berichten en chats, wat Microsoft alleen op deze manier toestaat, met de Graph-toepassingsmachtiging Teamwork.Migrate.All (beheerderstoestemming). Bij de bronregistratie laat het de Teams-tool alle teams in de tenant en de chats van de door u gekozen personen weergeven (de beheerdersweergave); de machtigingen staan in PERMISSIONS.md. Maak het geheim voor deze app-registratie onder Certificaten en geheimen en plak de waarde (Value), niet de ID. Laat het leeg als u geen van beide nodig hebt.</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Selecteer een registratie om deze te bewerken. Welke de bron is en welke het doel, wordt gekozen op het startscherm; een registratie hier selecteren of bewerken verandert dat niet.</value></data>
 </root>

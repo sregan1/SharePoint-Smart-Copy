@@ -47,9 +47,12 @@ public partial class TeamsDialog : Window
     private readonly TeamsApiClient _delegatedApi;
     private bool _admin;                               // administrator view: every team, and the chats of chosen people (application sign-in)
     private TreeViewItem? _chatsRoot;
+    private bool _adminAvailable, _adminRejected;     // a secret is saved for the source registration / Microsoft rejected it on this wizard's load
     private string? _adminFallbackNote;                // why the administrator view was dropped for the personal one, shown with the list
     private readonly HashSet<string> _seenChats = [];
     private readonly List<string> _chatPeople = [];
+    private List<PersonRow>? _allPeople;                // everyone, once "show all" was used (typing then narrows this list)
+    private CancellationTokenSource? _addChatsCts;
     private readonly AuthService _source;
     private readonly AuthService _target;
     private readonly bool _isMultiTenant;
@@ -134,7 +137,7 @@ public partial class TeamsDialog : Window
         _getRoot = getRoot;
         _signInTarget = signInTarget;
         _api = _delegatedApi = new TeamsApiClient((ct, force) => source.GetGraphTokenAsync(TeamsApiClient.ReadScopes, ct, force));
-        Closed += (_, _) => { _loadCts?.Cancel(); _copyCts?.Cancel(); _peopleCts?.Cancel(); _srcSignInCts?.Cancel(); _tgtSignInCts?.Cancel(); };
+        Closed += (_, _) => { _loadCts?.Cancel(); _copyCts?.Cancel(); _peopleCts?.Cancel(); _srcSignInCts?.Cancel(); _tgtSignInCts?.Cancel(); _addChatsCts?.Cancel(); };
 
         // Messages and chats are imported with an application sign-in, which needs the target registration's client secret.
         _hasSecret = _targetRegistration?.GetClientSecret() is { Length: > 0 };
@@ -147,7 +150,7 @@ public partial class TeamsDialog : Window
         // The administrator view reads with the SOURCE registration's own sign-in (its client secret), so it can see teams the signed-in person is not in.
         var adminOk = _sourceRegistration?.GetClientSecret() is { Length: > 0 };
         // It is the default whenever the source registration has a client secret; "only my own teams and chats" is the fallback (and the only view without a secret).
-        _admin = adminOk;
+        _admin = _adminAvailable = adminOk;
         PersonalCheck.IsEnabled = adminOk;
         PersonalCheck.ToolTip = adminOk ? Loc.T("Teams_Personal_OptionTip") : Loc.T("Teams_Admin_NeedSecret");
         AdminNote.Text = adminOk ? string.Empty : Loc.T("Teams_Admin_NeedSecret");
@@ -203,9 +206,10 @@ public partial class TeamsDialog : Window
                 canNext = (TeamMode || HasChats) && !_loading;
                 // The people filter is always shown; without the administrator view it is disabled and says what turns it on.
                 AdminPanel.IsEnabled = _admin;
-                var off = Loc.T("Teams_Admin_PanelOff");
+                var off = AdminOffText();
                 if (!_admin) PeopleChosenText.Text = off;
-                else if (PeopleChosenText.Text == off) PeopleChosenText.Text = string.Empty;
+                else if (_lastOffText != null && PeopleChosenText.Text == _lastOffText) PeopleChosenText.Text = string.Empty;
+                _lastOffText = off;
                 SelectionCount.Text = string.Join(", ", new[]
                 {
                     TeamMode ? Loc.T("Teams_Selected", _checkedTeams.Count.ToString()) : "",
@@ -423,6 +427,7 @@ public partial class TeamsDialog : Window
         _seenChats.Clear();
         PersonResults.ItemsSource = null;
         PersonResults.Visibility = Visibility.Collapsed;
+        _allPeople = null;
         PeopleChosenText.Text = string.Empty;
         RefreshWizard();
     }
@@ -1001,6 +1006,7 @@ public partial class TeamsDialog : Window
             _adminFallbackNote = Loc.T("Teams_Admin_Fallback", first.Contains("AADSTS7000215", StringComparison.Ordinal)
                 ? Loc.T("Teams_Admin_FallbackSecret") : first.Length > 160 ? first[..160] + "…" : first);
             fallback = true;
+            _adminRejected = true;
         }
         catch (TeamsApiClient.TeamsAccessException ex) { _status = ex.Message; _treeStale = true; }
         catch (Microsoft.Identity.Client.MsalServiceException)
@@ -1023,6 +1029,16 @@ public partial class TeamsDialog : Window
         }
     }
 
+    private string? _lastOffText;
+
+    // Why the people filter is off, in the words of the actual situation, naming the registration that was checked.
+    private string AdminOffText()
+    {
+        if (!_adminAvailable) return Loc.T("Teams_Admin_OffNoSecret", SourceRegistrationLabel);
+        if (_adminRejected) return Loc.T("Teams_Admin_OffRejected", SourceRegistrationLabel);
+        return Loc.T("Teams_Admin_OffChosen");
+    }
+
     private void AddChatNode(TreeViewItem root, TeamsApiClient.ChatInfo chat)
     {
         if (!_seenChats.Add(chat.Id)) return;   // a chat between two chosen people is listed once
@@ -1040,10 +1056,10 @@ public partial class TeamsDialog : Window
 
     private void PersonBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
-        if (e.Key == System.Windows.Input.Key.Enter) { e.Handled = true; _ = FindPeopleAsync(); }
+        if (e.Key == System.Windows.Input.Key.Enter) { e.Handled = true; if (_allPeople == null) _ = FindPeopleAsync(); }
     }
     private async void FindPerson_Click(object sender, RoutedEventArgs e) => await FindPeopleAsync();
-    private void PersonResults_SelectionChanged(object sender, SelectionChangedEventArgs e) => AddChatsButton.IsEnabled = PersonResults.SelectedItems.Count > 0;
+    private void PersonResults_SelectionChanged(object sender, SelectionChangedEventArgs e) => AddChatsButton.IsEnabled = _addChatsCts != null || PersonResults.SelectedItems.Count > 0;
 
     private async Task FindPeopleAsync()
     {
@@ -1063,34 +1079,96 @@ public partial class TeamsDialog : Window
         finally { FindPersonButton.IsEnabled = true; }
     }
 
-    // Lists the chats of the people picked in the results and adds them to the Chats node (no chat twice).
-    private async void AddChats_Click(object sender, RoutedEventArgs e)
+    // Everyone in the directory, as a list to narrow by typing and to tick (all at once with Select all).
+    private async void ShowAllPeople_Click(object sender, RoutedEventArgs e)
     {
-        var picked = PersonResults.SelectedItems.OfType<PersonRow>().ToList();
-        if (picked.Count == 0 || _chatsRoot == null) return;
-        AddChatsButton.IsEnabled = false;
+        if (!_admin) return;
+        ShowAllButton.IsEnabled = false;
         FindPersonButton.IsEnabled = false;
-        var added = 0;
+        SetStatus(Loc.T("Teams_Admin_LoadingPeople"));
         try
         {
-            foreach (var person in picked)
-            {
-                SetStatus(Loc.T("Teams_Admin_LoadingChats", person.User.DisplayName));
-                var before = _chatsRoot.Items.Count;
-                foreach (var chat in await _api.ListUserChatsAsync(person.User.Id)) AddChatNode(_chatsRoot, chat);
-                added += _chatsRoot.Items.Count - before;
-                if (!_chatPeople.Contains(person.User.DisplayName, StringComparer.OrdinalIgnoreCase)) _chatPeople.Add(person.User.DisplayName);
-            }
-            _chatsRoot.IsExpanded = true;
-            PeopleChosenText.Text = Loc.T("Teams_Admin_ChatsLoaded", string.Join(", ", _chatPeople), _chatsRoot.Items.Count.ToString());
-            SetStatus(Loc.T("Teams_Admin_ChatsAdded", added.ToString()));
+            var all = await _api.ListAllUsersAsync();
+            _allPeople = all.Select(u => new PersonRow(u)).ToList();
+            PersonBox.Text = string.Empty;
+            ApplyPeopleFilter();
         }
-        catch (TeamsApiClient.TeamsAccessException ex) { PeopleChosenText.Text = ex.Message; SetStatus(string.Empty); }
-        catch (Exception ex) { PeopleChosenText.Text = Loc.T("Teams_Error", ex.Message); SetStatus(string.Empty); }
+        catch (TeamsApiClient.TeamsAccessException ex) { PeopleChosenText.Text = ex.Message; }
+        catch (Exception ex) { PeopleChosenText.Text = Loc.T("Teams_Error", ex.Message); }
         finally
         {
+            ShowAllButton.IsEnabled = true;
             FindPersonButton.IsEnabled = true;
+            SetStatus(string.Empty);
+        }
+    }
+
+    // Once everyone is listed, the box narrows that list (name or email contains the text) instead of searching again.
+    private void PersonBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_allPeople != null) ApplyPeopleFilter();
+    }
+
+    private void ApplyPeopleFilter()
+    {
+        if (_allPeople == null) return;
+        var text = PersonBox.Text.Trim();
+        var shown = text.Length == 0 ? _allPeople : _allPeople.Where(p => p.Label.Contains(text, StringComparison.CurrentCultureIgnoreCase)).ToList();
+        PersonResults.ItemsSource = shown;
+        PersonResults.Visibility = Visibility.Visible;
+        PeopleChosenText.Text = Loc.T("Teams_Admin_AllPeople", shown.Count.ToString(), _allPeople.Count.ToString());
+    }
+
+    private void PeopleSelectAll_Click(object sender, RoutedEventArgs e) => PersonResults.SelectAll();
+    private void PeopleClear_Click(object sender, RoutedEventArgs e) => PersonResults.UnselectAll();
+
+    // Lists the chats of the people picked in the results and adds them to the Chats node (no chat twice). Several people are read at a time;
+    // many people ask for confirmation first (it can be thousands of chats); the button turns into Stop while it runs.
+    private async void AddChats_Click(object sender, RoutedEventArgs e)
+    {
+        if (_addChatsCts != null) { _addChatsCts.Cancel(); return; }
+        var picked = PersonResults.SelectedItems.OfType<PersonRow>().ToList();
+        if (picked.Count == 0 || _chatsRoot == null) return;
+        if (picked.Count > 5 && MessageBox.Show(this, Loc.T("Teams_Admin_ConfirmMany", picked.Count.ToString()), Title, MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+        _addChatsCts = new CancellationTokenSource();
+        var ct = _addChatsCts.Token;
+        AddChatsButton.Content = Loc.T("Teams_Admin_Stop");
+        FindPersonButton.IsEnabled = false;
+        ShowAllButton.IsEnabled = false;
+        var before = _chatsRoot.Items.Count;
+        var done = 0;
+        try
+        {
+            using var gate = new SemaphoreSlim(4);
+            await Task.WhenAll(picked.Select(async person =>
+            {
+                await gate.WaitAsync(ct);
+                try
+                {
+                    var chats = await _api.ListUserChatsAsync(person.User.Id, ct);
+                    // back on the UI thread here (the await resumes there): the tree is only touched from it
+                    foreach (var chat in chats) AddChatNode(_chatsRoot, chat);
+                    if (!_chatPeople.Contains(person.User.DisplayName, StringComparer.OrdinalIgnoreCase)) _chatPeople.Add(person.User.DisplayName);
+                    SetStatus(Loc.T("Teams_Admin_LoadingChatsN", (++done).ToString(), picked.Count.ToString()));
+                }
+                finally { gate.Release(); }
+            }));
+            _chatsRoot.IsExpanded = true;
+            PeopleChosenText.Text = Loc.T("Teams_Admin_ChatsLoaded", string.Join(", ", _chatPeople.Take(8)) + (_chatPeople.Count > 8 ? $" +{_chatPeople.Count - 8}" : ""), _chatsRoot.Items.Count.ToString());
+        }
+        catch (OperationCanceledException) { PeopleChosenText.Text = Loc.T("Teams_Admin_ChatsStopped", _chatsRoot.Items.Count.ToString()); }
+        catch (TeamsApiClient.TeamsAccessException ex) { PeopleChosenText.Text = ex.Message; }
+        catch (Exception ex) { PeopleChosenText.Text = Loc.T("Teams_Error", ex.Message); }
+        finally
+        {
+            _addChatsCts?.Dispose();
+            _addChatsCts = null;
+            AddChatsButton.Content = Loc.T("Teams_Admin_AddChats");
+            FindPersonButton.IsEnabled = true;
+            ShowAllButton.IsEnabled = true;
             AddChatsButton.IsEnabled = PersonResults.SelectedItems.Count > 0;
+            _chatsRoot.IsExpanded = true;
+            SetStatus(Loc.T("Teams_Admin_ChatsAdded", (_chatsRoot.Items.Count - before).ToString()));
         }
     }
 

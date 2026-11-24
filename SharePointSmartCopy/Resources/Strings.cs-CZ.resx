@@ -1655,4 +1655,181 @@ Storno: zpět</value></data>
   <data name="Teams_Error" xml:space="preserve"><value>Teams se nepodařilo přečíst: {0}</value></data>
   <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Nástroj Teams vyžaduje tato delegovaná oprávnění Microsoft Graph, která tato registrace aplikace nemá: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All a Chat.Read. V portálu Azure otevřete registraci, přejděte do části Oprávnění rozhraní API, přidejte je, udělte souhlas správce a aplikaci restartujte. Viz „Add API permissions“ v souboru README.</value></data>
   <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Živé kopírování vyžaduje delegovaná oprávnění Power Automate Service Flows.Read.All a Flows.Manage.All a také PowerApps Service User, která tato registrace aplikace nemá. Přidejte je v části Oprávnění rozhraní API, udělte souhlas správce a aplikaci restartujte. Kopírování z exportovaných balíčků funguje i bez nich.</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ {0:N0} složek (včetně sad dokumentů) nemělo e-mail u pole Vytvořil nebo Změnil (systémový účet, aplikace SharePoint nebo smazaný účet): tato osoba je označena jako systémový účet, stejně jako u souborů, místo importujícího účtu</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ {0:N0} složek nemělo e-mail u pole Vytvořil nebo Změnil (systémový účet, aplikace SharePoint nebo smazaný účet): obojí je označeno jako systémový účet, stejně jako u souborů, místo importujícího účtu</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>Přidat jejich chaty</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>Zobrazeno {0} z {1} lidí. Zadáním zúžíte seznam, pak vyberte lidi a klikněte na Přidat jejich chaty.</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>Přidáno chatů: {0}.</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>Chaty načteny pro: {0} (uvedeno {1}). Zaškrtněte ty, které chcete zkopírovat.</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>Chaty výše vybraných lidí</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>Zastaveno. Zatím uvedeno chatů: {0}.</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>Přečíst chaty {0} lidí? Může jít o velmi velký počet chatů a chvíli to potrvá; kdykoli to můžete zastavit. Chat sdílený dvěma z nich se uvede jen jednou.</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>Zobrazení pro správce není k dispozici ({0}); místo toho se zobrazí vaše vlastní týmy a chaty.</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>tajný klíč klienta uložený pro zdrojovou registraci byl odmítnut: v Nastavení vložte Hodnotu tajného klíče, ne jeho ID</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>Najít lidi</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>Chaty uživatelů:</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>Čtou se chaty uživatele {0}…</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>Čtení chatů: hotovo {0} z {1} lidí…</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>Čtou se všichni v adresáři…</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>Zobrazují se jen vaše vlastní týmy a chaty. Chcete-li vypsat všechny týmy v tenantu a chaty vybraných lidí, uložte tajný klíč klienta pro zdrojovou registraci aplikace (Nastavení).</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>Nenalezen nikdo, jehož jméno nebo e-mail začíná na „{0}“.</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>V kroku Připojení je zaškrtnuto „Zobrazit jen mé vlastní týmy a chaty“. Zrušte zaškrtnutí, abyste mohli vybírat lidi.</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>Pro zdrojovou registraci {0} není uložen žádný tajný klíč klienta. V Nastavení vyberte tuto registraci a vložte její tajný klíč, pak tohoto průvodce znovu otevřete (otevřený průvodce si ponechává nastavení, se kterým začal).</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>Microsoft odmítl tajný klíč klienta uložený pro zdrojovou registraci {0}, proto se zobrazují jen vaše vlastní týmy a chaty. Opravte tajný klíč v Nastavení a znovu otevřete tohoto průvodce.</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>Výběr lidí vyžaduje zobrazení pro správce: uložte v Nastavení tajný klíč klienta pro zdrojovou registraci aplikace a v kroku Připojení nechte nezaškrtnuté „Zobrazit jen mé vlastní týmy a chaty“.</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>Vyberte jednoho nebo více lidí a klikněte na Přidat jejich chaty.</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>Zobrazit všechny lidi</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>Zastavit</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(kopíruje se vždy)</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>Zkopírováno týmů: {0}.</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>Zkopírováno {0} z {1} týmů. Podrobnosti jsou níže.</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>Tým {0} z {1}: {2} → {3}</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>Chat {0} z {1}: {2}</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>Chat se zkopíruje jako nový skupinový chat se stejnými lidmi (v cíli se vyhledají podle e-mailu). Jeho zprávy se naimportují s původním časem a autorem a všichni v novém chatu uvidí celou historii.</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>Hotovo. Nový chat {0}: lidí {1}; zprávy: {2} naimportováno, {3} již existuje, {4} se nezdařilo; {5} odesláno vaším jménem, protože autor nemá shodu.</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>Chat {0} již byl zkopírován.</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>Vytváří se kopie chatu {0}…</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>Hledají se lidé z chatu {0} v cíli…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>Chat {0} nebyl zkopírován: žádného z ostatních lidí v něm se v cíli nepodařilo najít.</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>Chat {0}: naimportované zprávy jsou v chatu, ale lidé v něm je zatím nemusí vidět, protože se nepodařilo sdílet jejich historii: {1}. Udělte registraci oprávnění aplikace ChatMember.ReadWrite.All (souhlas správce) a spusťte kopírování chatu znovu.</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>Zpřístupňuje se naimportovaná historie chatu {0} jeho lidem…</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>Zkopírováno chatů: {0}.</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>Zkopírováno {0} z {1} chatů. Podrobnosti jsou níže.</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>Zaškrtněte týmy a chaty ke zkopírování. Kanály každého týmu jsou také zaškrtnuté: zrušte zaškrtnutí těch, které chcete vynechat. Pak klikněte na Další.</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>Zrušit výběr</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>Váš účet</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>Přihlášení bylo zrušeno. Kliknutím na Zkusit znovu to zkuste znovu.</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>Přihlášení se nezdařilo: {0}. Kliknutím na Zkusit znovu to zkuste znovu.</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>Přihlaste se účtem, který vidí týmy a chaty, které chcete zkopírovat. Kopie se vytvoří ve stejném tenantu.</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>Přihlaste se ke zdrojovému tenantu (kde je tým nyní) a k cílovému tenantu (kde se vytvoří kopie). Každé přihlášení otevře váš prohlížeč. Jedno můžete zrušit a zkusit znovu a neúspěšné přihlášení druhé nijak neovlivní.</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>Chcete-li pokračovat, přihlaste se k oběma tenantům.</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>Chcete-li pokračovat, přihlaste se.</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>Nepřihlášeno.</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>Registrace aplikace: {0} (ID klienta {1})</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>Zkusit znovu</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>Přihlásit se</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>Přihlásit se jako jiný uživatel</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>Přihlášen jako {0}.</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>Zdrojový tenant</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>Cílový tenant</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>Tenant: {0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>vyhledává se…</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>Čeká se, až dokončíte přihlášení v prohlížeči. Kliknutím na Zrušit přestanete čekat, pak klikněte na Zkusit znovu.</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>Kopírovat další</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>Kopírování bylo zrušeno.</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>Kopírování dokončeno.</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>Kopírování se zastavilo: {0}</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>Ke kopírování týmu jsou na cílové registraci aplikace {0} potřeba i tato delegovaná oprávnění Microsoft Graph. Přidejte je v části Oprávnění rozhraní API, udělte souhlas správce a zkuste to znovu: {1} (se souhlasem správce).</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>Ke kopírování týmu jsou na cílové registraci aplikace {0} potřeba i tato delegovaná oprávnění Microsoft Graph. Přidejte je v části Oprávnění rozhraní API, udělte souhlas správce a zkuste to znovu: Team.Create, Channel.Create, ChannelMember.ReadWrite.All, TeamMember.ReadWrite.All, TeamSettings.ReadWrite.All (se souhlasem správce).</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0} (kopie)</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name} (kopie)</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>Vypíše týmy a chaty, které vidíte, přičemž každý kanál je označen jako standardní, soukromý nebo sdílený. Vyberte tým a zkopírujte jeho nastavení, členy, kanály (včetně soukromých a sdílených), soubory a podle volby i zprávy do nového týmu, ve stejném tenantu nebo v cílovém tenantu. Vyberte chat a zkopírujte ho i s jeho zprávami. Zprávy vyžadují tajný klíč klienta cílové registrace (viz Nastavení). Soukromé a sdílené kanály se zobrazí jen tehdy, pokud jste jejich členem.</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>Mapovat lidi…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>Všech {0} členů bylo v cíli nalezeno.</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>Kontroluje se, kdo ze zdrojového týmu existuje v cílovém tenantu…</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …a dalších {0}</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>Zkopírováno týmů a chatů: {0}.</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>Zkopírováno {0} z {1} týmů a chatů. Podrobnosti jsou níže.</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>Příloha nebyla zkopírována: {0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>Zprávu {0} se nepodařilo připravit: {1}</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>Import se nepodařilo označit jako dokončený, takže kanál může stále zobrazovat banner importu: {0}</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>Ke kopírování zpráv a chatů je potřeba tajný klíč klienta cílové registrace aplikace. Uložte ho v Nastavení (Registrace aplikací Azure) a udělte registraci oprávnění aplikace Microsoft Graph Teamwork.Migrate.All se souhlasem správce.</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>Zprávu {0} se nepodařilo naimportovat: {1}</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>Původně odeslal(a) {0}</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>Odpovědi na zprávu {0} nebylo možné zařadit, protože zpráva již byla naimportována přerušeným během a nepodařilo se ji znovu najít. Spusťte kopírování znovu po dokončení vlákna.</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>Zahájení importu vrátilo: {0} (pokračuje se).</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>Odeslal neznámý autor</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>Dvě kopie by se jmenovaly „{0}“: dejte každé jiný název.</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>Při více týmech musí název obsahovat {name}, které se nahradí názvem původního týmu.</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>Zadejte název nového týmu.</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>Název kopie (pro název původního týmu použijte {name})</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>Kopie každého týmu dostane tento název. Při více týmech se {name} nahradí názvem původního týmu a každý název můžete v dalším kroku ještě změnit.</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>Soubory</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>Členové a vlastníci</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>Zprávy</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>Importuje zprávy a odpovědi každého kanálu s původním časem a autorem. Přílohy jsou uvedeny v textu, nekopírují se; reakce se nekopírují.</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>Nastavení</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>Zobrazit jen mé vlastní týmy a chaty (místo všech týmů v tenantu)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>Vypíše jen týmy a chaty účtu, kterým jste přihlášeni, pouze s využitím tohoto přihlášení: není potřeba tajný klíč klienta ani oprávnění aplikace.</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>Již existuje</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>Chat</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>Obecné</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>Lidé</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>Tým</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>Kanály</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>Chaty</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>Podrobnosti</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>Část</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>Doba trvání</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>Nezdařilo se</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>Soubory</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>Vynecháno</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>Členové</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>Zprávy</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>Nezkopírováno (nevybráno).</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>Nezahájeno: dřívější tým zastavil kopírování.</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>Vytvořeno {0}, již existuje {1}.</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>Vytvořen skupinový chat „{0}“ v tenantu {1}, vlastník {2}.</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>Zkopírováno {0}, nezdařilo se {1}.</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>{0} nemá v cíli shodu a byl(a) vynechán(a). Namapujte ji v části Nastavení &gt; Mapování identit a pak kopírování spusťte znovu.</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>Přidáno {0}.</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>Naimportováno {0}, již existuje {1}, nezdařilo se {2}, {3} odesláno jménem kopírujícího uživatele, protože autor nemá shodu.</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>Vytvořen „{0}“ v tenantu {1}, vlastník {2}.</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>Týmy</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>Zpráva o kopírování</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>Otevřít v Teams</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>Nový tým je v tenantu {0} a jeho vlastníkem je {1}. Otevřete ho: {2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>Nový tým je v tenantu {0} a jeho vlastníkem je {1}.</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0} z {1}</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>Zkopírovat chat „{0}“ jako nový skupinový chat.</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>Zkopírovat {0} chatů jako nové skupinové chaty: {1}.</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>Kanály</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>Název kopie</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>Tým</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>Včetně: {0}.</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>Zkontrolujte níže názvy kopií a případně je změňte. Kopie se stejným názvem jako dřívější kopie v ní pokračuje; jiný název vytvoří nový tým.</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>jen prázdný tým a jeho kanály</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>Zkopírovat tým „{0}“ jako nový tým s názvem „{1}“.</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>Zkopírovat {0} týmů jako nové týmy.</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>{0} z {1} lidí v tomto týmu nemá v cíli odpovídající účet. Bez mapování budou z kopie vynecháni a budou uvedeni ve výsledcích:
+{2}</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>Vybrat vše</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>Vybráno týmů: {0}</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>Vybráno chatů: {0}</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>Výběr</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>Připojení</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>Kopírování</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>Možnosti</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>Výsledky</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>Kontrola</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>Vytváří se kanál {0} ({1})…</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>Vytváří se tým {0}…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>Kopírují se soubory týmu {0}…</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>Tým z dřívějšího kopírování již neexistuje; vytváří se nový.</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>Přidává se členů: {0}…</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>Kopírují se zprávy týmu {0}…</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>Název „{0}“ se liší od dřívější kopie „{1}“, proto se vytvoří nový tým. Dřívější kopie zůstane beze změny.</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>Pokračuje se v dřívějším kopírování do {0}.</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>Kopíruje se nastavení týmu…</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>Hotovo. Nový tým {0}: vytvořeno kanálů {1}, již existuje {2}; přidáno členů {3}; zkopírováno souborů {4}, nezdařilo se {5}.</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>Zprávy: {0} naimportováno, {1} již existuje, {2} se nezdařilo; {3} odesláno vaším jménem, protože autor nemá v cíli shodu.</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>Kopie se vytvoří v účtu, kterým jste přihlášeni ({0}).</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>Kopie se vytvoří v cílovém tenantu jako {0}. Lidé se k cílovým účtům přiřazují podle e-mailu s využitím vašeho mapování identit.</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>{0} lidí nemá v cíli shodu a byli vynecháni. Namapujte je v části Nastavení &gt; Mapování identit a spusťte kopírování znovu:</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>Kanál {0} nebyl vytvořen: {1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>Členy kanálu {0} se nepodařilo přečíst: {1}</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}: nepodařilo se zkopírovat souborů: {1}. Spusťte kopírování znovu, abyste to zkusili znovu.</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}: zprávy se nepodařilo zkopírovat: {1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}: nepodařilo se naimportovat zpráv: {1}. Spusťte kopírování znovu, abyste je zkusili znovu.</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}: složka zdrojových souborů není k dispozici, proto se soubory nezkopírovaly.</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}: nová složka souborů ještě není připravena, proto se soubory nezkopírovaly. Spusťte kopírování znovu, abyste to zkusili znovu.</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>Upozornění: {0}</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>Co kopírovat</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>Zkopírovat tuto zprávu pro správce</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>Kliknutím pravým tlačítkem zkopírujete tuto zprávu a pošlete ji správci.</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>Odebrat</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>Tajný klíč klienta je uložen (zašifrovaný pro váš účet Windows).</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Tajný klíč klienta (volitelné, pro nástroj Teams)</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Tento tajný klíč používá jen nástroj Teams, jako přihlášení aplikace (bez uživatele). V registraci cíle jím importuje zprávy a chaty, což Microsoft povoluje pouze tímto způsobem, s oprávněním aplikace Graph Teamwork.Migrate.All (souhlas správce). V registraci zdroje díky němu nástroj Teams vypíše všechny týmy v tenantovi a chaty vybraných osob (zobrazení správce); oprávnění jsou popsána v PERMISSIONS.md. Tajný klíč vytvořte v této registraci aplikace v části Certifikáty a tajné klíče a vložte jeho hodnotu (Value), ne jeho ID. Pokud nepotřebujete ani jedno, nechte prázdné.</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Vyberte registraci, kterou chcete upravit. Která je zdrojová a která cílová, se vybírá na domovské obrazovce; výběr nebo úprava zde to nemění.</value></data>
 </root>

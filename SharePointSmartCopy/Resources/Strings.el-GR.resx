@@ -1655,4 +1655,181 @@
   <data name="Teams_Error" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση του Teams: {0}</value></data>
   <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Το εργαλείο Teams απαιτεί αυτές τις εξουσιοδοτημένες άδειες Microsoft Graph, τις οποίες δεν διαθέτει αυτή η εγγραφή εφαρμογής: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All και Chat.Read. Στην πύλη Azure ανοίξτε την εγγραφή, μεταβείτε στις Άδειες API, προσθέστε τις, παραχωρήστε συγκατάθεση διαχειριστή και επανεκκινήστε την εφαρμογή. Δείτε το «Add API permissions» στο README.</value></data>
   <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Η ζωντανή αντιγραφή απαιτεί τις εξουσιοδοτημένες άδειες Power Automate Service Flows.Read.All και Flows.Manage.All, καθώς και PowerApps Service User, τις οποίες δεν διαθέτει αυτή η εγγραφή εφαρμογής. Προσθέστε τις στις Άδειες API, παραχωρήστε συγκατάθεση διαχειριστή και επανεκκινήστε την εφαρμογή. Η αντιγραφή από εξαγμένα πακέτα λειτουργεί χωρίς αυτές.</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ {0:N0} φάκελοι (συμπεριλαμβανομένων των Document Sets) δεν είχαν email για τον δημιουργό ή τον τελευταίο τροποποιητή (λογαριασμός συστήματος, SharePoint App ή διαγραμμένος λογαριασμός): αυτό το άτομο καταχωρίζεται ως Λογαριασμός συστήματος, όπως και στα αρχεία, αντί για τον λογαριασμό εισαγωγής</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ {0:N0} φάκελοι δεν είχαν email για τον δημιουργό ή τον τελευταίο τροποποιητή (λογαριασμός συστήματος, SharePoint App ή διαγραμμένος λογαριασμός): και τα δύο καταχωρίζονται ως Λογαριασμός συστήματος, όπως και στα αρχεία, αντί για τον λογαριασμό εισαγωγής</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>Προσθήκη των συνομιλιών τους</value></data>
+  <data name="Teams_Admin_AllPeople" xml:space="preserve"><value>Εμφάνιση {0} από {1} άτομα. Πληκτρολογήστε για να περιορίσετε τη λίστα, επιλέξτε άτομα και κάντε κλικ στο Προσθήκη των συνομιλιών τους.</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>Προστέθηκαν {0} συνομιλίες.</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>Φορτώθηκαν συνομιλίες για: {0} ({1} στη λίστα). Επιλέξτε αυτές που θα αντιγραφούν.</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>Συνομιλίες των ατόμων που επιλέχθηκαν παραπάνω</value></data>
+  <data name="Teams_Admin_ChatsStopped" xml:space="preserve"><value>Διακόπηκε. {0} συνομιλίες στη λίστα μέχρι στιγμής.</value></data>
+  <data name="Teams_Admin_ConfirmMany" xml:space="preserve"><value>Να διαβαστούν οι συνομιλίες {0} ατόμων; Ο αριθμός των συνομιλιών μπορεί να είναι πολύ μεγάλος και η διαδικασία παίρνει χρόνο· μπορείτε να τη διακόψετε οποιαδήποτε στιγμή. Μια συνομιλία που μοιράζονται δύο από αυτούς εμφανίζεται μία φορά.</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>Η προβολή διαχειριστή δεν είναι διαθέσιμη ({0})· εμφανίζονται οι δικές σας ομάδες και συνομιλίες.</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>το client secret που έχει αποθηκευτεί για την εγγραφή προέλευσης απορρίφθηκε: επικολλήστε την Τιμή (Value) του μυστικού, όχι το αναγνωριστικό του (ID), στις Ρυθμίσεις</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>Εύρεση ατόμων</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>Συνομιλίες του/της:</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>Ανάγνωση των συνομιλιών του/της {0}…</value></data>
+  <data name="Teams_Admin_LoadingChatsN" xml:space="preserve"><value>Ανάγνωση συνομιλιών: ολοκληρώθηκαν {0} από {1} άτομα…</value></data>
+  <data name="Teams_Admin_LoadingPeople" xml:space="preserve"><value>Ανάγνωση όλων των ατόμων του καταλόγου…</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>Εμφανίζονται μόνο οι δικές σας ομάδες και συνομιλίες. Για να εμφανίσετε όλες τις ομάδες του μισθωτή και τις συνομιλίες των ατόμων που επιλέγετε, αποθηκεύστε ένα client secret για την εγγραφή εφαρμογής προέλευσης (Ρυθμίσεις).</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>Δεν βρέθηκε κανείς με όνομα ή email που ξεκινά με «{0}».</value></data>
+  <data name="Teams_Admin_OffChosen" xml:space="preserve"><value>Στο βήμα Σύνδεση είναι επιλεγμένο το «Εμφάνιση μόνο των δικών μου ομάδων και συνομιλιών». Καταργήστε την επιλογή για να διαλέξετε άτομα.</value></data>
+  <data name="Teams_Admin_OffNoSecret" xml:space="preserve"><value>Δεν έχει αποθηκευτεί client secret για την εγγραφή προέλευσης {0}. Στις Ρυθμίσεις, επιλέξτε αυτή την εγγραφή και επικολλήστε το μυστικό της, και μετά ανοίξτε ξανά τον οδηγό (ένας ανοιχτός οδηγός διατηρεί τις ρυθμίσεις με τις οποίες ξεκίνησε).</value></data>
+  <data name="Teams_Admin_OffRejected" xml:space="preserve"><value>Η Microsoft απέρριψε το client secret που έχει αποθηκευτεί για την εγγραφή προέλευσης {0}, γι' αυτό εμφανίζονται μόνο οι δικές σας ομάδες και συνομιλίες. Διορθώστε το μυστικό στις Ρυθμίσεις και ανοίξτε ξανά τον οδηγό.</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>Η επιλογή ατόμων απαιτεί την προβολή διαχειριστή: αποθηκεύστε ένα client secret για την εγγραφή εφαρμογής προέλευσης στις Ρυθμίσεις και αφήστε μη επιλεγμένο το «Εμφάνιση μόνο των δικών μου ομάδων και συνομιλιών» στο βήμα Σύνδεση.</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>Επιλέξτε ένα ή περισσότερα άτομα και κάντε κλικ στο Προσθήκη των συνομιλιών τους.</value></data>
+  <data name="Teams_Admin_ShowAll" xml:space="preserve"><value>Εμφάνιση όλων των ατόμων</value></data>
+  <data name="Teams_Admin_Stop" xml:space="preserve"><value>Διακοπή</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(αντιγράφεται πάντα)</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>Αντιγράφηκαν {0} ομάδες.</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>Αντιγράφηκαν {0} από {1} ομάδες. Δείτε τις λεπτομέρειες παρακάτω.</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>Ομάδα {0} από {1}: {2} → {3}</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>Συνομιλία {0} από {1}: {2}</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>Μια συνομιλία αντιγράφεται ως νέα ομαδική συνομιλία με τα ίδια άτομα (που βρίσκονται στον προορισμό με βάση το email τους). Τα μηνύματά της εισάγονται με την αρχική ώρα και τον αρχικό συντάκτη, και όλοι στη νέα συνομιλία βλέπουν ολόκληρο το ιστορικό.</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>Ολοκληρώθηκε. Νέα συνομιλία {0}: {1} άτομα· μηνύματα: {2} εισήχθησαν, {3} υπήρχαν ήδη, {4} απέτυχαν· {5} δημοσιεύτηκαν ως εσείς επειδή ο συντάκτης δεν έχει αντιστοίχιση.</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>Η συνομιλία {0} έχει ήδη αντιγραφεί.</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>Δημιουργία του αντιγράφου της συνομιλίας {0}…</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>Εύρεση των ατόμων της συνομιλίας {0} στον προορισμό…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>Η συνομιλία {0} δεν αντιγράφηκε: κανένα από τα υπόλοιπα άτομά της δεν βρέθηκε στον προορισμό.</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>Συνομιλία {0}: τα μηνύματα που εισήχθησαν βρίσκονται στη συνομιλία, αλλά τα άτομά της ίσως δεν τα βλέπουν ακόμη, επειδή δεν ήταν δυνατή η κοινή χρήση του ιστορικού: {1}. Δώστε στην εγγραφή την άδεια εφαρμογής ChatMember.ReadWrite.All (συγκατάθεση διαχειριστή) και εκτελέστε ξανά την αντιγραφή της συνομιλίας.</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>Το εισαγόμενο ιστορικό της συνομιλίας {0} γίνεται ορατό στα άτομά της…</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>Αντιγράφηκαν {0} συνομιλίες.</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>Αντιγράφηκαν {0} από {1} συνομιλίες. Δείτε τις λεπτομέρειες παρακάτω.</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>Επιλέξτε τις ομάδες και τις συνομιλίες που θα αντιγραφούν. Τα κανάλια κάθε ομάδας είναι επίσης επιλεγμένα: καταργήστε την επιλογή όσων θέλετε να εξαιρέσετε. Έπειτα κάντε κλικ στο Επόμενο.</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>Απαλοιφή</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>Ο λογαριασμός σας</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>Η σύνδεση ακυρώθηκε. Κάντε κλικ στο Επανάληψη για να δοκιμάσετε ξανά.</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>Η σύνδεση απέτυχε: {0}. Κάντε κλικ στο Επανάληψη για να δοκιμάσετε ξανά.</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>Συνδεθείτε με τον λογαριασμό που βλέπει τις ομάδες και τις συνομιλίες που θέλετε να αντιγράψετε. Η αντιγραφή γίνεται στον ίδιο μισθωτή.</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>Συνδεθείτε στον μισθωτή προέλευσης (όπου βρίσκεται τώρα η ομάδα) και στον μισθωτή προορισμού (όπου θα γίνει το αντίγραφο). Κάθε σύνδεση ανοίγει το πρόγραμμα περιήγησής σας. Μπορείτε να ακυρώσετε μία και να τη δοκιμάσετε ξανά, και μια σύνδεση που αποτυγχάνει αφήνει την άλλη ως έχει.</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>Συνδεθείτε και στους δύο μισθωτές για να συνεχίσετε.</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>Συνδεθείτε για να συνεχίσετε.</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>Δεν έχετε συνδεθεί.</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>Εγγραφή εφαρμογής: {0} (client ID {1})</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>Επανάληψη</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>Σύνδεση</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>Σύνδεση ως άλλος χρήστης</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>Συνδεδεμένος ως {0}.</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>Μισθωτής προέλευσης</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>Μισθωτής προορισμού</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>Μισθωτής: {0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>αναζήτηση…</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>Αναμονή για να ολοκληρώσετε τη σύνδεση στο πρόγραμμα περιήγησής σας. Κάντε κλικ στο Άκυρο για να σταματήσετε την αναμονή και μετά στο Επανάληψη.</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>Αντιγραφή άλλου</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>Η αντιγραφή ακυρώθηκε.</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>Η αντιγραφή ολοκληρώθηκε.</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>Η αντιγραφή διακόπηκε: {0}</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>Η αντιγραφή μιας ομάδας απαιτεί επίσης αυτές τις delegated άδειες Microsoft Graph στην εγγραφή εφαρμογής προορισμού {0}. Προσθέστε τις στις API permissions, χορηγήστε συγκατάθεση διαχειριστή και δοκιμάστε ξανά: {1} (με συγκατάθεση διαχειριστή).</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>Η αντιγραφή μιας ομάδας απαιτεί επίσης αυτές τις delegated άδειες Microsoft Graph στην εγγραφή εφαρμογής προορισμού {0}. Προσθέστε τις στις API permissions, χορηγήστε συγκατάθεση διαχειριστή και δοκιμάστε ξανά: Team.Create, Channel.Create, ChannelMember.ReadWrite.All, TeamMember.ReadWrite.All, TeamSettings.ReadWrite.All (με συγκατάθεση διαχειριστή).</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0} (αντίγραφο)</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name} (αντίγραφο)</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>Εμφανίζει τις ομάδες και τις συνομιλίες που βλέπετε, με κάθε κανάλι να επισημαίνεται ως τυπικό, ιδιωτικό ή κοινόχρηστο. Επιλέξτε μια ομάδα για να αντιγράψετε τις ρυθμίσεις, τα μέλη, τα κανάλια (συμπεριλαμβανομένων των ιδιωτικών και κοινόχρηστων), τα αρχεία και, αν το επιλέξετε, τα μηνύματά της σε μια νέα ομάδα, στον ίδιο μισθωτή ή στον μισθωτή προορισμού. Επιλέξτε μια συνομιλία για να την αντιγράψετε μαζί με τα μηνύματά της. Τα μηνύματα απαιτούν το client secret της εγγραφής προορισμού (δείτε τις Ρυθμίσεις). Τα ιδιωτικά και κοινόχρηστα κανάλια εμφανίζονται μόνο αν είστε μέλος.</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>Αντιστοίχιση ατόμων…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>Και τα {0} μέλη βρέθηκαν στον προορισμό.</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>Έλεγχος ποιοι από την ομάδα προέλευσης υπάρχουν στον μισθωτή προορισμού…</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …και {0} ακόμη</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>Αντιγράφηκαν {0} ομάδες και συνομιλίες.</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>Αντιγράφηκαν {0} από {1} ομάδες και συνομιλίες. Δείτε τις λεπτομέρειες παρακάτω.</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>Το συνημμένο δεν αντιγράφηκε: {0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>Το μήνυμα {0} δεν ήταν δυνατό να προετοιμαστεί: {1}</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>Δεν ήταν δυνατό να σημανθεί η εισαγωγή ως ολοκληρωμένη, επομένως το κανάλι μπορεί να εμφανίζει ακόμη banner εισαγωγής: {0}</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>Η αντιγραφή μηνυμάτων και συνομιλιών απαιτεί το client secret της εγγραφής εφαρμογής προορισμού. Αποθηκεύστε το στις Ρυθμίσεις (Εγγραφές εφαρμογών Azure) και δώστε στην εγγραφή την άδεια εφαρμογής Microsoft Graph Teamwork.Migrate.All με συγκατάθεση διαχειριστή.</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>Το μήνυμα {0} δεν ήταν δυνατό να εισαχθεί: {1}</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>Αρχικά δημοσιεύτηκε από {0}</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>Οι απαντήσεις στο μήνυμα {0} δεν ήταν δυνατό να τοποθετηθούν επειδή το μήνυμα είχε ήδη εισαχθεί από μια διακοπείσα εκτέλεση και δεν βρέθηκε ξανά. Εκτελέστε ξανά την αντιγραφή αφού ολοκληρωθεί το νήμα.</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>Η έναρξη της εισαγωγής απάντησε: {0} (συνέχεια).</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>Δημοσιεύτηκε από άγνωστο συντάκτη</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>Δύο αντίγραφα θα ονομάζονταν «{0}»: δώστε διαφορετικό όνομα σε καθένα.</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>Με πολλές ομάδες, το όνομα πρέπει να περιέχει {name}, το οποίο αντικαθίσταται από το όνομα της αρχικής ομάδας.</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>Εισαγάγετε ένα όνομα για τη νέα ομάδα.</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>Όνομα του αντιγράφου (χρησιμοποιήστε {name} για το όνομα της αρχικής ομάδας)</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>Το αντίγραφο κάθε ομάδας παίρνει αυτό το όνομα. Με πολλές ομάδες, το {name} αντικαθίσταται από το όνομα της αρχικής ομάδας, και μπορείτε να αλλάξετε κάθε όνομα στο επόμενο βήμα.</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>Αρχεία</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>Μέλη και κάτοχοι</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>Μηνύματα</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>Εισάγει τα μηνύματα και τις απαντήσεις κάθε καναλιού με την αρχική ώρα και τον αρχικό συντάκτη. Τα συνημμένα αρχεία αναφέρονται στο κείμενο και δεν αντιγράφονται· οι αντιδράσεις δεν αντιγράφονται.</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>Ρυθμίσεις</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>Εμφάνιση μόνο των δικών μου ομάδων και συνομιλιών (αντί για όλες τις ομάδες του μισθωτή)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>Εμφανίζει μόνο τις ομάδες και τις συνομιλίες του λογαριασμού με τον οποίο συνδεθήκατε, χρησιμοποιώντας μόνο αυτή τη σύνδεση: δεν χρειάζεται client secret ή άδειες εφαρμογής.</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>Υπήρχε ήδη</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>Συνομιλία</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>Γενικά</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>Άτομα</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>Ομάδα</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>Κανάλια</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>Συνομιλίες</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>Λεπτομέρειες</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>Μέρος</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>Διάρκεια</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>Απέτυχε</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>Αρχεία</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>Εξαιρέθηκε</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>Μέλη</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>Μηνύματα</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>Δεν αντιγράφηκε (δεν επιλέχθηκε).</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>Δεν ξεκίνησε: μια προηγούμενη ομάδα διέκοψε την αντιγραφή.</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>{0} δημιουργήθηκαν, {1} υπήρχαν ήδη.</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>Δημιουργήθηκε η ομαδική συνομιλία «{0}» στον μισθωτή {1}, με κάτοχο τον/την {2}.</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>{0} αντιγράφηκαν, {1} απέτυχαν.</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>Ο/Η {0} δεν έχει αντιστοίχιση στον προορισμό και εξαιρέθηκε. Αντιστοιχίστε τον/την στις Ρυθμίσεις &gt; Αντιστοίχιση ταυτοτήτων και εκτελέστε ξανά την αντιγραφή.</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>{0} προστέθηκαν.</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>{0} εισήχθησαν, {1} υπήρχαν ήδη, {2} απέτυχαν, {3} δημοσιεύτηκαν ως ο χρήστης που αντιγράφει επειδή ο συντάκτης δεν έχει αντιστοίχιση.</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>Δημιουργήθηκε η «{0}» στον μισθωτή {1}, με κάτοχο τον/την {2}.</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>Ομάδες</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>Αναφορά αντιγραφής</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>Άνοιγμα στο Teams</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>Η νέα ομάδα βρίσκεται στον μισθωτή {0} και ανήκει στον/στην {1}. Ανοίξτε την: {2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>Η νέα ομάδα βρίσκεται στον μισθωτή {0} και ανήκει στον/στην {1}.</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0} από {1}</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>Αντιγραφή της συνομιλίας «{0}» ως νέας ομαδικής συνομιλίας.</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>Αντιγραφή {0} συνομιλιών ως νέων ομαδικών συνομιλιών: {1}.</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>Κανάλια</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>Όνομα του αντιγράφου</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>Ομάδα</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>Περιλαμβάνονται: {0}.</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>Ελέγξτε τα ονόματα των αντιγράφων παρακάτω και αλλάξτε όποιο χρειάζεται. Ένα αντίγραφο με το ίδιο όνομα με ένα προηγούμενο αντίγραφο συνεχίζει εκείνο το αντίγραφο· ένα διαφορετικό όνομα δημιουργεί νέα ομάδα.</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>μόνο η κενή ομάδα και τα κανάλια της</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>Αντιγραφή της ομάδας «{0}» ως νέας ομάδας με όνομα «{1}».</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>Αντιγραφή {0} ομάδων ως νέων ομάδων.</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>{0} από τα {1} άτομα αυτής της ομάδας δεν έχουν αντίστοιχο λογαριασμό στον προορισμό. Χωρίς αντιστοίχιση εξαιρούνται από το αντίγραφο και αναφέρονται στα αποτελέσματα:
+{2}</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>Επιλογή όλων</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>Επιλέχθηκαν {0} ομάδα/ες</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>Επιλέχθηκαν {0} συνομιλία/ες</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>Επιλογή</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>Σύνδεση</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>Αντιγραφή</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>Επιλογές</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>Αποτελέσματα</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>Έλεγχος</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>Δημιουργία καναλιού {0} ({1})…</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>Δημιουργία της ομάδας {0}…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>Αντιγραφή των αρχείων του/της {0}…</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>Η ομάδα από την προηγούμενη αντιγραφή δεν υπάρχει πια· δημιουργείται νέα.</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>Προσθήκη {0} μελών…</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>Αντιγραφή των μηνυμάτων του/της {0}…</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>Το όνομα «{0}» διαφέρει από το προηγούμενο αντίγραφο «{1}», επομένως δημιουργείται νέα ομάδα. Το προηγούμενο αντίγραφο μένει ως έχει.</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>Συνέχιση της προηγούμενης αντιγραφής στην ομάδα {0}.</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>Αντιγραφή των ρυθμίσεων της ομάδας…</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>Ολοκληρώθηκε. Νέα ομάδα {0}: {1} κανάλια δημιουργήθηκαν, {2} υπήρχαν ήδη· {3} μέλη προστέθηκαν· {4} αρχεία αντιγράφηκαν, {5} απέτυχαν.</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>Μηνύματα: {0} εισήχθησαν, {1} υπήρχαν ήδη, {2} απέτυχαν· {3} δημοσιεύτηκαν ως εσείς επειδή ο συντάκτης δεν έχει αντιστοίχιση στον προορισμό.</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>Το αντίγραφο θα δημιουργηθεί στον λογαριασμό με τον οποίο έχετε συνδεθεί ({0}).</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>Το αντίγραφο θα δημιουργηθεί στον μισθωτή προορισμού, ως {0}. Τα άτομα αντιστοιχίζονται σε λογαριασμούς προορισμού με βάση το email τους, χρησιμοποιώντας την αντιστοίχιση ταυτοτήτων σας.</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>{0} άτομα δεν έχουν αντιστοίχιση στον προορισμό και εξαιρέθηκαν. Αντιστοιχίστε τα στις Ρυθμίσεις &gt; Αντιστοίχιση ταυτοτήτων και εκτελέστε ξανά την αντιγραφή:</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>Το κανάλι {0} δεν δημιουργήθηκε: {1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>Δεν ήταν δυνατή η ανάγνωση των μελών του {0}: {1}</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}: {1} αρχεία δεν αντιγράφηκαν. Εκτελέστε ξανά την αντιγραφή για να δοκιμάσετε ξανά.</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}: δεν ήταν δυνατή η αντιγραφή των μηνυμάτων: {1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}: {1} μηνύματα δεν εισήχθησαν. Εκτελέστε ξανά την αντιγραφή για να τα δοκιμάσετε ξανά.</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}: ο φάκελος αρχείων προέλευσης δεν είναι διαθέσιμος, επομένως τα αρχεία του δεν αντιγράφηκαν.</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}: ο νέος φάκελος αρχείων δεν είναι ακόμη έτοιμος, επομένως τα αρχεία του δεν αντιγράφηκαν. Εκτελέστε ξανά την αντιγραφή για να δοκιμάσετε ξανά.</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>{0} προειδοποιήσεις:</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>Τι θα αντιγραφεί</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>Αντιγραφή αυτού του μηνύματος για τον διαχειριστή σας</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>Κάντε δεξί κλικ για να αντιγράψετε αυτό το μήνυμα και να το στείλετε στον διαχειριστή σας.</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>Κατάργηση</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>Έχει αποθηκευτεί ένα client secret (κρυπτογραφημένο για τον λογαριασμό σας στα Windows).</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Client secret (προαιρετικό, για το εργαλείο Teams)</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Αυτό το μυστικό χρησιμοποιείται μόνο από το εργαλείο Teams, ως σύνδεση εφαρμογής (χωρίς χρήστη). Στην εγγραφή προορισμού εισάγει μηνύματα και συνομιλίες, κάτι που η Microsoft επιτρέπει μόνο με αυτόν τον τρόπο, με την άδεια εφαρμογής Graph Teamwork.Migrate.All (συγκατάθεση διαχειριστή). Στην εγγραφή πηγής επιτρέπει στο εργαλείο Teams να εμφανίζει όλες τις ομάδες του tenant και τις συνομιλίες των ατόμων που επιλέγετε (προβολή διαχειριστή)· οι άδειες περιγράφονται στο PERMISSIONS.md. Δημιουργήστε το μυστικό σε αυτή την εγγραφή εφαρμογής στην ενότητα Certificates &amp; secrets και επικολλήστε την τιμή του (Value), όχι το ID του. Αφήστε το κενό αν δεν χρειάζεστε κανένα από τα δύο.</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Επιλέξτε μια εγγραφή για να την επεξεργαστείτε. Ποια είναι η προέλευση και ποια ο προορισμός επιλέγεται στην αρχική οθόνη· η επιλογή ή επεξεργασία μιας εδώ δεν το αλλάζει.</value></data>
 </root>
