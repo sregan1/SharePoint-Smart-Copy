@@ -3,8 +3,11 @@ name: CI
 on:
   push:
     branches: [main]
+    # a change that only touches documentation or the license does not need a build
+    paths-ignore: ['**.md', 'LICENSE', '.github/FUNDING.yml']
   pull_request:
     branches: [main]
+    paths-ignore: ['**.md', 'LICENSE', '.github/FUNDING.yml']
 
 jobs:
   test:
