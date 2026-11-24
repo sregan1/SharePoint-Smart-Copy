@@ -19,6 +19,8 @@ public partial class MainViewModel : ObservableObject
     public readonly TenantRouter Router;
     public readonly SharePointService SpService;
     private readonly CopyService _copyService;
+    // The same copy engine, for tools outside the wizard that copy files (the Teams tool's channel files).
+    public CopyService CopyEngine => _copyService;
     private readonly LibraryCopyService _libraryCopyService;
     private readonly PermissionCopyService _permissionCopyService;
     private readonly VerificationReportService _verificationReportService;
@@ -123,6 +125,7 @@ public partial class MainViewModel : ObservableObject
         if (registrationsChanged || !AuthService.IsConfigured)
         {
             AuthService.Configure(s);
+            if (registrationsChanged) ResetToolAccess();   // the tool-access result belongs to the old registration
             // Reconfiguring drops both sign-ins and the router's host registrations, so a multi-tenant
             // session must reconnect — otherwise both sides stay marked connected while requests are
             // routed to the wrong tenant.

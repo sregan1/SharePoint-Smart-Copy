@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ Foldery bez tożsamości ze skanowania (nie jest to błąd Graph): {0:N0} — będą miały datę zastępczą. Ścieżki: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ Foldery, dla których wyszukiwanie metadanych w Graph nie powiodło się: {0:N0} — będą miały datę zastępczą. Przykłady: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ Nie można ustalić daty folderów: {0:N0} (wyszukiwanie w Graph nie powiodło się po ponownych próbach) — zamiast rzeczywistej daty źródłowej będą miały datę zastępczą 2000-01-01</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ Foldery bez dostępnego adresu e-mail autora/modyfikującego w źródle: {0:N0} — nie można ich poprawić, będą pokazywać konto importujące</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Poprawianie metadanych folderów (daty + autorstwo + kolor) dla {0:N0} z {1:N0} folderów...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: nie można ustalić identyfikatora GUID folderu docelowego</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Poprawianie metadanych folderów: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Porównaj źródło i cel</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Otwórz narzędzie Porównaj, aby sprawdzić tę kopię względem źródła.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Otwórz Historię</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Wybrana rejestracja jest używana dla źródła — oraz dla obu stron w trybie jednego tenanta.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Nowa rejestracja</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Dodaj co najmniej jedną rejestrację aplikacji.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Walidacja</value></data>
@@ -1636,4 +1634,25 @@ Anuluj: wróć</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>Skopiowano „{0}”, ale nie udało się przywrócić oryginalnych dat i autorów dla {1} elementów: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>Skopiowano „{0}”, ale nie znaleziono potem kopii, aby przywrócić jej daty i autorów.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>To zestaw dokumentów typu „{0}”, ale biblioteka docelowa nie ma tego typu zawartości i nie udało się go dodać ({1}). Dodaj typ zawartości do biblioteki docelowej (Ustawienia biblioteki, Ustawienia zaawansowane, zezwalaj na zarządzanie typami zawartości), a następnie skopiuj ponownie.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Narzędzie Forms wymaga delegowanego uprawnienia „Microsoft Forms”, którego ta rejestracja aplikacji nie ma. W portalu Azure otwórz rejestrację, przejdź do Uprawnienia interfejsu API, dodaj je w sekcji „Interfejsy API używane przez moją organizację”, udziel zgody administratora i uruchom aplikację ponownie. Zobacz „Add API permissions” w pliku README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Narzędzie Teams</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Przeglądaj zespoły i czaty oraz kopiuj kanały i pliki zespołu</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Załaduj zespoły i czaty</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Ładowanie…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Odczyt: {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Czaty</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Nie znaleziono zespołów dla tego konta.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Kanał standardowy</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Kanał prywatny</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Kanał udostępniony</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>Członków: {0}</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>znaleziono folder plików</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>folder plików niedostępny</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>Znaleziono zespołów: {0}, czatów: {1}.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Nie można odczytać Teams: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Narzędzie Teams wymaga tych delegowanych uprawnień Microsoft Graph, których ta rejestracja aplikacji nie ma: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All i Chat.Read. W portalu Azure otwórz rejestrację, przejdź do Uprawnienia interfejsu API, dodaj je, udziel zgody administratora i uruchom aplikację ponownie. Zobacz „Add API permissions” w pliku README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Kopiowanie na żywo wymaga delegowanych uprawnień Power Automate Service Flows.Read.All i Flows.Manage.All oraz PowerApps Service User, których ta rejestracja aplikacji nie ma. Dodaj je w sekcji Uprawnienia interfejsu API, udziel zgody administratora i uruchom aplikację ponownie. Kopiowanie z wyeksportowanych pakietów działa bez nich.</value></data>
 </root>

@@ -542,7 +542,8 @@ Cancel: go back</value></data>
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} folder(s) had no identity from the scan (not a Graph failure) — they will show a placeholder date. Path(s): {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} folder(s) failed the Graph metadata lookup — they will show a placeholder date. Example(s): {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} folder(s) could not be dated (Graph lookup failed after retries) — they will show a 2000-01-01 placeholder date instead of their real source date</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} folder(s) had no source Author/Modified-By email available — cannot correct those, they will show the importing account</value></data>
+  <data name="Svc_Mig_FolderOnePersonMissing" xml:space="preserve"><value>ℹ {0:N0} folder(s) (including Document Sets) had no email for their Created By or Modified By (a system account, SharePoint App or a deleted account): that person is stamped as the System Account, like files, instead of the importing account</value></data>
+  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>ℹ {0:N0} folder(s) had no email for Created By or Modified By (a system account, SharePoint App or a deleted account): both are stamped as the System Account, like files, instead of the importing account</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Correcting folder metadata (dates + authorship + color) for {0:N0} of {1:N0} folder(s)...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: could not resolve target folder GUID</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Correcting folder metadata: {0:N0} / {1:N0}</value></data>
@@ -817,7 +818,7 @@ Cancel: go back</value></data>
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Compare source &amp; target</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Open the Compare tool to check this copy against the source.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Open History</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>The selected registration is used for the source — and for both sides in single-tenant mode.</value></data>
+  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Select a registration to edit it. Which one is the source and which is the target is chosen on the home screen; selecting or editing one here does not change that.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>New Registration</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Add at least one app registration.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validation</value></data>
@@ -914,6 +915,7 @@ Cancel: go back</value></data>
   <data name="Forms_TileTitle" xml:space="preserve"><value>Forms</value></data>
   <data name="Forms_TileDesc" xml:space="preserve"><value>Copy Microsoft Forms and export their responses</value></data>
   <data name="Forms_AutoTile" xml:space="preserve"><value>Forms tool</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>The Forms tool needs the delegated "Microsoft Forms" permission, and this app registration does not have it. In the Azure portal open the registration, go to API permissions, add it under "APIs my organization uses", grant admin consent, then restart the app. See "Add API permissions" in the README.</value></data>
   <data name="Flows_Title" xml:space="preserve"><value>Rewrite Flows for the Target</value></data>
   <data name="Flows_Subtitle" xml:space="preserve"><value>Update exported Power Automate packages (.zip) so they point at the target: sites, lists, columns, copied forms, and email domains. Your original packages are never changed.</value></data>
   <data name="Flows_Step1" xml:space="preserve"><value>1. Choose exported flow packages</value></data>
@@ -1636,4 +1638,188 @@ Copying again creates a second copy of each. Continue?</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderMulti" xml:space="preserve"><value>Sign in to the target tenant to list its environments</value></data>
   <data name="Flows_Live_TargetEnvPlaceholderSingle" xml:space="preserve"><value>Load the environments first</value></data>
   <data name="Flows_Live_NoTargetEnvs" xml:space="preserve"><value>No Power Automate environments were found for the target account. It needs a Power Automate license or access to an environment there. Try signing in again with another account.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Teams tool</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Browse teams and chats, and copy a team&apos;s channels and files</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Intro" xml:space="preserve"><value>Lists the teams and chats you can see, with each channel marked standard, private or shared. Select a team to copy its settings, members, channels (including private and shared ones), files and, if you choose, messages to a new team, in the same tenant or in the target tenant. Select a chat to copy it and its messages. Messages need the target registration's client secret (see Settings). Private and shared channels only appear if you are a member.</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Load teams and chats</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Loading…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Reading {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Chats</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>No teams found for this account.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Standard channel</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Private channel</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Shared channel</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} members</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>files folder found</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>files folder not available</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>Found {0} teams and {1} chats.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Could not read Teams: {0}</value></data>
+  <data name="Tool_CopyForAdmin" xml:space="preserve"><value>Copy this message for your administrator</value></data>
+  <data name="Tool_CopyForAdminHint" xml:space="preserve"><value>Right-click to copy this message and send it to your administrator.</value></data>
+  <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Client secret (optional, for copying Teams messages)</value></data>
+  <data name="Ui_ClientSecretSaved" xml:space="preserve"><value>A client secret is saved (encrypted for your Windows account).</value></data>
+  <data name="Ui_ClientSecretClear" xml:space="preserve"><value>Remove</value></data>
+  <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Only the Teams tool uses this, to import messages and chats: Microsoft allows that only for an application sign-in with the Graph application permission Teamwork.Migrate.All (admin consent). Create the secret on this app registration under Certificates &amp; secrets. Leave it empty if you do not copy messages.</value></data>
+  <data name="Teams_OptMessages" xml:space="preserve"><value>Messages</value></data>
+  <data name="Teams_OptMessagesTip" xml:space="preserve"><value>Imports each channel's messages and replies with their original time and author. File attachments are named in the text, not copied; reactions are not copied.</value></data>
+  <data name="Teams_Msg_NeedSecret" xml:space="preserve"><value>Copying messages and chats needs the target app registration's client secret. Save it under Settings (Azure app registrations), and give the registration the Microsoft Graph application permission Teamwork.Migrate.All with admin consent.</value></data>
+  <data name="Teams_Msg_StartNote" xml:space="preserve"><value>Starting the import answered: {0} (continuing).</value></data>
+  <data name="Teams_Msg_CompleteFailed" xml:space="preserve"><value>The import could not be marked complete, so the channel may still show an import banner: {0}</value></data>
+  <data name="Teams_Msg_BuildFailed" xml:space="preserve"><value>Message {0} could not be prepared: {1}</value></data>
+  <data name="Teams_Msg_PostFailed" xml:space="preserve"><value>Message {0} could not be imported: {1}</value></data>
+  <data name="Teams_Msg_UnknownAuthor" xml:space="preserve"><value>Posted by an unknown author</value></data>
+  <data name="Teams_Msg_PostedBy" xml:space="preserve"><value>Originally posted by {0}</value></data>
+  <data name="Teams_Msg_AttachmentNote" xml:space="preserve"><value>Attachment not copied: {0}</value></data>
+  <data name="Teams_Step_Messages" xml:space="preserve"><value>Copying the messages of {0}…</value></data>
+  <data name="Teams_Warn_Messages" xml:space="preserve"><value>{0}: messages could not be copied: {1}</value></data>
+  <data name="Teams_Warn_MessagesFailed" xml:space="preserve"><value>{0}: {1} messages failed to import. Run the copy again to retry them.</value></data>
+  <data name="Teams_Chat_Members" xml:space="preserve"><value>Finding the people of chat {0} in the target…</value></data>
+  <data name="Teams_Chat_NoOneElse" xml:space="preserve"><value>Chat {0} was not copied: none of its other people could be found in the target.</value></data>
+  <data name="Teams_Chat_Creating" xml:space="preserve"><value>Creating the copy of chat {0}…</value></data>
+  <data name="Teams_Chat_AlreadyDone" xml:space="preserve"><value>Chat {0} was already copied.</value></data>
+  <data name="Teams_ChatSummary" xml:space="preserve"><value>Done. New chat {0}: {1} people; messages: {2} imported, {3} already there, {4} failed; {5} posted as you because the author has no match.</value></data>
+  <data name="Teams_SummaryMessages" xml:space="preserve"><value>Messages: {0} imported, {1} already there, {2} failed; {3} posted as you because the author has no match in the target.</value></data>
+  <data name="Teams_UnresolvedPeople" xml:space="preserve"><value>{0} people have no match in the target and were left out. Map them under Settings &gt; Identity mapping and run the copy again:</value></data>
+  <data name="Teams_Mapping_Checking" xml:space="preserve"><value>Checking who from the source team exists in the target tenant…</value></data>
+  <data name="Teams_Mapping_AllFound" xml:space="preserve"><value>All {0} members were found in the target.</value></data>
+  <data name="Teams_Mapping_More" xml:space="preserve"><value>  …and {0} more</value></data>
+  <data name="Teams_Msg_RepliesSkipped" xml:space="preserve"><value>The replies to message {0} could not be placed because the message was already imported by an interrupted run and could not be found again. Run the copy again after the thread is completed.</value></data>
+  <data name="Teams_Chat_SharingHistory" xml:space="preserve"><value>Making the imported history of chat {0} visible to its people…</value></data>
+  <data name="Teams_Chat_ShareFailed" xml:space="preserve"><value>Chat {0}: the imported messages are in the chat but its people may not see them yet, because their history could not be shared: {1}. Give the registration the application permission ChatMember.ReadWrite.All (admin consent) and run the chat copy again.</value></data>
+  <data name="Teams_StepChoose" xml:space="preserve"><value>Choose</value></data>
+  <data name="Teams_StepOptions" xml:space="preserve"><value>Options</value></data>
+  <data name="Teams_StepReview" xml:space="preserve"><value>Review</value></data>
+  <data name="Teams_StepCopy" xml:space="preserve"><value>Copy</value></data>
+  <data name="Teams_StepResults" xml:space="preserve"><value>Results</value></data>
+  <data name="Teams_WhatToCopy" xml:space="preserve"><value>What to copy</value></data>
+  <data name="Teams_ChatOptionsInfo" xml:space="preserve"><value>A chat is copied as a new group chat with the same people (found in the target by their email). Its messages are imported with their original time and author, and everyone in the new chat can see the full history.</value></data>
+  <data name="Teams_Target" xml:space="preserve"><value>The copy will be created in the account you are signed in with ({0}).</value></data>
+  <data name="Teams_TargetOtherTenant" xml:space="preserve"><value>The copy will be created in the target tenant, as {0}. People are matched to target accounts by their email, using your identity mapping.</value></data>
+  <data name="Teams_Review_Team" xml:space="preserve"><value>Copy the team "{0}" as a new team named "{1}".</value></data>
+  <data name="Teams_Review_Includes" xml:space="preserve"><value>Including: {0}.</value></data>
+  <data name="Teams_Review_Nothing" xml:space="preserve"><value>only the empty team and its channels</value></data>
+  <data name="Teams_Review_Chat" xml:space="preserve"><value>Copy the chat "{0}" as a new group chat.</value></data>
+  <data name="Teams_MapPeople" xml:space="preserve"><value>Map people…</value></data>
+  <data name="Teams_CopyAnother" xml:space="preserve"><value>Copy another</value></data>
+  <data name="Teams_Review_Unresolved" xml:space="preserve"><value>{0} of the {1} people in this team have no matching account in the target. Without a mapping they are left out of the copy, and they are listed in the results:
+{2}</value></data>
+  <data name="Teams_StepConnect" xml:space="preserve"><value>Connect</value></data>
+  <data name="Teams_Connect_IntroOne" xml:space="preserve"><value>Sign in with the account that can see the teams and chats you want to copy. The copy is made in the same tenant.</value></data>
+  <data name="Teams_Connect_IntroTwo" xml:space="preserve"><value>Sign in to the source tenant (where the team is now) and to the target tenant (where the copy will be made). Each sign-in opens your browser. You can cancel one and try it again, and a sign-in that fails leaves the other as it is.</value></data>
+  <data name="Teams_Connect_Source" xml:space="preserve"><value>Source tenant</value></data>
+  <data name="Teams_Connect_Account" xml:space="preserve"><value>Your account</value></data>
+  <data name="Teams_Connect_Target" xml:space="preserve"><value>Target tenant</value></data>
+  <data name="Teams_Connect_NotSignedIn" xml:space="preserve"><value>Not signed in.</value></data>
+  <data name="Teams_Connect_Waiting" xml:space="preserve"><value>Waiting for you to finish signing in in your browser. Click Cancel to stop waiting, then Retry.</value></data>
+  <data name="Teams_Connect_SignedInAs" xml:space="preserve"><value>Signed in as {0}.</value></data>
+  <data name="Teams_Connect_Canceled" xml:space="preserve"><value>Sign-in canceled. Click Retry to try again.</value></data>
+  <data name="Teams_Connect_Failed" xml:space="preserve"><value>Sign-in failed: {0}. Click Retry to try again.</value></data>
+  <data name="Teams_Connect_SignIn" xml:space="preserve"><value>Sign in</value></data>
+  <data name="Teams_Connect_SignInAgain" xml:space="preserve"><value>Sign in as someone else</value></data>
+  <data name="Teams_Connect_Retry" xml:space="preserve"><value>Retry</value></data>
+  <data name="Teams_Connect_NeedBoth" xml:space="preserve"><value>Sign in to both tenants to continue.</value></data>
+  <data name="Teams_Connect_NeedOne" xml:space="preserve"><value>Sign in to continue.</value></data>
+  <data name="Teams_Connect_Tenant" xml:space="preserve"><value>Tenant: {0}</value></data>
+  <data name="Teams_Connect_TenantLooking" xml:space="preserve"><value>looking it up…</value></data>
+  <data name="Teams_Connect_Registration" xml:space="preserve"><value>App registration: {0} (client ID {1})</value></data>
+  <data name="Teams_Result_Where" xml:space="preserve"><value>The new team is in tenant {0} and owned by {1}. Open it: {2}</value></data>
+  <data name="Teams_Result_WhereTenant" xml:space="preserve"><value>The new team is in tenant {0} and owned by {1}.</value></data>
+  <data name="Teams_Step_NewNameNewTeam" xml:space="preserve"><value>The name "{0}" is different from the earlier copy "{1}", so a new team is created. The earlier copy is left as it is.</value></data>
+  <data name="Teams_Result_Open" xml:space="preserve"><value>Open in Teams</value></data>
+  <data name="Teams_Result_CopyReport" xml:space="preserve"><value>Copy report</value></data>
+  <data name="Teams_Res_ColPart" xml:space="preserve"><value>Part</value></data>
+  <data name="Teams_Res_ColDetails" xml:space="preserve"><value>Details</value></data>
+  <data name="Teams_Res_Channels" xml:space="preserve"><value>Channels</value></data>
+  <data name="Teams_Res_Members" xml:space="preserve"><value>Members</value></data>
+  <data name="Teams_Res_Files" xml:space="preserve"><value>Files</value></data>
+  <data name="Teams_Res_Messages" xml:space="preserve"><value>Messages</value></data>
+  <data name="Teams_Res_Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="Teams_Res_LeftOut" xml:space="preserve"><value>Left out</value></data>
+  <data name="Teams_Res_AlreadyThere" xml:space="preserve"><value>Already there</value></data>
+  <data name="Teams_Res_Duration" xml:space="preserve"><value>Duration</value></data>
+  <data name="Teams_Res_AreaTeam" xml:space="preserve"><value>Team</value></data>
+  <data name="Teams_Res_AreaChat" xml:space="preserve"><value>Chat</value></data>
+  <data name="Teams_Res_AreaPeople" xml:space="preserve"><value>People</value></data>
+  <data name="Teams_Res_AreaGeneral" xml:space="preserve"><value>General</value></data>
+  <data name="Teams_Res_NotCopied" xml:space="preserve"><value>Not copied (not selected).</value></data>
+  <data name="Teams_Res_RowTeam" xml:space="preserve"><value>Created "{0}" in tenant {1}, owned by {2}.</value></data>
+  <data name="Teams_Res_RowChat" xml:space="preserve"><value>Created the group chat "{0}" in tenant {1}, owned by {2}.</value></data>
+  <data name="Teams_Res_RowChannels" xml:space="preserve"><value>{0} created, {1} already there.</value></data>
+  <data name="Teams_Res_RowMembers" xml:space="preserve"><value>{0} added.</value></data>
+  <data name="Teams_Res_RowFiles" xml:space="preserve"><value>{0} copied, {1} failed.</value></data>
+  <data name="Teams_Res_RowMessages" xml:space="preserve"><value>{0} imported, {1} already there, {2} failed, {3} posted as the copying user because the author has no match.</value></data>
+  <data name="Teams_Res_RowLeftOut" xml:space="preserve"><value>{0} has no match in the target and was left out. Map them under Settings &gt; Identity mapping, then run the copy again.</value></data>
+  <data name="Teams_SelectAll" xml:space="preserve"><value>Select all</value></data>
+  <data name="Teams_ClearSelection" xml:space="preserve"><value>Clear</value></data>
+  <data name="Teams_Selected" xml:space="preserve"><value>{0} team(s) selected</value></data>
+  <data name="Teams_DefaultCopyPattern" xml:space="preserve"><value>{name} (copy)</value></data>
+  <data name="Teams_NamePatternNeedsName" xml:space="preserve"><value>With several teams the name must contain {name}, which becomes the original team's name.</value></data>
+  <data name="Teams_NameDuplicate" xml:space="preserve"><value>Two copies would be named "{0}": give each a different name.</value></data>
+  <data name="Teams_Review_Teams" xml:space="preserve"><value>Copy {0} teams as new teams.</value></data>
+  <data name="Teams_Review_NamesHint" xml:space="preserve"><value>Check the names of the copies below and change any that need it. A copy with the same name as an earlier copy continues that copy; a different name creates a new team.</value></data>
+  <data name="Teams_Review_ColSource" xml:space="preserve"><value>Team</value></data>
+  <data name="Teams_Review_ColNewName" xml:space="preserve"><value>Name of the copy</value></data>
+  <data name="Teams_Batch_Starting" xml:space="preserve"><value>Team {0} of {1}: {2} → {3}</value></data>
+  <data name="Teams_Batch_Done" xml:space="preserve"><value>Copied {0} teams.</value></data>
+  <data name="Teams_Batch_Partial" xml:space="preserve"><value>Copied {0} of {1} teams. See the details below.</value></data>
+  <data name="Teams_Res_Teams" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Res_NotStarted" xml:space="preserve"><value>Not started: an earlier team stopped the copy.</value></data>
+  <data name="Teams_NewName" xml:space="preserve"><value>Name of the copy (use {name} for the original team's name)</value></data>
+  <data name="Teams_NewNameHint" xml:space="preserve"><value>The copy of each team gets this name. With several teams, {name} becomes the original team's name, and you can still change each name on the next step.</value></data>
+  <data name="Teams_SelectedChats" xml:space="preserve"><value>{0} chat(s) selected</value></data>
+  <data name="Teams_AlwaysCopied" xml:space="preserve"><value>(always copied)</value></data>
+  <data name="Teams_Review_ChannelsOf" xml:space="preserve"><value>{0} of {1}</value></data>
+  <data name="Teams_Review_ColChannels" xml:space="preserve"><value>Channels</value></data>
+  <data name="Teams_Review_Chats" xml:space="preserve"><value>Copy {0} chats as new group chats: {1}.</value></data>
+  <data name="Teams_Batch_StartingChat" xml:space="preserve"><value>Chat {0} of {1}: {2}</value></data>
+  <data name="Teams_Chats_Done" xml:space="preserve"><value>Copied {0} chats.</value></data>
+  <data name="Teams_Chats_Partial" xml:space="preserve"><value>Copied {0} of {1} chats. See the details below.</value></data>
+  <data name="Teams_Mixed_Done" xml:space="preserve"><value>Copied {0} teams and chats.</value></data>
+  <data name="Teams_Mixed_Partial" xml:space="preserve"><value>Copied {0} of {1} teams and chats. See the details below.</value></data>
+  <data name="Teams_Res_Chats" xml:space="preserve"><value>Chats</value></data>
+  <data name="Teams_ChooseHint" xml:space="preserve"><value>Tick the teams and chats to copy. Each team's channels are ticked too: untick the ones to leave out. Then click Next.</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>The Teams tool needs these delegated Microsoft Graph permissions, and this app registration has not been granted them yet (they are missing from the registration, or not consented to yet). You can still open the tool and consent when asked: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All and Chat.Read. In the Azure portal open the registration, go to API permissions, add any that are missing and grant admin consent. See &quot;Add API permissions&quot; in the README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Live copy needs the delegated Power Automate Service permissions Flows.Read.All and Flows.Manage.All, plus PowerApps Service User, and this app registration does not have them. Add them under API permissions, grant admin consent, then restart the app. Copying from exported packages works without them.</value></data>
+  <data name="Teams_Step_MapStale" xml:space="preserve"><value>The team from the earlier copy no longer exists; creating a new one.</value></data>
+  <data name="Teams_Step_CreatingTeam" xml:space="preserve"><value>Creating the team {0}…</value></data>
+  <data name="Teams_Step_Resuming" xml:space="preserve"><value>Continuing the earlier copy into {0}.</value></data>
+  <data name="Teams_Step_Settings" xml:space="preserve"><value>Copying team settings…</value></data>
+  <data name="Teams_Step_Members" xml:space="preserve"><value>Adding {0} members…</value></data>
+  <data name="Teams_Step_Channel" xml:space="preserve"><value>Creating channel {0} ({1})…</value></data>
+  <data name="Teams_Step_Files" xml:space="preserve"><value>Copying the files of {0}…</value></data>
+  <data name="Teams_Warn_Channel" xml:space="preserve"><value>Channel {0} was not created: {1}</value></data>
+  <data name="Teams_Warn_ChannelMembers" xml:space="preserve"><value>Could not read the members of {0}: {1}</value></data>
+  <data name="Teams_Warn_NoSourceFiles" xml:space="preserve"><value>{0}: the source files folder is not available, so its files were not copied.</value></data>
+  <data name="Teams_Warn_NoTargetFiles" xml:space="preserve"><value>{0}: the new files folder is not ready yet, so its files were not copied. Run the copy again to retry.</value></data>
+  <data name="Teams_Warn_FilesFailed" xml:space="preserve"><value>{0}: {1} files failed to copy. Run the copy again to retry.</value></data>
+  <data name="Teams_OptSettings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Teams_OptMembers" xml:space="preserve"><value>Members and owners</value></data>
+  <data name="Teams_OptFiles" xml:space="preserve"><value>Files</value></data>
+  <data name="Teams_DefaultCopyName" xml:space="preserve"><value>{0} (copy)</value></data>
+  <data name="Teams_NameRequired" xml:space="preserve"><value>Enter a name for the new team.</value></data>
+  <data name="Teams_Summary" xml:space="preserve"><value>Done. New team {0}: {1} channels created, {2} already there; {3} members added; {4} files copied, {5} failed.</value></data>
+  <data name="Teams_Warnings" xml:space="preserve"><value>{0} warnings:</value></data>
+  <data name="Teams_CopyDone" xml:space="preserve"><value>Copy finished.</value></data>
+  <data name="Teams_CopyCancelled" xml:space="preserve"><value>Copy canceled.</value></data>
+  <data name="Teams_CopyPermissionTip" xml:space="preserve"><value>Copying a team also needs these delegated Microsoft Graph permissions on the target app registration {0}. Add them under API permissions, grant admin consent, then try again: Team.Create, Channel.Create, ChannelMember.ReadWrite.All, TeamMember.ReadWrite.All, TeamSettings.ReadWrite.All (with admin consent).</value></data>
+  <data name="Teams_CopyPermissionMissing" xml:space="preserve"><value>Copying a team also needs these delegated Microsoft Graph permissions on the target app registration {0}. Add them under API permissions, grant admin consent, then try again: {1} (with admin consent).</value></data>
+  <data name="Teams_CopyError" xml:space="preserve"><value>The copy stopped: {0}</value></data>
+  <data name="Teams_Personal_Option" xml:space="preserve"><value>Only show my own teams and chats (instead of every team in the tenant)</value></data>
+  <data name="Teams_Personal_OptionTip" xml:space="preserve"><value>Lists only the teams and chats of the account you signed in with, using that sign-in alone: no client secret or application permissions needed.</value></data>
+  <data name="Teams_Admin_NeedSecret" xml:space="preserve"><value>Only your own teams and chats are shown. To list every team in the tenant and the chats of people you choose, save a client secret for the source app registration (Settings).</value></data>
+  <data name="Teams_Admin_ChatsNode" xml:space="preserve"><value>Chats of the people chosen above</value></data>
+  <data name="Teams_Admin_FindLabel" xml:space="preserve"><value>Chats of:</value></data>
+  <data name="Teams_Admin_Find" xml:space="preserve"><value>Find people</value></data>
+  <data name="Teams_Admin_AddChats" xml:space="preserve"><value>Add their chats</value></data>
+  <data name="Teams_Admin_NoPeople" xml:space="preserve"><value>No one found whose name or email starts with "{0}".</value></data>
+  <data name="Teams_Admin_PickPeople" xml:space="preserve"><value>Select one or more people, then click Add their chats.</value></data>
+  <data name="Teams_Admin_LoadingChats" xml:space="preserve"><value>Reading the chats of {0}…</value></data>
+  <data name="Teams_Admin_ChatsLoaded" xml:space="preserve"><value>Chats loaded for: {0} ({1} listed). Tick the ones to copy.</value></data>
+  <data name="Teams_Admin_ChatsAdded" xml:space="preserve"><value>{0} chats added.</value></data>
+  <data name="Teams_Admin_Fallback" xml:space="preserve"><value>The administrator view is unavailable ({0}); showing your own teams and chats instead.</value></data>
+  <data name="Teams_Admin_FallbackSecret" xml:space="preserve"><value>the client secret saved for the source registration was rejected: paste the secret's Value, not its ID, in Settings</value></data>
+  <data name="Teams_Admin_PanelOff" xml:space="preserve"><value>Choosing people needs the administrator view: save a client secret for the source app registration in Settings, and leave "Only show my own teams and chats" unticked on the Connect step.</value></data>
 </root>

@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ 폴더 {0:N0}개는 검사에서 ID를 얻지 못했습니다(Graph 오류 아님). 자리 표시자 날짜로 표시됩니다. 경로: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ 폴더 {0:N0}개는 Graph 메타데이터 조회에 실패했습니다. 자리 표시자 날짜로 표시됩니다. 예: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ 폴더 {0:N0}개의 날짜를 확인할 수 없습니다(재시도 후 Graph 조회 실패). 실제 원본 날짜 대신 2000-01-01 자리 표시자 날짜로 표시됩니다</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ 폴더 {0:N0}개는 원본 작성자/수정한 사람 이메일을 사용할 수 없어 수정할 수 없으며 가져오기 계정으로 표시됩니다</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>{1:N0}개 중 폴더 {0:N0}개의 메타데이터(날짜, 작성자, 색) 수정 중...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: 대상 폴더 GUID를 확인할 수 없습니다</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>폴더 메타데이터 수정 중: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>원본과 대상 비교</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>비교 도구를 열어 이 복사본을 원본과 대조합니다.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>기록 열기</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>선택한 등록은 원본에 사용되며, 단일 테넌트 모드에서는 양쪽 모두에 사용됩니다.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>새 등록</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>앱 등록을 하나 이상 추가하세요.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>유효성 검사</value></data>
@@ -1636,4 +1634,25 @@
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>&apos;{0}&apos;을(를) 복사했지만 {1}개 항목의 원래 날짜와 작성자를 복원하지 못했습니다: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>&apos;{0}&apos;을(를) 복사했지만 날짜와 작성자를 복원하기 위한 복사본을 나중에 찾을 수 없었습니다.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>&apos;{0}&apos; 유형의 문서 집합이지만 대상 라이브러리에 해당 콘텐츠 형식이 없으며 추가할 수도 없습니다({1}). 대상 라이브러리에 콘텐츠 형식을 추가한 다음(라이브러리 설정, 고급 설정, 콘텐츠 형식 관리 허용) 다시 복사하세요.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Forms 도구에는 위임된 권한 “Microsoft Forms”가 필요하지만 이 앱 등록에는 없습니다. Azure 포털에서 등록을 열고 API 권한으로 이동하여 “내 조직에서 사용하는 API”에서 추가한 다음 관리자 동의를 부여하고 앱을 다시 시작하세요. README의 “Add API permissions”를 참조하세요.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Teams 도구</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>팀과 채팅을 둘러보고 팀의 채널과 파일을 복사합니다</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>팀 및 채팅 불러오기</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>불러오는 중…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>{0} 읽는 중…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>채팅</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>이 계정에 대한 팀을 찾을 수 없습니다.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>표준 채널</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>비공개 채널</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>공유 채널</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>구성원 {0}명</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>파일 폴더를 찾음</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>파일 폴더를 사용할 수 없음</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>팀 {0}개와 채팅 {1}개를 찾았습니다.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Teams를 읽을 수 없습니다: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Teams 도구에는 다음 위임된 Microsoft Graph 권한이 필요하지만 이 앱 등록에는 없습니다: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All, Chat.Read. Azure 포털에서 등록을 열고 API 권한으로 이동하여 추가한 다음 관리자 동의를 부여하고 앱을 다시 시작하세요. README의 “Add API permissions”를 참조하세요.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>실시간 복사에는 위임된 Power Automate Service 권한 Flows.Read.All 및 Flows.Manage.All과 PowerApps Service User가 필요하지만 이 앱 등록에는 없습니다. API 권한에서 추가하고 관리자 동의를 부여한 다음 앱을 다시 시작하세요. 내보낸 패키지에서 복사하는 기능은 이 권한 없이도 작동합니다.</value></data>
 </root>

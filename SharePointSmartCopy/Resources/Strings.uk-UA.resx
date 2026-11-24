@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ Для папок ({0:N0}) сканування не повернуло ідентифікатора (це не збій Graph) — вони матимуть дату-заповнювач. Шлях(и): {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ Для папок ({0:N0}) не вдався пошук метаданих у Graph — вони матимуть дату-заповнювач. Приклад(и): {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ Не вдалося визначити дату для папок ({0:N0}) (пошук у Graph не вдався після повторних спроб) — замість реальної дати джерела вони матимуть дату-заповнювач 2000-01-01</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ Для папок ({0:N0}) недоступна електронна адреса Author/Modified-By джерела — їх неможливо виправити, вони показуватимуть імпортувальний обліковий запис</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Виправлення метаданих папок (дати + авторство + колір): {0:N0} із {1:N0} папок...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: не вдалося визначити GUID папки призначення</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Виправлення метаданих папок: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Порівняти джерело й призначення</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Відкрийте засіб порівняння, щоб звірити цю копію з джерелом.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Відкрити історію</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Вибрана реєстрація використовується для джерела — а в режимі одного тенанта й для обох сторін.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Нова реєстрація</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Додайте принаймні одну реєстрацію додатка.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Перевірка</value></data>
@@ -1636,4 +1634,25 @@
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>Елемент «{0}» скопійовано, але не вдалося відновити початкові дати й авторів (елементів: {1}): {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>Елемент «{0}» скопійовано, але згодом не вдалося знайти копію, щоб відновити її дати й авторів.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Це набір документів типу «{0}», але в цільовій бібліотеці немає цього типу вмісту, і додати його не вдалося ({1}). Додайте тип вмісту до цільової бібліотеки (Параметри бібліотеки, Додаткові параметри, дозволити керування типами вмісту) і повторіть копіювання.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Для інструмента Forms потрібен делегований дозвіл «Microsoft Forms», якого немає в цій реєстрації застосунку. На порталі Azure відкрийте реєстрацію, перейдіть до розділу «Дозволи API», додайте його в розділі «API, що використовуються моєю організацією», надайте згоду адміністратора та перезапустіть застосунок. Див. «Add API permissions» у README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Інструмент Teams</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Переглядайте команди та чати й копіюйте канали та файли команди</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Завантажити команди та чати</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Завантаження…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Читання: {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Чати</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Для цього облікового запису команд не знайдено.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Стандартний канал</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Приватний канал</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Спільний канал</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>Учасників: {0}</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>папку файлів знайдено</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>папка файлів недоступна</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>Знайдено команд: {0}, чатів: {1}.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Не вдалося прочитати Teams: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Для інструмента Teams потрібні такі делеговані дозволи Microsoft Graph, яких немає в цій реєстрації застосунку: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All і Chat.Read. На порталі Azure відкрийте реєстрацію, перейдіть до розділу «Дозволи API», додайте їх, надайте згоду адміністратора та перезапустіть застосунок. Див. «Add API permissions» у README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Для копіювання в реальному часі потрібні делеговані дозволи Power Automate Service Flows.Read.All і Flows.Manage.All, а також PowerApps Service User, яких немає в цій реєстрації застосунку. Додайте їх у розділі «Дозволи API», надайте згоду адміністратора та перезапустіть застосунок. Копіювання з експортованих пакетів працює й без них.</value></data>
 </root>

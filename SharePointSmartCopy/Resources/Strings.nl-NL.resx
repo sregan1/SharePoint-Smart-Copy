@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ Voor {0:N0} map(pen) leverde de scan geen identiteit op (geen Graph-fout) – ze tonen een tijdelijke datum. Pad(en): {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ Bij {0:N0} map(pen) is de Graph-metagegevensopzoeking mislukt – ze tonen een tijdelijke datum. Voorbeeld(en): {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} map(pen) konden niet worden gedateerd (Graph-opzoeking mislukt na nieuwe pogingen) – ze tonen de tijdelijke datum 01-01-2000 in plaats van hun echte brondatum</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ Voor {0:N0} map(pen) was geen e-mailadres van auteur/gewijzigd door in de bron beschikbaar – deze kunnen niet worden gecorrigeerd en tonen het importerende account</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Mapmetagegevens (datums, auteurschap, kleur) corrigeren voor {0:N0} van {1:N0} map(pen)...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: kon de GUID van de doelmap niet oplossen</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Mapmetagegevens corrigeren: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Bron &amp; doel vergelijken</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Open het hulpmiddel Vergelijken om deze kopie met de bron te controleren.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Geschiedenis openen</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>De geselecteerde registratie wordt gebruikt voor de bron – en voor beide zijden in de modus met één tenant.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Nieuwe registratie</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Voeg ten minste één app-registratie toe.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validatie</value></data>
@@ -1636,4 +1634,25 @@ Annuleren: terug</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>&apos;{0}&apos; is gekopieerd, maar de oorspronkelijke datums en auteurs konden niet worden hersteld voor {1} item(s): {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>&apos;{0}&apos; is gekopieerd, maar de kopie kon daarna niet worden gevonden om de datums en auteurs te herstellen.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Dit is een documentenset van het type &apos;{0}&apos;, maar de doelbibliotheek heeft dat inhoudstype niet en het kon niet worden toegevoegd ({1}). Voeg het inhoudstype toe aan de doelbibliotheek (Bibliotheekinstellingen, Geavanceerde instellingen, beheer van inhoudstypen toestaan) en kopieer opnieuw.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>De Forms-tool heeft de gedelegeerde machtiging ‘Microsoft Forms’ nodig, die deze app-registratie niet heeft. Open de registratie in de Azure-portal, ga naar API-machtigingen, voeg de machtiging toe onder ‘API’s die door mijn organisatie worden gebruikt’, geef beheerderstoestemming en start de app opnieuw. Zie ‘Add API permissions’ in de README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Teams-tool</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Blader door teams en chats en kopieer de kanalen en bestanden van een team</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Teams en chats laden</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Laden…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>{0} lezen…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Chats</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Geen teams gevonden voor dit account.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Standaardkanaal</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Privékanaal</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Gedeeld kanaal</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} leden</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>bestandsmap gevonden</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>bestandsmap niet beschikbaar</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>{0} teams en {1} chats gevonden.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Teams kan niet worden gelezen: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>De Teams-tool heeft deze gedelegeerde Microsoft Graph-machtigingen nodig, die deze app-registratie niet heeft: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All en Chat.Read. Open de registratie in de Azure-portal, ga naar API-machtigingen, voeg ze toe, geef beheerderstoestemming en start de app opnieuw. Zie ‘Add API permissions’ in de README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Live kopiëren heeft de gedelegeerde Power Automate Service-machtigingen Flows.Read.All en Flows.Manage.All nodig, plus PowerApps Service User, die deze app-registratie niet heeft. Voeg ze toe onder API-machtigingen, geef beheerderstoestemming en start de app opnieuw. Kopiëren vanuit geëxporteerde pakketten werkt zonder deze machtigingen.</value></data>
 </root>

@@ -91,6 +91,7 @@ public partial class MainViewModel : ObservableObject
             Settings.Save();
             CurrentStep = 1;
             _ = LoadLibrariesAsync();
+            _ = RefreshToolAccessAsync();
         }
         catch (OperationCanceledException) { SourceStatus = string.Empty; }
         catch (Exception ex)              { SetSourceError(ex); }
@@ -416,6 +417,7 @@ public partial class MainViewModel : ObservableObject
             TargetConnected = true;
             Settings.TargetUrl = TargetUrl.Trim();
             Settings.Save();
+            _ = RefreshToolAccessAsync();   // multi-tenant: the target sign-in now exists too
 
             // Pages scope: pages can only go into a Site Pages library (the SitePages API is
             // exclusive to BaseTemplate=119). Replace all target libraries with only Site Pages

@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} 个文件夹在扫描中没有标识(不是 Graph 故障) - 它们将显示占位符日期。路径: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} 个文件夹的 Graph 元数据查找失败 - 它们将显示占位符日期。示例: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} 个文件夹无法确定日期(Graph 查找在重试后失败) - 它们将显示 2000-01-01 占位符日期,而不是其真实的源日期</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} 个文件夹没有可用的源作者/修改者电子邮件 - 无法更正这些文件夹,它们将显示导入帐户</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>正在更正 {1:N0} 个文件夹中 {0:N0} 个的文件夹元数据(日期 + 作者 + 颜色)...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: 无法解析目标文件夹 GUID</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>正在更正文件夹元数据: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>比较源和目标</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>打开“比较”工具,对照源检查此次复制。</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>打开历史记录</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>所选注册用于源 — 在单租户模式下也用于两端。</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>新注册</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>请至少添加一个应用注册。</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>验证</value></data>
@@ -1636,4 +1634,25 @@
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>已复制“{0}”，但无法为 {1} 个项目恢复原始日期和作者: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>已复制“{0}”，但之后找不到副本，无法恢复其日期和作者。</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>这是类型为“{0}”的文档集，但目标库没有该内容类型，且无法添加({1})。请将该内容类型添加到目标库(库设置、高级设置、允许管理内容类型)，然后重新复制。</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Forms 工具需要委托权限“Microsoft Forms”，但此应用注册中没有该权限。请在 Azure 门户中打开该注册，转到“API 权限”，在“我的组织使用的 API”下添加它，授予管理员同意，然后重启应用。请参阅 README 中的“Add API permissions”。</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Teams 工具</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>浏览团队和聊天，并复制团队的频道和文件</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>加载团队和聊天</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>正在加载…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>正在读取 {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>聊天</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>未找到此帐户的团队。</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>标准频道</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>专用频道</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>共享频道</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} 名成员</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>已找到文件文件夹</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>文件文件夹不可用</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>找到 {0} 个团队和 {1} 个聊天。</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>无法读取 Teams：{0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Teams 工具需要以下委托的 Microsoft Graph 权限，但此应用注册中没有：Team.ReadBasic.All、Channel.ReadBasic.All、TeamMember.Read.All 和 Chat.Read。请在 Azure 门户中打开该注册，转到“API 权限”，添加这些权限，授予管理员同意，然后重启应用。请参阅 README 中的“Add API permissions”。</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>实时复制需要委托的 Power Automate Service 权限 Flows.Read.All 和 Flows.Manage.All，以及 PowerApps Service User，但此应用注册中没有这些权限。请在“API 权限”中添加它们，授予管理员同意，然后重启应用。从导出的包进行复制不需要这些权限。</value></data>
 </root>

@@ -177,7 +177,22 @@
                     <!-- Where the flows come from -->
                     <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                         <RadioButton GroupName="FlowSource" Content="{loc:Loc Flows_Live_ModeLive}" IsChecked="{Binding IsLiveSource, Mode=OneWay}"
-                                     Click="SourceModeLive_Click" Margin="0,0,20,0" IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
+                                     Click="SourceModeLive_Click" Margin="0,0,20,0" IsEnabled="{Binding CanPickLive}"
+                                     ToolTipService.ShowOnDisabled="True" ContextMenuService.ShowOnDisabled="True" ToolTipService.IsEnabled="{Binding LiveAvailable, Converter={StaticResource InvBool}}" ContextMenuService.IsEnabled="{Binding LiveAvailable, Converter={StaticResource InvBool}}">
+                            <RadioButton.ToolTip>
+                                <ToolTip MaxWidth="360">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding LiveBlockedTip}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{loc:Loc Tool_CopyForAdminHint}" TextWrapping="Wrap" Margin="0,6,0,0" FontStyle="Italic"/>
+                                    </StackPanel>
+                                </ToolTip>
+                            </RadioButton.ToolTip>
+                            <RadioButton.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="{loc:Loc Tool_CopyForAdmin}" Click="CopyLiveTip_Click"/>
+                                </ContextMenu>
+                            </RadioButton.ContextMenu>
+                        </RadioButton>
                         <RadioButton GroupName="FlowSource" Content="{loc:Loc Flows_Live_ModeZip}" IsChecked="{Binding IsZipSource, Mode=OneWay}"
                                      Click="SourceModeZip_Click" IsEnabled="{Binding IsBusy, Converter={StaticResource InvBool}}"/>
                     </StackPanel>

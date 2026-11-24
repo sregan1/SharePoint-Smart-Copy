@@ -55,6 +55,7 @@ Choose from four copy scopes in a step-by-step wizard:
 |---|---|
 | **Forms** | Copies Microsoft Forms (all question types including Ranking and Likert, branching, quiz type, settings, theme, logo and background images) and exports responses to Excel. Uses the *unofficial* Microsoft Forms API and needs the delegated Microsoft Forms permission on your app registration |
 | **Flows** | Rewrites exported Power Automate packages (including solution exports) or copies flows live between environments, for the target tenant: sites, lists (matched by name through your connections), columns (a column the target list lacks is left out of the steps that write it, with a warning), copied forms, and email domains; live copy can create the flows inside a Dataverse solution. Connections must be recreated after a package import |
+| **Teams** (preview) | A six-step wizard (Connect, Choose, Options, Review, Copy, Results) that copies one team, or several at once (choosing which channels), and any number of chats, to new teams, in the same tenant or in another one: settings, members and owners, every channel (standard, private and shared), the files and, if you choose, the messages and replies with their original time and author. It also copies a chat, with its messages, into a new group chat with the same people. People are found in the target by email through the identity mapping, and the Review step lets you map anyone who has no match. Messages and chats need an application permission and a client secret: see [PERMISSIONS.md](PERMISSIONS.md) |
 
 **All scopes:**
 - Custom column values copied in both **Migration API** and **Enhanced REST** modes — including **Person/User**, **Managed Metadata**, **Lookup**, **Hyperlink**, and **Currency** columns
@@ -141,6 +142,8 @@ Go to **API permissions** → **Add a permission**:
 | Microsoft Graph | Delegated | `Files.ReadWrite.All` | Upload/download file content via Graph |
 | SharePoint | Delegated | `AllSites.FullControl` | Required by the Migration API to submit migration jobs; also allows correct `IsSiteAdmin` evaluation in the OAuth context |
 | Microsoft Forms | Delegated | *(Microsoft Forms permissions)* | **Optional** — only for the Forms tool; search "Microsoft Forms" under *APIs my organization uses* |
+| Microsoft Graph | Delegated | `Team.ReadBasic.All`, `Channel.ReadBasic.All`, `TeamMember.Read.All`, `Chat.Read` | **Optional** — only for the Teams tool (preview). The tile is grayed out until the registration has them. Copying a team also needs `Team.Create`, `Channel.Create`, `ChannelMember.ReadWrite.All`, `TeamMember.ReadWrite.All` and `TeamSettings.ReadWrite.All` (admin consent); they are asked for when a copy starts. Copying between two tenants also needs `User.ReadBasic.All` (on the target sign-in, to find each person by their mapped email); copying messages also needs `ChannelMessage.Read.All` and `ChatMember.Read`, and copying a chat `Chat.Create` |
+| Microsoft Graph | **Application** | `Teamwork.Migrate.All`, `ChatMember.ReadWrite.All` | **Optional** — only to copy Teams messages and chats. Microsoft allows the message import API only for an application sign-in, so it is used with the target registration's **client secret** (Certificates & secrets), saved under Settings and encrypted for your Windows account. Needs admin consent. `ChatMember.ReadWrite.All` is only for chats: it lets the app make the imported history visible to the chat's members |
 | Microsoft Graph | Delegated | `TermStore.ReadWrite.All` | **Optional** — only to copy managed-metadata term sets to a different tenant (needs admin consent, and the signed-in target account needs a term store role). With two registrations (different-tenant mode) the **source** registration needs `TermStore.Read.All` instead |
 
 > **Why `AllSites.FullControl`?**
@@ -152,26 +155,58 @@ Go to **API permissions** → **Add a permission**:
 
 #### Which permissions does each feature need?
 
-Every sign-in asks for the two Microsoft Graph permissions, so they are needed for anything that connects to SharePoint. The other two are only needed by the features marked below. If you do not use a feature, you can leave its permission out.
+Permissions are grouped under a short code so the feature chart stays readable. Add only the groups for the features you use. Everything is **delegated** (the app acts as the signed-in user) except those marked **Application**, which are used only for Teams messages and the Teams administrator view.
 
-| Feature | Graph `Sites.ReadWrite.All` | Graph `Files.ReadWrite.All` | SharePoint `AllSites.FullControl` | Microsoft Forms | Graph `TermStore.ReadWrite.All` |
-|---|:-:|:-:|:-:|:-:|:-:|
-| Files & Folders, Libraries & Lists, Entire Site — **Enhanced REST** mode | ✔ | ✔ | — | — | optional† |
-| Files & Folders, Libraries & Lists, Entire Site — **Migration API** mode | ✔ | ✔ | ✔ | — | optional† |
-| Site Pages (always Enhanced REST) | ✔ | ✔ | — | — | — |
-| **Compare**, and verifying a copy | ✔ | ✔ | — | — | — |
-| **Forms** tool | ✔ | ✔ | — | ✔ | — |
-| **Flows** tool (packages) | ✔ | ✔ | — | optional* | — |
-| **Flows** tool (live copy between environments) | ✔ | ✔ | — | optional* | — ‡ |
-| Browsing saved History, Settings (local only; verifying a run signs in like Compare) | — | — | — | — | — |
+**Permission groups**
 
-‡ Live copy also needs **Power Automate Service** → delegated `Flows.Read.All` and `Flows.Manage.All`, and **PowerApps Service** → delegated `User`. To create flows inside a solution, add **Dataverse** → delegated `user_impersonation` (optional). In an environment with Dataverse the account also needs a security role that can create flows and read connection references (for example *Environment Maker*).
+| Code | API | Type | Permissions | If it is missing |
+|---|---|---|---|---|
+| **BASE** | Microsoft Graph | Delegated | `Sites.ReadWrite.All`, `Files.ReadWrite.All` | Nothing connects to SharePoint: sign-in or the first request fails |
+| **MIG** | SharePoint | Delegated | `AllSites.FullControl` | Migration API mode is refused ("Permission Denied"); Enhanced REST mode still works |
+| **TERM** | Microsoft Graph | Delegated | `TermStore.ReadWrite.All` (target), and `TermStore.Read.All` on the source registration when two registrations are used | The managed-metadata column is not created; the run report says why |
+| **FORMS** | Microsoft Forms | Delegated | the Microsoft Forms permission (under *APIs my organization uses*) | The Forms tile is grayed out and its tooltip names what to add; in Flows only form-title lookups fail |
+| **FLOW** | Power Automate Service, PowerApps Service | Delegated | `Flows.Read.All`, `Flows.Manage.All` (Power Automate Service); `User` (PowerApps Service) | The Live option in Flows is disabled, with the reason; packages still work |
+| **DV** | Dataverse | Delegated | `user_impersonation` | Live-copied flows are created outside a solution |
+| **TREAD** | Microsoft Graph | Delegated | `Team.ReadBasic.All`, `Channel.ReadBasic.All`, `TeamMember.Read.All`, `Chat.Read` | The Teams tile shows a warning, and the tool cannot list your teams and chats |
+| **TWRITE** | Microsoft Graph | Delegated | `Team.Create`, `Channel.Create`, `ChannelMember.ReadWrite.All`, `TeamMember.ReadWrite.All`, `TeamSettings.ReadWrite.All` | The wizard stops on the first step and names the missing permissions |
+| **TUSER** | Microsoft Graph | Delegated | `User.ReadBasic.All` | Different-tenant copies cannot look people up in the target and report a permission error |
+| **TMSG** | Microsoft Graph | Delegated | `ChannelMessage.Read.All`, `ChatMember.Read` | Reading messages or chat members from the source fails with a permission error |
+| **TCHAT** | Microsoft Graph | Delegated | `Chat.Create` | The new chat cannot be created |
+| **TAPP** | Microsoft Graph | **Application** | `Teamwork.Migrate.All`, plus the target registration's **client secret** saved in Settings | The *Include messages* option is disabled without the secret; without the permission Microsoft refuses the import |
+| **TCHATAPP** | Microsoft Graph | **Application** | `ChatMember.ReadWrite.All` | A copied chat's messages are imported but its people cannot see them yet; the results say so |
+| **TADMIN** | Microsoft Graph | **Application** (source registration) | `Group.Read.All`, `Team.ReadBasic.All`, `Channel.ReadBasic.All`, `TeamMember.Read.All`, `ChannelMember.Read.All`, `Files.Read.All`, `User.Read.All`, plus the **source** registration's client secret saved in Settings | Without the secret the Teams tool shows only your own teams and chats; without the permissions the list says which to add |
+| **TADMINMSG** | Microsoft Graph | **Application** (source registration) | `ChannelMessage.Read.All`, `Chat.Read.All`, `ChatMember.Read.All`, **and** Microsoft's approval of the tenant for the Teams *protected APIs* (a request form; admin consent alone is not enough) | Reading other people's chats, or the messages of a team you are not in, is refused with a message that names the approval |
 
-\* The Flows tool only uses Microsoft Forms to look up form titles and the target account's forms. Without the permission those lookups report an error and you paste each new form's ID or edit-page link instead; everything else in Flows works.
+**What each feature needs**
 
-† Only for copying a managed-metadata column to a different tenant (the term set is copied through Microsoft Graph, delegated, admin consent). The signed-in target account also needs a term store role, for example *Term Store Administrator*. Without the permission the column is not created and the run report says why. See *Managed metadata* in the User Guide.
+| Feature | Required | Optional |
+|---|---|---|
+| Files & Folders, Libraries & Lists, Entire Site — **Enhanced REST** mode | BASE | TERM (managed metadata to a different tenant) |
+| Files & Folders, Libraries & Lists, Entire Site — **Migration API** mode | BASE, MIG | TERM (managed metadata to a different tenant) |
+| Site Pages (always Enhanced REST) | BASE | — |
+| **Compare**, and verifying a copy | BASE | — |
+| **Forms** tool | BASE, FORMS | — |
+| **Flows** tool — packages | BASE | FORMS (form-title lookups) |
+| **Flows** tool — live copy between environments | BASE, FLOW | FORMS, DV |
+| **Teams** — browse teams and chats | BASE, TREAD | — |
+| **Teams** — copy a team in the same tenant (settings, members, channels, files) | BASE, TREAD, TWRITE | — |
+| **Teams** — copy a team to a different tenant | BASE, TREAD, TWRITE, TUSER (target registration) | — |
+| **Teams** — include messages and replies | all of the above for the copy, plus TMSG and TAPP | — |
+| **Teams** — copy a chat | BASE, TREAD, TWRITE, TMSG, TCHAT, TAPP, TCHATAPP (and TUSER between tenants) | — |
+| **Teams** — administrator view: every team in the tenant, copied without its messages | BASE, TADMIN, TWRITE (and TUSER between tenants) | — |
+| **Teams** — administrator view: the chats of chosen people, or messages of teams you are not in | all of the above, plus TADMINMSG, TMSG, TCHAT, TAPP, TCHATAPP | — |
+| Browsing saved History, Settings | none (local only; verifying a run signs in like Compare) | — |
 
-For example, a company that only wants to move Power Automate flows needs the two Graph permissions and nothing else: no Microsoft Forms permission, and no `AllSites.FullControl`. Flows reads your packages from disk and looks up lists and columns on the source and target sites with the same sign-in.
+**Two tenants:** each side uses its own app registration and its own consent. The source registration needs only what is read from the source (BASE, and for Teams TREAD, and TMSG when copying messages or chats); the target registration needs what is written there (BASE, MIG for Migration API mode, and for Teams TWRITE, TUSER, TCHAT, TAPP and TCHATAPP). A registration used for both sides needs the union. Grant admin consent in **each** tenant.
+
+**Notes**
+
+- **Admin consent.** Application permissions always need admin consent, and so do most of the Teams permissions: simplest is to click *Grant admin consent* once after adding everything.
+- **Client secret.** Only TAPP needs one. Create it under *Certificates & secrets* on the target registration, then paste it into **Settings → Azure app registrations**. It is stored encrypted for your Windows account and is never sent anywhere except to Microsoft's sign-in service.
+- **Forms** uses Microsoft's unofficial Forms API. In a Dataverse environment the signed-in account needs a security role that can create flows (for example *Environment Maker*). Managed-metadata copy also needs a term store role on the target account (for example *Term Store Administrator*).
+- **Grayed-out tiles.** Forms is disabled until its permission is on the registration. Teams is never disabled: it shows a warning tooltip you can copy and paste to your administrator.
+
+Full copy-paste lists for common setups are in [PERMISSIONS.md](PERMISSIONS.md).
 
 ### 3. Grant admin consent
 

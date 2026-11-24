@@ -261,6 +261,85 @@ public class AuthService
         finally { _refreshLock.Release(); }
     }
 
+    // What a silent, no-prompt check found out about one API the app registration may or may not have been given.
+    public enum ResourceAccess
+    {
+        Ready,               // a token was issued silently: the permission is added and consented
+        NeedsConsent,        // the permission is on the registration but this user has not consented yet (first use prompts)
+        NotInRegistration,   // Entra says the registration does not list this API at all: the tool cannot work until it is added
+        Unknown,             // not signed in, offline, or an error that says nothing about the permission
+    }
+
+    // Checks the Microsoft Forms permission without ever showing UI. Only NotInRegistration is a definite "this can't
+    // work"; NeedsConsent is normal before first use (the tool's first click shows the consent screen), so callers must
+    // not block on it.
+    public Task<ResourceAccess> ProbeFormsAccessAsync(CancellationToken cancellationToken = default) =>
+        ProbeResourceAccessAsync([FormsScope], cancellationToken);
+
+    // Same check for the Power Automate live-copy APIs (Flow service and PowerApps service).
+    public async Task<ResourceAccess> ProbeFlowAccessAsync(CancellationToken cancellationToken = default)
+    {
+        var flow = await ProbeResourceAccessAsync([FlowScope], cancellationToken);
+        var apps = await ProbeResourceAccessAsync([PowerAppsScope], cancellationToken);
+        return flow == ResourceAccess.NotInRegistration || apps == ResourceAccess.NotInRegistration
+            ? ResourceAccess.NotInRegistration
+            : flow == ResourceAccess.Ready && apps == ResourceAccess.Ready ? ResourceAccess.Ready : flow;
+    }
+
+    // The delegated Microsoft Graph permissions actually granted to this app for the signed-in user, read from the "scp"
+    // claim of a silent token for Graph's .default scope (which carries everything consented, nothing more). Null when it
+    // cannot be told (not signed in, offline, an error): callers must then leave the tool enabled. Never shows UI.
+    // Entra gives no "not on the registration" answer for a Graph scope (it asks for consent instead), so this is how
+    // a missing Graph permission is detected; it cannot tell "not added" from "added but not yet consented".
+    // forceRefresh asks Entra for a NEW token instead of reusing the cached one (valid for about an hour and issued before a permission
+    // was added or consented, so it would not list it yet).
+    public async Task<HashSet<string>?> GetGrantedGraphScopesAsync(CancellationToken cancellationToken = default, bool forceRefresh = false)
+    {
+        if (_app == null || !IsAuthenticated) return null;
+        await _refreshLock.WaitAsync(cancellationToken);
+        try
+        {
+            var account = await GetPinnedAccountAsync();
+            if (account == null) return null;
+            var result = await _app.AcquireTokenSilent(["https://graph.microsoft.com/.default"], account).WithForceRefresh(forceRefresh).ExecuteAsync(cancellationToken);
+            var parts = result.AccessToken.Split('.');
+            if (parts.Length < 2) return null;
+            var payload = parts[1].Replace('-', '+').Replace('_', '/');
+            payload = payload.PadRight(payload.Length + (4 - payload.Length % 4) % 4, '=');
+            using var doc = System.Text.Json.JsonDocument.Parse(Convert.FromBase64String(payload));
+            if (!doc.RootElement.TryGetProperty("scp", out var scp) || scp.GetString() is not { } text) return null;
+            return new HashSet<string>(text.Split(' ', StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase);
+        }
+        catch (OperationCanceledException) { throw; }
+        catch { return null; }
+        finally { _refreshLock.Release(); }
+    }
+
+    private async Task<ResourceAccess> ProbeResourceAccessAsync(string[] scopes, CancellationToken cancellationToken)
+    {
+        if (_app == null || !IsAuthenticated) return ResourceAccess.Unknown;
+        await _refreshLock.WaitAsync(cancellationToken);   // never overlap an interactive sign-in or refresh
+        try
+        {
+            var account = await GetPinnedAccountAsync();
+            if (account == null) return ResourceAccess.Unknown;
+            await _app.AcquireTokenSilent(scopes, account).ExecuteAsync(cancellationToken);
+            return ResourceAccess.Ready;
+        }
+        catch (MsalUiRequiredException) { return ResourceAccess.NeedsConsent; }   // subclass of MsalServiceException: keep first
+        catch (MsalServiceException ex) when (
+            ex.ErrorCode is "invalid_resource" or "invalid_scope" ||
+            ex.Message.Contains("AADSTS650057", StringComparison.Ordinal) ||    // invalid resource: not in the requested permissions
+            ex.Message.Contains("AADSTS70011", StringComparison.Ordinal) ||     // invalid scope
+            ex.Message.Contains("AADSTS500011", StringComparison.Ordinal))      // resource principal not found in the tenant
+        {
+            return ResourceAccess.NotInRegistration;
+        }
+        catch (OperationCanceledException) { throw; }
+        catch { return ResourceAccess.Unknown; }
+        finally { _refreshLock.Release(); }
+    }
+
     // Tokens for the Power Automate flow-copy feature. Each is a separate resource, so the app registration needs
     // the matching delegated permission consented: "Power Automate Service" (Flows.Read.All, Flows.Manage.All) for the
     // Flow management API, "PowerApps Service" (User) for connection listings, and "Dataverse" (user_impersonation)

@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} مجلد لم تكن له هوية من الفحص (ليس فشلًا في Graph) — ستظهر له تواريخ مؤقتة. المسارات: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ فشل بحث بيانات Graph الوصفية لـ {0:N0} مجلد — ستظهر له تواريخ مؤقتة. أمثلة: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ تعذّر تحديد تاريخ {0:N0} مجلد (فشل بحث Graph بعد إعادة المحاولة) — ستظهر له تاريخ مؤقت 2000-01-01 بدلًا من تاريخه الحقيقي في المصدر</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} مجلد لم يتوفر له بريد المؤلف/المعدِّل الأخير في المصدر — لا يمكن تصحيحها، وستظهر باسم الحساب المستورِد</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>جارٍ تصحيح البيانات الوصفية للمجلدات (التواريخ + المؤلف + اللون) لـ {0:N0} من {1:N0} مجلد...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: تعذّر تحديد GUID لمجلد الهدف</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>جارٍ تصحيح البيانات الوصفية للمجلدات: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>مقارنة المصدر والهدف</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>افتح أداة المقارنة للتحقق من هذه النسخة مقابل المصدر.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>فتح السجل</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>يُستخدم التسجيل المحدد للمصدر — ولكلا الجانبين في وضع المستأجر الواحد.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>تسجيل جديد</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>أضف تسجيل تطبيق واحدًا على الأقل.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>التحقق</value></data>
@@ -1636,4 +1634,25 @@
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>تم نسخ &apos;{0}&apos;، لكن تعذّرت استعادة التواريخ والمؤلفين الأصليين لـ {1} عنصر: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>تم نسخ &apos;{0}&apos;، لكن تعذّر العثور على النسخة بعد ذلك لاستعادة تواريخها ومؤلفيها.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>هذه مجموعة مستندات من النوع &apos;{0}&apos;، لكن مكتبة الوجهة لا تحتوي على نوع المحتوى هذا وتعذّرت إضافته ({1}). أضف نوع المحتوى إلى مكتبة الوجهة (إعدادات المكتبة ← الإعدادات المتقدمة ← السماح بإدارة أنواع المحتوى)، ثم انسخ مرة أخرى.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>تتطلب أداة Forms إذن «Microsoft Forms» المفوَّض، وتسجيل التطبيق هذا لا يتضمنه. في مدخل Azure افتح التسجيل، وانتقل إلى أذونات واجهة برمجة التطبيقات، وأضفه ضمن «واجهات برمجة التطبيقات التي تستخدمها مؤسستي»، وامنح موافقة المسؤول، ثم أعد تشغيل التطبيق. راجع «إضافة أذونات واجهة برمجة التطبيقات» في ملف README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>أداة Teams</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>تصفح الفرق والمحادثات، وانسخ قنوات الفريق وملفاته</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>تحميل الفرق والمحادثات</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>جارٍ التحميل…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>جارٍ قراءة {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>المحادثات</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>لم يتم العثور على فرق لهذا الحساب.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>قناة قياسية</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>قناة خاصة</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>قناة مشتركة</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} أعضاء</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>تم العثور على مجلد الملفات</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>مجلد الملفات غير متاح</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>تم العثور على {0} فرق و{1} محادثات.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>تعذرت قراءة Teams: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>تحتاج أداة Teams إلى أذونات Microsoft Graph المفوَّضة التالية، وتسجيل التطبيق هذا لا يتضمنها: Team.ReadBasic.All وChannel.ReadBasic.All وTeamMember.Read.All وChat.Read. في مدخل Azure افتح التسجيل، وانتقل إلى أذونات واجهة برمجة التطبيقات، وأضفها، وامنح موافقة المسؤول، ثم أعد تشغيل التطبيق. راجع «إضافة أذونات واجهة برمجة التطبيقات» في ملف README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>يتطلب النسخ المباشر أذونات Power Automate Service المفوَّضة Flows.Read.All وFlows.Manage.All، بالإضافة إلى PowerApps Service User، وتسجيل التطبيق هذا لا يتضمنها. أضفها ضمن أذونات واجهة برمجة التطبيقات، وامنح موافقة المسؤول، ثم أعد تشغيل التطبيق. النسخ من الحزم المصدَّرة يعمل بدونها.</value></data>
 </root>

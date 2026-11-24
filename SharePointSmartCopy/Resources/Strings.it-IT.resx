@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} cartelle non avevano alcuna identità dalla scansione (non è un errore di Graph): mostreranno una data segnaposto. Percorsi: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} cartelle hanno fallito la ricerca dei metadati in Graph: mostreranno una data segnaposto. Esempi: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ Impossibile datare {0:N0} cartelle (ricerca in Graph non riuscita dopo i nuovi tentativi): mostreranno la data segnaposto 2000-01-01 invece della data reale di origine</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} cartelle non avevano l'e-mail dell'autore/modificatore di origine: non è possibile correggerle, mostreranno l'account che importa</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Correzione dei metadati delle cartelle (date + autori + colore) per {0:N0} di {1:N0} cartelle...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: impossibile risolvere il GUID della cartella di destinazione</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Correzione dei metadati delle cartelle: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Confronta origine e destinazione</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Apri lo strumento Confronta per verificare questa copia rispetto all&apos;origine.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Apri Cronologia</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>La registrazione selezionata viene usata per l&apos;origine e, in modalità tenant singolo, per entrambi i lati.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Nuova registrazione</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Aggiungi almeno una registrazione app.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Convalida</value></data>
@@ -1636,4 +1634,25 @@ Annulla: torna indietro</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>&apos;{0}&apos; è stato copiato, ma non è stato possibile ripristinare le date e gli autori originali per {1} elemento/i: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>&apos;{0}&apos; è stato copiato, ma in seguito la copia non è stata trovata per ripristinarne date e autori.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Questo è un set di documenti di tipo &apos;{0}&apos;, ma la raccolta di destinazione non ha quel tipo di contenuto e non è stato possibile aggiungerlo ({1}). Aggiungere il tipo di contenuto alla raccolta di destinazione (Impostazioni raccolta, Impostazioni avanzate, consenti la gestione dei tipi di contenuto), quindi copiare di nuovo.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Lo strumento Forms richiede l’autorizzazione delegata “Microsoft Forms”, che questa registrazione dell’app non ha. Nel portale di Azure aprite la registrazione, andate in Autorizzazioni API, aggiungetela in “API usate dall’organizzazione”, concedete il consenso dell’amministratore e riavviate l’app. Vedere “Add API permissions” nel README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Strumento Teams</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Esplorate team e chat e copiate i canali e i file di un team</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Carica team e chat</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Caricamento…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Lettura di {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Chat</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Nessun team trovato per questo account.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Canale standard</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Canale privato</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Canale condiviso</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} membri</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>cartella dei file trovata</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>cartella dei file non disponibile</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>Trovati {0} team e {1} chat.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Impossibile leggere Teams: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Lo strumento Teams richiede queste autorizzazioni delegate di Microsoft Graph, che questa registrazione dell’app non ha: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All e Chat.Read. Nel portale di Azure aprite la registrazione, andate in Autorizzazioni API, aggiungetele, concedete il consenso dell’amministratore e riavviate l’app. Vedere “Add API permissions” nel README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>La copia dal vivo richiede le autorizzazioni delegate di Power Automate Service Flows.Read.All e Flows.Manage.All, oltre a PowerApps Service User, che questa registrazione dell’app non ha. Aggiungetele in Autorizzazioni API, concedete il consenso dell’amministratore e riavviate l’app. La copia da pacchetti esportati funziona anche senza di esse.</value></data>
 </root>

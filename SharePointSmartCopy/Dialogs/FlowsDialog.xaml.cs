@@ -66,6 +66,22 @@ public partial class FlowsDialog : Window
     private string? _lastOutput;
     private string? _lastReport;
 
+    // Called by the main window before the dialog is shown. With a tip, live copy is unavailable: gray its option and
+    // start on the package source (the dialog's default is Live).
+    public void DisableLiveCopy(string tip)
+    {
+        _vm.LiveAvailable = false;
+        _vm.LiveBlockedTip = tip;
+        _vm.SourceMode = "Zip";
+    }
+
+    // The tooltip cannot be selected; right-click copies the message for the administrator.
+    private void CopyLiveTip_Click(object sender, RoutedEventArgs e)
+    {
+        try { if (_vm.LiveBlockedTip is { Length: > 0 } tip) Clipboard.SetText(tip); }
+        catch (System.Runtime.InteropServices.ExternalException) { /* clipboard busy */ }
+    }
+
     public FlowsDialog(SharePointService sp, Func<string, bool, CancellationToken, Task> prepareSite, Func<bool, string> signedInUser,
         Func<bool, string?> tenantId, Func<CancellationToken, bool, Task<string>> targetFormsToken,
         Func<CancellationToken, bool, Task<string>> sourceFormsToken,

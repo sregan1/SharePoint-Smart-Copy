@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ Složky bez identity ze skenování: {0:N0} (nejde o chybu Graph) – zobrazí zástupné datum. Cesty: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ Složky, u nichž selhalo vyhledání metadat v Graph: {0:N0} – zobrazí zástupné datum. Příklady: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ Složky, u nichž nebylo možné zjistit datum (vyhledání v Graph selhalo i po opakováních): {0:N0} – místo skutečného zdrojového data zobrazí zástupné datum 2000-01-01</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ Složky bez dostupného e-mailu zdrojového autora/posledního editora: {0:N0} – nelze je opravit, zobrazí importující účet</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Oprava metadat složek (data + autorství + barva): {0:N0} z {1:N0} složek...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: nepodařilo se určit GUID cílové složky</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Oprava metadat složek: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Porovnat zdroj a cíl</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Otevře nástroj Porovnat a zkontroluje tuto kopii proti zdroji.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Otevřít Historii</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Vybraná registrace se používá pro zdroj – a pro obě strany v režimu jednoho tenantu.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Nová registrace</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Přidejte alespoň jednu registraci aplikace.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Ověření</value></data>
@@ -1636,4 +1634,25 @@ Storno: zpět</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>Položka „{0}“ byla zkopírována, ale původní data a autory se nepodařilo obnovit u {1} položek: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>Položka „{0}“ byla zkopírována, ale kopii se poté nepodařilo najít, aby se u ní obnovila data a autoři.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Toto je sada dokumentů typu „{0}“, ale cílová knihovna tento typ obsahu nemá a nepodařilo se jej přidat ({1}). Přidejte typ obsahu do cílové knihovny (Nastavení knihovny, Upřesňující nastavení, povolit správu typů obsahu) a kopírujte znovu.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Nástroj Formuláře vyžaduje delegované oprávnění „Microsoft Forms“, které tato registrace aplikace nemá. V portálu Azure otevřete registraci, přejděte do části Oprávnění rozhraní API, přidejte ho v části „Rozhraní API, která moje organizace používá“, udělte souhlas správce a aplikaci restartujte. Viz „Add API permissions“ v souboru README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Nástroj Teams</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Procházejte týmy a chaty a kopírujte kanály a soubory týmu</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Načíst týmy a chaty</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Načítání…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Čtení: {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Chaty</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Pro tento účet nebyly nalezeny žádné týmy.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Standardní kanál</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Soukromý kanál</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Sdílený kanál</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>Členů: {0}</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>složka souborů nalezena</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>složka souborů není dostupná</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>Nalezeno týmů: {0}, chatů: {1}.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Teams se nepodařilo přečíst: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Nástroj Teams vyžaduje tato delegovaná oprávnění Microsoft Graph, která tato registrace aplikace nemá: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All a Chat.Read. V portálu Azure otevřete registraci, přejděte do části Oprávnění rozhraní API, přidejte je, udělte souhlas správce a aplikaci restartujte. Viz „Add API permissions“ v souboru README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Živé kopírování vyžaduje delegovaná oprávnění Power Automate Service Flows.Read.All a Flows.Manage.All a také PowerApps Service User, která tato registrace aplikace nemá. Přidejte je v části Oprávnění rozhraní API, udělte souhlas správce a aplikaci restartujte. Kopírování z exportovaných balíčků funguje i bez nich.</value></data>
 </root>

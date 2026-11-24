@@ -12,6 +12,34 @@ public partial class AzureRegistration : ObservableObject
     [ObservableProperty] private string _clientId = string.Empty;
     [ObservableProperty] private string _tenantId = string.Empty;
 
+    // Optional client secret, used only by the Teams tool's message import (Microsoft allows that API as application-only).
+    // Stored encrypted for the current Windows user (DPAPI), never as text; it cannot be decrypted on another PC or account.
+    public string ProtectedClientSecret { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public bool HasClientSecret => ProtectedClientSecret.Length > 0;
+
+    public void SetClientSecret(string? secret)
+    {
+        secret = secret?.Trim();   // a pasted secret often carries a trailing space or line break, which Entra rejects
+        ProtectedClientSecret = string.IsNullOrEmpty(secret)
+            ? string.Empty
+            : Convert.ToBase64String(System.Security.Cryptography.ProtectedData.Protect(
+                System.Text.Encoding.UTF8.GetBytes(secret), null, System.Security.Cryptography.DataProtectionScope.CurrentUser));
+    }
+
+    // Null when there is none or it cannot be decrypted (copied from another account or PC): the user re-enters it.
+    public string? GetClientSecret()
+    {
+        if (ProtectedClientSecret.Length == 0) return null;
+        try
+        {
+            return System.Text.Encoding.UTF8.GetString(System.Security.Cryptography.ProtectedData.Unprotect(
+                Convert.FromBase64String(ProtectedClientSecret), null, System.Security.Cryptography.DataProtectionScope.CurrentUser));
+        }
+        catch (Exception ex) when (ex is System.Security.Cryptography.CryptographicException or FormatException) { return null; }
+    }
+
     [JsonIgnore]
     public string DisplayName => string.IsNullOrWhiteSpace(Name) ? Loc.T("VM_Unnamed") : Name;
 }

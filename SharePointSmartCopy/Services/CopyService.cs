@@ -813,6 +813,38 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     });
                 }
             }
+            // Files the package cannot get right on its own: a person with no email (System Account, SharePoint App...) comes out as the importing
+            // account, and so does a Created By that differs from the first version's editor (the import takes the file's creator from its
+            // first version). Stamp them afterwards, as folders are.
+            // Only files whose metadata had such a person (recorded while the package was built), so an ordinary copy pays nothing for this.
+            if (preserveMetadata)
+            {
+                var sysCandidates = allTasks.Where(t => t.result.Status == CopyStatus.Success && t.result.PostImportMetadata != null).ToList();
+                if (sysCandidates.Count > 0)
+                {
+                    var listIds = new System.Collections.Concurrent.ConcurrentDictionary<string, Task<string>>();
+                    await Parallel.ForEachAsync(sysCandidates,
+                        new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = cancellationToken },
+                        async (t, ct) =>
+                    {
+                        var (job, result) = t;
+                        try
+                        {
+                            var meta = result.PostImportMetadata!;
+                            var sub = job.TargetSubFolderPath?.Trim('/');
+                            var rel = string.IsNullOrEmpty(sub)
+                                ? $"{job.TargetLibraryServerRelativeUrl}/{job.SourceName}"
+                                : $"{job.TargetLibraryServerRelativeUrl.TrimEnd('/')}/{sub}/{job.SourceName}";
+                            var listId = await listIds.GetOrAdd($"{job.TargetSiteUrl}|{job.TargetLibraryServerRelativeUrl}",
+                                _ => spService.GetListIdByServerRelativeUrlAsync(job.TargetSiteUrl, job.TargetLibraryServerRelativeUrl));
+                            var err = await spService.StampSystemAccountOnItemByPathAsync(job.TargetSiteUrl, listId, rel, meta, force: true);
+                            if (err != null) result.ErrorMessage ??= err;
+                        }
+                        catch (OperationCanceledException) { throw; }
+                        catch (Exception ex) { result.ErrorMessage ??= ex.Message; }
+                    });
+                }
+            }
         }
         else
         {
@@ -1297,6 +1329,12 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     System.Diagnostics.Debug.WriteLine($"[CopyCurrentVersion] ApplyFileMetadata warning: {err}");
                     result.ErrorMessage ??= err;
                 }
+                // a person with no email (System Account, SharePoint App...) would otherwise stay the running account
+                if (!job.IsPage)
+                {
+                    var systemErr = await spService.StampSystemAccountOnItemAsync(job.TargetDriveId, targetItemId, metadata);
+                    if (systemErr != null) result.ErrorMessage ??= systemErr;
+                }
             }
         }
         // The date/author/column writes above each save the page again as a new minor (draft) version, which left a
@@ -1450,6 +1488,18 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 }
             }
         }
+        // The item's own people, last: a person with no email is stamped as the System Account (the writes above leave them out)
+        if (preserveMetadata && versions.Count > 0 && !string.IsNullOrEmpty(targetItemId) && !job.IsPage)
+        {
+            var systemErr = await spService.StampSystemAccountOnItemAsync(job.TargetDriveId, targetItemId, new FileMetadata
+            {
+                CreatedDateTime  = metadata.CreatedDateTime,
+                CreatedByEmail   = metadata.CreatedByEmail,
+                ModifiedDateTime = versions[^1].LastModifiedDateTime ?? metadata.ModifiedDateTime,
+                ModifiedByEmail  = metadata.ModifiedByEmail,
+            });
+            if (systemErr != null) result.ErrorMessage ??= systemErr;
+        }
         return targetItemId;
     }
 
@@ -1549,6 +1599,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             rootMeta.ModifiedDateTime.Value, rootMeta.CreatedDateTime));
                 ReportFolderIssue(rootPath, Loc.T("Svc_FolderIssueMetadata"),
                     await spService.ApplyFileMetadataAsync(job.TargetDriveId, rootTargetId, job.TargetSiteId, rootMeta));
+                ReportFolderIssue(rootPath, Loc.T("Svc_FolderIssueMetadata"),
+                    await spService.StampSystemAccountOnItemAsync(job.TargetDriveId, rootTargetId, rootMeta));
             }
 
             if (copyPermissions && permissionService != null && permissionResults != null)
@@ -1650,6 +1702,8 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 meta.ModifiedDateTime.Value, meta.CreatedDateTime));
                     ReportFolderIssue(targetPath, Loc.T("Svc_FolderIssueMetadata"),
                         await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetFolderId, job.TargetSiteId, meta));
+                    ReportFolderIssue(targetPath, Loc.T("Svc_FolderIssueMetadata"),
+                        await spService.StampSystemAccountOnItemAsync(job.TargetDriveId, targetFolderId, meta));
                 }
 
                 if (copyPermissions && permissionService != null && permissionResults != null)

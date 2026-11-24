@@ -501,7 +501,55 @@ public partial class MainWindow : Window
     private void ModeForms_Click(object sender, RoutedEventArgs e)
         => new FormsDialog(VM.AuthService, VM.TargetAuthService, VM.IsMultiTenant, VM.TargetRegistrationName) { Owner = this }.ShowDialog();
 
-    private void ModeFlows_Click(object sender, RoutedEventArgs e)
+    // The "permission missing" tip is the message an administrator needs; a tooltip cannot be selected, so it is copied from here.
+    private static void CopyTip(string tip)
+    {
+        try { if (tip.Length > 0) Clipboard.SetText(tip); } catch (System.Runtime.InteropServices.ExternalException) { /* clipboard busy */ }
+    }
+    private void CopyFormsTip_Click(object sender, RoutedEventArgs e) => CopyTip(VM.FormsBlockedTip);
+    private void CopyTeamsTip_Click(object sender, RoutedEventArgs e) => CopyTip(VM.TeamsBlockedTip);
+
+    private void ModeTeams_Click(object sender, RoutedEventArgs e)
+        => new TeamsDialog(VM.AuthService, VM.TargetAuthService, VM.IsMultiTenant,
+            VM.IsMultiTenant ? VM.Settings.TargetRegistration : VM.Settings.ActiveRegistration,   // single tenant: the one registration in use, even if a target index is left over from multi-tenant
+            () => VM.SpService.Identity,
+            (owner, users) =>
+            {
+                var dlg = new IdentityMappingDialog(VM.Settings, users,
+                    VM.CanCheckTargetUsers ? (email => VM.CheckTargetUserAsync(email)) : null) { Owner = owner };
+                if (dlg.ShowDialog() != true) return false;
+                VM.ApplyIdentityMapping();
+                return true;
+            },
+            VM.SpService, VM.CopyEngine, VM.MaxParallelCopies,
+            ct => VM.SignInSourceForToolsAsync(ct),
+            ct => VM.SignInTargetForToolsAsync(ct),
+            VM.Settings.ActiveRegistration,
+            (isSource, ct) => VM.GetConnectedRootAsync(isSource, ct)) { Owner = this }.ShowDialog();
+
+    private bool _openingFlows;
+
+    private async void ModeFlows_Click(object sender, RoutedEventArgs e)
+    {
+        if (_openingFlows) return;   // the permission check takes a moment: a double-click must not open two dialogs
+        _openingFlows = true;
+        try
+        {
+        // Packages need nothing beyond Graph; only live copy needs the Power Automate permissions, so a missing one
+        // disables just that option (with the reason) instead of the whole tool.
+        var liveBlockedTip = await VM.GetFlowsLiveBlockedTipAsync();
+        var dialog = CreateFlowsDialog();
+        if (liveBlockedTip is not null) dialog.DisableLiveCopy(liveBlockedTip);
+        dialog.ShowDialog();
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            MessageBox.Show(this, ex.Message, Title, MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+        finally { _openingFlows = false; }
+    }
+
+    private FlowsDialog CreateFlowsDialog()
         => new FlowsDialog(VM.SpService, (url, isSource, ct) => VM.PrepareSiteAccessAsync(url, isSource, ct),
             isSource => isSource || !VM.IsMultiTenant ? VM.SignedInUser : VM.TargetSignedInUser,   // single tenant: one shared sign-in
             isSource => (isSource ? VM.AuthService : VM.TargetAuthService).TenantId,
@@ -514,7 +562,7 @@ public partial class MainWindow : Window
             (isSource, ct) => (isSource || !VM.IsMultiTenant ? VM.AuthService : VM.TargetAuthService).GetFlowTokenAsync(ct),
             (isSource, ct) => (isSource || !VM.IsMultiTenant ? VM.AuthService : VM.TargetAuthService).GetPowerAppsTokenAsync(ct),
             VM.SourceUrl, VM.TargetUrl, VM.IsMultiTenant,
-            (isSource, org, ct) => (isSource || !VM.IsMultiTenant ? VM.AuthService : VM.TargetAuthService).GetDataverseTokenAsync(org, ct)) { Owner = this }.ShowDialog();
+            (isSource, org, ct) => (isSource || !VM.IsMultiTenant ? VM.AuthService : VM.TargetAuthService).GetDataverseTokenAsync(org, ct)) { Owner = this };
 
     // ── Step 4 Copy log column sorting ───────────────────────────────────────────
 

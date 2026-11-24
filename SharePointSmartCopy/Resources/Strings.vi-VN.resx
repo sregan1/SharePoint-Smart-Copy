@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} thư mục không có thông tin nhận dạng từ lần quét (không phải lỗi Graph) — chúng sẽ hiển thị ngày giữ chỗ. Đường dẫn: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} thư mục thất bại khi tra cứu siêu dữ liệu Graph — chúng sẽ hiển thị ngày giữ chỗ. Ví dụ: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ Không thể xác định ngày cho {0:N0} thư mục (tra cứu Graph thất bại sau các lần thử lại) — chúng sẽ hiển thị ngày giữ chỗ 2000-01-01 thay vì ngày nguồn thực</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} thư mục không có email Tác giả/Người sửa đổi ở nguồn — không thể sửa các thư mục đó, chúng sẽ hiển thị tài khoản nhập</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Đang sửa siêu dữ liệu thư mục (ngày + tác giả + màu) cho {0:N0}/{1:N0} thư mục...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: không thể phân giải GUID thư mục đích</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Đang sửa siêu dữ liệu thư mục: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>So sánh nguồn và đích</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Mở công cụ So sánh để đối chiếu bản sao này với nguồn.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Mở Lịch sử</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Đăng ký được chọn được dùng cho nguồn — và cho cả hai phía ở chế độ một tenant.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Đăng ký mới</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Hãy thêm ít nhất một đăng ký ứng dụng.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Xác thực</value></data>
@@ -1636,4 +1634,25 @@ Hủy: quay lại</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>Đã sao chép &apos;{0}&apos;, nhưng không thể khôi phục ngày và tác giả gốc cho {1} mục: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>Đã sao chép &apos;{0}&apos;, nhưng sau đó không tìm thấy bản sao để khôi phục ngày và tác giả của nó.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Đây là Bộ tài liệu thuộc loại &apos;{0}&apos;, nhưng thư viện đích không có loại nội dung đó và không thể thêm ({1}). Hãy thêm loại nội dung vào thư viện đích (Cài đặt thư viện, Cài đặt nâng cao, cho phép quản lý loại nội dung), rồi sao chép lại.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Công cụ Forms cần quyền được ủy quyền “Microsoft Forms”, mà bản đăng ký ứng dụng này không có. Trong cổng Azure, hãy mở bản đăng ký, vào Quyền API, thêm quyền này trong “API mà tổ chức của tôi sử dụng”, cấp sự đồng ý của quản trị viên rồi khởi động lại ứng dụng. Xem “Add API permissions” trong README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Công cụ Teams</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Duyệt nhóm và cuộc trò chuyện, đồng thời sao chép kênh và tệp của một nhóm</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Tải nhóm và cuộc trò chuyện</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Đang tải…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Đang đọc {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Cuộc trò chuyện</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Không tìm thấy nhóm nào cho tài khoản này.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Kênh tiêu chuẩn</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Kênh riêng tư</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Kênh dùng chung</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} thành viên</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>đã tìm thấy thư mục tệp</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>thư mục tệp không khả dụng</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>Đã tìm thấy {0} nhóm và {1} cuộc trò chuyện.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Không thể đọc Teams: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Công cụ Teams cần các quyền Microsoft Graph được ủy quyền sau mà bản đăng ký ứng dụng này không có: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All và Chat.Read. Trong cổng Azure, hãy mở bản đăng ký, vào Quyền API, thêm các quyền này, cấp sự đồng ý của quản trị viên rồi khởi động lại ứng dụng. Xem “Add API permissions” trong README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Sao chép trực tiếp cần các quyền Power Automate Service được ủy quyền Flows.Read.All và Flows.Manage.All, cùng PowerApps Service User, mà bản đăng ký ứng dụng này không có. Hãy thêm chúng trong Quyền API, cấp sự đồng ý của quản trị viên rồi khởi động lại ứng dụng. Việc sao chép từ gói đã xuất vẫn hoạt động mà không cần các quyền này.</value></data>
 </root>

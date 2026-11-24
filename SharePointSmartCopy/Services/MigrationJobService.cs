@@ -697,7 +697,9 @@ public class MigrationJobService(SharePointService spService)
                     var foldersNeedingAuthorFix = folderMetadata
                         .Where(kv => !string.IsNullOrEmpty(kv.Value.CreatedByEmail) || !string.IsNullOrEmpty(kv.Value.ModifiedByEmail)
                                   || !string.IsNullOrEmpty(kv.Value.ColorTag) || !string.IsNullOrEmpty(kv.Value.ColorHex)
-                                  || !string.IsNullOrEmpty(kv.Value.ContentTypeName))
+                                  || !string.IsNullOrEmpty(kv.Value.ContentTypeName)
+                                  // both people without an email: the pass still stamps them as the System Account (see PatchFolderMetadataAsync); not the library root, which has no folder item to write
+                                  || (!string.IsNullOrEmpty(kv.Key) && (kv.Value.CreatedDateTime != null || kv.Value.ModifiedDateTime != null)))
                         .ToList();
                     // Distinguish "we never had a source email to try" (folderMetadata's CreatedByEmail/
                     // ModifiedByEmail came back null — GetIdentityEmail found no email/UPN on the Graph
@@ -712,6 +714,10 @@ public class MigrationJobService(SharePointService spService)
                         .Count(kv => string.IsNullOrEmpty(kv.Value.CreatedByEmail) && string.IsNullOrEmpty(kv.Value.ModifiedByEmail));
                     if (foldersMissingSourceEmail > 0)
                         activityLog?.Report(Loc.T("Svc_Mig_FolderSHadNo2", foldersMissingSourceEmail));
+                    int foldersOnePersonMissing = folderMetadata
+                        .Count(kv => string.IsNullOrEmpty(kv.Value.CreatedByEmail) != string.IsNullOrEmpty(kv.Value.ModifiedByEmail));
+                    if (foldersOnePersonMissing > 0)
+                        activityLog?.Report(Loc.T("Svc_Mig_FolderOnePersonMissing", foldersOnePersonMissing));
                     if (foldersNeedingAuthorFix.Count == 0) return;
 
                     activityLog?.Report(Loc.T("Svc_Mig_CorrectingFolderMetadataDates", foldersNeedingAuthorFix.Count, folderMetadata.Count));
@@ -2600,6 +2606,13 @@ public class MigrationJobService(SharePointService spService)
             ? allVersions.TakeLast(maxVersions).ToList()
             : allVersions;
 
+        // The import takes a file's creator and Created date from its FIRST version, so a file whose Created By differs from that version's
+        // editor (content an earlier migration tool moved) needs a stamp afterwards, and so does one with a person that has no email.
+        if ((string.IsNullOrEmpty(metadata.CreatedByEmail) || string.IsNullOrEmpty(metadata.ModifiedByEmail)) && (metadata.CreatedDateTime != null || metadata.ModifiedDateTime != null))
+            result.PostImportMetadata = metadata;
+        else if (versions.Count > 1 && !string.IsNullOrEmpty(metadata.CreatedByEmail) &&
+                 !string.Equals(SharePointService.GetIdentityEmail(versions[0].LastModifiedBy?.User), metadata.CreatedByEmail, StringComparison.OrdinalIgnoreCase))
+            result.PostImportMetadata = metadata;
         result.VersionsTotal      = versions.Count;
         result.VersionsBytesTotal = versions.Sum(v => v.Size ?? metadata.Size ?? job.SourceSize ?? 0);
 

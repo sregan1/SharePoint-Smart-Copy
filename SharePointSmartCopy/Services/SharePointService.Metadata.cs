@@ -181,6 +181,67 @@ public partial class SharePointService
         catch { return (null, null); }
     }
 
+    // A person with no email (System Account, SharePoint App, a deleted account) is left out by the regular metadata writes, so the item
+    // keeps the running account. Stamp the System Account for each missing person (and the source dates again, so Modified is not
+    // bumped), like a file in a Migration API package does. Works for any list item (folder, Document Set or file); only the
+    // people that ARE known are sent again, because this write otherwise leaves those fields as the running account too.
+    public async Task<string?> StampSystemAccountOnItemAsync(string targetDriveId, string targetItemId, FileMetadata meta)
+    {
+        if (!NeedsSystemAccount(meta)) return null;
+        var ids = await GetSharePointIdsAsync(targetDriveId, targetItemId);
+        if (ids == null || !int.TryParse(ids.Value.listItemId, out var itemNo)) return null;
+        return await StampSystemAccountCoreAsync(ids.Value.siteUrl, ids.Value.listId, itemNo, meta);
+    }
+
+    // Same, for a Migration API file that has no Graph item id: found by its server-relative path in a known list.
+    public async Task<string?> StampSystemAccountOnItemByPathAsync(string siteUrl, string listId, string serverRelativeUrl, FileMetadata meta, bool force = false)
+    {
+        if (!force && !NeedsSystemAccount(meta)) return null;
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativePath(decodedurl='{Uri.EscapeDataString(serverRelativeUrl.Replace("'", "''"))}')/ListItemAllFields?$select=Id";
+        try
+        {
+            using var resp = await SendSharePointRequestAsync(token =>
+            {
+                var r = new HttpRequestMessage(HttpMethod.Get, url);
+                r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                r.Headers.Accept.ParseAdd("application/json;odata=nometadata");
+                return r;
+            }, siteUrl);
+            if (!resp.IsSuccessStatusCode) return $"System Account stamp: could not find the item (HTTP {(int)resp.StatusCode})";
+            using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
+            if (!doc.RootElement.TryGetProperty("Id", out var idEl)) return null;
+            return await StampSystemAccountCoreAsync(siteUrl, listId, idEl.GetInt32(), meta);
+        }
+        catch (Exception ex) when (ex is HttpRequestException or JsonException) { return "System Account stamp: " + ex.Message; }
+    }
+
+    private static bool NeedsSystemAccount(FileMetadata meta)
+        => (string.IsNullOrEmpty(meta.CreatedByEmail) || string.IsNullOrEmpty(meta.ModifiedByEmail))
+           && (meta.CreatedDateTime != null || meta.ModifiedDateTime != null);
+
+    private async Task<string?> StampSystemAccountCoreAsync(string siteUrl, string listId, int itemNo, FileMetadata meta)
+    {
+        bool author = string.IsNullOrEmpty(meta.CreatedByEmail), editor = string.IsNullOrEmpty(meta.ModifiedByEmail);
+        var systemId = await GetSystemAccountIdAsync(siteUrl);
+        async Task<int?> PersonIdAsync(string? email)
+        {
+            if (string.IsNullOrEmpty(email)) return null;
+            var mapped = Identity.MapEmail(email);
+            return string.IsNullOrEmpty(mapped) ? null : await EnsureUserAsync(siteUrl, mapped.Contains('|') ? mapped : "i:0#.f|membership|" + mapped);
+        }
+        int? authorId = author ? systemId : await PersonIdAsync(meta.CreatedByEmail);
+        int? editorId = editor ? systemId : await PersonIdAsync(meta.ModifiedByEmail);
+        return await PatchFolderViaCsomAsync(siteUrl, listId, itemNo, authorId, editorId, meta.CreatedDateTime, meta.ModifiedDateTime, null, null);
+    }
+
+    // The target site's System Account, the user a person with no email is stamped as. Its id is the same on every site, but ask the site
+    // first (ensureuser registers it) and fall back to the well-known id.
+    public const int WellKnownSystemAccountId = 1073741823;
+    private async Task<string?> GetSystemAccountLoginAsync(string siteUrl)
+        => await EnsureUserAsync(siteUrl, "SHAREPOINT\\system") != null && _ensuredLoginCache.TryGetValue($"{siteUrl}|SHAREPOINT\\system", out var login) ? login : null;
+    private async Task<int> GetSystemAccountIdAsync(string siteUrl)
+        => await EnsureUserAsync(siteUrl, "SHAREPOINT\\system") ?? WellKnownSystemAccountId;
+
     // Fetches each SOURCE folder's created/modified metadata for the migration manifest (folders
     // otherwise get a hardcoded placeholder date, which surfaced as a wrong "1999"/"2000" timestamp
     // on the target). `folders` maps a caller key (the folder's relative path) to a sample FILE item
@@ -718,6 +779,9 @@ public partial class SharePointService
                 var meta = await GetFileMetadataAsync(sourceDriveId, srcId);
                 var error = await ApplyFileMetadataAsync(targetDriveId, tgtId, "", meta);
                 if (error != null) problems.Add($"{label}: {error}");
+                // a person with no email (System Account, SharePoint App...) is otherwise left as the running account
+                var systemError = await StampSystemAccountOnItemAsync(targetDriveId, tgtId, meta);
+                if (systemError != null) problems.Add($"{label}: {systemError}");
             }
             catch (OperationCanceledException) { throw; }
             catch (Exception ex) { problems.Add($"{label}: {ex.Message}"); }
@@ -934,6 +998,13 @@ public partial class SharePointService
         // metadata with a single cheap REST call first; if it already matches the source, skip
         // EnsureUser/digest/CSOM entirely for that folder. Only a folder that's actually wrong (new,
         // never corrected, or somehow reverted) pays the full cost.
+        // A person with no email (System Account, SharePoint App, "Everyone"; Graph gives no address for them) used to be left out, so the
+        // folder kept the running account. A file falls back to the System Account in that case; a folder now does too, so Created By and
+        // Modified By are never silently replaced by whoever ran the copy. Only when the source gave this folder metadata at all.
+        bool hasSourceMetadata = createdDateTime != null || modifiedDateTime != null;
+        bool systemAuthor = hasSourceMetadata && string.IsNullOrEmpty(createdByEmail);
+        bool systemEditor = hasSourceMetadata && string.IsNullOrEmpty(modifiedByEmail);
+        int? systemAccountId = (systemAuthor || systemEditor) ? await GetSystemAccountIdAsync(siteUrl) : null;
         int folderItemId;
         // Whether the color write should even be attempted — unknown (assume yes, matching the
         // pre-existing author/date behavior in the fallback branch below) unless the fast-path read
@@ -942,10 +1013,10 @@ public partial class SharePointService
         var current = await GetFolderCurrentMetadataAsync(siteUrl, folderUniqueId);
         if (current != null)
         {
-            var (id, actualAuthorEmail, actualEditorEmail, actualCreated, actualModified, actualColorTag, actualColorHex) = current.Value;
+            var (id, actualAuthorEmail, actualEditorEmail, actualCreated, actualModified, actualColorTag, actualColorHex, actualAuthorId, actualEditorId) = current.Value;
             folderItemId = id;
-            bool authorOk = string.IsNullOrEmpty(createdByEmail) || EmailsMatch(actualAuthorEmail, createdByEmail);
-            bool editorOk = string.IsNullOrEmpty(modifiedByEmail) || EmailsMatch(actualEditorEmail, modifiedByEmail);
+            bool authorOk = systemAuthor ? actualAuthorId == systemAccountId : string.IsNullOrEmpty(createdByEmail) || EmailsMatch(actualAuthorEmail, createdByEmail);
+            bool editorOk = systemEditor ? actualEditorId == systemAccountId : string.IsNullOrEmpty(modifiedByEmail) || EmailsMatch(actualEditorEmail, modifiedByEmail);
             bool createdOk = createdDateTime == null || DatesClose(actualCreated, createdDateTime.Value);
             bool modifiedOk = modifiedDateTime == null || DatesClose(actualModified, modifiedDateTime.Value);
             bool colorOk = (string.IsNullOrEmpty(colorTag) || string.Equals(actualColorTag, colorTag, StringComparison.OrdinalIgnoreCase))
@@ -1009,7 +1080,7 @@ public partial class SharePointService
             {
                 skipped.Add(Loc.T("Svc_Sp_AuthorNotAResolvable", createdByEmail));
                 resolvedCreatedBy = null;
-                if (IsCrossTenant || createdByEmail.Contains('|')) Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
+                Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
             }
         }
         if (!string.IsNullOrEmpty(modifiedByEmail))
@@ -1026,10 +1097,13 @@ public partial class SharePointService
                 {
                     skipped.Add(Loc.T("Svc_Sp_EditorNotAResolvable", modifiedByEmail));
                     resolvedModifiedBy = null;
-                    if (IsCrossTenant || modifiedByEmail.Contains('|')) Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
+                    Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
                 }
             }
         }
+
+        if (systemAuthor) createdById = systemAccountId;
+        if (systemEditor) modifiedById = systemAccountId;
 
         if (createdById == null && modifiedById == null && createdDateTime == null && modifiedDateTime == null && !needsColorWrite)
             return (skipped.Count > 0 ? Loc.T("Svc_Sp_NothingToWriteSkipped", string.Join(", ", skipped)) : null, null);
@@ -1298,7 +1372,7 @@ public partial class SharePointService
     // null on any failure so the caller can fall back to the old (slower but proven) resolution.
     // The color fields simply come back null if FolderColorTagFieldName/FolderColorHexFieldName
     // don't exist on this list — same "absent means no value" contract as everywhere else.
-    private async Task<(int ItemId, string? AuthorEmail, string? EditorEmail, DateTimeOffset? Created, DateTimeOffset? Modified, string? ColorTag, string? ColorHex)?>
+    private async Task<(int ItemId, string? AuthorEmail, string? EditorEmail, DateTimeOffset? Created, DateTimeOffset? Modified, string? ColorTag, string? ColorHex, int? AuthorId, int? EditorId)?>
         GetFolderCurrentMetadataAsync(string siteUrl, string folderUniqueId)
     {
         try
@@ -1311,7 +1385,7 @@ public partial class SharePointService
             // the folders that need correcting, never the optimization itself.
             string BuildUrl(bool withColor) =>
                 $"{siteUrl.TrimEnd('/')}/_api/web/GetFolderById('{folderUniqueId}')/ListItemAllFields" +
-                "?$select=Id,Author/EMail,Editor/EMail,Created,Modified" +
+                "?$select=Id,Author/EMail,Author/Id,Editor/EMail,Editor/Id,Created,Modified" +
                 (withColor ? $",{FolderColorTagODataName},{FolderColorHexODataName}" : "") +
                 "&$expand=Author,Editor";
 
@@ -1363,8 +1437,10 @@ public partial class SharePointService
                     : null;
             string? colorTag = ReadColor(root, FolderColorTagODataName);
             string? colorHex = ReadColor(root, FolderColorHexODataName);
+            int? authorId = root.TryGetProperty("Author", out var ao) && ao.ValueKind == JsonValueKind.Object && ao.TryGetProperty("Id", out var aid) && aid.ValueKind == JsonValueKind.Number ? aid.GetInt32() : null;
+            int? editorId = root.TryGetProperty("Editor", out var eo) && eo.ValueKind == JsonValueKind.Object && eo.TryGetProperty("Id", out var eid) && eid.ValueKind == JsonValueKind.Number ? eid.GetInt32() : null;
 
-            return (idEl.GetInt32(), authorEmail, editorEmail, created, modified, colorTag, colorHex);
+            return (idEl.GetInt32(), authorEmail, editorEmail, created, modified, colorTag, colorHex, authorId, editorId);
         }
         catch { return null; }
     }
@@ -1379,7 +1455,7 @@ public partial class SharePointService
     {
         var m = await GetFolderCurrentMetadataAsync(siteUrl, folderUniqueId);
         if (m == null) return null;
-        var (_, authorEmail, editorEmail, created, modified, colorTag, colorHex) = m.Value;
+        var (_, authorEmail, editorEmail, created, modified, colorTag, colorHex, _, _) = m.Value;
         return new FileMetadata
         {
             CreatedDateTime  = created,
@@ -1492,8 +1568,9 @@ public partial class SharePointService
             createdLogin = await ResolveTargetLoginAsync(siteUrl, createdByEmail);
             if (createdLogin == null)
             {
-                if (IsCrossTenant || createdByEmail.Contains('|')) Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
-                else createdLogin = $"i:0#.f|membership|{createdByEmail}";
+                // ResolveTargetLoginAsync already tried to register the person on the site, so the plain claims form would only be
+                // rejected ("no exact match") and take the dates with it: leave the person out, record them, keep the dates.
+                Unresolved.Record(sourceCreatedBy, createdByEmail, "author");
             }
         }
         if (!string.IsNullOrEmpty(modifiedByEmail))
@@ -1501,10 +1578,14 @@ public partial class SharePointService
             modifiedLogin = await ResolveTargetLoginAsync(siteUrl, modifiedByEmail);
             if (modifiedLogin == null)
             {
-                if (IsCrossTenant || modifiedByEmail.Contains('|')) Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
-                else modifiedLogin = $"i:0#.f|membership|{modifiedByEmail}";
+                Unresolved.Record(sourceModifiedBy, modifiedByEmail, "editor");
             }
         }
+        // This write (ValidateUpdateListItem) does not apply Author on its own: with Editor missing the item keeps the running account as
+        // BOTH. So when only the author resolved, the editor goes with it: the System Account when the source editor has no email,
+        // otherwise the author (the editor could not be resolved here, for instance a deleted account).
+        if (!string.IsNullOrEmpty(createdLogin) && string.IsNullOrEmpty(modifiedLogin))
+            modifiedLogin = string.IsNullOrEmpty(modifiedByEmail) ? await GetSystemAccountLoginAsync(siteUrl) ?? createdLogin : createdLogin;
         if (modified.HasValue)
             values.Add(("Modified", await FormatAsSiteLocalDateStringAsync(siteUrl, modified.Value)));
         if (created.HasValue)

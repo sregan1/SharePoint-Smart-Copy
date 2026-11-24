@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} klasörün taramadan kimliği yok (Graph hatası değil) — yer tutucu tarih gösterecekler. Yol(lar): {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} klasör Graph meta veri aramasında başarısız oldu — yer tutucu tarih gösterecekler. Örnek(ler): {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} klasörün tarihi belirlenemedi (Graph araması yeniden denemelerden sonra başarısız oldu) — gerçek kaynak tarihleri yerine 2000-01-01 yer tutucu tarihini gösterecekler</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} klasör için kaynak Yazar/Değiştiren e-postası yok — bunlar düzeltilemez, içe aktaran hesabı gösterecekler</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>{1:N0} klasörden {0:N0} tanesinin meta verileri (tarihler + yazarlık + renk) düzeltiliyor...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: hedef klasör GUID'i çözümlenemedi</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Klasör meta verileri düzeltiliyor: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Kaynağı ve hedefi karşılaştır</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Bu kopyayı kaynakla karşılaştırmak için Karşılaştır aracını açın.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Geçmiş&apos;i Aç</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Seçili kayıt kaynak için kullanılır — tek kiracı modunda ise her iki taraf için.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Yeni Kayıt</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>En az bir uygulama kaydı ekleyin.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Doğrulama</value></data>
@@ -1636,4 +1634,25 @@ Hayır: önce kullanıcı eşlemesini aç
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>&apos;{0}&apos; kopyalandı, ancak {1} öğe için özgün tarihler ve yazarlar geri yüklenemedi: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>&apos;{0}&apos; kopyalandı, ancak tarihlerini ve yazarlarını geri yüklemek için kopya sonradan bulunamadı.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Bu, &apos;{0}&apos; türünde bir Belge Kümesi, ancak hedef kitaplıkta bu içerik türü yok ve eklenemedi ({1}). İçerik türünü hedef kitaplığa ekleyin (Kitaplık ayarları, Gelişmiş ayarlar, içerik türlerinin yönetimine izin ver) ve yeniden kopyalayın.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Forms aracı, bu uygulama kaydında bulunmayan “Microsoft Forms” temsilci iznini gerektirir. Azure portalında kaydı açın, API izinleri bölümüne gidin, “Kuruluşumun kullandığı API’ler” altına ekleyin, yönetici onayı verin ve uygulamayı yeniden başlatın. README’deki “Add API permissions” bölümüne bakın.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Teams aracı</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Ekiplere ve sohbetlere göz atın, bir ekibin kanallarını ve dosyalarını kopyalayın</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Ekipleri ve sohbetleri yükle</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Yükleniyor…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>{0} okunuyor…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Sohbetler</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Bu hesap için ekip bulunamadı.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Standart kanal</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Özel kanal</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Paylaşılan kanal</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} üye</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>dosya klasörü bulundu</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>dosya klasörü kullanılamıyor</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>{0} ekip ve {1} sohbet bulundu.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Teams okunamadı: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Teams aracı, bu uygulama kaydında bulunmayan şu temsilci Microsoft Graph izinlerini gerektirir: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All ve Chat.Read. Azure portalında kaydı açın, API izinleri bölümüne gidin, bunları ekleyin, yönetici onayı verin ve uygulamayı yeniden başlatın. README’deki “Add API permissions” bölümüne bakın.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Canlı kopyalama, bu uygulama kaydında bulunmayan Power Automate Service temsilci izinleri Flows.Read.All ve Flows.Manage.All ile PowerApps Service User iznini gerektirir. Bunları API izinleri bölümünde ekleyin, yönetici onayı verin ve uygulamayı yeniden başlatın. Dışa aktarılan paketlerden kopyalama bunlar olmadan da çalışır.</value></data>
 </root>

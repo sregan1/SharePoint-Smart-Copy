@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} 個資料夾在掃描中沒有身分識別 (並非 Graph 失敗) — 它們將顯示預留位置日期。路徑: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} 個資料夾的 Graph 中繼資料查詢失敗 — 它們將顯示預留位置日期。範例: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} 個資料夾無法取得日期 (Graph 查詢在重試後失敗) — 它們將顯示 2000-01-01 預留位置日期,而非實際的來源日期</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} 個資料夾沒有可用的來源作者/修改者電子郵件 — 無法修正這些資料夾,它們將顯示匯入帳戶</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>正在修正 {1:N0} 個資料夾中 {0:N0} 個的資料夾中繼資料 (日期 + 作者 + 色彩)...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: 無法解析目標資料夾 GUID</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>正在修正資料夾中繼資料: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>比較來源與目標</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>開啟「比較」工具,對照來源檢查此次複製。</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>開啟記錄</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>所選註冊用於來源 — 在單一租用戶模式下也用於兩端。</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>新註冊</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>請至少新增一個應用程式註冊。</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>驗證</value></data>
@@ -1636,4 +1634,25 @@
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>已複製「{0}」，但無法為 {1} 個項目還原原始日期和作者: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>已複製「{0}」，但之後找不到複本，無法還原其日期和作者。</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>這是類型為「{0}」的文件集，但目標文件庫沒有該內容類型，且無法新增({1})。請將該內容類型新增至目標文件庫(文件庫設定、進階設定、允許管理內容類型)，然後重新複製。</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Forms 工具需要委派權限「Microsoft Forms」，但此應用程式註冊中沒有該權限。請在 Azure 入口網站中開啟該註冊，前往「API 權限」，在「我的組織使用的 API」下新增，授與管理員同意，然後重新啟動應用程式。請參閱 README 中的「Add API permissions」。</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Teams 工具</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>瀏覽團隊和聊天，並複製團隊的頻道和檔案</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>載入團隊和聊天</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>正在載入…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>正在讀取 {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>聊天</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>找不到此帳戶的團隊。</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>標準頻道</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>私人頻道</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>共用頻道</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} 位成員</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>已找到檔案資料夾</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>檔案資料夾無法使用</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>找到 {0} 個團隊和 {1} 個聊天。</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>無法讀取 Teams：{0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Teams 工具需要下列委派的 Microsoft Graph 權限，但此應用程式註冊中沒有：Team.ReadBasic.All、Channel.ReadBasic.All、TeamMember.Read.All 和 Chat.Read。請在 Azure 入口網站中開啟該註冊，前往「API 權限」，新增這些權限，授與管理員同意，然後重新啟動應用程式。請參閱 README 中的「Add API permissions」。</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>即時複製需要委派的 Power Automate Service 權限 Flows.Read.All 和 Flows.Manage.All，以及 PowerApps Service User，但此應用程式註冊中沒有這些權限。請在「API 權限」中新增，授與管理員同意，然後重新啟動應用程式。從匯出的封裝進行複製不需要這些權限。</value></data>
 </root>

@@ -155,6 +155,14 @@
                     <TextBox FlowDirection="LeftToRight" Text="{Binding TenantId, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Text="{loc:Loc Ui_UseCommonForMultiTenant}"
                                Foreground="{DynamicResource TextTertiaryBrush}" FontSize="11" Margin="0,4,0,0"/>
+                    <TextBlock Text="{loc:Loc Ui_ClientSecretTeams}" Style="{StaticResource FieldLabel}" Margin="0,10,0,0"/>
+                    <PasswordBox x:Name="SecretBox" FlowDirection="LeftToRight" PasswordChanged="SecretBox_PasswordChanged"/>
+                    <StackPanel x:Name="SecretSavedHint" Orientation="Horizontal" Visibility="Collapsed" Margin="0,4,0,0">
+                        <TextBlock Text="{loc:Loc Ui_ClientSecretSaved}" Foreground="{DynamicResource TextTertiaryBrush}" FontSize="11" VerticalAlignment="Center"/>
+                        <Button Style="{StaticResource LinkBtn}" Content="{loc:Loc Ui_ClientSecretClear}" Click="ClearSecret_Click" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <TextBlock Text="{loc:Loc Ui_ClientSecretTeamsHint}" TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextTertiaryBrush}" FontSize="11" Margin="0,4,0,0"/>
                 </StackPanel>
 
                 <!-- Setup instructions -->

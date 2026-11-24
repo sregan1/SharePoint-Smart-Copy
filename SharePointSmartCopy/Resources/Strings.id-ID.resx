@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} folder tidak memiliki identitas dari pemindaian (bukan kegagalan Graph) — akan menampilkan tanggal placeholder. Jalur: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} folder gagal pada pencarian metadata Graph — akan menampilkan tanggal placeholder. Contoh: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} folder tidak dapat diberi tanggal (pencarian Graph gagal setelah percobaan ulang) — akan menampilkan tanggal placeholder 2000-01-01, bukan tanggal sumber yang sebenarnya</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} folder tidak memiliki email Author/Modified-By sumber — tidak dapat dikoreksi, akan menampilkan akun pengimpor</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Mengoreksi metadata folder (tanggal + penulis + warna) untuk {0:N0} dari {1:N0} folder...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: GUID folder target tidak dapat ditentukan</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Mengoreksi metadata folder: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Bandingkan sumber &amp; target</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Buka alat Bandingkan untuk memeriksa salinan ini terhadap sumber.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Buka Riwayat</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Registrasi yang dipilih digunakan untuk sumber — dan untuk kedua sisi dalam mode satu tenant.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Registrasi Baru</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Tambahkan setidaknya satu registrasi aplikasi.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validasi</value></data>
@@ -1636,4 +1634,25 @@ Batal: kembali</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>&apos;{0}&apos; telah disalin, tetapi tanggal dan penulis asli tidak dapat dipulihkan untuk {1} item: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>&apos;{0}&apos; telah disalin, tetapi salinannya tidak dapat ditemukan setelahnya untuk memulihkan tanggal dan penulisnya.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Ini adalah Set Dokumen bertipe &apos;{0}&apos;, tetapi pustaka target tidak memiliki tipe konten tersebut dan tipe itu tidak dapat ditambahkan ({1}). Tambahkan tipe konten ke pustaka target (Pengaturan pustaka, Pengaturan lanjutan, izinkan pengelolaan tipe konten), lalu salin lagi.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Alat Forms memerlukan izin terdelegasi “Microsoft Forms”, yang tidak dimiliki pendaftaran aplikasi ini. Di portal Azure, buka pendaftaran, masuk ke Izin API, tambahkan di bawah “API yang digunakan organisasi saya”, berikan persetujuan admin, lalu mulai ulang aplikasi. Lihat “Add API permissions” di README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Alat Teams</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Jelajahi tim dan obrolan, lalu salin saluran dan file sebuah tim</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Muat tim dan obrolan</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Memuat…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Membaca {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Obrolan</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Tidak ada tim yang ditemukan untuk akun ini.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Saluran standar</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Saluran privat</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Saluran bersama</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} anggota</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>folder file ditemukan</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>folder file tidak tersedia</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>Ditemukan {0} tim dan {1} obrolan.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Tidak dapat membaca Teams: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Alat Teams memerlukan izin terdelegasi Microsoft Graph berikut, yang tidak dimiliki pendaftaran aplikasi ini: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All, dan Chat.Read. Di portal Azure, buka pendaftaran, masuk ke Izin API, tambahkan, berikan persetujuan admin, lalu mulai ulang aplikasi. Lihat “Add API permissions” di README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Penyalinan langsung memerlukan izin terdelegasi Power Automate Service Flows.Read.All dan Flows.Manage.All, serta PowerApps Service User, yang tidak dimiliki pendaftaran aplikasi ini. Tambahkan di Izin API, berikan persetujuan admin, lalu mulai ulang aplikasi. Penyalinan dari paket yang diekspor berfungsi tanpa izin tersebut.</value></data>
 </root>

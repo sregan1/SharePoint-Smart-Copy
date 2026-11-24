@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} mappához nem tartozott azonosító a vizsgálatból (nem Graph-hiba) – helyőrző dátumot fognak mutatni. Elérési utak: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} mappánál sikertelen volt a Graph metaadat-lekérdezés – helyőrző dátumot fognak mutatni. Példák: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} mappa dátuma nem állapítható meg (a Graph-lekérdezés az újrapróbálkozások után sem sikerült) – a valódi forrásdátum helyett 2000-01-01 helyőrző dátumot fognak mutatni</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} mappánál nem érhető el a forrás szerzőjének/módosítójának e-mail-címe – ezek nem javíthatók, az importáló fiókot fogják mutatni</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Mappametaadatok javítása (dátumok + szerzőség + szín) {0:N0} / {1:N0} mappánál...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: a célmappa GUID-ja nem oldható fel</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Mappametaadatok javítása: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Forrás és cél összehasonlítása</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Megnyitja az Összehasonlítás eszközt, hogy ellenőrizze ezt a másolatot a forráshoz képest.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Előzmények megnyitása</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>A kiválasztott regisztrációt a forrás használja – egybérlős módban mindkét oldal.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Új regisztráció</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Adjon hozzá legalább egy alkalmazásregisztrációt.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Érvényesítés</value></data>
@@ -1636,4 +1634,25 @@ Mégse: vissza</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>A(z) &apos;{0}&apos; másolása megtörtént, de az eredeti dátumokat és szerzőket nem sikerült visszaállítani {1} elemnél: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>A(z) &apos;{0}&apos; másolása megtörtént, de a másolat utólag nem található, így a dátumai és szerzői nem állíthatók vissza.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Ez egy &apos;{0}&apos; típusú dokumentumcsomag, de a célkönyvtárban nincs meg ez a tartalomtípus, és nem sikerült hozzáadni ({1}). Adja hozzá a tartalomtípust a célkönyvtárhoz (Könyvtárbeállítások, Speciális beállítások, tartalomtípusok kezelésének engedélyezése), majd másoljon újra.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>A Forms eszközhöz szükség van a delegált „Microsoft Forms” engedélyre, amellyel ez az alkalmazásregisztráció nem rendelkezik. Nyissa meg a regisztrációt az Azure Portalon, lépjen az API-engedélyek részre, adja hozzá a „Szervezetem által használt API-k” alatt, adjon rendszergazdai hozzájárulást, majd indítsa újra az alkalmazást. Lásd az „Add API permissions” részt a README-ben.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Teams-eszköz</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Csapatok és csevegések böngészése, valamint egy csapat csatornáinak és fájljainak másolása</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Csapatok és csevegések betöltése</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Betöltés…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>{0} olvasása…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Csevegések</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Ehhez a fiókhoz nem található csapat.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Standard csatorna</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Privát csatorna</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Megosztott csatorna</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} tag</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>fájlmappa megtalálva</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>a fájlmappa nem érhető el</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>{0} csapat és {1} csevegés található.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>A Teams nem olvasható: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>A Teams eszközhöz szükség van ezekre a delegált Microsoft Graph-engedélyekre, amelyekkel ez az alkalmazásregisztráció nem rendelkezik: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All és Chat.Read. Nyissa meg a regisztrációt az Azure Portalon, lépjen az API-engedélyek részre, adja hozzá őket, adjon rendszergazdai hozzájárulást, majd indítsa újra az alkalmazást. Lásd az „Add API permissions” részt a README-ben.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Az élő másoláshoz szükség van a delegált Power Automate Service engedélyekre (Flows.Read.All és Flows.Manage.All), valamint a PowerApps Service User engedélyre, amelyekkel ez az alkalmazásregisztráció nem rendelkezik. Adja hozzá őket az API-engedélyeknél, adjon rendszergazdai hozzájárulást, majd indítsa újra az alkalmazást. Az exportált csomagokból való másolás ezek nélkül is működik.</value></data>
 </root>

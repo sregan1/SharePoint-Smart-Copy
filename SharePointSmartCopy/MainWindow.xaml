@@ -190,6 +190,12 @@
                             <Trigger Property="IsKeyboardFocused" Value="True">
                                 <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
                             </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.45"/>
+                                <Setter TargetName="Bd" Property="Background" Value="Transparent"/>
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource BorderLightBrush}"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -726,7 +732,22 @@
                         </Grid>
                     </Button>
 
-                    <Button Style="{StaticResource ToolButton}" Click="ModeForms_Click" AutomationProperties.Name="{loc:Loc Forms_AutoTile}">
+                    <Button Style="{StaticResource ToolButton}" Click="ModeForms_Click" AutomationProperties.Name="{loc:Loc Forms_AutoTile}"
+                            IsEnabled="{Binding FormsAvailable}"
+                            ToolTipService.ShowOnDisabled="True" ContextMenuService.ShowOnDisabled="True" ToolTipService.IsEnabled="{Binding FormsAvailable, Converter={StaticResource InvBool}}" ContextMenuService.IsEnabled="{Binding FormsAvailable, Converter={StaticResource InvBool}}">
+                        <Button.ToolTip>
+                            <ToolTip MaxWidth="360">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding FormsBlockedTip}" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{loc:Loc Tool_CopyForAdminHint}" TextWrapping="Wrap" Margin="0,6,0,0" FontStyle="Italic"/>
+                                </StackPanel>
+                            </ToolTip>
+                        </Button.ToolTip>
+                        <Button.ContextMenu>
+                            <ContextMenu ContextMenuService.ShowOnDisabled="True">
+                                <MenuItem Header="{loc:Loc Tool_CopyForAdmin}" Click="CopyFormsTip_Click"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -752,6 +773,35 @@
                             <StackPanel Grid.Column="1">
                                 <TextBlock Text="{loc:Loc Flows_TileTitle}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
                                 <TextBlock Text="{loc:Loc Flows_TileDesc}" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextTertiaryBrush}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Button>
+
+                    <Button Style="{StaticResource ToolButton}" Click="ModeTeams_Click" AutomationProperties.Name="{loc:Loc Teams_AutoTile}"
+                            ToolTipService.ShowOnDisabled="True" ContextMenuService.ShowOnDisabled="True" ToolTipService.IsEnabled="{Binding TeamsPermissionWarning}" ContextMenuService.IsEnabled="{Binding TeamsPermissionWarning}">
+                        <Button.ToolTip>
+                            <ToolTip MaxWidth="360">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding TeamsBlockedTip}" TextWrapping="Wrap"/>
+                                    <TextBlock Text="{loc:Loc Tool_CopyForAdminHint}" TextWrapping="Wrap" Margin="0,6,0,0" FontStyle="Italic"/>
+                                </StackPanel>
+                            </ToolTip>
+                        </Button.ToolTip>
+                        <Button.ContextMenu>
+                            <ContextMenu ContextMenuService.ShowOnDisabled="True">
+                                <MenuItem Header="{loc:Loc Tool_CopyForAdmin}" Click="CopyTeamsTip_Click"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE902;" Style="{StaticResource GlyphIcon}" FontSize="18" Margin="0,0,10,0"
+                                       VerticalAlignment="Top" Foreground="{DynamicResource AccentBrush}"/>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="{loc:Loc Teams_TileTitle}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}"/>
+                                <TextBlock Text="{loc:Loc Teams_TileDesc}" FontSize="11" TextWrapping="Wrap" Foreground="{DynamicResource TextTertiaryBrush}"/>
                             </StackPanel>
                         </Grid>
                     </Button>

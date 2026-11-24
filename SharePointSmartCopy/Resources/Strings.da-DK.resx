@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} mappe(r) havde ingen identitet fra scanningen (ikke en Graph-fejl) – de viser en pladsholderdato. Sti(er): {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} mappe(r) mislykkedes ved Graph-metadataopslaget – de viser en pladsholderdato. Eksempel(er): {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} mappe(r) kunne ikke dateres (Graph-opslag mislykkedes efter genforsøg) – de viser pladsholderdatoen 01-01-2000 i stedet for deres rigtige kildedato</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} mappe(r) havde ingen tilgængelig e-mail for forfatter/ændret af i kilden – disse kan ikke rettes og viser den importerende konto</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Retter mappemetadata (datoer, forfatterskab, farve) for {0:N0} af {1:N0} mappe(r)...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: kunne ikke opløse målmappens GUID</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Retter mappemetadata: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Sammenlign kilde og mål</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Åbn værktøjet Sammenlign for at kontrollere denne kopi mod kilden.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Åbn Historik</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Den valgte registrering bruges til kilden – og til begge sider i tilstanden Enkelt lejer.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Ny registrering</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Tilføj mindst én appregistrering.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validering</value></data>
@@ -1636,4 +1634,25 @@ Annuller: gå tilbage</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>&apos;{0}&apos; blev kopieret, men de oprindelige datoer og forfattere kunne ikke gendannes for {1} element(er): {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>&apos;{0}&apos; blev kopieret, men kopien kunne ikke findes bagefter for at gendanne dens datoer og forfattere.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Dette er et dokumentsæt af typen &apos;{0}&apos;, men målbiblioteket har ikke den indholdstype, og den kunne ikke tilføjes ({1}). Tilføj indholdstypen til målbiblioteket (Biblioteksindstillinger, Avancerede indstillinger, tillad administration af indholdstyper), og kopier derefter igen.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Forms-værktøjet kræver den delegerede tilladelse „Microsoft Forms“, som denne appregistrering ikke har. Åbn registreringen i Azure-portalen, gå til API-tilladelser, tilføj den under „API&apos;er, som min organisation bruger“, giv administratorsamtykke, og genstart appen. Se „Add API permissions“ i README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Teams-værktøj</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Gennemse teams og chats, og kopiér et teams kanaler og filer</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Indlæs teams og chats</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Indlæser…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Læser {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Chats</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Der blev ikke fundet nogen teams for denne konto.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Standardkanal</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Privat kanal</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Delt kanal</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} medlemmer</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>filmappe fundet</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>filmappe ikke tilgængelig</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>Fandt {0} teams og {1} chats.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Teams kunne ikke læses: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Teams-værktøjet kræver disse delegerede Microsoft Graph-tilladelser, som denne appregistrering ikke har: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All og Chat.Read. Åbn registreringen i Azure-portalen, gå til API-tilladelser, tilføj dem, giv administratorsamtykke, og genstart appen. Se „Add API permissions“ i README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Live-kopiering kræver de delegerede Power Automate Service-tilladelser Flows.Read.All og Flows.Manage.All samt PowerApps Service User, som denne appregistrering ikke har. Tilføj dem under API-tilladelser, giv administratorsamtykke, og genstart appen. Kopiering fra eksporterede pakker virker uden dem.</value></data>
 </root>

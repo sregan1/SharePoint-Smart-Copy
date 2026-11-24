@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} folder(e) nu au avut identitate din scanare (nu este o eroare Graph) — vor afișa o dată provizorie. Cale/căi: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} folder(e) au eșuat la căutarea metadatelor în Graph — vor afișa o dată provizorie. Exemplu/exemple: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} folder(e) nu au putut fi datate (căutarea în Graph a eșuat după reîncercări) — vor afișa data provizorie 2000-01-01 în loc de data reală din sursă</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} folder(e) nu au avut disponibil e-mailul autorului/modificatorului din sursă — nu pot fi corectate, vor afișa contul care importă</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Se corectează metadatele folderelor (date + autor + culoare) pentru {0:N0} din {1:N0} folder(e)...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: GUID-ul folderului din destinație nu a putut fi rezolvat</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Se corectează metadatele folderelor: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Comparați sursa și destinația</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Deschide instrumentul Comparare pentru a verifica această copie față de sursă.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Deschideți Istoricul</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Înregistrarea selectată este folosită pentru sursă — și pentru ambele părți în modul tenant unic.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Înregistrare nouă</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Adăugați cel puțin o înregistrare de aplicație.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validare</value></data>
@@ -1636,4 +1634,25 @@ Anulare: înapoi</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>&apos;{0}&apos; a fost copiat, dar datele și autorii originali nu au putut fi restaurați pentru {1} element(e): {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>&apos;{0}&apos; a fost copiat, dar copia nu a putut fi găsită ulterior pentru a-i restaura datele și autorii.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Acesta este un set de documente de tipul &apos;{0}&apos;, dar biblioteca țintă nu are acel tip de conținut și acesta nu a putut fi adăugat ({1}). Adăugați tipul de conținut la biblioteca țintă (Setări bibliotecă, Setări avansate, permiteți gestionarea tipurilor de conținut), apoi copiați din nou.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Instrumentul Forms necesită permisiunea delegată „Microsoft Forms”, pe care această înregistrare de aplicație nu o are. În portalul Azure, deschideți înregistrarea, accesați Permisiuni API, adăugați-o la „API-urile folosite de organizația mea”, acordați consimțământul administratorului și reporniți aplicația. Consultați „Add API permissions” din README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Instrument Teams</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Răsfoiți echipele și conversațiile și copiați canalele și fișierele unei echipe</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Încărcați echipele și conversațiile</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Se încarcă…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Se citește {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Conversații</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Nu s-au găsit echipe pentru acest cont.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Canal standard</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Canal privat</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Canal partajat</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} membri</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>folder de fișiere găsit</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>folder de fișiere indisponibil</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>S-au găsit {0} echipe și {1} conversații.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Teams nu a putut fi citit: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Instrumentul Teams necesită aceste permisiuni delegate Microsoft Graph, pe care această înregistrare de aplicație nu le are: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All și Chat.Read. În portalul Azure, deschideți înregistrarea, accesați Permisiuni API, adăugați-le, acordați consimțământul administratorului și reporniți aplicația. Consultați „Add API permissions” din README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Copierea live necesită permisiunile delegate Power Automate Service Flows.Read.All și Flows.Manage.All, precum și PowerApps Service User, pe care această înregistrare de aplicație nu le are. Adăugați-le la Permisiuni API, acordați consimțământul administratorului și reporniți aplicația. Copierea din pachete exportate funcționează și fără ele.</value></data>
 </root>

@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} carpeta(s) no tenían identidad en el análisis (no es un error de Graph): mostrarán una fecha provisional. Ruta(s): {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} carpeta(s) fallaron en la consulta de metadatos de Graph: mostrarán una fecha provisional. Ejemplo(s): {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ No se pudo fechar {0:N0} carpeta(s) (la consulta de Graph falló tras los reintentos): mostrarán la fecha provisional 2000-01-01 en lugar de su fecha real de origen</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} carpeta(s) no tenían correo del autor/modificador de origen disponible: no se pueden corregir y mostrarán la cuenta que importa</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Corrigiendo los metadatos de carpeta (fechas + autoría + color) de {0:N0} de {1:N0} carpeta(s)...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: no se pudo resolver el GUID de la carpeta de destino</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Corrigiendo metadatos de carpetas: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Comparar origen y destino</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Abre la herramienta Comparar para contrastar esta copia con el origen.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Abrir Historial</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>El registro seleccionado se usa para el origen y, en modo de un solo inquilino, para ambos lados.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Nuevo registro</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Agregue al menos un registro de aplicación.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validación</value></data>
@@ -1636,4 +1634,25 @@ Cancelar: volver</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>Se copió &apos;{0}&apos;, pero no se pudieron restaurar las fechas y los autores originales de {1} elemento(s): {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>Se copió &apos;{0}&apos;, pero después no se encontró la copia para restaurar sus fechas y autores.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Este es un conjunto de documentos de tipo &apos;{0}&apos;, pero la biblioteca de destino no tiene ese tipo de contenido y no se pudo agregar ({1}). Agregue el tipo de contenido a la biblioteca de destino (Configuración de la biblioteca, Configuración avanzada, permitir la administración de tipos de contenido) y vuelva a copiar.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>La herramienta Forms necesita el permiso delegado «Microsoft Forms», que este registro de aplicación no tiene. En Azure Portal abra el registro, vaya a Permisos de API, agréguelo en «API que usa mi organización», conceda el consentimiento del administrador y reinicie la aplicación. Consulte «Add API permissions» en el README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Herramienta Teams</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Explore equipos y chats, y copie los canales y archivos de un equipo</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Cargar equipos y chats</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Cargando…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Leyendo {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Chats</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>No se encontraron equipos para esta cuenta.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Canal estándar</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Canal privado</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Canal compartido</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} miembros</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>carpeta de archivos encontrada</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>carpeta de archivos no disponible</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>Se encontraron {0} equipos y {1} chats.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>No se pudo leer Teams: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>La herramienta Teams necesita estos permisos delegados de Microsoft Graph, que este registro de aplicación no tiene: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All y Chat.Read. En Azure Portal abra el registro, vaya a Permisos de API, agréguelos, conceda el consentimiento del administrador y reinicie la aplicación. Consulte «Add API permissions» en el README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>La copia en vivo necesita los permisos delegados de Power Automate Service Flows.Read.All y Flows.Manage.All, además de PowerApps Service User, que este registro de aplicación no tiene. Agréguelos en Permisos de API, conceda el consentimiento del administrador y reinicie la aplicación. La copia desde paquetes exportados funciona sin ellos.</value></data>
 </root>

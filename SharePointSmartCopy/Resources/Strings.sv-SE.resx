@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} mapp(ar) hade ingen identitet från genomsökningen (inte ett Graph-fel) – de visar ett platshållardatum. Sökväg(ar): {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} mapp(ar) misslyckades vid Graph-metadatauppslagningen – de visar ett platshållardatum. Exempel: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} mapp(ar) kunde inte dateras (Graph-uppslagning misslyckades efter nya försök) – de visar platshållardatumet 2000-01-01 i stället för sitt riktiga källdatum</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} mapp(ar) hade ingen tillgänglig e-postadress för författare/ändrad av i källan – dessa kan inte korrigeras och visar det importerande kontot</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Korrigerar mappmetadata (datum, författarskap, färg) för {0:N0} av {1:N0} mapp(ar)...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: det gick inte att matcha målmappens GUID</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Korrigerar mappmetadata: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Jämför källa och mål</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Öppna verktyget Jämför för att kontrollera den här kopian mot källan.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Öppna Historik</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Den valda registreringen används för källan – och för båda sidor i läget en klientorganisation.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Ny registrering</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Lägg till minst en appregistrering.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validering</value></data>
@@ -1636,4 +1634,25 @@ Avbryt: gå tillbaka</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>&apos;{0}&apos; kopierades, men de ursprungliga datumen och författarna kunde inte återställas för {1} objekt: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>&apos;{0}&apos; kopierades, men kopian hittades inte efteråt för att återställa dess datum och författare.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Detta är en dokumentuppsättning av typen &apos;{0}&apos;, men målbiblioteket har inte den innehållstypen och den kunde inte läggas till ({1}). Lägg till innehållstypen i målbiblioteket (Biblioteksinställningar, Avancerade inställningar, tillåt hantering av innehållstyper) och kopiera sedan igen.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Verktyget Forms kräver den delegerade behörigheten ”Microsoft Forms”, som den här appregistreringen inte har. Öppna registreringen i Azure-portalen, gå till API-behörigheter, lägg till den under ”API:er som min organisation använder”, ge administratörsmedgivande och starta om appen. Se ”Add API permissions” i README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Teams-verktyg</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Bläddra bland team och chattar och kopiera ett Teams kanaler och filer</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Läs in team och chattar</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Läser in…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Läser {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Chattar</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Inga team hittades för det här kontot.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Standardkanal</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Privat kanal</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Delad kanal</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} medlemmar</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>filmapp hittades</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>filmappen är inte tillgänglig</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>Hittade {0} team och {1} chattar.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Det gick inte att läsa Teams: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Teams-verktyget kräver dessa delegerade Microsoft Graph-behörigheter, som den här appregistreringen inte har: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All och Chat.Read. Öppna registreringen i Azure-portalen, gå till API-behörigheter, lägg till dem, ge administratörsmedgivande och starta om appen. Se ”Add API permissions” i README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Direktkopiering kräver de delegerade Power Automate Service-behörigheterna Flows.Read.All och Flows.Manage.All samt PowerApps Service User, som den här appregistreringen inte har. Lägg till dem under API-behörigheter, ge administratörsmedgivande och starta om appen. Kopiering från exporterade paket fungerar utan dem.</value></data>
 </root>

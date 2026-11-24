@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} kansiolla ei ollut skannauksesta identiteettiä (ei Graph-virhe) – ne näyttävät paikkamerkkipäivämäärän. Polku/polut: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} kansion Graph-metatietohaku epäonnistui – ne näyttävät paikkamerkkipäivämäärän. Esimerkki(t): {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} kansiota ei voitu päivätä (Graph-haku epäonnistui uudelleenyritysten jälkeen) – ne näyttävät paikkamerkkipäivämäärän 1.1.2000 todellisen lähdepäivämääränsä sijaan</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} kansiolle ei ollut lähteessä saatavilla tekijän/muokkaajan sähköpostiosoitetta – näitä ei voi korjata, ja ne näyttävät tuovan tilin</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Korjataan kansioiden metatietoja (päivämäärät, tekijyys, väri) {0:N0}/{1:N0} kansiolle...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: kohdekansion GUID-tunnusta ei voitu ratkaista</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Korjataan kansioiden metatietoja: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Vertaa lähdettä ja kohdetta</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Avaa Vertailu-työkalun, jolla tämä kopio tarkistetaan lähteeseen nähden.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Avaa Historia</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Valittua rekisteröintiä käytetään lähteelle – ja yhden vuokraajan tilassa molemmille puolille.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Uusi rekisteröinti</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Lisää vähintään yksi sovellusrekisteröinti.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Vahvistus</value></data>
@@ -1636,4 +1634,25 @@ Peruuta: palaa takaisin</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>Kohde &apos;{0}&apos; kopioitiin, mutta alkuperäisiä päivämääriä ja tekijöitä ei voitu palauttaa {1} kohteelle: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>Kohde &apos;{0}&apos; kopioitiin, mutta kopiota ei löytynyt jälkeenpäin sen päivämäärien ja tekijöiden palauttamiseksi.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Tämä on asiakirjajoukko, jonka tyyppi on &apos;{0}&apos;, mutta kohdekirjastossa ei ole kyseistä sisältötyyppiä, eikä sitä voitu lisätä ({1}). Lisää sisältötyyppi kohdekirjastoon (Kirjaston asetukset, Lisäasetukset, salli sisältötyyppien hallinta) ja kopioi uudelleen.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Forms-työkalu tarvitsee delegoidun Microsoft Forms -käyttöoikeuden, jota tällä sovelluksen rekisteröinnillä ei ole. Avaa rekisteröinti Azure-portaalissa, siirry kohtaan API-käyttöoikeudet, lisää se kohdassa ”Organisaationi käyttämät sovellusliittymät”, myönnä järjestelmänvalvojan suostumus ja käynnistä sovellus uudelleen. Katso README:stä ”Add API permissions”.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Teams-työkalu</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Selaa tiimejä ja keskusteluja ja kopioi tiimin kanavat ja tiedostot</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Lataa tiimit ja keskustelut</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Ladataan…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Luetaan: {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Keskustelut</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Tälle tilille ei löytynyt tiimejä.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Vakiokanava</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Yksityinen kanava</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Jaettu kanava</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} jäsentä</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>tiedostokansio löytyi</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>tiedostokansio ei ole käytettävissä</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>Löytyi {0} tiimiä ja {1} keskustelua.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Teamsia ei voitu lukea: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Teams-työkalu tarvitsee nämä delegoidut Microsoft Graph -käyttöoikeudet, joita tällä sovelluksen rekisteröinnillä ei ole: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All ja Chat.Read. Avaa rekisteröinti Azure-portaalissa, siirry kohtaan API-käyttöoikeudet, lisää ne, myönnä järjestelmänvalvojan suostumus ja käynnistä sovellus uudelleen. Katso README:stä ”Add API permissions”.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>Live-kopiointi tarvitsee delegoidut Power Automate Service -käyttöoikeudet Flows.Read.All ja Flows.Manage.All sekä PowerApps Service User -käyttöoikeuden, joita tällä sovelluksen rekisteröinnillä ei ole. Lisää ne kohdassa API-käyttöoikeudet, myönnä järjestelmänvalvojan suostumus ja käynnistä sovellus uudelleen. Kopiointi viedyistä paketeista toimii ilman niitä.</value></data>
 </root>

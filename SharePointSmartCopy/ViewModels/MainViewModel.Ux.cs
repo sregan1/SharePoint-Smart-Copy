@@ -153,6 +153,7 @@ public partial class MainViewModel
         DisconnectTarget();
         SignedInUser       = string.Empty;
         TargetSignedInUser = string.Empty;
+        ResetToolAccess();
         ConfigureTenancy();
         SpService.Initialize();
         RefreshRegistrationProperties();

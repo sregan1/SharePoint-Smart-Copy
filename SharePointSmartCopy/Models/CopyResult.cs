@@ -21,6 +21,11 @@ public partial class CopyResult : ObservableObject
     // Compared against ErrorMessage to decide whether permissions still refresh.
     // Shown in the Details column, so it is localized; the language is fixed for the whole session, so comparing against
     // it elsewhere in the same run still works.
+    // The source file's metadata, kept only when the Migration API package cannot carry its people and dates on its own (a person with
+    // no email, or a Created By that differs from the first version's editor), so they can be stamped after the import. Not saved with the history.
+    [System.Text.Json.Serialization.JsonIgnore]
+    public FileMetadata? PostImportMetadata { get; set; }
+
     public static string UpToDate => SharePointSmartCopy.Localization.Loc.T("Res_UpToDate");
 
     // Exposed so ProcessDiagnostics can report the current BeginInvoke backlog — if background

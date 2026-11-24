@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} dossier(s) n'avaient aucune identité issue de l'analyse (pas un échec de Graph) — ils afficheront une date provisoire. Chemin(s) : {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} dossier(s) ont échoué à la recherche de métadonnées Graph — ils afficheront une date provisoire. Exemple(s) : {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} dossier(s) n'ont pas pu être datés (échec de la recherche Graph après nouvelles tentatives) — ils afficheront la date provisoire 2000-01-01 au lieu de leur vraie date source</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} dossier(s) n'avaient aucune adresse e-mail d'auteur/modificateur source — impossible de les corriger, ils afficheront le compte d'importation</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>Correction des métadonnées de dossiers (dates + auteurs + couleur) pour {0:N0} dossier(s) sur {1:N0}...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0} : impossible de résoudre le GUID du dossier cible</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>Correction des métadonnées de dossiers : {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>Comparer la source et la cible</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>Ouvre l&apos;outil de comparaison pour vérifier cette copie par rapport à la source.</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>Ouvrir l&apos;Historique</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>L&apos;inscription sélectionnée est utilisée pour la source — et pour les deux côtés en mode tenant unique.</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>Nouvelle inscription</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>Ajoutez au moins une inscription d&apos;application.</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>Validation</value></data>
@@ -1636,4 +1634,25 @@ Annuler : revenir en arrière</value></data>
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>« {0} » a été copié, mais les dates et auteurs d&apos;origine n&apos;ont pas pu être restaurés pour {1} élément(s) : {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>« {0} » a été copié, mais la copie est introuvable par la suite pour restaurer ses dates et ses auteurs.</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>Il s&apos;agit d&apos;un ensemble de documents de type « {0} », mais la bibliothèque cible n&apos;a pas ce type de contenu et il n&apos;a pas pu être ajouté ({1}). Ajoutez le type de contenu à la bibliothèque cible (Paramètres de la bibliothèque, Paramètres avancés, autoriser la gestion des types de contenu), puis copiez à nouveau.</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>L’outil Forms nécessite l’autorisation déléguée « Microsoft Forms », que cet enregistrement d’application n’a pas. Dans le portail Azure, ouvrez l’enregistrement, accédez à Autorisations d’API, ajoutez-la sous « API utilisées par mon organisation », accordez le consentement de l’administrateur, puis redémarrez l’application. Voir « Add API permissions » dans le README.</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Outil Teams</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>Parcourez les équipes et conversations, et copiez les canaux et fichiers d’une équipe</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>Charger les équipes et conversations</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>Chargement…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>Lecture de {0}…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>Conversations</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>Aucune équipe trouvée pour ce compte.</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>Canal standard</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>Canal privé</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>Canal partagé</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} membres</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>dossier de fichiers trouvé</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>dossier de fichiers non disponible</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>{0} équipes et {1} conversations trouvées.</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Impossible de lire Teams : {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>L’outil Teams nécessite ces autorisations déléguées Microsoft Graph, que cet enregistrement d’application n’a pas : Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All et Chat.Read. Dans le portail Azure, ouvrez l’enregistrement, accédez à Autorisations d’API, ajoutez-les, accordez le consentement de l’administrateur, puis redémarrez l’application. Voir « Add API permissions » dans le README.</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>La copie en direct nécessite les autorisations déléguées Power Automate Service Flows.Read.All et Flows.Manage.All, ainsi que PowerApps Service User, que cet enregistrement d’application n’a pas. Ajoutez-les sous Autorisations d’API, accordez le consentement de l’administrateur, puis redémarrez l’application. La copie à partir de packages exportés fonctionne sans elles.</value></data>
 </root>

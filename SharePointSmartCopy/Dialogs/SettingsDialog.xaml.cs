@@ -25,13 +25,14 @@ public partial class SettingsDialog : Window
         Result       = current;
 
         foreach (var r in current.Registrations)
-            _registrations.Add(new AzureRegistration { Name = r.Name, ClientId = r.ClientId, TenantId = r.TenantId });
+            _registrations.Add(new AzureRegistration { Name = r.Name, ClientId = r.ClientId, TenantId = r.TenantId, ProtectedClientSecret = r.ProtectedClientSecret });
 
         RegistrationList.ItemsSource = _registrations;
 
         if (_registrations.Count > 0)
         {
             var idx = Math.Clamp(current.ActiveRegistrationIndex, 0, _registrations.Count - 1);
+            _sourceReg = _registrations[idx];   // the source registration stays this one however the list is browsed or edited here
             RegistrationList.SelectedIndex = idx;
         }
 
@@ -68,8 +69,31 @@ public partial class SettingsDialog : Window
     private void TargetRegistrationCombo_DropDownOpened(object? sender, EventArgs e)
         => RefreshTargetRegistrationCombo(null);
 
+    // The secret box never shows the stored value: a placeholder says one is saved, typing replaces it, clearing removes it.
+    private bool _loadingSecret;
+    private void ShowSecretState()
+    {
+        _loadingSecret = true;
+        SecretBox.Password = string.Empty;
+        SecretSavedHint.Visibility = RegistrationList.SelectedItem is AzureRegistration { HasClientSecret: true } ? Visibility.Visible : Visibility.Collapsed;
+        _loadingSecret = false;
+    }
+    private void SecretBox_PasswordChanged(object sender, RoutedEventArgs e)
+    {
+        if (_loadingSecret || RegistrationList.SelectedItem is not AzureRegistration reg) return;
+        if (SecretBox.Password.Length > 0) reg.SetClientSecret(SecretBox.Password);
+        SecretSavedHint.Visibility = reg.HasClientSecret ? Visibility.Visible : Visibility.Collapsed;
+    }
+    private void ClearSecret_Click(object sender, RoutedEventArgs e)
+    {
+        if (RegistrationList.SelectedItem is not AzureRegistration reg) return;
+        reg.SetClientSecret(null);
+        ShowSecretState();
+    }
+
     private void RegistrationList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
+        ShowSecretState();
         RemoveButton.IsEnabled = RegistrationList.SelectedItem != null;
     }
 
@@ -89,6 +113,9 @@ public partial class SettingsDialog : Window
             RegistrationList.SelectedIndex = Math.Min(idx, _registrations.Count - 1);
     }
 
+    // The registration the home screen has chosen as the source (not the row being edited in the list).
+    private AzureRegistration? _sourceReg;
+
     private void Save_Click(object sender, RoutedEventArgs e)
     {
         if (_registrations.Count == 0)
@@ -98,7 +125,12 @@ public partial class SettingsDialog : Window
             return;
         }
 
-        var activeIdx = Math.Max(0, RegistrationList.SelectedIndex);
+        // The source registration is the one the home screen chose, found again by reference (a removal or an addition above it
+        // shifts its index). Editing a registration here, or just selecting it, must not make it the source: that is picked on the
+        // home screen. Only when the chosen one was removed does the selected row take over.
+        var activeIdx = _sourceReg != null && _registrations.Contains(_sourceReg)
+            ? _registrations.IndexOf(_sourceReg)
+            : Math.Max(0, RegistrationList.SelectedIndex);
         var active    = _registrations[activeIdx];
 
         if (string.IsNullOrWhiteSpace(active.ClientId))

@@ -72,7 +72,13 @@ public partial class FlowsDialogViewModel : ObservableObject
 
     [ObservableProperty, NotifyPropertyChangedFor(nameof(ShowBack), nameof(ShowNext), nameof(ShowStartOver), nameof(NextButtonText), nameof(CanNext), nameof(ShowSubtitle))]
     private int _currentStep;
-    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext))] private bool _isBusy;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanNext), nameof(CanPickLive))] private bool _isBusy;
+
+    // Live copy needs the Power Automate permissions on the app registration; when Entra says they are not there the live
+    // option is grayed out (with the reason as its tooltip) and the dialog opens on the package (zip) source instead.
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(CanPickLive))] private bool _liveAvailable = true;
+    [ObservableProperty] private string _liveBlockedTip = string.Empty;
+    public bool CanPickLive => LiveAvailable && !IsBusy;
     [ObservableProperty] private string _statusText = string.Empty;
     [ObservableProperty, NotifyPropertyChangedFor(nameof(HasNotes))] private string _notesText = string.Empty;
     public bool HasNotes => NotesText.Length > 0;

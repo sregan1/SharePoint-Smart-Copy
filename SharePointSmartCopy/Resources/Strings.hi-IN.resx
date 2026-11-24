@@ -509,7 +509,6 @@
   <data name="Svc_Mig_FolderSHadNo" xml:space="preserve"><value>⚠ {0:N0} फ़ोल्डरों की स्कैन से पहचान नहीं मिली (Graph की विफलता नहीं) — उनकी तारीख प्लेसहोल्डर दिखेगी। पथ: {1}</value></data>
   <data name="Svc_Mig_FolderSFailedThe" xml:space="preserve"><value>⚠ {0:N0} फ़ोल्डरों के लिए Graph मेटाडेटा लुकअप विफल रहा — उनकी तारीख प्लेसहोल्डर दिखेगी। उदाहरण: {1}</value></data>
   <data name="Svc_Mig_FolderSCouldNot" xml:space="preserve"><value>⚠ {0:N0} फ़ोल्डरों की तारीख तय नहीं हो सकी (पुनः प्रयासों के बाद Graph लुकअप विफल) — उन पर असली स्रोत तारीख की जगह प्लेसहोल्डर 2000-01-01 दिखेगी</value></data>
-  <data name="Svc_Mig_FolderSHadNo2" xml:space="preserve"><value>⚠ {0:N0} फ़ोल्डरों के लिए स्रोत में Author/Modified-By ईमेल उपलब्ध नहीं था — इन्हें ठीक नहीं किया जा सकता, ये आयात करने वाले खाते के रूप में दिखेंगे</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadataDates" xml:space="preserve"><value>{1:N0} में से {0:N0} फ़ोल्डरों का मेटाडेटा (तारीखें + लेखक + रंग) ठीक किया जा रहा है...</value></data>
   <data name="Svc_Mig_CouldNotResolveTarget" xml:space="preserve"><value>{0}: लक्ष्य फ़ोल्डर का GUID हल नहीं हो सका</value></data>
   <data name="Svc_Mig_CorrectingFolderMetadata" xml:space="preserve"><value>फ़ोल्डर मेटाडेटा ठीक किया जा रहा है: {0:N0} / {1:N0}</value></data>
@@ -786,7 +785,6 @@
   <data name="Ui_CompareSourceTarget" xml:space="preserve"><value>स्रोत और लक्ष्य की तुलना करें</value></data>
   <data name="Ui_CompareSourceTargetHint" xml:space="preserve"><value>इस कॉपी को स्रोत से जाँचने के लिए तुलना टूल खोलें।</value></data>
   <data name="Ui_OpenInHistory" xml:space="preserve"><value>इतिहास खोलें</value></data>
-  <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>चुना गया रजिस्ट्रेशन स्रोत के लिए उपयोग होता है — और सिंगल-टेनेंट मोड में दोनों पक्षों के लिए।</value></data>
   <data name="Dlg_AddRegistrationDefaultName" xml:space="preserve"><value>नया रजिस्ट्रेशन</value></data>
   <data name="Dlg_AddAtLeastOneRegistration" xml:space="preserve"><value>कम से कम एक ऐप रजिस्ट्रेशन जोड़ें।</value></data>
   <data name="Dlg_ValidationTitle" xml:space="preserve"><value>सत्यापन</value></data>
@@ -1636,4 +1634,25 @@
   <data name="Svc_NativeMetaPartial" xml:space="preserve"><value>&apos;{0}&apos; कॉपी हो गया, लेकिन {1} आइटम के मूल दिनांक और लेखक पुनर्स्थापित नहीं किए जा सके: {2}</value></data>
   <data name="Svc_NativeMetaTargetMissing" xml:space="preserve"><value>&apos;{0}&apos; कॉपी हो गया, लेकिन उसके दिनांक और लेखक पुनर्स्थापित करने के लिए बाद में कॉपी नहीं मिली।</value></data>
   <data name="Svc_DocSetCtMissing" xml:space="preserve"><value>यह &apos;{0}&apos; प्रकार का दस्तावेज़ समूह है, लेकिन गंतव्य लाइब्रेरी में वह सामग्री प्रकार नहीं है और उसे जोड़ा नहीं जा सका ({1})। गंतव्य लाइब्रेरी में सामग्री प्रकार जोड़ें (लाइब्रेरी सेटिंग, उन्नत सेटिंग, सामग्री प्रकारों के प्रबंधन की अनुमति दें), फिर दोबारा कॉपी करें।</value></data>
+  <data name="Forms_PermissionMissingTip" xml:space="preserve"><value>Forms टूल को प्रतिनिधित (delegated) अनुमति “Microsoft Forms” चाहिए, जो इस ऐप पंजीकरण में नहीं है। Azure पोर्टल में पंजीकरण खोलें, API अनुमतियाँ पर जाएँ, इसे “APIs my organization uses” में जोड़ें, एडमिन सहमति दें, फिर ऐप को पुनः आरंभ करें। README में “Add API permissions” देखें।</value></data>
+  <data name="Teams_AutoTile" xml:space="preserve"><value>Teams टूल</value></data>
+  <data name="Teams_TileTitle" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_TileDesc" xml:space="preserve"><value>टीमें और चैट ब्राउज़ करें, और टीम के चैनल व फ़ाइलें कॉपी करें</value></data>
+  <data name="Teams_Title" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_Load" xml:space="preserve"><value>टीमें और चैट लोड करें</value></data>
+  <data name="Teams_Loading" xml:space="preserve"><value>लोड हो रहा है…</value></data>
+  <data name="Teams_LoadingTeam" xml:space="preserve"><value>{0} पढ़ा जा रहा है…</value></data>
+  <data name="Teams_TeamsNode" xml:space="preserve"><value>Teams</value></data>
+  <data name="Teams_ChatsNode" xml:space="preserve"><value>चैट</value></data>
+  <data name="Teams_NoTeams" xml:space="preserve"><value>इस खाते के लिए कोई टीम नहीं मिली।</value></data>
+  <data name="Teams_KindStandard" xml:space="preserve"><value>मानक चैनल</value></data>
+  <data name="Teams_KindPrivate" xml:space="preserve"><value>निजी चैनल</value></data>
+  <data name="Teams_KindShared" xml:space="preserve"><value>साझा चैनल</value></data>
+  <data name="Teams_Members" xml:space="preserve"><value>{0} सदस्य</value></data>
+  <data name="Teams_FilesYes" xml:space="preserve"><value>फ़ाइल फ़ोल्डर मिला</value></data>
+  <data name="Teams_FilesNo" xml:space="preserve"><value>फ़ाइल फ़ोल्डर उपलब्ध नहीं है</value></data>
+  <data name="Teams_Done" xml:space="preserve"><value>{0} टीमें और {1} चैट मिलीं।</value></data>
+  <data name="Teams_Error" xml:space="preserve"><value>Teams नहीं पढ़ा जा सका: {0}</value></data>
+  <data name="Teams_PermissionMissingTip" xml:space="preserve"><value>Teams टूल को ये प्रतिनिधित Microsoft Graph अनुमतियाँ चाहिए, जो इस ऐप पंजीकरण में नहीं हैं: Team.ReadBasic.All, Channel.ReadBasic.All, TeamMember.Read.All और Chat.Read। Azure पोर्टल में पंजीकरण खोलें, API अनुमतियाँ पर जाएँ, इन्हें जोड़ें, एडमिन सहमति दें, फिर ऐप को पुनः आरंभ करें। README में “Add API permissions” देखें।</value></data>
+  <data name="Flows_Live_PermissionMissingTip" xml:space="preserve"><value>लाइव कॉपी के लिए प्रतिनिधित Power Automate Service अनुमतियाँ Flows.Read.All और Flows.Manage.All, साथ ही PowerApps Service User चाहिए, जो इस ऐप पंजीकरण में नहीं हैं। इन्हें API अनुमतियाँ में जोड़ें, एडमिन सहमति दें, फिर ऐप को पुनः आरंभ करें। निर्यात किए गए पैकेज से कॉपी करना इनके बिना भी काम करता है।</value></data>
 </root>
