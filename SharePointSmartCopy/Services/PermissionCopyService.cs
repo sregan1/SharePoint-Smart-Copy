@@ -59,7 +59,8 @@ public class PermissionCopyService(SharePointService spService)
         string targetApiPath,
         bool? hasUniquePermissions,
         string itemDisplayName,
-        CancellationToken ct = default)
+        CancellationToken ct = default,
+        string? targetAliasQuery = null)
     {
         // null = the source could not be asked (see TryGetHasUniqueRoleAssignmentsAsync): say so instead of
         // silently leaving the item with inherited permissions.
@@ -102,7 +103,7 @@ public class PermissionCopyService(SharePointService spService)
         {
             try
             {
-                await spService.BreakPermissionInheritanceAsync(targetSiteUrl, targetApiPath, ct);
+                await spService.BreakPermissionInheritanceAsync(targetSiteUrl, targetApiPath, ct, targetAliasQuery);
             }
             catch (OperationCanceledException) { throw; }
             catch (Exception ex)
@@ -141,7 +142,7 @@ public class PermissionCopyService(SharePointService spService)
 
                 try
                 {
-                    await spService.AddRoleAssignmentAsync(targetSiteUrl, targetApiPath, principalId.Value, roleDefId, ct);
+                    await spService.AddRoleAssignmentAsync(targetSiteUrl, targetApiPath, principalId.Value, roleDefId, ct, targetAliasQuery);
                     applied++;
                 }
                 catch (OperationCanceledException) { throw; }

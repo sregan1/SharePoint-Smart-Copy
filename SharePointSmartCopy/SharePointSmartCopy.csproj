@@ -9,7 +9,7 @@
     <AssemblyName>SharePointSmartCopy</AssemblyName>
     <RootNamespace>SharePointSmartCopy</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>4.2.0</Version>
+    <Version>4.2.1</Version>
     <Company>Vivity, Inc.</Company>
     <Authors>Sean Regan</Authors>
     <Copyright>Copyright (c) 2026 Vivity, Inc.</Copyright>
@@ -34,7 +34,10 @@
     <PackageReference Include="Azure.Storage.Blobs" Version="12.28.0" />
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-    <PackageReference Include="Microsoft.Graph" Version="5.51.0" />
+    <PackageReference Include="Microsoft.Graph" Version="5.105.0" />
+    <!-- Microsoft.Graph 5.105.0 still pulls in Kiota 1.21.1; GHSA-7j59-v9qr-6fq9 (RedirectHandler leaks Cookie/Proxy-Authorization
+         on a cross-host redirect) is fixed in 1.22.0. Pinned here until Graph's own dependency catches up. -->
+    <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.22.2" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
     <PackageReference Include="Microsoft.SharePointOnline.CSOM" Version="16.1.27215.12000" />
   </ItemGroup>

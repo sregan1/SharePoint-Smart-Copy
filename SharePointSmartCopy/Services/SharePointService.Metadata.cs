@@ -185,19 +185,24 @@ public partial class SharePointService
     // keeps the running account. Stamp the System Account for each missing person (and the source dates again, so Modified is not
     // bumped), like a file in a Migration API package does. Works for any list item (folder, Document Set or file); only the
     // people that ARE known are sent again, because this write otherwise leaves those fields as the running account too.
-    public async Task<string?> StampSystemAccountOnItemAsync(string targetDriveId, string targetItemId, FileMetadata meta)
+    //
+    // unresolvedAsSystemAccount (folders and Document Sets): a person who HAS an email but whom the target cannot resolve (a deleted
+    // account) must not stay the account that ran the copy either. Neither resolved -> the System Account for both; only the Modified By
+    // unresolved -> it follows the Created By; only the Created By unresolved -> the System Account. Done here, with the CSOM write that
+    // takes user IDs, because the System Account cannot be written through the login-based REST write.
+    public async Task<string?> StampSystemAccountOnItemAsync(string targetDriveId, string targetItemId, FileMetadata meta, bool unresolvedAsSystemAccount = false)
     {
-        if (!NeedsSystemAccount(meta)) return null;
+        if (!NeedsStamp(meta, unresolvedAsSystemAccount)) return null;
         var ids = await GetSharePointIdsAsync(targetDriveId, targetItemId);
         if (ids == null || !int.TryParse(ids.Value.listItemId, out var itemNo)) return null;
-        return await StampSystemAccountCoreAsync(ids.Value.siteUrl, ids.Value.listId, itemNo, meta);
+        return await StampSystemAccountCoreAsync(ids.Value.siteUrl, ids.Value.listId, itemNo, meta, unresolvedAsSystemAccount);
     }
 
     // Same, for a Migration API file that has no Graph item id: found by its server-relative path in a known list.
-    public async Task<string?> StampSystemAccountOnItemByPathAsync(string siteUrl, string listId, string serverRelativeUrl, FileMetadata meta, bool force = false)
+    public async Task<string?> StampSystemAccountOnItemByPathAsync(string siteUrl, string listId, string serverRelativeUrl, FileMetadata meta, bool force = false, bool unresolvedAsSystemAccount = false)
     {
-        if (!force && !NeedsSystemAccount(meta)) return null;
-        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativePath(decodedurl='{Uri.EscapeDataString(serverRelativeUrl.Replace("'", "''"))}')/ListItemAllFields?$select=Id";
+        if (!force && !NeedsStamp(meta, unresolvedAsSystemAccount)) return null;
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativePath({ServerRelativePathArg(serverRelativeUrl)})/ListItemAllFields?{ServerRelativePathAliasQuery(serverRelativeUrl)}&$select=Id";
         try
         {
             using var resp = await SendSharePointRequestAsync(token =>
@@ -210,7 +215,7 @@ public partial class SharePointService
             if (!resp.IsSuccessStatusCode) return $"System Account stamp: could not find the item (HTTP {(int)resp.StatusCode})";
             using var doc = JsonDocument.Parse(await resp.Content.ReadAsStringAsync());
             if (!doc.RootElement.TryGetProperty("Id", out var idEl)) return null;
-            return await StampSystemAccountCoreAsync(siteUrl, listId, idEl.GetInt32(), meta);
+            return await StampSystemAccountCoreAsync(siteUrl, listId, idEl.GetInt32(), meta, unresolvedAsSystemAccount);
         }
         catch (Exception ex) when (ex is HttpRequestException or JsonException) { return "System Account stamp: " + ex.Message; }
     }
@@ -219,7 +224,13 @@ public partial class SharePointService
         => (string.IsNullOrEmpty(meta.CreatedByEmail) || string.IsNullOrEmpty(meta.ModifiedByEmail))
            && (meta.CreatedDateTime != null || meta.ModifiedDateTime != null);
 
-    private async Task<string?> StampSystemAccountCoreAsync(string siteUrl, string listId, int itemNo, FileMetadata meta)
+    // With unresolvedAsSystemAccount, any source person (not just one with no email) can need a stamp; the dates must be known either way.
+    private static bool NeedsStamp(FileMetadata meta, bool unresolvedAsSystemAccount)
+        => unresolvedAsSystemAccount
+            ? meta.CreatedDateTime != null || meta.ModifiedDateTime != null
+            : NeedsSystemAccount(meta);
+
+    private async Task<string?> StampSystemAccountCoreAsync(string siteUrl, string listId, int itemNo, FileMetadata meta, bool unresolvedAsSystemAccount = false)
     {
         bool author = string.IsNullOrEmpty(meta.CreatedByEmail), editor = string.IsNullOrEmpty(meta.ModifiedByEmail);
         var systemId = await GetSystemAccountIdAsync(siteUrl);
@@ -231,7 +242,32 @@ public partial class SharePointService
         }
         int? authorId = author ? systemId : await PersonIdAsync(meta.CreatedByEmail);
         int? editorId = editor ? systemId : await PersonIdAsync(meta.ModifiedByEmail);
-        return await PatchFolderViaCsomAsync(siteUrl, listId, itemNo, authorId, editorId, meta.CreatedDateTime, meta.ModifiedDateTime, null, null);
+        string? unresolvedNote = null;
+        if (unresolvedAsSystemAccount)
+        {
+            bool authorUnresolved = !author && authorId == null, editorUnresolved = !editor && editorId == null;
+            // Nobody to substitute and nobody with no email: the login-based write already stamped everyone correctly.
+            if (!author && !editor && !authorUnresolved && !editorUnresolved) return null;
+            if (authorUnresolved && editorUnresolved)
+            {
+                authorId = systemId; editorId = systemId;
+                unresolvedNote = Loc.T("Svc_Meta_BothUnresolved", meta.CreatedByEmail, meta.ModifiedByEmail);
+            }
+            else if (editorUnresolved)
+            {
+                editorId = authorId;        // follows the Created By (which may be the System Account)
+                unresolvedNote = Loc.T("Svc_Meta_EditorUnresolved", meta.ModifiedByEmail);
+            }
+            else if (authorUnresolved)
+            {
+                authorId = systemId;
+                unresolvedNote = Loc.T("Svc_Meta_AuthorUnresolved", meta.CreatedByEmail);
+            }
+        }
+        var error = await PatchFolderViaCsomAsync(siteUrl, listId, itemNo, authorId, editorId, meta.CreatedDateTime, meta.ModifiedDateTime, null, null);
+        // A person was substituted: say so (the same way a plain folder in Migration API mode is warned), so a Document Set or folder
+        // does not look like a clean copy when someone could not be kept.
+        return error ?? unresolvedNote;
     }
 
     // The target site's System Account, the user a person with no email is stamped as. Its id is the same on every site, but ask the site
@@ -779,8 +815,9 @@ public partial class SharePointService
                 var meta = await GetFileMetadataAsync(sourceDriveId, srcId);
                 var error = await ApplyFileMetadataAsync(targetDriveId, tgtId, "", meta);
                 if (error != null) problems.Add($"{label}: {error}");
-                // a person with no email (System Account, SharePoint App...) is otherwise left as the running account
-                var systemError = await StampSystemAccountOnItemAsync(targetDriveId, tgtId, meta);
+                // a person with no email (System Account, SharePoint App...) or one the target cannot resolve (a deleted account) is
+                // otherwise left as the running account
+                var systemError = await StampSystemAccountOnItemAsync(targetDriveId, tgtId, meta, unresolvedAsSystemAccount: true);
                 if (systemError != null) problems.Add($"{label}: {systemError}");
             }
             catch (OperationCanceledException) { throw; }
@@ -1104,6 +1141,20 @@ public partial class SharePointService
 
         if (systemAuthor) createdById = systemAccountId;
         if (systemEditor) modifiedById = systemAccountId;
+
+        // A person the target could not resolve (a deleted account) must not fall back to whoever ran the copy: left alone, an Author
+        // sent without an Editor lost the Created By too (the write reports no error but is not saved). Same rules as a Document Set:
+        // neither resolved -> the System Account for both; only the editor unresolved -> the editor follows the author; only the author
+        // unresolved -> the author is the System Account.
+        bool authorUnresolved = !string.IsNullOrEmpty(createdByEmail) && createdById == null;
+        bool editorUnresolved = !string.IsNullOrEmpty(modifiedByEmail) && modifiedById == null;
+        if (hasSourceMetadata && (authorUnresolved || editorUnresolved))
+        {
+            systemAccountId ??= await GetSystemAccountIdAsync(siteUrl);
+            if (authorUnresolved && editorUnresolved) { createdById = systemAccountId; modifiedById = systemAccountId; }
+            else if (editorUnresolved)                { modifiedById = createdById; }
+            else                                      { createdById = systemAccountId; }
+        }
 
         if (createdById == null && modifiedById == null && createdDateTime == null && modifiedDateTime == null && !needsColorWrite)
             return (skipped.Count > 0 ? Loc.T("Svc_Sp_NothingToWriteSkipped", string.Join(", ", skipped)) : null, null);

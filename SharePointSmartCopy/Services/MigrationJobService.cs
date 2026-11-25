@@ -710,14 +710,12 @@ public class MigrationJobService(SharePointService spService)
                     // also admits color-only folders, subtraction silently stops counting a folder that
                     // genuinely has no source email but does have a color — exactly the case this
                     // warning exists to surface.
-                    int foldersMissingSourceEmail = folderMetadata
-                        .Count(kv => string.IsNullOrEmpty(kv.Value.CreatedByEmail) && string.IsNullOrEmpty(kv.Value.ModifiedByEmail));
-                    if (foldersMissingSourceEmail > 0)
-                        activityLog?.Report(Loc.T("Svc_Mig_FolderSHadNo2", foldersMissingSourceEmail));
-                    int foldersOnePersonMissing = folderMetadata
-                        .Count(kv => string.IsNullOrEmpty(kv.Value.CreatedByEmail) != string.IsNullOrEmpty(kv.Value.ModifiedByEmail));
-                    if (foldersOnePersonMissing > 0)
-                        activityLog?.Report(Loc.T("Svc_Mig_FolderOnePersonMissing", foldersOnePersonMissing));
+                    // One line for every folder missing Created By and/or Modified By (it used to be two overlapping lines, one for
+                    // "both" and one for "one of them", which read like the same note twice).
+                    int foldersMissingPeople = folderMetadata
+                        .Count(kv => string.IsNullOrEmpty(kv.Value.CreatedByEmail) || string.IsNullOrEmpty(kv.Value.ModifiedByEmail));
+                    if (foldersMissingPeople > 0)
+                        activityLog?.Report(Loc.T("Svc_Mig_FolderPeopleMissing", foldersMissingPeople));
                     if (foldersNeedingAuthorFix.Count == 0) return;
 
                     activityLog?.Report(Loc.T("Svc_Mig_CorrectingFolderMetadataDates", foldersNeedingAuthorFix.Count, folderMetadata.Count));

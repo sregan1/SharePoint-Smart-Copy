@@ -873,12 +873,15 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         // *ByServerRelativePath(decodedurl=…): the *Url variant cannot resolve
                         // paths containing '#'/'%'/'+' even when percent-encoded (see
                         // ServerRelativePathArg), so those files silently lost their permissions.
+                        // The path goes in the query string as an OData alias (decodedurl=@p): a deep file path inside the URL path is
+                        // refused by SharePoint (maxUrlLength) — see SharePointService.ServerRelativePathArg.
                         var perm = await permissionService.CopyObjectPermissionsAsync(
                             job.SourceSiteUrl, job.TargetSiteUrl,
                             $"web/lists('{srcIds.Value.listId}')/items({srcIds.Value.listItemId})",
-                            $"web/GetFileByServerRelativePath(decodedurl='{Uri.EscapeDataString(tgtRelUrl.Replace("'", "''"))}')/ListItemAllFields",
+                            "web/GetFileByServerRelativePath(decodedurl=@p)/ListItemAllFields",
                             hasUniquePermissions: true,
-                            job.SourceName, ct);
+                            job.SourceName, ct,
+                            targetAliasQuery: $"@p='{Uri.EscapeDataString(tgtRelUrl.Replace("'", "''"))}'");
 
                         if (perm.HasActivity)
                             AddPermissionRow(results, perm, result);
@@ -1748,7 +1751,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 ReportFolderIssue(rootPath, Loc.T("Svc_FolderIssueMetadata"),
                     await spService.ApplyFileMetadataAsync(job.TargetDriveId, rootTargetId, job.TargetSiteId, rootMeta));
                 ReportFolderIssue(rootPath, Loc.T("Svc_FolderIssueMetadata"),
-                    await spService.StampSystemAccountOnItemAsync(job.TargetDriveId, rootTargetId, rootMeta));
+                    await spService.StampSystemAccountOnItemAsync(job.TargetDriveId, rootTargetId, rootMeta, unresolvedAsSystemAccount: true));
             }
 
             if (copyPermissions && permissionService != null && permissionResults != null)
@@ -1851,7 +1854,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     ReportFolderIssue(targetPath, Loc.T("Svc_FolderIssueMetadata"),
                         await spService.ApplyFileMetadataAsync(job.TargetDriveId, targetFolderId, job.TargetSiteId, meta));
                     ReportFolderIssue(targetPath, Loc.T("Svc_FolderIssueMetadata"),
-                        await spService.StampSystemAccountOnItemAsync(job.TargetDriveId, targetFolderId, meta));
+                        await spService.StampSystemAccountOnItemAsync(job.TargetDriveId, targetFolderId, meta, unresolvedAsSystemAccount: true));
                 }
 
                 if (copyPermissions && permissionService != null && permissionResults != null)

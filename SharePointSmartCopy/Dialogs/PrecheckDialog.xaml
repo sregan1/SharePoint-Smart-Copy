@@ -26,7 +26,7 @@
         <DataGrid x:Name="IssueGrid" Grid.Row="1" FlowDirection="LeftToRight"
                   AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True"
                   SelectionMode="Extended" SelectionUnit="FullRow" HeadersVisibility="Column"
-                  GridLinesVisibility="Horizontal" RowHeight="Auto"
+                  GridLinesVisibility="Horizontal"
                   Background="{DynamicResource SurfaceBrush}"
                   BorderBrush="{DynamicResource BorderLightBrush}" BorderThickness="1">
             <DataGrid.Columns>

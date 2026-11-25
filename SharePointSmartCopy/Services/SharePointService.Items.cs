@@ -77,8 +77,9 @@ public partial class SharePointService
         // *Path (not *Url) API: folder names containing #, %, or + are unresolvable via
         // GetFolderByServerRelativeUrl, so its /Files listing 404s and the pre-flight wrongly
         // reports the folder empty. See ServerRelativePathArg.
+        var aliasQuery = ServerRelativePathAliasQuery(folderServerRelativeUrl);
         string? nextUrl = $"{baseUrl}/_api/web/GetFolderByServerRelativePath({ServerRelativePathArg(folderServerRelativeUrl)})/Files" +
-                          "?$select=Name,TimeLastModified&$top=5000";
+                          $"?{aliasQuery}&$select=Name,TimeLastModified&$top=5000";
 
         for (int attempt = 0; nextUrl != null; )
         {
@@ -135,6 +136,10 @@ public partial class SharePointService
                           nl.ValueKind == JsonValueKind.String
                     ? nl.GetString()
                     : null;
+                // The next page still addresses the folder by the alias, so it has to carry the alias value too; add it if SharePoint's
+                // own link did not keep it.
+                if (nextUrl != null && !nextUrl.Contains("@p=", StringComparison.Ordinal))
+                    nextUrl += (nextUrl.Contains('?') ? "&" : "?") + aliasQuery;
                 attempt = 0; // reset the retry budget per page
             }
             catch (Exception ex) when (attempt < 4 && IsTransientTransportError(ex))
@@ -226,15 +231,24 @@ public partial class SharePointService
     // 2026-07-02 on folder and file names containing '+' and '#'.
     // decodedurl takes the LITERAL path: OData-escape embedded quotes (' → ''), then percent-encode
     // the whole thing for transport; SharePoint decodes it back to the literal server-relative path.
-    private static string ServerRelativePathArg(string serverRelativeUrl) =>
-        $"decodedurl='{Uri.EscapeDataString(serverRelativeUrl.Replace("'", "''"))}'";
+    //
+    // The path is passed as an OData parameter ALIAS: the call uses `decodedurl=@p` and the value goes in the query string as
+    // `@p='<encoded path>'` (see ServerRelativePathAliasQuery). Putting the whole percent-encoded path in the URL PATH made a deep
+    // folder fail with HTTP 401 "The length of the URL for this request exceeds the configured maxUrlLength value" — SharePoint
+    // limits the path part of a URL far below what its 400-character item-path limit allows (every space is three characters). The
+    // query string has a much higher limit, so the alias form works for any path SharePoint can hold.
+    private static string ServerRelativePathArg(string serverRelativeUrl) => "decodedurl=@p";
+
+    // The value for ServerRelativePathArg's alias; append it to the request's query string.
+    private static string ServerRelativePathAliasQuery(string serverRelativeUrl) =>
+        $"@p='{Uri.EscapeDataString(serverRelativeUrl.Replace("'", "''"))}'";
 
     // Returns the SharePoint UniqueId (AllDocs GUID) for a file by its server-relative URL.
     // Works via REST (not Graph) so it finds zombie files — SPFile blobs without a list item
     // that Graph returns 404 for. Returns null if the file doesn't exist.
     public async Task<string?> GetFileUniqueIdAsync(string siteUrl, string serverRelativeUrl, CancellationToken ct = default)
     {
-        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativePath({ServerRelativePathArg(serverRelativeUrl)})/UniqueId";
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativePath({ServerRelativePathArg(serverRelativeUrl)})/UniqueId?{ServerRelativePathAliasQuery(serverRelativeUrl)}";
         try
         {
             using var response = await SendSharePointRequestAsync(token =>

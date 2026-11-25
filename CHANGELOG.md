@@ -4,14 +4,17 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
-## Unreleased
+## 4.2.1 — 2026-11-25
 
 ### Changed
 
 - **Now runs on .NET 10** — the app and its release build moved from .NET 8, whose support has ended, to the current long-term-support release, so the bundled runtime keeps receiving security fixes. The release is still a self-contained single file, so there is nothing to install. .NET 10 needs Windows 10 version 1607 or later (the app already required 1809).
+- **Security: updated the Microsoft Graph libraries** — Microsoft Graph SDK 5.51.0 → 5.105.0, with the Kiota abstractions library moved to 1.22.2 to fix an advisory (GHSA-7j59-v9qr-6fq9) where Kiota's redirect handler could pass `Cookie` and `Proxy-Authorization` headers on to a different host after a redirect. The build no longer reports a vulnerable package.
 
 ### Fixed
 
+- **Folders and Document Sets whose Created By or Modified By is a deleted account** — a plain subfolder whose Modified By was a deleted account lost its Created By as well (the write reported no error but was not saved), and a folder with neither person resolvable became the account that ran the copy. A folder or Document Set now follows the same rules in both copy modes: if both people resolve they are kept; if only the Modified By cannot be resolved it follows the Created By; if only the Created By cannot be resolved it is the System Account; if neither can be resolved both are the System Account. When a person has to be substituted, the folder or Document Set now says so in the report, as a plain folder already did. Files are unchanged. The two overlapping log lines about folders without an email are now one.
+- **Deep folders no longer fail with "The length of the URL for this request exceeds the configured maxUrlLength value"** — in Migration API mode the app lists each target folder's existing files (and looks files up by path) before deciding what to overwrite or skip, and it put the whole percent-encoded folder path in the web address. SharePoint limits the path part of an address far below its 400-character limit for an item's path (every space counts as three characters), so a deep folder was refused with an HTTP 401 and the copy stopped. The path is now sent in the query string, where the limit is much higher, so these lookups work for any path SharePoint can hold. Copying permissions on a file in a deep folder (Migration API mode) addressed the target file the same way and is fixed too.
 - **One missing column no longer stops a whole list from copying** — when SharePoint said a column does not exist on the source list ("The field or property '…' does not exist"), reading the list's items failed and the list copied nothing. The app now leaves just that column out, reads the list again, copies everything else, and adds a Failed row to the report naming the column that was not copied.
 - **View formatting that contains `&&`, `<` or `>`** — SharePoint refuses a view's custom formatting (JSON) set over REST with those characters bare in it ("An error occurred while parsing EntityName"), so the view copied without its formatting. The app now retries once with those characters escaped, which SharePoint accepts, and a note is added only if that also fails.
 

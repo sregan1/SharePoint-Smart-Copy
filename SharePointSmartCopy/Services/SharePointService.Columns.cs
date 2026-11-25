@@ -797,7 +797,7 @@ public partial class SharePointService
     // GetFileUniqueIdAsync's *ByServerRelativePath approach so '#'/'%'/'+' in names are unaffected.
     private async Task<int?> GetFileListItemIdAsync(string siteUrl, string serverRelativeUrl, CancellationToken ct = default)
     {
-        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativePath({ServerRelativePathArg(serverRelativeUrl)})/ListItemAllFields/Id";
+        var url = $"{siteUrl.TrimEnd('/')}/_api/web/GetFileByServerRelativePath({ServerRelativePathArg(serverRelativeUrl)})/ListItemAllFields/Id?{ServerRelativePathAliasQuery(serverRelativeUrl)}";
         try
         {
             using var response = await SendSharePointRequestAsync(token =>

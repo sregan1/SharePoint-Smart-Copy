@@ -96,10 +96,13 @@ public partial class SharePointService
         catch { return null; }
     }
 
+    // aliasQuery: the value of an OData parameter alias used in apiPath (e.g. "@p='<path>'" for "GetFileByServerRelativePath(decodedurl=@p)"),
+    // appended to the query string. A deep file path inside the URL PATH is refused by SharePoint (maxUrlLength); in the query string it is not.
     public async Task BreakPermissionInheritanceAsync(
-        string siteUrl, string apiPath, CancellationToken ct = default)
+        string siteUrl, string apiPath, CancellationToken ct = default, string? aliasQuery = null)
     {
-        var url = $"{siteUrl.TrimEnd('/')}/_api/{apiPath}/breakroleinheritance(copyRoleAssignments=false,clearSubscopes=false)";
+        var url = $"{siteUrl.TrimEnd('/')}/_api/{apiPath}/breakroleinheritance(copyRoleAssignments=false,clearSubscopes=false)" +
+                  (aliasQuery == null ? "" : "?" + aliasQuery);
         using var resp = await SendSharePointRequestAsync(token =>
         {
             var r = new HttpRequestMessage(HttpMethod.Post, url);
@@ -116,9 +119,10 @@ public partial class SharePointService
     }
 
     public async Task AddRoleAssignmentAsync(
-        string siteUrl, string apiPath, int principalId, int roleDefId, CancellationToken ct = default)
+        string siteUrl, string apiPath, int principalId, int roleDefId, CancellationToken ct = default, string? aliasQuery = null)
     {
-        var url = $"{siteUrl.TrimEnd('/')}/_api/{apiPath}/roleassignments/addroleassignment(principalid={principalId},roleDefId={roleDefId})";
+        var url = $"{siteUrl.TrimEnd('/')}/_api/{apiPath}/roleassignments/addroleassignment(principalid={principalId},roleDefId={roleDefId})" +
+                  (aliasQuery == null ? "" : "?" + aliasQuery);
         using var resp = await SendSharePointRequestAsync(token =>
         {
             var r = new HttpRequestMessage(HttpMethod.Post, url);
