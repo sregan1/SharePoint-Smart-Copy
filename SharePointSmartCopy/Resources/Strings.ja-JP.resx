@@ -1832,4 +1832,30 @@
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>クライアント シークレット (省略可、Teams ツール用)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>このシークレットを使用するのは Teams ツールだけで、アプリケーションのサインイン (ユーザーなし) として使用します。ターゲットの登録では、メッセージとチャットのインポートに使用します。Microsoft では、Graph のアプリケーションのアクセス許可 Teamwork.Migrate.All (管理者の同意) を使用したこの方法でのみ許可されています。ソースの登録では、Teams ツールがテナント内のすべてのチームと、選択したユーザーのチャットを一覧表示できます (管理者ビュー)。アクセス許可については PERMISSIONS.md を参照してください。このアプリの登録の [証明書とシークレット] でシークレットを作成し、その ID ではなく値 (Value) を貼り付けてください。どちらも必要ない場合は空のままにします。</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>編集する登録を選択します。コピー元とコピー先のどちらにするかはホーム画面で選択します。ここで登録を選択または編集しても、その設定は変わりません。</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>コピーされませんでした: &apos;{0}&apos; は先頭または末尾にスペース (␣ で表示) があり、SharePoint では使用できません。コピー元で名前を変更して、もう一度コピーしてください。</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>コピーされませんでした: &apos;{0}&apos; はピリオドで終わっており、SharePoint では使用できません。コピー元で名前を変更して、もう一度コピーしてください。</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>コピーされませんでした: 名前 &apos;{0}&apos; は {1} 文字です。SharePoint ではファイル名またはフォルダー名に {2} 文字まで使用できます。コピー元で短くして、もう一度コピーしてください。</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>コピーされませんでした: コピー先のパスが {0} 文字になります。SharePoint では {1} 文字まで使用できます。フォルダー名を短くするか、より浅い場所にコピーしてください。</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>列 &apos;{0}&apos; はコピーされませんでした: SharePoint から、コピー元のリストにこの列が存在しないと報告されました (内部名が変更されたか、列が削除された可能性があります)。他の列とアイテムはコピーされました。</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>コピー前チェックでコピーがキャンセルされました。何もコピーされていません。</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>コピーされませんでした: コピー前チェックでコピーがキャンセルされました。</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ コピー前チェックに合格しました: コピー先で {0:N0} 件のファイル名、フォルダー名、パスを確認しました (先頭または末尾のスペース、ピリオドで終わる名前、255 文字を超える名前、400 文字を超えるパス)。</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ コピー前チェック: {1:N0} 件中 {0:N0} 件のファイル名、フォルダー名、パスは、このままではコピーできません (先頭または末尾のスペース、ピリオドで終わる名前、255 文字を超える名前、または 400 文字を超えるパス)。</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>コピー前チェック: コピーできない項目</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} 件の項目に、コピー先で SharePoint に拒否される名前またはパスがあります。その他はすべてコピーできます。</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>項目</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>問題</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>[コピーを中止] を選ぶとここで停止し、何もコピーされません。[残りをコピー] を選ぶと有効なものをすべてコピーし、これらの項目はコピーせずに残します。これらはレポートに「失敗」として残るため、コピー元で修正してもう一度コピーできます。</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>リストを保存…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>コピーを中止</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>残りをコピー</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} 件の項目は、名前またはパスが SharePoint に拒否されるためコピーされませんでした。これらは下に「失敗」として表示されます。</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>コピー元のパス,コピー先のパス,問題</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ コピー前チェック: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>コピー前チェックに合格しました: すべての名前とパスがコピー先で有効です。</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>コピー前チェック: {0:N0} 件の項目はこのままではコピーできないため、コピーされませんでした。理由は「失敗」の行を参照してください。その他は通常どおりコピーされています。</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>作成者 ({0}) と更新者 ({1}) がコピー先で見つかりませんでした。どちらも、インポートを実行したアカウントではなく、システム アカウントとして記録されました</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>更新者 ({0}) がコピー先で見つかりませんでした。インポートを実行したアカウントにはならず、作成者と同じになります</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>作成者 ({0}) がコピー先で見つかりませんでした。インポートを実行したアカウントではなく、システム アカウントとして記録されました</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ {0:N0} 個のフォルダー (ドキュメント セットを含む) で、作成者や更新者のメール アドレスがありませんでした (システム アカウント、SharePoint アプリ、または削除されたアカウント)。該当する人物は、インポートを実行したアカウントではなく、ファイルと同様にシステム アカウントとして記録されます</value></data>
 </root>

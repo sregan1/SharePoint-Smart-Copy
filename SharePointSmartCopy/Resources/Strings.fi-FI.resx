@@ -1832,4 +1832,30 @@ Peruuta: palaa takaisin</value></data>
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Asiakassalaisuus (valinnainen, Teams-työkalua varten)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Vain Teams-työkalu käyttää tätä salaisuutta sovelluksen kirjautumisena (ilman käyttäjää). Kohderekisteröinnissä sillä tuodaan viestit ja keskustelut, minkä Microsoft sallii vain näin, Graph-sovelluksen käyttöoikeudella Teamwork.Migrate.All (järjestelmänvalvojan hyväksyntä). Lähderekisteröinnissä sen avulla Teams-työkalu luettelee vuokraajan kaikki tiimit ja valitsemiesi henkilöiden keskustelut (järjestelmänvalvojan näkymä); käyttöoikeudet on kuvattu tiedostossa PERMISSIONS.md. Luo salaisuus tälle sovellusrekisteröinnille kohdassa Varmenteet ja salaisuudet ja liitä sen arvo (Value), ei tunnus (ID). Jätä tyhjäksi, jos et tarvitse kumpaakaan.</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Valitse rekisteröinti muokattavaksi. Se, mikä on lähde ja mikä kohde, valitaan aloitusnäytössä; rekisteröinnin valitseminen tai muokkaaminen täällä ei muuta sitä.</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>Ei kopioitu: &apos;{0}&apos; alkaa tai päättyy välilyöntiin (näkyy merkkinä ␣), jota SharePoint ei salli. Nimeä se uudelleen lähteessä ja kopioi uudelleen.</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>Ei kopioitu: &apos;{0}&apos; päättyy pisteeseen, jota SharePoint ei salli. Nimeä se uudelleen lähteessä ja kopioi uudelleen.</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>Ei kopioitu: nimi &apos;{0}&apos; on {1} merkkiä pitkä; SharePoint sallii {2} merkkiä tiedoston tai kansion nimessä. Lyhennä sitä lähteessä ja kopioi uudelleen.</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>Ei kopioitu: kohdepolku olisi {0} merkkiä pitkä; SharePoint sallii {1}. Lyhennä kansioiden nimiä tai kopioi matalampaan sijaintiin.</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>Saraketta &apos;{0}&apos; ei kopioitu: SharePoint ilmoitti, ettei sitä ole lähdeluettelossa (sen sisäinen nimi on voinut muuttua tai sarake on poistettu). Muut sarakkeet ja kohteet kopioitiin.</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>Kopiointi peruutettiin kopiointia edeltävässä tarkistuksessa. Mitään ei kopioitu.</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>Ei kopioitu: kopiointi peruutettiin kopiointia edeltävässä tarkistuksessa.</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ Kopiointia edeltävä tarkistus läpäisty: kohteessa tarkistettiin {0:N0} tiedosto- ja kansionimeä sekä polkua alku- tai loppuvälilyöntien, pisteeseen päättyvien nimien, yli 255 merkin nimien ja yli 400 merkin polkujen varalta.</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ Kopiointia edeltävä tarkistus: {0:N0} / {1:N0} tiedosto- ja kansionimestä sekä poluista ei voi kopioida sellaisenaan (alku- tai loppuvälilyönnit, pisteeseen päättyvät nimet, yli 255 merkin nimet tai yli 400 merkin polut).</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>Kopiointia edeltävä tarkistus: kohteet, joita ei voi kopioida</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} kohteen nimi tai polku hylättäisiin SharePointissa kohteessa. Kaikki muu on valmis kopioitavaksi.</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>Kohde</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>Ongelma</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>Peruuta kopiointi pysähtyy tähän, eikä mitään ole kopioitu. Kopioi loput kopioi kaiken kelvollisen ja jättää nämä kohteet kopioimatta. Ne pysyvät raportissa tilassa Epäonnistui, joten voit korjata ne lähteessä ja kopioida uudelleen.</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>Tallenna luettelo…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>Peruuta kopiointi</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>Kopioi loput</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} kohdetta ei kopioitu, koska SharePoint hylkäisi niiden nimet tai polut. Ne on lueteltu alla tilassa Epäonnistui.</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>Lähdepolku,Kohdepolku,Ongelma</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ Kopiointia edeltävä tarkistus: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>Kopiointia edeltävä tarkistus läpäisty: jokainen nimi ja polku on kelvollinen kohteessa.</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>Kopiointia edeltävä tarkistus: {0:N0} kohdetta ei voi kopioida sellaisenaan, eikä niitä kopioitu. Katso syyt Epäonnistui-riveiltä. Kaikki muu kopioituu normaalisti.</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>Luonut ({0}) ja Muokannut ({1}) eivät löytyneet kohteesta: molemmat merkittiin järjestelmätiliksi tuovan tilin sijaan</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>Muokannut ({0}) ei löytynyt kohteesta: se seuraa Luonut-arvoa eikä muutu tuovaksi tiliksi</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>Luonut ({0}) ei löytynyt kohteesta: se merkittiin järjestelmätiliksi tuovan tilin sijaan</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ {0:N0} kansiolla (asiakirjajoukot mukaan lukien) ei ollut sähköpostiosoitetta Luonut- tai Muokannut-kentässä (järjestelmätili, SharePoint-sovellus tai poistettu tili): kyseinen henkilö merkitään järjestelmätiliksi, kuten tiedostoissa, tuovan tilin sijaan</value></data>
 </root>

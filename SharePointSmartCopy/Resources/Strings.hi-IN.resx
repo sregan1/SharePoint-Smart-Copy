@@ -1832,4 +1832,30 @@
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>क्लाइंट सीक्रेट (वैकल्पिक, Teams टूल के लिए)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>इस सीक्रेट का उपयोग केवल Teams टूल करता है, ऐप्लिकेशन साइन-इन (बिना उपयोगकर्ता) के रूप में। लक्ष्य रजिस्ट्रेशन पर यह संदेश और चैट आयात करता है, जिसकी अनुमति Microsoft केवल इसी तरह देता है, Graph ऐप्लिकेशन अनुमति Teamwork.Migrate.All (एडमिन सहमति) के साथ। स्रोत रजिस्ट्रेशन पर यह Teams टूल को टेनेंट की सभी टीमें और आपके चुने हुए लोगों की चैट सूचीबद्ध करने देता है (एडमिन व्यू); अनुमतियाँ PERMISSIONS.md में हैं। यह सीक्रेट इसी ऐप रजिस्ट्रेशन में Certificates &amp; secrets के अंतर्गत बनाएँ और उसका Value चिपकाएँ, ID नहीं। यदि आपको दोनों की आवश्यकता नहीं है तो इसे खाली छोड़ें।</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>किसी रजिस्ट्रेशन को संपादित करने के लिए उसे चुनें। कौन-सा स्रोत है और कौन-सा लक्ष्य, यह होम स्क्रीन पर चुना जाता है; यहाँ किसी को चुनने या संपादित करने से वह नहीं बदलता।</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>कॉपी नहीं हुआ: &apos;{0}&apos; रिक्त स्थान (␣ के रूप में दिखाया गया) से शुरू या समाप्त होता है, जिसकी SharePoint अनुमति नहीं देता। स्रोत पर इसका नाम बदलें और फिर से कॉपी करें।</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>कॉपी नहीं हुआ: &apos;{0}&apos; बिंदु (.) पर समाप्त होता है, जिसकी SharePoint अनुमति नहीं देता। स्रोत पर इसका नाम बदलें और फिर से कॉपी करें।</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>कॉपी नहीं हुआ: नाम &apos;{0}&apos; {1} वर्ण लंबा है; SharePoint फ़ाइल या फ़ोल्डर के नाम में {2} वर्णों की अनुमति देता है। स्रोत पर इसे छोटा करें और फिर से कॉपी करें।</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>कॉपी नहीं हुआ: गंतव्य पथ {0} वर्ण लंबा होगा; SharePoint {1} की अनुमति देता है। फ़ोल्डर के नाम छोटे करें या कम गहरे स्थान पर कॉपी करें।</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>कॉलम &apos;{0}&apos; कॉपी नहीं हुआ: SharePoint ने बताया कि यह स्रोत सूची में मौजूद नहीं है (इसका आंतरिक नाम बदल गया हो सकता है या कॉलम हटा दिया गया हो सकता है)। अन्य कॉलम और आइटम कॉपी हो गए।</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>कॉपी से पहले की जाँच में कॉपी रद्द कर दी गई। कुछ भी कॉपी नहीं हुआ।</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>कॉपी नहीं हुआ: कॉपी से पहले की जाँच में कॉपी रद्द कर दी गई।</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ कॉपी से पहले की जाँच सफल: गंतव्य पर {0:N0} फ़ाइल और फ़ोल्डर नामों और पथों की शुरुआत या अंत में रिक्त स्थान, बिंदु पर समाप्त होने वाले नाम, 255 से अधिक वर्णों वाले नाम और 400 से अधिक वर्णों वाले पथों के लिए जाँच की गई।</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ कॉपी से पहले की जाँच: {1:N0} में से {0:N0} फ़ाइल और फ़ोल्डर नाम और पथ जैसे हैं वैसे कॉपी नहीं किए जा सकते (शुरुआत या अंत में रिक्त स्थान, बिंदु पर समाप्त होने वाले नाम, 255 से अधिक वर्णों वाले नाम, या 400 से अधिक वर्णों वाले पथ)।</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>कॉपी से पहले की जाँच: जो आइटम कॉपी नहीं किए जा सकते</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} आइटम का नाम या पथ ऐसा है जिसे SharePoint गंतव्य पर अस्वीकार कर देगा। बाकी सब कॉपी के लिए तैयार है।</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>आइटम</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>समस्या</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>कॉपी रद्द करें यहीं रुक जाता है, और कुछ भी कॉपी नहीं हुआ है। बाकी कॉपी करें सभी मान्य आइटम कॉपी करता है और इन आइटम को बिना कॉपी किए छोड़ देता है। ये रिपोर्ट में विफल के रूप में रहते हैं, ताकि आप इन्हें स्रोत पर ठीक करके फिर से कॉपी कर सकें।</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>सूची सहेजें…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>कॉपी रद्द करें</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>बाकी कॉपी करें</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} आइटम कॉपी नहीं हुए क्योंकि उनके नाम या पथ SharePoint द्वारा अस्वीकार कर दिए जाएँगे। वे नीचे विफल के रूप में सूचीबद्ध हैं।</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>स्रोत पथ,गंतव्य पथ,समस्या</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ कॉपी से पहले की जाँच: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>कॉपी से पहले की जाँच सफल: हर नाम और पथ गंतव्य पर मान्य है।</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>कॉपी से पहले की जाँच: {0:N0} आइटम जैसे हैं वैसे कॉपी नहीं किए जा सकते और कॉपी नहीं हुए। हर कारण के लिए विफल पंक्तियाँ देखें। बाकी सब सामान्य रूप से कॉपी हो रहा है।</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>Created By ({0}) और Modified By ({1}) लक्ष्य पर नहीं मिले: दोनों को आयात करने वाले खाते के बजाय सिस्टम खाते के रूप में दर्ज किया गया</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>Modified By ({0}) लक्ष्य पर नहीं मिला: यह आयात करने वाला खाता बनने के बजाय Created By का अनुसरण करता है</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>Created By ({0}) लक्ष्य पर नहीं मिला: इसे आयात करने वाले खाते के बजाय सिस्टम खाते के रूप में दर्ज किया गया</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ {0:N0} फ़ोल्डर (Document Sets सहित) के Created By या Modified By में कोई ईमेल नहीं था (सिस्टम खाता, SharePoint ऐप या हटाया गया खाता): उस व्यक्ति को फ़ाइलों की तरह ही सिस्टम खाते के रूप में दर्ज किया गया है, आयात करने वाले खाते के रूप में नहीं</value></data>
 </root>

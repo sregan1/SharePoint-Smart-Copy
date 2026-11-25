@@ -1832,4 +1832,30 @@ Storno: zpět</value></data>
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Tajný klíč klienta (volitelné, pro nástroj Teams)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Tento tajný klíč používá jen nástroj Teams, jako přihlášení aplikace (bez uživatele). V registraci cíle jím importuje zprávy a chaty, což Microsoft povoluje pouze tímto způsobem, s oprávněním aplikace Graph Teamwork.Migrate.All (souhlas správce). V registraci zdroje díky němu nástroj Teams vypíše všechny týmy v tenantovi a chaty vybraných osob (zobrazení správce); oprávnění jsou popsána v PERMISSIONS.md. Tajný klíč vytvořte v této registraci aplikace v části Certifikáty a tajné klíče a vložte jeho hodnotu (Value), ne jeho ID. Pokud nepotřebujete ani jedno, nechte prázdné.</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Vyberte registraci, kterou chcete upravit. Která je zdrojová a která cílová, se vybírá na domovské obrazovce; výběr nebo úprava zde to nemění.</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>Nezkopírováno: &apos;{0}&apos; začíná nebo končí mezerou (zobrazena jako ␣), což SharePoint nepovoluje. Přejmenujte položku ve zdroji a zkopírujte ji znovu.</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>Nezkopírováno: &apos;{0}&apos; končí tečkou, což SharePoint nepovoluje. Přejmenujte položku ve zdroji a zkopírujte ji znovu.</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>Nezkopírováno: název &apos;{0}&apos; má {1} znaků; SharePoint povoluje {2} na název souboru nebo složky. Zkraťte ho ve zdroji a zkopírujte znovu.</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>Nezkopírováno: cesta v cíli by měla {0} znaků; SharePoint povoluje {1}. Zkraťte názvy složek nebo kopírujte do méně hluboké umístění.</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>Sloupec &apos;{0}&apos; nebyl zkopírován: SharePoint oznámil, že ve zdrojovém seznamu neexistuje (jeho interní název se mohl změnit nebo byl sloupec odebrán). Ostatní sloupce a položky byly zkopírovány.</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>Kopírování bylo zrušeno při kontrole před kopírováním. Nic nebylo zkopírováno.</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>Nezkopírováno: kopírování bylo zrušeno při kontrole před kopírováním.</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ Kontrola před kopírováním proběhla úspěšně: v cíli bylo zkontrolováno {0:N0} názvů a cest souborů a složek (mezery na začátku nebo na konci, názvy končící tečkou, názvy delší než 255 znaků a cesty delší než 400 znaků).</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ Kontrola před kopírováním: {0:N0} z {1:N0} názvů a cest souborů a složek nelze zkopírovat v dané podobě (mezery na začátku nebo na konci, názvy končící tečkou, názvy delší než 255 znaků nebo cesty delší než 400 znaků).</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>Kontrola před kopírováním: položky, které nelze zkopírovat</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} položek má název nebo cestu, které by SharePoint v cíli odmítl. Vše ostatní je připraveno ke kopírování.</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>Položka</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>Problém</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>Možnost Zrušit kopírování se zde zastaví a nic nebude zkopírováno. Možnost Zkopírovat zbytek zkopíruje vše platné a tyto položky ponechá nezkopírované. V přehledu zůstanou jako Selhalo, takže je můžete opravit ve zdroji a zkopírovat znovu.</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>Uložit seznam…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>Zrušit kopírování</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>Zkopírovat zbytek</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} položek nebylo zkopírováno, protože SharePoint by jejich názvy nebo cesty odmítl. Níže jsou uvedeny jako Selhalo.</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>Zdrojová cesta,Cílová cesta,Problém</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ Kontrola před kopírováním: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>Kontrola před kopírováním proběhla úspěšně: každý název a cesta jsou v cíli platné.</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>Kontrola před kopírováním: {0:N0} položek nelze zkopírovat v dané podobě a nebyly zkopírovány. Důvod každé z nich najdete v řádcích Selhalo. Vše ostatní se kopíruje normálně.</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>Pole Vytvořil ({0}) a Změnil ({1}) se v cíli nepodařilo najít: obojí bylo označeno jako systémový účet místo importujícího účtu</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>Pole Změnil ({0}) se v cíli nepodařilo najít: přebírá hodnotu pole Vytvořil místo importujícího účtu</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>Pole Vytvořil ({0}) se v cíli nepodařilo najít: bylo označeno jako systémový účet místo importujícího účtu</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ {0:N0} složek (včetně sad dokumentů) nemělo e-mail u pole Vytvořil nebo Změnil (systémový účet, aplikace SharePoint nebo smazaný účet): každá taková osoba je označena jako systémový účet, stejně jako u souborů, místo importujícího účtu</value></data>
 </root>

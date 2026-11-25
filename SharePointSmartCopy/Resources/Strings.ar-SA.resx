@@ -1832,4 +1832,30 @@
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>سر العميل (اختياري، لأداة Teams)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>تستخدم أداة Teams فقط هذا السر لتسجيل دخول التطبيق (بدون مستخدم). في تسجيل الهدف تستورد به الرسائل والمحادثات، وهو ما تسمح به Microsoft بهذه الطريقة فقط، مع إذن تطبيق Graph باسم Teamwork.Migrate.All (موافقة المسؤول). وفي تسجيل المصدر تتيح لأداة Teams عرض جميع الفرق في المستأجر ومحادثات الأشخاص الذين تختارهم (عرض المسؤول)؛ والأذونات مذكورة في PERMISSIONS.md. أنشئ السر في تسجيل التطبيق هذا ضمن الشهادات والأسرار (Certificates &amp; secrets) والصق قيمته (Value) وليس معرّفه (ID). اتركه فارغًا إذا لم تحتج إلى أي منهما.</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>حدّد تسجيلاً لتحريره. يتم اختيار المصدر والهدف من الشاشة الرئيسية؛ ولا يغيّر تحديد تسجيل أو تحريره هنا ذلك.</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>لم يتم النسخ: &apos;{0}&apos; يبدأ أو ينتهي بمسافة (تظهر كـ ␣)، وهو أمر لا يسمح به SharePoint. أعد تسميته في المصدر ثم انسخ مرة أخرى.</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>لم يتم النسخ: &apos;{0}&apos; ينتهي بنقطة، وهو أمر لا يسمح به SharePoint. أعد تسميته في المصدر ثم انسخ مرة أخرى.</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>لم يتم النسخ: يبلغ طول الاسم &apos;{0}&apos; {1} حرفًا؛ ويسمح SharePoint بـ {2} لكل اسم ملف أو مجلد. اختصره في المصدر ثم انسخ مرة أخرى.</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>لم يتم النسخ: سيبلغ طول المسار في الوجهة {0} حرفًا؛ ويسمح SharePoint بـ {1}. اختصر أسماء المجلدات أو انسخ إلى موقع أقل عمقًا.</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>لم يتم نسخ العمود &apos;{0}&apos;: أفاد SharePoint بأنه غير موجود في القائمة المصدر (ربما تغيّر اسمه الداخلي أو تمت إزالة العمود). تم نسخ الأعمدة الأخرى والعناصر.</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>تم إلغاء النسخ عند الفحص قبل النسخ. لم يتم نسخ أي شيء.</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>لم يتم النسخ: تم إلغاء النسخ عند الفحص قبل النسخ.</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ اجتاز الفحص قبل النسخ: تم فحص {0:N0} من أسماء ومسارات الملفات والمجلدات في الوجهة للتحقق من المسافات في البداية أو النهاية، والأسماء المنتهية بنقطة، والأسماء التي تتجاوز 255 حرفًا، والمسارات التي تتجاوز 400 حرف.</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ الفحص قبل النسخ: تعذر نسخ {0:N0} من أصل {1:N0} من أسماء ومسارات الملفات والمجلدات كما هي (مسافات في البداية أو النهاية، أو أسماء منتهية بنقطة، أو أسماء تتجاوز 255 حرفًا، أو مسارات تتجاوز 400 حرف).</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>الفحص قبل النسخ: عناصر لا يمكن نسخها</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} عنصر(عناصر) لها اسم أو مسار سيرفضه SharePoint في الوجهة. كل ما عداها جاهز للنسخ.</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>العنصر</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>المشكلة</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>يؤدي إلغاء النسخ إلى التوقف هنا دون نسخ أي شيء. أما نسخ الباقي فينسخ كل ما هو صالح ويترك هذه العناصر دون نسخ. وتبقى في التقرير بحالة فشل، لتتمكن من إصلاحها في المصدر والنسخ مرة أخرى.</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>حفظ القائمة…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>إلغاء النسخ</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>نسخ الباقي</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>لم يتم نسخ {0:N0} عنصر(عناصر) لأن SharePoint سيرفض أسماءها أو مساراتها. وهي مدرجة أدناه بحالة فشل.</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>المسار المصدر,المسار الوجهة,المشكلة</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ الفحص قبل النسخ: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>اجتاز الفحص قبل النسخ: كل اسم ومسار صالح في الوجهة.</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>الفحص قبل النسخ: تعذر نسخ {0:N0} عنصر(عناصر) كما هي ولم يتم نسخها. راجع صفوف الفشل لمعرفة سبب كل منها. أما بقية العناصر فتُنسخ بشكل طبيعي.</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>تعذر العثور على المنشئ ({0}) والمعدِّل ({1}) في الهدف: تم تسجيل كليهما كحساب النظام بدلاً من حساب الاستيراد</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>تعذر العثور على المعدِّل ({0}) في الهدف: يتبع المنشئ بدلاً من أن يصبح حساب الاستيراد</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>تعذر العثور على المنشئ ({0}) في الهدف: تم تسجيله كحساب النظام بدلاً من حساب الاستيراد</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ لم يكن لدى {0:N0} مجلد(ات) (بما في ذلك مجموعات المستندات) بريد إلكتروني للمنشئ و/أو المعدِّل (حساب نظام أو تطبيق SharePoint أو حساب محذوف): يُسجَّل كل شخص من هؤلاء كحساب النظام، كما في الملفات، بدلاً من حساب الاستيراد</value></data>
 </root>

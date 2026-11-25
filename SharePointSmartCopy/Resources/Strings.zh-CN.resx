@@ -1832,4 +1832,30 @@
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>客户端密码(可选,用于 Teams 工具)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>只有 Teams 工具会使用此密码,作为应用程序登录(无用户)。在目标注册中,它用于导入消息和聊天,Microsoft 仅允许以这种方式、并使用 Graph 应用程序权限 Teamwork.Migrate.All(需管理员同意)来执行此操作。在源注册中,它让 Teams 工具列出租户中的所有团队以及您所选人员的聊天(管理员视图);权限请参阅 PERMISSIONS.md。请在此应用注册的“证书和密码”下创建密码,并粘贴其值(Value),而不是其 ID。如果两者都不需要,请留空。</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>选择一个注册进行编辑。哪个是源、哪个是目标在主屏幕上选择;在此处选择或编辑注册不会更改该设置。</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>未复制:&apos;{0}&apos; 以空格开头或结尾(显示为 ␣),SharePoint 不允许这样。请在源位置重命名后再次复制。</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>未复制:&apos;{0}&apos; 以句点结尾,SharePoint 不允许这样。请在源位置重命名后再次复制。</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>未复制:名称 &apos;{0}&apos; 长 {1} 个字符;SharePoint 允许每个文件或文件夹名称最多 {2} 个字符。请在源位置缩短后再次复制。</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>未复制:目标路径将长达 {0} 个字符;SharePoint 允许 {1} 个。请缩短文件夹名称,或复制到层级较浅的位置。</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>列 &apos;{0}&apos; 未复制:SharePoint 报告源列表中不存在该列(其内部名称可能已更改,或该列已被删除)。其他列和项目已复制。</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>已在复制前检查时取消复制。未复制任何内容。</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>未复制:复制已在复制前检查时取消。</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ 复制前检查通过:已在目标位置检查 {0:N0} 个文件和文件夹名称及路径,检查内容包括开头或结尾的空格、以句点结尾的名称、超过 255 个字符的名称以及超过 400 个字符的路径。</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ 复制前检查:{1:N0} 个文件和文件夹名称及路径中有 {0:N0} 个无法按原名称复制(开头或结尾有空格、以句点结尾的名称、超过 255 个字符的名称,或超过 400 个字符的路径)。</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>复制前检查:无法复制的项目</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>有 {0:N0} 个项目的名称或路径会被 SharePoint 在目标位置拒绝。其他所有内容均可复制。</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>项目</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>问题</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>取消复制将在此停止,不会复制任何内容。复制其余项目将复制所有有效项目,并保留这些项目不复制。它们在报告中仍显示为失败,因此您可以在源位置修复后再次复制。</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>保存列表…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>取消复制</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>复制其余项目</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>有 {0:N0} 个项目未复制,因为其名称或路径会被 SharePoint 拒绝。它们在下方列为失败。</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>源路径,目标路径,问题</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ 复制前检查:{0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>复制前检查通过:所有名称和路径在目标位置均有效。</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>复制前检查:有 {0:N0} 个项目无法按原名称复制,且未复制。请查看失败行了解各自的原因。其他所有内容正在正常复制。</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>在目标位置找不到创建者({0})和修改者({1}):二者均记为系统帐户,而不是导入帐户</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>在目标位置找不到修改者({0}):其沿用创建者,而不是成为导入帐户</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>在目标位置找不到创建者({0}):其记为系统帐户,而不是导入帐户</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ {0:N0} 个文件夹(包括文档集)的创建者和/或修改者没有电子邮件(系统帐户、SharePoint 应用或已删除的帐户):每个此类人员与文件一样记为系统帐户,而不是导入帐户</value></data>
 </root>

@@ -1832,4 +1832,30 @@ Hayır: önce kullanıcı eşlemesini aç
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Client secret (isteğe bağlı, Teams aracı için)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Bu gizli anahtarı yalnızca Teams aracı kullanır, uygulama oturum açması olarak (kullanıcısız). Hedef kayıtta iletileri ve sohbetleri içe aktarır; Microsoft buna yalnızca bu şekilde ve Graph uygulama izni Teamwork.Migrate.All (yönetici onayı) ile izin verir. Kaynak kayıtta Teams aracının kiracıdaki tüm ekipleri ve seçtiğiniz kişilerin sohbetlerini listelemesini sağlar (yönetici görünümü); izinler PERMISSIONS.md dosyasındadır. Gizli anahtarı bu uygulama kaydında Certificates &amp; secrets altında oluşturun ve kimliğini (ID) değil değerini (Value) yapıştırın. İkisine de ihtiyacınız yoksa boş bırakın.</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Düzenlemek için bir kayıt seçin. Hangisinin kaynak, hangisinin hedef olduğu ana ekranda seçilir; burada birini seçmek veya düzenlemek bunu değiştirmez.</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>Kopyalanmadı: &apos;{0}&apos; boşlukla başlıyor veya bitiyor (␣ ile gösterilir); SharePoint buna izin vermez. Kaynakta yeniden adlandırın ve tekrar kopyalayın.</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>Kopyalanmadı: &apos;{0}&apos; nokta ile bitiyor; SharePoint buna izin vermez. Kaynakta yeniden adlandırın ve tekrar kopyalayın.</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>Kopyalanmadı: &apos;{0}&apos; adı {1} karakter uzunluğunda; SharePoint dosya veya klasör adı başına {2} karaktere izin verir. Kaynakta kısaltın ve tekrar kopyalayın.</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>Kopyalanmadı: hedef yol {0} karakter uzunluğunda olurdu; SharePoint {1} karaktere izin verir. Klasör adlarını kısaltın veya daha az derin bir konuma kopyalayın.</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>&apos;{0}&apos; sütunu kopyalanmadı: SharePoint, bunun kaynak listede bulunmadığını bildirdi (iç adı değişmiş veya sütun kaldırılmış olabilir). Diğer sütunlar ve öğeler kopyalandı.</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>Kopyalama, kopyalama öncesi denetimde iptal edildi. Hiçbir şey kopyalanmadı.</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>Kopyalanmadı: kopyalama, kopyalama öncesi denetimde iptal edildi.</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ Kopyalama öncesi denetim başarılı: hedefte {0:N0} dosya ve klasör adı ile yolu; başta veya sonda boşluk, nokta ile biten adlar, 255 karakteri aşan adlar ve 400 karakteri aşan yollar açısından denetlendi.</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ Kopyalama öncesi denetim: {1:N0} dosya ve klasör adı ile yolundan {0:N0} tanesi adlandırıldığı gibi kopyalanamaz (başta veya sonda boşluk, nokta ile biten adlar, 255 karakteri aşan adlar veya 400 karakteri aşan yollar).</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>Kopyalama öncesi denetim: kopyalanamayan öğeler</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} öğenin adı veya yolu SharePoint tarafından hedefte reddedilir. Diğer her şey kopyalanmaya hazır.</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>Öğe</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>Sorun</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>Kopyalamayı iptal et burada durur ve hiçbir şey kopyalanmaz. Kalanı kopyala, geçerli olan her şeyi kopyalar ve bu öğeleri kopyalanmadan bırakır. Bunlar raporda Başarısız olarak kalır; böylece kaynakta düzeltip tekrar kopyalayabilirsiniz.</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>Listeyi kaydet…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>Kopyalamayı iptal et</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>Kalanı kopyala</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} öğe, adları veya yolları SharePoint tarafından reddedileceği için kopyalanmadı. Aşağıda Başarısız olarak listelenmiştir.</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>Kaynak yol,Hedef yol,Sorun</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ Kopyalama öncesi denetim: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>Kopyalama öncesi denetim başarılı: her ad ve yol hedefte geçerli.</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>Kopyalama öncesi denetim: {0:N0} öğe adlandırıldığı gibi kopyalanamaz ve kopyalanmadı. Her birinin nedeni için Başarısız satırlarına bakın. Diğer her şey normal şekilde kopyalanıyor.</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>Oluşturan ({0}) ve Değiştiren ({1}) hedefte bulunamadı: ikisi de içe aktaran hesap yerine Sistem Hesabı olarak damgalandı</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>Değiştiren ({0}) hedefte bulunamadı: içe aktaran hesap olmak yerine Oluşturan değerini izler</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>Oluşturan ({0}) hedefte bulunamadı: içe aktaran hesap yerine Sistem Hesabı olarak damgalandı</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ {0:N0} klasörün (Belge Kümeleri dahil) Oluşturan ve/veya Değiştiren alanında e-posta yoktu (sistem hesabı, SharePoint App veya silinmiş bir hesap): bu kişilerin her biri, dosyalarda olduğu gibi, içe aktaran hesap yerine Sistem Hesabı olarak damgalanır</value></data>
 </root>

@@ -1832,4 +1832,30 @@ Hủy: quay lại</value></data>
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Client secret (tùy chọn, cho công cụ Teams)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Chỉ công cụ Teams dùng secret này, như một đăng nhập kiểu ứng dụng (không có người dùng). Trên đăng ký đích, nó dùng để nhập tin nhắn và cuộc trò chuyện, điều mà Microsoft chỉ cho phép theo cách này, cùng quyền ứng dụng Graph Teamwork.Migrate.All (có sự đồng ý của quản trị viên). Trên đăng ký nguồn, nó cho phép công cụ Teams liệt kê mọi nhóm trong tenant và cuộc trò chuyện của những người bạn chọn (chế độ xem quản trị viên); các quyền có trong PERMISSIONS.md. Hãy tạo secret trên đăng ký ứng dụng này trong Certificates &amp; secrets và dán Value của nó, không phải ID. Để trống nếu bạn không cần cả hai.</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Chọn một đăng ký để chỉnh sửa. Đăng ký nào là nguồn và đăng ký nào là đích được chọn ở màn hình chính; việc chọn hoặc chỉnh sửa ở đây không thay đổi điều đó.</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>Không được sao chép: &apos;{0}&apos; bắt đầu hoặc kết thúc bằng dấu cách (hiển thị là ␣), điều mà SharePoint không cho phép. Hãy đổi tên ở nguồn rồi sao chép lại.</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>Không được sao chép: &apos;{0}&apos; kết thúc bằng dấu chấm, điều mà SharePoint không cho phép. Hãy đổi tên ở nguồn rồi sao chép lại.</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>Không được sao chép: tên &apos;{0}&apos; dài {1} ký tự; SharePoint cho phép {2} ký tự cho mỗi tên tệp hoặc thư mục. Hãy rút ngắn ở nguồn rồi sao chép lại.</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>Không được sao chép: đường dẫn đích sẽ dài {0} ký tự; SharePoint cho phép {1}. Hãy rút ngắn tên thư mục hoặc sao chép đến vị trí nông hơn.</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>Cột &apos;{0}&apos; không được sao chép: SharePoint báo rằng cột này không tồn tại trong danh sách nguồn (tên nội bộ có thể đã thay đổi hoặc cột đã bị xóa). Các cột khác và các mục đã được sao chép.</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>Đã hủy sao chép ở bước kiểm tra trước khi sao chép. Chưa sao chép gì.</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>Không được sao chép: việc sao chép đã bị hủy ở bước kiểm tra trước khi sao chép.</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ Đạt kiểm tra trước khi sao chép: đã kiểm tra {0:N0} tên và đường dẫn tệp và thư mục tại đích về dấu cách ở đầu hoặc cuối, tên kết thúc bằng dấu chấm, tên dài hơn 255 ký tự và đường dẫn dài hơn 400 ký tự.</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ Kiểm tra trước khi sao chép: {0:N0} trong số {1:N0} tên và đường dẫn tệp và thư mục không thể sao chép với tên hiện tại (dấu cách ở đầu hoặc cuối, tên kết thúc bằng dấu chấm, tên dài hơn 255 ký tự hoặc đường dẫn dài hơn 400 ký tự).</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>Kiểm tra trước khi sao chép: các mục không thể sao chép</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} mục có tên hoặc đường dẫn mà SharePoint sẽ từ chối tại đích. Mọi mục khác đã sẵn sàng để sao chép.</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>Mục</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>Sự cố</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>Hủy sao chép sẽ dừng tại đây và chưa sao chép gì. Sao chép phần còn lại sẽ sao chép mọi mục hợp lệ và để các mục này không được sao chép. Chúng vẫn nằm trong báo cáo với trạng thái Thất bại, nên bạn có thể sửa ở nguồn rồi sao chép lại.</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>Lưu danh sách…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>Hủy sao chép</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>Sao chép phần còn lại</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} mục không được sao chép vì tên hoặc đường dẫn của chúng sẽ bị SharePoint từ chối. Các mục này được liệt kê là Thất bại bên dưới.</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>Đường dẫn nguồn,Đường dẫn đích,Sự cố</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ Kiểm tra trước khi sao chép: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>Đạt kiểm tra trước khi sao chép: mọi tên và đường dẫn đều hợp lệ tại đích.</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>Kiểm tra trước khi sao chép: {0:N0} mục không thể sao chép với tên hiện tại và chưa được sao chép. Xem các hàng Thất bại để biết lý do của từng mục. Mọi mục khác vẫn đang được sao chép bình thường.</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>Không tìm thấy Created By ({0}) và Modified By ({1}) trên đích: cả hai được ghi là Tài khoản hệ thống thay vì tài khoản nhập</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>Không tìm thấy Modified By ({0}) trên đích: giá trị này lấy theo Created By thay vì trở thành tài khoản nhập</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>Không tìm thấy Created By ({0}) trên đích: được ghi là Tài khoản hệ thống thay vì tài khoản nhập</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ {0:N0} thư mục (bao gồm Document Sets) không có email ở Created By và/hoặc Modified By (tài khoản hệ thống, ứng dụng SharePoint hoặc tài khoản đã bị xóa): mỗi người như vậy được ghi là Tài khoản hệ thống, giống như với tệp, thay vì tài khoản nhập</value></data>
 </root>

@@ -1832,4 +1832,30 @@
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Секрет клієнта (необов’язково, для інструмента Teams)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Цей секрет використовує лише інструмент Teams, як вхід від імені застосунку (без користувача). У реєстрації призначення він слугує для імпорту повідомлень і чатів, що Microsoft дозволяє лише так, з дозволом застосунку Graph Teamwork.Migrate.All (згода адміністратора). У реєстрації джерела він дає змогу інструменту Teams перелічити всі команди в оренді та чати вибраних вами людей (подання адміністратора); дозволи описано в PERMISSIONS.md. Створіть секрет у цій реєстрації застосунку в розділі «Сертифікати й секрети» та вставте його значення (Value), а не ідентифікатор (ID). Залиште порожнім, якщо вам не потрібне ні те, ні інше.</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Виберіть реєстрацію, щоб змінити її. Яка з них вихідна, а яка цільова, обирається на головному екрані; вибір чи зміна тут цього не змінює.</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>Не скопійовано: «{0}» починається або закінчується пробілом (показано як ␣), що SharePoint не дозволяє. Перейменуйте в джерелі та скопіюйте знову.</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>Не скопійовано: «{0}» закінчується крапкою, що SharePoint не дозволяє. Перейменуйте в джерелі та скопіюйте знову.</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>Не скопійовано: назва «{0}» має довжину {1} символів; SharePoint дозволяє {2} для назви файлу або папки. Скоротьте її в джерелі та скопіюйте знову.</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>Не скопійовано: шлях призначення мав би довжину {0} символів; SharePoint дозволяє {1}. Скоротьте назви папок або скопіюйте в менш вкладене розташування.</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>Стовпець «{0}» не скопійовано: SharePoint повідомив, що його не існує у вихідному списку (його внутрішню назву могли змінити або стовпець видалили). Інші стовпці та елементи скопійовано.</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>Копіювання скасовано під час перевірки перед копіюванням. Нічого не скопійовано.</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>Не скопійовано: копіювання скасовано під час перевірки перед копіюванням.</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ Перевірку перед копіюванням пройдено: у призначенні перевірено {0:N0} назв і шляхів файлів і папок на пробіли на початку або в кінці, назви, що закінчуються крапкою, назви довші за 255 символів і шляхи довші за 400 символів.</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ Перевірка перед копіюванням: {0:N0} із {1:N0} назв і шляхів файлів і папок не можна скопіювати з поточними назвами (пробіли на початку або в кінці, назви, що закінчуються крапкою, назви довші за 255 символів або шляхи довші за 400 символів).</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>Перевірка перед копіюванням: елементи, які не можна скопіювати</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>У {0:N0} елементів назва або шлях, які SharePoint відхилить у призначенні. Усе інше готове до копіювання.</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>Елемент</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>Проблема</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>Скасувати копіювання зупиняє процес, і нічого не копіюється. Скопіювати решту копіює все коректне та залишає ці елементи нескопійованими. У звіті вони лишаються зі статусом Помилка, тож ви можете виправити їх у джерелі та скопіювати знову.</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>Зберегти список…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>Скасувати копіювання</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>Скопіювати решту</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} елементів не скопійовано, оскільки їхні назви або шляхи буде відхилено SharePoint. Нижче вони позначені як Помилка.</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>Шлях джерела,Шлях призначення,Проблема</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ Перевірка перед копіюванням: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>Перевірку перед копіюванням пройдено: усі назви та шляхи коректні в призначенні.</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>Перевірка перед копіюванням: {0:N0} елементів не можна скопіювати з поточними назвами, і їх не скопійовано. Причину для кожного див. у рядках зі статусом Помилка. Усе інше копіюється як зазвичай.</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>Не вдалося знайти в цілі «Створив» ({0}) і «Змінив» ({1}): обох позначено як системний обліковий запис замість облікового запису, що імпортує</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>Не вдалося знайти в цілі «Змінив» ({0}): значення дорівнює «Створив» замість облікового запису, що імпортує</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>Не вдалося знайти в цілі «Створив» ({0}): позначено як системний обліковий запис замість облікового запису, що імпортує</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ Для {0:N0} папок (зокрема наборів документів) не було електронної адреси в полі «Створив» і/або «Змінив» (системний обліковий запис, застосунок SharePoint або видалений обліковий запис): кожну таку особу позначено як системний обліковий запис, як і для файлів, замість облікового запису, що імпортує</value></data>
 </root>

@@ -1832,4 +1832,30 @@ Batal: kembali</value></data>
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Rahasia klien (opsional, untuk alat Teams)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Hanya alat Teams yang menggunakan rahasia ini, sebagai proses masuk aplikasi (tanpa pengguna). Pada registrasi target, rahasia ini mengimpor pesan dan obrolan, yang hanya diizinkan Microsoft dengan cara ini, dengan izin aplikasi Graph Teamwork.Migrate.All (persetujuan admin). Pada registrasi sumber, rahasia ini memungkinkan alat Teams mencantumkan semua tim di tenant dan obrolan milik orang yang Anda pilih (tampilan administrator); izinnya ada di PERMISSIONS.md. Buat rahasia pada registrasi aplikasi ini di bawah Sertifikat &amp; rahasia dan tempel Value-nya, bukan ID-nya. Biarkan kosong jika Anda tidak memerlukan keduanya.</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Pilih registrasi untuk mengeditnya. Mana yang menjadi sumber dan mana yang menjadi target dipilih di layar beranda; memilih atau mengedit registrasi di sini tidak mengubahnya.</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>Tidak disalin: &apos;{0}&apos; diawali atau diakhiri dengan spasi (ditampilkan sebagai ␣), yang tidak diizinkan SharePoint. Ganti namanya di sumber lalu salin lagi.</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>Tidak disalin: &apos;{0}&apos; diakhiri dengan titik, yang tidak diizinkan SharePoint. Ganti namanya di sumber lalu salin lagi.</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>Tidak disalin: nama &apos;{0}&apos; sepanjang {1} karakter; SharePoint mengizinkan {2} karakter per nama file atau folder. Persingkat di sumber lalu salin lagi.</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>Tidak disalin: jalur tujuan akan sepanjang {0} karakter; SharePoint mengizinkan {1}. Persingkat nama folder atau salin ke lokasi yang lebih dangkal.</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>Kolom &apos;{0}&apos; tidak disalin: SharePoint melaporkan kolom tersebut tidak ada di daftar sumber (nama internalnya mungkin berubah atau kolom telah dihapus). Kolom lain dan item telah disalin.</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>Penyalinan dibatalkan pada pemeriksaan sebelum penyalinan. Tidak ada yang disalin.</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>Tidak disalin: penyalinan dibatalkan pada pemeriksaan sebelum penyalinan.</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ Pemeriksaan sebelum penyalinan lulus: {0:N0} nama dan jalur file serta folder diperiksa di tujuan untuk spasi di awal atau akhir, nama yang diakhiri titik, nama lebih dari 255 karakter, dan jalur lebih dari 400 karakter.</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ Pemeriksaan sebelum penyalinan: {0:N0} dari {1:N0} nama dan jalur file serta folder tidak dapat disalin apa adanya (spasi di awal atau akhir, nama yang diakhiri titik, nama lebih dari 255 karakter, atau jalur lebih dari 400 karakter).</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>Pemeriksaan sebelum penyalinan: item yang tidak dapat disalin</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} item memiliki nama atau jalur yang akan ditolak SharePoint di tujuan. Semua yang lain siap disalin.</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>Item</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>Masalah</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>Batalkan penyalinan berhenti di sini, dan tidak ada yang disalin. Salin sisanya menyalin semua yang valid dan membiarkan item ini tidak disalin. Item tersebut tetap ada di laporan sebagai Gagal, sehingga Anda dapat memperbaikinya di sumber lalu menyalin lagi.</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>Simpan daftar…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>Batalkan penyalinan</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>Salin sisanya</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} item tidak disalin karena nama atau jalurnya akan ditolak oleh SharePoint. Item tersebut tercantum di bawah sebagai Gagal.</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>Jalur sumber,Jalur tujuan,Masalah</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ Pemeriksaan sebelum penyalinan: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>Pemeriksaan sebelum penyalinan lulus: setiap nama dan jalur valid di tujuan.</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>Pemeriksaan sebelum penyalinan: {0:N0} item tidak dapat disalin apa adanya dan tidak disalin. Lihat baris Gagal untuk setiap alasannya. Semua yang lain disalin seperti biasa.</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>Dibuat Oleh ({0}) dan Diubah Oleh ({1}) tidak ditemukan di target: keduanya dicatat sebagai Akun Sistem, bukan akun yang mengimpor</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>Diubah Oleh ({0}) tidak ditemukan di target: mengikuti Dibuat Oleh, bukan menjadi akun yang mengimpor</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>Dibuat Oleh ({0}) tidak ditemukan di target: dicatat sebagai Akun Sistem, bukan akun yang mengimpor</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ {0:N0} folder (termasuk Set Dokumen) tidak memiliki email untuk Dibuat Oleh atau Diubah Oleh (akun sistem, Aplikasi SharePoint, atau akun yang dihapus): orang tersebut dicatat sebagai Akun Sistem, seperti file, bukan akun yang mengimpor</value></data>
 </root>

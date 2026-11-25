@@ -1832,4 +1832,30 @@ Avbryt: gå tillbaka</value></data>
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Klienthemlighet (valfritt, för Teams-verktyget)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Bara Teams-verktyget använder den här hemligheten, som en programinloggning (utan användare). På målregistreringen importerar det meddelanden och chattar, vilket Microsoft bara tillåter på det här sättet, med Graph-programbehörigheten Teamwork.Migrate.All (administratörsgodkännande). På källregistreringen låter den Teams-verktyget lista alla team i klientorganisationen och chattarna för de personer du väljer (administratörsvyn); behörigheterna finns i PERMISSIONS.md. Skapa hemligheten på den här appregistreringen under Certifikat och hemligheter och klistra in dess värde (Value), inte dess ID. Lämna tomt om du inte behöver någotdera.</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Välj en registrering för att redigera den. Vilken som är källan och vilken som är målet väljs på startskärmen; att välja eller redigera en här ändrar inte det.</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>Kopierades inte: &apos;{0}&apos; börjar eller slutar med ett mellanslag (visas som ␣), vilket SharePoint inte tillåter. Byt namn i källan och kopiera igen.</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>Kopierades inte: &apos;{0}&apos; slutar med en punkt, vilket SharePoint inte tillåter. Byt namn i källan och kopiera igen.</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>Kopierades inte: namnet &apos;{0}&apos; är {1} tecken långt; SharePoint tillåter {2} per fil- eller mappnamn. Korta ned det i källan och kopiera igen.</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>Kopierades inte: målsökvägen skulle bli {0} tecken lång; SharePoint tillåter {1}. Korta ned mappnamnen eller kopiera till en grundare plats.</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>Kolumnen &apos;{0}&apos; kopierades inte: SharePoint rapporterade att den inte finns i källistan (det interna namnet kan ha ändrats eller kolumnen har tagits bort). De andra kolumnerna och objekten kopierades.</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>Kopieringen avbröts vid kontrollen före kopiering. Ingenting kopierades.</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>Kopierades inte: kopieringen avbröts vid kontrollen före kopiering.</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ Kontrollen före kopiering godkändes: {0:N0} fil- och mappnamn och sökvägar kontrollerades på målet för mellanslag i början eller slutet, namn som slutar med punkt, namn över 255 tecken och sökvägar över 400 tecken.</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ Kontroll före kopiering: {0:N0} av {1:N0} fil- och mappnamn och sökvägar kan inte kopieras med nuvarande namn (mellanslag i början eller slutet, namn som slutar med punkt, namn över 255 tecken eller sökvägar över 400 tecken).</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>Kontroll före kopiering: objekt som inte kan kopieras</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} objekt har ett namn eller en sökväg som SharePoint skulle avvisa på målet. Allt annat är redo att kopieras.</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>Objekt</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>Problem</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>Avbryt kopiering stannar här, och ingenting har kopierats. Kopiera resten kopierar allt som är giltigt och lämnar de här objekten okopierade. De ligger kvar i rapporten som Misslyckades, så att du kan åtgärda dem i källan och kopiera igen.</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>Spara lista…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>Avbryt kopiering</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>Kopiera resten</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} objekt kopierades inte eftersom deras namn eller sökvägar skulle avvisas av SharePoint. De visas som Misslyckades nedan.</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>Källsökväg,Målsökväg,Problem</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ Kontroll före kopiering: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>Kontrollen före kopiering godkändes: alla namn och sökvägar är giltiga på målet.</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>Kontroll före kopiering: {0:N0} objekt kan inte kopieras med nuvarande namn och kopierades inte. Se raderna med Misslyckades för respektive orsak. Allt annat kopieras som vanligt.</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>Skapad av ({0}) och Ändrad av ({1}) hittades inte på målet: båda anges som systemkontot i stället för det importerande kontot</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>Ändrad av ({0}) hittades inte på målet: den följer Skapad av i stället för att bli det importerande kontot</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>Skapad av ({0}) hittades inte på målet: den anges som systemkontot i stället för det importerande kontot</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ {0:N0} mapp(ar) (inklusive dokumentuppsättningar) saknade e-postadress för Skapad av och/eller Ändrad av (ett systemkonto, SharePoint-app eller ett borttaget konto): varje sådan person anges som systemkontot, precis som för filer, i stället för det importerande kontot</value></data>
 </root>

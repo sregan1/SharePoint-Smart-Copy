@@ -1832,4 +1832,30 @@ Annuller: gå tilbage</value></data>
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Klienthemmelighed (valgfri, til Teams-værktøjet)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>Kun Teams-værktøjet bruger denne hemmelighed, som et programlogin (uden bruger). På målregistreringen importerer det beskeder og chats, hvilket Microsoft kun tillader på denne måde, med Graph-programtilladelsen Teamwork.Migrate.All (administratorsamtykke). På kilderegistreringen lader den Teams-værktøjet vise alle teams i tenanten og chats for de personer, du vælger (administratorvisningen); tilladelserne står i PERMISSIONS.md. Opret hemmeligheden på denne appregistrering under Certifikater og hemmeligheder, og indsæt dens værdi (Value), ikke dens ID. Lad feltet være tomt, hvis du ikke har brug for nogen af delene.</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>Vælg en registrering for at redigere den. Hvilken der er kilden, og hvilken der er målet, vælges på startskærmen; at vælge eller redigere en her ændrer ikke det.</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>Ikke kopieret: &apos;{0}&apos; starter eller slutter med et mellemrum (vist som ␣), hvilket SharePoint ikke tillader. Omdøb det i kilden, og kopier igen.</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>Ikke kopieret: &apos;{0}&apos; slutter med et punktum, hvilket SharePoint ikke tillader. Omdøb det i kilden, og kopier igen.</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>Ikke kopieret: navnet &apos;{0}&apos; er {1} tegn langt; SharePoint tillader {2} pr. fil- eller mappenavn. Forkort det i kilden, og kopier igen.</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>Ikke kopieret: stien på destinationen ville være {0} tegn lang; SharePoint tillader {1}. Forkort mappenavnene, eller kopier til en mindre dyb placering.</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>Kolonnen &apos;{0}&apos; blev ikke kopieret: SharePoint oplyste, at den ikke findes på kildelisten (dens interne navn kan være ændret, eller kolonnen kan være fjernet). De øvrige kolonner og elementerne blev kopieret.</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>Kopieringen blev annulleret ved kontrollen før kopiering. Intet blev kopieret.</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>Ikke kopieret: kopieringen blev annulleret ved kontrollen før kopiering.</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ Kontrol før kopiering bestået: {0:N0} fil- og mappenavn(e) og sti(er) blev kontrolleret på destinationen for mellemrum i starten eller slutningen, navne der slutter med punktum, navne over 255 tegn og stier over 400 tegn.</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ Kontrol før kopiering: {0:N0} af {1:N0} fil- og mappenavn(e) og sti(er) kan ikke kopieres som navngivet (mellemrum i starten eller slutningen, navne der slutter med punktum, navne over 255 tegn eller stier over 400 tegn).</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>Kontrol før kopiering: elementer der ikke kan kopieres</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} element(er) har et navn eller en sti, som SharePoint ville afvise på destinationen. Alt andet er klar til kopiering.</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>Element</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>Problem</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>Annuller kopiering stopper her, og intet er kopieret. Kopier resten kopierer alt, der er gyldigt, og lader disse elementer stå ukopierede. De forbliver i rapporten som Mislykkedes, så du kan rette dem i kilden og kopiere igen.</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>Gem liste…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>Annuller kopiering</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>Kopier resten</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} element(er) blev ikke kopieret, fordi deres navne eller stier ville blive afvist af SharePoint. De er opført som Mislykkedes nedenfor.</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>Kildesti,Destinationssti,Problem</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ Kontrol før kopiering: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>Kontrol før kopiering bestået: alle navne og stier er gyldige på destinationen.</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>Kontrol før kopiering: {0:N0} element(er) kan ikke kopieres som navngivet og blev ikke kopieret. Se rækkerne med Mislykkedes for hver årsag. Alt andet kopieres som normalt.</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>Oprettet af ({0}) og Ændret af ({1}) kunne ikke findes på målet: begge blev stemplet som systemkontoen i stedet for den importerende konto</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>Ændret af ({0}) kunne ikke findes på målet: det følger Oprettet af i stedet for at blive den importerende konto</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>Oprettet af ({0}) kunne ikke findes på målet: det blev stemplet som systemkontoen i stedet for den importerende konto</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ {0:N0} mappe(r) (inklusive dokumentsæt) havde ingen mailadresse for Oprettet af og/eller Ændret af (en systemkonto, SharePoint-app eller en slettet konto): hver sådan person stemples som systemkontoen, ligesom filer, i stedet for den importerende konto</value></data>
 </root>

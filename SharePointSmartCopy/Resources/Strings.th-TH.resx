@@ -1832,4 +1832,30 @@
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>Client secret (ไม่บังคับ สำหรับเครื่องมือ Teams)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>เฉพาะเครื่องมือ Teams ที่ใช้ secret นี้ ในฐานะการลงชื่อเข้าใช้ระดับแอปพลิเคชัน (ไม่มีผู้ใช้) ในการลงทะเบียนเป้าหมาย ใช้เพื่อนำเข้าข้อความและแชต ซึ่ง Microsoft อนุญาตเฉพาะวิธีนี้ โดยใช้สิทธิ์แอปพลิเคชัน Graph ชื่อ Teamwork.Migrate.All (ความยินยอมของผู้ดูแลระบบ) ในการลงทะเบียนต้นทาง ช่วยให้เครื่องมือ Teams แสดงรายการทีมทั้งหมดในผู้เช่าและแชตของบุคคลที่คุณเลือก (มุมมองผู้ดูแลระบบ) สิทธิ์ต่าง ๆ อยู่ใน PERMISSIONS.md สร้าง secret ในการลงทะเบียนแอปนี้ภายใต้ Certificates &amp; secrets แล้ววางค่า (Value) ไม่ใช่ ID เว้นว่างไว้หากคุณไม่ต้องการทั้งสองอย่าง</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>เลือกการลงทะเบียนเพื่อแก้ไข การลงทะเบียนใดเป็นต้นทางและใดเป็นปลายทางจะเลือกในหน้าหลัก การเลือกหรือแก้ไขที่นี่ไม่เปลี่ยนค่านั้น</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>ไม่ได้คัดลอก: &apos;{0}&apos; ขึ้นต้นหรือลงท้ายด้วยช่องว่าง (แสดงเป็น ␣) ซึ่ง SharePoint ไม่อนุญาต โปรดเปลี่ยนชื่อที่ต้นทางแล้วคัดลอกอีกครั้ง</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>ไม่ได้คัดลอก: &apos;{0}&apos; ลงท้ายด้วยจุด ซึ่ง SharePoint ไม่อนุญาต โปรดเปลี่ยนชื่อที่ต้นทางแล้วคัดลอกอีกครั้ง</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>ไม่ได้คัดลอก: ชื่อ &apos;{0}&apos; ยาว {1} อักขระ; SharePoint อนุญาต {2} อักขระต่อชื่อไฟล์หรือโฟลเดอร์ โปรดทำให้สั้นลงที่ต้นทางแล้วคัดลอกอีกครั้ง</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>ไม่ได้คัดลอก: เส้นทางปลายทางจะยาว {0} อักขระ; SharePoint อนุญาต {1} โปรดทำให้ชื่อโฟลเดอร์สั้นลงหรือคัดลอกไปยังตำแหน่งที่ตื้นกว่า</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>ไม่ได้คัดลอกคอลัมน์ &apos;{0}&apos;: SharePoint รายงานว่าไม่มีคอลัมน์นี้ในรายการต้นทาง (ชื่อภายในอาจเปลี่ยนไปหรือคอลัมน์ถูกลบ) คอลัมน์อื่นและรายการต่าง ๆ ถูกคัดลอกแล้ว</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>ยกเลิกการคัดลอกที่การตรวจสอบก่อนคัดลอก ไม่มีสิ่งใดถูกคัดลอก</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>ไม่ได้คัดลอก: การคัดลอกถูกยกเลิกที่การตรวจสอบก่อนคัดลอก</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ การตรวจสอบก่อนคัดลอกผ่าน: ตรวจสอบชื่อและเส้นทางของไฟล์และโฟลเดอร์ {0:N0} รายการที่ปลายทางเกี่ยวกับช่องว่างที่ต้นหรือท้าย ชื่อที่ลงท้ายด้วยจุด ชื่อที่ยาวเกิน 255 อักขระ และเส้นทางที่ยาวเกิน 400 อักขระ</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ การตรวจสอบก่อนคัดลอก: ชื่อและเส้นทางของไฟล์และโฟลเดอร์ {0:N0} จาก {1:N0} รายการไม่สามารถคัดลอกตามชื่อเดิมได้ (ช่องว่างที่ต้นหรือท้าย ชื่อที่ลงท้ายด้วยจุด ชื่อที่ยาวเกิน 255 อักขระ หรือเส้นทางที่ยาวเกิน 400 อักขระ)</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>การตรวจสอบก่อนคัดลอก: รายการที่ไม่สามารถคัดลอกได้</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} รายการมีชื่อหรือเส้นทางที่ SharePoint จะปฏิเสธที่ปลายทาง รายการอื่นทั้งหมดพร้อมคัดลอก</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>รายการ</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>ปัญหา</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>ยกเลิกการคัดลอกจะหยุดที่นี่และไม่มีสิ่งใดถูกคัดลอก คัดลอกส่วนที่เหลือจะคัดลอกทุกรายการที่ถูกต้องและปล่อยรายการเหล่านี้ไว้โดยไม่คัดลอก รายการเหล่านี้จะยังอยู่ในรายงานเป็นล้มเหลว เพื่อให้คุณแก้ไขที่ต้นทางแล้วคัดลอกอีกครั้ง</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>บันทึกรายการ…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>ยกเลิกการคัดลอก</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>คัดลอกส่วนที่เหลือ</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>ไม่ได้คัดลอก {0:N0} รายการเนื่องจากชื่อหรือเส้นทางจะถูก SharePoint ปฏิเสธ รายการเหล่านี้แสดงเป็นล้มเหลวด้านล่าง</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>เส้นทางต้นทาง,เส้นทางปลายทาง,ปัญหา</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ การตรวจสอบก่อนคัดลอก: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>การตรวจสอบก่อนคัดลอกผ่าน: ทุกชื่อและเส้นทางถูกต้องที่ปลายทาง</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>การตรวจสอบก่อนคัดลอก: {0:N0} รายการไม่สามารถคัดลอกตามชื่อเดิมได้และไม่ได้ถูกคัดลอก ดูสาเหตุแต่ละรายการได้ที่แถวล้มเหลว รายการอื่นทั้งหมดกำลังคัดลอกตามปกติ</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>ไม่พบ Created By ({0}) และ Modified By ({1}) ที่ปลายทาง: ทั้งสองถูกบันทึกเป็นบัญชีระบบแทนที่จะเป็นบัญชีที่นำเข้า</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>ไม่พบ Modified By ({0}) ที่ปลายทาง: จะใช้ค่าเดียวกับ Created By แทนที่จะเป็นบัญชีที่นำเข้า</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>ไม่พบ Created By ({0}) ที่ปลายทาง: ถูกบันทึกเป็นบัญชีระบบแทนที่จะเป็นบัญชีที่นำเข้า</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ โฟลเดอร์ {0:N0} รายการ (รวม Document Sets) ไม่มีอีเมลใน Created By และ/หรือ Modified By (บัญชีระบบ แอป SharePoint หรือบัญชีที่ถูกลบ): บุคคลดังกล่าวแต่ละคนจะถูกบันทึกเป็นบัญชีระบบเช่นเดียวกับไฟล์ แทนที่จะเป็นบัญชีที่นำเข้า</value></data>
 </root>

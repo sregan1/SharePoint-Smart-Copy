@@ -1832,4 +1832,30 @@
   <data name="Ui_ClientSecretTeams" xml:space="preserve"><value>סוד לקוח (אופציונלי, עבור כלי Teams)</value></data>
   <data name="Ui_ClientSecretTeamsHint" xml:space="preserve"><value>רק כלי Teams משתמש בסוד הזה, כהתחברות יישום (ללא משתמש). ברישום היעד הוא מייבא באמצעותו הודעות וצ'אטים, ש-Microsoft מתירה רק בדרך זו, עם הרשאת היישום Teamwork.Migrate.All של Graph (בהסכמת מנהל). ברישום המקור הוא מאפשר לכלי Teams לרשום את כל הצוותים בדייר ואת הצ'אטים של האנשים שבחרת (תצוגת מנהל); ההרשאות מפורטות ב-PERMISSIONS.md. צור את הסוד ברישום האפליקציה הזה תחת Certificates &amp; secrets והדבק את הערך שלו (Value), לא את המזהה (ID). השאר ריק אם אינך זקוק לאף אחד מהם.</value></data>
   <data name="Ui_RegistrationListCaption" xml:space="preserve"><value>בחר רישום כדי לערוך אותו. מה המקור ומה היעד נבחר במסך הבית; בחירה או עריכה של רישום כאן אינן משנות זאת.</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>לא הועתק: &apos;{0}&apos; מתחיל או מסתיים ברווח (מוצג כ-␣), ש-SharePoint אינו מאפשר. שנה את השם במקור והעתק שוב.</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>לא הועתק: &apos;{0}&apos; מסתיים בנקודה, ש-SharePoint אינו מאפשר. שנה את השם במקור והעתק שוב.</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>לא הועתק: השם &apos;{0}&apos; באורך {1} תווים; SharePoint מאפשר {2} תווים לשם קובץ או תיקיה. קצר אותו במקור והעתק שוב.</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>לא הועתק: נתיב היעד היה באורך {0} תווים; SharePoint מאפשר {1}. קצר את שמות התיקיות או העתק למיקום פחות מקונן.</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>העמודה &apos;{0}&apos; לא הועתקה: SharePoint דיווח שהיא אינה קיימת ברשימת המקור (ייתכן ששמה הפנימי השתנה או שהעמודה הוסרה). שאר העמודות והפריטים הועתקו.</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>ההעתקה בוטלה בבדיקה שלפני ההעתקה. דבר לא הועתק.</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>לא הועתק: ההעתקה בוטלה בבדיקה שלפני ההעתקה.</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ הבדיקה שלפני ההעתקה עברה: נבדקו ביעד {0:N0} שמות ונתיבים של קבצים ותיקיות לגבי רווחים בתחילה או בסוף, שמות המסתיימים בנקודה, שמות מעל 255 תווים ונתיבים מעל 400 תווים.</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ בדיקה שלפני ההעתקה: {0:N0} מתוך {1:N0} שמות ונתיבים של קבצים ותיקיות אינם ניתנים להעתקה כפי שהם (רווחים בתחילה או בסוף, שמות המסתיימים בנקודה, שמות מעל 255 תווים או נתיבים מעל 400 תווים).</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>בדיקה שלפני ההעתקה: פריטים שאינם ניתנים להעתקה</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>ל-{0:N0} פריטים יש שם או נתיב ש-SharePoint ידחה ביעד. כל השאר מוכן להעתקה.</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>פריט</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>בעיה</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>ביטול ההעתקה עוצר כאן, ודבר לא הועתק. העתקת השאר מעתיקה את כל מה שתקין ומשאירה את הפריטים האלה לא מועתקים. הם נשארים בדוח כ&quot;נכשל&quot;, כך שתוכל לתקן אותם במקור ולהעתיק שוב.</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>שמור רשימה…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>ביטול ההעתקה</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>העתק את השאר</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} פריטים לא הועתקו מפני ששמותיהם או נתיביהם יידחו על ידי SharePoint. הם מפורטים להלן כ&quot;נכשל&quot;.</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>נתיב מקור,נתיב יעד,בעיה</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ בדיקה שלפני ההעתקה: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>הבדיקה שלפני ההעתקה עברה: כל שם ונתיב תקינים ביעד.</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>בדיקה שלפני ההעתקה: {0:N0} פריטים אינם ניתנים להעתקה כפי שהם ולא הועתקו. ראה את השורות &quot;נכשל&quot; לכל סיבה. כל השאר מועתק כרגיל.</value></data>
+  <data name="Svc_Meta_BothUnresolved" xml:space="preserve"><value>&quot;נוצר על ידי&quot; ({0}) ו&quot;שונה על ידי&quot; ({1}) לא נמצאו ביעד: שניהם סומנו כחשבון המערכת במקום חשבון הייבוא</value></data>
+  <data name="Svc_Meta_EditorUnresolved" xml:space="preserve"><value>&quot;שונה על ידי&quot; ({0}) לא נמצא ביעד: הוא עוקב אחר &quot;נוצר על ידי&quot; במקום להפוך לחשבון הייבוא</value></data>
+  <data name="Svc_Meta_AuthorUnresolved" xml:space="preserve"><value>&quot;נוצר על ידי&quot; ({0}) לא נמצא ביעד: הוא סומן כחשבון המערכת במקום חשבון הייבוא</value></data>
+  <data name="Svc_Mig_FolderPeopleMissing" xml:space="preserve"><value>ℹ ל-{0:N0} תיקיות (כולל Document Sets) לא היה דוא&quot;ל ב&quot;נוצר על ידי&quot; או ב&quot;שונה על ידי&quot; (חשבון מערכת, אפליקציית SharePoint או חשבון שנמחק): אותו אדם מסומן כחשבון המערכת, כמו בקבצים, במקום חשבון הייבוא</value></data>
 </root>
