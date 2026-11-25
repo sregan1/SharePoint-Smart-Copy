@@ -498,6 +498,13 @@ Cancel: go back</value></data>
   <data name="Svc_NativeFailedErr" xml:space="preserve"><value>⚠ Native copy of '{0}' failed: {1}</value></data>
   <data name="Svc_ScanProgress" xml:space="preserve"><value>Scanning source: {0:N0} file(s) found so far...</value></data>
   <data name="Svc_EmptyFolderFailed" xml:space="preserve"><value>⚠ Creating empty folder '{0}' failed: {1}</value></data>
+  <data name="Pre_NameWhitespace" xml:space="preserve"><value>Not copied: '{0}' starts or ends with a space (shown as ␣), which SharePoint does not allow. Rename it at the source and copy again.</value></data>
+  <data name="Pre_NameTrailingDot" xml:space="preserve"><value>Not copied: '{0}' ends with a period, which SharePoint does not allow. Rename it at the source and copy again.</value></data>
+  <data name="Pre_NameTooLong" xml:space="preserve"><value>Not copied: the name '{0}' is {1} characters long; SharePoint allows {2} per file or folder name. Shorten it at the source and copy again.</value></data>
+  <data name="Pre_PathTooLong" xml:space="preserve"><value>Not copied: the destination path would be {0} characters long; SharePoint allows {1}. Shorten folder names or copy to a shallower location.</value></data>
+  <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ Pre-copy check: {0} — {1}</value></data>
+  <data name="Pre_Passed" xml:space="preserve"><value>Pre-copy check passed: every name and path is valid at the destination.</value></data>
+  <data name="Pre_Flagged" xml:space="preserve"><value>Pre-copy check: {0:N0} item(s) cannot be copied as named and were not copied. See the Failed rows for each reason. Everything else is copying normally.</value></data>
   <data name="Svc_ScanComplete" xml:space="preserve"><value>Source scan complete: {0:N0} file(s) found in {1:0}s</value></data>
   <data name="Svc_ScanThrottleInfo" xml:space="preserve"><value>({0} throttle event(s), {1:0}s waited, {2:P0} throttle overhead)</value></data>
   <data name="Svc_ApplyingCustom" xml:space="preserve"><value>Applying custom column values to {0:N0} file(s)...</value></data>

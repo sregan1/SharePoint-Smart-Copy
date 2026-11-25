@@ -311,6 +311,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         if (anyFolderJobs)
             activityLog?.Report(Loc.T("Svc_ScanningSource"));
         int scannedFiles = 0;
+        int precheckFlagged = 0;   // items the pre-copy name/path check refused (see FindDestinationNameProblem)
         var lastScanReport = DateTimeOffset.UtcNow;
 
         // Graph's native /copy action has no overwrite concept — a same-named item at the target
@@ -373,6 +374,16 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     {
                         pendingResults.Add(result);
                         if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
+                    }
+                    var directProblem = FindDestinationNameProblem(
+                        job.TargetLibraryServerRelativeUrl, $"{job.TargetSubFolderPath}/{job.SourceName}");
+                    if (directProblem != null)
+                    {
+                        result.Status       = CopyStatus.Failed;
+                        result.ErrorMessage = directProblem;
+                        precheckFlagged++;
+                        activityLog?.Report(Loc.T("Pre_ItemFlagged", job.SourceDisplayPath, directProblem));
+                        continue;
                     }
                     allTasks.Add((job, result));
                 }
@@ -527,6 +538,26 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             var displayName = string.IsNullOrEmpty(relativePath) ? job.SourceName : name;
                             var emptyFolderTarget = ComputeTargetFolderPath(
                                 relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
+                            var emptyFolderProblem = FindDestinationNameProblem(
+                                job.TargetLibraryServerRelativeUrl, emptyFolderTarget);
+                            if (emptyFolderProblem != null)
+                            {
+                                var flagged = new CopyResult
+                                {
+                                    FileName     = displayName,
+                                    SourcePath   = string.IsNullOrEmpty(relativePath)
+                                        ? job.SourceDisplayPath : $"{job.SourceDisplayPath}/{relativePath}",
+                                    TargetPath   = string.IsNullOrEmpty(relativePath)
+                                        ? job.TargetDisplayPath : $"{job.TargetDisplayPath}/{relativePath}",
+                                    Status       = CopyStatus.Failed,
+                                    ErrorMessage = emptyFolderProblem
+                                };
+                                pendingResults.Add(flagged);
+                                precheckFlagged++;
+                                activityLog?.Report(Loc.T("Pre_ItemFlagged", flagged.SourcePath, emptyFolderProblem));
+                                if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
+                                continue;
+                            }
                             allEmptyFolderPaths.Add(emptyFolderTarget);
                             var folderResult = new CopyResult
                             {
@@ -578,6 +609,24 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             targetSubFolder = ComputeTargetSubFolder(
                                 relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
                             targetSubFolderCache[fileDirKey] = targetSubFolder;
+                        }
+                        var fileProblem = FindDestinationNameProblem(
+                            job.TargetLibraryServerRelativeUrl, $"{targetSubFolder}/{name}");
+                        if (fileProblem != null)
+                        {
+                            var flagged = new CopyResult
+                            {
+                                FileName     = name,
+                                SourcePath   = $"{job.SourceDisplayPath}/{relativePath}",
+                                TargetPath   = $"{job.TargetDisplayPath}/{relativePath}",
+                                Status       = CopyStatus.Failed,
+                                ErrorMessage = fileProblem
+                            };
+                            pendingResults.Add(flagged);
+                            precheckFlagged++;
+                            activityLog?.Report(Loc.T("Pre_ItemFlagged", flagged.SourcePath, fileProblem));
+                            if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
+                            continue;
                         }
                         var fileJob = new CopyJob
                         {
@@ -634,6 +683,9 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     : ""));
         }
         await FlushPendingResultsAsync();
+        activityLog?.Report(precheckFlagged == 0
+            ? Loc.T("Pre_Passed")
+            : Loc.T("Pre_Flagged", precheckFlagged));
 
         // Flattens scannedFoldersByJob into the SAME key shape SPMI's folder-metadata correction
         // already keys by (TargetSubFolderPath.Trim('/') — see MigrationJobService's directFolderGroups):
@@ -1738,6 +1790,47 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 }
                 finally { gate.Release(); }
             });
+    }
+
+    // SharePoint Online limits: 400 characters for the whole decoded server-relative path, 255 per segment.
+    internal const int MaxServerRelativePathLength = 400;
+    internal const int MaxNameSegmentLength        = 255;
+
+    // Pre-copy check: returns a localized reason when the destination path for an item (library-relative,
+    // folders plus leaf name, '/'-separated) could not be created by SharePoint, or null when it is fine.
+    // Runs against the DESTINATION path — the source path already fits, but the destination base path is
+    // often longer. libraryServerRelativeUrl may be empty, in which case only the name checks run.
+    internal static string? FindDestinationNameProblem(string libraryServerRelativeUrl, string relativeTargetPath)
+    {
+        var segments = relativeTargetPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        foreach (var seg in segments)
+        {
+            // char.IsWhiteSpace also covers non-breaking and other Unicode spaces, which are invisible in listings.
+            if (char.IsWhiteSpace(seg[0]) || char.IsWhiteSpace(seg[^1]))
+                return Loc.T("Pre_NameWhitespace", VisibleSpaces(seg));
+            if (seg[^1] == '.')
+                return Loc.T("Pre_NameTrailingDot", seg);
+            if (seg.Length > MaxNameSegmentLength)
+                return Loc.T("Pre_NameTooLong", seg.Length > 60 ? seg[..60] + "…" : seg, seg.Length, MaxNameSegmentLength);
+        }
+
+        if (!string.IsNullOrEmpty(libraryServerRelativeUrl))
+        {
+            var total = libraryServerRelativeUrl.TrimEnd('/').Length
+                        + segments.Sum(s => s.Length + 1);   // each segment plus its leading '/'
+            if (total > MaxServerRelativePathLength)
+                return Loc.T("Pre_PathTooLong", total, MaxServerRelativePathLength);
+        }
+        return null;
+    }
+
+    // Makes leading/trailing whitespace visible in a message: each such character becomes "␣".
+    private static string VisibleSpaces(string s)
+    {
+        int start = 0, end = s.Length;
+        while (start < end && char.IsWhiteSpace(s[start])) start++;
+        while (end > start && char.IsWhiteSpace(s[end - 1])) end--;
+        return new string('␣', start) + s[start..end] + new string('␣', s.Length - end);
     }
 
     // Computes the TargetSubFolderPath for a file expanded from a folder job.

@@ -4,6 +4,14 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## Unreleased
+
+### Added
+
+- **Built-in pre-copy check** — before anything is copied, the source scan now checks every file and folder against what SharePoint will accept at the destination, so a bad name is reported up front with its full path and the reason instead of surfacing as a cryptic error partway through a long run. It flags a name that starts or ends with a space (including the invisible non-breaking space; shown as ␣ in the message), a name that ends with a period, a name longer than 255 characters, and a destination path longer than 400 characters (measured against the destination, where the base path is often longer than the source's). Flagged items are not copied and appear as Failed rows with the reason; everything else copies normally. The activity log ends the scan with either "Pre-copy check passed" or the number of items flagged. Applies to both copy modes.
+
+---
+
 ## 4.2.0 — 2026-11-23
 
 ### Added

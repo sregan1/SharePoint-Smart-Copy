@@ -60,6 +60,7 @@ Choose from four copy scopes in a step-by-step wizard:
 **All scopes:**
 - Custom column values copied in both **Migration API** and **Enhanced REST** modes — including **Person/User**, **Managed Metadata**, **Lookup**, **Hyperlink**, and **Currency** columns
 - Custom column mapping dialog — map source columns to target columns, or create missing columns in the target
+- **Built-in pre-copy check** — before anything is copied, every file and folder is checked against SharePoint's rules at the destination (leading or trailing spaces, names ending in a period, names over 255 characters, paths over 400 characters). Problem items are reported up front with their full path and the reason, instead of failing partway through a long run; everything else copies normally
 - Overwrite / skip / **copy-if-newer** incremental mode
 - **Adaptive throttle handling** — each Graph-heavy phase backs off and re-probes independently, so large jobs complete without manual intervention or stalling on shared throttle state
 - **System sleep is blocked** while a copy, metadata update, or verification is running, so long unattended jobs aren't interrupted

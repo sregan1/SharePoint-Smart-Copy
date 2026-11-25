@@ -33,6 +33,7 @@ Two copy engines are available. **Migration API** mode uses SharePoint's server-
 - **Enhanced REST mode** — correct dates and editors per version; no admin rights required
 - **Copy-if-newer** incremental mode — only copies files that are newer on the source, skipping files already up to date
 - **Person/User, Managed Metadata, Lookup, Hyperlink, and Currency columns** copied alongside content in both copy modes — no manual field re-entry
+- **Built-in pre-copy check** — every file and folder is checked against SharePoint's rules at the destination before anything is copied, so problem names and over-long paths are reported up front with the reason, not as a surprise mid-run
 - Custom column mapping dialog — map source columns to matching target columns or create missing ones
 - **Custom Fields status column** flags any column value that couldn't be written (e.g. a target column that looks identical but doesn't actually match by internal name), so a partial metadata mismatch is never mistaken for a fully clean copy
 - Automatic HTTP 429 throttle handling — large jobs complete without interruption
@@ -404,6 +405,14 @@ Each file appears in the list with its current status:
 
 Use the **filter chips** (All / Success / Failed / Skipped) above the file list to focus on a subset of results — useful when copying thousands of files. Cancelled items appear under the **Failed** chip, since they're still unfinished work, but they're counted separately in the summary so an interrupted run doesn't look like a mass failure.
 
+**Pre-copy check.** As soon as the source scan finishes, and before any file is transferred, the app checks every item against what SharePoint will accept at the destination:
+
+- a file or folder name that starts or ends with a space (including the invisible non-breaking space, shown as ␣ in the message), or ends with a period
+- a file or folder name longer than 255 characters
+- a destination path longer than 400 characters (the path is measured at the destination, which is often longer than the source path because of the target library and folder)
+
+An item that fails the check is not copied. It appears as a **Failed** row with the reason and its full path, and everything else copies normally. The activity log shows "Pre-copy check passed" when nothing was flagged, or the number of items flagged. To fix a flagged item, rename or shorten it at the source (or copy to a shallower destination) and run the copy again.
+
 Click **Cancel** to stop the copy at any time. Files already transferred remain in the destination — the operation is not rolled back. When all files are processed, the **Next →** button becomes active.
 
 ### Step 6 — Copy Report
@@ -705,7 +714,8 @@ These are copied by one server-side copy, so the app writes the original dates a
 - **"File version is X GB — larger than the 2 GB this mode can buffer" (Migration API mode)** — a single version of the file exceeds what this mode can hold in memory during encryption. Switch to **Enhanced REST** mode for that file (or the whole batch).
 - **File is checked out** — check the file back in at the source site before retrying.
 - **Permission denied** — verify the signed-in account has Contribute or higher access on the target folder.
-- **Path too long** — SharePoint Online has a 400-character limit on the full URL path. Shorten folder names or use a shallower structure.
+- **Path too long** — SharePoint Online has a 400-character limit on the full URL path. The pre-copy check flags these before the copy starts. Shorten folder names or use a shallower structure.
+- **"Starts or ends with a space" / "ends with a period"** — SharePoint does not allow these names. The pre-copy check flags them with the full path; the space is often invisible (a non-breaking space, or a trailing space on a parent folder). Rename the item at the source and copy again.
 - **Throttling (429 Too Many Requests)** — the Microsoft Graph API rate-limits heavy usage. The application retries automatically, but very large batches may take longer.
 - **"SharePoint aborted the batch after N name conflicts" in the activity log (Migration API mode)** — this is expected automatic recovery, not a failure. SharePoint's Migration API cancels an entire import batch once enough files at the destination already exist, which would otherwise discard every other valid file in that batch. With **Skip existing** selected, the app marks the conflicting files Skipped (matching what Skip means) and resubmits the rest once. With **Overwrite** or **If newer**, the app clears the conflicting targets and resubmits the whole batch once. If a retry still fails, the affected files are reported individually in the final results — re-running the copy again typically clears them, since a fresh pre-flight scan re-detects the current state of the target.
 - **A file shows "⚠ Warning" in the Custom Fields column** — the file itself copied successfully; only one or more custom column values could not be written. Check the Custom Fields Details column for the reason. The most common cause is a target column that looks identical to its source counterpart (same display name and values elsewhere) but doesn't actually share the same internal name — SharePoint auto-suffixes a column's internal name at creation time if it collides with another field, so "Notes" on the source and "Notes" on the target can silently be different fields underneath. Open the Column Mapping dialog and confirm the source column is mapped to the target's real internal name (visible in **Library Settings** → click the column → the `Field=` value in the URL), rather than relying on the display name to match automatically.
