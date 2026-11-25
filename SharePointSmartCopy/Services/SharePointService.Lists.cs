@@ -145,9 +145,13 @@ public partial class SharePointService
         string siteUrl, string listId,
         IEnumerable<SpColumnDef> customColumns,
         IEnumerable<string>? extraFieldNames = null,
-        CancellationToken ct = default)
+        CancellationToken ct = default,
+        // Filled with the internal name of every column SharePoint said does not exist on the list and
+        // that was left out of the read so the rest of the list could still be copied.
+        List<string>? droppedColumns = null)
     {
         var cols       = customColumns.ToList();
+        var extraNames = extraFieldNames?.ToList();
         var colsByName = cols.ToDictionary(c => c.InternalName, StringComparer.OrdinalIgnoreCase);
 
         // User fields are lookups: $expand them and read {name}/Name (claims login).
@@ -175,8 +179,8 @@ public partial class SharePointService
                     selectParts.Add(c.InternalName);
                 }
             }
-            if (extraFieldNames != null)
-                selectParts.AddRange(extraFieldNames);
+            if (extraNames != null)
+                selectParts.AddRange(extraNames);
 
             return $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items" +
                    $"?$select={Uri.EscapeDataString(string.Join(",", selectParts))}" +
@@ -200,6 +204,30 @@ public partial class SharePointService
                 return r;
             }, siteUrl);
 
+            // A column SharePoint says does not exist (renamed or deleted since it was read, or a name that
+            // doesn't match the list's real internal name) used to make this whole read fail, so the list
+            // copied nothing. Leave just that column out, say so, and read again. Only acts when the named
+            // field is one we asked for; any other 400 falls through to the handling below.
+            string? failureBody = null;
+            if (!resp.IsSuccessStatusCode)
+            {
+                failureBody = await resp.Content.ReadAsStringAsync(ct);
+                if ((int)resp.StatusCode == 400 && TryExtractMissingFieldName(failureBody) is { } missing)
+                {
+                    var removed = cols.RemoveAll(c => string.Equals(c.InternalName, missing, StringComparison.OrdinalIgnoreCase))
+                                + (extraNames?.RemoveAll(n => string.Equals(n, missing, StringComparison.OrdinalIgnoreCase)) ?? 0);
+                    if (removed > 0)
+                    {
+                        if (droppedColumns != null && !droppedColumns.Contains(missing, StringComparer.OrdinalIgnoreCase))
+                            droppedColumns.Add(missing);
+                        hasLookups = cols.Any(c => SpColumnDef.IsLookupType(c.FieldType));
+                        result.Clear();
+                        next = BuildUrl(lookupIdOnly);
+                        continue;
+                    }
+                }
+            }
+
             if (!resp.IsSuccessStatusCode && (int)resp.StatusCode == 400 && hasLookups && !lookupIdOnly)
             {
                 // A lookup show field SharePoint won't project: restart reading lookup IDs only
@@ -215,7 +243,7 @@ public partial class SharePointService
             {
                 // Never truncate silently: a failed page used to `break`, returning a partial
                 // (or empty) list the caller then reported as a successful copy of 0 items.
-                var err = await resp.Content.ReadAsStringAsync(ct);
+                var err = failureBody ?? await resp.Content.ReadAsStringAsync(ct);
                 throw new HttpRequestException(
                     Loc.T("Svc_Sp_ReadingListItemsFailed", (int)resp.StatusCode, err[..Math.Min(err.Length, 300)]));
             }

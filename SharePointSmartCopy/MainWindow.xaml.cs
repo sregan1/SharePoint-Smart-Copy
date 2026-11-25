@@ -49,6 +49,10 @@ public partial class MainWindow : Window
         VM.ConfirmAction = (title, message) =>
             MessageBox.Show(this, message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No)
                 == MessageBoxResult.Yes;
+        // The pre-copy check found names or paths SharePoint would reject: list them and let the user cancel
+        // or copy the rest. Only ever called when something was flagged; a clean check never interrupts.
+        VM.ConfirmPrecheckAction = issues =>
+            new Dialogs.PrecheckDialog(issues) { Owner = this }.ShowDialog() == true;
         // Yes = copy anyway, No = open the user mapping (the copy does not start), Cancel = go back.
         VM.ConfirmNoUserMappingAction = (title, message) =>
         {

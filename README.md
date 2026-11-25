@@ -60,7 +60,7 @@ Choose from four copy scopes in a step-by-step wizard:
 **All scopes:**
 - Custom column values copied in both **Migration API** and **Enhanced REST** modes — including **Person/User**, **Managed Metadata**, **Lookup**, **Hyperlink**, and **Currency** columns
 - Custom column mapping dialog — map source columns to target columns, or create missing columns in the target
-- **Built-in pre-copy check** — before anything is copied, every file and folder is checked against SharePoint's rules at the destination (leading or trailing spaces, names ending in a period, names over 255 characters, paths over 400 characters). Problem items are reported up front with their full path and the reason, instead of failing partway through a long run; everything else copies normally
+- **Built-in pre-copy check** — before anything is copied, every file and folder is checked against SharePoint's rules at the destination (leading or trailing spaces, names ending in a period, names over 255 characters, paths over 400 characters). A clean check never interrupts the copy. If something is flagged, the copy pauses before anything is written and lists each item with its full path and the reason, so you can cancel or copy the rest. Flagged items stay on the report so you can fix them and copy again
 - Overwrite / skip / **copy-if-newer** incremental mode
 - **Adaptive throttle handling** — each Graph-heavy phase backs off and re-probes independently, so large jobs complete without manual intervention or stalling on shared throttle state
 - **System sleep is blocked** while a copy, metadata update, or verification is running, so long unattended jobs aren't interrupted
@@ -116,7 +116,7 @@ Choose from four copy scopes in a step-by-step wizard:
 | Requirement | Detail |
 |---|---|
 | **OS** | Windows 10 or 11 |
-| **.NET Runtime** | [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) (x64) |
+| **.NET Runtime** | None to install: the release is self-contained and includes the .NET 10 runtime (x64). To build from source, install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) |
 | **Microsoft 365** | SharePoint Online tenant |
 | **Azure AD** | App registration with delegated API permissions (see below) |
 
@@ -229,7 +229,7 @@ Without the first two nothing connects to SharePoint. Without the third, Migrati
 - **Grayed-out tiles.** Forms is disabled until its permission is on the registration. Teams is never disabled: it shows a warning tooltip you can copy and paste to your administrator.
 - **No permissions needed** to browse saved History or open Settings (local only).
 
-The same text is in [PERMISSIONS.md](PERMISSIONS.md).
+The same text is in [PERMISSIONS.md](PERMISSIONS.md). For help working out which permissions your administrator needs to grant, see the [permissions guide](https://sharepointsmartsolutions.com/smart-copy/permissions) on the Smart Copy website.
 
 ### 3. Grant admin consent
 
@@ -337,6 +337,9 @@ The app has no Client ID configured. Open **Settings** (⚙ top-right) and enter
 
 **"File is checked out at source" errors in the report**
 Files checked out in SharePoint cannot be read by the API. Check them in at the source before copying, or use the CSV export from the report to identify and retry them individually.
+
+**A copy fails partway and the report doesn't say why**
+Each run writes an `activity-*.log` to `%LocalAppData%\SharePointSmartCopy\Logs`, with the full text of SharePoint's error responses. It contains file names and site URLs, so remove anything sensitive before attaching it to a GitHub issue. **Settings → Export diagnostics…** saves a separate zip of recent logs and system info with organization details removed; it does not include the activity log. See the [User Guide](USER-GUIDE.md#sharing-diagnostics-when-you-report-a-problem).
 
 ---
 

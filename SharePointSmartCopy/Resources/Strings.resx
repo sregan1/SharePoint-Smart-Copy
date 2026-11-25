@@ -502,6 +502,21 @@ Cancel: go back</value></data>
   <data name="Pre_NameTrailingDot" xml:space="preserve"><value>Not copied: '{0}' ends with a period, which SharePoint does not allow. Rename it at the source and copy again.</value></data>
   <data name="Pre_NameTooLong" xml:space="preserve"><value>Not copied: the name '{0}' is {1} characters long; SharePoint allows {2} per file or folder name. Shorten it at the source and copy again.</value></data>
   <data name="Pre_PathTooLong" xml:space="preserve"><value>Not copied: the destination path would be {0} characters long; SharePoint allows {1}. Shorten folder names or copy to a shallower location.</value></data>
+  <data name="VM_ColumnNotReadable" xml:space="preserve"><value>Column '{0}' was not copied: SharePoint reported that it does not exist on the source list (its internal name may have changed or the column was removed). The other columns and the items were copied.</value></data>
+  <data name="Pre_CancelledByUser" xml:space="preserve"><value>Copy cancelled at the pre-copy check. Nothing was copied.</value></data>
+  <data name="Pre_NotAttempted" xml:space="preserve"><value>Not copied: the copy was cancelled at the pre-copy check.</value></data>
+  <data name="Ui_PrecheckPassedLine" xml:space="preserve"><value>✔ Pre-copy check passed: {0:N0} file and folder name(s) and path(s) checked at the destination for spaces at the start or end, names ending in a period, names over 255 characters, and paths over 400 characters.</value></data>
+  <data name="Ui_PrecheckFlaggedLine" xml:space="preserve"><value>⚠ Pre-copy check: {0:N0} of {1:N0} file and folder name(s) and path(s) cannot be copied as named (spaces at the start or end, names ending in a period, names over 255 characters, or paths over 400 characters).</value></data>
+  <data name="Ui_PrecheckTitle" xml:space="preserve"><value>Pre-copy check: items that cannot be copied</value></data>
+  <data name="Ui_PrecheckIntro" xml:space="preserve"><value>{0:N0} item(s) have a name or path that SharePoint would reject at the destination. Everything else is ready to copy.</value></data>
+  <data name="Ui_PrecheckColItem" xml:space="preserve"><value>Item</value></data>
+  <data name="Ui_PrecheckColProblem" xml:space="preserve"><value>Problem</value></data>
+  <data name="Ui_PrecheckNextSteps" xml:space="preserve"><value>Cancel copy stops here, and nothing has been copied. Copy the rest copies everything that is valid and leaves these items uncopied. They stay on the report as Failed, so you can fix them at the source and copy again.</value></data>
+  <data name="Ui_PrecheckSaveList" xml:space="preserve"><value>Save list…</value></data>
+  <data name="Ui_PrecheckCancelCopy" xml:space="preserve"><value>Cancel copy</value></data>
+  <data name="Ui_PrecheckCopyRest" xml:space="preserve"><value>Copy the rest</value></data>
+  <data name="Ui_PrecheckBanner" xml:space="preserve"><value>{0:N0} item(s) were not copied because their names or paths would be rejected by SharePoint. They are listed as Failed below.</value></data>
+  <data name="Ui_PrecheckCsvHeader" xml:space="preserve"><value>Source path,Destination path,Problem</value></data>
   <data name="Pre_ItemFlagged" xml:space="preserve"><value>⚠ Pre-copy check: {0} — {1}</value></data>
   <data name="Pre_Passed" xml:space="preserve"><value>Pre-copy check passed: every name and path is valid at the destination.</value></data>
   <data name="Pre_Flagged" xml:space="preserve"><value>Pre-copy check: {0:N0} item(s) cannot be copied as named and were not copied. See the Failed rows for each reason. Everything else is copying normally.</value></data>

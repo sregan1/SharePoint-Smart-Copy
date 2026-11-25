@@ -105,7 +105,7 @@ The only data written to your local machine is:
 ## 3. System Requirements
 
 - Windows 10 (version 1809 or later) or Windows 11
-- .NET 8 Desktop Runtime — download free from microsoft.com/dotnet
+- No separate .NET install is needed: the release is self-contained and includes the .NET 10 runtime
 - Internet access to Microsoft 365 / SharePoint Online
 - A default browser for the initial Microsoft 365 sign-in flow
 - An Azure Active Directory / Entra ID app registration (see [Section 4](#4-setup--azure-app-registration))
@@ -138,7 +138,7 @@ Before using SharePoint Smart Copy for the first time, a one-time setup is requi
 
 ### Step 2 — Grant API Permissions
 
-Smart Copy needs only **three permissions** to copy files, libraries, lists and sites (the third is for Migration API mode only). **Everything else is optional.**
+Smart Copy needs only **three permissions** to copy files, libraries, lists and sites (the third is for Migration API mode only). **Everything else is optional.** For help working out which permissions your administrator needs to grant, see the [permissions guide](https://sharepointsmartsolutions.com/smart-copy/permissions) on the Smart Copy website.
 
 1. In your new app registration, go to **API permissions** → **Add a permission**.
 2. Choose **Microsoft Graph** → **Delegated permissions**. Search for and add: `Sites.ReadWrite.All`
@@ -411,7 +411,17 @@ Use the **filter chips** (All / Success / Failed / Skipped) above the file list 
 - a file or folder name longer than 255 characters
 - a destination path longer than 400 characters (the path is measured at the destination, which is often longer than the source path because of the target library and folder)
 
-An item that fails the check is not copied. It appears as a **Failed** row with the reason and its full path, and everything else copies normally. The activity log shows "Pre-copy check passed" when nothing was flagged, or the number of items flagged. To fix a flagged item, rename or shorten it at the source (or copy to a shallower destination) and run the copy again.
+**If nothing is flagged, the copy carries on by itself.** You are never asked to confirm a clean check. A green line under the progress bar, repeated at the top of the report, says what was checked, for example: "✔ Pre-copy check passed: 1,240 file and folder name(s) and path(s) checked at the destination for spaces at the start or end, names ending in a period, names over 255 characters, and paths over 400 characters." The activity log shows the same result.
+
+**If something is flagged, the copy pauses before anything is written to the destination** and a window lists each item with its full path and the reason. You choose:
+
+- **Cancel copy** — stops here. Nothing has been copied. This is the default, and so is pressing Esc or closing the window.
+- **Copy the rest** — copies everything that is valid and leaves the flagged items uncopied.
+- **Save list…** — saves the list as a CSV so you can work through it.
+
+Flagged items are kept after the run. Each one appears as a **Failed** row with the reason and its full path, and a banner at the top of the report shows how many were not copied, with a **Save list…** button. The rows are saved with the run in History, so the list is still there later. To fix an item, rename or shorten it at the source (or copy to a shallower destination) and run the copy again. If you cancelled at the check, the other items are marked **Cancelled**, since they were never attempted.
+
+The pause-and-choose window applies to the **Files** scope. In the Libraries & Lists, Site and Pages scopes a flagged item is not copied and is reported in the same way, without the pause.
 
 Click **Cancel** to stop the copy at any time. Files already transferred remain in the destination — the operation is not rolled back. When all files are processed, the **Next →** button becomes active.
 
@@ -701,12 +711,14 @@ These are copied by one server-side copy, so the app writes the original dates a
   - Open the app registration's **API permissions** page and verify every row — both the Microsoft Graph block and the SharePoint block — shows a green "Granted for [tenant]" status. If a permission was added after consent was last granted, click **Grant admin consent** again to cover it.
   - As a one-click alternative, visit `https://login.microsoftonline.com/{tenant-id}/adminconsent?client_id={app-client-id}` while signed in as Global Admin — this grants tenant-wide consent directly without navigating the portal.
 - **Admin consent does not transfer between tenants.** If this is a new Microsoft 365 tenant, repeat the full Azure App Registration setup in Section 4 — including a fresh admin consent grant — inside that tenant; consent granted for another tenant's app registration has no effect here.
+- If the browser shows a **Permissions requested** screen that includes *Have full control of all site collections*, that is the `AllSites.FullControl` permission for Migration API mode and it has not been consented in this tenant yet. A Global Administrator can accept it with **Consent on behalf of your organization** ticked, which grants it once for everyone in the tenant. See the [permissions guide](https://sharepointsmartsolutions.com/smart-copy/permissions) for what each permission is for.
 
 ### Migration API — Permission Denied
 
 - Ensure `AllSites.FullControl` delegated permission is added to the Microsoft Entra ID app registration and admin consent has been granted.
 - Ensure the signed-in account is listed in **Site Settings** → **Site Collection Administrators** on the target site. Tenant-level SharePoint Admin or Global Admin roles are not sufficient on their own.
 - If you cannot obtain these permissions, switch to **Enhanced REST** mode — it does not require admin rights.
+- For help working out which permissions your administrator needs to grant, see the [permissions guide](https://sharepointsmartsolutions.com/smart-copy/permissions).
 
 ### Files are failing with errors
 
@@ -772,9 +784,11 @@ Access tokens are valid for approximately one hour. If the application has been 
 
 Connection problems that come from the app registration (no Client ID yet, the wrong Tenant ID, a missing redirect address, consent not granted) are explained in plain language under the **Connect** button, with an **Open Settings** button when the fix is there. The technical detail is kept in brackets at the end of the message — include it if you ask for help.
 
-### Sending diagnostics to support
+### Sharing diagnostics when you report a problem
 
 In **Settings**, click **Export diagnostics…** to save a zip with recent logs, basic system information and your settings with organization details removed. It does not include copy reports, file names or site URLs.
+
+**Copy errors: the activity log.** Each copy or verify run also writes an `activity-*.log` file to `%LocalAppData%\SharePointSmartCopy\Logs` (paste that into File Explorer's address bar). It lists what happened step by step, including the full text of SharePoint's own error responses, so it is usually the most useful file when a copy fails partway. Because it contains file names, site URLs and SharePoint's error text, it is **not** part of the diagnostics zip. Open it, remove anything you don't want to share, and attach the file or paste the relevant lines when you post the problem, for example in a GitHub issue. The newest file is the latest run. Logs older than two months are removed automatically.
 
 ### Settings not persisted
 

@@ -32,6 +32,61 @@ public partial class MainViewModel : ObservableObject
         System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
     }
 
+    // ── Pre-copy check results ────────────────────────────────────────────────
+    // Items the check refused stay on the report (Failed rows carrying the reason, saved with the run).
+    // The banner above the report summarizes them and lets the user save the list to work through.
+
+    // The one-line verdict shown under the progress bar and again on the report: what was checked and how it came out.
+    // Empty until the scan has finished. A clean check never interrupts the copy; this line is how it is seen.
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasPrecheckStatus))]
+    [NotifyPropertyChangedFor(nameof(PrecheckPassed))]
+    private string _precheckStatusText = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PrecheckPassed))]
+    private bool _precheckHasIssues;
+
+    public bool HasPrecheckStatus => PrecheckStatusText.Length > 0;
+    public bool PrecheckPassed    => HasPrecheckStatus && !PrecheckHasIssues;
+
+    private void OnPrecheckResult((int Checked, int Flagged) r)
+    {
+        PrecheckHasIssues  = r.Flagged > 0;
+        PrecheckStatusText = r.Flagged == 0
+            ? Loc.T("Ui_PrecheckPassedLine", r.Checked)
+            : Loc.T("Ui_PrecheckFlaggedLine", r.Flagged, r.Checked);
+    }
+
+    public int  PrecheckFlaggedCount => CopyResults.Count(r => r.IsPrecheckFlagged);
+    public bool HasPrecheckFlagged   => PrecheckFlaggedCount > 0;
+
+    [RelayCommand]
+    private void SavePrecheckList()
+    {
+        var dlg = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter   = Loc.T("VM_FilterCsvTxt"),
+            FileName = $"{SiteUrlHelper.ReportFilenamePrefix(SourceUrl, TargetUrl, Settings.PrefixReportFilenamesWithSiteNames)}PrecheckIssues_{DateTime.Now:yyyyMMdd_HHmmss}.csv"
+        };
+        if (dlg.ShowDialog() != true) return;
+        CsvReportExport.SavePrecheckList(dlg.FileName, CopyResults
+            .Where(r => r.IsPrecheckFlagged)
+            .Select(r => new PrecheckIssue(r.SourcePath, r.TargetPath, r.ErrorMessage ?? string.Empty)));
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dlg.FileName) { UseShellExecute = true });
+    }
+
+    // Set by the window: shows the flagged items and asks whether to copy the rest. Returns true to
+    // carry on. Null (no window) means carry on without asking.
+    public Func<IReadOnlyList<PrecheckIssue>, bool>? ConfirmPrecheckAction { get; set; }
+
+    // Handed to CopyService.ExecuteAsync (CopyRunOptions.ConfirmPrecheckAsync). Runs on the UI thread
+    // because it opens a dialog; the copy engine's scan thread waits here, so nothing is written yet.
+    private Task<bool> ConfirmPrecheckAsync(IReadOnlyList<PrecheckIssue> issues) =>
+        ConfirmPrecheckAction == null
+            ? Task.FromResult(true)
+            : System.Windows.Application.Current.Dispatcher.InvokeAsync(() => ConfirmPrecheckAction(issues)).Task;
+
     private bool CanExportVerificationReport() => !IsCopying && !IsVerifying && CopyJobs.Count > 0;
 
     [RelayCommand(CanExecute = nameof(CanExportVerificationReport))]
@@ -258,6 +313,7 @@ public partial class MainViewModel : ObservableObject
         VersionsTotal      = r.VersionsTotal,
         ErrorMessage       = r.ErrorMessage,
         IsPermissionResult = r.IsPermissionResult,
+        PrecheckFlagged    = r.IsPrecheckFlagged,
         PermissionStatus   = r.PermissionStatus,
         PermissionDetails  = r.PermissionDetails,
         CustomFieldStatus  = r.CustomFieldStatus,

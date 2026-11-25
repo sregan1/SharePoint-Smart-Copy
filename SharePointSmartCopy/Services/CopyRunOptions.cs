@@ -46,4 +46,13 @@ public sealed record CopyRunOptions
     public IProgress<string>? ActivityLog        { get; init; }
     public IProgress<long>? OnFilePacked         { get; init; }
     public IProgress<(int done, int total)>? OnFolderProgress { get; init; }
+
+    // ── Pre-copy check ──
+    // Called once, after the source scan and before anything is transferred, ONLY when the check
+    // flagged something. Return true to copy everything else (flagged items stay uncopied), false to
+    // cancel the run. Null means "carry on without asking" (the harness, Teams).
+    public Func<IReadOnlyList<PrecheckIssue>, Task<bool>>? ConfirmPrecheckAsync { get; init; }
+    // Reported once the scan is done: how many files and folders were checked, and how many were flagged.
+    // Drives the "Pre-copy check passed" status line, so a clean check is visible without interrupting the copy.
+    public IProgress<(int Checked, int Flagged)>? OnPrecheckDone { get; init; }
 }

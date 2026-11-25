@@ -6,6 +6,8 @@ Which Microsoft permissions SharePoint Smart Copy needs, and for which feature. 
 
 This page is the master copy. The same text is in the [README](README.md#which-permissions-does-each-feature-need) and the [User Guide](USER-GUIDE.md#which-permissions-does-each-feature-need).
 
+For help working out which permissions your administrator needs to grant, see the [permissions guide](https://sharepointsmartsolutions.com/smart-copy/permissions) on the Smart Copy website.
+
 Add permissions under **Entra ID → App registrations → your registration → API permissions → Add a permission**, then click **Grant admin consent for your organization**.
 
 ## Which permissions does each feature need?

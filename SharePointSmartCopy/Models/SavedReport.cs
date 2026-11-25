@@ -16,6 +16,8 @@ public class SavedReportItem
     public int VersionsTotal { get; set; }
     public string? ErrorMessage { get; set; }
     public bool IsPermissionResult { get; set; }
+    // The pre-copy check refused this item; ErrorMessage holds the reason. Absent in older reports.
+    public bool PrecheckFlagged { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public CopyStatus? PermissionStatus { get; set; }

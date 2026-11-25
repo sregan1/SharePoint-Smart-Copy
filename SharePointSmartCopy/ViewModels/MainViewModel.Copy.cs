@@ -610,6 +610,8 @@ public partial class MainViewModel : ObservableObject
         _packedBytesTally = 0;
         _activityLines.Clear();
         ActivityText = "";
+        PrecheckStatusText = string.Empty;   // the previous run's pre-copy verdict must not linger
+        PrecheckHasIssues  = false;
         StartActivityLogFile();
         if (ActivityLogPath != null)
             PushActivity(Loc.T("VM_ActivityLogPath", ActivityLogPath));
@@ -810,6 +812,8 @@ public partial class MainViewModel : ObservableObject
                     OnFolderProgress      = onFolderProgress,
                     SourceMetaCache       = _sourceMetaCache,
                     ReapplyFolderMetadata = ReapplyFolderMetadataEveryRun,
+                    ConfirmPrecheckAsync  = ConfirmPrecheckAsync,
+                    OnPrecheckDone        = new Progress<(int Checked, int Flagged)>(OnPrecheckResult),
                 },
                 _copyCts.Token);
         }
@@ -836,6 +840,8 @@ public partial class MainViewModel : ObservableObject
             OnPropertyChanged(nameof(FileSkippedCount));
             OnPropertyChanged(nameof(FileCancelledCount));
             OnPropertyChanged(nameof(CustomFieldWarningCount));
+            OnPropertyChanged(nameof(PrecheckFlaggedCount));
+            OnPropertyChanged(nameof(HasPrecheckFlagged));
             SaveReport();
 
             if (IsUpdatingMetadata)
@@ -918,9 +924,22 @@ public partial class MainViewModel : ObservableObject
             queue.Enqueue((t.Id, t.Modified));
         }
 
+        var droppedColumns = new List<string>();
         var allItems = await SpService.GetListItemsAsync(
             SourceUrl.TrimEnd('/'), def.SourceListId ?? string.Empty, def.Columns,
-            ["HasUniqueRoleAssignments", "ContentTypeId"], _copyCts!.Token);
+            ["HasUniqueRoleAssignments", "ContentTypeId"], _copyCts!.Token, droppedColumns);
+        // A column SharePoint said does not exist was left out of the read so the list could still copy.
+        // Its values are not copied, so say which column and why instead of letting it vanish silently.
+        foreach (var column in droppedColumns)
+            System.Windows.Application.Current.Dispatcher.Invoke(() => CopyResults.Add(new CopyResult
+            {
+                FileName          = Loc.T("VM_ColumnFailedTitle", destinationTitle ?? def.Title),
+                SourcePath        = string.Empty,
+                TargetPath        = $"{TargetUrl.TrimEnd('/')}/{destinationTitle ?? def.Title}",
+                Status            = CopyStatus.Failed,
+                ErrorMessage      = Loc.T("VM_ColumnNotReadable", column),
+                IsLibraryCreation = true,
+            }));
 
         // Items go onto the target list's content type of the same name as their source type.
         var contentTypeMap = await SpService.GetContentTypeIdMapAsync(

@@ -1822,6 +1822,21 @@
                                  Foreground="{DynamicResource TextTertiaryBrush}" TextWrapping="Wrap"
                                  FocusVisualStyle="{x:Null}"
                                  ToolTip="{loc:Loc Ui_FullActivityLogForThis}"/>
+                        <!-- The pre-copy check's verdict: what was checked and how it came out. Green when clean (the copy never pauses for it). -->
+                        <TextBlock Margin="0,6,0,0" FontSize="12" TextWrapping="Wrap"
+                                   Text="{Binding PrecheckStatusText}"
+                                   Visibility="{Binding HasPrecheckStatus, Converter={StaticResource BoolToVis}}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding PrecheckHasIssues}" Value="True">
+                                            <Setter Property="Foreground" Value="{DynamicResource WarningBrush}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <WrapPanel Margin="0,8,0,0" Visibility="{Binding IsReadyForReport, Converter={StaticResource BoolToVis}}">
                             <TextBlock FontSize="13" Foreground="{DynamicResource SuccessBrush}" VerticalAlignment="Center"
                                        TextWrapping="Wrap">
@@ -1962,7 +1977,23 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="{loc:Loc Ui_CopyReport}" Style="{StaticResource SectionHeader}"/>
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="{loc:Loc Ui_CopyReport}" Style="{StaticResource SectionHeader}"/>
+                    <!-- A clean pre-copy check is stated here too, with what it covered. -->
+                    <TextBlock Margin="0,0,0,10" FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource SuccessBrush}"
+                               Text="{Binding PrecheckStatusText}"
+                               Visibility="{Binding PrecheckPassed, Converter={StaticResource BoolToVis}}"/>
+                    <!-- Items the pre-copy check refused stay listed here after the run, so they can be fixed and copied again. -->
+                    <Border Style="{StaticResource WarningBanner}" Margin="0,0,0,10"
+                            Visibility="{Binding HasPrecheckFlagged, Converter={StaticResource BoolToVis}}">
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Style="{StaticResource SecondaryBtn}" Margin="12,0,0,0"
+                                    Content="{loc:Loc Ui_PrecheckSaveList}" Command="{Binding SavePrecheckListCommand}"/>
+                            <TextBlock TextWrapping="Wrap" FontSize="13" VerticalAlignment="Center"
+                                       Text="{Binding PrecheckFlaggedCount, Mode=OneWay, StringFormat={loc:Loc Ui_PrecheckBanner}}"/>
+                        </DockPanel>
+                    </Border>
+                </StackPanel>
 
                 <!-- A wrapping row: the old fixed 5-column grid left one tile alone on a second row
                      whenever the optional tiles (size, cancelled) made it 6 or 7. -->

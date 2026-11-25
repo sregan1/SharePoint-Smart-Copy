@@ -356,6 +356,24 @@ public class LibraryCopyService(SharePointService spService)
 
     private static string Short(string s) => s.Length > 160 ? s[..160] : s;
 
+    // Sets a view's CustomFormatter. A formatter with "&&", "<" or ">" in it (common in conditional formatting) is refused with
+    // an XML parse error when set as-is, because SharePoint writes it into the view's XML. When that happens, tries once more
+    // with those three characters escaped (SharePoint accepts that form). Any other failure is returned as it came.
+    // Escaped tells the caller the retry was needed. viewUrl is the view's REST address, e.g. ".../views('<id>')".
+    public async Task<(bool Ok, bool Escaped, string Body)> SetViewFormatterAsync(string viewUrl, string siteUrl, string formatter)
+    {
+        var (ok, body) = await SpRestAsync(HttpMethod.Post, viewUrl, siteUrl,
+            JsonSerializer.Serialize(new Dictionary<string, object?> { ["CustomFormatter"] = formatter }), merge: true);
+        if (ok || !body.Contains("XmlException", StringComparison.OrdinalIgnoreCase)) return (ok, false, body);
+        (ok, body) = await SpRestAsync(HttpMethod.Post, viewUrl, siteUrl,
+            JsonSerializer.Serialize(new Dictionary<string, object?> { ["CustomFormatter"] = EscapeXmlText(formatter) }), merge: true);
+        return (ok, true, body);
+    }
+
+    // Escapes the characters that break XML text ('&' first, so the others are not escaped twice). Quotes are left alone: they
+    // are fine inside element text, and a formatter is full of them.
+    internal static string EscapeXmlText(string s) => s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+
     private static List<string> ReadStrings(JsonElement root)
     {
         var list = new List<string>();
@@ -1271,7 +1289,14 @@ public class LibraryCopyService(SharePointService spService)
                     if (!ok) notes.Add(Loc.T("Svc_View_SettingsFail", title, Short(mergeBody)));
                     foreach (var (name, pval) in separate)
                     {
-                        var (pok, pbody) = await SpRestAsync(HttpMethod.Post, mergeUrl, targetSiteUrl, JsonSerializer.Serialize(new Dictionary<string, object?> { [name] = pval }), merge: true);
+                        bool pok; string pbody;
+                        if (name == "CustomFormatter" && pval is string formatter)
+                        {
+                            var fr = await SetViewFormatterAsync(mergeUrl, targetSiteUrl, formatter);
+                            (pok, pbody) = (fr.Ok, fr.Body);
+                        }
+                        else
+                            (pok, pbody) = await SpRestAsync(HttpMethod.Post, mergeUrl, targetSiteUrl, JsonSerializer.Serialize(new Dictionary<string, object?> { [name] = pval }), merge: true);
                         if (pok) continue;
                         if (name == "ViewQuery") notes.Add(Loc.T("Svc_View_QueryDropped", title));
                         else notes.Add(Loc.T("Svc_View_PropFail", title, name, Short(pbody)));

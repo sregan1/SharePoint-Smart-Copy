@@ -81,6 +81,10 @@ public partial class CopyResult : ObservableObject
     [ObservableProperty] private int _versionsCopied;
     [ObservableProperty] private int _versionsTotal;
     [ObservableProperty] private bool _isLibraryCreation;
+    // True when the pre-copy check refused this item (a name or path SharePoint would reject at the
+    // destination). Its ErrorMessage holds the reason. Saved with the report so the list of items to
+    // fix survives the run — see SavedReportItem.PrecheckFlagged.
+    [ObservableProperty] private bool _isPrecheckFlagged;
     [ObservableProperty] private bool _isPermissionResult;
 
     [ObservableProperty]

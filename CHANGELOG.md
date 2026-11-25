@@ -6,9 +6,18 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ## Unreleased
 
+### Changed
+
+- **Now runs on .NET 10** — the app and its release build moved from .NET 8, whose support has ended, to the current long-term-support release, so the bundled runtime keeps receiving security fixes. The release is still a self-contained single file, so there is nothing to install. .NET 10 needs Windows 10 version 1607 or later (the app already required 1809).
+
+### Fixed
+
+- **One missing column no longer stops a whole list from copying** — when SharePoint said a column does not exist on the source list ("The field or property '…' does not exist"), reading the list's items failed and the list copied nothing. The app now leaves just that column out, reads the list again, copies everything else, and adds a Failed row to the report naming the column that was not copied.
+- **View formatting that contains `&&`, `<` or `>`** — SharePoint refuses a view's custom formatting (JSON) set over REST with those characters bare in it ("An error occurred while parsing EntityName"), so the view copied without its formatting. The app now retries once with those characters escaped, which SharePoint accepts, and a note is added only if that also fails.
+
 ### Added
 
-- **Built-in pre-copy check** — before anything is copied, the source scan now checks every file and folder against what SharePoint will accept at the destination, so a bad name is reported up front with its full path and the reason instead of surfacing as a cryptic error partway through a long run. It flags a name that starts or ends with a space (including the invisible non-breaking space; shown as ␣ in the message), a name that ends with a period, a name longer than 255 characters, and a destination path longer than 400 characters (measured against the destination, where the base path is often longer than the source's). Flagged items are not copied and appear as Failed rows with the reason; everything else copies normally. The activity log ends the scan with either "Pre-copy check passed" or the number of items flagged. Applies to both copy modes.
+- **Built-in pre-copy check** — before anything is copied, the source scan now checks every file and folder against what SharePoint will accept at the destination, so a bad name is reported up front with its full path and the reason instead of surfacing as a cryptic error partway through a long run. It flags a name that starts or ends with a space (including the invisible non-breaking space; shown as ␣ in the message), a name that ends with a period, a name longer than 255 characters, and a destination path longer than 400 characters (measured against the destination, where the base path is often longer than the source's). If nothing is flagged the copy carries on by itself, and a green line under the progress bar (repeated on the report) says how many files and folders were checked and what for; if something is flagged, the copy pauses before anything is written to the destination and a window lists every flagged item with its reason, so you can **cancel** (the default) or **copy the rest**, or save the list as a CSV. Flagged items are kept after the run: they appear as Failed rows with the reason, a banner on the report counts them and saves the list, and they are saved with the run in History so they can be fixed at the source and copied again. The folder and OneNote-notebook work the scan used to do on its own now waits until the check has been answered, so cancelling leaves the destination untouched. The pause applies to the Files scope; in the other scopes a flagged item is reported the same way without the pause. Applies to both copy modes.
 
 ---
 

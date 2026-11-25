@@ -105,7 +105,9 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
             onFilePacked:          options.OnFilePacked,
             onFolderProgress:      options.OnFolderProgress,
             reapplyFolderMetadata: options.ReapplyFolderMetadata,
-            sourceMetaCache:       options.SourceMetaCache);
+            sourceMetaCache:       options.SourceMetaCache,
+            confirmPrecheckAsync:  options.ConfirmPrecheckAsync,
+            onPrecheckDone:        options.OnPrecheckDone);
 
     private async Task ExecuteCoreImplAsync(
         IList<CopyJob> jobs,
@@ -135,7 +137,9 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         // "{listId}:{itemId}" keys) — lets the Migration API custom-fields restamp reuse that
         // already-paid-for scan instead of a per-file GetFileMetadataAsync Graph call. Only
         // consulted in Migration API mode; falls back to a live per-file fetch on a cache miss.
-        Dictionary<string, FileMetadata>? sourceMetaCache = null)
+        Dictionary<string, FileMetadata>? sourceMetaCache = null,
+        Func<IReadOnlyList<PrecheckIssue>, Task<bool>>? confirmPrecheckAsync = null,
+        IProgress<(int Checked, int Flagged)>? onPrecheckDone = null)
     {
         // In SPMI mode the controller semaphore is never used as a download gate
         // (MigrationJobService has its own download controller). Suppress cosmetic step-downs.
@@ -311,7 +315,18 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
         if (anyFolderJobs)
             activityLog?.Report(Loc.T("Svc_ScanningSource"));
         int scannedFiles = 0;
-        int precheckFlagged = 0;   // items the pre-copy name/path check refused (see FindDestinationNameProblem)
+        // Items the pre-copy name/path check refused (see FindDestinationNameProblem).
+        var precheckIssues = new List<PrecheckIssue>();
+        int precheckChecked = 0;   // how many files and folders were checked, shown in the status line
+        string? CheckName(string libraryServerRelativeUrl, string relativeTargetPath)
+        {
+            precheckChecked++;
+            return FindDestinationNameProblem(libraryServerRelativeUrl, relativeTargetPath);
+        }
+        // Work the scan used to do inline that WRITES to the target (native copy of a OneNote notebook,
+        // creating an empty folder). It runs after the pre-copy check has been answered, so cancelling
+        // at that prompt leaves the target untouched.
+        var deferredScanWork = new List<Func<Task>>();
         var lastScanReport = DateTimeOffset.UtcNow;
 
         // Graph's native /copy action has no overwrite concept — a same-named item at the target
@@ -375,13 +390,14 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         pendingResults.Add(result);
                         if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
                     }
-                    var directProblem = FindDestinationNameProblem(
+                    var directProblem = CheckName(
                         job.TargetLibraryServerRelativeUrl, $"{job.TargetSubFolderPath}/{job.SourceName}");
                     if (directProblem != null)
                     {
-                        result.Status       = CopyStatus.Failed;
-                        result.ErrorMessage = directProblem;
-                        precheckFlagged++;
+                        result.Status             = CopyStatus.Failed;
+                        result.ErrorMessage       = directProblem;
+                        result.IsPrecheckFlagged  = true;
+                        precheckIssues.Add(new PrecheckIssue(job.SourceDisplayPath, job.TargetDisplayPath, directProblem));
                         activityLog?.Report(Loc.T("Pre_ItemFlagged", job.SourceDisplayPath, directProblem));
                         continue;
                     }
@@ -389,6 +405,27 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                 }
                 else if (await spService.IsRootFolderSpecialContainerAsync(job.SourceDriveId, job.SourceItemId))
                 {
+                    var rootProblem = CheckName(
+                        job.TargetLibraryServerRelativeUrl, $"{job.TargetSubFolderPath}/{job.SourceName}");
+                    if (rootProblem != null)
+                    {
+                        pendingResults.Add(new CopyResult
+                        {
+                            FileName          = job.SourceName,
+                            SourcePath        = job.SourceDisplayPath,
+                            TargetPath        = job.TargetDisplayPath,
+                            Status            = CopyStatus.Failed,
+                            ErrorMessage      = rootProblem,
+                            IsPrecheckFlagged = true
+                        });
+                        precheckIssues.Add(new PrecheckIssue(job.SourceDisplayPath, job.TargetDisplayPath, rootProblem));
+                        activityLog?.Report(Loc.T("Pre_ItemFlagged", job.SourceDisplayPath, rootProblem));
+                        continue;
+                    }
+                    // Deferred until the pre-copy check has been answered: this native copy writes to the
+                    // target, so it must not run while the user can still cancel.
+                    deferredScanWork.Add(async () =>
+                    {
                     // The job's OWN root is the special folder (e.g. a notebook selected directly
                     // as the copy source, not discovered as a descendant during a walk) — the
                     // per-child check inside EnumerateFilesForCopyAsync never sees this case since
@@ -435,6 +472,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         activityLog?.Report(Loc.T("Svc_NativeFailedErr", job.SourceName, ex.Message));
                     }
                     await FlushPendingResultsAsync();
+                    });
                 }
                 else
                 {
@@ -491,6 +529,28 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                         {
                             var parentSubFolder = ComputeTargetSubFolder(
                                 relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
+                            var specialProblem = CheckName(
+                                job.TargetLibraryServerRelativeUrl, $"{parentSubFolder}/{name}");
+                            if (specialProblem != null)
+                            {
+                                var flaggedSpecial = new CopyResult
+                                {
+                                    FileName          = name,
+                                    SourcePath        = $"{job.SourceDisplayPath}/{relativePath}",
+                                    TargetPath        = $"{job.TargetDisplayPath}/{relativePath}",
+                                    Status            = CopyStatus.Failed,
+                                    ErrorMessage      = specialProblem,
+                                    IsPrecheckFlagged = true
+                                };
+                                pendingResults.Add(flaggedSpecial);
+                                precheckIssues.Add(new PrecheckIssue(flaggedSpecial.SourcePath, flaggedSpecial.TargetPath, specialProblem));
+                                activityLog?.Report(Loc.T("Pre_ItemFlagged", flaggedSpecial.SourcePath, specialProblem));
+                                if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
+                                continue;
+                            }
+                            // Deferred until the pre-copy check has been answered (see deferredScanWork).
+                            deferredScanWork.Add(async () =>
+                            {
                             var folderResult = new CopyResult
                             {
                                 FileName   = name,
@@ -527,6 +587,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 activityLog?.Report(Loc.T("Svc_NativeFailedErr", name, ex.Message));
                             }
                             if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
+                            });
                             continue;
                         }
 
@@ -538,7 +599,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                             var displayName = string.IsNullOrEmpty(relativePath) ? job.SourceName : name;
                             var emptyFolderTarget = ComputeTargetFolderPath(
                                 relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
-                            var emptyFolderProblem = FindDestinationNameProblem(
+                            var emptyFolderProblem = CheckName(
                                 job.TargetLibraryServerRelativeUrl, emptyFolderTarget);
                             if (emptyFolderProblem != null)
                             {
@@ -549,16 +610,20 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                         ? job.SourceDisplayPath : $"{job.SourceDisplayPath}/{relativePath}",
                                     TargetPath   = string.IsNullOrEmpty(relativePath)
                                         ? job.TargetDisplayPath : $"{job.TargetDisplayPath}/{relativePath}",
-                                    Status       = CopyStatus.Failed,
-                                    ErrorMessage = emptyFolderProblem
+                                    Status            = CopyStatus.Failed,
+                                    ErrorMessage      = emptyFolderProblem,
+                                    IsPrecheckFlagged = true
                                 };
                                 pendingResults.Add(flagged);
-                                precheckFlagged++;
+                                precheckIssues.Add(new PrecheckIssue(flagged.SourcePath, flagged.TargetPath, emptyFolderProblem));
                                 activityLog?.Report(Loc.T("Pre_ItemFlagged", flagged.SourcePath, emptyFolderProblem));
                                 if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
                                 continue;
                             }
                             allEmptyFolderPaths.Add(emptyFolderTarget);
+                            // Creating the folder is deferred until the pre-copy check has been answered.
+                            deferredScanWork.Add(async () =>
+                            {
                             var folderResult = new CopyResult
                             {
                                 FileName   = displayName,
@@ -600,6 +665,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 activityLog?.Report(Loc.T("Svc_EmptyFolderFailed", displayName, ex.Message));
                             }
                             if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
+                            });
                             continue;
                         }
 
@@ -610,7 +676,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 relativePath, job.SourceName, job.IsLibrary, job.TargetSubFolderPath);
                             targetSubFolderCache[fileDirKey] = targetSubFolder;
                         }
-                        var fileProblem = FindDestinationNameProblem(
+                        var fileProblem = CheckName(
                             job.TargetLibraryServerRelativeUrl, $"{targetSubFolder}/{name}");
                         if (fileProblem != null)
                         {
@@ -619,11 +685,12 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                                 FileName     = name,
                                 SourcePath   = $"{job.SourceDisplayPath}/{relativePath}",
                                 TargetPath   = $"{job.TargetDisplayPath}/{relativePath}",
-                                Status       = CopyStatus.Failed,
-                                ErrorMessage = fileProblem
+                                Status            = CopyStatus.Failed,
+                                ErrorMessage      = fileProblem,
+                                IsPrecheckFlagged = true
                             };
                             pendingResults.Add(flagged);
-                            precheckFlagged++;
+                            precheckIssues.Add(new PrecheckIssue(flagged.SourcePath, flagged.TargetPath, fileProblem));
                             activityLog?.Report(Loc.T("Pre_ItemFlagged", flagged.SourcePath, fileProblem));
                             if (pendingResults.Count >= 200) await FlushPendingResultsAsync();
                             continue;
@@ -683,9 +750,38 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
                     : ""));
         }
         await FlushPendingResultsAsync();
-        activityLog?.Report(precheckFlagged == 0
-            ? Loc.T("Pre_Passed")
-            : Loc.T("Pre_Flagged", precheckFlagged));
+        onPrecheckDone?.Report((precheckChecked, precheckIssues.Count));
+
+        // Pre-copy check verdict. Nothing has been written to the target yet (see deferredScanWork), so
+        // this is the last point where the user can still back out cleanly.
+        if (precheckIssues.Count == 0)
+        {
+            activityLog?.Report(Loc.T("Pre_Passed"));
+        }
+        else
+        {
+            activityLog?.Report(Loc.T("Pre_Flagged", precheckIssues.Count));
+            // No callback (the harness, Teams): carry on, the flagged items simply stay uncopied.
+            if (confirmPrecheckAsync != null && !await confirmPrecheckAsync(precheckIssues))
+            {
+                activityLog?.Report(Loc.T("Pre_CancelledByUser"));
+                // Never attempted: mark them Cancelled (not Skipped), same as a stop mid-run.
+                foreach (var (_, notStarted) in allTasks)
+                {
+                    notStarted.Status       = CopyStatus.Cancelled;
+                    notStarted.ErrorMessage = Loc.T("Pre_NotAttempted");
+                }
+                await FlushPendingResultsAsync();
+                throw new OperationCanceledException();
+            }
+        }
+
+        foreach (var work in deferredScanWork)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            await work();
+        }
+        await FlushPendingResultsAsync();
 
         // Flattens scannedFoldersByJob into the SAME key shape SPMI's folder-metadata correction
         // already keys by (TargetSubFolderPath.Trim('/') — see MigrationJobService's directFolderGroups):
@@ -1800,7 +1896,7 @@ public class CopyService(SharePointService spService, MigrationJobService migrat
     // folders plus leaf name, '/'-separated) could not be created by SharePoint, or null when it is fine.
     // Runs against the DESTINATION path — the source path already fits, but the destination base path is
     // often longer. libraryServerRelativeUrl may be empty, in which case only the name checks run.
-    internal static string? FindDestinationNameProblem(string libraryServerRelativeUrl, string relativeTargetPath)
+    public static string? FindDestinationNameProblem(string libraryServerRelativeUrl, string relativeTargetPath)
     {
         var segments = relativeTargetPath.Split('/', StringSplitOptions.RemoveEmptyEntries);
         foreach (var seg in segments)

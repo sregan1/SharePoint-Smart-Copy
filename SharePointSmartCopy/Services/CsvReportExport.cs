@@ -1,5 +1,7 @@
 using System.IO;
 using System.Text;
+using SharePointSmartCopy.Localization;
+using SharePointSmartCopy.Models;
 
 namespace SharePointSmartCopy.Services;
 
@@ -14,6 +16,11 @@ public static class CsvReportExport
         string? error, object? permissionStatus, string? permissionDetails) =>
         $"{Field(fileName)},{Field(sourcePath)},{Field(targetPath)},{status},{versionsCopied},{Field(error)}," +
         $"{permissionStatus?.ToString() ?? ""},{Field(permissionDetails)}";
+
+    // The pre-copy check's list of items to fix: where each one is, and why SharePoint would refuse it.
+    public static void SavePrecheckList(string path, IEnumerable<PrecheckIssue> issues) =>
+        Save(path, Loc.T("Ui_PrecheckCsvHeader"),
+            issues.Select(i => $"{Field(i.SourcePath)},{Field(i.TargetPath)},{Field(i.Reason)}"));
 
     public static void Save(string path, string headerLine, IEnumerable<string> rows)
     {
