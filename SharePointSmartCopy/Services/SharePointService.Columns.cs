@@ -292,8 +292,8 @@ public partial class SharePointService
                 {
                     if (SpColumnDef.IsUserType(c.FieldType))
                     {
-                        selectParts.Add($"{c.InternalName}/Name");
-                        expandParts.Add(c.InternalName);
+                        selectParts.Add($"{RestFieldName(c.InternalName)}/Name");
+                        expandParts.Add(RestFieldName(c.InternalName));
                     }
                     else if (SpColumnDef.IsLookupType(c.FieldType))
                     {
@@ -301,7 +301,7 @@ public partial class SharePointService
                     }
                     else
                     {
-                        selectParts.Add(c.InternalName);
+                        selectParts.Add(RestFieldName(c.InternalName));
                     }
                 }
                 var nextUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items" +
@@ -326,7 +326,8 @@ public partial class SharePointService
                     {
                         var badField = TryExtractMissingFieldName(body);
                         if (badField != null &&
-                            chunkCols.RemoveAll(c => string.Equals(c.InternalName, badField, StringComparison.OrdinalIgnoreCase)) > 0)
+                            chunkCols.RemoveAll(c => string.Equals(c.InternalName, badField, StringComparison.OrdinalIgnoreCase)
+                                                  || string.Equals(RestFieldName(c.InternalName), badField, StringComparison.OrdinalIgnoreCase)) > 0)
                         {
                             excludedFields.Add(badField);
                             retryWithFieldExcluded = true;
@@ -369,7 +370,7 @@ public partial class SharePointService
 
                             foreach (var col in chunkCols)
                             {
-                                if (!item.TryGetProperty(col.InternalName, out var valProp)) continue;
+                                if (!item.TryGetProperty(RestFieldName(col.InternalName), out var valProp)) continue;
                                 fields[col.InternalName] = ParseFieldValue(valProp, col.FieldType, col.LookupShowField);
                             }
 
@@ -481,10 +482,18 @@ public partial class SharePointService
     // a show field SharePoint refuses to project); the display text is then empty.
     private static void AppendLookupSelect(List<string> selectParts, List<string> expandParts, SpColumnDef col, bool idOnly = false)
     {
-        selectParts.Add($"{col.InternalName}/Id");
-        if (!idOnly) selectParts.Add($"{col.InternalName}/{LookupQueryField(col.LookupShowField)}");
-        expandParts.Add(col.InternalName);
+        var name = RestFieldName(col.InternalName);
+        selectParts.Add($"{name}/Id");
+        if (!idOnly) selectParts.Add($"{name}/{LookupQueryField(col.LookupShowField)}");
+        expandParts.Add(name);
     }
+
+    // SharePoint's REST layer names a field whose internal name starts with an underscore with an "OData_" prefix: a column
+    // titled "5 YearsService?" has the internal name "_x0035_YearsService_x003f_" but is selected, expanded and returned as
+    // "OData__x0035_YearsService_x003f_". The bare name is answered with "The field or property '...' does not exist", which
+    // used to stop the whole read. (Writes through ValidateUpdateListItem use the plain internal name.)
+    internal static string RestFieldName(string internalName) =>
+        internalName.StartsWith('_') ? "OData_" + internalName : internalName;
 
     private static object? ParseFieldValue(JsonElement el, SupportedFieldType type, string? lookupShowField = null)
     {

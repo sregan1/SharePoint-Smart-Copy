@@ -4,6 +4,14 @@ All notable changes to SharePoint Smart Copy are documented here.
 
 ---
 
+## 4.2.2 — 2026-11-25
+
+### Fixed
+
+- **Columns whose name starts with a digit or an underscore now copy their values** — SharePoint gives a column titled, for example, "5 YearsService?" the internal name `_x0035_YearsService_x003f_`, and its REST interface calls any such name by an `OData_` prefix (`OData__x0035_YearsService_x003f_`). The app asked for the bare name, so reading a list or a library's custom columns answered "The field or property '…' does not exist" and the column's values were left out (a list copy reported the column as not copied). Reading the items, creating them at the target and updating them now use the prefixed name for these columns, so their values are copied.
+
+---
+
 ## 4.2.1 — 2026-11-25
 
 ### Changed

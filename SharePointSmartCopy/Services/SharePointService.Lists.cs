@@ -167,8 +167,8 @@ public partial class SharePointService
             {
                 if (SpColumnDef.IsUserType(c.FieldType))
                 {
-                    selectParts.Add($"{c.InternalName}/Name");
-                    expandParts.Add(c.InternalName);
+                    selectParts.Add($"{RestFieldName(c.InternalName)}/Name");
+                    expandParts.Add(RestFieldName(c.InternalName));
                 }
                 else if (SpColumnDef.IsLookupType(c.FieldType))
                 {
@@ -176,7 +176,7 @@ public partial class SharePointService
                 }
                 else
                 {
-                    selectParts.Add(c.InternalName);
+                    selectParts.Add(RestFieldName(c.InternalName));
                 }
             }
             if (extraNames != null)
@@ -214,7 +214,8 @@ public partial class SharePointService
                 failureBody = await resp.Content.ReadAsStringAsync(ct);
                 if ((int)resp.StatusCode == 400 && TryExtractMissingFieldName(failureBody) is { } missing)
                 {
-                    var removed = cols.RemoveAll(c => string.Equals(c.InternalName, missing, StringComparison.OrdinalIgnoreCase))
+                    var removed = cols.RemoveAll(c => string.Equals(c.InternalName, missing, StringComparison.OrdinalIgnoreCase)
+                                                   || string.Equals(RestFieldName(c.InternalName), missing, StringComparison.OrdinalIgnoreCase))
                                 + (extraNames?.RemoveAll(n => string.Equals(n, missing, StringComparison.OrdinalIgnoreCase)) ?? 0);
                     if (removed > 0)
                     {
@@ -270,7 +271,11 @@ public partial class SharePointService
                             item[prop.Name + "Email"] = email ?? login;
                             continue;
                         }
-                        item[prop.Name] = colsByName.TryGetValue(prop.Name, out var col)
+                        // A field whose internal name starts with an underscore comes back as "OData_" + its internal name (see RestFieldName);
+                        // it is kept under the internal name, which is what the rest of the copy looks up.
+                        var key = prop.Name.StartsWith("OData__", StringComparison.Ordinal) && colsByName.ContainsKey(prop.Name["OData_".Length..])
+                            ? prop.Name["OData_".Length..] : prop.Name;
+                        item[key] = colsByName.TryGetValue(key, out var col)
                             ? ParseFieldValue(prop.Value, col.FieldType, col.LookupShowField)
                             : ExtractJsonValue(prop.Value);
                     }
@@ -412,7 +417,7 @@ public partial class SharePointService
         var (simpleFields, complexFields) = SplitComplexFields(fields);
 
         var createUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items";
-        var body      = JsonSerializer.Serialize(simpleFields);
+        var body      = JsonSerializer.Serialize(simpleFields.ToDictionary(kv => RestFieldName(kv.Key), kv => kv.Value));   // underscore-leading internal names need the OData_ prefix in a REST body
 
         string? newItemId = null;
         string? skippedFieldsWarning = null;
@@ -490,7 +495,7 @@ public partial class SharePointService
         foreach (var (name, value) in simpleFields)
         {
             if (name == "Title") continue;
-            var one = JsonSerializer.Serialize(new Dictionary<string, object?> { [name] = value });
+            var one = JsonSerializer.Serialize(new Dictionary<string, object?> { [RestFieldName(name)] = value });
             using var resp = await SendSharePointRequestAsync(token =>
             {
                 var r = new HttpRequestMessage(HttpMethod.Post, itemUrl);
@@ -677,7 +682,7 @@ public partial class SharePointService
         var (simpleFields, complexFields) = SplitComplexFields(fields);
 
         var updateUrl = $"{siteUrl.TrimEnd('/')}/_api/web/lists('{listId}')/items({itemId})";
-        var body      = JsonSerializer.Serialize(simpleFields);
+        var body      = JsonSerializer.Serialize(simpleFields.ToDictionary(kv => RestFieldName(kv.Key), kv => kv.Value));   // underscore-leading internal names need the OData_ prefix in a REST body
 
         using var resp = await SendSharePointRequestAsync(token =>
         {
